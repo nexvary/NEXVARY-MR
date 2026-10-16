@@ -11,13 +11,13 @@ TestCase {
  function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
-  for(let i=0;i<8;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
+  for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
   let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);tryVerify(function(){return deviceScroll.contentHeight>deviceScroll.availableHeight});
   deviceScroll.contentItem.contentY=deviceScroll.contentHeight-deviceScroll.availableHeight;verify(waitForRendering(app.contentItem));
   let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
   app.width=1536;app.height=980;
  }
- function test_navigation(){for(let i=0;i<8;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
+ function test_navigation(){for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
  function test_language(){let b=findChild(app,"languageButton");mouseClick(b);compare(app.ar,false);mouseClick(b);compare(app.ar,true)}
  function test_boardMeasurement(){
   app.currentPage=3;verify(waitForRendering(app.contentItem));mouseClick(findChild(app,"loadTrainingBoard"));tryVerify(function(){return boardBridge.loaded});verify(boardBridge.components.length>0);verify(waitForRendering(app.contentItem));
@@ -45,6 +45,25 @@ TestCase {
   verify(waitForRendering(app.contentItem));mouseClick(save);tryVerify(function(){return workshopBridge.diagnoses(id).length===1});
   compare(workshopBridge.diagnoses(id)[0].findings,"Synthetic observation only");
   findChild(app,"symptomChoice").currentIndex=1;compare(save.enabled,false);scroll.contentItem.contentY=0;
+ }
+ function test_recoveryConsent(){
+  app.currentPage=8;
+  let result=findChild(app,"recoveryVerdict");
+  verify(result!==null);
+  compare(result.text,"not_supported");
+  let consent=findChild(app,"recoveryConsent");
+  verify(consent!==null);
+  consent.checked=true;
+  tryCompare(result,"text","need_more_information");
+  let source=findChild(app,"recoverySource");
+  source.currentIndex=3;
+  app.currentPage=0;
+  app.currentPage=8;
+  let reset=findChild(app,"recoveryReset");
+  reset.checked=true;
+  compare(result.text,"not_supported");
+  reset.checked=false;
+  consent.checked=false;
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
