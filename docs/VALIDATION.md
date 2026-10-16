@@ -8,6 +8,16 @@ Use the [C++/Qt workflow](https://github.com/nexvary/NEXVARY-MR/actions/workflow
 
 ## Verified Windows candidate
 
+The subsequent sidebar revision `39175ba2c235ccf2cac6ac61891c8a27a06b05cb` passed [run 38900200998](https://github.com/nexvary/NEXVARY-MR/actions/runs/38900200998): all seven native suites, portable isolated runtime, and installer install/run/uninstall passed. Python checks also passed. Actual Windows screenshots and test files were downloaded and reviewed. [Portable](https://github.com/nexvary/NEXVARY-MR/actions/runs/38900200998/artifacts/12045304923), [installer](https://github.com/nexvary/NEXVARY-MR/actions/runs/38900200998/artifacts/12045479161), [evidence](https://github.com/nexvary/NEXVARY-MR/actions/runs/38900200998/artifacts/12045817545).
+
+## Base completion increment
+
+The next increment expands the directory to 20 brand groups/65 family entries and 22 distinct guided workflows, without treating catalog entries as firmware/driver/board compatibility certification. SQLite schema v2 persists technician findings, manually reviewed evidence and the exact rule-guidance snapshot against an explicitly chosen repair order. JSON reports and invoice PDFs include these entries. Existing schema-v1 databases and backups migrate through tested paths; the unrelated Python `cases` database is retained separately.
+
+Local checks executed after this increment: core/workshop/tool/board/firmware/GUI smoke passed; the first UI launch encountered a zero-byte locally linked executable, which was relinked, and UI then passed including the real save-findings click. Workshop has 14 QtTest results including setup/cleanup; UI has 11 including setup/cleanup. Legacy Python remains 4/4. Windows CI for the increment must pass before claiming Windows validation for it.
+
+Remaining base acceptance gates require external resources: actual authorized Android/OEM-driver/scrcpy interaction, clean Windows10/11 consumer VMs/DPI/accessibility, and independently verified licensed model-specific board data. No physical phone, instrument or licensed phone schematic is present in this execution environment. Native JSON board editing/viewing and simulated tool failures are tested; proprietary BRD/PDF parsing, flashing and instrument acquisition are unsupported features, not passing tests. These are explicit boundaries for continuing an isolated recovery research increment; they do not authorize a commercial release or merge.
+
 Commit `c648f1483b8feb698f30adf3396bf2b302e8c91a`, [successful run 38899256690](https://github.com/nexvary/NEXVARY-MR/actions/runs/38899256690):
 
 - Windows2022/MSVC2022/Qt6.8.3 build with compiler warnings as errors: passed.

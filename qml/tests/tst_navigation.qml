@@ -35,6 +35,17 @@ TestCase {
   mouseClick(dialog.standardButton(Dialog.Save));compare(workshopBridge.orders.length,before+1);tryCompare(dialog,"visible",false);
  }
  function test_diagnosis(){app.currentPage=2;let b=findChild(app,"diagnoseButton");mouseClick(b);let r=findChild(app,"diagnosisResult");verify(r.text.length>40);verify(r.readOnly)}
+ function test_savedDiagnosis(){
+  const id=workshopBridge.createOrder("Synthetic diagnosis UI","","TestBrand","Model-02","","USB not detected","Test technician","");verify(id>0);
+  app.currentPage=2;verify(waitForRendering(app.contentItem));
+  let choice=findChild(app,"diagnosisOrder");tryVerify(function(){return choice.count>1});choice.currentIndex=choice.indexOfValue(id);
+  findChild(app,"diagnosisTechnician").text="UI technician";findChild(app,"diagnosisFindings").text="Synthetic observation only";findChild(app,"diagnosisEvidence").text="No phone connected; UI test";
+  let analyze=findChild(app,"diagnoseButton");mouseClick(analyze);let save=findChild(app,"saveDiagnosis");tryCompare(save,"enabled",true);
+  let scroll=findChild(app,"diagnosisScroll");verify(scroll!==null);let center=save.mapToItem(scroll,save.width/2,save.height/2);scroll.contentItem.contentY+=center.y-scroll.height/2;
+  verify(waitForRendering(app.contentItem));mouseClick(save);tryVerify(function(){return workshopBridge.diagnoses(id).length===1});
+  compare(workshopBridge.diagnoses(id)[0].findings,"Synthetic observation only");
+  findChild(app,"symptomChoice").currentIndex=1;compare(save.enabled,false);scroll.contentItem.contentY=0;
+ }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

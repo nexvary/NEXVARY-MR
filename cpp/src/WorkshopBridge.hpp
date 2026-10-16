@@ -28,6 +28,9 @@ public:
     Q_INVOKABLE QVariantMap invoice(int orderId) const;
     Q_INVOKABLE bool exportOrders(const QString &path);
     Q_INVOKABLE bool exportInvoice(int id,const QString &path);
+    Q_INVOKABLE QVariantList diagnoses(int orderId) const;
+    Q_INVOKABLE bool saveDiagnosis(int orderId,const QString &symptom,const QString &guidance,const QString &findings,const QString &evidence,const QString &technician);
+    Q_INVOKABLE bool exportDiagnosisReport(int orderId,const QString &path);
     Q_INVOKABLE bool backup(const QString &path);
     Q_INVOKABLE bool restore(const QString &path,bool confirmed);
     Q_INVOKABLE QString checkIntegrity();
@@ -42,7 +45,7 @@ private:
     bool fail(const QString &message);
     bool log(int orderId,const QString &action);
     bool finish(bool ok);
-    bool validDb(QSqlDatabase &db) const;
+    bool validDb(QSqlDatabase &db,bool allowLegacy=false) const;
     QSqlDatabase db_;
     QString path_, connection_, error_;
     bool ready_=false;

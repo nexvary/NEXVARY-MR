@@ -14,6 +14,9 @@
 #include <QFile>
 #include <QSet>
 #include <QTemporaryFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <limits>
 namespace {
 QStringList migrationSql() {
@@ -26,6 +29,9 @@ QStringList migrationSql() {
       QStringLiteral("CREATE TABLE events(id INTEGER PRIMARY KEY,order_id INTEGER REFERENCES orders(id),action TEXT NOT NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
       QStringLiteral("CREATE INDEX orders_status ON orders(status)"),
       QStringLiteral("PRAGMA user_version=1")};
+}
+QString diagnosisMigrationSql() {
+    return QStringLiteral("CREATE TABLE diagnoses(id INTEGER PRIMARY KEY,order_id INTEGER NOT NULL REFERENCES orders(id),symptom TEXT NOT NULL CHECK(length(symptom) BETWEEN 1 AND 2000),guidance TEXT NOT NULL CHECK(length(guidance) BETWEEN 1 AND 8000),findings TEXT NOT NULL CHECK(length(findings) BETWEEN 1 AND 8000),evidence TEXT NOT NULL DEFAULT '' CHECK(length(evidence)<=4000),technician TEXT NOT NULL CHECK(length(technician) BETWEEN 1 AND 160),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)");
 }
 QVariantList rows(QSqlQuery &q) {
     QVariantList list;
@@ -79,21 +85,25 @@ bool WorkshopBridge::open() {
 bool WorkshopBridge::migrate() {
     QSqlQuery q(db_); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()) return fail(q.lastError().text());
     const int v=q.value(0).toInt(); q.finish();
-    if(v>1) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
-    if(v==1) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
+    if(v>2) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
+    if(v==2) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
+    if(v==1 && !validDb(db_,true)) return fail(QStringLiteral("Legacy database schema/integrity validation failed."));
     if(!db_.transaction()) return fail(db_.lastError().text());
-    const auto migration=migrationSql();
-    for(const auto &sql:migration) if(!q.exec(sql)) { db_.rollback(); return fail(q.lastError().text()); }
-    return db_.commit() || fail(db_.lastError().text());
+    if(v==0) for(const auto &sql:migrationSql()) if(!q.exec(sql)) { db_.rollback(); return fail(q.lastError().text()); }
+    if(!q.exec(diagnosisMigrationSql())||!q.exec(QStringLiteral("PRAGMA user_version=2"))) { db_.rollback();return fail(q.lastError().text()); }
+    if(!db_.commit()) {db_.rollback();return fail(db_.lastError().text());}
+    return validDb(db_) || fail(QStringLiteral("Migrated database failed validation."));
 }
-bool WorkshopBridge::validDb(QSqlDatabase &db) const {
+bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
     QSqlQuery q(db); if(!q.exec(QStringLiteral("PRAGMA integrity_check"))||!q.next()||q.value(0).toString()!=QStringLiteral("ok")) return false;
     q.finish(); if(!q.exec(QStringLiteral("PRAGMA foreign_key_check"))||q.next()) return false;
-    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||q.value(0).toInt()!=1) return false;
-    const QMap<QString,QStringList> required={
+    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||(q.value(0).toInt()!=2 && !(allowLegacy&&q.value(0).toInt()==1))) return false;
+    const int version=q.value(0).toInt();
+    QMap<QString,QStringList> required={
       {"customers",{"id","name","phone"}}, {"devices",{"id","customer_id","brand","model","serial"}},
       {"orders",{"id","device_id","symptom","technician","status","labor_cents","notes","created_at","updated_at"}},
       {"parts",{"id","sku","name","quantity","unit_cents"}}, {"order_parts",{"id","order_id","part_id","quantity","unit_cents"}}, {"events",{"id","order_id","action","created_at"}}};
+    if(version==2) required.insert(QStringLiteral("diagnoses"),{"id","order_id","symptom","guidance","findings","evidence","technician","created_at"});
     // Match our own schema, including CHECK/UNIQUE/foreign-key constraints. A file
     // with familiar column names but relaxed constraints is not an application backup.
     QMap<QString,QString> expectedSql;
@@ -102,6 +112,7 @@ bool WorkshopBridge::validDb(QSqlDatabase &db) const {
         const auto name=sql.mid(13,sql.indexOf('(')-13);
         expectedSql.insert(name,sql);
     }
+    if(version==2) expectedSql.insert(QStringLiteral("diagnoses"),diagnosisMigrationSql());
     // A backup is application data, not a mechanism to install executable triggers/views.
     q.finish();if(!q.exec(QStringLiteral("SELECT name,type,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'"))) return false;
     while(q.next()) {
@@ -132,6 +143,12 @@ bool WorkshopBridge::validDb(QSqlDatabase &db) const {
         total+=amount;
     }
     if(q.lastError().isValid()) return false;
+    if(version==2) {
+        q.finish();if(!q.exec(QStringLiteral("SELECT symptom,guidance,findings,evidence,technician FROM diagnoses"))) return false;
+        while(q.next()) if(!textOk(q.value(0).toString(),2000)||!textOk(q.value(1).toString(),8000)||!textOk(q.value(2).toString(),8000)||!optionalTextOk(q.value(3).toString(),4000)||!textOk(q.value(4).toString(),160)) return false;
+        if(q.lastError().isValid()) return false;
+        q.finish();if(!q.exec(QStringLiteral("SELECT order_id FROM diagnoses GROUP BY order_id HAVING COUNT(*)>100 LIMIT 1"))||q.next()) return false;
+    }
     return true;
 }
 QString WorkshopBridge::checkIntegrity() { return validDb(db_)?QStringLiteral("ok"):QStringLiteral("failed"); }
@@ -191,7 +208,7 @@ QVariantMap WorkshopBridge::invoice(int id) const {
     QVariantMap result;
     for(const auto &r:orders()) if(r.toMap().value("id").toInt()==id) { result=r.toMap();break; }
     if(result.isEmpty()) return result;
-    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT p.sku,p.name,op.quantity,op.unit_cents FROM order_parts op JOIN parts p ON p.id=op.part_id WHERE order_id=?"));q.addBindValue(id);q.exec();result.insert("parts",rows(q));return result;
+    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT p.sku,p.name,op.quantity,op.unit_cents FROM order_parts op JOIN parts p ON p.id=op.part_id WHERE order_id=?"));q.addBindValue(id);q.exec();result.insert("parts",rows(q));result.insert("diagnoses",diagnoses(id));return result;
 }
 bool WorkshopBridge::exportOrders(const QString &value) {
     if(!ready_) return fail(QStringLiteral("Database is not ready."));
@@ -209,6 +226,15 @@ bool WorkshopBridge::exportInvoice(int id,const QString &value) {
     QString html=QStringLiteral("<html><body><h1>NEXVARY MR</h1><h2>Repair service invoice / فاتورة صيانة #%1</h2><p>%2<br>%3 %4<br>%5</p><table width='100%'><tr><th>Part / القطعة</th><th>Quantity</th><th>Unit price</th></tr>").arg(id).arg(m.value("customer").toString().toHtmlEscaped(),m.value("brand").toString().toHtmlEscaped(),m.value("model").toString().toHtmlEscaped(),m.value("status").toString().toHtmlEscaped());
     for(const auto &r:m.value("parts").toList()) { const auto p=r.toMap();html+=QStringLiteral("<tr><td>%1</td><td>%2</td><td>%3</td></tr>").arg(p.value("name").toString().toHtmlEscaped()).arg(p.value("quantity").toInt()).arg(money(p.value("unit_cents").toLongLong())); }
     html+=QStringLiteral("</table><p>Labor / أجرة العمل: %1</p><h2>Total / الإجمالي: %2</h2><p>Local currency • No tax calculated / العملة المحلية، دون حساب ضريبة</p><p>%3</p></body></html>").arg(money(m.value("labor_cents").toLongLong())).arg(money(m.value("total_cents").toLongLong())).arg(m.value("notes").toString().toHtmlEscaped());
+    if(!m.value("diagnoses").toList().isEmpty()) {
+        QString details=QStringLiteral("<h2>Saved diagnostic findings / نتائج التشخيص المحفوظة</h2><p>Technician observations and rule guidance; not a certified diagnosis / ملاحظات الفني وإرشادات قواعد، وليست تشخيصًا معتمدًا</p>");
+        auto plainHtml=[](const QString &text) {return text.toHtmlEscaped().replace(QLatin1Char('\n'),QStringLiteral("<br>"));};
+        for(const auto &entry:m.value("diagnoses").toList()) {
+            const auto d=entry.toMap();
+            details+=QStringLiteral("<h3>#%1 · %2 · %3</h3><p>Technician / الفني: %4</p><p><b>Findings / الملاحظات:</b><br>%5</p><p><b>Evidence reviewed / الدليل المُراجع:</b><br>%6</p><p><b>Rule guidance / إرشاد القواعد:</b><br>%7</p>").arg(d.value("id").toInt()).arg(plainHtml(d.value("created_at").toString()),plainHtml(d.value("symptom").toString()),plainHtml(d.value("technician").toString()),plainHtml(d.value("findings").toString()),plainHtml(d.value("evidence").toString()),plainHtml(d.value("guidance").toString()));
+        }
+        html.replace(QStringLiteral("</body>"),details+QStringLiteral("</body>"));
+    }
     QSaveFile output(target);if(!output.open(QIODevice::WriteOnly)) return fail(output.errorString());
     { QPdfWriter pdf(&output);pdf.setPageSize(QPageSize(QPageSize::A4));pdf.setResolution(96);QTextDocument doc;doc.setHtml(html);doc.print(&pdf); }
     if(output.error()!=QFileDevice::NoError||output.size()==0) return fail(QStringLiteral("Invoice PDF generation failed."));
@@ -242,7 +268,7 @@ bool WorkshopBridge::restore(const QString &value,bool confirmed) {
     if(original.error()!=QFileDevice::NoError||!staged.flush()) return fail(QStringLiteral("Cannot finish staging backup."));
     original.close();const auto stage=staged.fileName();staged.close();
     const QString name=QUuid::createUuid().toString();bool valid=false;
-    {auto check=QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"),name);check.setDatabaseName(stage);check.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));if(check.open()) { QSqlQuery safe(check);safe.exec(QStringLiteral("PRAGMA trusted_schema=OFF"));valid=validDb(check); }check.close();}
+    {auto check=QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"),name);check.setDatabaseName(stage);check.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY"));if(check.open()) { QSqlQuery safe(check);safe.exec(QStringLiteral("PRAGMA trusted_schema=OFF"));valid=validDb(check,true); }check.close();}
     QSqlDatabase::removeDatabase(name);
     if(!valid) {QFile::remove(stage);return fail(QStringLiteral("Backup failed schema, integrity or foreign key checks."));}
     const QString previous=path_+QStringLiteral(".before-restore-")+QUuid::createUuid().toString(QUuid::Id128)+QStringLiteral(".db");
@@ -251,7 +277,7 @@ bool WorkshopBridge::restore(const QString &value,bool confirmed) {
     QSaveFile dest(path_);QFile input(stage);bool ok=input.open(QIODevice::ReadOnly)&&dest.open(QIODevice::WriteOnly);
     if(ok) {const auto bytes=input.readAll();ok=dest.write(bytes)==bytes.size()&&dest.commit();}
     input.close();QFile::remove(stage);
-    ready_=db_.open()&&validDb(db_);QSqlQuery q(db_);ready_=q.exec(QStringLiteral("PRAGMA foreign_keys=ON"))&&q.exec(QStringLiteral("PRAGMA trusted_schema=OFF"))&&ready_;
+    ready_=db_.open()&&migrate();QSqlQuery q(db_);ready_=q.exec(QStringLiteral("PRAGMA foreign_keys=ON"))&&q.exec(QStringLiteral("PRAGMA trusted_schema=OFF"))&&ready_;
     QFile::setPermissions(path_,QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     emit changed();if(ok&&ready_) {error_.clear();emit errorChanged();return true;}return fail(QStringLiteral("Restore failed; original preserved in ")+previous);
 }
@@ -269,4 +295,32 @@ bool WorkshopBridge::restockPart(int partId,int quantity,int unitCents) {
     QSqlQuery q(db_);q.prepare(QStringLiteral("UPDATE parts SET quantity=quantity+?,unit_cents=? WHERE id=? AND quantity<=1000000-?"));
     q.addBindValue(quantity);q.addBindValue(unitCents);q.addBindValue(partId);q.addBindValue(quantity);
     return finish(q.exec()&&q.numRowsAffected()==1&&log(0,QStringLiteral("Stock received: %1 x%2").arg(partId).arg(quantity)));
+}
+
+QVariantList WorkshopBridge::diagnoses(int orderId) const {
+    if(!ready_||orderId<=0) return {};
+    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT * FROM diagnoses WHERE order_id=? ORDER BY id DESC LIMIT 100"));q.addBindValue(orderId);
+    if(!q.exec()) return {};
+    return rows(q);
+}
+bool WorkshopBridge::saveDiagnosis(int orderId,const QString &symptom,const QString &guidance,const QString &findings,const QString &evidence,const QString &technician) {
+    if(!ready_||orderId<=0||!textOk(symptom,2000)||!textOk(guidance,8000)||!textOk(findings,8000)||!optionalTextOk(evidence,4000)||!textOk(technician,160)) return fail(QStringLiteral("Select an existing repair order; symptom, rule guidance, findings and technician are required within their size limits."));
+    if(!db_.transaction()) return fail(db_.lastError().text());
+    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT (SELECT COUNT(*) FROM diagnoses WHERE order_id=orders.id) FROM orders WHERE id=?"));q.addBindValue(orderId);
+    if(!q.exec()||!q.next()||q.value(0).toInt()>=100) {db_.rollback();return fail(QStringLiteral("Repair order not found or already has 100 saved diagnostic entries."));}
+    q.finish();q.prepare(QStringLiteral("INSERT INTO diagnoses(order_id,symptom,guidance,findings,evidence,technician) VALUES(?,?,?,?,?,?)"));
+    q.addBindValue(orderId);q.addBindValue(symptom.trimmed());q.addBindValue(guidance);q.addBindValue(findings.trimmed());q.addBindValue(sqlText(evidence));q.addBindValue(technician.trimmed());
+    return finish(q.exec()&&log(orderId,QStringLiteral("Diagnostic findings saved")));
+}
+bool WorkshopBridge::exportDiagnosisReport(int orderId,const QString &value) {
+    const auto target=localPath(value);
+    if(!ready_||target.isEmpty()||databaseTarget(target,path_)) return fail(QStringLiteral("Export requires a local report file separate from the active database."));
+    const auto order=invoice(orderId);
+    if(order.isEmpty()) return fail(QStringLiteral("Repair order not found."));
+    const auto entries=diagnoses(orderId);
+    if(entries.isEmpty()) return fail(QStringLiteral("No saved diagnostic findings for this repair order."));
+    const QJsonObject report{{QStringLiteral("schemaVersion"),1},{QStringLiteral("reportType"),QStringLiteral("nexvary-mr-diagnostic-findings")},{QStringLiteral("generatedAtUtc"),QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},{QStringLiteral("notice"),QStringLiteral("Technician observations and rule-based guidance only; not a certified fault diagnosis. Raw ADB logs are not captured automatically. Contains customer data; review before sharing.")},{QStringLiteral("order"),QJsonObject::fromVariantMap(order)}};
+    const auto bytes=QJsonDocument(report).toJson(QJsonDocument::Indented);
+    QSaveFile file(target);if(!file.open(QIODevice::WriteOnly)||file.write(bytes)!=bytes.size()||!file.commit()) return fail(QStringLiteral("Could not write diagnostic report."));
+    error_.clear();emit errorChanged();return true;
 }

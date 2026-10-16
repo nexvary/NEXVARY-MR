@@ -4,6 +4,9 @@
 #include <QFile>
 #include <QSqlQuery>
 #include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 class WorkshopTests:public QObject {
  Q_OBJECT
 private slots:
@@ -47,6 +50,48 @@ private slots:
  void diagnosticAudit(){
   QTemporaryDir t;WorkshopBridge w(t.filePath("audit.db"));QVERIFY(w.ready());
   QVERIFY(!w.recordDiagnostic("arbitrary command",true));QVERIFY(w.recordDiagnostic("adb-scan",true));QCOMPARE(w.events().size(),1);QVERIFY(w.events().first().toMap().value("action").toString().contains("adb-scan"));
+ }
+ void diagnosisPersistenceAndReport(){
+  QTemporaryDir t;const auto path=t.filePath("diagnosis.db");int order=-1;
+  const QString finding=QStringLiteral("USB data pin damaged; <script> is literal, not markup.\nManual test only.");
+  {WorkshopBridge w(path);QVERIFY(w.ready());order=w.createOrder("Customer","","Brand","Model","","USB not detected","Tech","");QVERIFY(order>0);
+   const int other=w.createOrder("Other","","Brand","Other","","Bootloop","Tech","");QVERIFY(other>0);
+   QVERIFY(!w.saveDiagnosis(999,"USB","Guidance","Finding","","Tech"));
+   QVERIFY(!w.saveDiagnosis(order,"USB","Guidance"," ","","Tech"));
+   QVERIFY(!w.saveDiagnosis(order,"USB","Guidance","Finding","",""));
+   QVERIFY(!w.saveDiagnosis(order,"USB",QString(8001,'x'),"Finding","","Tech"));
+   QVERIFY(!w.saveDiagnosis(order,"USB","Guidance","Finding",QString(4001,'x'),"Tech"));
+   QVERIFY(!w.saveDiagnosis(order,"USB","Guidance",QString("Hidden")+QChar::Null+"text","","Tech"));
+   QVERIFY(w.diagnoses(order).isEmpty());
+   QVERIFY(w.saveDiagnosis(order,"USB not detected","Rule guidance; not confirmed diagnosis",finding,"Known-good cable tested manually","Tech"));
+   QCOMPARE(w.diagnoses(order).size(),1);QVERIFY(w.diagnoses(other).isEmpty());
+   QCOMPARE(w.invoice(order).value("diagnoses").toList().size(),1);
+   QVERIFY(w.events().first().toMap().value("action").toString().contains("Diagnostic findings saved"));
+   QVERIFY(!w.exportDiagnosisReport(order,path));QVERIFY(!w.exportDiagnosisReport(order,path+"-wal"));QVERIFY(!w.exportDiagnosisReport(other,t.filePath("empty.json")));
+   QVERIFY(!w.exportDiagnosisReport(order,"https://example.invalid/report.json"));
+   const auto report=t.filePath("diagnosis-report.json");QVERIFY(w.exportDiagnosisReport(order,QUrl::fromLocalFile(report).toString()));
+   QFile file(report);QVERIFY(file.open(QIODevice::ReadOnly));const auto document=QJsonDocument::fromJson(file.readAll());QVERIFY(document.isObject());
+   const auto object=document.object();QCOMPARE(object.value("reportType").toString(),QStringLiteral("nexvary-mr-diagnostic-findings"));
+   const auto saved=object.value("order").toObject().value("diagnoses").toArray().first().toObject();QCOMPARE(saved.value("findings").toString(),finding);QCOMPARE(saved.value("evidence").toString(),QStringLiteral("Known-good cable tested manually"));
+   QVERIFY(!object.contains("logcat"));QVERIFY(w.exportInvoice(order,t.filePath("diagnosis-invoice.pdf")));
+   QVERIFY(w.backup(t.filePath("saved.db")));QVERIFY(w.saveDiagnosis(order,"USB","Guidance","Second finding","","Tech"));QCOMPARE(w.diagnoses(order).size(),2);
+   QVERIFY(w.restore(t.filePath("saved.db"),true));QCOMPARE(w.diagnoses(order).size(),1);QCOMPARE(w.checkIntegrity(),QStringLiteral("ok"));
+  }
+  WorkshopBridge reopened(path);QVERIFY(reopened.ready());QCOMPARE(reopened.diagnoses(order).first().toMap().value("findings").toString(),finding);
+ }
+ void diagnosisEntryLimit(){
+  QTemporaryDir t;WorkshopBridge w(t.filePath("bounded.db"));QVERIFY(w.ready());const int order=w.createOrder("C","","B","M","","S","T","");QVERIFY(order>0);
+  for(int i=0;i<100;++i)QVERIFY(w.saveDiagnosis(order,"S","Guidance",QStringLiteral("Finding %1").arg(i),QString(),"T"));
+  QVERIFY(!w.saveDiagnosis(order,"S","Guidance","Excess entry","","T"));QCOMPARE(w.diagnoses(order).size(),100);QCOMPARE(w.checkIntegrity(),QStringLiteral("ok"));
+ }
+ void migratesAndRestoresLegacyDiagnosisSchema(){
+  QTemporaryDir t;const auto legacy=t.filePath("legacy-v1.db");int order=-1;
+  {WorkshopBridge w(legacy);QVERIFY(w.ready());order=w.createOrder("Preserved","","Brand","Model","","USB","Tech","Old notes");QVERIFY(order>0);}
+  const QString connection="diagnosis-legacy";
+  {auto db=QSqlDatabase::addDatabase("QSQLITE",connection);db.setDatabaseName(legacy);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("DROP TABLE diagnoses"));QVERIFY(q.exec("PRAGMA user_version=1"));db.close();}QSqlDatabase::removeDatabase(connection);
+  const auto backup=t.filePath("legacy-backup.db");QVERIFY(QFile::copy(legacy,backup));
+  {WorkshopBridge migrated(legacy);QVERIFY2(migrated.ready(),qPrintable(migrated.error()));QCOMPARE(migrated.orders().size(),1);QCOMPARE(migrated.orders().first().toMap().value("notes").toString(),QStringLiteral("Old notes"));QVERIFY(migrated.saveDiagnosis(order,"USB","Guidance","New finding","","Tech"));QCOMPARE(migrated.checkIntegrity(),QStringLiteral("ok"));}
+  WorkshopBridge active(t.filePath("active.db"));QVERIFY(active.ready());QVERIFY(active.restore(backup,true));QCOMPARE(active.orders().size(),1);QVERIFY(active.diagnoses(order).isEmpty());QVERIFY(active.saveDiagnosis(order,"USB","Guidance","After legacy restore","","Tech"));QCOMPARE(active.checkIntegrity(),QStringLiteral("ok"));
  }
  void newerSchema() {
   QTemporaryDir t;const QString path=t.filePath("new.db");const QString c="future-test";
