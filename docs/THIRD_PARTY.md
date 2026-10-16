@@ -4,7 +4,7 @@ This is a development build, not a signed commercial release. No external Androi
 
 ## Qt 6.8.3
 
-The Windows C++ executable dynamically links Qt 6.8.3. Core, Gui, Qml, Quick, Quick Controls, Quick Layouts, Concurrent, PrintSupport and Sql, together with their deployed runtime dependencies, are distributed as replaceable DLLs/QML modules and plug-ins. The runtime Qt SQLite driver is included. The packaging scripts do not statically link Qt or prevent replacing a compatible Qt build. Reverse engineering required for debugging modifications to LGPL-covered components is not prohibited by this project.
+The Windows C++ executable dynamically links Qt 6.8.3. Core, Gui, Qml, Quick, Quick Controls, Quick Layouts, Concurrent and Sql, together with their deployed runtime dependencies, are distributed as replaceable DLLs/QML modules and plug-ins. The runtime Qt SQLite driver is included. The packaging scripts do not statically link Qt or prevent replacing a compatible Qt build. Reverse engineering required for debugging modifications to LGPL-covered components is not prohibited by this project.
 
 Qt is copyright The Qt Company Ltd. and its contributors. Qt modules have individual licenses, including commercial, LGPLv3 and GPL alternatives. This build uses the LGPL-permitted versions of the modules listed above; no Qt Charts, Qt Virtual Keyboard or other GPL-only module is intentionally selected. A final release distributor must audit the exact deployed DLL/module manifest and all embedded third-party notices.
 

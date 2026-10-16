@@ -33,6 +33,7 @@ QVariantList rows(QSqlQuery &q) {
     return list;
 }
 bool textOk(const QString &s,int max=240) { return !s.trimmed().isEmpty() && s.size()<=max && !s.contains(QChar::Null); }
+QString sqlText(const QString &value) { return value.isNull()?QStringLiteral(""):value; }
 bool optionalTextOk(const QString &s,int max) { return s.size()<=max && !s.contains(QChar::Null); }
 bool sameFile(const QString &a,const QString &b) {
     if(a.isEmpty()||b.isEmpty()) return false;
@@ -149,12 +150,12 @@ bool WorkshopBridge::finish(bool ok) {
 int WorkshopBridge::createOrder(const QString &customer,const QString &phone,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &tech,const QString &notes) {
     if(!ready_||!textOk(customer)||!textOk(brand)||!textOk(model)||!textOk(symptom,2000)||!optionalTextOk(phone,80)||!optionalTextOk(serial,160)||!optionalTextOk(tech,160)||!optionalTextOk(notes,20000)) { fail(QStringLiteral("Customer, brand, model and symptom are required; text exceeds allowed length."));return -1; }
     if(!db_.transaction()) { fail(db_.lastError().text()); return -1; }
-    QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO customers(name,phone) VALUES(?,?)"));q.addBindValue(customer.trimmed());q.addBindValue(phone.trimmed());
-    if(!q.exec()) { finish(false);return -1; } const int customerId=q.lastInsertId().toInt();
-    q.prepare(QStringLiteral("INSERT INTO devices(customer_id,brand,model,serial) VALUES(?,?,?,?)"));q.addBindValue(customerId);q.addBindValue(brand.trimmed());q.addBindValue(model.trimmed());q.addBindValue(serial.trimmed());
-    if(!q.exec()) { finish(false);return -1; } const int deviceId=q.lastInsertId().toInt();
-    q.prepare(QStringLiteral("INSERT INTO orders(device_id,symptom,technician,notes) VALUES(?,?,?,?)"));q.addBindValue(deviceId);q.addBindValue(symptom.trimmed());q.addBindValue(tech.trimmed());q.addBindValue(notes);
-    if(!q.exec()) { finish(false);return -1; } const int id=q.lastInsertId().toInt();
+    QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO customers(name,phone) VALUES(?,?)"));q.addBindValue(customer.trimmed());q.addBindValue(sqlText(phone.trimmed()));
+    if(!q.exec()) { const auto message=q.lastError().text();db_.rollback();fail(message);return -1; } const int customerId=q.lastInsertId().toInt();
+    q.prepare(QStringLiteral("INSERT INTO devices(customer_id,brand,model,serial) VALUES(?,?,?,?)"));q.addBindValue(customerId);q.addBindValue(brand.trimmed());q.addBindValue(model.trimmed());q.addBindValue(sqlText(serial.trimmed()));
+    if(!q.exec()) { const auto message=q.lastError().text();db_.rollback();fail(message);return -1; } const int deviceId=q.lastInsertId().toInt();
+    q.prepare(QStringLiteral("INSERT INTO orders(device_id,symptom,technician,notes) VALUES(?,?,?,?)"));q.addBindValue(deviceId);q.addBindValue(symptom.trimmed());q.addBindValue(sqlText(tech.trimmed()));q.addBindValue(sqlText(notes));
+    if(!q.exec()) { const auto message=q.lastError().text();db_.rollback();fail(message);return -1; } const int id=q.lastInsertId().toInt();
     return finish(log(id,QStringLiteral("Created")))?id:-1;
 }
 bool WorkshopBridge::updateOrder(int id,const QString &status,const QString &tech,int cents,const QString &notes) {
@@ -163,7 +164,7 @@ bool WorkshopBridge::updateOrder(int id,const QString &status,const QString &tec
     if(!db_.transaction()) return fail(db_.lastError().text());
     QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT COALESCE(SUM(quantity*unit_cents),0) FROM order_parts WHERE order_id=?"));q.addBindValue(id);
     if(!q.exec()||!q.next()||q.value(0).toLongLong()>std::numeric_limits<qint64>::max()-cents) {db_.rollback();return fail(QStringLiteral("Invoice total exceeds the integer monetary limit."));}
-    q.finish();q.prepare(QStringLiteral("UPDATE orders SET status=?,technician=?,labor_cents=?,notes=?,updated_at=CURRENT_TIMESTAMP WHERE id=?"));q.addBindValue(status);q.addBindValue(tech);q.addBindValue(cents);q.addBindValue(notes);q.addBindValue(id);
+    q.finish();q.prepare(QStringLiteral("UPDATE orders SET status=?,technician=?,labor_cents=?,notes=?,updated_at=CURRENT_TIMESTAMP WHERE id=?"));q.addBindValue(status);q.addBindValue(sqlText(tech));q.addBindValue(cents);q.addBindValue(sqlText(notes));q.addBindValue(id);
     return finish(q.exec()&&q.numRowsAffected()==1&&log(id,QStringLiteral("Status: ")+status));
 }
 bool WorkshopBridge::addPart(const QString &sku,const QString &name,int qty,int cents) {

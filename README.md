@@ -22,7 +22,7 @@ See [user guide](docs/USER_GUIDE.md), [verification gates](docs/REQUIREMENTS.md)
 
 ## Developer build
 
-The Windows CI uses Qt **6.8.3 / MSVC2022 x64**. Linux Qt 6.4.2 is also used for automated local verification. Install Qt Quick, QuickControls2, Sql, Concurrent, PrintSupport, Test and QuickTest.
+The Windows CI uses Qt **6.8.3 / MSVC2022 x64**. Linux Qt 6.4.2 is also used for automated local verification. Install Qt Quick, QuickControls2, Sql, Concurrent, Test and QuickTest.
 
 ```sh
 cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON

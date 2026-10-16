@@ -39,6 +39,11 @@ private slots:
   QVERIFY(w.restockPart(part,3,250));QCOMPARE(w.inventory().first().toMap().value("quantity").toInt(),3);QCOMPARE(w.invoice(order).value("total_cents").toInt(),100);
   QVERIFY(!w.restockPart(part,1000000,250));QVERIFY(!w.restockPart(999,1,250));QCOMPARE(w.inventory().first().toMap().value("quantity").toInt(),3);QVERIFY(w.usePart(order,part,1));QCOMPARE(w.invoice(order).value("total_cents").toInt(),350);
  }
+ void optionalNullStrings(){
+  QTemporaryDir t;WorkshopBridge w(t.filePath("optional.db"));QVERIFY(w.ready());
+  const int id=w.createOrder("Customer",QString(),"Brand","Model",QString(),"Symptom",QString(),QString());QVERIFY2(id>0,qPrintable(w.error()));
+  QVERIFY(w.updateOrder(id,"Diagnosing",QString(),0,QString()));QCOMPARE(w.orders().first().toMap().value("phone").toString(),QStringLiteral(""));
+ }
  void diagnosticAudit(){
   QTemporaryDir t;WorkshopBridge w(t.filePath("audit.db"));QVERIFY(w.ready());
   QVERIFY(!w.recordDiagnostic("arbitrary command",true));QVERIFY(w.recordDiagnostic("adb-scan",true));QCOMPARE(w.events().size(),1);QVERIFY(w.events().first().toMap().value("action").toString().contains("adb-scan"));

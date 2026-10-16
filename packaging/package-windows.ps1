@@ -63,7 +63,7 @@ Copy-Item "$qtRoot/plugins/imageformats/qjpeg.dll" (Join-Path $bundle 'imageform
 $requiredRuntime = @(
   'NEXVARY-MR.exe', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
-  'Qt6Quick.dll', 'Qt6Sql.dll', 'Qt6PrintSupport.dll',
+  'Qt6Quick.dll', 'Qt6Sql.dll',
   'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll'
 )
 foreach ($relative in $requiredRuntime) {

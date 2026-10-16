@@ -23,6 +23,9 @@ Ubuntu 24.04, GCC 13, Qt 6.4.2, C++20, `MR_WARNINGS_AS_ERRORS=ON`:
 - `5afea10`: native build exposed MSVC's rejection of a CSV Unicode escape. Corrected with an explicit QChar BOM.
 - `6236e18`, [run 38897028279](https://github.com/nexvary/NEXVARY-MR/actions/runs/38897028279): Windows 2022 / MSVC2022 / Qt6.8.3 compiled successfully; core/workshop/tool/board/firmware suites and the executable runtime smoke passed. QuickTest itself crashed before its first case, so the workflow correctly refused packaging. Setup initialization has since been moved to `applicationAvailable()`; subsequent Windows results, not this change alone, determine whether that fix passes.
 
+- `e0de0d9`, [run 38898529718](https://github.com/nexvary/NEXVARY-MR/actions/runs/38898529718): detailed output identified the remaining UI failure as the manual measurement click (9/10 QuickTest results passed). UI tests now wait for rendering/viewport visibility while preserving real clicks. Packaging also exposed a redundant PrintSupport DLL assertion; the application uses QtGui QPdfWriter and the unused dependency was removed.
+- A separate null-QString regression reproduced failure when optional repair fields were empty/null. Bindings now normalize optional strings to non-null empty text; the regression passed after the fix.
+
 ## Deployment checks
 
 The current packaging gates explicitly require the SQL SQLite driver, Windows platform plug-in and JPEG decoder. The executable smoke decodes a tiny original JPEG fixture, so a missing qjpeg plug-in cannot pass unnoticed. App-local release MSVC CRT files come only from VS2022's official redistributable folder; their provenance, versions and hashes are recorded. No debug or System32 DLLs are copied.

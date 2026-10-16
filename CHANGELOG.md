@@ -12,6 +12,9 @@
 - Fix Windows QuickTest setup order to initialize Qt-dependent backends after QGuiApplication.
 - Record minimal read-only diagnostic outcomes locally without automatically archiving raw device logs.
 - Pin Windows2022/MSVC2022 and fix Unicode CSV portability.
+- Normalize optional empty/null form strings before SQLite binding; regression covers blank optional fields.
+- Wait for rendered board controls and opened dialogs in UI interaction tests; preserve actual button clicks.
+- Remove unused Qt PrintSupport dependency; invoice PDF rendering uses QtGui.
 - Correct legacy SQLite connection closure on Windows; keep Python baseline and tests.
 - Add Release-effective C++ tests, backend/UI tests and isolated Windows portable/installer validation in CI.
 - Record verified upstream revisions and reject incompatible/unclear third-party licenses. Only the existing external scrcpy and Android platform-tools adapters are integrated; no third-party application source is vendored.

@@ -240,6 +240,7 @@ Item {
                 Layout.fillHeight: true
                 color: "#091b29"; radius: 8; border.color: "#203d52"
                 ScrollView {
+                    objectName: "boardInspector"
                     anchors.fill: parent; anchors.margins: 12; clip: true
                     contentWidth: availableWidth
                     ColumnLayout {
