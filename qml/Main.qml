@@ -14,7 +14,7 @@ ApplicationWindow {
     property var names: ["الرئيسية", "جاهزية الكمبيوتر", "مكتبة الهواتف", "تشخيص الأعطال", "أوامر الصيانة"]
     property var details: [
         "مساحة عمل صيانة الهواتف — إصدار تأسيسي",
-        "فحص نظام Windows والتعريفات والأدوات — قيد الربط بمحرك النظام",
+        "فحص الأدوات الرسمية المتاحة على الكمبيوتر",
         "شجرة الشركات والموديلات — البيانات الأساسية قيد التوسيع",
         "تشخيص إرشادي آمن — لا يتم تنفيذ أي عملية مدمرة",
         "سجل عمليات الصيانة — الربط بقاعدة البيانات قيد التطوير"
@@ -59,6 +59,40 @@ ApplicationWindow {
                 Label { text: window.names[window.currentPage]; color: "#62E6BA"; font.pixelSize: 30; font.bold: true; Layout.alignment: Qt.AlignRight }
                 Rectangle { Layout.fillWidth: true; height: 1; color: "#30445A" }
                 Label { text: window.details[window.currentPage]; color: "#E7EFFA"; font.pixelSize: 17; Layout.alignment: Qt.AlignRight; wrapMode: Text.WordWrap }
+                ColumnLayout {
+                    visible: window.currentPage === 0 || window.currentPage === 1
+                    Layout.fillWidth: true
+                    spacing: 12
+                    Label { text: "الأدوات المتصلة"; color: "#62E6BA"; font.pixelSize: 20; Layout.alignment: Qt.AlignRight }
+                    Repeater {
+                        model: toolBridge.tools
+                        delegate: Label {
+                            required property var modelData
+                            text: modelData.name + ": " + (modelData.available ? "متاح" : "غير مثبت")
+                            color: modelData.available ? "#62E6BA" : "#F2BA77"
+                            Layout.alignment: Qt.AlignRight
+                        }
+                    }
+                    RowLayout {
+                        Layout.alignment: Qt.AlignRight
+                        Button { text: "تحديث الأدوات"; onClicked: toolBridge.refreshTools() }
+                        Button { text: "فحص ADB"; enabled: !toolBridge.busy; onClicked: toolBridge.scanAdb() }
+                        Button { text: "فحص Fastboot"; enabled: !toolBridge.busy; onClicked: toolBridge.scanFastboot() }
+                        Button { text: "عرض الهاتف (scrcpy)"; enabled: !toolBridge.busy; onClicked: toolBridge.startMirror() }
+                    }
+                    Label { text: "نتيجة الفحص"; color: "#62E6BA"; font.pixelSize: 17; Layout.alignment: Qt.AlignRight }
+                    ScrollView {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 200
+                        TextArea {
+                            text: toolBridge.status
+                            readOnly: true
+                            wrapMode: TextEdit.Wrap
+                            color: "#E7EFFA"
+                            background: Rectangle { color: "#172537"; radius: 8 }
+                        }
+                    }
+                }
                 Item { Layout.fillHeight: true }
                 Label { text: "لا توجد عمليات تفليش أو مسح بيانات في هذا الإصدار"; color: "#9BAFC5"; Layout.alignment: Qt.AlignRight }
             }
