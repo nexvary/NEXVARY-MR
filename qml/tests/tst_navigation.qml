@@ -11,13 +11,33 @@ TestCase {
  function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
-  for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
+  for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
   let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);tryVerify(function(){return deviceScroll.contentHeight>deviceScroll.availableHeight});
   deviceScroll.contentItem.contentY=deviceScroll.contentHeight-deviceScroll.availableHeight;verify(waitForRendering(app.contentItem));
   let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
   app.width=1536;app.height=980;
  }
- function test_navigation(){for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
+ function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
+ function test_forensicLabNavigation(){
+  app.currentPage=0;
+  let nav=app.navigationButton(9);
+  verify(nav!==null,"Forensic Lab navigation missing");
+  mouseClick(nav);
+  compare(app.currentPage,9);
+  let lab=findChild(app,"forensicLabWorkspace");
+  verify(lab!==null,"Forensic Lab workspace missing");
+  compare(lab.modules.length,12);
+  compare(lab.modules.filter(function(m){return m.ready}).length,6);
+  verify(waitForRendering(app.contentItem));
+  app.ar=false;
+  verify(waitForRendering(app.contentItem));
+  compare(app.titles[9],"Forensic Lab");
+  app.ar=true;
+  verify(waitForRendering(app.contentItem));
+  compare(app.titles[9],"مختبر الأدلة الرقمية");
+  mouseClick(app.navigationButton(0));
+  compare(app.currentPage,0);
+ }
  function test_language(){let b=findChild(app,"languageButton");mouseClick(b);compare(app.ar,false);mouseClick(b);compare(app.ar,true)}
  function test_boardMeasurement(){
   app.currentPage=3;verify(waitForRendering(app.contentItem));mouseClick(findChild(app,"loadTrainingBoard"));tryVerify(function(){return boardBridge.loaded});verify(boardBridge.components.length>0);verify(waitForRendering(app.contentItem));
