@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import stat
 import os
 
 SIGNATURES: dict[str, bytes] = {
@@ -44,7 +45,7 @@ def scan_image(path: Path, *, chunk_size: int = 1024 * 1024,
     previous = b""
     processed = 0
     with path.open("rb") as stream:
-        if not os.path.isfile(stream.name):
+        if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
             raise ValueError("Not a regular file")
         while True:
             chunk = stream.read(chunk_size)
