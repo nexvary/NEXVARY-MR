@@ -66,3 +66,13 @@ The portable is copied to an isolated path with spaces; Qt SDK/PATH/import overr
 - Clean Windows10/11 x64 VM, DPI/accessibility/user acceptance, physical phones, publisher signing, final dependency/license/privacy review and backup retention remain commercial-release gates.
 
 Passing automated tests does not remove these limits. This is an unsigned development build and must not be advertised as a finished commercial product.
+
+## Recovery increment evidence
+
+`9e315088005751dbd7690d118de6040cf84a6d5f` passed [Windows/Qt38945576237](https://github.com/nexvary/NEXVARY-MR/actions/runs/38945576237) and [Python38945576240](https://github.com/nexvary/NEXVARY-MR/actions/runs/38945576240). Windows CTest9/9, UI13/13 including lifecycle, portable isolated smoke and installer install/run/uninstall passed. Both runtime stderr files were empty. Actual Windows recovery screenshots show two original synthetic image candidates and their offsets/hashes, not a phone recovery.
+
+Downloaded portable/setup SHA256 matched recorded sums; all1,380 portable manifest entries matched, required Qt/JPEG/SQLite/CRT files were present, and test executables were absent. APK906,642 bytes had matching SHA2561660afa3fcc0fc2a26116c93506c17f6c07a5aa143546d2c78a3bde8d76b1433. Android8/8 JVM tests, lint with0errors/6warnings, permission boundary, and API30 emulator consent/public-metadata/shell-gate UI test passed in [Android38945576262](https://github.com/nexvary/NEXVARY-MR/actions/runs/38945576262). The APK requests only the Shizuku API permission; complete MIT notice and executable code were checked inside it.
+
+The subsequent Android-only privacy increment adds explicit cloud/device-transfer exclusions and a density-independent launcher bitmap, plus a second instrumented policy check. Its exact revision must independently pass before inheriting any APK result. Lint upgrade/target-level warnings are not suppressed. Linux recovery cases/image tests passed ASan/UBSan2/2 with leak detection disabled because this environment cannot support LeakSanitizer's process inspection.
+
+No physical Shizuku backend, phone USB/OEM/scrcpy session, customer media or factory-reset experiment was used. Every hardware matrix row remainsnot_run. PhotoRec7.2 was independently executed on Linux against two original synthetic image fixtures with matching hashes and unchanged source; it is not an integrated desktop worker.
