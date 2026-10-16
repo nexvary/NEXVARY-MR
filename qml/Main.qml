@@ -17,7 +17,7 @@ ApplicationWindow {
  property var titles:ar?["مركز العمليات","الأجهزة والاتصال","تشخيص الجهاز","مخططات اللوحات","فحص ملفات النظام","أوامر الصيانة","قطع الغيار","جاهزية وإعدادات"]:["Operations center","Devices & USB","Diagnostics","Board workspace","Firmware preflight","Repair orders","Parts inventory","Readiness & settings"]
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
- function notice(ok,message){toastOk=ok;toastText=ok?message:workshopBridge.error;toastTimer.restart()}
+ function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
  function navigate(index){currentPage=index}
  function navigationButton(index){return navigation.itemAt(index)}
  palette.window:"#081825";palette.windowText:"#e0ecfa";palette.base:"#0c2131";palette.alternateBase:"#102a3e";palette.text:"#dae8f7";palette.button:"#122d43";palette.buttonText:"#e0ecff";palette.highlight:"#176df0";palette.highlightedText:"white";palette.mid:"#27435b";palette.dark:"#081320";palette.light:"#34536d";palette.placeholderText:"#6f8ca5"

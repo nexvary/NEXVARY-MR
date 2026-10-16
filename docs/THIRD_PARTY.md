@@ -28,7 +28,15 @@ SQLite is provided inside Qt's QSQLITE plug-in. SQLite's own code is dedicated t
 
 ## MSVC runtime
 
-`windeployqt` handles the Microsoft Visual C++ runtime dependencies according to the selected Qt toolchain. Microsoft components remain subject to their redistribution terms. Validate the deployed package on a clean supported Windows 10/11 x64 machine before public release; a GitHub-hosted runner is not a clean end-user VM.
+The Windows package includes app-local **release x64** Microsoft Visual C++ CRT DLLs from the official Visual Studio 2022 `VC/Redist/MSVC/<version>/x64/Microsoft.VC143.CRT` directory. The build locates VS2022 with `vswhere`, selects the newest installed versioned release redistributable directory, copies that directory's DLL set unchanged, and refuses an incomplete package when `msvcp140.dll`, `vcruntime140.dll` or `vcruntime140_1.dll` is absent. It does not copy Windows system DLLs, debug runtimes or arbitrary compiler binaries. `CRT_DEPLOYMENT.json` records the source directory, DLL versions and SHA256 hashes; `SHA256SUMS.txt` covers the resulting package files.
+
+Microsoft owns these binaries. They remain subject to the Visual Studio license terms and redistributable-code list; they are not licensed as open-source project code. The bundled notice identifies the applicable official sources:
+
+- [Visual Studio 2022 redistribution list](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution)
+- [Microsoft Visual C++ redistribution requirements](https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files?view=msvc-170)
+- [Microsoft app-local deployment method](https://learn.microsoft.com/en-us/cpp/windows/choosing-a-deployment-method?view=msvc-170)
+
+App-local deployment preserves portable and per-user installation without requiring a machine-wide redistributable installer or administrator rights. The Universal CRT is supplied by supported Windows 10/11; it is not copied from the build machine. Bundled app-local CRT security fixes require updating the application's package. A GitHub-hosted runner already has developer runtimes installed, so even an isolated-path smoke test does not prove the absence of all system-level prerequisites. Validate the downloaded portable and installer on a clean supported Windows 10/11 x64 VM before public release.
 
 ## Optional external tools
 

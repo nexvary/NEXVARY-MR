@@ -9,6 +9,11 @@ TestCase {
  width:1536;height:980
  MR.Main {id:app}
  function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
+ function test_minimumSize(){
+  app.width=1180;app.height=760;app.currentPage=7;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
+  for(let i=0;i<8;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
+  app.width=1536;app.height=980;
+ }
  function test_navigation(){for(let i=0;i<8;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
  function test_language(){let b=findChild(app,"languageButton");mouseClick(b);compare(app.ar,false);mouseClick(b);compare(app.ar,true)}
  function test_boardMeasurement(){

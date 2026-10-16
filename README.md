@@ -5,7 +5,7 @@ Native **C++20 / Qt 6 Quick** Windows workstation for authorized phone diagnosti
 ## Implemented
 
 - Arabic RTL / English desktop workspace with eight functional sections, keyboard navigation and explicit exit confirmation.
-- Async bounded ADB / Fastboot discovery, explicit device selection, read-only properties and 200-line logcat, Windows PnP inspection, optional polling and cancellation.
+- Async bounded ADB / Fastboot discovery, explicit device selection, read-only properties, 200-line logcat and evidence-based text-pattern indicators, Windows PnP inspection, optional polling and cancellation. Tools can be selected using a native file picker and persisted locally without editing PATH.
 - Optional separately installed official scrcpy, launched only on request for an authorized selected device.
 - Native component/net board viewer: zoom, pan, search, component/net highlighting, manual measurements, reference comparisons, text/photo annotations and atomic session files. Imports require declared license metadata and explicit permission. The bundled CC0 training board is fictional.
 - SQLite v1 migration: customers, devices, repair orders, repair status, technicians, inventory, atomic stock allocation/restocking with historical prices preserved, exact integer monetary values, operation history, CSV export, PDF invoices/printing through a PDF reader, backups and validated restoration with pre-restore snapshots.

@@ -4,6 +4,8 @@
 #include <vector>
 namespace mr {
 struct DeviceFamily { std::string brand; std::vector<std::string> families; };
+struct LogFinding { std::string code; int count; std::string firstEvidence; };
+std::vector<LogFinding> analyzeLog(std::string_view log);
 struct Diagnosis { std::string nextCheck; std::string safety; };
 std::vector<DeviceFamily> catalog();
 Diagnosis diagnose(std::string_view symptom);

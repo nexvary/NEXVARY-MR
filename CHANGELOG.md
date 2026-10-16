@@ -7,6 +7,9 @@
 - Add original licensed JSON component/net viewer, fictional training data, manual measurements and text/photo annotation sessions.
 - Add cancellable exact-identity and SHA256 firmware preflight without flashing.
 - Harden read-only external tool processes: selection/authorization, output bounds, cancellation, timeout lifecycle, no-device and failed-start paths.
+- Add native executable selection and atomic saved tool paths without requiring PATH edits.
+- Add bounded, rule-based log indicators with evidence excerpts; no confirmed-fault claims.
+- Fix Windows QuickTest setup order to initialize Qt-dependent backends after QGuiApplication.
 - Record minimal read-only diagnostic outcomes locally without automatically archiving raw device logs.
 - Pin Windows2022/MSVC2022 and fix Unicode CSV portability.
 - Correct legacy SQLite connection closure on Windows; keep Python baseline and tests.

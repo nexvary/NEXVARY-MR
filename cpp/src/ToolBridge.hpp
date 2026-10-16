@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QTimer>
+#include <QMap>
 #include <QVariantList>
 #include <QVariantMap>
 
@@ -31,6 +32,9 @@ public:
   QString driverInfo() const { return driverInfo_; }
   bool autoRefresh() const { return pollTimer_.isActive(); }
   Q_INVOKABLE void refreshTools();
+  Q_INVOKABLE bool configureTool(const QString &name, const QString &localPath);
+  Q_INVOKABLE bool clearTool(const QString &name);
+  Q_INVOKABLE bool loadToolConfiguration(const QString &configPath);
   Q_INVOKABLE void scanAdb();
   Q_INVOKABLE void scanFastboot();
   Q_INVOKABLE void startMirror();
@@ -60,6 +64,10 @@ private:
   enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers };
   bool runReadOnly(const QString &program, const QStringList &arguments, Operation operation);
   bool selectedAdbReady();
+  QString resolveExecutable(const QString &name) const;
+  bool persistToolConfiguration(const QMap<QString, QString> &paths);
+  QMap<QString, QString> configuredTools_;
+  QString toolConfigurationPath_;
   void collectOutput();
   void finish(int exitCode, QProcess::ExitStatus exitStatus);
   void replaceDevices(const QVariantList &found, const QString &transport);

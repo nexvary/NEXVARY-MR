@@ -1,6 +1,12 @@
 #include "ToolBridge.hpp"
 
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSaveFile>
+#include <QUrl>
 #include <QRegularExpression>
 #include <QSet>
 #include <QStandardPaths>
@@ -9,7 +15,7 @@ namespace {
 constexpr qsizetype maxOutputBytes = 512 * 1024;
 const QString adbTransport = QStringLiteral("adb");
 const QString fastbootTransport = QStringLiteral("fastboot");
-QString executable(const QString &name) {
+QString pathExecutable(const QString &name) {
 #ifdef Q_OS_WIN
   if (name == QStringLiteral("pnputil")) {
     const QString root = qEnvironmentVariable("SystemRoot");
@@ -18,6 +24,34 @@ QString executable(const QString &name) {
   }
 #endif
   return QStandardPaths::findExecutable(name);
+}
+bool configurableTool(const QString &name) {
+  return name == QStringLiteral("adb") || name == QStringLiteral("fastboot") || name == QStringLiteral("scrcpy");
+}
+QString localAbsolutePath(const QString &input) {
+  if (input.isEmpty() || input != input.trimmed() || input.startsWith(QStringLiteral("//")) || input.startsWith(QStringLiteral("\\\\"))) return {};
+  for (const auto ch : input) if (ch.isNull() || ch.category() == QChar::Other_Control) return {};
+  QString path = input;
+  if (input.startsWith(QStringLiteral("file:"), Qt::CaseInsensitive)) {
+    const QUrl url(input, QUrl::StrictMode);
+    if (!url.isValid() || !url.isLocalFile() || !url.host().isEmpty() || url.hasQuery() || url.hasFragment()) return {};
+    path = url.toLocalFile();
+  }
+  if (!QDir::isAbsolutePath(path) || path.startsWith(QStringLiteral("//")) || path.startsWith(QStringLiteral("\\\\"))) return {};
+  return QDir::cleanPath(path);
+}
+QString validatedExecutable(const QString &input) {
+  const QString path = localAbsolutePath(input);
+  if (path.isEmpty()) return {};
+  const QFileInfo file(path);
+  if (!file.isFile() || !file.isReadable()) return {};
+#ifdef Q_OS_WIN
+  if (file.suffix().compare(QStringLiteral("exe"), Qt::CaseInsensitive) != 0) return {};
+#else
+  if (!file.isExecutable()) return {};
+#endif
+  const QString canonical = file.canonicalFilePath();
+  return localAbsolutePath(canonical);
 }
 }
 
@@ -54,10 +88,79 @@ ToolBridge::~ToolBridge() {
 QVariantList ToolBridge::tools() const {
   QVariantList result;
   for (const auto &name : {QStringLiteral("adb"), QStringLiteral("fastboot"), QStringLiteral("scrcpy")}) {
-    const QString path = executable(name);
-    result.append(QVariantMap{{QStringLiteral("name"), name}, {QStringLiteral("available"), !path.isEmpty()}, {QStringLiteral("path"), path}});
+    const QString path = resolveExecutable(name);
+    result.append(QVariantMap{{QStringLiteral("name"), name}, {QStringLiteral("available"), !path.isEmpty()}, {QStringLiteral("path"), path}, {QStringLiteral("configured"), configuredTools_.contains(name)}, {QStringLiteral("configuredPath"), configuredTools_.value(name)}});
   }
   return result;
+}
+QString ToolBridge::resolveExecutable(const QString &name) const {
+  if (configurableTool(name) && configuredTools_.contains(name)) return validatedExecutable(configuredTools_.value(name));
+  return pathExecutable(name);
+}
+bool ToolBridge::persistToolConfiguration(const QMap<QString, QString> &paths) {
+  if (toolConfigurationPath_.isEmpty()) return true; // Unit tests and unconfigured instances stay ephemeral.
+  QJsonObject toolsObject;
+  for (auto it = paths.cbegin(); it != paths.cend(); ++it) toolsObject.insert(it.key(), it.value());
+  const QByteArray json = QJsonDocument(QJsonObject{{QStringLiteral("schemaVersion"), 1}, {QStringLiteral("tools"), toolsObject}}).toJson();
+  QSaveFile file(toolConfigurationPath_);
+  if (!file.open(QIODevice::WriteOnly) || file.write(json) != json.size() || !file.commit()) {
+    setStatus(QStringLiteral("تعذر حفظ إعداد مسارات الأدوات؛ لم يُطبّق التغيير"));
+    return false;
+  }
+  return true;
+}
+bool ToolBridge::configureTool(const QString &name, const QString &localPath) {
+  if (busy() || !configurableTool(name)) { setStatus(QStringLiteral("اسم أداة غير مدعوم أو هناك فحص جارٍ")); return false; }
+  const QString path = validatedExecutable(localPath);
+  if (path.isEmpty()) { setStatus(QStringLiteral("اختر ملفًا تنفيذيًا محليًا صالحًا دون وسائط أو رابط شبكة")); return false; }
+  auto updated = configuredTools_;
+  updated.insert(name, path);
+  if (!persistToolConfiguration(updated)) return false;
+  configuredTools_ = updated;
+  if (name == adbTransport || name == fastbootTransport) replaceDevices({}, name);
+  refreshTools(); // Selection never starts the executable.
+  return true;
+}
+bool ToolBridge::clearTool(const QString &name) {
+  if (busy() || !configurableTool(name)) { setStatus(QStringLiteral("اسم أداة غير مدعوم أو هناك فحص جارٍ")); return false; }
+  auto updated = configuredTools_;
+  updated.remove(name);
+  if (!persistToolConfiguration(updated)) return false;
+  configuredTools_ = updated;
+  if (name == adbTransport || name == fastbootTransport) replaceDevices({}, name);
+  refreshTools();
+  return true;
+}
+bool ToolBridge::loadToolConfiguration(const QString &configPath) {
+  if (busy()) return false;
+  const QString path = localAbsolutePath(configPath);
+  if (path.isEmpty()) { setStatus(QStringLiteral("مسار إعداد الأدوات يجب أن يكون ملفًا محليًا مطلقًا")); return false; }
+  // Remember an explicitly chosen destination even if its old contents are
+  // corrupt: a later user selection can repair it and must not silently become ephemeral.
+  toolConfigurationPath_ = path;
+  QMap<QString, QString> loaded;
+  if (QFileInfo::exists(path)) {
+    QFile file(path);
+    if (!QFileInfo(path).isFile() || !file.open(QIODevice::ReadOnly) || file.size() > 65536) { setStatus(QStringLiteral("تعذر قراءة إعداد الأدوات أو تجاوز الحد المسموح")); return false; }
+    QJsonParseError error;
+    const auto document = QJsonDocument::fromJson(file.read(65537), &error);
+    const auto object = document.object();
+    if (error.error != QJsonParseError::NoError || !document.isObject() || object.size() != 2 || object.value(QStringLiteral("schemaVersion")).toDouble() != 1.0 || !object.value(QStringLiteral("tools")).isObject()) {
+      setStatus(QStringLiteral("صيغة إعداد الأدوات غير صالحة")); return false;
+    }
+    const auto entries = object.value(QStringLiteral("tools")).toObject();
+    for (auto it = entries.constBegin(); it != entries.constEnd(); ++it) {
+      const QString executablePath = it.value().isString() ? validatedExecutable(it.value().toString()) : QString();
+      if (!configurableTool(it.key()) || executablePath.isEmpty()) { setStatus(QStringLiteral("إعداد الأدوات يتضمن اسمًا أو مسارًا غير مسموح")); return false; }
+      loaded.insert(it.key(), executablePath);
+    }
+  }
+  configuredTools_ = loaded;
+  replaceDevices({}, adbTransport);
+  replaceDevices({}, fastbootTransport);
+  toolConfigurationPath_ = path;
+  refreshTools();
+  return true;
 }
 void ToolBridge::setStatus(const QString &value) {
   if (status_ == value) return;
@@ -66,7 +169,7 @@ void ToolBridge::setStatus(const QString &value) {
 }
 void ToolBridge::refreshTools() {
   emit toolsChanged();
-  setStatus(QStringLiteral("تم فحص الأدوات المتاحة في PATH"));
+  setStatus(QStringLiteral("تم فحص مسارات الأدوات المحددة والأدوات المتاحة في PATH"));
 }
 bool ToolBridge::isValidSerial(const QString &serial) {
   static const QRegularExpression valid(QStringLiteral("\\A[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}\\z"));
@@ -124,7 +227,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
-  const QString path = executable(program);
+  const QString path = resolveExecutable(program);
   if (path.isEmpty()) {
     if (operation == Operation::AdbScan) replaceDevices({}, adbTransport);
     if (operation == Operation::FastbootScan) replaceDevices({}, fastbootTransport);
@@ -257,7 +360,7 @@ void ToolBridge::setAutoRefresh(bool enabled) {
 void ToolBridge::startMirror() {
   if (busy()) { setStatus(QStringLiteral("انتظر اكتمال الفحص الحالي")); return; }
   if (!selectedAdbReady()) return;
-  const QString path = executable(QStringLiteral("scrcpy"));
+  const QString path = resolveExecutable(QStringLiteral("scrcpy"));
   if (path.isEmpty()) { setStatus(QStringLiteral("scrcpy غير مثبتة؛ استخدم النسخة الرسمية فقط")); return; }
   const bool launched = QProcess::startDetached(path, {QStringLiteral("--serial"), selectedSerial_});
   setStatus(launched ? QStringLiteral("تم طلب تشغيل scrcpy للجهاز المحدد؛ راجع نافذتها الخارجية") : QStringLiteral("تعذر تشغيل scrcpy"));

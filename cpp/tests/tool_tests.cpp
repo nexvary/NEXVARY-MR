@@ -4,6 +4,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QUrl>
 #include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
@@ -59,6 +62,57 @@ private slots:
     qunsetenv("MR_TEST_TOOL_MODE");
   }
   void cleanup() { qputenv("PATH", oldPath_); qputenv("MR_TEST_TOOL_MODE", oldMode_); }
+  void configureToolsAndPersistence() {
+#ifdef Q_OS_WIN
+    const QString executablePath = directory_.filePath(QStringLiteral("adb.exe"));
+#else
+    const QString executablePath = directory_.filePath(QStringLiteral("adb"));
+#endif
+    const QString configPath = directory_.filePath(QStringLiteral("tool-selection.json"));
+    QFile::remove(configPath);
+    ToolBridge bridge;
+    QSignalSpy finished(&bridge, &ToolBridge::operationFinished);
+    QVERIFY(bridge.loadToolConfiguration(configPath));
+    QVERIFY(bridge.configureTool(QStringLiteral("adb"), QUrl::fromLocalFile(executablePath).toString()));
+    QVERIFY(!bridge.busy());
+    QVERIFY(finished.isEmpty()); // Selecting and loading files never runs them.
+    QCOMPARE(bridge.tools()[0].toMap().value(QStringLiteral("configured")).toBool(), true);
+    QCOMPARE(bridge.tools()[0].toMap().value(QStringLiteral("path")).toString(), QFileInfo(executablePath).canonicalFilePath());
+    QVERIFY(QFileInfo::exists(configPath));
+    ToolBridge separate;
+    QVERIFY(!separate.tools()[0].toMap().value(QStringLiteral("configured")).toBool());
+    QVERIFY(separate.loadToolConfiguration(configPath));
+    QVERIFY(separate.tools()[0].toMap().value(QStringLiteral("configured")).toBool());
+    separate.scanAdb();
+    QSignalSpy separateFinished(&separate, &ToolBridge::operationFinished);
+    QVERIFY(separateFinished.wait(5000));
+    QCOMPARE(separate.devices().size(), 2);
+    QVERIFY(separate.clearTool(QStringLiteral("adb")));
+    QVERIFY(!separate.tools()[0].toMap().value(QStringLiteral("configured")).toBool());
+    ToolBridge cleared;
+    QVERIFY(cleared.loadToolConfiguration(configPath));
+    QVERIFY(!cleared.tools()[0].toMap().value(QStringLiteral("configured")).toBool());
+  }
+  void rejectUnsafeToolConfiguration() {
+#ifdef Q_OS_WIN
+    const QString executablePath = directory_.filePath(QStringLiteral("adb.exe"));
+#else
+    const QString executablePath = directory_.filePath(QStringLiteral("adb"));
+#endif
+    ToolBridge bridge;
+    QVERIFY(!bridge.configureTool(QStringLiteral("pnputil"), executablePath));
+    QVERIFY(!bridge.clearTool(QStringLiteral("unknown")));
+    for (const auto &bad : {QStringLiteral("https://example.com/adb.exe"), QStringLiteral("file://remote/share/adb.exe"), QStringLiteral("adb"), executablePath + QStringLiteral(" --version"), directory_.path(), QStringLiteral("//remote/share/adb.exe")}) QVERIFY(!bridge.configureTool(QStringLiteral("adb"), bad));
+    QVERIFY(!bridge.tools()[0].toMap().value(QStringLiteral("configured")).toBool());
+    const QString badConfig = directory_.filePath(QStringLiteral("unsafe-tools.json"));
+    QFile file(badConfig);
+    QVERIFY(file.open(QIODevice::WriteOnly));
+    const auto data = QJsonDocument(QJsonObject{{QStringLiteral("schemaVersion"), 1}, {QStringLiteral("tools"), QJsonObject{{QStringLiteral("pnputil"), executablePath}}}}).toJson();
+    QCOMPARE(file.write(data), qint64(data.size())); file.close();
+    QVERIFY(!bridge.loadToolConfiguration(badConfig));
+    QVERIFY(!bridge.loadToolConfiguration(QStringLiteral("https://example.com/config.json")));
+    QVERIFY(!bridge.loadToolConfiguration(directory_.path()));
+  }
   void serialValidation() {
     QVERIFY(ToolBridge::isValidSerial(QStringLiteral("192.168.1.2:5555")));
     QVERIFY(ToolBridge::isValidSerial(QStringLiteral("emulator-5554")));

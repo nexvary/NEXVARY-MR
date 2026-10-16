@@ -32,6 +32,7 @@ int main(int argc,char *argv[]) {
  const QString dir=cli.isSet(QStringLiteral("data-dir"))?cli.value(QStringLiteral("data-dir")):QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
  if(!QDir().mkpath(dir)) return 3;
  ToolBridge tools;RepairBridge repair;WorkshopBridge workshop(QDir(dir).filePath(QStringLiteral("repairs.db")));BoardBridge board;FirmwareBridge firmware;
+ tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
@@ -46,7 +47,9 @@ int main(int argc,char *argv[]) {
  if(smoke) {
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return 4;
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());if(!window)return 5;
-  board.importBoard(QStringLiteral(":/samples/training-board.json"),true);
+  if(QImage(QStringLiteral(":/assets/codec-check.jpg")).size()!=QSize(8,8)) return 8;
+  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()) return 8;
+  if(!board.importBoard(QStringLiteral(":/samples/training-board.json"),true)) return 9;
   auto *timer=new QTimer(&app);timer->setInterval(160);
   int page=0;
   QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page]() mutable {

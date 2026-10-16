@@ -31,4 +31,24 @@ bool validCase(std::string_view brand, std::string_view model, std::string_view 
   };
   return hasText(brand) && hasText(model) && hasText(symptom);
 }
+std::vector<LogFinding> analyzeLog(std::string_view log) {
+  if(log.size()>512*1024) throw std::invalid_argument("Log exceeds 512 KiB");
+  std::vector<LogFinding> rules={{"runtime_crash",0,{}},{"watchdog",0,{}},{"memory_pressure",0,{}},{"usb_transport",0,{}},{"permission_denial",0,{}}};
+  while(!log.empty()) {
+    const auto end=log.find('\n');const auto line=log.substr(0,end);
+    std::string lower(line);std::transform(lower.begin(),lower.end(),lower.begin(),[](unsigned char c){return static_cast<char>(std::tolower(c));});
+    const bool matches[]={lower.find("fatal exception")!=std::string::npos||lower.find("fatal signal")!=std::string::npos,
+      lower.find("watchdog")!=std::string::npos,
+      lower.find("outofmemoryerror")!=std::string::npos||lower.find("lowmemorykiller")!=std::string::npos,
+      lower.find("usb disconnect")!=std::string::npos||lower.find("device offline")!=std::string::npos||lower.find("device unauthorized")!=std::string::npos,
+      lower.find("permission denial")!=std::string::npos||lower.find("avc: denied")!=std::string::npos};
+    for(std::size_t i=0;i<rules.size();++i) if(matches[i]) {
+      ++rules[i].count;if(rules[i].firstEvidence.empty()){rules[i].firstEvidence=std::string(line.substr(0,240));for(auto &c:rules[i].firstEvidence) if(static_cast<unsigned char>(c)<32)c=' ';}
+    }
+    if(end==std::string_view::npos)break;
+    log.remove_prefix(end+1);
+  }
+  std::erase_if(rules,[](const LogFinding &finding){return finding.count==0;});return rules;
+}
+
 }

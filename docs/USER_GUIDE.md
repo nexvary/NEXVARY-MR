@@ -1,6 +1,6 @@
 # NEXVARY MR — دليل الاستخدام / User guide
 
-نسخة تطوير لمحطة صيانة Windows. شغّل `NEXVARY-MR.exe` من مجلد النسخة المحمولة بعد فك الضغط بالكامل، أو استخدم المثبت. لا تحتاج كتابة أوامر لإجراء الوظائف الأساسية. الملفات الناتجة غير موقعة رقميًا، ولا تُعد إصدارًا تجاريًا نهائيًا قبل اعتماد بوابات الاختبار.
+نسخة تطوير لمحطة صيانة Windows 10/11 x64. تتضمن الحزمة مكتبات Microsoft C++ الضرورية بجوار البرنامج؛ لا يحتاج التثبيت لكل مستخدم إلى تثبيت Runtime على مستوى النظام. شغّل `NEXVARY-MR.exe` من مجلد النسخة المحمولة بعد فك الضغط بالكامل، أو استخدم المثبت. لا تحتاج كتابة أوامر لإجراء الوظائف الأساسية. الملفات الناتجة غير موقعة رقميًا، ولا تُعد إصدارًا تجاريًا نهائيًا قبل اعتماد بوابات الاختبار.
 
 ## البداية والأجهزة
 
@@ -42,3 +42,14 @@
 Extract the entire portable ZIP and double-click `NEXVARY-MR.exe`, or use the per-user installer. Install optional ADB/Fastboot/scrcpy from their official sources. Authorize USB debugging on your own or an explicitly authorized Android device, select the intended serial, and start read-only diagnostics. No firmware flashing or security bypass is implemented.
 
 Use the workshop for local repair records, stock and operational invoices. Export invoices as PDF and print them from your PDF viewer. Back up the SQLite database before a confirmed restore; files are not encrypted automatically. The embedded boardview uses documented NEXVARY JSON with synthetic training data, not proprietary production board formats. Save board sessions before closing. Consult `THIRD_PARTY.md` and `INTEGRATIONS.md` for licensing and integration boundaries.
+
+
+### اختيار أدوات Android دون تعديل PATH
+
+من «جاهزية وإعدادات» اضغط «اختيار الأداة» بجوار ADB أو Fastboot أو scrcpy، ثم اختر الملف التنفيذي الرسمي بعد فك ضغطه. الاختيار يحفظ المسار ولا يشغّل الملف. زر «تلقائي» يلغي المسار المحفوظ ويعود للاكتشاف التلقائي. لا تختَر أدوات من مصدر غير موثوق.
+
+The readiness page provides executable file pickers for ADB, Fastboot and scrcpy. Selecting a file validates and saves its path without executing it. **Auto** clears the saved override and restores PATH discovery.
+
+### مؤشرات السجلات
+
+بعد قراءة Logcat من جهاز مصرح به، يمكن عرض أنماط التعطل والذاكرة والاتصال ورفض الصلاحيات مع عدد مرات ظهورها وأسطر الدليل. هذه مؤشرات نصية محدودة؛ عدم ظهورها لا يثبت سلامة الجهاز. لا يُحفظ محتوى السجل الخام تلقائيًا في سجل الورشة.
