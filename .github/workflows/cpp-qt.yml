@@ -1,0 +1,115 @@
+name: C++20 and Qt Windows
+on:
+  push:
+    branches: [main, dev/cpp-qt-foundation]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mr-cpp-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  core:
+    strategy:
+      matrix:
+        os: [windows-2022, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure C++ core
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=OFF -DMR_WARNINGS_AS_ERRORS=ON
+      - name: Build core and tests
+        run: cmake --build build --config Release --parallel
+      - name: Run core tests
+        run: ctest --test-dir build -C Release --output-on-failure --output-junit core-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-test-results-${{ matrix.os }}
+          path: build/core-results.xml
+  qt:
+    runs-on: windows-2022
+    env:
+      QT_QUICK_BACKEND: software
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          arch: win64_msvc2022_64
+          cache: true
+      - name: Configure GUI and Qt integration tests
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+      - name: Build GUI
+        id: native_build
+        run: cmake --build build --config Release --parallel
+      - name: Run CTest suite
+        id: tests
+        shell: pwsh
+        run: |
+          ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          $testResult = $LASTEXITCODE
+          if (Test-Path build/ui-results.txt) { Get-Content build/ui-results.txt }
+          if ($testResult -ne 0) { exit $testResult }
+      - name: Assemble portable Qt runtime
+        id: portable
+        if: ${{ !cancelled() && steps.native_build.outcome == 'success' }}
+        shell: pwsh
+        run: ./packaging/package-windows.ps1
+      - name: Verify portable in isolated path with spaces
+        id: portable_smoke
+        if: ${{ !cancelled() && steps.portable.outcome == 'success' }}
+        shell: pwsh
+        run: ./packaging/smoke-windows.ps1
+      - name: Build per-user Windows installer
+        id: installer
+        if: ${{ !cancelled() && steps.portable_smoke.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+          $iscc = if ($compiler) { $compiler.Source } else { "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" }
+          if (-not (Test-Path $iscc)) { throw 'Inno Setup compiler was not found on Windows runner' }
+          & $iscc packaging/NEXVARY-MR.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
+      - name: Verify installer installation and deployed runtime
+        id: installed_smoke
+        if: ${{ !cancelled() && steps.installer.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
+          $setup = (Resolve-Path 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe').Path
+          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=`"$destination`"" -Wait -PassThru
+          if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
+          ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed
+          $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
+      - name: Record artifact checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-MR-Windows-x64-portable-unsigned
+          path: dist/NEXVARY-MR-Windows-x64-portable-unsigned.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-MR-Windows-x64-installer-unsigned
+          path: |
+            dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEXVARY-MR-Windows-validation-evidence
+          path: |
+            build/qt-results.xml
+            build/ui-results.txt
+            build/smoke.png
+            build/Testing/Temporary/LastTest.log
+            dist/evidence/
+          if-no-files-found: warn

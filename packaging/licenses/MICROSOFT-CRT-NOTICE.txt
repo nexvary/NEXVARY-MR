@@ -1,0 +1,17 @@
+MICROSOFT VISUAL C++ RUNTIME NOTICE
+
+The app-local release x64 CRT DLLs bundled with this application are Microsoft
+software. Microsoft retains ownership and all applicable copyright rights.
+They are distributed unchanged from the official Visual Studio 2022
+VC/Redist/MSVC/<version>/x64/Microsoft.VC143.CRT directory, subject to the
+applicable Microsoft Software License Terms and redistributable-code list.
+They are not part of this project's open-source code license.
+
+Official terms and deployment guidance:
+https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution
+https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files?view=msvc-170
+https://learn.microsoft.com/en-us/cpp/windows/choosing-a-deployment-method?view=msvc-170
+
+CRT_DEPLOYMENT.json identifies the exact source, DLL versions and checksums.
+No debug_nonredist or Windows system DLL is copied into this package.
+The Windows 10/11 Universal CRT remains an operating-system component.
