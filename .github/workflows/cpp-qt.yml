@@ -42,16 +42,29 @@ jobs:
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
       - name: Build GUI
+        id: native_build
         run: cmake --build build --config Release --parallel
       - name: Run CTest suite
-        run: ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+        id: tests
+        shell: pwsh
+        run: |
+          ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          $testResult = $LASTEXITCODE
+          if (Test-Path build/ui-results.txt) { Get-Content build/ui-results.txt }
+          if ($testResult -ne 0) { exit $testResult }
       - name: Assemble portable Qt runtime
+        id: portable
+        if: ${{ !cancelled() && steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: ./packaging/package-windows.ps1
       - name: Verify portable in isolated path with spaces
+        id: portable_smoke
+        if: ${{ !cancelled() && steps.portable.outcome == 'success' }}
         shell: pwsh
         run: ./packaging/smoke-windows.ps1
       - name: Build per-user Windows installer
+        id: installer
+        if: ${{ !cancelled() && steps.portable_smoke.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -61,6 +74,8 @@ jobs:
           & $iscc packaging/NEXVARY-MR.iss
           if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
       - name: Verify installer installation and deployed runtime
+        id: installed_smoke
+        if: ${{ !cancelled() && steps.installer.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -93,6 +108,8 @@ jobs:
           name: NEXVARY-MR-Windows-validation-evidence
           path: |
             build/qt-results.xml
+            build/ui-results.txt
+            build/smoke.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/
           if-no-files-found: warn
