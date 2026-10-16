@@ -5,8 +5,8 @@ Item {
     property color stroke: "#91bfff"
     implicitWidth: 28
     implicitHeight: 28
-    readonly property var glyphs: ["⌂", "▣", "⌕", "▦", "⇅", "☷", "▤", "⚙"]
-    readonly property var accents: ["#54c7ec", "#73a9ff", "#40d6b2", "#b4a0ff", "#f6b85d", "#55c7e8", "#ef92c1", "#9aaaff"]
+    readonly property var glyphs: ["⌂", "▣", "⌕", "▦", "⇅", "☷", "▤", "⚙", "♻"]
+    readonly property var accents: ["#54c7ec", "#73a9ff", "#40d6b2", "#b4a0ff", "#f6b85d", "#55c7e8", "#ef92c1", "#9aaaff", "#5bdab6"]
     Rectangle {
         anchors.centerIn: parent
         width: 27
@@ -17,7 +17,7 @@ Item {
     }
     Text {
         anchors.centerIn: parent
-        text: icon.glyphs[Math.max(0, Math.min(7, icon.kind))]
+        text: icon.glyphs[Math.max(0, Math.min(8, icon.kind))]
         color: icon.accents[Math.max(0, Math.min(7, icon.kind))]
         font.family: "Segoe UI Symbol"
         font.pixelSize: 21
