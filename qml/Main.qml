@@ -44,6 +44,54 @@ ApplicationWindow {
                         contentItem: Text { text: parent.text; color: "white"; horizontalAlignment: Text.AlignRight; verticalAlignment: Text.AlignVCenter; rightPadding: 12; font.pixelSize: 16 }
                     }
                 }
+                ColumnLayout {
+                    visible: window.currentPage === 2
+                    Layout.fillWidth: true
+                    spacing: 10
+                    Label { text: "دليل الشركات وعائلات الأجهزة"; color: "#62E6BA"; font.pixelSize: 20; Layout.alignment: Qt.AlignRight }
+                    ScrollView {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 350
+                        ListView {
+                            model: repairBridge.brands()
+                            spacing: 7
+                            delegate: Label {
+                                required property var modelData
+                                width: ListView.view.width
+                                horizontalAlignment: Text.AlignRight
+                                text: modelData.brand + "  •  " + modelData.families.join(" / ")
+                                color: "#E7EFFA"
+                                font.pixelSize: 15
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
+                ColumnLayout {
+                    visible: window.currentPage === 3
+                    Layout.fillWidth: true
+                    spacing: 12
+                    Label { text: "اختر العَرَض لعرض خطوات الفحص الآمنة"; color: "#62E6BA"; font.pixelSize: 20; Layout.alignment: Qt.AlignRight }
+                    ComboBox {
+                        id: symptomBox
+                        Layout.fillWidth: true
+                        model: ["Bootloop", "Not charging", "No network", "USB not detected"]
+                    }
+                    Button {
+                        text: "تحليل العَرَض"
+                        Layout.alignment: Qt.AlignRight
+                        onClicked: diagnosisResult.text = repairBridge.diagnose(symptomBox.currentText)
+                    }
+                    TextArea {
+                        id: diagnosisResult
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 160
+                        readOnly: true
+                        wrapMode: TextEdit.Wrap
+                        color: "#E7EFFA"
+                        background: Rectangle { color: "#172537"; radius: 8 }
+                    }
+                }
                 Item { Layout.fillHeight: true }
                 Label { text: "v0.2.0 • C++20 / Qt 6"; color: "#8098AF" }
             }
