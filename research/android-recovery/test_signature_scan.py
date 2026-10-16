@@ -42,6 +42,13 @@ class SignatureScanTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 scanner.scan_image(path, max_matches=2)
 
+    def test_jpeg_exif_marker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "exif.img"
+            path.write_bytes(b"padding" + bytes.fromhex("ffd8ffe1") + b"Exif")
+            matches = scanner.scan_image(path)
+            self.assertEqual([(m.format, m.offset) for m in matches], [("jpeg", 7)])
+
     def test_empty_image(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "evidence.img"
