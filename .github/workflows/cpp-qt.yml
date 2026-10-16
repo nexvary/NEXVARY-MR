@@ -7,6 +7,7 @@ on:
       - 'CMakeLists.txt'
       - '.github/workflows/cpp-qt.yml'
   pull_request:
+  workflow_dispatch:
 jobs:
   core:
     runs-on: windows-latest
@@ -25,7 +26,6 @@ jobs:
       - uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.3'
-          modules: 'qtshadertools'
           cache: true
       - name: Configure GUI
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
@@ -33,3 +33,19 @@ jobs:
         run: cmake --build build --config Release
       - name: Test core
         run: ctest --test-dir build -C Release --output-on-failure
+      - name: Assemble portable Qt runtime
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = 'build/Release/nexvary_mr.exe'
+          if (-not (Test-Path $exe)) { $exe = 'build/nexvary_mr.exe' }
+          if (-not (Test-Path $exe)) { throw 'Qt executable not found' }
+          New-Item -ItemType Directory -Force -Path dist/NEXVARY-MR | Out-Null
+          Copy-Item $exe dist/NEXVARY-MR/NEXVARY-MR.exe
+          & "$env:QT_ROOT_DIR/bin/windeployqt.exe" --release --qmldir qml --no-translations dist/NEXVARY-MR/NEXVARY-MR.exe
+          if ($LASTEXITCODE -ne 0) { throw "windeployqt failed: $LASTEXITCODE" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-MR-Windows-portable-unsigned
+          path: dist/NEXVARY-MR/
+          if-no-files-found: error
