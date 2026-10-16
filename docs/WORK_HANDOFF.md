@@ -1,39 +1,33 @@
 # Work handoff — NEXVARY-MR
 
-Updated: 2026-10-16 (UTC date). Development branch: `dev/cpp-qt-foundation`.
-Verified starting HEAD: `d6606f90a0bbb3b801b1336fb29ce79558227c4d` (handoff commit follows).
-PR: https://github.com/nexvary/NEXVARY-MR/pull/1 (draft; do not merge without acceptance).
+Updated 2026-10-16. Branch: `dev/cpp-qt-foundation`. PR #1 remains draft.
 
-## Verified implementation
-Native C++20/Qt Quick Windows desktop, Arabic/English UI, bounded ADB/Fastboot read-only adapters, optional external scrcpy launcher, SQLite workshop, licensed JSON board viewer, firmware preflight, portable and Inno installer pipelines. Python foundation retained. See README and docs/INTEGRATIONS.md for exact limitations.
+## Current execution
+- Native C++20/Qt Quick Windows workstation, eight pages, local SQLite, read-only ADB/Fastboot, optional scrcpy, licensed JSON board view and firmware preflight were already implemented.
+- Synthetic evidence manifest module added at `research/android-recovery/evidence_manifest.py`.
+- Regression tests added at `research/android-recovery/test_evidence_manifest.py`; Windows Python CI now runs this suite.
+- QML navigation symbols, accessible button focus states, and panel layout have been modified. Visual acceptance is **pending**; system glyphs are not a licensed SVG icon library.
+- Most recent interface commit before this handoff: `170518b4b92f8a930b1f74d06ec82b631e13ac67`.
 
-## Evidence
-For starting HEAD `d6606f90`: Windows C++/Qt workflow run 38903214803: completed/success; Python workflow run 38903214819: completed/success. Prior run 38900200998 provides portable, installer and evidence artifacts; these artifacts belong to an earlier revision, NOT necessarily this handoff commit. No local build or physical Android test was performed while preparing this handoff.
+## Verified outcomes
+- Python checks run 38910210284: completed, success, for earlier commit `1d8e144`.
+- Qt Windows run 38910210308: cancelled by concurrency; this is **not** a passing result.
+- No new Qt build, physical Android acceptance or Windows 10/11 acceptance has been verified for the latest UI changes.
 
-## Outstanding and blockers
-- Real Android devices, OEM USB drivers, unplug/replug and scrcpy acceptance: requires hardware.
-- Clean Windows 10/11, DPI/accessibility and installer acceptance: requires target environments.
-- Licensed real board data, privacy/license review and signing: external acceptance.
-- Legacy Python data migration: not implemented.
-- Android Recovery Agent and Shizuku bridge: not verified implemented; do not claim functionality.
-- Post-factory-reset internal encrypted-data recovery: research only, no proven recovery.
-- No Windows build has been run against this handoff-only commit.
+## Outstanding
+1. Inspect latest Qt CI for this branch and fix any QML compilation or UI test failures.
+2. Replace temporary system symbol navigation with bundled, properly licensed, tested SVG icons after verifying Qt SVG support and redistribution terms.
+3. Verify RTL, keyboard focus, small-window scrolling, accessibility, exit confirmation and all page navigation.
+4. Complete licensed hardware and OEM acceptance gates, installer, signing, privacy, and legacy migration.
+5. Design consent-first Android recovery capability assessment. Shizuku does not grant root or recover cryptographic keys erased by factory reset.
+6. Run synthetic evidence experiments with independent input/output directories; preserve original evidence.
 
-## Design decisions
-Preserve existing native Qt architecture. No silent destructive device operations, FRP/lock bypass or implied root access via Shizuku. Treat shared files, backups and encrypted internal storage as distinct recovery sources. Obtain device-owner consent, hash acquisitions, preserve originals, and test with synthetic fixtures. Review each third-party license before redistribution.
-
-## Next execution priority
-1. Inspect current tree, QML UI tests, CI and package manifests for gaps; avoid duplicating existing features.
-2. Run native Windows pipeline on updated HEAD and inspect job/artifact results.
-3. Add independent, testable recovery assessment core with explicit capabilities and no unsupported success percentages; only then design optional Kotlin/Shizuku agent.
-4. Research upstream tool versions/licenses and create reproducible synthetic recovery experiments.
-5. Update this handoff with actual test outcomes and commit identifiers.
-
-## Build and test
+## Build verification
 ```sh
 cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
 python -m unittest discover -s tests -v
+python -m unittest discover -s research/android-recovery -p 'test_*.py' -v
 ```
-These commands are documented, not executed by this handoff commit.
+Do not mark commands as executed unless supported by actual test logs.
