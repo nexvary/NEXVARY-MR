@@ -10,7 +10,9 @@ object ProbePolicy {
         "boot-completed" to "sys.boot_completed",
         "boot-reason" to "ro.boot.bootreason",
         "verified-boot-state" to "ro.boot.verifiedbootstate",
-        "bootloader-lock-state" to "ro.boot.flash.locked"
+        "bootloader-lock-state" to "ro.boot.flash.locked",
+        "reported-crypto-state" to "ro.crypto.state",
+        "reported-crypto-type" to "ro.crypto.type"
     )
     val probeNames = properties.keys + setOf("shell-identity", "filesystem-capacity")
     fun commandFor(name: String): List<String>? = when (name) {

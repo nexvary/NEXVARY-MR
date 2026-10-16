@@ -23,6 +23,8 @@ class PolicyTest {
     @Test fun commandSurfaceHasNoClientProvidedArguments() {
         assertEquals(listOf("/system/bin/id"), ProbePolicy.commandFor("shell-identity"))
         assertEquals(listOf("/system/bin/getprop", "sys.boot_completed"), ProbePolicy.commandFor("boot-completed"))
+        assertEquals(listOf("/system/bin/getprop", "ro.crypto.state"), ProbePolicy.commandFor("reported-crypto-state"))
+        assertEquals(listOf("/system/bin/getprop", "ro.crypto.type"), ProbePolicy.commandFor("reported-crypto-type"))
         for (name in listOf("sh", "getprop;reboot", "/data/user/0", "su", "id --context", "../../x", "ro.product.model")) assertNull(ProbePolicy.commandFor(name))
     }
 }

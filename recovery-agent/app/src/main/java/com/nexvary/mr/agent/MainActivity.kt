@@ -82,7 +82,7 @@ class MainActivity : Activity() {
             handler.removeCallbacks(bindTimeout)
             val helper = IMetadataService.Stub.asInterface(binder)
             inShellTask = true
-            runTask(getString(R.string.collecting_shell), 12_000L, {
+            runTask(getString(R.string.collecting_shell), 18_000L, {
                 ReportProtocol.parseHelper(helper.collectMetadata())
             }) { result ->
                 if (currentAccess().state == "shell" && consent.isChecked) {

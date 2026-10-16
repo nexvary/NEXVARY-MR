@@ -5,6 +5,7 @@ plugins {
 android {
     namespace = "com.nexvary.mr.agent"
     compileSdk = 35
+    buildToolsVersion = "35.0.0"
     defaultConfig {
         applicationId = "com.nexvary.mr.agent"
         minSdk = 26
