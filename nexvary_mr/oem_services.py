@@ -19,6 +19,11 @@ class Service:
 
 COMMON = (
     Service("read_info", "Read device information", "adb", Risk.READ_ONLY),
+    Service("read_android_version", "Android version", "adb", Risk.READ_ONLY),
+    Service("read_manufacturer", "Manufacturer", "adb", Risk.READ_ONLY),
+    Service("read_security_patch", "Security patch level", "adb", Risk.READ_ONLY),
+    Service("read_sdk", "Android API level", "adb", Risk.READ_ONLY),
+    Service("read_bootloader", "Bootloader version", "adb", Risk.READ_ONLY),
     Service("reboot_normal", "Reboot to system", "adb", Risk.REVERSIBLE),
     Service("reboot_recovery", "Reboot to recovery", "adb", Risk.REVERSIBLE),
     Service("reboot_bootloader", "Reboot to bootloader", "adb", Risk.REVERSIBLE),
