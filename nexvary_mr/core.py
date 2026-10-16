@@ -76,4 +76,6 @@ def save_case(brand, model, symptom, notes="", path=None):
         cursor = connection.execute(
             "INSERT INTO cases (brand, model, symptom, notes) VALUES (?, ?, ?, ?)",
             (brand.strip(), model.strip(), symptom.strip(), notes.strip()))
-        return cursor.lastrowid
+        number = cursor.lastrowid
+    connection.close()
+    return number
