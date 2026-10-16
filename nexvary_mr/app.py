@@ -135,7 +135,7 @@ class Window(QMainWindow):
             except (RuntimeError, ValueError, PermissionError, OSError) as exc:
                 QMessageBox.warning(self, "Operation failed", str(exc))
                 result.setPlainText(str(exc))
-        brand.currentTextChanged.connect(refresh_actions)
+        brand.currentTextChanged.connect(lambda: filter_transport_actions())
         transport.currentTextChanged.connect(refresh_devices)
         def filter_transport_actions():
             action.clear()
