@@ -82,7 +82,9 @@ jobs:
           script: |
             chmod +x gradlew
             ./gradlew --no-daemon --console=plain connectedDebugAndroidTest
-            adb exec-out run-as com.nexvary.mr.agent cat cache/emulator-native-ui.png > app/build/emulator-native-ui.png
+            adb pull /data/local/tmp/nexvary-agent-emulator-ui.png app/build/emulator-native-ui.png
+            test "$(file --brief --mime-type app/build/emulator-native-ui.png)" = image/png
+            adb shell rm /data/local/tmp/nexvary-agent-emulator-ui.png
       - uses: actions/upload-artifact@v4
         if: always()
         with:

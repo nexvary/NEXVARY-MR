@@ -1,6 +1,6 @@
 package com.nexvary.mr.agent
 
-import android.graphics.Bitmap
+import android.os.ParcelFileDescriptor
 import android.content.pm.ApplicationInfo
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import org.xmlpull.v1.XmlPullParser
 
@@ -71,9 +70,13 @@ class NativeUiTest {
             assertTrue("Public metadata did not finish", completed.get())
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             val instrumentation = InstrumentationRegistry.getInstrumentation()
-            val image = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
-            File(instrumentation.targetContext.cacheDir, "emulator-native-ui.png").outputStream().use {
-                assertTrue(image.compress(Bitmap.CompressFormat.PNG, 100, it))
+            // UTP uninstalls both APKs at the end of connectedDebugAndroidTest.
+            // Keep this synthetic emulator-only artifact in shell-owned temporary
+            // storage, rather than the application's subsequently removed cache.
+            val capture = instrumentation.uiAutomation.executeShellCommand(
+                "screencap -p /data/local/tmp/nexvary-agent-emulator-ui.png")
+            ParcelFileDescriptor.AutoCloseInputStream(capture).bufferedReader().use {
+                assertEquals("Emulator screenshot capture failed", "", it.readText().trim())
             }
             scenario.onActivity { activity ->
                 val views = descendants(activity.window.decorView)
