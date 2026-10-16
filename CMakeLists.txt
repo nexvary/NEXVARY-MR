@@ -37,7 +37,7 @@ if(MR_BUILD_GUI)
  # Windows release target is Qt 6.8.3; 6.4 permits Linux/offscreen validation too.
  find_package(Qt6 6.4 REQUIRED COMPONENTS Quick QuickControls2 Sql Concurrent)
  qt_standard_project_setup(REQUIRES 6.4)
- add_library(mr_desktop STATIC cpp/src/ToolBridge.cpp cpp/src/ToolBridge.hpp cpp/src/RepairBridge.cpp cpp/src/RepairBridge.hpp cpp/src/WorkshopBridge.cpp cpp/src/WorkshopBridge.hpp cpp/src/BoardBridge.cpp cpp/src/BoardBridge.hpp cpp/src/FirmwareBridge.cpp cpp/src/FirmwareBridge.hpp cpp/src/RecoveryBridge.cpp cpp/src/RecoveryBridge.hpp cpp/src/RecoveryImage.cpp cpp/src/RecoveryImage.hpp cpp/src/CaseVault.cpp cpp/src/CaseVault.hpp)
+ add_library(mr_desktop STATIC cpp/src/ToolBridge.cpp cpp/src/ToolBridge.hpp cpp/src/RepairBridge.cpp cpp/src/RepairBridge.hpp cpp/src/WorkshopBridge.cpp cpp/src/WorkshopBridge.hpp cpp/src/BoardBridge.cpp cpp/src/BoardBridge.hpp cpp/src/FirmwareBridge.cpp cpp/src/FirmwareBridge.hpp cpp/src/RecoveryBridge.cpp cpp/src/RecoveryBridge.hpp cpp/src/RecoveryImage.cpp cpp/src/RecoveryImage.hpp cpp/src/CaseVault.cpp cpp/src/CaseVault.hpp cpp/src/RecoveryFile.hpp)
  target_include_directories(mr_desktop PUBLIC cpp/src)
  target_link_libraries(mr_desktop PUBLIC mr_core Qt6::Core Qt6::Gui Qt6::Sql Qt6::Concurrent)
  if(WIN32)

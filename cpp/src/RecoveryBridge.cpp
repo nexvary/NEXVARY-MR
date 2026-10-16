@@ -1,6 +1,7 @@
 #include "RecoveryBridge.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryImage.hpp"
+#include "RecoveryFile.hpp"
 #include <QtConcurrent/QtConcurrentRun>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -19,9 +20,15 @@ QString now(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)
  }
 QString local(const QString &value){
  if(value.isEmpty()||value.contains(QChar::Null)||value.startsWith("\\\\")||value.startsWith("//"))return {};
+ for(const auto c:value)if(c.unicode()<32||c.unicode()==127)return {};
  const QUrl url(value);
  const auto path=url.isLocalFile()?url.toLocalFile():(url.scheme().isEmpty()||QFileInfo(value).isAbsolute()?value:QString());
  if(path.startsWith("\\\\")||path.startsWith("//"))return {};
+#ifdef Q_OS_WIN
+ if(path.mid(2).contains(QLatin1Char(':')))return {};
+ static const QRegularExpression reserved(QStringLiteral("^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?$"),QRegularExpression::CaseInsensitiveOption);
+ if(reserved.match(QFileInfo(path).fileName()).hasMatch())return {};
+#endif
  return path.isEmpty()?QString():QFileInfo(path).absoluteFilePath();
 }
 bool text(const QString &s,int limit,bool required=true){return s.size()<=limit&&!s.contains(QChar::Null)&&(!required||!s.trimmed().isEmpty());
@@ -35,7 +42,7 @@ QByteArray readBounded(const QString &path,qint64 maximum,QString &error){
  return {};
  }
  QFile f(path);
- if(!f.open(QIODevice::ReadOnly)){error=f.errorString();
+ if(!mr::recovery::openRegularInput(f)){error=f.errorString();
  return {};
  }
  const auto bytes=f.read(maximum+1);
@@ -65,7 +72,7 @@ QJsonObject evidenceRecord(const QByteArray &bytes,const QString &name,const QSt
  return {{"name",name},{"kind",kind},{"size",static_cast<double>(bytes.size())},{"sha256",QString::fromLatin1(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex())},{"source",source},{"sourceSha256",sourceDigest},{"offset",offset},{"collectedAtUtc",now()},{"payload",QString::fromLatin1(bytes.toBase64())}};
 }
 }
-RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfile,QObject *parent):QObject(parent),directory_(QFileInfo(directory).absoluteFilePath()),synthetic_(syntheticTestProfile){
+RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfile,QObject *parent):QObject(parent),directory_(local(directory)),synthetic_(syntheticTestProfile){
  status_=QStringLiteral("No recovery case is open. Assess write impact before installing any phone agent.");
  connect(&watcher_,&QFutureWatcher<JobResult>::finished,this,[this]{
   const auto result=watcher_.result();running_=false;

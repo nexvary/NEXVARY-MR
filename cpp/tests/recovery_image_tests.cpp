@@ -1,4 +1,5 @@
 #include "RecoveryImage.hpp"
+#include "RecoveryFile.hpp"
 #include <QBuffer>
 #include <QCryptographicHash>
 #include <QFile>
@@ -85,6 +86,20 @@ private slots:
     options={};options.maximumInputBytes=2LL*1024*1024*1024+1;QVERIFY(!scanImage(path,options).error.isEmpty());
     QByteArray flood;for(int i=0;i<50;++i) flood+=QByteArray::fromHex("89504e470d0a1a0a")+QByteArray(16,'x');
     options={};options.maximumSignatureAttempts=3;result=scanImage(write(flood+png,"flood.img"),options);QVERIFY(result.sourceUnchanged);QVERIFY(result.limited);QCOMPARE(result.signatureAttempts,3);QVERIFY(result.candidates.isEmpty());
+  }
+  void openedDescriptorMustBeRegular() {
+    const auto path=write(QByteArray("synthetic descriptor test"),"regular.img");
+    QFile regular(path);QVERIFY(openRegularInput(regular));QCOMPARE(regular.readAll(),QByteArray("synthetic descriptor test"));regular.close();
+#ifndef Q_OS_WIN
+    QFile device(QStringLiteral("/dev/zero"));QVERIFY(!openRegularInput(device));
+    const auto fifo=directory.filePath("replacement-fifo.img");
+    QVERIFY(::mkfifo(QFile::encodeName(fifo).constData(),0600)==0);
+    QFile pipe(fifo);QVERIFY(!openRegularInput(pipe));
+    const auto link=directory.filePath("descriptor-link.img");QVERIFY(QFile::link(path,link));
+    QFile symlink(link);QVERIFY(!openRegularInput(symlink));
+#else
+    QFile device(QStringLiteral("NUL"));QVERIFY(!openRegularInput(device));
+#endif
   }
   void cancellationAndSourceMutationDiscardEverything() {
     const auto png=raster("PNG",Qt::red);const auto bytes=png+QByteArray(100,'x');const auto path=write(bytes);

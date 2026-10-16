@@ -21,3 +21,5 @@ A debug APK is an unsigned-for-production lab artifact, not a signed customer re
 ## Dependencies
 
 Shizuku API/provider13.1.5 are MIT licensed (RikkaApps); matching source and notices: https://github.com/RikkaApps/Shizuku-API. Shizuku manager is a separate user-installed project with its own license: https://github.com/RikkaApps/Shizuku. Gradle wrapper is Apache2.0; version8.9 sources/notices: https://github.com/gradle/gradle/tree/v8.9.0. Android SDK/build components are obtained under Google's applicable SDK terms. Test-only dependencies include JUnit, AndroidXTest and JSON-java; they do not replace the C++ commercial desktop core.
+
+CI explicitly requests `platform-tools` from setup-android; the removed legacy SDK package named `tools` is not a dependency. The first CI attempt exposed that action default before Kotlin compilation, so it is not recorded as a source/build test result.

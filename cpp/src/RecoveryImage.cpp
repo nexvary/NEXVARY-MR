@@ -1,4 +1,5 @@
 #include "RecoveryImage.hpp"
+#include "RecoveryFile.hpp"
 #include <QBuffer>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -195,7 +196,7 @@ Result scanImage(const QString &value,const Options &options,const std::shared_p
   const auto size = original.size();
   if (size < 1 || size > options.maximumInputBytes) return abort(QStringLiteral("Image is empty or exceeds the input limit (maximum 2 GiB)."));
   QFile file(path);
-  if (!file.open(QIODevice::ReadOnly)) return abort(file.errorString());
+  if (!openRegularInput(file)) return abort(file.errorString());
   if (unsupportedContainer(file.peek(16))) return abort(QStringLiteral("This container/compressed/sparse image format is unsupported; provide an authorized raw image file."));
   const qint64 total = size*3;
   qint64 processed = 0;
@@ -269,7 +270,7 @@ Result scanImage(const QString &value,const Options &options,const std::shared_p
   const QFileInfo finalInfo(path);
   if (imagePath(path) != path || finalInfo.size() != size || finalInfo.lastModified() != original.lastModified()) return abort(QStringLiteral("Source image changed; all candidates were discarded."));
   QFile finalFile(path);
-  if (!finalFile.open(QIODevice::ReadOnly)) return abort(QStringLiteral("Cannot reopen source for final integrity verification."));
+  if (!openRegularInput(finalFile)) return abort(QStringLiteral("Cannot reopen source for final integrity verification."));
   QByteArray after;
   if (!hashPass(finalFile,after)) return abort(stopped(cancel)?QStringLiteral("Cancelled."):QStringLiteral("Source read failed or changed during final hashing."),stopped(cancel));
   if (stopped(cancel)) return abort(QStringLiteral("Cancelled."),true);
