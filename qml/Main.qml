@@ -28,6 +28,11 @@ ApplicationWindow {
  Shortcut {sequence:"Ctrl+2";onActivated:window.navigate(1)}
  Shortcut {sequence:"Ctrl+3";onActivated:window.navigate(2)}
  Shortcut {sequence:"Ctrl+4";onActivated:window.navigate(3)}
+ Shortcut {sequence:"Ctrl+5";onActivated:window.navigate(4)}
+ Shortcut {sequence:"Ctrl+6";onActivated:window.navigate(5)}
+ Shortcut {sequence:"Ctrl+7";onActivated:window.navigate(6)}
+ Shortcut {sequence:"Ctrl+8";onActivated:window.navigate(7)}
+ Shortcut {sequence:"Ctrl+9";onActivated:window.navigate(8)}
  Shortcut {sequence:"Ctrl+R";onActivated:if(!toolBridge.busy)toolBridge.scanAdb()}
  Shortcut {sequence:"Ctrl+Q";onActivated:window.close()}
  onClosing:function(close){if(!allowClose){close.accepted=false;exitDialog.open()}}
