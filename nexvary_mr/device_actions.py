@@ -59,4 +59,4 @@ def execute(action, serial, confirmed=False):
                             text=True, timeout=20, check=False)
     if result.returncode:
         raise RuntimeError(result.stderr.strip() or f"{action} failed")
-    return (result.stdout + "\\n" + result.stderr).strip() or "Command completed"
+    return (result.stdout + "\n" + result.stderr).strip() or "Command completed"
