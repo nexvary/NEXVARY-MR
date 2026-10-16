@@ -19,6 +19,7 @@ class BoardBridge final : public QObject {
   Q_PROPERTY(QVariantList nets READ nets NOTIFY boardChanged)
   Q_PROPERTY(QVariantList measurements READ measurements NOTIFY sessionChanged)
   Q_PROPERTY(QVariantList annotations READ annotations NOTIFY sessionChanged)
+  Q_PROPERTY(QVariantList photos READ photos NOTIFY sessionChanged)
   Q_PROPERTY(bool dirty READ dirty NOTIFY sessionChanged)
   Q_PROPERTY(QString error READ error NOTIFY errorChanged)
 public:
@@ -35,6 +36,7 @@ public:
   QVariantList nets() const { return m_nets; }
   QVariantList measurements() const { return m_measurements; }
   QVariantList annotations() const { return m_annotations; }
+  QVariantList photos() const { return m_photos; }
   bool dirty() const { return m_dirty; }
   QString error() const { return m_error; }
 
@@ -42,6 +44,8 @@ public:
   Q_INVOKABLE QVariantList search(const QString &query) const;
   Q_INVOKABLE bool addMeasurement(const QString &net, double value, const QString &note = {});
   Q_INVOKABLE bool addAnnotation(const QString &reference, const QString &text, double x, double y);
+  Q_INVOKABLE bool addPhoto(const QString &reference, const QString &path);
+  Q_INVOKABLE bool removePhoto(int index);
   Q_INVOKABLE bool saveSession(const QString &path);
   Q_INVOKABLE bool loadSession(const QString &path);
 signals:
@@ -58,5 +62,5 @@ private:
   bool m_dirty = false;
   double m_width = 0, m_height = 0;
   QString m_title, m_author, m_license, m_description, m_sourcePath, m_digest, m_error;
-  QVariantList m_components, m_nets, m_measurements, m_annotations;
+  QVariantList m_components, m_nets, m_measurements, m_annotations, m_photos;
 };

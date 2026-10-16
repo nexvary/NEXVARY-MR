@@ -28,7 +28,7 @@ Item {
      Label {text:"#"+modelData.id;color:"#68afff";font.pixelSize:22;Layout.preferredWidth:64}
      ColumnLayout {Layout.fillWidth:true;Label{text:modelData.customer+"  /  "+modelData.brand+" "+modelData.model;color:"#e7f1ff";font.bold:true;textFormat:Text.PlainText} Label{text:modelData.symptom;color:"#8da6bc";textFormat:Text.PlainText;elide:Text.ElideRight;Layout.fillWidth:true}}
      Label {text:app.orderStatus(modelData.status);color:modelData.status==="Ready"?"#51d6a2":"#78b7ff"}
-     Label {text:(modelData.total_cents/100).toFixed(2);color:"#e6eef8";font.pixelSize:18}
+     Label {text:modelData.total_display;color:"#e6eef8";font.pixelSize:18}
      ActionButton {text:app.trx("تحرير","Edit");onClicked:{page.selectedId=modelData.id;page.selectedOrder=modelData;editTech.text=modelData.technician;editNotes.text=modelData.notes;labor.value=modelData.labor_cents;state.currentIndex=app.states.indexOf(modelData.status);editDialog.open()}}
      ActionButton {text:"PDF";onClicked:{page.selectedId=modelData.id;pdfDialog.open()}}
     }

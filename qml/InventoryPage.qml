@@ -15,6 +15,16 @@ Item {
     ActionButton {text:app.trx("إضافة للمخزون","Add to stock");primary:true;enabled:workshopBridge.ready;onClicked:{if(workshopBridge.addPart(sku.text,name.text,quantity.value,price.value)){sku.clear();name.clear();app.notice(true,app.trx("تمت إضافة القطعة","Stock item added"))}else app.notice(false,"")}}
    }
   }
+  Panel {
+   title:app.trx("توريد مخزون لقطعة موجودة","Restock an existing item");Layout.fillWidth:true;Layout.preferredHeight:130
+   RowLayout {
+    ComboBox{id:restockItem;Layout.fillWidth:true;model:workshopBridge.inventory;textRole:"name";valueRole:"id"}
+    SpinBox{id:restockQuantity;from:1;to:1000000;value:1;editable:true}
+    Label{text:app.trx("السعر الجديد ×100","New price ×100");color:"#8da8bd"}
+    SpinBox{id:restockPrice;from:0;to:100000000;editable:true;stepSize:100}
+    ActionButton{text:app.trx("تسجيل التوريد","Receive stock");enabled:restockItem.count>0;onClicked:app.notice(workshopBridge.restockPart(restockItem.currentValue,restockQuantity.value,restockPrice.value),app.trx("تم التوريد؛ أسعار الفواتير السابقة محفوظة","Stock received; earlier invoice prices are preserved"))}
+   }
+  }
   ListView {
    Layout.fillWidth:true;Layout.fillHeight:true;clip:true;spacing:8;model:workshopBridge.inventory
    delegate:Rectangle {

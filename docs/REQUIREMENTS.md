@@ -18,7 +18,7 @@ C++20 core independent of Qt; Qt desktop bridges independent of QML; native SQLi
 - Clean Windows 10/11 x64 VM; actual display scaling 100/125/150/200%, keyboard focus and screen-reader accessibility.
 - Actual authorized Android devices, SDK/OEM drivers, USB disconnect/reconnect, scrcpy external process interaction. Fake-process tests do not prove physical compatibility.
 - Real licensed board data converted to native JSON with independently checked component/net definitions. No .brd/PDF proprietary parser is implemented.
-- Measurements verified against model-specific authorized source; no electrical-instrument adapter or photo annotation support.
+- Measurements verified against model-specific authorized source; no electrical-instrument adapter. Local PNG/JPEG component photos are supported, with bounded decoded size and metadata stripping.
 - OEM firmware authenticity/signature checks, complete backup and recovery workflows. Current firmware gate only checks identity metadata and checksum, with no flashing.
 - Customer privacy/retention/access control acceptance, tested backup recovery, complete dependency/licensing audit, installer publisher signing.
 - Legacy database migration/parity acceptance before retiring Python baseline.

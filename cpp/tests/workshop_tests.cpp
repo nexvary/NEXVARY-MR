@@ -32,6 +32,17 @@ private slots:
   QTemporaryDir temp;WorkshopBridge w(temp.filePath("db"));QVERIFY(w.ready());
   const QString attack="=cmd|' /C calc'!A0";const int id=w.createOrder(attack,"","X'; DROP TABLE orders;--","M","","USB","",QStringLiteral("line 1\nline 2"));QVERIFY(id>0);QCOMPARE(w.orders().size(),1);QVERIFY(w.exportOrders(temp.filePath("safe.csv")));QFile f(temp.filePath("safe.csv"));QVERIFY(f.open(QIODevice::ReadOnly));QVERIFY(f.readAll().contains("'=cmd"));QCOMPARE(w.checkIntegrity(),QStringLiteral("ok"));
  }
+ void restockKeepsHistoricalPrice(){
+  QTemporaryDir t;WorkshopBridge w(t.filePath("stock.db"));QVERIFY(w.ready());
+  const int order=w.createOrder("A","","B","M","","S","","");QVERIFY(order>0);QVERIFY(w.addPart("P","Connector",1,100));
+  const int part=w.inventory().first().toMap().value("id").toInt();QVERIFY(w.usePart(order,part,1));QCOMPARE(w.invoice(order).value("total_cents").toInt(),100);
+  QVERIFY(w.restockPart(part,3,250));QCOMPARE(w.inventory().first().toMap().value("quantity").toInt(),3);QCOMPARE(w.invoice(order).value("total_cents").toInt(),100);
+  QVERIFY(!w.restockPart(part,1000000,250));QVERIFY(!w.restockPart(999,1,250));QCOMPARE(w.inventory().first().toMap().value("quantity").toInt(),3);QVERIFY(w.usePart(order,part,1));QCOMPARE(w.invoice(order).value("total_cents").toInt(),350);
+ }
+ void diagnosticAudit(){
+  QTemporaryDir t;WorkshopBridge w(t.filePath("audit.db"));QVERIFY(w.ready());
+  QVERIFY(!w.recordDiagnostic("arbitrary command",true));QVERIFY(w.recordDiagnostic("adb-scan",true));QCOMPARE(w.events().size(),1);QVERIFY(w.events().first().toMap().value("action").toString().contains("adb-scan"));
+ }
  void newerSchema() {
   QTemporaryDir t;const QString path=t.filePath("new.db");const QString c="future-test";
   {auto db=QSqlDatabase::addDatabase("QSQLITE",c);db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("PRAGMA user_version=99"));db.close();}QSqlDatabase::removeDatabase(c);
@@ -64,7 +75,7 @@ private slots:
    q.prepare("WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<92233) INSERT INTO order_parts(order_id,part_id,quantity,unit_cents) SELECT ?,?,1000000,100000000 FROM n");q.addBindValue(order);q.addBindValue(part);QVERIFY(q.exec());
    q.prepare("INSERT INTO order_parts(order_id,part_id,quantity,unit_cents) VALUES(?,?,720368,100000000)");q.addBindValue(order);q.addBindValue(part);QVERIFY(q.exec());db.close();}QSqlDatabase::removeDatabase(c);
   QCOMPARE(w.checkIntegrity(),QStringLiteral("ok"));
-  const qint64 before=w.invoice(order).value("total_cents").toLongLong();QCOMPARE(before,Q_INT64_C(9223372036800000000));
+  const qint64 before=w.invoice(order).value("total_cents").toLongLong();QCOMPARE(before,Q_INT64_C(9223372036800000000));QCOMPARE(w.invoice(order).value("total_display").toString(),QStringLiteral("92233720368000000.00"));
   QVERIFY(!w.usePart(order,part,1));QCOMPARE(w.inventory().first().toMap().value("quantity").toInt(),1);
   QVERIFY(!w.updateOrder(order,"Ready","",100000000,""));QCOMPARE(w.invoice(order).value("total_cents").toLongLong(),before);
  }

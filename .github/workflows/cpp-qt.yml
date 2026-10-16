@@ -13,12 +13,12 @@ jobs:
   core:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-2022, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure C++ core
-        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=OFF
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=OFF -DMR_WARNINGS_AS_ERRORS=ON
       - name: Build core and tests
         run: cmake --build build --config Release --parallel
       - name: Run core tests
@@ -29,7 +29,7 @@ jobs:
           name: core-test-results-${{ matrix.os }}
           path: build/core-results.xml
   qt:
-    runs-on: windows-latest
+    runs-on: windows-2022
     env:
       QT_QUICK_BACKEND: software
     steps:
@@ -40,7 +40,7 @@ jobs:
           arch: win64_msvc2022_64
           cache: true
       - name: Configure GUI and Qt integration tests
-        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
       - name: Build GUI
         run: cmake --build build --config Release --parallel
       - name: Run CTest suite

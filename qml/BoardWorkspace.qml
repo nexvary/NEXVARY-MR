@@ -13,6 +13,8 @@ Item {
     property string pendingBoard: ""
     property string pendingAction: ""
     property string status: ""
+    property string photoReference: ""
+    property string photoPreview: ""
     onVisibleChanged: if (visible) Qt.callLater(fitBoard)
     function tr(ar, en) { return app.trx(ar, en) }
     function containsNet(component, net) {
@@ -56,6 +58,23 @@ Item {
         function onBoardChanged() { workspace.selected = ({}); workspace.activeNet = ""; searchField.text = ""; Qt.callLater(workspace.fitBoard) }
     }
     FileDialog {
+        id: photoPicker
+        title: workspace.tr("إرفاق صورة للمكون المحدد", "Attach a component photograph")
+        fileMode: FileDialog.OpenFile
+        nameFilters: ["Photographs (*.png *.jpg *.jpeg)"]
+        onAccepted: if (boardBridge.addPhoto(workspace.photoReference, selectedFile.toString())) workspace.status = workspace.tr("أُرفقت الصورة بجلسة اللوحة", "Photograph attached to the board session")
+    }
+    Dialog {
+        id: photoDialog
+        title: workspace.tr("صورة المكون", "Component photograph")
+        modal: true
+        anchors.centerIn: parent
+        width: Math.min(800, workspace.width - 24)
+        height: Math.min(650, workspace.height - 24)
+        standardButtons: Dialog.Close
+        contentItem: Image { source: workspace.photoPreview; fillMode: Image.PreserveAspectFit; cache: false; sourceSize.width: 1600; sourceSize.height: 1600 }
+    }
+    FileDialog {
         id: boardPicker
         title: workspace.tr("اختر ملف لوحة مرخصًا", "Open an authorized board file")
         fileMode: FileDialog.OpenFile
@@ -64,7 +83,7 @@ Item {
     }
     FileDialog {
         id: savePicker
-        title: workspace.tr("حفظ القياسات والتعليقات", "Save measurements and annotations")
+        title: workspace.tr("حفظ القياسات والتعليقات والصور", "Save measurements, annotations and photos")
         fileMode: FileDialog.SaveFile
         defaultSuffix: "json"
         nameFilters: ["NEXVARY session (*.session.json)", "JSON (*.json)"]
@@ -103,7 +122,7 @@ Item {
         anchors.centerIn: parent
         width: Math.min(440, workspace.width - 24)
         standardButtons: Dialog.Yes | Dialog.Cancel
-        contentItem: Label { width: discardDialog.availableWidth; wrapMode: Text.WordWrap; text: workspace.tr("ستستبدل العملية القياسات والتعليقات الحالية. هل تريد المتابعة؟ يمكنك الإلغاء وحفظ الجلسة أولًا.", "This will replace the current measurements and annotations. Continue? Cancel to save the session first."); color: "#dbe8f4" }
+        contentItem: Label { width: discardDialog.availableWidth; wrapMode: Text.WordWrap; text: workspace.tr("ستستبدل العملية القياسات والتعليقات والصور الحالية. هل تريد المتابعة؟ يمكنك الإلغاء وحفظ الجلسة أولًا.", "This will replace the current measurements, annotations and photos. Continue? Cancel to save the session first."); color: "#dbe8f4" }
         onAccepted: workspace.performAction()
     }
     ColumnLayout {
@@ -264,6 +283,22 @@ Item {
                         Repeater {
                             model: boardBridge.annotations
                             delegate: Label { required property var modelData; Layout.fillWidth: true; visible: modelData.reference === workspace.selected.reference; text: "• " + modelData.text; textFormat: Text.PlainText; color: "#9fbbcd"; wrapMode: Text.WordWrap; font.pixelSize: 12 }
+                        }
+                        Rectangle { Layout.fillWidth: true; height: 1; color: "#233b4c" }
+                        Label { text: workspace.tr("صور المكون", "Component photographs"); color: "#d9e8f2"; font.bold: true }
+                        Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: "#7797ae"; font.pixelSize: 11; text: workspace.tr("حتى 4 صور لكل جلسة. PNG/JPEG محلية حتى 4 MiB و4096×4096؛ الصورة المحفوظة حتى 2 MiB. تبقى الصور داخل ملف الجلسة.", "Up to 4 photos per session. Local PNG/JPEG up to 4 MiB and 4096×4096; stored PNG up to 2 MiB. Photos remain inside the session file.") }
+                        ActionButton { objectName: "attachBoardPhoto"; Layout.fillWidth: true; text: workspace.tr("إرفاق صورة", "Attach photograph"); enabled: !!workspace.selected.reference && boardBridge.photos.length < 4; onClicked: { workspace.photoReference = workspace.selected.reference; photoPicker.open() } }
+                        Repeater {
+                            model: boardBridge.photos
+                            delegate: ColumnLayout {
+                                required property var modelData
+                                required property int index
+                                visible: modelData.reference === workspace.selected.reference
+                                Layout.fillWidth: true
+                                Image { Layout.fillWidth: true; Layout.preferredHeight: 130; fillMode: Image.PreserveAspectFit; source: modelData.image; sourceSize.width: 520; sourceSize.height: 260; cache: false; MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: { workspace.photoPreview = modelData.image; photoDialog.open() } } }
+                                Label { Layout.fillWidth: true; text: modelData.name; textFormat: Text.PlainText; color: "#9fbbcd"; elide: Text.ElideRight; font.pixelSize: 11 }
+                                ActionButton { text: workspace.tr("حذف المرفق", "Remove attachment"); implicitHeight: 28; onClicked: boardBridge.removePhoto(index) }
+                            }
                         }
                         Label { Layout.fillWidth: true; text: boardBridge.description; textFormat: Text.PlainText; wrapMode: Text.WordWrap; color: "#708ca2"; font.pixelSize: 10 }
                     }

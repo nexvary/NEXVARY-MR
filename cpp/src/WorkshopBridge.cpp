@@ -135,10 +135,11 @@ bool WorkshopBridge::validDb(QSqlDatabase &db) const {
 }
 QString WorkshopBridge::checkIntegrity() { return validDb(db_)?QStringLiteral("ok"):QStringLiteral("failed"); }
 QVariantList WorkshopBridge::orders() const {
-    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,d.brand,d.model,d.serial,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); return rows(q);
+    if(!ready_) return {};
+    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,d.brand,d.model,d.serial,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); auto result=rows(q);for(auto &v:result){auto row=v.toMap();row.insert("total_display",money(row.value("total_cents").toLongLong()));v=row;}return result;
 }
-QVariantList WorkshopBridge::inventory() const { QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM parts ORDER BY name"));return rows(q); }
-QVariantList WorkshopBridge::events() const { QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM events ORDER BY id DESC LIMIT 300"));return rows(q); }
+QVariantList WorkshopBridge::inventory() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM parts ORDER BY name"));return rows(q); }
+QVariantList WorkshopBridge::events() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM events ORDER BY id DESC LIMIT 300"));return rows(q); }
 bool WorkshopBridge::log(int id,const QString &action) { QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO events(order_id,action) VALUES(?,?)"));q.addBindValue(id>0?QVariant(id):QVariant());q.addBindValue(action);return q.exec(); }
 bool WorkshopBridge::finish(bool ok) {
     if(!ok) { const auto e=db_.lastError().text(); db_.rollback(); return fail(QStringLiteral("Transaction failed. ")+e); }
@@ -192,10 +193,11 @@ QVariantMap WorkshopBridge::invoice(int id) const {
     QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT p.sku,p.name,op.quantity,op.unit_cents FROM order_parts op JOIN parts p ON p.id=op.part_id WHERE order_id=?"));q.addBindValue(id);q.exec();result.insert("parts",rows(q));return result;
 }
 bool WorkshopBridge::exportOrders(const QString &value) {
+    if(!ready_) return fail(QStringLiteral("Database is not ready."));
     const auto target=localPath(value);
     if(!ready_||target.isEmpty()||databaseTarget(target,path_)) return fail(QStringLiteral("Export requires a local file separate from the active database."));
     QSaveFile file(target);if(!file.open(QIODevice::WriteOnly)) return fail(file.errorString());
-    QString out=QStringLiteral("\xFEFFid,customer,phone,brand,model,serial,symptom,status,technician,total_cents,notes\r\n");
+    QString out=QString(QChar(0xFEFF))+QStringLiteral("id,customer,phone,brand,model,serial,symptom,status,technician,total_cents,notes\r\n");
     for(const auto &v:orders()) {const auto m=v.toMap(); QStringList line;for(const auto &key:QStringList{"id","customer","phone","brand","model","serial","symptom","status","technician","total_cents","notes"}) line<<csv(m.value(key).toString());out+=line.join(',')+QStringLiteral("\r\n");}
     const auto bytes=out.toUtf8();if(file.write(bytes)!=bytes.size()||!file.commit()) return fail(file.errorString());error_.clear();emit errorChanged();return true;
 }
@@ -213,6 +215,7 @@ bool WorkshopBridge::exportInvoice(int id,const QString &value) {
     error_.clear();emit errorChanged();return true;
 }
 bool WorkshopBridge::backup(const QString &value) {
+    if(!ready_) return fail(QStringLiteral("Database is not ready."));
     const QString target=localPath(value);if(!ready_||target.isEmpty()||databaseTarget(target,path_)||QFileInfo::exists(target)) return fail(QStringLiteral("Choose a new local backup filename separate from the active database."));
     QSqlQuery q(db_);q.prepare(QStringLiteral("VACUUM INTO ?"));q.addBindValue(target);
     // Never delete a destination on failure: another process may have created it after the existence check.
@@ -250,4 +253,19 @@ bool WorkshopBridge::restore(const QString &value,bool confirmed) {
     ready_=db_.open()&&validDb(db_);QSqlQuery q(db_);ready_=q.exec(QStringLiteral("PRAGMA foreign_keys=ON"))&&q.exec(QStringLiteral("PRAGMA trusted_schema=OFF"))&&ready_;
     QFile::setPermissions(path_,QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     emit changed();if(ok&&ready_) {error_.clear();emit errorChanged();return true;}return fail(QStringLiteral("Restore failed; original preserved in ")+previous);
+}
+
+bool WorkshopBridge::recordDiagnostic(const QString &operation,bool success) {
+    const QStringList allowed={"adb-scan","fastboot-scan","properties","logcat","drivers"};
+    if(!ready_||!allowed.contains(operation)) return false;
+    if(!db_.transaction()) return fail(db_.lastError().text());
+    return finish(log(0,QStringLiteral("Read-only %1: %2").arg(operation,success?QStringLiteral("success"):QStringLiteral("failed/cancelled"))));
+}
+
+bool WorkshopBridge::restockPart(int partId,int quantity,int unitCents) {
+    if(!ready_||quantity<1||quantity>1000000||unitCents<0||unitCents>100000000) return fail(QStringLiteral("Invalid restock values."));
+    if(!db_.transaction()) return fail(db_.lastError().text());
+    QSqlQuery q(db_);q.prepare(QStringLiteral("UPDATE parts SET quantity=quantity+?,unit_cents=? WHERE id=? AND quantity<=1000000-?"));
+    q.addBindValue(quantity);q.addBindValue(unitCents);q.addBindValue(partId);q.addBindValue(quantity);
+    return finish(q.exec()&&q.numRowsAffected()==1&&log(0,QStringLiteral("Stock received: %1 x%2").arg(partId).arg(quantity)));
 }

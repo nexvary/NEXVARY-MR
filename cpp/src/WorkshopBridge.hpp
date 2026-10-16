@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE int createOrder(const QString &customer,const QString &phone,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &technician,const QString &notes);
     Q_INVOKABLE bool updateOrder(int id,const QString &status,const QString &technician,int laborCents,const QString &notes);
     Q_INVOKABLE bool addPart(const QString &sku,const QString &name,int quantity,int unitCents);
+    Q_INVOKABLE bool restockPart(int partId,int quantity,int unitCents);
     Q_INVOKABLE bool usePart(int orderId,int partId,int quantity);
     Q_INVOKABLE QVariantMap invoice(int orderId) const;
     Q_INVOKABLE bool exportOrders(const QString &path);
@@ -30,6 +31,7 @@ public:
     Q_INVOKABLE bool backup(const QString &path);
     Q_INVOKABLE bool restore(const QString &path,bool confirmed);
     Q_INVOKABLE QString checkIntegrity();
+    bool recordDiagnostic(const QString &operation,bool success);
     static QString localPath(const QString &value);
 signals:
     void changed();

@@ -183,6 +183,8 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
     if (operation_ == Operation::FastbootScan) replaceDevices({}, fastbootTransport);
     setStatus(!terminalReason_.isEmpty() ? terminalReason_ : QStringLiteral("فشل الفحص (رمز ") + QString::number(exitCode) + QStringLiteral("): ") + QString::fromUtf8(errors_).trimmed().left(2048));
   }
+  const QStringList operationNames{QStringLiteral("none"),QStringLiteral("adb-scan"),QStringLiteral("fastboot-scan"),QStringLiteral("properties"),QStringLiteral("logcat"),QStringLiteral("drivers")};
+  emit diagnosticCompleted(operationNames.value(static_cast<int>(operation_)), success);
   active_ = false;
   operation_ = Operation::None;
   emit busyChanged();

@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QCommandLineParser>
 #include <QImage>
+#include <QIcon>
 #include <QFileInfo>
 #include "ToolBridge.hpp"
 #include "RepairBridge.hpp"
@@ -19,6 +20,7 @@ int main(int argc,char *argv[]) {
  QGuiApplication::setApplicationName(QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
  QGuiApplication::setApplicationVersion(QStringLiteral("0.3.0"));
+ QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/assets/nexvary-mr.png")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;cli.addHelpOption();cli.addVersionOption();
  cli.addOption({QStringLiteral("data-dir"),QStringLiteral("Local data directory"),QStringLiteral("path")});
@@ -30,6 +32,7 @@ int main(int argc,char *argv[]) {
  const QString dir=cli.isSet(QStringLiteral("data-dir"))?cli.value(QStringLiteral("data-dir")):QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
  if(!QDir().mkpath(dir)) return 3;
  ToolBridge tools;RepairBridge repair;WorkshopBridge workshop(QDir(dir).filePath(QStringLiteral("repairs.db")));BoardBridge board;FirmwareBridge firmware;
+ QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
  engine.rootContext()->setContextProperty(QStringLiteral("repairBridge"),&repair);
@@ -49,6 +52,7 @@ int main(int argc,char *argv[]) {
   QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page]() mutable {
    if(page<16){window->setProperty("ar",page<8);window->setProperty("currentPage",page%8);++page;return;}
    timer->stop();window->setProperty("ar",true);window->setProperty("currentPage",3);
+   if(auto *viewer=window->findChild<QObject *>(QStringLiteral("boardWorkspace")); viewer && board.components().size()>2) {viewer->setProperty("selected",board.components().at(2));}
    QTimer::singleShot(400,&app,[&,window] {
     bool ok=true;
     if(cli.isSet(QStringLiteral("screenshot"))) {const auto path=cli.value(QStringLiteral("screenshot"));QDir().mkpath(QFileInfo(path).absolutePath());ok=window->grabWindow().save(path);}

@@ -8,6 +8,8 @@
 #include <QTemporaryDir>
 #include <QTest>
 #include <QUrl>
+#include <QBuffer>
+#include <QImage>
 #include <limits>
 
 class BoardTests final : public QObject {
@@ -92,6 +94,29 @@ private slots:
   void rejectsLargeFiles() {
     QFile file(dir.filePath("large.json")); QVERIFY(file.open(QIODevice::WriteOnly)); QVERIFY(file.resize(8 * 1024 * 1024 + 1)); file.close();
     BoardBridge board; QVERIFY(!board.importBoard(file.fileName(), true)); QVERIFY(board.error().contains("8 MiB"));
+  }
+  void photoAttachmentAndSessionValidation() {
+    BoardBridge board;const auto source=write(fixture());QVERIFY(board.importBoard(source,true));
+    const auto imagePath=dir.filePath("technician.png");QImage image(8,6,QImage::Format_ARGB32);image.fill(Qt::cyan);image.setText("Comment","metadata must not survive");QVERIFY(image.save(imagePath,"PNG"));
+    QVERIFY(!board.addPhoto("UNKNOWN",imagePath));QVERIFY(!board.addPhoto("U1","https://example.invalid/photo.png"));
+    QVERIFY(board.addPhoto("U1",QUrl::fromLocalFile(imagePath).toString()));QVERIFY(board.dirty());QCOMPARE(board.photos().size(),1);
+    const auto photo=board.photos().first().toMap();QCOMPARE(photo.value("width").toInt(),8);QCOMPARE(photo.value("height").toInt(),6);
+    const auto encoded=photo.value("image").toString();QVERIFY(encoded.startsWith("data:image/png;base64,"));
+    const auto decoded=QByteArray::fromBase64(encoded.mid(QStringLiteral("data:image/png;base64,").size()).toLatin1());const auto cleaned=QImage::fromData(decoded,"PNG");QVERIFY(!cleaned.isNull());QVERIFY(cleaned.text("Comment").isEmpty());
+    const auto session=dir.filePath("photos.session.json");QVERIFY(board.saveSession(session));
+    BoardBridge copy;QVERIFY(copy.importBoard(source,true));QVERIFY(copy.loadSession(session));QCOMPARE(copy.photos(),board.photos());QVERIFY(!copy.dirty());
+    QFile saved(session);QVERIFY(saved.open(QIODevice::ReadOnly));const auto root=QJsonDocument::fromJson(saved.readAll()).object();saved.close();
+    auto bad=root;auto photos=bad["photos"].toArray();auto record=photos[0].toObject();record["image"]="data:image/png;base64,!!!!";photos[0]=record;bad["photos"]=photos;
+    QVERIFY(!copy.loadSession(write(bad,"invalid-photo.json")));QCOMPARE(copy.photos().size(),1);
+    QImage tooWide(4097,1,QImage::Format_ARGB32);tooWide.fill(Qt::red);QByteArray oversizedPng;QBuffer buffer(&oversizedPng);QVERIFY(buffer.open(QIODevice::WriteOnly));QVERIFY(tooWide.save(&buffer,"PNG"));buffer.close();
+    record["image"]=QStringLiteral("data:image/png;base64,")+QString::fromLatin1(oversizedPng.toBase64());photos[0]=record;bad["photos"]=photos;
+    QVERIFY(!copy.loadSession(write(bad,"wide-photo.json")));QCOMPARE(copy.photos().size(),1);
+    const auto widePath=dir.filePath("wide.png");QVERIFY(tooWide.save(widePath,"PNG"));QVERIFY(!copy.addPhoto("U1",widePath));
+    for(int i=0;i<3;++i) { QVERIFY(copy.addPhoto("U1",imagePath)); }
+    QCOMPARE(copy.photos().size(),4);QVERIFY(!copy.addPhoto("U1",imagePath));
+    QVERIFY(copy.removePhoto(0));QCOMPARE(copy.photos().size(),3);QVERIFY(copy.dirty());QVERIFY(!copy.removePhoto(-1));
+    QFile huge(dir.filePath("huge-photo.png"));QVERIFY(huge.open(QIODevice::WriteOnly));QVERIFY(huge.resize(4*1024*1024+1));huge.close();QVERIFY(!copy.addPhoto("U1",huge.fileName()));
+    QVERIFY(copy.importBoard(source,true));QVERIFY(copy.photos().isEmpty());
   }
 };
 QTEST_GUILESS_MAIN(BoardTests)

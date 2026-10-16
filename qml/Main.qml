@@ -42,7 +42,7 @@ ApplicationWindow {
    Layout.fillWidth:true;Layout.preferredHeight:80;color:"#071421";border.color:"#193248"
    RowLayout {
     anchors.fill:parent;anchors.margins:18;spacing:18
-    Rectangle {width:42;height:42;radius:9;color:"#0f4da5";border.color:"#4b9aff";Label{anchors.centerIn:parent;text:"MR";font.bold:true;font.pixelSize:22;color:"#f2f7ff"}}
+    Image {source:"qrc:/assets/nexvary-mr.png";Layout.preferredWidth:48;Layout.preferredHeight:48;fillMode:Image.PreserveAspectFit}
     ColumnLayout {spacing:1;Label{text:"Nexvary MR";font.pixelSize:28;font.bold:true;color:"#f2f6ff"}Label{text:"MOBILE REPAIR WORKSTATION";font.pixelSize:10;font.letterSpacing:1.7;color:"#829bb5"}}
     Item {Layout.fillWidth:true}
     Label {text:window.trx("مساحة عمل هندسية محلية","LOCAL ENGINEERING WORKSPACE");color:"#7297b7";font.pixelSize:12}

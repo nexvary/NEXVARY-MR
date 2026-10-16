@@ -55,6 +55,7 @@ signals:
   void driverInfoChanged();
   void autoRefreshChanged();
   void operationFinished(bool success);
+  void diagnosticCompleted(const QString &operation, bool success);
 private:
   enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers };
   bool runReadOnly(const QString &program, const QStringList &arguments, Operation operation);
