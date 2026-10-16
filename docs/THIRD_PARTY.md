@@ -49,3 +49,9 @@ See [INTEGRATIONS.md](INTEGRATIONS.md) for pinned upstream revisions and the rej
 ## Installer and CI
 
 Inno Setup is a build-time tool; the installer contains only the application's deployed runtime. CI builds unsigned portable ZIP and setup EXE artifacts. A SHA256 file checks file integrity; it does not establish publisher identity. Code signing, antivirus reputation, independent Windows acceptance and complete dependency-license review remain release gates.
+
+## Recovery increment
+
+The C++ image scanner and case workflow are original project code; no PhotoRec, TSK, ALEAPP, MVT, libewf or other recovery application code/binary is bundled. The native Windows case vault calls the operating system's CryptProtectData/CryptUnprotectData APIs (Crypt32), with current-user scope and integrity protection. No Windows system DLL is redistributed. [Microsoft DPAPI documentation](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata) describes account/machine binding and its limits.
+
+The optional Android companion uses the official MIT Shizuku API/provider13.1.5, downloaded through pinned Gradle dependencies. Its APK assets include the complete upstream MIT notice, copyright2021 RikkaW. Shizuku manager is not bundled. The Gradle8.9 wrapper is an Apache2.0 build-time binary with pinned SHA256; matching source/notices are linked in the companion README. No runtime Python foundation has been added to the desktop. Recovery tool research and its independent PhotoRec/Linux fixture experiment do not imply integration or Windows acceptance of those external applications.

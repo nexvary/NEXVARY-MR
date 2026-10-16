@@ -39,7 +39,7 @@ ApplicationWindow {
  Dialog {
   id:exitDialog;width:480;objectName:"exitDialog";anchors.centerIn:parent;modal:true;title:window.trx("إغلاق NEXVARY MR","Close NEXVARY MR");standardButtons:Dialog.Yes|Dialog.No
   Label {width:430;wrapMode:Text.WordWrap;color:"#cfdfed";text:window.trx("هل تريد إغلاق البرنامج؟ ستُلغى الفحوص الجارية. احفظ جلسة المخطط والنماذج المفتوحة أولًا؛ أوامر الصيانة المحفوظة محفوظة محليًا.","Close the application? Running checks will be cancelled. Save board sessions and open forms first; saved repair orders are stored locally.")}
-  onAccepted:{toolBridge.cancel();firmwareBridge.cancel();window.allowClose=true;window.close()}
+  onAccepted:{toolBridge.cancel();firmwareBridge.cancel();recoveryBridge.cancel();window.allowClose=true;window.close()}
  }
  ColumnLayout {
   anchors.fill:parent;spacing:0
@@ -102,7 +102,7 @@ ApplicationWindow {
    }
    ColumnLayout {
     Layout.fillWidth:true;Layout.fillHeight:true;spacing:10
-    RowLayout {Layout.fillWidth:true;Label{text:window.titles[window.currentPage];color:"#e6f0ff";font.pixelSize:23;font.bold:true}Item{Layout.fillWidth:true}Label{text:"0.3.0 / "+window.trx("تطوير","DEVELOPMENT");color:"#6d94b3";font.pixelSize:11}}
+    RowLayout {Layout.fillWidth:true;Label{text:window.titles[window.currentPage];color:"#e6f0ff";font.pixelSize:23;font.bold:true}Item{Layout.fillWidth:true}Label{text:"0.4.0 / "+window.trx("تطوير","DEVELOPMENT");color:"#6d94b3";font.pixelSize:11}}
     StackLayout {
      id:pages;Layout.fillWidth:true;Layout.fillHeight:true;currentIndex:window.currentPage
      ColumnLayout {

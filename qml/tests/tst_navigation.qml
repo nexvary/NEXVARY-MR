@@ -65,6 +65,14 @@ TestCase {
   reset.checked=false;
   consent.checked=false;
  }
+ function test_recoveryWizard(){
+  app.currentPage=8;findChild(app,"recoveryTabs").currentIndex=1;let page=findChild(app,"recoveryWorkspace");verify(page!==null);
+  for(let i=0;i<8;i++){page.step=i;verify(waitForRendering(app.contentItem))}
+  page.step=1;findChild(app,"recoveryBrand").text="Synthetic";findChild(app,"recoveryModel").text="UI fixture";
+  page.step=4;findChild(app,"recoveryTitle").text="Synthetic UI case";findChild(app,"recoveryOwner").text="Test-only owner reference";
+  let create=findChild(app,"createRecoveryCase");compare(create.enabled,false);verify(waitForRendering(app.contentItem));mouseClick(findChild(app,"caseOwnerConsent"));tryCompare(create,"enabled",true);mouseClick(create);tryCompare(recoveryBridge,"active",true);compare(page.step,5);
+  compare(findChild(app,"runRecovery").enabled,false);page.step=4;verify(waitForRendering(app.contentItem));mouseClick(findChild(app,"closeRecoveryCase"));tryCompare(recoveryBridge,"active",false);findChild(app,"recoveryTabs").currentIndex=0;
+ }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

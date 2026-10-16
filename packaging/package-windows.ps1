@@ -74,6 +74,7 @@ foreach ($relative in $requiredRuntime) {
 }
 @('[Paths]', 'Prefix=.', 'Plugins=.', 'QmlImports=qml') | Set-Content (Join-Path $bundle 'qt.conf') -Encoding utf8
 Copy-Item (Join-Path $repo 'docs/USER_GUIDE.md') $bundle
+Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/THIRD_PARTY.md') $bundle
 Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }

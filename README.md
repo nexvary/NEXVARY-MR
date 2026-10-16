@@ -37,3 +37,7 @@ The Python 0.1 foundation remains available for parity review (`python -m nexvar
 ## Validation boundaries
 
 GitHub-hosted Windows build, Qt integration/UI tests and isolated portable/installer smoke checks are automated gates. Clean end-user Windows 10/11 VM acceptance, physical phones, OEM drivers, unplug/replug behavior, real licensed board files, external scrcpy controls, code signing, privacy/retention policy and a final dependency audit remain separate release gates. See `docs/VALIDATION.md` for results tied to the development revision.
+
+## Development recovery increment
+
+The ninth workspace now retains source assessment and adds native local image analysis and encrypted Windows cases. See [recovery guide](docs/RECOVERY_GUIDE.md), [research](research/android-recovery/FACTORY_RESET_RESEARCH.md), [tool/license matrix](research/android-recovery/TOOLS.md) and [optional Android companion](recovery-agent/README.md). Existing Python research scanners remain offset-only tools; they are not the desktop processing engine. Builds are unsigned development artifacts. Physical Shizuku/OEM/reset experiments and clean Windows acceptance remain unverified.

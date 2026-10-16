@@ -19,3 +19,10 @@
 - Correct legacy SQLite connection closure on Windows; keep Python baseline and tests.
 - Add Release-effective C++ tests, backend/UI tests and isolated Windows portable/installer validation in CI.
 - Record verified upstream revisions and reject incompatible/unclear third-party licenses. Only the existing external scrcpy and Android platform-tools adapters are integrated; no third-party application source is vendored.
+
+## 0.4.0 development
+
+- Preserve the latest source-assessment UI, keyboard navigation and JPEG/EXIF research changes; restore the required os import after Windows research CI exposed a NameError.
+- Add native bounded PNG/JPEG raw-image carving, source verification, conditional assessment, DPAPI case containers, explicit consent, evidence provenance/audit and plaintext-confirmed exports.
+- Add an optional Kotlin/Shizuku metadata-only Android companion, offline protocol and separate Android CI gates. No privileged device or factory-reset recovery success is claimed.
+- Add primary-source recovery-tool/license research and an unexecuted hardware laboratory matrix. Retain the Python baseline and research utilities; the desktop engines remain C++20/Qt.
