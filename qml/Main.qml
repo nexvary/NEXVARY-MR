@@ -14,7 +14,7 @@ ApplicationWindow {
  property bool toastOk:true
  property var states:["Received","Diagnosing","Awaiting parts","Repairing","Ready","Delivered","Cancelled"]
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
- property var titles:ar?["مركز العمليات","الأجهزة والاتصال","تشخيص الجهاز","مخططات اللوحات","فحص ملفات النظام","أوامر الصيانة","قطع الغيار","جاهزية وإعدادات","استعادة البيانات"]:["Operations center","Devices & USB","Diagnostics","Board workspace","Firmware preflight","Repair orders","Parts inventory","Readiness & settings","Data recovery"]
+ property var titles:ar?["مركز العمليات","الأجهزة والاتصال","تشخيص الجهاز","مخططات اللوحات","فحص ملفات النظام","أوامر الصيانة","قطع الغيار","جاهزية وإعدادات","استعادة البيانات","مختبر الأدلة الرقمية"]:["Operations center","Devices & USB","Diagnostics","Board workspace","Firmware preflight","Repair orders","Parts inventory","Readiness & settings","Data recovery","Forensic Lab"]
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
@@ -142,6 +142,7 @@ ApplicationWindow {
      InventoryPage {app:window}
      SettingsPage {app:window}
      RecoveryPage {app:window}
+     ForensicLabPage {app:window}
     }
     Rectangle {
      Layout.fillWidth:true;Layout.preferredHeight:66;color:"#061622";radius:6;border.color:"#1a354a"
