@@ -1,0 +1,35 @@
+name: C++20 and Qt Windows
+on:
+  push:
+    paths:
+      - 'cpp/**'
+      - 'qml/**'
+      - 'CMakeLists.txt'
+      - '.github/workflows/cpp-qt.yml'
+  pull_request:
+jobs:
+  core:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure C++ core
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=OFF
+      - name: Build core and tests
+        run: cmake --build build --config Release
+      - name: Run tests
+        run: ctest --test-dir build -C Release --output-on-failure
+  qt:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          modules: 'qtshadertools'
+          cache: true
+      - name: Configure GUI
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+      - name: Build GUI
+        run: cmake --build build --config Release
+      - name: Test core
+        run: ctest --test-dir build -C Release --output-on-failure
