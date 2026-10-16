@@ -6,6 +6,20 @@ Validation date: 2026-10-16. Work is on `dev/cpp-qt-foundation` in [draft PR #1]
 
 Use the [C++/Qt workflow](https://github.com/nexvary/NEXVARY-MR/actions/workflows/cpp-qt.yml) and [Python workflow](https://github.com/nexvary/NEXVARY-MR/actions/workflows/test.yml) for the results attached to each exact commit. A workflow configuration in this repository is not evidence that its steps have passed. Test XML, deployment stdout/stderr, PNG screenshots and checksums are uploaded as Actions artifacts. Portable/setup artifacts are published only after the Qt job's gates pass.
 
+## Verified Windows candidate
+
+Commit `c648f1483b8feb698f30adf3396bf2b302e8c91a`, [successful run 38899256690](https://github.com/nexvary/NEXVARY-MR/actions/runs/38899256690):
+
+- Windows2022/MSVC2022/Qt6.8.3 build with compiler warnings as errors: passed.
+- Native CTest: 7/7 passed, including 10/10 QuickTest results (init/cleanup included); legacy Python: 4/4 passed.
+- Portable copied outside the developer directory with SDK paths removed: GUI smoke exit0, JPEG/PNG decode and SQLite ready, screenshot produced, empty stderr.
+- Inno installer built, installed, deployed runtime smoke-tested, then uninstalled: passed; empty runtime stderr.
+- Downloaded archives were inspected. Both package SHA256 values matched the recorded checksums, all 1,379 portable manifest entries matched, required Qt/SQLite/JPEG/CRT files were present, and no test EXEs were bundled.
+
+Artifacts: [portable](https://github.com/nexvary/NEXVARY-MR/actions/runs/38899256690/artifacts/12045372788), [installer](https://github.com/nexvary/NEXVARY-MR/actions/runs/38899256690/artifacts/12045492344), [Windows runtime screenshots/test evidence](https://github.com/nexvary/NEXVARY-MR/actions/runs/38899256690/artifacts/12045820881).
+
+Visual inspection of the actual Windows minimum-size screenshot identified clipped sidebar quick actions. The subsequent QML adjustment makes that sidebar scrollable; its UI regression scrolls to and verifies the quick backup action remains reachable. The latest workflow run is authoritative for the adjusted revision.
+
 ## Executed local checks
 
 Ubuntu 24.04, GCC 13, Qt 6.4.2, C++20, `MR_WARNINGS_AS_ERRORS=ON`:

@@ -74,6 +74,10 @@ ApplicationWindow {
    Layout.fillWidth:true;Layout.fillHeight:true;Layout.margins:10;spacing:10
    Panel {
     title:window.trx("الجهاز المحدد","Selected device");Layout.preferredWidth:224;Layout.fillHeight:true
+    ScrollView {
+     id:deviceScroll;objectName:"deviceScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
+     ColumnLayout {
+      width:deviceScroll.availableWidth;spacing:12
     Rectangle {
      Layout.fillWidth:true;Layout.preferredHeight:155;color:"#07131f";radius:7;border.color:"#1b3850"
      Rectangle {anchors.centerIn:parent;width:66;height:116;radius:12;color:"#0b2947";border.width:2;border.color:toolBridge.selectedSerial?"#3989ff":"#31506a";Rectangle{anchors.top:parent.top;anchors.horizontalCenter:parent.horizontalCenter;anchors.topMargin:7;width:25;height:4;radius:2;color:"#5b8bb2"}Label{anchors.centerIn:parent;text:toolBridge.selectedSerial?"USB":"—";color:"#6fa8d9";font.pixelSize:18}}
@@ -86,9 +90,10 @@ ApplicationWindow {
     ActionButton {text:window.trx("قراءة المعلومات","Read properties");Layout.fillWidth:true;enabled:!toolBridge.busy&&toolBridge.selectedSerial!=="";onClicked:toolBridge.readDeviceInfo()}
     ActionButton {text:window.trx("عرض الشاشة","Mirror screen");Layout.fillWidth:true;enabled:!toolBridge.busy&&toolBridge.selectedSerial!=="";onClicked:toolBridge.startMirror()}
     ActionButton {text:window.trx("أمر صيانة جديد","Repair orders");Layout.fillWidth:true;onClicked:window.navigate(5)}
-    ActionButton {text:window.trx("النسخ الاحتياطي","Backup & restore");Layout.fillWidth:true;onClicked:window.navigate(7)}
-    Item {Layout.fillHeight:true}
+    ActionButton {objectName:"quickBackup";text:window.trx("النسخ الاحتياطي","Backup & restore");Layout.fillWidth:true;onClicked:window.navigate(7)}
     Label {text:window.trx("فحوص أولية للقراءة فقط\nلا توجد عمليات فتح حماية أو تعديل هوية","Read-only initial checks\nNo protection bypass or identity changes");color:"#6e8ca5";wrapMode:Text.WordWrap;Layout.fillWidth:true;font.pixelSize:11}
+     }
+    }
    }
    ColumnLayout {
     Layout.fillWidth:true;Layout.fillHeight:true;spacing:10

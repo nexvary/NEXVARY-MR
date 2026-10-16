@@ -15,6 +15,7 @@
 - Normalize optional empty/null form strings before SQLite binding; regression covers blank optional fields.
 - Wait for rendered board controls and opened dialogs in UI interaction tests; preserve actual button clicks.
 - Remove unused Qt PrintSupport dependency; invoice PDF rendering uses QtGui.
+- Make the device/quick-action sidebar scrollable at minimum window height, verified after Windows runtime screenshot review.
 - Correct legacy SQLite connection closure on Windows; keep Python baseline and tests.
 - Add Release-effective C++ tests, backend/UI tests and isolated Windows portable/installer validation in CI.
 - Record verified upstream revisions and reject incompatible/unclear third-party licenses. Only the existing external scrcpy and Android platform-tools adapters are integrated; no third-party application source is vendored.
