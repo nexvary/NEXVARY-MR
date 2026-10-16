@@ -5,6 +5,8 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QHBoxLayout
     QLineEdit, QListWidget, QMainWindow, QMessageBox, QPushButton, QStackedWidget,
     QTextEdit, QVBoxLayout, QWidget)
 from .core import CATALOG, RULES, discover, readiness, save_case
+from .oem_services import OEM, COMMON, capability_status
+from .device_actions import ALLOWED, connected_devices, execute
 
 STYLE = """
 QWidget {background:#0b1220;color:#e7edf8;font-size:14px;font-family:'Segoe UI';}
@@ -29,6 +31,7 @@ class Window(QMainWindow):
             ("Dashboard / الرئيسية", self.dashboard),
             ("Readiness / المتطلبات", self.ready_page),
             ("Devices / الأجهزة", self.devices_page),
+            ("OEM Service / صيانة الهواتف", self.oem_page),
             ("Diagnosis / التشخيص", self.diagnosis_page),
             ("Repair case / أمر صيانة", self.case_page),
         ]
@@ -88,6 +91,73 @@ class Window(QMainWindow):
         layout.addWidget(models)
         layout.addWidget(scan)
         layout.addWidget(output)
+        return page
+
+    def oem_page(self):
+        page, layout = self.page("OEM Service / مركز صيانة الهواتف")
+        brand = QComboBox()
+        brand.addItems(OEM.keys())
+        transport = QComboBox()
+        transport.addItems(["adb", "fastboot"])
+        serial = QComboBox()
+        serial.setEditable(False)
+        action = QComboBox()
+        result = QTextEdit()
+        result.setReadOnly(True)
+        def refresh_actions():
+            action.clear()
+            for service in COMMON:
+                status = capability_status(brand.currentText(), service.key)
+                if service.key in ALLOWED:
+                    action.addItem(service.title, service.key)
+            result.setPlainText("Only tested transport-level commands are offered. OEM-specific operations require model adapters.")
+        def refresh_devices():
+            serial.clear()
+            try:
+                serial.addItems(connected_devices(transport.currentText()))
+                if serial.count() == 0:
+                    result.setPlainText("No authorized device detected for selected transport.")
+            except (RuntimeError, OSError, ValueError) as exc:
+                result.setPlainText(str(exc))
+        def run():
+            selected = action.currentData()
+            device = serial.currentText()
+            if not selected or not device:
+                QMessageBox.warning(self, "Device required", "Connect and select a device first.")
+                return
+            confirm = QMessageBox.question(self, "Confirm device operation",
+                f"Execute {selected} on device {device}?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if confirm != QMessageBox.StandardButton.Yes:
+                return
+            try:
+                result.setPlainText(execute(selected, device, confirmed=True))
+            except (RuntimeError, ValueError, PermissionError, OSError) as exc:
+                QMessageBox.warning(self, "Operation failed", str(exc))
+                result.setPlainText(str(exc))
+        brand.currentTextChanged.connect(lambda: filter_transport_actions())
+        transport.currentTextChanged.connect(refresh_devices)
+        def filter_transport_actions():
+            action.clear()
+            for service in COMMON:
+                if service.key in ALLOWED and ALLOWED[service.key][0] == transport.currentText():
+                    action.addItem(service.title, service.key)
+        transport.currentTextChanged.connect(filter_transport_actions)
+        form = QFormLayout()
+        form.addRow("Manufacturer / الشركة", brand)
+        form.addRow("Connection / الاتصال", transport)
+        form.addRow("Device serial / الجهاز", serial)
+        form.addRow("Available action / الوظيفة", action)
+        layout.addLayout(form)
+        refresh = QPushButton("Refresh connected devices / تحديث الأجهزة")
+        refresh.clicked.connect(refresh_devices)
+        layout.addWidget(refresh)
+        button = QPushButton("Execute selected action / تنفيذ الأمر")
+        button.clicked.connect(run)
+        layout.addWidget(button)
+        layout.addWidget(result)
+        refresh_actions()
+        filter_transport_actions()
         return page
 
     def diagnosis_page(self):
