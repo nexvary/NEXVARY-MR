@@ -15,6 +15,9 @@ ALLOWED = {
     "reboot_recovery": ("adb", ("reboot", "recovery")),
     "reboot_bootloader": ("adb", ("reboot", "bootloader")),
     "fastboot_check": ("fastboot", ("getvar", "product")),
+    "fastboot_is_unlocked": ("fastboot", ("getvar", "unlocked")),
+    "fastboot_current_slot": ("fastboot", ("getvar", "current-slot")),
+    "fastboot_serial": ("fastboot", ("getvar", "serialno")),
     "fastboot_reboot": ("fastboot", ("reboot",)),
     "fastboot_bootloader": ("fastboot", ("reboot", "bootloader")),
 }
@@ -56,4 +59,4 @@ def execute(action, serial, confirmed=False):
                             text=True, timeout=20, check=False)
     if result.returncode:
         raise RuntimeError(result.stderr.strip() or f"{action} failed")
-    return result.stdout.strip() or "Command completed"
+    return (result.stdout + "\\n" + result.stderr).strip() or "Command completed"
