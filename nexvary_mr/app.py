@@ -137,6 +137,12 @@ class Window(QMainWindow):
                 result.setPlainText(str(exc))
         brand.currentTextChanged.connect(refresh_actions)
         transport.currentTextChanged.connect(refresh_devices)
+        def filter_transport_actions():
+            action.clear()
+            for service in COMMON:
+                if service.key in ALLOWED and ALLOWED[service.key][0] == transport.currentText():
+                    action.addItem(service.title, service.key)
+        transport.currentTextChanged.connect(filter_transport_actions)
         form = QFormLayout()
         form.addRow("Manufacturer / الشركة", brand)
         form.addRow("Connection / الاتصال", transport)
@@ -151,6 +157,7 @@ class Window(QMainWindow):
         layout.addWidget(button)
         layout.addWidget(result)
         refresh_actions()
+        filter_transport_actions()
         return page
 
     def diagnosis_page(self):
