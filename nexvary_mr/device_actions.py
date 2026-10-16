@@ -6,6 +6,11 @@ from .core import tool_path
 SERIAL = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 ALLOWED = {
     "read_info": ("adb", ("shell", "getprop", "ro.product.model")),
+    "read_android_version": ("adb", ("shell", "getprop", "ro.build.version.release")),
+    "read_manufacturer": ("adb", ("shell", "getprop", "ro.product.manufacturer")),
+    "read_security_patch": ("adb", ("shell", "getprop", "ro.build.version.security_patch")),
+    "read_sdk": ("adb", ("shell", "getprop", "ro.build.version.sdk")),
+    "read_bootloader": ("adb", ("shell", "getprop", "ro.bootloader")),
     "reboot_normal": ("adb", ("reboot",)),
     "reboot_recovery": ("adb", ("reboot", "recovery")),
     "reboot_bootloader": ("adb", ("reboot", "bootloader")),
