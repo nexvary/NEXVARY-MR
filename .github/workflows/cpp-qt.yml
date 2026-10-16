@@ -1,51 +1,98 @@
 name: C++20 and Qt Windows
 on:
   push:
-    paths:
-      - 'cpp/**'
-      - 'qml/**'
-      - 'CMakeLists.txt'
-      - '.github/workflows/cpp-qt.yml'
+    branches: [main, dev/cpp-qt-foundation]
   pull_request:
   workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mr-cpp-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   core:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure C++ core
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=OFF
       - name: Build core and tests
-        run: cmake --build build --config Release
-      - name: Run tests
-        run: ctest --test-dir build -C Release --output-on-failure
+        run: cmake --build build --config Release --parallel
+      - name: Run core tests
+        run: ctest --test-dir build -C Release --output-on-failure --output-junit core-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-test-results-${{ matrix.os }}
+          path: build/core-results.xml
   qt:
     runs-on: windows-latest
+    env:
+      QT_QUICK_BACKEND: software
     steps:
       - uses: actions/checkout@v4
       - uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.3'
+          arch: win64_msvc2022_64
           cache: true
-      - name: Configure GUI
+      - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
       - name: Build GUI
-        run: cmake --build build --config Release
-      - name: Test core
-        run: ctest --test-dir build -C Release --output-on-failure
+        run: cmake --build build --config Release --parallel
+      - name: Run CTest suite
+        run: ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
       - name: Assemble portable Qt runtime
+        shell: pwsh
+        run: ./packaging/package-windows.ps1
+      - name: Verify portable in isolated path with spaces
+        shell: pwsh
+        run: ./packaging/smoke-windows.ps1
+      - name: Build per-user Windows installer
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $exe = 'build/Release/nexvary_mr.exe'
-          if (-not (Test-Path $exe)) { $exe = 'build/nexvary_mr.exe' }
-          if (-not (Test-Path $exe)) { throw 'Qt executable not found' }
-          New-Item -ItemType Directory -Force -Path dist/NEXVARY-MR | Out-Null
-          Copy-Item $exe dist/NEXVARY-MR/NEXVARY-MR.exe
-          & "$env:QT_ROOT_DIR/bin/windeployqt.exe" --release --qmldir qml --no-translations dist/NEXVARY-MR/NEXVARY-MR.exe
-          if ($LASTEXITCODE -ne 0) { throw "windeployqt failed: $LASTEXITCODE" }
+          $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+          $iscc = if ($compiler) { $compiler.Source } else { "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" }
+          if (-not (Test-Path $iscc)) { throw 'Inno Setup compiler was not found on Windows runner' }
+          & $iscc packaging/NEXVARY-MR.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
+      - name: Verify installer installation and deployed runtime
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
+          $setup = (Resolve-Path 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe').Path
+          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=`"$destination`"" -Wait -PassThru
+          if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
+          ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed
+          $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
+      - name: Record artifact checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: NEXVARY-MR-Windows-portable-unsigned
-          path: dist/NEXVARY-MR/
+          name: NEXVARY-MR-Windows-x64-portable-unsigned
+          path: dist/NEXVARY-MR-Windows-x64-portable-unsigned.zip
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-MR-Windows-x64-installer-unsigned
+          path: |
+            dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEXVARY-MR-Windows-validation-evidence
+          path: |
+            build/qt-results.xml
+            build/Testing/Temporary/LastTest.log
+            dist/evidence/
+          if-no-files-found: warn
