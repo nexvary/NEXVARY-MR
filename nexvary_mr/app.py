@@ -1,0 +1,134 @@
+import json
+import sys
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QHBoxLayout, QLabel,
+    QLineEdit, QListWidget, QMainWindow, QMessageBox, QPushButton, QStackedWidget,
+    QTextEdit, QVBoxLayout, QWidget)
+from .core import CATALOG, RULES, discover, readiness, save_case
+
+STYLE = """
+QWidget {background:#0b1220;color:#e7edf8;font-size:14px;font-family:'Segoe UI';}
+QPushButton {background:#18283e;border:1px solid #30475d;border-radius:10px;padding:12px;text-align:left;}
+QPushButton:hover {background:#24435b;}
+QLineEdit,QComboBox,QTextEdit,QListWidget {background:#111e30;border:1px solid #334b60;border-radius:8px;padding:8px;}
+QLabel#heading {font-size:23px;font-weight:700;color:#64e2bb;}
+"""
+class Window(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("NEXVARY MR | Mobile Repair Workspace")
+        self.resize(1100, 720)
+        root = QWidget()
+        self.setCentralWidget(root)
+        layout = QHBoxLayout(root)
+        nav = QVBoxLayout()
+        self.stack = QStackedWidget()
+        layout.addLayout(nav, 1)
+        layout.addWidget(self.stack, 4)
+        sections = [
+            ("Dashboard / الرئيسية", self.dashboard),
+            ("Readiness / المتطلبات", self.ready_page),
+            ("Devices / الأجهزة", self.devices_page),
+            ("Diagnosis / التشخيص", self.diagnosis_page),
+            ("Repair case / أمر صيانة", self.case_page),
+        ]
+        for index, (name, factory) in enumerate(sections):
+            self.stack.addWidget(factory())
+            button = QPushButton(name)
+            button.clicked.connect(lambda checked=False, i=index: self.stack.setCurrentIndex(i))
+            nav.addWidget(button)
+        nav.addStretch()
+
+    def page(self, heading):
+        page = QWidget()
+        layout = QVBoxLayout(page)
+        label = QLabel(heading)
+        label.setObjectName("heading")
+        layout.addWidget(label)
+        return page, layout
+
+    def dashboard(self):
+        page, layout = self.page("NEXVARY MR — Mobile Repair")
+        layout.addWidget(QLabel("Offline-first • Windows 10/11 • Safe read-only discovery"))
+        layout.addWidget(QLabel("Start with readiness, connect a phone, then document diagnostics."))
+        layout.addStretch()
+        return page
+
+    def ready_page(self):
+        page, layout = self.page("Computer readiness / جاهزية الكمبيوتر")
+        output = QTextEdit()
+        output.setReadOnly(True)
+        def refresh():
+            output.setPlainText(json.dumps(readiness(), ensure_ascii=False, indent=2))
+        button = QPushButton("Scan computer / فحص الكمبيوتر")
+        button.clicked.connect(refresh)
+        layout.addWidget(button)
+        layout.addWidget(output)
+        refresh()
+        return page
+
+    def devices_page(self):
+        page, layout = self.page("Device catalog & USB discovery / الأجهزة")
+        search = QLineEdit()
+        search.setPlaceholderText("Search brand or model / ابحث عن شركة أو موديل")
+        models = QListWidget()
+        def filter_models(query=""):
+            models.clear()
+            for brand, entries in CATALOG.items():
+                for model in entries:
+                    if query.casefold() in (brand + " " + model).casefold():
+                        models.addItem(f"{brand}  ›  {model}")
+        search.textChanged.connect(filter_models)
+        filter_models()
+        output = QTextEdit()
+        output.setReadOnly(True)
+        scan = QPushButton("Discover ADB / Fastboot (read-only)")
+        scan.clicked.connect(lambda: output.setPlainText(json.dumps(discover(), ensure_ascii=False, indent=2)))
+        layout.addWidget(search)
+        layout.addWidget(models)
+        layout.addWidget(scan)
+        layout.addWidget(output)
+        return page
+
+    def diagnosis_page(self):
+        page, layout = self.page("Guided diagnosis / التشخيص")
+        choice = QComboBox()
+        choice.addItems(RULES)
+        result = QTextEdit()
+        result.setReadOnly(True)
+        def update():
+            steps, warning = RULES[choice.currentText()]
+            result.setPlainText(f"Next check:\n{steps}\n\nSafety:\n{warning}")
+        choice.currentTextChanged.connect(update)
+        layout.addWidget(choice)
+        layout.addWidget(result)
+        update()
+        return page
+
+    def case_page(self):
+        page, layout = self.page("New repair case / أمر صيانة")
+        brand, model, symptom = QLineEdit(), QLineEdit(), QLineEdit()
+        notes = QTextEdit()
+        form = QFormLayout()
+        for name, widget in (("Brand / الشركة", brand), ("Model / الموديل", model),
+                             ("Symptom / العطل", symptom), ("Notes / ملاحظات", notes)):
+            form.addRow(name, widget)
+        layout.addLayout(form)
+        def save():
+            try:
+                number = save_case(brand.text(), model.text(), symptom.text(), notes.toPlainText())
+                QMessageBox.information(self, "Saved", f"Repair case #{number} saved locally.")
+            except (ValueError, OSError) as exc:
+                QMessageBox.warning(self, "Cannot save", str(exc))
+        button = QPushButton("Save case / حفظ أمر الصيانة")
+        button.clicked.connect(save)
+        layout.addWidget(button)
+        layout.addStretch()
+        return page
+
+def main():
+    app = QApplication(sys.argv)
+    app.setStyleSheet(STYLE)
+    window = Window()
+    window.show()
+    sys.exit(app.exec())
