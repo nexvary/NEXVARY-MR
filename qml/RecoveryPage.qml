@@ -73,7 +73,7 @@ Item {
      model: app.ar ? ["بطاقة ذاكرة خارجية","نسخة احتياطية متاحة","تصدير من حساب سحابي","تخزين الهاتف الداخلي"] :
        ["External memory card","Accessible backup","Cloud account export","Internal phone storage"]
      currentIndex: page.sourceIndex
-     onActivated: function(index) { page.sourceIndex = index }
+     onCurrentIndexChanged: page.sourceIndex = currentIndex
     }
     Label {
      visible: page.sourceIndex === 0
@@ -87,7 +87,7 @@ Item {
      Layout.fillWidth: true
      model: app.ar ? ["غير معروف","نعم","لا"] : ["Unknown","Yes","No"]
      currentIndex: page.readabilityIndex
-     onActivated: function(index) { page.readabilityIndex = index }
+     onCurrentIndexChanged: page.readabilityIndex = currentIndex
     }
    }
    Panel {
