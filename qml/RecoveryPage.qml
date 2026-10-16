@@ -56,14 +56,14 @@ Item {
      objectName: "recoveryConsent"
      text: app.trx("لدي موافقة موثقة من مالك الجهاز","I have documented authorization from the owner")
      checked: page.consent
-     onToggled: page.consent = checked
+     onCheckedChanged: page.consent = checked
     }
     CheckBox {
      id: resetChoice
      objectName: "recoveryReset"
      text: app.trx("تمت إعادة ضبط المصنع","Device was factory-reset")
      checked: page.reset
-     onToggled: page.reset = checked
+     onCheckedChanged: page.reset = checked
     }
     Label { text: app.trx("مصدر البيانات","Data source"); color: "#e8f2ff" }
     ComboBox {
