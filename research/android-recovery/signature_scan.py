@@ -8,10 +8,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import stat
-import os
 
 SIGNATURES: dict[str, bytes] = {
-    "jpeg": bytes.fromhex("ffd8ffe0"),
+    "jpeg": bytes.fromhex("ffd8ff"),
     "png": bytes.fromhex("89504e470d0a1a0a"),
     "pdf": b"%PDF-",
     "zip": bytes.fromhex("504b0304"),
