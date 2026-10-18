@@ -63,12 +63,16 @@ Copy-Item "$qtRoot/plugins/imageformats/qjpeg.dll" (Join-Path $bundle 'imageform
 # Fluent SVG navigation assets require both the decoder and its matching library.
 Copy-Item "$qtRoot/plugins/imageformats/qsvg.dll" (Join-Path $bundle 'imageformats/qsvg.dll')
 Copy-Item "$qtRoot/bin/Qt6Svg.dll" (Join-Path $bundle 'Qt6Svg.dll')
+# Remote tracking needs actual TLS in the deployed runtime. Use Windows' native
+# certificate store/backend, without depending on an OpenSSL installation.
+New-Item -ItemType Directory -Force (Join-Path $bundle 'tls') | Out-Null
+Copy-Item "$qtRoot/plugins/tls/qschannelbackend.dll" (Join-Path $bundle 'tls/qschannelbackend.dll')
 $requiredRuntime = @(
   'NEXVARY-MR.exe', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
   'Qt6Quick.dll', 'Qt6Sql.dll', 'Qt6Network.dll',
   'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll',
-  'imageformats/qsvg.dll', 'Qt6Svg.dll'
+  'imageformats/qsvg.dll', 'Qt6Svg.dll', 'tls/qschannelbackend.dll'
 )
 foreach ($relative in $requiredRuntime) {
   $file = Join-Path $bundle $relative

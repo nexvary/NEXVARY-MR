@@ -15,6 +15,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QSslSocket>
 #include <memory>
 #include "ToolBridge.hpp"
 #include "RepairBridge.hpp"
@@ -72,6 +73,8 @@ int main(int argc,char *argv[]) {
  engine.load(QUrl(QStringLiteral("qrc:/NexvaryMR/qml/Main.qml")));
  if(engine.rootObjects().isEmpty()) return 1;
  if(smoke) {
+  // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
+  if(!QSslSocket::supportsSsl())return 12;
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return 4;
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());
  if(!window)return 5;
