@@ -26,7 +26,7 @@ QString pathExecutable(const QString &name) {
   return QStandardPaths::findExecutable(name);
 }
 bool configurableTool(const QString &name) {
-  return name == QStringLiteral("adb") || name == QStringLiteral("fastboot") || name == QStringLiteral("scrcpy");
+  return name == QStringLiteral("adb") || name == QStringLiteral("fastboot") || name == QStringLiteral("scrcpy") || name == QStringLiteral("mmls");
 }
 QString localAbsolutePath(const QString &input) {
   if (input.isEmpty() || input != input.trimmed() || input.startsWith(QStringLiteral("//")) || input.startsWith(QStringLiteral("\\\\"))) return {};
@@ -92,6 +92,26 @@ QVariantList ToolBridge::tools() const {
     result.append(QVariantMap{{QStringLiteral("name"), name}, {QStringLiteral("available"), !path.isEmpty()}, {QStringLiteral("path"), path}, {QStringLiteral("configured"), configuredTools_.contains(name)}, {QStringLiteral("configuredPath"), configuredTools_.value(name)}});
   }
   return result;
+}
+QVariantList ToolBridge::forensicTools() const {
+ struct Candidate{const char *name;const char *executable;const char *source;const char *license;};
+ static const Candidate candidates[]{
+  {"The Sleuth Kit / mmls","mmls","https://github.com/sleuthkit/sleuthkit","Component-specific IPL/CPL and other notices"},
+  {"Autopsy","autopsy","https://github.com/sleuthkit/autopsy","Apache-2.0 plus dependency notices"},
+  {"ALEAPP","aleapp","https://github.com/abrignoni/ALEAPP","MIT plus dependency notices"},
+  {"iLEAPP","ileapp","https://github.com/abrignoni/iLEAPP","MIT plus dependency notices"},
+  {"PhotoRec","photorec","https://www.cgsecurity.org/","GPL; review version and dependencies"},
+  {"TestDisk","testdisk","https://www.cgsecurity.org/","GPL; includes writing operations"},
+  {"Volatility 3","vol","https://github.com/volatilityfoundation/volatility3","Volatility Software License 1.0"},
+  {"MVT","mvt-ios","https://github.com/mvt-project/mvt","MVT License 1.1; consent restriction"},
+  {"Plaso","log2timeline","https://github.com/log2timeline/plaso","Apache-2.0 plus dependency notices"},
+  {"bulk_extractor","bulk_extractor","https://github.com/simsong/bulk_extractor","GPL-3.0-or-later for post-NPS project code; mixed components"}
+ };
+ QVariantList result;
+ for(const auto &candidate:candidates){const auto name=QString::fromLatin1(candidate.executable);const auto path=resolveExecutable(name);
+  result.append(QVariantMap{{"name",QString::fromLatin1(candidate.name)},{"executable",name},{"path",path},{"available",!path.isEmpty()},{"configuredPath",configuredTools_.value(name)},{"configured",configuredTools_.contains(name)},{"adapter",name==QStringLiteral("mmls")},{"source",QString::fromLatin1(candidate.source)},{"license",QString::fromLatin1(candidate.license)}});
+ }
+ return result;
 }
 QString ToolBridge::resolveExecutable(const QString &name) const {
   if (configurableTool(name) && configuredTools_.contains(name)) return validatedExecutable(configuredTools_.value(name));

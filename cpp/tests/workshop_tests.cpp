@@ -88,7 +88,7 @@ private slots:
   QTemporaryDir t;const auto legacy=t.filePath("legacy-v1.db");int order=-1;
   {WorkshopBridge w(legacy);QVERIFY(w.ready());order=w.createOrder("Preserved","","Brand","Model","","USB","Tech","Old notes");QVERIFY(order>0);}
   const QString connection="diagnosis-legacy";
-  {auto db=QSqlDatabase::addDatabase("QSQLITE",connection);db.setDatabaseName(legacy);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("DROP TABLE diagnoses"));QVERIFY(q.exec("PRAGMA user_version=1"));db.close();}QSqlDatabase::removeDatabase(connection);
+  {auto db=QSqlDatabase::addDatabase("QSQLITE",connection);db.setDatabaseName(legacy);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("DROP TABLE tracking_links"));QVERIFY(q.exec("DROP TABLE diagnoses"));QVERIFY(q.exec("PRAGMA user_version=1"));db.close();}QSqlDatabase::removeDatabase(connection);
   const auto backup=t.filePath("legacy-backup.db");QVERIFY(QFile::copy(legacy,backup));
   {WorkshopBridge migrated(legacy);QVERIFY2(migrated.ready(),qPrintable(migrated.error()));QCOMPARE(migrated.orders().size(),1);QCOMPARE(migrated.orders().first().toMap().value("notes").toString(),QStringLiteral("Old notes"));QVERIFY(migrated.saveDiagnosis(order,"USB","Guidance","New finding","","Tech"));QCOMPARE(migrated.checkIntegrity(),QStringLiteral("ok"));}
   WorkshopBridge active(t.filePath("active.db"));QVERIFY(active.ready());QVERIFY(active.restore(backup,true));QCOMPARE(active.orders().size(),1);QVERIFY(active.diagnoses(order).isEmpty());QVERIFY(active.saveDiagnosis(order,"USB","Guidance","After legacy restore","","Tech"));QCOMPARE(active.checkIntegrity(),QStringLiteral("ok"));

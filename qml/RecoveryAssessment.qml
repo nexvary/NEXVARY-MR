@@ -47,7 +47,7 @@ Item {
     Label {
      Layout.fillWidth: true
      wrapMode: Text.WordWrap
-     color: "#b8d1e6"
+     color: app.tone("#b8d1e6")
      text: app.trx("تقييم محلي لا يقرأ الهاتف ولا يعد باستعادة الملفات. لا يبدأ أي فحص دون إذن صاحب الجهاز.",
        "Local assessment only: no device access, no recovery promise, and no acquisition without owner authorization.")
     }
@@ -65,7 +65,7 @@ Item {
      checked: page.reset
      onCheckedChanged: page.reset = checked
     }
-    Label { text: app.trx("مصدر البيانات","Data source"); color: "#e8f2ff" }
+    Label { text: app.trx("مصدر البيانات","Data source"); color: app.tone("#e8f2ff") }
     ComboBox {
      id: source
      objectName: "recoverySource"
@@ -78,7 +78,7 @@ Item {
     Label {
      visible: page.sourceIndex === 0
      text: app.trx("هل البطاقة قابلة للقراءة؟","Is the card readable?")
-     color: "#e8f2ff"
+     color: app.tone("#e8f2ff")
     }
     ComboBox {
      id: readable
@@ -97,18 +97,18 @@ Item {
      objectName: "recoveryVerdict"
      text: page.verdict
      font.bold: true
-     color: page.blocked ? "#f4b56f" : "#58d7ae"
+     color: page.blocked ? app.tone("#f4b56f") : app.tone("#58d7ae")
     }
     Label {
      Layout.fillWidth: true
      wrapMode: Text.WordWrap
      text: app.ar ? page.instructionsAr[page.verdict] : page.instructionsEn[page.verdict]
-     color: "#e4efff"
+     color: app.tone("#e4efff")
     }
     Label {
      Layout.fillWidth: true
      wrapMode: Text.WordWrap
-     color: "#f1bd81"
+     color: app.tone("#f1bd81")
      text: app.trx("Shizuku لا يوفر صلاحيات Root ولا يستعيد مفاتيح التشفير المفقودة. لا تستخدم الهاتف لكتابة بيانات جديدة قبل التقييم.",
        "Shizuku does not grant root or restore lost encryption keys. Avoid writing new data before evaluation.")
     }

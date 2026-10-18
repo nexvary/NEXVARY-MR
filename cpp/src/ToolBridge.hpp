@@ -12,6 +12,7 @@ class ToolBridge final : public QObject {
   Q_OBJECT
   Q_PROPERTY(QString status READ status NOTIFY statusChanged)
   Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+  Q_PROPERTY(QVariantList forensicTools READ forensicTools NOTIFY toolsChanged)
   Q_PROPERTY(QVariantList tools READ tools NOTIFY toolsChanged)
   Q_PROPERTY(QVariantList devices READ devices NOTIFY devicesChanged)
   Q_PROPERTY(QString selectedSerial READ selectedSerial WRITE selectDevice NOTIFY selectedSerialChanged)
@@ -25,6 +26,7 @@ public:
   QString status() const { return status_; }
   bool busy() const { return active_; }
   QVariantList tools() const;
+  QVariantList forensicTools() const;
   QVariantList devices() const { return devices_; }
   QString selectedSerial() const { return selectedSerial_; }
   QVariantMap deviceInfo() const { return deviceInfo_; }

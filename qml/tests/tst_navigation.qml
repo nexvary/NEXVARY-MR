@@ -8,16 +8,122 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
- function test_minimumSize(){
-  app.width=1180;app.height=760;app.currentPage=7;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
-  for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
-  let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);tryVerify(function(){return deviceScroll.contentHeight>deviceScroll.availableHeight});
-  deviceScroll.contentItem.contentY=deviceScroll.contentHeight-deviceScroll.availableHeight;verify(waitForRendering(app.contentItem));
-  let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
-  app.width=1536;app.height=980;
+ function init(){findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
+ function test_centerProfilesAndTracking(){
+  const id=workshopBridge.createOrder("SYNTHETIC UI owner","test-contact","OPPO","TRAINING-01","test-serial","USB","Tech","private");verify(id>0)
+  const order=workshopBridge.invoice(id)
+  const second=workshopBridge.createOrderForDevice(order.device_id,"Screen","Tech","second visit");verify(second>id)
+  compare(workshopBridge.deviceProfile(order.device_id).orders.length,2)
+  app.currentPage=5;const tabs=findChild(app,"workshopTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem))
+  verify(findChild(app,"customerProfiles").count>0);verify(findChild(app,"deviceProfiles").count>0)
+  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));verify(!findChild(app,"startPortal").enabled);verify(!findChild(app,"issueTracking").enabled)
+  verify(trackingPortal.start("127.0.0.1",0,true));verify(waitForRendering(app.contentItem));verify(findChild(app,"stopPortal").enabled)
+  trackingPortal.stop();verify(!trackingPortal.running)
  }
- function test_navigation(){for(let i=0;i<9;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
+ function test_securityAndFaultTree(){
+  const id=workshopBridge.createOrder("Synthetic tree owner","","Samsung","SYNTHETIC-02","","USB","Tech","");verify(id>0)
+  app.currentPage=2;const tabs=findChild(app,"diagnosticTabs");tabs.currentIndex=2;verify(waitForRendering(app.contentItem))
+  verify(!findChild(app,"startSecurityScan").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
+  tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,6)
+  tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
+  const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
+  mouseClick(findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
+  findChild(app,"treeTechnician").text="Synthetic technician";findChild(app,"treeFinding").text="Synthetic safety observation only";
+  const save=findChild(app,"saveFaultTree");verify(save.enabled)
+  // The save control is below the first viewport: scroll it into view before clicking.
+  const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
+  verify(workshopBridge.diagnoses(selected).length>0)
+ }
+ function test_cloudTrackingConsent(){
+  app.currentPage=5;findChild(app,"workshopTabs").currentIndex=2;verify(waitForRendering(app.contentItem))
+  const approval=findChild(app,"cloudUploadConsent"),load=findChild(app,"importCloudCredentials")
+  approval.checked=false;compare(load.enabled,false)
+  compare(findChild(app,"syncCloudNow").enabled,false);compare(findChild(app,"issueCloudLink").enabled,false);compare(findChild(app,"copyCloudLink").enabled,false)
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;approval.checked=true;tryCompare(load,"enabled",true)
+   approval.checked=false;tryCompare(load,"enabled",false)
+  }
+ }
+ function test_newWorkspaceMinimumSize(){
+  app.width=1180;app.height=760
+  const checks=[{page:2,tab:1,bar:"diagnosticTabs",scroll:"faultTreePage",target:"importModelGuide"},{page:2,tab:2,bar:"diagnosticTabs",scroll:"securityPage",target:"exportSecurityReport"},{page:5,tab:1,bar:"workshopTabs",scroll:"profilesScroll",target:"repeatRepair"},{page:5,tab:2,bar:"workshopTabs",scroll:"trackingScroll",target:"publicTrackingMessage"}]
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark
+   for(const c of checks){app.currentPage=c.page;findChild(app,c.bar).currentIndex=c.tab;wait(50);const scroll=findChild(app,c.scroll);const target=findChild(app,c.target);verify(target!==null);verify(scroll.availableHeight>0);let point=target.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,scroll.contentItem.contentY+point.y-scroll.availableHeight+target.height+20);wait(30);let center=target.mapToItem(scroll,target.width/2,target.height/2);verify(center.y>=0&&center.y<scroll.height,"Bottom action remains reachable: "+c.target);scroll.contentItem.contentY=0}
+  }
+ }
+ function test_minimumSize(){
+  app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
+  for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
+  let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);verify(deviceScroll.availableHeight>0);
+  deviceScroll.contentItem.contentY=Math.max(0,deviceScroll.contentHeight-deviceScroll.availableHeight);
+  // Content can fit without scrolling, so no new render frame is required.
+  let backup=findChild(app,"quickBackup");verify(backup!==null);
+  tryVerify(function(){let point=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);return point.x>=0&&point.x<deviceScroll.width&&point.y>=0&&point.y<deviceScroll.height},5000,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
+  app.showDevicePanel=false;app.width=1536;app.height=980;
+ }
+ function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);wait(50);let point=b.mapToItem(app.contentItem,b.width/2,b.height/2);verify(point.y>=0&&point.y<app.height,"Navigation remains reachable: "+i);mouseClick(b);tryCompare(app,"currentPage",i)}}
+ function test_forensicLabNavigation(){
+  app.currentPage=0;
+  let nav=app.navigationButton(9);
+  verify(nav!==null,"Forensic Lab navigation missing");
+  mouseClick(nav);
+  compare(app.currentPage,9);
+  let lab=findChild(app,"forensicLabWorkspace");
+  verify(lab!==null,"Forensic Lab workspace missing");
+  compare(lab.modules.length,12);
+  compare(lab.modules.filter(function(m){return m.ready}).length,9);
+  verify(waitForRendering(app.contentItem));
+  app.ar=false;
+  verify(waitForRendering(app.contentItem));
+  compare(app.titles[9],"Forensic Lab");
+  app.ar=true;
+  verify(waitForRendering(app.contentItem));
+  compare(app.titles[9],"مختبر الأدلة الرقمية");
+  mouseClick(app.navigationButton(0));
+  compare(app.currentPage,0);
+ }
+ function test_forensicWorkspace(){
+  app.currentPage=9;
+  let tabs=findChild(app,"forensicTabs");verify(tabs!==null);tabs.currentIndex=1;
+  verify(recoveryBridge.createCase("Synthetic lab UI","LAB-ONLY","Synthetic","No phone","15","backup","unknown",true));
+  findChild(app,"forensicOperator").text="UI operator";findChild(app,"forensicAuthorization").text="LAB authorization";
+  let record=findChild(app,"forensicRecordOperator");compare(record.enabled,false);
+  findChild(app,"forensicOperatorConsent").checked=true;tryCompare(record,"enabled",true);
+  verify(waitForRendering(app.contentItem));mouseClick(record);compare(recoveryBridge.caseOperator,"UI operator");
+  verify(recoveryBridge.importVisibleFile(syntheticEvidencePath,true));tryCompare(recoveryBridge,"busy",false);
+  let files=findChild(app,"forensicEvidenceList");tryCompare(files,"count",1);
+  mouseClick(files,files.width/2,40);let preview=findChild(app,"forensicPreview");tryVerify(function(){return preview.text.indexOf("SYNTHETIC UI EVIDENCE")>=0});
+  let search=findChild(app,"forensicSearch");search.text="no matching file";tryCompare(files,"count",0);search.text="synthetic";tryCompare(files,"count",1);search.text="";
+  let report=findChild(app,"forensicReport");compare(report.enabled,false);findChild(app,"forensicPlaintext").checked=true;tryCompare(report,"enabled",true);findChild(app,"forensicPlaintext").checked=false;
+  mouseClick(findChild(app,"forensicVerify"));tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");
+  let custodyButton=findChild(app,"forensicCustody");let detail=findChild(app,"forensicDetailScroll");
+  let point=custodyButton.mapToItem(detail,custodyButton.width/2,custodyButton.height/2);detail.contentItem.contentY+=point.y-detail.height/2;
+  verify(waitForRendering(app.contentItem));mouseClick(custodyButton);let dialog=findChild(app,"forensicCustodyDialog");tryCompare(dialog,"opened",true);compare(dialog.standardButton(Dialog.Ok).enabled,false);
+  findChild(app,"forensicCustodyRecipient").text="Lab storage";findChild(app,"forensicCustodyReason").text="Synthetic review";
+  tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true);mouseClick(dialog.standardButton(Dialog.Ok));tryCompare(dialog,"opened",false);compare(recoveryBridge.evidenceCustodian(0),"Lab storage");
+  tabs.currentIndex=2;let events=findChild(app,"forensicTimelineList");tryVerify(function(){return events.count>=5});findChild(app,"forensicTimelineSearch").text="custody-transfer";tryCompare(events,"count",1);findChild(app,"forensicTimelineSearch").text="";
+  for(let language=0;language<2;language++){app.ar=language===0;for(let i=0;i<tabs.count;i++){tabs.currentIndex=i;verify(waitForRendering(app.contentItem))}}
+  tabs.currentIndex=3;compare(findChild(app,"runTskAnalysis").enabled,false);compare(toolBridge.forensicTools.length,10);
+  verify(recoveryBridge.closeCase());tabs.currentIndex=0;
+ }
+ function test_backNavigation(){
+  app.pageHistory=[];app.previousPage=0;app.currentPage=0;
+  mouseClick(app.navigationButton(9));compare(app.currentPage,9);let back=findChild(app,"backButton");compare(back.enabled,true);mouseClick(back);compare(app.currentPage,0);compare(app.visible,true);
+ }
+ function test_themeAndNarrowForensicTabs(){
+  app.width=1180;app.height=760;app.showDevicePanel=false;app.currentPage=9;
+  let theme=findChild(app,"themeButton"),tabs=findChild(app,"forensicTabs");
+  for(let language=0;language<2;language++){
+   app.ar=language===0;
+   for(let mode=0;mode<2;mode++){
+    mouseClick(theme);compare(app.darkTheme,mode===1);
+    for(let tab=0;tab<tabs.count;tab++){tabs.currentIndex=tab;verify(waitForRendering(app.contentItem))}
+   }
+  }
+  tabs.currentIndex=0;app.darkTheme=true;app.width=1536;app.height=980;
+ }
  function test_language(){let b=findChild(app,"languageButton");mouseClick(b);compare(app.ar,false);mouseClick(b);compare(app.ar,true)}
  function test_boardMeasurement(){
   app.currentPage=3;verify(waitForRendering(app.contentItem));mouseClick(findChild(app,"loadTrainingBoard"));tryVerify(function(){return boardBridge.loaded});verify(boardBridge.components.length>0);verify(waitForRendering(app.contentItem));

@@ -1,0 +1,20 @@
+bind = '127.0.0.1:9085'
+workers = 1
+worker_class = 'gthread'
+threads = 4
+worker_connections = 64
+timeout = 20
+graceful_timeout = 20
+keepalive = 2
+limit_request_line = 2048
+limit_request_fields = 40
+limit_request_field_size = 4096
+forwarded_allow_ips = '127.0.0.1'
+secure_scheme_headers = {'X-FORWARDED-PROTO': 'https'}
+accesslog = None
+errorlog = '-'
+loglevel = 'warning'
+capture_output = False
+preload_app = True
+# Gunicorn 26's local control socket is not part of this service's management surface.
+control_socket_disable = True

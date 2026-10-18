@@ -11,9 +11,19 @@
 #include <QIcon>
 #include <QFileInfo>
 #include <QFile>
+#include <QUuid>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QSslSocket>
+#include <memory>
 #include "ToolBridge.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
+#include "TrackingPortal.hpp"
+#include "CloudTracking.hpp"
+#include "SecurityBridge.hpp"
+#include "ServiceCatalog.hpp"
 #include "BoardBridge.hpp"
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
@@ -39,6 +49,10 @@ int main(int argc,char *argv[]) {
  ToolBridge tools;
  RepairBridge repair;
  WorkshopBridge workshop(QDir(dir).filePath(QStringLiteral("repairs.db")));
+ TrackingPortal portal(&workshop);
+ CloudTracking cloud(&workshop,QDir(dir).filePath(QStringLiteral("remote-tracking.dat")));
+ SecurityBridge security(QDir(dir).filePath(QStringLiteral("security-tools.json")));
+ ServiceCatalog catalog(QDir(dir).filePath(QStringLiteral("model-guides.json")));
  BoardBridge board;
  FirmwareBridge firmware;
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
@@ -50,37 +64,51 @@ int main(int argc,char *argv[]) {
  engine.rootContext()->setContextProperty(QStringLiteral("boardBridge"),&board);
  engine.rootContext()->setContextProperty(QStringLiteral("firmwareBridge"),&firmware);
  engine.rootContext()->setContextProperty(QStringLiteral("recoveryBridge"),&recovery);
+ engine.rootContext()->setContextProperty(QStringLiteral("trackingPortal"),&portal);
+ engine.rootContext()->setContextProperty(QStringLiteral("securityBridge"),&security);
+ engine.rootContext()->setContextProperty(QStringLiteral("serviceCatalog"),&catalog);
+ engine.rootContext()->setContextProperty(QStringLiteral("cloudTracking"),&cloud);
  bool qmlWarning=false;
  QObject::connect(&engine,&QQmlEngine::warnings,&app,[&qmlWarning](const QList<QQmlError> &warnings){if(!warnings.isEmpty())qmlWarning=true;});
  engine.load(QUrl(QStringLiteral("qrc:/NexvaryMR/qml/Main.qml")));
  if(engine.rootObjects().isEmpty()) return 1;
  if(smoke) {
+  // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
+  if(!QSslSocket::supportsSsl())return 12;
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return 4;
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());
  if(!window)return 5;
   if(QImage(QStringLiteral(":/assets/codec-check.jpg")).size()!=QSize(8,8)) return 8;
-  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()) return 8;
+  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()||QImage(QStringLiteral(":/assets/icons/home.svg")).isNull()) return 8;
   if(!board.importBoard(QStringLiteral(":/samples/training-board.json"),true)) return 9;
   // Original synthetic raw-image fixture exercises deployed recovery decoding,
   // source verification and Windows DPAPI persistence without a phone.
   QFile png(QStringLiteral(":/assets/nexvary-mr.png")),jpeg(QStringLiteral(":/assets/codec-check.jpg"));
   if(!png.open(QIODevice::ReadOnly)||!jpeg.open(QIODevice::ReadOnly))return 10;
-  const auto fixturePath=QDir(dir).filePath(QStringLiteral("synthetic-smoke.dd"));
+  const auto fixturePath=QDir(dir).filePath(QUuid::createUuid().toString(QUuid::WithoutBraces)+QStringLiteral("-synthetic-smoke.dd"));
   QFile fixture(fixturePath);
  if(!fixture.open(QIODevice::WriteOnly))return 10;
   const QByteArray fixtureBytes=QByteArray(65536,'\0')+png.readAll()+QByteArray(65536,'\0')+jpeg.readAll();
   if(fixture.write(fixtureBytes)!=fixtureBytes.size())return 10;
  fixture.close();
-  if(!recovery.createCase(QStringLiteral("SYNTHETIC smoke case"),QStringLiteral("automated fixture consent"),QStringLiteral("Synthetic"),QStringLiteral("No phone"),QString(),QStringLiteral("deleted"),QStringLiteral("none"),true)||!recovery.scanImage(fixturePath,true))return 10;
+  if(!recovery.createCase(QStringLiteral("SYNTHETIC smoke case"),QStringLiteral("automated fixture consent"),QStringLiteral("Synthetic"),QStringLiteral("No phone"),QString(),QStringLiteral("deleted"),QStringLiteral("none"),true)||!recovery.recordOperator(QStringLiteral("Synthetic CI operator"),QStringLiteral("Automated fixture authorization; no customer data"),true)||!recovery.scanImage(fixturePath,true))return 10;
+  const int order=workshop.createOrder(QStringLiteral("SYNTHETIC workshop customer"),QStringLiteral("TEST-ONLY"),QStringLiteral("Samsung"),QStringLiteral("TRAINING-01"),QStringLiteral("synthetic-serial"),QStringLiteral("USB not detected"),QStringLiteral("CI technician"),QStringLiteral("Synthetic intake only"));
+  if(order<=0||!workshop.updateOrder(order,QStringLiteral("Repairing"),QStringLiteral("CI technician"),12500,QStringLiteral("Private synthetic notes"))||!portal.start(QStringLiteral("127.0.0.1"),0,true))return 11;
+  const auto tracking=portal.link(order,1,true);if(tracking.isEmpty())return 11;
+  if(auto *consent=window->findChild<QObject *>(QStringLiteral("portalConsent")))consent->setProperty("checked",true);
+  if(auto *consent=window->findChild<QObject *>(QStringLiteral("trackingShareConsent")))consent->setProperty("checked",true);
+  if(auto *hub=window->findChild<QObject *>(QStringLiteral("workshopHub"))){hub->setProperty("customerData",workshop.customerProfile(workshop.invoice(order).value(QStringLiteral("customer_id")).toInt()));hub->setProperty("deviceData",workshop.deviceProfile(workshop.invoice(order).value(QStringLiteral("device_id")).toInt()));hub->setProperty("issuedLink",tracking);}
+  const auto portalOk=std::make_shared<bool>(false);auto *network=new QNetworkAccessManager(&app);auto *reply=network->get(QNetworkRequest(QUrl(tracking)));
+  QObject::connect(reply,&QNetworkReply::finished,&app,[reply,portalOk]{const auto body=reply->readAll();*portalOk=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()==200&&body.contains("Repairing")&&!body.contains("Private synthetic notes")&&!body.contains("TEST-ONLY");reply->deleteLater();});
   auto *timer=new QTimer(&app);
  timer->setInterval(160);
   int page=0;
-  QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page]() mutable {
-   if(page<18){window->setProperty("ar",page<9);window->setProperty("currentPage",page%9);++page;return;}
-   timer->stop();window->setProperty("ar",true);window->setProperty("currentPage",3);
+  QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page,portalOk]() mutable {
+   if(page<40){window->setProperty("darkTheme",page<20);window->setProperty("ar",page%20<10);window->setProperty("currentPage",page%10);++page;return;}
+   timer->stop();window->setProperty("darkTheme",true);window->setProperty("ar",true);window->setProperty("currentPage",3);
    if(auto *viewer=window->findChild<QObject *>(QStringLiteral("boardWorkspace")); viewer && board.components().size()>2) {viewer->setProperty("selected",board.components().at(2));}
    QTimer::singleShot(400,&app,[&,window] {
-    bool ok=!recovery.busy()&&recovery.evidence().size()==2&&recovery.error().isEmpty();
+    bool ok=*portalOk&&!recovery.busy()&&recovery.evidence().size()==2&&recovery.error().isEmpty();
     if(cli.isSet(QStringLiteral("screenshot"))) {const auto path=cli.value(QStringLiteral("screenshot"));QDir().mkpath(QFileInfo(path).absolutePath());ok=window->grabWindow().save(path)&&ok;}
     window->setProperty("currentPage",8);
     if(auto *workspace=window->findChild<QObject *>(QStringLiteral("recoveryWorkspace")))workspace->setProperty("step",6);
@@ -91,7 +119,31 @@ int main(int argc,char *argv[]) {
       const auto path=QDir(original.absolutePath()).filePath(original.completeBaseName()+QStringLiteral("-recovery.png"));
       ok=window->grabWindow().save(path)&&ok;
      }
-     window->setProperty("allowClose",true);window->close();app.exit(ok&&!qmlWarning?0:6);
+     ok=recovery.exportFormattedReport(QDir(dir).filePath(recovery.caseId()+QStringLiteral("-synthetic-report.html")),QStringLiteral("html"),false,true)&&ok;
+     ok=recovery.exportFormattedReport(QDir(dir).filePath(recovery.caseId()+QStringLiteral("-synthetic-report.pdf")),QStringLiteral("pdf"),true,true)&&ok;
+     ok=recovery.exportTimeline(QDir(dir).filePath(recovery.caseId()+QStringLiteral("-synthetic-timeline.json")),true)&&ok;
+     window->setProperty("currentPage",9);
+     if(auto *tabs=window->findChild<QObject *>(QStringLiteral("forensicTabs")))tabs->setProperty("currentIndex",1);
+     if(auto *workspace=window->findChild<QObject *>(QStringLiteral("forensicEvidenceWorkspace")); workspace&&!recovery.evidence().isEmpty())workspace->setProperty("selectedId",recovery.evidence().first().toMap().value(QStringLiteral("id")));
+     QTimer::singleShot(250,&app,[&,window,ok]() mutable {
+      if(cli.isSet(QStringLiteral("screenshot"))){const QFileInfo original(cli.value(QStringLiteral("screenshot")));ok=window->grabWindow().save(QDir(original.absolutePath()).filePath(original.completeBaseName()+QStringLiteral("-forensic-ar.png")))&&ok;}
+      window->setProperty("ar",false);window->setProperty("darkTheme",false);
+      QTimer::singleShot(250,&app,[&,window,ok]() mutable {
+       if(cli.isSet(QStringLiteral("screenshot"))){const QFileInfo original(cli.value(QStringLiteral("screenshot")));ok=window->grabWindow().save(QDir(original.absolutePath()).filePath(original.completeBaseName()+QStringLiteral("-forensic-en-light.png")))&&ok;}
+       // Exercise every new workshop/diagnostic tab in both directions/themes,
+       // retaining actual deployed captures in the validation artifact.
+       auto *capture=new QTimer(&app);capture->setInterval(180);int step=0;
+       QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
+        const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers")};
+        if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%5],previous%10<5?QStringLiteral("ar"):QStringLiteral("en"),previous<10?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
+        if(step==20){capture->stop();portal.stop();window->setProperty("allowClose",true);window->close();app.exit(ok&&!qmlWarning?0:6);return;}
+        const int tab=step%5;window->setProperty("ar",step%10<5);window->setProperty("darkTheme",step<10);window->setProperty("currentPage",tab<2?5:2);
+        const auto tabs=tab<2?QStringLiteral("workshopTabs"):QStringLiteral("diagnosticTabs");if(auto *bar=window->findChild<QObject *>(tabs))bar->setProperty("currentIndex",tab<2?tab+1:tab-1);else ok=false;
+        if(tab==2){if(auto *tree=window->findChild<QObject *>(QStringLiteral("faultTreePage")))QMetaObject::invokeMethod(tree,"start");}
+        ++step;
+       });capture->start();
+      });
+     });
     });
    });
   });
