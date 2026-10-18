@@ -4,7 +4,7 @@
 #include <QFutureWatcher>
 #include <atomic>
 #include <memory>
-struct SecurityLimits {qint64 maximumFile=128LL*1024*1024;int timeoutMs=120000;qsizetype maximumOutput=512*1024;};
+struct SecurityLimits {qint64 maximumFile=128LL*1024*1024;int timeoutMs=120000;qsizetype maximumOutput=512*1024;int versionTimeoutMs=3000;};
 QVariantMap scanSecurityFile(const QString &source,const QString &engine,const QString &database,const std::shared_ptr<std::atomic_bool> &cancelled,const SecurityLimits &limits={});
 class SecurityBridge final:public QObject {
  Q_OBJECT

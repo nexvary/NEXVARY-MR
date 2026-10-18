@@ -49,6 +49,8 @@ Local Linux Qt 6.4.2 verification covered **16/16 CTest targets**, including **3
 
 Windows [run 39151901703](https://github.com/nexvary/NEXVARY-MR/actions/runs/39151901703), for `22f3c6f459c521d10aca68e1288f198cdd92764b`, built the GUI and passed portable/installer smoke but failed four Fastboot fixture checks. Windows CRLF output exposed a multiline-anchor parsing error. A new CRLF fixture reproduced it on Linux before the parser was corrected to trim individual lines. That failed run is not accepted; check the subsequent exact-head run in PR #4.
 
+Windows [run 39152777782](https://github.com/nexvary/NEXVARY-MR/actions/runs/39152777782), for `4330a4e7d0f89b96623e077804cad3d957e809a6`, passed all **34 service checks**, all **22 QML checks** and portable/install/uninstall smoke. Its remaining failure was the existing security timeout fixture. The version probe shared a 100 ms test scan budget and collapsed process timeout errors into a generic version error; the process clock also started after startup. The correction gives version probing its own bounded deadline, includes startup/late completion in process deadlines, preserves timeout/cancellation reasons and tests version timeout independently from output limits. This is not a relaxed assertion or automatic retry. Local security checks pass with the real-ClamAV check skipped unless configured; subsequent CI must exercise the real Windows/Linux scanner fixture.
+
 ## Continuation / remaining gates
 
 1. Require all new-head CI jobs green; inspect Windows compilation and QML warnings, then installer/portable artifacts and deployed screenshots.

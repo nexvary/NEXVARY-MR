@@ -23,12 +23,21 @@ QByteArray digest(const QString &p,qint64 limit,const std::shared_ptr<std::atomi
 }
 struct ProcessResult {QByteArray out;int exit=-1;QString error;};
 ProcessResult run(const QString &engine,const QStringList &args,const QString &work,const std::shared_ptr<std::atomic_bool> &cancel,const SecurityLimits &limits){
- ProcessResult r;QProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);p.start();
- if(!p.waitForStarted(3000)){r.error="Cannot start the selected ClamAV executable.";return r;}p.closeWriteChannel();QElapsedTimer timer;timer.start();
+ ProcessResult r;QProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);
+ const int budget=qMax(1,limits.timeoutMs);QElapsedTimer timer;timer.start();p.start();
+ auto stop=[&]{if(p.state()!=QProcess::NotRunning){p.kill();p.waitForFinished(3000);}};
+ if(!p.waitForStarted(qMin(3000,budget))){r.error=timer.elapsed()>=budget?QStringLiteral("Scanner timed out; no scan verdict."):QStringLiteral("Cannot start the selected ClamAV executable.");stop();return r;}
+ p.closeWriteChannel();
  auto collect=[&]{r.out+=p.read(qMax<qsizetype>(0,limits.maximumOutput-r.out.size())+1);if(r.out.size()>limits.maximumOutput){r.error="Scanner output limit exceeded.";p.kill();}};
+ auto check=[&]{if(!r.error.isEmpty())return;if(cancel&&cancel->load())r.error="Cancelled; no scan verdict.";else if(timer.elapsed()>=budget)r.error="Scanner timed out; no scan verdict.";};
  QObject::connect(&p,&QProcess::readyReadStandardOutput,&p,collect);
- while(p.state()!=QProcess::NotRunning){p.waitForFinished(50);collect();if(cancel&&cancel->load()){r.error="Cancelled; no scan verdict.";break;}if(timer.elapsed()>limits.timeoutMs){r.error="Scanner timed out; no scan verdict.";break;}if(!r.error.isEmpty())break;}
- if(!r.error.isEmpty()){p.kill();p.waitForFinished(3000);return r;}collect();if(p.exitStatus()!=QProcess::NormalExit)r.error="Scanner crashed; no scan verdict.";r.exit=p.exitCode();return r;
+ // The clock includes startup and is checked even if the child has already
+ // exited before the parent resumes; a late result must not become a verdict.
+ check();
+ while(r.error.isEmpty()&&p.state()!=QProcess::NotRunning){p.waitForFinished(50);collect();check();}
+ collect();check();if(!r.error.isEmpty()){stop();return r;}
+ if(p.exitStatus()!=QProcess::NormalExit)r.error="Scanner crashed; no scan verdict.";
+ r.exit=p.exitCode();return r;
 }
 }
 QVariantMap scanSecurityFile(const QString &source,const QString &engine,const QString &database,const std::shared_ptr<std::atomic_bool> &cancel,const SecurityLimits &limits){
@@ -54,7 +63,13 @@ QVariantMap scanSecurityFile(const QString &source,const QString &engine,const Q
  while(!input.atEnd()){if(cancel&&cancel->load())return fail("Cancelled; no scan verdict.");const auto b=input.read(1024*1024);count+=b.size();if((b.isEmpty()&&input.error()!=QFileDevice::NoError)||count>limits.maximumFile||output.write(b)!=b.size())return fail("Source disconnected or staging failed.");}
  if(!output.flush()){return fail("Cannot flush working copy.");}
  input.close();output.close();if(digest(copy,limits.maximumFile,cancel)!=sourceHash)return fail("Working-copy integrity mismatch.");
- auto version=run(engine,{"--version"},work.path(),cancel,limits);if(!version.error.isEmpty()||version.exit!=0||!version.out.trimmed().startsWith("ClamAV ")||version.out.size()>1000)return fail("Selected executable did not return a ClamAV version.");r.insert("engineVersion",QString::fromUtf8(version.out).trimmed());
+ // Version startup and file analysis have separate deadlines. A short scan
+ // budget must not accidentally test Windows DLL startup instead of scanning.
+ auto versionLimits=limits;versionLimits.timeoutMs=qBound(1,limits.versionTimeoutMs,3000);
+ const auto version=run(engine,{"--version"},work.path(),cancel,versionLimits);
+ if(!version.error.isEmpty())return fail("ClamAV version check: "+version.error);
+ if(version.exit!=0||!version.out.trimmed().startsWith("ClamAV ")||version.out.size()>1000)return fail("Selected executable did not return a ClamAV version.");
+ r.insert("engineVersion",QString::fromUtf8(version.out).trimmed());
  const QStringList args={"--stdout","--database="+database,"--recursive=no","--max-filesize=128M","--max-scansize=256M","--max-files=1000","--max-recursion=16","--max-scantime=60000","--alert-exceeds-max=yes","--alert-encrypted=yes","--bytecode=no","--fail-if-cvd-older-than=7","--",copy};
  const auto result=run(engine,args,work.path(),cancel,limits);if(!result.error.isEmpty())return fail(result.error);r.insert("output",QString::fromUtf8(result.out));
  if(digest(source,limits.maximumFile,cancel)!=sourceHash||digest(copy,limits.maximumFile,cancel)!=sourceHash||digest(engine,256LL*1024*1024,cancel)!=engineHash)return fail("Source, working copy or scanner changed during the scan; verdict refused.");
