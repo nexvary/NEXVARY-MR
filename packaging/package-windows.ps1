@@ -60,11 +60,15 @@ Copy-Item "$qtRoot/plugins/sqldrivers/qsqlite.dll" (Join-Path $bundle 'sqldriver
 # Keep all plug-ins and dependency DLLs already selected by windeployqt.
 New-Item -ItemType Directory -Force (Join-Path $bundle 'imageformats') | Out-Null
 Copy-Item "$qtRoot/plugins/imageformats/qjpeg.dll" (Join-Path $bundle 'imageformats/qjpeg.dll')
+# Fluent SVG navigation assets require both the decoder and its matching library.
+Copy-Item "$qtRoot/plugins/imageformats/qsvg.dll" (Join-Path $bundle 'imageformats/qsvg.dll')
+Copy-Item "$qtRoot/bin/Qt6Svg.dll" (Join-Path $bundle 'Qt6Svg.dll')
 $requiredRuntime = @(
   'NEXVARY-MR.exe', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
   'Qt6Quick.dll', 'Qt6Sql.dll',
-  'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll'
+  'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll',
+  'imageformats/qsvg.dll', 'Qt6Svg.dll'
 )
 foreach ($relative in $requiredRuntime) {
   $file = Join-Path $bundle $relative

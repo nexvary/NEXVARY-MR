@@ -1,0 +1,67 @@
+{
+  "source": "https://github.com/microsoft/fluentui-system-icons",
+  "revision": "a347af95478f989038cccbf085978865264c048a",
+  "license": "MIT; packaging/licenses/FLUENT-ICONS-MIT.txt",
+  "files": [
+    {
+      "file": "home.svg",
+      "upstream": "assets/Home/SVG/ic_fluent_home_24_color.svg",
+      "blob": "98d265c053916eae5167d695ce6824d2b3f355ac",
+      "sha256": "1b6a5c06d4c44ebe0f0b675fdbde99968a96ef5c22c6d8eb303bdbe0cf40a92f"
+    },
+    {
+      "file": "phone.svg",
+      "upstream": "assets/Phone/SVG/ic_fluent_phone_24_color.svg",
+      "blob": "f6b83fce8fa2d8a37db392d9c8033a82a725f87b",
+      "sha256": "56e161979e92136aaaffacbcdd9f30cc09562e4d4f1f52f9b004c3f58be65edf"
+    },
+    {
+      "file": "gauge.svg",
+      "upstream": "assets/Gauge/SVG/ic_fluent_gauge_24_color.svg",
+      "blob": "eb6eebe2893a3ca2853a7e8e2377ee78d402772c",
+      "sha256": "6d5edf5a1ffd285a385facdafcb463cebac7746d1739b4c7756b0c30680d9279"
+    },
+    {
+      "file": "board.svg",
+      "upstream": "assets/Board/SVG/ic_fluent_board_24_color.svg",
+      "blob": "8cdbcefd87f29c4370bd6843652f6597a8a0595d",
+      "sha256": "69a524179fa84dfe0aa417228d876fa7283da9f07fab7ac9e864328336cb864e"
+    },
+    {
+      "file": "arrow_square_down.svg",
+      "upstream": "assets/Arrow Square Down/SVG/ic_fluent_arrow_square_down_24_color.svg",
+      "blob": "b0c3834ac44bfa2975bf8a25043f05543d81fe4a",
+      "sha256": "075ca36bcea2d37b8600dbdaba887ea20288a99e487b2b246d73a8182966cc85"
+    },
+    {
+      "file": "clipboard_task.svg",
+      "upstream": "assets/Clipboard Task/SVG/ic_fluent_clipboard_task_24_color.svg",
+      "blob": "63a906cf802d1343a7eaaa8a24418210eb71ef0d",
+      "sha256": "c81cab69d8fdf02ac921dc31b66f46ec4388ba1dc85818fe9488de4dea0ca831"
+    },
+    {
+      "file": "database.svg",
+      "upstream": "assets/Database/SVG/ic_fluent_database_24_color.svg",
+      "blob": "7ae66d383f67ba1a7306d2012678abea5223cecb",
+      "sha256": "ec181d4822154949b1e7986be45cd68a9854c0083866a7a350674796fcba693e"
+    },
+    {
+      "file": "settings.svg",
+      "upstream": "assets/Settings/SVG/ic_fluent_settings_24_color.svg",
+      "blob": "8367bef6fdc3346f257cefbc257692ff0c4f49b0",
+      "sha256": "5703399b75763538275f16f22b4156894b97cc8aacb0141baaeac891e46b1d1e"
+    },
+    {
+      "file": "history.svg",
+      "upstream": "assets/History/SVG/ic_fluent_history_24_color.svg",
+      "blob": "4ab79afd095fd522c31cc084e8fbe5989f93cb4d",
+      "sha256": "f3240058f37c5bb0a9797cc8ba3ee1685c01de8af52f488cf9d5e0f2b698a324"
+    },
+    {
+      "file": "document_lock.svg",
+      "upstream": "assets/Document Lock/SVG/ic_fluent_document_lock_24_color.svg",
+      "blob": "f89800af7c657a5531252cd99b4dbceb3422cd4d",
+      "sha256": "f47bdc6aa2d5065b1e2851bf489ebe724f9f9b67ffe46f5f2726f81f004258c0"
+    }
+  ]
+}

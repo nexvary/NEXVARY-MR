@@ -3,10 +3,12 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Rectangle {
  id: card
+ readonly property var themeWindow:ApplicationWindow.window
+ function tone(value){return themeWindow?themeWindow.tone(value):value}
  property string title: ""
  default property alias body: container.data
- color: "#0b2030"
- border.color: "#29485f"
+ color: card.tone("#0b2030")
+ border.color: card.tone("#29485f")
  border.width: 1
  radius: 12
  implicitHeight: column.implicitHeight + 32
@@ -23,13 +25,13 @@ Rectangle {
     width: 4
     height: 18
     radius: 2
-    color: "#40b9e6"
+    color: card.tone("#40b9e6")
    }
    Label {
     text: card.title
     font.pixelSize: 15
     font.bold: true
-    color: "#eff6ff"
+    color: card.tone("#eff6ff")
     Layout.fillWidth: true
     elide: Text.ElideRight
    }
@@ -38,7 +40,7 @@ Rectangle {
    visible: card.title.length > 0
    Layout.fillWidth: true
    height: 1
-   color: "#244358"
+   color: card.tone("#244358")
   }
   ColumnLayout {
    id: container

@@ -15,6 +15,10 @@ class RecoveryBridge final:public QObject {
  Q_PROPERTY(QString status READ status NOTIFY changed)
  Q_PROPERTY(QString casePath READ casePath NOTIFY changed)
  Q_PROPERTY(QString caseTitle READ caseTitle NOTIFY changed)
+ Q_PROPERTY(QString caseId READ caseId NOTIFY changed)
+ Q_PROPERTY(QString caseOperator READ caseOperator NOTIFY changed)
+ Q_PROPERTY(QString authorization READ authorization NOTIFY changed)
+ Q_PROPERTY(QVariantList timeline READ timeline NOTIFY changed)
  Q_PROPERTY(QString protection READ protection CONSTANT)
  Q_PROPERTY(bool vaultReady READ vaultReady CONSTANT)
  Q_PROPERTY(QVariantList evidence READ evidence NOTIFY changed)
@@ -32,6 +36,10 @@ public:
  QString status() const{return status_;}
  QString casePath() const{return path_;}
  QString caseTitle() const{return document_.value("title").toString();}
+ QString caseId() const{return document_.value("id").toString();}
+ QString caseOperator() const{return document_.value("operator").toString();}
+ QString authorization() const{return document_.value("authorization").toString();}
+ QVariantList timeline() const;
  QString protection() const;
  bool vaultReady() const;
  QVariantList evidence() const;
@@ -47,6 +55,13 @@ public:
  Q_INVOKABLE bool scanImage(const QString &path,bool consent);
  Q_INVOKABLE bool exportReport(const QString &path,bool plaintextConfirmed);
  Q_INVOKABLE bool exportEvidence(int index,const QString &path,bool plaintextConfirmed);
+ Q_INVOKABLE bool recordOperator(const QString &name,const QString &authorization,bool confirmed);
+ Q_INVOKABLE bool verifyEvidence();
+ Q_INVOKABLE QString previewEvidence(int index) const;
+ Q_INVOKABLE QString evidenceCustodian(int index) const;
+ Q_INVOKABLE bool transferCustody(int index,const QString &recipient,const QString &reason,bool confirmed);
+ Q_INVOKABLE bool exportFormattedReport(const QString &path,const QString &format,bool arabic,bool confirmed);
+ Q_INVOKABLE bool exportTimeline(const QString &path,bool confirmed);
  Q_INVOKABLE bool deleteCase(bool confirmed);
  Q_INVOKABLE bool closeCase();
  Q_INVOKABLE void cancel();

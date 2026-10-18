@@ -9,13 +9,14 @@ TestCase {
  width:1536;height:980
  MR.Main {id:app}
  function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
+ function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase()}
  function test_minimumSize(){
-  app.width=1180;app.height=760;app.currentPage=7;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
+  app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
   for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
   let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);tryVerify(function(){return deviceScroll.contentHeight>deviceScroll.availableHeight});
   deviceScroll.contentItem.contentY=deviceScroll.contentHeight-deviceScroll.availableHeight;verify(waitForRendering(app.contentItem));
   let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
-  app.width=1536;app.height=980;
+  app.showDevicePanel=false;app.width=1536;app.height=980;
  }
  function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
  function test_forensicLabNavigation(){
@@ -27,7 +28,7 @@ TestCase {
   let lab=findChild(app,"forensicLabWorkspace");
   verify(lab!==null,"Forensic Lab workspace missing");
   compare(lab.modules.length,12);
-  compare(lab.modules.filter(function(m){return m.ready}).length,6);
+  compare(lab.modules.filter(function(m){return m.ready}).length,8);
   verify(waitForRendering(app.contentItem));
   app.ar=false;
   verify(waitForRendering(app.contentItem));
@@ -37,6 +38,45 @@ TestCase {
   compare(app.titles[9],"مختبر الأدلة الرقمية");
   mouseClick(app.navigationButton(0));
   compare(app.currentPage,0);
+ }
+ function test_forensicWorkspace(){
+  app.currentPage=9;
+  let tabs=findChild(app,"forensicTabs");verify(tabs!==null);tabs.currentIndex=1;
+  verify(recoveryBridge.createCase("Synthetic lab UI","LAB-ONLY","Synthetic","No phone","15","backup","unknown",true));
+  findChild(app,"forensicOperator").text="UI operator";findChild(app,"forensicAuthorization").text="LAB authorization";
+  let record=findChild(app,"forensicRecordOperator");compare(record.enabled,false);
+  findChild(app,"forensicOperatorConsent").checked=true;tryCompare(record,"enabled",true);
+  verify(waitForRendering(app.contentItem));mouseClick(record);compare(recoveryBridge.caseOperator,"UI operator");
+  verify(recoveryBridge.importVisibleFile(syntheticEvidencePath,true));tryCompare(recoveryBridge,"busy",false);
+  let files=findChild(app,"forensicEvidenceList");tryCompare(files,"count",1);
+  mouseClick(files,files.width/2,40);let preview=findChild(app,"forensicPreview");tryVerify(function(){return preview.text.indexOf("SYNTHETIC UI EVIDENCE")>=0});
+  let search=findChild(app,"forensicSearch");search.text="no matching file";tryCompare(files,"count",0);search.text="synthetic";tryCompare(files,"count",1);search.text="";
+  let report=findChild(app,"forensicReport");compare(report.enabled,false);findChild(app,"forensicPlaintext").checked=true;tryCompare(report,"enabled",true);findChild(app,"forensicPlaintext").checked=false;
+  mouseClick(findChild(app,"forensicVerify"));tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");
+  let custodyButton=findChild(app,"forensicCustody");let detail=findChild(app,"forensicDetailScroll");
+  let point=custodyButton.mapToItem(detail,custodyButton.width/2,custodyButton.height/2);detail.contentItem.contentY+=point.y-detail.height/2;
+  verify(waitForRendering(app.contentItem));mouseClick(custodyButton);let dialog=findChild(app,"forensicCustodyDialog");tryCompare(dialog,"opened",true);compare(dialog.standardButton(Dialog.Ok).enabled,false);
+  findChild(app,"forensicCustodyRecipient").text="Lab storage";findChild(app,"forensicCustodyReason").text="Synthetic review";
+  tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true);mouseClick(dialog.standardButton(Dialog.Ok));tryCompare(dialog,"opened",false);compare(recoveryBridge.evidenceCustodian(0),"Lab storage");
+  tabs.currentIndex=2;let events=findChild(app,"forensicTimelineList");tryVerify(function(){return events.count>=5});findChild(app,"forensicTimelineSearch").text="custody-transfer";tryCompare(events,"count",1);findChild(app,"forensicTimelineSearch").text="";
+  for(let language=0;language<2;language++){app.ar=language===0;for(let i=0;i<4;i++){tabs.currentIndex=i;verify(waitForRendering(app.contentItem))}}
+  verify(recoveryBridge.closeCase());tabs.currentIndex=0;
+ }
+ function test_backNavigation(){
+  app.pageHistory=[];app.previousPage=0;app.currentPage=0;
+  mouseClick(app.navigationButton(9));compare(app.currentPage,9);let back=findChild(app,"backButton");compare(back.enabled,true);mouseClick(back);compare(app.currentPage,0);compare(app.visible,true);
+ }
+ function test_themeAndNarrowForensicTabs(){
+  app.width=1180;app.height=760;app.showDevicePanel=false;app.currentPage=9;
+  let theme=findChild(app,"themeButton"),tabs=findChild(app,"forensicTabs");
+  for(let language=0;language<2;language++){
+   app.ar=language===0;
+   for(let mode=0;mode<2;mode++){
+    mouseClick(theme);compare(app.darkTheme,mode===1);
+    for(let tab=0;tab<4;tab++){tabs.currentIndex=tab;verify(waitForRendering(app.contentItem))}
+   }
+  }
+  tabs.currentIndex=0;app.darkTheme=true;app.width=1536;app.height=980;
  }
  function test_language(){let b=findChild(app,"languageButton");mouseClick(b);compare(app.ar,false);mouseClick(b);compare(app.ar,true)}
  function test_boardMeasurement(){

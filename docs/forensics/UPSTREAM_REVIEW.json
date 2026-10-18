@@ -1,0 +1,150 @@
+[
+  {
+    "repository": "sleuthkit/autopsy",
+    "url": "https://github.com/sleuthkit/autopsy",
+    "revision": "cb3dacdcad67abe7cf863c74f10dcdb8e25a5c21",
+    "commitDate": "2026-05-04T17:07:28Z",
+    "archived": false,
+    "licenseDetected": null,
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licenseReviewPending": "HTTP Error 404: Not Found",
+    "additionalLicenseSources": [
+      {
+        "path": "LICENSE-2.0.txt",
+        "url": "https://github.com/sleuthkit/autopsy/blob/cb3dacdcad67abe7cf863c74f10dcdb8e25a5c21/LICENSE-2.0.txt",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "opening": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled objec"
+      }
+    ]
+  },
+  {
+    "repository": "sleuthkit/sleuthkit",
+    "url": "https://github.com/sleuthkit/sleuthkit",
+    "revision": "e08bdd2f9b74b319981144c03ee492e9287b9e0f",
+    "commitDate": "2026-10-14T20:15:07Z",
+    "archived": false,
+    "licenseDetected": null,
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licenseReviewPending": "HTTP Error 404: Not Found",
+    "additionalLicenseSources": [
+      {
+        "path": "licenses/README.md",
+        "url": "https://github.com/sleuthkit/sleuthkit/blob/e08bdd2f9b74b319981144c03ee492e9287b9e0f/licenses/README.md",
+        "sha256": "339bdd5d56545644d12cde0a728730598681d14e4ff4c4d65a2afeedbe15027b",
+        "opening": "## Copyright/Non-Copyright Statements\n\nThe SleuthKit (tsk/) originates from the The Coronors Toolkit (TCT),\nwhich was largely authored by Wietse Venema in 1997-1999 under the IBM Public\nLicense version 1.0:\n\n```\nCopyright (c) 1997,1998,1999, International Business Machines          \nCorporation and others. All Rights Reserved.\n```\n\nThe TCT code was adopted by TASK in 2002-2003 by Brian Carrier under the Common\nPublic License version 1.0\n\n```\nCopyright (c) 2002-2003 Brian Carrier, @stake Inc.  All rights reserved\n```\n\nWho then adopted TASK code into the SleuthKit in 2003 under the existing\nlicense:\n\n```\nCopyright (c) 2003-2005 Brian Carrier.  All rights reserved\nCopyright (c) 2006-2011 Brian Carrier, Basis Technology.  All Rights reserved\n```\n\n## Other materials\n\n* Makefile and Makefile.in\n\n```\nCopyright (C) 1994-2020 Free Software Foundation, Inc.\n\nThis Makefile.in is free software; the Free Software Foundation\ngives unlimited permission to copy and/or distribute it,\nwith or without modifications, as long as this notice is preserved.\n```\n\n* bindings/java/jni/*\n\n```\nCopyright (c) 2020 Brian Carrier.  All Rights reserved\n```\n\nunder Common Public License version 1.0\n\n* bindings/java/src/org/sleuthkit/datamodel/*\n\n```\nCopyright 2011-2021 Basis Technology Corp.\n```\n\nunder Apache License, Version 2.0\n\n* case-uco/*\n\n```\nCopyright 2020 Basis Technology Corp.\n```\n\nunder Apache License, Version 2.0\n\n* debian/*\n\n```\nCopyright: 2001-2016 Brian Carrier <carrier@sleuthkit.org>\n           2"
+      },
+      {
+        "path": "licenses/cpl1.0.txt",
+        "url": "https://github.com/sleuthkit/sleuthkit/blob/e08bdd2f9b74b319981144c03ee492e9287b9e0f/licenses/cpl1.0.txt",
+        "sha256": "7b47225a5b77cb7825efc6a4d7e0ac57864c790542cf92f5080ec2bf310c00e5",
+        "opening": "Common Public License Version 1.0\n\nTHE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS COMMON PUBLIC\nLICENSE (\"AGREEMENT\"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM\nCONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.\n\n1. DEFINITIONS\n\n\"Contribution\" means:\n\n    a) in the case of the initial Contributor, the initial code and\ndocumentation distributed under this Agreement, and\n\n    b) in the case of each subsequent Contributor:\n\n    i) changes to the Program, and\n\n    ii) additions to the Program;\n\n    where such changes and/or additions to the Program originate from and are\ndistributed by that particular Contributor. A Contribution 'originates' from a\nContributor if it was added to the Program by such Contributor itself or anyone\nacting on such Contributor's behalf. Contributions do not include additions to\nthe Program which: (i) are separate modules of software distributed in\nconjunction with the Program under their own license agreement, and (ii) are not\nderivative works of the Program.\n\n\"Contributor\" means any person or entity that distributes the Program.\n\n\"Licensed Patents \" mean patent claims licensable by a Contributor which are\nnecessarily infringed by the use or sale of its Contribution alone or when\ncombined with the Program.\n\n\"Program\" means the Contributions distributed in accordance with this Agreement.\n\n\"Recipient\" means anyone who receives the Program under this Agreement,\nincluding all Contributors.\n\n2. GRANT OF RIGHTS\n\n    a) Subject to t"
+      },
+      {
+        "path": "licenses/IBM-LICENSE",
+        "url": "https://github.com/sleuthkit/sleuthkit/blob/e08bdd2f9b74b319981144c03ee492e9287b9e0f/licenses/IBM-LICENSE",
+        "sha256": "c44ddab37556dec46db7d443004b3479b298ef0518938c1449794292f2fd7765",
+        "opening": "IBM PUBLIC LICENSE VERSION 1.0 - CORONER TOOLKIT UTILITIES\n\nTHE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS IBM PUBLIC\nLICENSE (\"AGREEMENT\").  ANY USE, REPRODUCTION OR DISTRIBUTION OF THE\nPROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.\n\n1.  DEFINITIONS\n\n\"Contribution\" means:  \n    a) in the case of International Business Machines Corporation (\"IBM\"), \n       the Original Program, and \n    b) in the case of each Contributor, \n       i)  changes to the Program, and\n       ii) additions to the Program;\n           where such changes and/or additions to the Program originate\n           from and are distributed by that particular Contributor.  \n           A Contribution 'originates' from a Contributor if it was added \n           to the Program by such Contributor itself or anyone acting on \n           such Contributor's behalf.  \n    Contributions do not include additions to the Program which:\n       (i)  are separate modules of software distributed in conjunction \n            with the Program under their own license agreement, and \n       (ii) are not derivative works of the Program.\n\n\"Contributor\" means IBM and any other entity that distributes the Program.\n\n\"Licensed Patents \" mean patent claims licensable by a Contributor which\nare necessarily infringed by the use or sale of its Contribution alone\nor when combined with the Program.\n\n\"Original Program\" means the original version of the software accompanying\nthis Agreement as released by IBM, including "
+      }
+    ]
+  },
+  {
+    "repository": "abrignoni/ALEAPP",
+    "url": "https://github.com/abrignoni/ALEAPP",
+    "revision": "1eae6b9dcca13bbc07ee879a276f0348738f6991",
+    "commitDate": "2026-10-17T23:07:27Z",
+    "archived": false,
+    "licenseDetected": "MIT",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE",
+    "licenseURL": "https://github.com/abrignoni/ALEAPP/blob/1eae6b9dcca13bbc07ee879a276f0348738f6991/LICENSE",
+    "licenseSha256": "b06a819817c119603a135d9f8c40d02142987153be580dc72b28293f2dd17765",
+    "licenseOpening": "MIT License\n\nCopyright (c) 2020 Alexis Brignoni\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLU"
+  },
+  {
+    "repository": "abrignoni/iLEAPP",
+    "url": "https://github.com/abrignoni/iLEAPP",
+    "revision": "eec026c4bf037e38baeba1d5eefb5104d4291552",
+    "commitDate": "2026-10-17T22:57:51Z",
+    "archived": false,
+    "licenseDetected": "MIT",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE",
+    "licenseURL": "https://github.com/abrignoni/iLEAPP/blob/eec026c4bf037e38baeba1d5eefb5104d4291552/LICENSE",
+    "licenseSha256": "b06a819817c119603a135d9f8c40d02142987153be580dc72b28293f2dd17765",
+    "licenseOpening": "MIT License\n\nCopyright (c) 2020 Alexis Brignoni\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLU"
+  },
+  {
+    "repository": "cgsecurity/testdisk",
+    "url": "https://github.com/cgsecurity/testdisk",
+    "revision": "0aa4bc2b68378bc2bd2e92be3a465f0957e0f026",
+    "commitDate": "2026-10-03T16:34:10Z",
+    "archived": false,
+    "licenseDetected": "GPL-2.0",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "COPYING",
+    "licenseURL": "https://github.com/cgsecurity/testdisk/blob/0aa4bc2b68378bc2bd2e92be3a465f0957e0f026/COPYING",
+    "licenseSha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+    "licenseOpening": "\t\t    GNU GENERAL PUBLIC LICENSE\n\t\t       Version 2, June 1991\n\n Copyright (C) 1989, 1991 Free Software Foundation, Inc.,\n 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n Everyone is permitted to copy and distribute verbatim copies\n of this license document, but changing it is not allowed.\n\n\t\t\t    Preamble\n\n  The licenses for most software are designed to take away your\nfreedom to share and change it.  By contrast, the GNU General Public\nLicense is intended to guarantee your freedom to share and change free\nsoftware--to make sure the software is free for all its users.  This\nGeneral Public License applies to most of the Free Software\nFoundation's software and to any other program"
+  },
+  {
+    "repository": "volatilityfoundation/volatility3",
+    "url": "https://github.com/volatilityfoundation/volatility3",
+    "revision": "77ff0b1932d77527f850c8ced01d85805ea7bf97",
+    "commitDate": "2026-10-12T09:18:06Z",
+    "archived": false,
+    "licenseDetected": "NOASSERTION",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE.txt",
+    "licenseURL": "https://github.com/volatilityfoundation/volatility3/blob/77ff0b1932d77527f850c8ced01d85805ea7bf97/LICENSE.txt",
+    "licenseSha256": "6e905a859f6d5ebf23d4b7cdfb8ac425c4ec5dd02b3b274901a967f3e452eb37",
+    "licenseOpening": "Volatility Software License\nVersion 1.0 dated October 3, 2019.\nThis license covers the Volatility software, Copyright 2019 Volatility Foundation.\n\nSoftware\nThe software referred to in this license includes the software named above, and any data (such as operating system profiles or configuration information), and documentation provided with the software.\n\nPurpose\nThis license gives you permission to use, share, and build with this software for free, but requires you to share source code for changes, additions, and software that you build with it.\n\nAcceptance\nIn order to receive this license, you must agree to its rules. The rules of this license are both obligations under that agreement and "
+  },
+  {
+    "repository": "mvt-project/mvt",
+    "url": "https://github.com/mvt-project/mvt",
+    "revision": "b3aa443819972e3918097d5383157f0afdfd5c94",
+    "commitDate": "2026-10-09T10:52:44Z",
+    "archived": false,
+    "licenseDetected": "NOASSERTION",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE",
+    "licenseURL": "https://github.com/mvt-project/mvt/blob/b3aa443819972e3918097d5383157f0afdfd5c94/LICENSE",
+    "licenseSha256": "ac67bba0ee27326139cf2aeea625f1e4cf6d3e88e751bc0ccede09dda509b460",
+    "licenseOpening": "MVT License 1.1\n===============\n\n1. Definitions\n--------------\n\n1.1. \"Contributor\"\n    means each individual or legal entity that creates, contributes to\n    the creation of, or owns Covered Software.\n\n1.2. \"Contributor Version\"\n    means the combination of the Contributions of others (if any) used\n    by a Contributor and that particular Contributor's Contribution.\n\n1.3. \"Contribution\"\n    means Covered Software of a particular Contributor.\n\n1.4. \"Covered Software\"\n    means Source Code Form to which the initial Contributor has attached\n    the notice in Exhibit A, the Executable Form of such Source Code\n    Form, and Modifications of such Source Code Form, in each case\n    including portio"
+  },
+  {
+    "repository": "log2timeline/plaso",
+    "url": "https://github.com/log2timeline/plaso",
+    "revision": "f951fc6cdaf365948d91cd945ac405a2d1b5ff6c",
+    "commitDate": "2026-10-13T07:50:22Z",
+    "archived": false,
+    "licenseDetected": "Apache-2.0",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE",
+    "licenseURL": "https://github.com/log2timeline/plaso/blob/f951fc6cdaf365948d91cd945ac405a2d1b5ff6c/LICENSE",
+    "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenseOpening": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity"
+  },
+  {
+    "repository": "simsong/bulk_extractor",
+    "url": "https://github.com/simsong/bulk_extractor",
+    "revision": "e86383947ee016c825599887334cacf011736abf",
+    "commitDate": "2026-10-12T00:57:38Z",
+    "archived": false,
+    "licenseDetected": "NOASSERTION",
+    "integrationStatus": "not integrated; no executable bundled",
+    "reviewedOn": "2026-10-18",
+    "licensePath": "LICENSE.md",
+    "licenseURL": "https://github.com/simsong/bulk_extractor/blob/e86383947ee016c825599887334cacf011736abf/LICENSE.md",
+    "licenseSha256": "4a7539e19e4db9f0d99878368576dd88a1da0608328b814761f64038ad119d7b",
+    "licenseOpening": "## Project license and copyright status\n\nSimson Garfinkel originally developed **bulk_extractor** while at the Naval\nPostgraduate School (NPS). Original works created in that U.S. Government\nemployment are not subject to U.S. copyright protection under 17 U.S.C. § 105.\nThat status applies only to the original NPS material.\n\nSimson Garfinkel left NPS in January 2015. All post-NPS, project-authored\nbulk_extractor code and documentation developed or modified in his personal\ncapacity are licensed under the **GNU General Public License, version 3 or\nlater (GPL-3.0-or-later)**. Third-party components retain their original\nlicense terms as stated in their source headers and applicable files under\n["
+  }
+]

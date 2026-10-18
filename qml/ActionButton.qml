@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 Button {
  id: control
+ readonly property var themeWindow:ApplicationWindow.window
+ function tone(value){return themeWindow?themeWindow.tone(value):value}
  property bool primary: false
  implicitHeight: 42
  implicitWidth: Math.max(112, contentItem.implicitWidth + 30)
@@ -12,16 +14,16 @@ Button {
  contentItem: Text {
   text: control.text
   font: control.font
-  color: control.enabled ? "#edf5ff" : "#8192a5"
+  color: control.enabled ? control.tone("#edf5ff") : control.tone("#8192a5")
   horizontalAlignment: Text.AlignHCenter
   verticalAlignment: Text.AlignVCenter
   elide: Text.ElideRight
  }
  background: Rectangle {
   radius: 9
-  color: !control.enabled ? "#162434" : control.down ? "#124b94" : control.primary ? (control.hovered ? "#307ef3" : "#1767dc") : (control.hovered ? "#1d3b55" : "#10293e")
+  color: !control.enabled ? control.tone("#162434") : control.down ? control.tone("#124b94") : control.primary ? (control.hovered ? control.tone("#307ef3") : control.tone("#1767dc")) : (control.hovered ? control.tone("#1d3b55") : control.tone("#10293e"))
   border.width: control.activeFocus ? 2 : 1
-  border.color: control.activeFocus ? "#a6d9ff" : control.primary ? "#519cff" : "#31516a"
+  border.color: control.activeFocus ? control.tone("#a6d9ff") : control.primary ? control.tone("#519cff") : control.tone("#31516a")
   Rectangle {
    visible: control.primary && control.enabled
    anchors.left: parent.left
@@ -29,7 +31,7 @@ Button {
    anchors.top: parent.top
    anchors.margins: 2
    height: 1
-   color: "#75b7ff"
+   color: control.tone("#75b7ff")
    opacity: 0.6
   }
  }

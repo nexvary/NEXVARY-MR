@@ -2,6 +2,7 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QTemporaryDir>
+#include <QFile>
 #include <QQuickStyle>
 #include <memory>
 #include "ToolBridge.hpp"
@@ -30,6 +31,9 @@ public slots:
   board=std::make_unique<BoardBridge>();firmware=std::make_unique<FirmwareBridge>();
  }
  void qmlEngineAvailable(QQmlEngine *engine) {
+  const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
+  QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("toolBridge",tools.get());
   engine->rootContext()->setContextProperty("repairBridge",repair.get());
   engine->rootContext()->setContextProperty("workshopBridge",workshop.get());
