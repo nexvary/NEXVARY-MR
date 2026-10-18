@@ -14,8 +14,10 @@ TestCase {
   app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
   for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
   let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);verify(deviceScroll.availableHeight>0);
-  deviceScroll.contentItem.contentY=Math.max(0,deviceScroll.contentHeight-deviceScroll.availableHeight);verify(waitForRendering(app.contentItem));
-  let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
+  deviceScroll.contentItem.contentY=Math.max(0,deviceScroll.contentHeight-deviceScroll.availableHeight);
+  // Content can fit without scrolling, so no new render frame is required.
+  let backup=findChild(app,"quickBackup");verify(backup!==null);
+  tryVerify(function(){let point=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);return point.x>=0&&point.x<deviceScroll.width&&point.y>=0&&point.y<deviceScroll.height},5000,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
   app.showDevicePanel=false;app.width=1536;app.height=980;
  }
  function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);wait(50);let point=b.mapToItem(app.contentItem,b.width/2,b.height/2);verify(point.y>=0&&point.y<app.height,"Navigation remains reachable: "+i);mouseClick(b);tryCompare(app,"currentPage",i)}}
