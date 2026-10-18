@@ -1,3 +1,13 @@
+# Current continuation — 2026-10-18
+
+Actual latest development branch: `feature/device-service-engine`, based on `eb533d55744379a2dbdc9b27600195b0aafc9929`. The older checkpoint below is historical, not the branch to resume.
+
+This increment retains serial, transport and bounded detailed result per session operation, including failure and reboot records whose live device profile has been invalidated. Clicking a history row opens its original plaintext result. Export schema v2 preserves those operation snapshots; history remains memory-only and capped at 100 records. Export still requires explicit consent and a new local filename. The added target fields are personal identifiers; review before sharing.
+
+Regression coverage adds failure retention across an ADB-to-Fastboot probe, export fidelity, reboot/discovery invalidation and a plaintext history-dialog UI check. Native Qt/CMake are absent in the current local environment: exact-revision CI must establish native validation. Baseline eb533d5 passed Windows/Qt run 39155049192 and Python run 39155049210. Physical phone and clean consumer Windows acceptance remain unverified.
+
+---
+
 # Execution checkpoint — 2026-10-16
 
 Development branch dev/cpp-qt-foundation; PR1 draft; main unchanged.

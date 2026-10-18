@@ -8,6 +8,8 @@ Item {
  property var app
  property var selectedAction:({})
  property string reviewedTarget:""
+ property var reviewedRecord:({})
+ function reviewRecord(record){reviewedRecord=record;historyDetail.open()}
  readonly property var brands:serviceCatalog.deviceCatalog.brands||[]
  readonly property var driverSource:serviceCatalog.drivers.find(function(r){return r.brand.toLowerCase()===brand.currentText.split(" / ")[0].toLowerCase()})
  readonly property var phases:({preparing:["تحضير نسخة الملف والتحقق من البصمة","Preparing and hashing the private copy"],connection:["التحقق من الاتصال الحالي","Checking the current connection"],identity:["مطابقة هوية الهاتف وإصداره","Verifying device identity and build"],capability:["قراءة القدرات الفعلية","Reading actual capabilities"],applying:["تنفيذ الأمر على الجهاز","Applying the selected command"],verifying:["التحقق من النتيجة","Verifying the result"],complete:["اكتملت العملية","Operation completed"],failed:["توقفت العملية؛ راجع النتيجة","Operation stopped; review the result"]})
@@ -64,10 +66,15 @@ Item {
     }
     Panel {id:history;title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true
      ActionButton {objectName:"exportDeviceServiceReport";text:app.trx("تصدير تقرير محلي","Export local report");enabled:!toolBridge.busy&&toolBridge.serviceHistory.length>0;onClicked:reportConsent.open()}
-     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.atUtc+" · "+modelData.action+" · "+(modelData.success?"OK":"Stopped");textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}
+     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:ItemDelegate {required property var modelData;width:ListView.view.width;onClicked:page.reviewRecord(modelData);contentItem:Label {text:modelData.atUtc+" · "+modelData.serial+" · "+modelData.transport+" · "+modelData.action+" · "+(modelData.success?app.trx("اكتملت","Completed"):app.trx("توقفت","Stopped"));textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}}
     }
     }
    }
+  }
+ }
+ Dialog {id:historyDetail;objectName:"deviceServiceHistoryDetail";parent:Overlay.overlay;anchors.centerIn:parent;width:Math.min(670,app.width-48);height:Math.min(480,app.height-96);modal:true;title:app.trx("تفاصيل العملية المسجلة","Recorded operation details");standardButtons:Dialog.Close
+  contentItem:ScrollView {clip:true;contentWidth:availableWidth
+   TextArea {objectName:"deviceServiceHistoryText";readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.tone("#c7deef");background:null;text:(page.reviewedRecord.serial||"")+" · "+(page.reviewedRecord.transport||"")+"\n"+(page.reviewedRecord.action||"")+" · "+(page.reviewedRecord.atUtc||"")+"\n\n"+(page.reviewedRecord.result||"")}
   }
  }
  FileDialog {id:packageFile;fileMode:FileDialog.OpenFile;nameFilters:page.selectedAction.id==="sideload_zip"?["Recovery package (*.zip)"]:["Android package (*.apk)"];onAccepted:packagePath.text=selectedFile.toString()}

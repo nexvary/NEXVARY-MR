@@ -28,6 +28,14 @@ TestCase {
   mouseClick(app.navigationButton(0));compare(app.currentPage,0)
  }
  function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
+ function test_serviceHistoryDetailsArePlainText(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;verify(waitForRendering(app.contentItem))
+  const page=findChild(app,"deviceServicesPage")
+  page.reviewRecord({serial:"SYNTHETIC-42",transport:"adb",action:"dark_on",atUtc:"2026-10-18T00:00:00Z",result:"<b>Permission denied</b>"})
+  const dialog=findChild(app,"deviceServiceHistoryDetail");tryCompare(dialog,"opened",true)
+  const output=findChild(app,"deviceServiceHistoryText");verify(output.text.indexOf("SYNTHETIC-42")>=0);verify(output.text.indexOf("<b>Permission denied</b>")>=0);compare(output.textFormat,TextEdit.PlainText)
+  dialog.close();tryCompare(dialog,"opened",false)
+ }
  function test_serviceMinimumSizeOutputAndHistory(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;findChild(app,"serviceBrand").currentIndex=1
   for(const arabic of [true,false])for(const dark of [true,false]){

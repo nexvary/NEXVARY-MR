@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
@@ -129,6 +130,36 @@ private slots:
  void noPartitionNoErase(){qputenv("MR_SERVICE_MODE","no-partition");ToolBridge b;QVERIFY(probe(b,true));QVERIFY(!available(b,"erase_userdata"));QVERIFY(!available(b,"erase_cache"));}
  void rebootInvalidatesDiscovery(){ToolBridge b;QVERIFY(probe(b));QVERIFY(waitFor(b,[&]{b.startService("reboot_recovery","TEST42",approval());}));QVERIFY(b.selectedSerial().isEmpty());QVERIFY(b.serviceProfile().isEmpty());QVERIFY(journal().contains("\"reboot\",\"recovery\""));}
  void cancellation(){ToolBridge b;QVERIFY(probe(b));qputenv("MR_SERVICE_MODE","hang");QSignalSpy spy(&b,&ToolBridge::operationFinished);QVERIFY(b.startService("dark_on","TEST42",approval()));QTRY_VERIFY_WITH_TIMEOUT(journal().contains("\"night\",\"yes\""),5000);b.cancel();if(spy.isEmpty())QVERIFY(spy.wait(5000));QVERIFY(!b.busy());QCOMPARE(spy.last()[0].toBool(),false);QVERIFY(!journal().contains("\"uimode\",\"night\"]"));}
+ void historyRetainsTargetAndFailureAfterAnotherOperation(){
+  ToolBridge b;QVERIFY(probe(b));
+  qputenv("MR_SERVICE_MODE","disconnected");
+  QVERIFY(waitFor(b,[&]{b.startService("dark_on","TEST42",approval());},false));
+  const auto failed=b.serviceHistory().first().toMap();
+  QCOMPARE(failed.value("serial").toString(),QStringLiteral("TEST42"));
+  QCOMPARE(failed.value("transport").toString(),QStringLiteral("adb"));
+  QVERIFY(!failed.value("success").toBool());
+  QVERIFY(failed.value("result").toString().contains("missing"));
+  QVERIFY(b.serviceProfile().isEmpty());
+  qunsetenv("MR_SERVICE_MODE");QVERIFY(probe(b,true));
+  QCOMPARE(b.serviceHistory().first().toMap().value("transport").toString(),QStringLiteral("fastboot"));
+  QCOMPARE(b.serviceHistory().at(1).toMap(),failed);
+  const auto path=dir_.filePath("history-report.json");QFile::remove(path);
+  QVERIFY(b.exportServiceReport(path,true));QFile file(path);QVERIFY(file.open(QIODevice::ReadOnly));
+  const auto report=QJsonDocument::fromJson(file.readAll()).object();
+  QCOMPARE(report.value("schemaVersion").toInt(),2);
+  const auto operations=report.value("operations").toArray();
+  QCOMPARE(operations.size(),3);
+  QCOMPARE(operations.at(1).toObject().toVariantMap(),failed);
+ }
+ void rebootHistoryKeepsTargetAfterDiscoveryCleared(){
+  ToolBridge b;QVERIFY(probe(b));
+  QVERIFY(waitFor(b,[&]{b.startService("reboot_recovery","TEST42",approval());}));
+  QVERIFY(b.selectedSerial().isEmpty());QVERIFY(b.serviceProfile().isEmpty());
+  const auto record=b.serviceHistory().first().toMap();
+  QCOMPARE(record.value("serial").toString(),QStringLiteral("TEST42"));
+  QCOMPARE(record.value("action").toString(),QStringLiteral("reboot_recovery"));
+  QCOMPARE(record.value("result").toString(),b.serviceOutput());
+ }
  void reportConsentAndNoOverwrite(){ToolBridge b;QVERIFY(probe(b));const auto path=dir_.filePath("service-report.json");QFile::remove(path);QVERIFY(!b.exportServiceReport(path,false));QVERIFY(b.exportServiceReport(path,true));QVERIFY(!b.exportServiceReport(path,true));QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));const auto bytes=f.readAll();QVERIFY(bytes.contains("Pending Hardware Validation"));QVERIFY(!bytes.contains("PRIVATE"));}
 };
 int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto base=QFileInfo(app.applicationFilePath()).completeBaseName();if(base=="adb"||base=="fastboot")return child(app.arguments().mid(1),base=="fastboot");ServiceTests tests;return QTest::qExec(&tests,argc,argv);}
