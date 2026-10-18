@@ -198,6 +198,11 @@ void ToolBridge::serviceStepFinished(bool success,const QString &out,const QStri
  success=success&&!failedText(text);
  if(!success&&!serviceCurrent_.optional){serviceComplete(false,"Device command rejected, disconnected or failed; no further queued commands were sent.\n"+text.left(2048));return;}
  if(key=="state"){
+  // Discovery's legacy display parser deduplicates rows. Execution must reject
+  // repeated serials rather than silently selecting one physical transport.
+  int occurrences=0;
+  for(const auto &line:out.split(QLatin1Char('\n'))){const auto fields=line.trimmed().split(QRegularExpression(QStringLiteral("\\s+")),Qt::SkipEmptyParts);if(fields.size()>=2&&fields[0]==serviceTarget_)++occurrences;}
+  if(occurrences!=1){serviceComplete(false,"Target is missing or its serial is ambiguous; no device write was sent.");return;}
   const auto list=serviceTool_=="adb"?parseAdbDevices(out):parseFastbootDevices(out);bool found=false;
   for(const auto &row:list){const auto d=row.toMap();if(d.value("serial").toString()==serviceTarget_&&d.value("state").toString()==(serviceTool_=="fastboot"?"fastboot":serviceAction_=="sideload_zip"?"sideload":"device"))found=true;}
   if(!found){serviceComplete(false,"Target is disconnected, unauthorized or in a different mode; no device write was sent.");return;}serviceAfterState();return;

@@ -20,6 +20,7 @@ static int child(QStringList args, bool fast) {
  auto out=[](const QString &value,bool error=false){const auto bytes=value.toUtf8();std::fwrite(bytes.constData(),1,static_cast<size_t>(bytes.size()),error?stderr:stdout);};
  if(args==QStringList{"devices","-l"}||args==QStringList{"devices"}) {
   if(mode=="disconnected") {out("List of devices attached\n");return 0;}
+  if(mode=="duplicate"){out(fast?"TEST42\tfastboot\nTEST42\tfastboot\n":"List of devices attached\nTEST42\tdevice\nTEST42\tdevice\n");return 0;}
   out(fast?"TEST42\tfastboot\n":mode=="sideload"?"List of devices attached\nTEST42\tsideload\n":"List of devices attached\nTEST42\tdevice\nLOCKED\tunauthorized\n");return 0;
  }
  if(args.size()<3||args[0]!="-s"||args[1]!="TEST42")return 99;
@@ -117,6 +118,8 @@ private slots:
  }
  void explicitApkReplace(){ToolBridge b;QVERIFY(probe(b));auto a=approval();a.insert("file",package());a.insert("replace",true);QVERIFY(waitFor(b,[&]{b.startService("install_apk","TEST42",a);}));QVERIFY(journal().contains("\"install\",\"-r\""));}
  void ambiguousTransportAndRescanInvalidate(){ToolBridge b;QVERIFY(probe(b));QVERIFY(waitFor(b,[&]{b.scanAdb();}));QVERIFY(b.serviceProfile().isEmpty());QVERIFY(!available(b,"dark_on"));QVERIFY(waitFor(b,[&]{b.scanFastboot();}));QVERIFY(!available(b,"probe"));}
+ void duplicateSerialRejectedBeforeWrite_data(){QTest::addColumn<bool>("fast");QTest::newRow("adb")<<false;QTest::newRow("fastboot")<<true;}
+ void duplicateSerialRejectedBeforeWrite(){QFETCH(bool,fast);ToolBridge b;QVERIFY(probe(b,fast));qputenv("MR_SERVICE_MODE","duplicate");QVERIFY(waitFor(b,[&]{b.startService(fast?"erase_cache":"dark_on","TEST42",approval(true));},false));QVERIFY(!journal().contains("\"erase\""));QVERIFY(!journal().contains("\"night\",\"yes\""));QVERIFY(b.serviceOutput().contains("ambiguous"));}
  void apkHashAndManagerFailure_data(){QTest::addColumn<QByteArray>("mode");QTest::addColumn<bool>("wrongHash");QTest::newRow("hash")<<QByteArray()<<true;QTest::newRow("manager")<<QByteArray("install-failure")<<false;QTest::newRow("no-confirmation")<<QByteArray("no-success")<<false;}
  void apkHashAndManagerFailure(){QFETCH(QByteArray,mode);QFETCH(bool,wrongHash);ToolBridge b;QVERIFY(probe(b));qputenv("MR_SERVICE_MODE",mode);auto a=approval();a.insert("file",package());if(wrongHash)a.insert("sha256",QString(64,'0'));QVERIFY(waitFor(b,[&]{b.startService("install_apk","TEST42",a);},false));if(wrongHash)QVERIFY(!journal().contains("\"install\""));}
  void sideloadConsentAndMode(){qputenv("MR_SERVICE_MODE","sideload");ToolBridge b;QVERIFY(waitFor(b,[&]{b.scanAdb();}));b.selectDevice("TEST42");QVERIFY(!available(b,"probe"));QVERIFY(available(b,"sideload_zip"));const auto path=package("fixture.zip");auto a=approval(true);a.insert("file",path);a.insert("sha256",hash(path));QVERIFY(!b.startService("sideload_zip","TEST42",a));a.insert("compatible",true);QVERIFY(waitFor(b,[&]{b.startService("sideload_zip","TEST42",a);}));QVERIFY(b.serviceOutput().contains("not proof"));QVERIFY(!journal().contains("\"getprop\""));}

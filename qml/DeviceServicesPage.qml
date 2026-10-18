@@ -22,9 +22,10 @@ Item {
   RowLayout {Layout.fillWidth:true
    NavIcon {kind:1;Layout.preferredWidth:32;Layout.preferredHeight:32}
    Label {text:app.trx("خدمات الجهاز حسب قدراته","Capability-based device services");font.bold:true;font.pixelSize:19;color:app.tone("#edf4ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
-   ComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:140}
-   ActionButton {text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:Qt.openUrlExternally(page.driverSource.url)}
+   ComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:190}
+   ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:Qt.openUrlExternally(page.driverSource.url)}
   }
+  Label {objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");text:app.trx("اختيار الشركة يرشّح المراجع فقط. تُقرأ هوية الجهاز وقدراته من الاتصال الحالي. العربية والإنجليزية والفرنسية والتركية تتبع اللغات الموجودة في Firmware؛ لن تُضاف ترجمة غير موجودة.","The brand filter selects references only. Device identity/capabilities come from the current connection. Arabic, English, French and Turkish depend on the languages present in the installed firmware.")}
   RowLayout {Layout.fillWidth:true
    ComboBox {id:device;objectName:"serviceDevice";Layout.fillWidth:true;model:toolBridge.devices;textRole:"serial";valueRole:"serial";currentIndex:toolBridge.devices.findIndex(function(row){return row.serial===toolBridge.selectedSerial});displayText:currentIndex<0?app.trx("اختر جهازًا بعد الفحص","Select a device after discovery"):currentText;enabled:!toolBridge.busy;onActivated:toolBridge.selectDevice(currentValue)}
@@ -57,7 +58,7 @@ Item {
      ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
     }
     Panel {title:app.trx("الموديلات المطلوبة — مراجع غير معتمدة بعد","Requested models — not yet validated");Layout.fillWidth:true;Layout.preferredHeight:120
-     ComboBox {objectName:"requestedServiceModel";Layout.fillWidth:true;model:toolBridge.requestedModels.filter(function(row){return row.brand===brand.currentText});textRole:"model"}
+     ComboBox {objectName:"requestedServiceModel";Layout.fillWidth:true;model:toolBridge.requestedModels.filter(function(row){return row.brand===brand.currentText});textRole:"model";enabled:count>0;displayText:count>0?currentText:app.trx("لا توجد مراجع موديلات مسجلة لهذه الشركة","No model references recorded for this brand")}
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("إضافة اسم موديل ليست اعتمادًا لعمليات FRP أو Format أو Firmware الخاصة به.","A model reference does not validate its FRP, format or firmware operations.");color:app.tone("#eab775");font.pixelSize:12}
     }
     Panel {title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true;Layout.preferredHeight:120
