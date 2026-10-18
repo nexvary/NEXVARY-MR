@@ -138,6 +138,8 @@ int main(int argc,char *argv[]) {
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%7],previous%14<7?QStringLiteral("ar"):QStringLiteral("en"),previous<14?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
         if(step==28){capture->stop();portal.stop();window->setProperty("allowClose",true);window->close();app.exit(ok&&!qmlWarning?0:6);return;}
         const int tab=step%7;window->setProperty("ar",step%14<7);window->setProperty("darkTheme",step<14);window->setProperty("currentPage",tab<2?5:tab<5?2:1);
+        // Capture the new service/catalog workspaces at the supported minimum.
+        window->resize(tab>=5?QSize(1180,760):QSize(1536,980));
         const auto tabs=tab<2?QStringLiteral("workshopTabs"):tab<5?QStringLiteral("diagnosticTabs"):QStringLiteral("deviceTabs");if(auto *bar=window->findChild<QObject *>(tabs))bar->setProperty("currentIndex",tab<2?tab+1:tab<5?tab-1:tab-4);else ok=false;
         if(tab==2){if(auto *tree=window->findChild<QObject *>(QStringLiteral("faultTreePage")))QMetaObject::invokeMethod(tree,"start");}
         ++step;

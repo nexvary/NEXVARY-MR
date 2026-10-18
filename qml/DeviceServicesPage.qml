@@ -53,17 +53,19 @@ Item {
      }
     }
    }
-   ColumnLayout {Layout.fillWidth:true;Layout.fillHeight:true;spacing:10
-    Panel {title:app.trx("نتيجة العملية — بيانات محلية","Operation result — local data");Layout.fillWidth:true;Layout.fillHeight:true
+   ScrollView {id:detailsScroll;objectName:"deviceServiceDetailsScroll";implicitWidth:0;implicitHeight:0;Layout.minimumWidth:0;Layout.minimumHeight:0;Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
+    ColumnLayout {width:detailsScroll.availableWidth;spacing:10
+    Panel {objectName:"deviceServiceResultPanel";title:app.trx("نتيجة العملية — بيانات محلية","Operation result — local data");Layout.fillWidth:true;Layout.minimumHeight:200;Layout.preferredHeight:Math.max(200,detailsScroll.availableHeight-references.implicitHeight-history.implicitHeight-20)
      ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
     }
-    Panel {title:app.trx("الموديلات المطلوبة — مراجع غير معتمدة بعد","Requested models — not yet validated");Layout.fillWidth:true;Layout.preferredHeight:120
+    Panel {id:references;title:app.trx("الموديلات المطلوبة — مراجع غير معتمدة بعد","Requested models — not yet validated");Layout.fillWidth:true
      ComboBox {objectName:"requestedServiceModel";Layout.fillWidth:true;model:toolBridge.requestedModels.filter(function(row){return row.brand===brand.currentText});textRole:"model";enabled:count>0;displayText:count>0?currentText:app.trx("لا توجد مراجع موديلات مسجلة لهذه الشركة","No model references recorded for this brand")}
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("إضافة اسم موديل ليست اعتمادًا لعمليات FRP أو Format أو Firmware الخاصة به.","A model reference does not validate its FRP, format or firmware operations.");color:app.tone("#eab775");font.pixelSize:12}
     }
-    Panel {title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true;Layout.preferredHeight:120
+    Panel {id:history;title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true
      ActionButton {objectName:"exportDeviceServiceReport";text:app.trx("تصدير تقرير محلي","Export local report");enabled:!toolBridge.busy&&toolBridge.serviceHistory.length>0;onClicked:reportConsent.open()}
-     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.fillHeight:true;clip:true;model:toolBridge.serviceHistory;delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.atUtc+" · "+modelData.action+" · "+(modelData.success?"OK":"Stopped");textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}
+     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.atUtc+" · "+modelData.action+" · "+(modelData.success?"OK":"Stopped");textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}
+    }
     }
    }
   }

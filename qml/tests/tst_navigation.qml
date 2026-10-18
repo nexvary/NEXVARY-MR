@@ -28,6 +28,19 @@ TestCase {
   mouseClick(app.navigationButton(0));compare(app.currentPage,0)
  }
  function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
+ function test_serviceMinimumSizeOutputAndHistory(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;findChild(app,"serviceBrand").currentIndex=1
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(80)
+   const result=findChild(app,"deviceServiceResultPanel");verify(result.height>=180,"Operation result must remain readable at minimum size")
+   const details=findChild(app,"deviceServiceDetailsScroll");verify(details!==null);details.contentItem.contentY=0;wait(30)
+   let point=result.mapToItem(details,result.width/2,80);verify(point.y>=0&&point.y<details.height,"Result remains visible at the top")
+   details.contentItem.contentY=Math.max(0,details.contentHeight-details.availableHeight);wait(30)
+   const report=findChild(app,"exportDeviceServiceReport");point=report.mapToItem(details,report.width/2,report.height/2);verify(point.y>=0&&point.y<details.height,"Report remains reachable by scrolling")
+   details.contentItem.contentY=0
+  }
+  findChild(app,"serviceBrand").currentIndex=0
+ }
  function test_centerProfilesAndTracking(){
   const id=workshopBridge.createOrder("SYNTHETIC UI owner","test-contact","OPPO","TRAINING-01","test-serial","USB","Tech","private");verify(id>0)
   const order=workshopBridge.invoice(id)
