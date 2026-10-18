@@ -1,0 +1,41 @@
+# Workshop profiles, customer status and security checkpoint
+
+Starting head: `b84342b8c5aaadcfa0ef94bcca6b92ac140a9810`. Native C++/Qt remains the sole desktop operation engine. PR #3 stays a development draft.
+
+## Implemented
+
+- SQLite v3 migration preserves v1/v2 orders, diagnoses, inventory and existing customer/device IDs. A returning phone can have multiple orders without creating another owner or device. A returning customer can register another phone. Profiles expose owner/contact, serial/model, repair history, symptoms, status and historical order costs. Editing a customer's current contact does not create a new identity. Existing duplicate profiles are not automatically merged.
+- Workshop tabs: repair orders, customer/phone profiles and customer tracking. Data stays in the existing workshop database and its validated backup/restore flow.
+- Opt-in customer portal implemented with Qt Network. Bind only to a selected local/private IPv4 address; default is loopback. Explicit network and sharing consent; no automatic firewall change. Links use 256 random bits, are stored only as SHA256 digests, expire within 1–90 days and can be rotated/revoked. Restoring a backup invalidates all restored tracking links to avoid resurrecting a revoked bearer token.
+- Actual GET status pages, with Arabic/English status labels and refresh, show model, current status, status history and a deliberately entered customer-visible message. They omit customer name/contact, serial, fault, cost, technician and internal notes. Responses use no-store, no-referrer, noindex and restrictive CSP; no request URL/token logging. Unknown/revoked/expired links return the same unavailable response. Bounded connections, header size and timeout; no write or admin endpoint.
+- ClamAV adapter: selected separately installed native `clamscan`, explicitly selected signature folder, one authorized local file/APK copy (128 MiB maximum). Creates a private verified working copy; records source, executable and database file SHA256, version, time, scope, output and return code; rechecks inputs after scan. Fixed arguments only, no shell, delete, move, quarantine or upload. Background worker with cancellation, process/output/time/archive bounds, encrypted/limit alerts, bytecode disabled and engine-side 7-day CVD-age gate. Custom-only signatures are clearly marked as limited coverage. No-signature-match is never a device health verdict. Report export requires consent and a new filename.
+- Diagnostic tree engine binds a yes/no path to a particular order's exact brand/model/symptom, stores technician observations/path through existing diagnoses, and supports an operator-reviewed model-guide library. Import validates bounded text/nodes, exact identity, source/license metadata, references, reachability and absence of cycles. No fuzzy model substitution. Without an imported exact match, only clearly labeled general triage is offered; no invented board voltages.
+- OEM catalog links official Samsung, Huawei, OPPO, vivo, LG and ZTE sources; retains read-only Windows PnP driver inspection. These are official landing pages, not bundled or silently installed driver packages. Availability depends on model, connection mode, region and Windows version.
+
+## Test gates
+
+`mr_center_tests` verifies repeat-owner/device histories, invalid IDs/rollback, persistence, v2 migration, public-data omission/HTML escaping, random-token rotation/revocation/expiry/restore, and actual localhost HTTP requests reflecting changed statuses. `mr_security_tests` tests the process adapter's alert/no-match/error/tamper/cancellation/time/output behavior and asynchronous bridge consent/report boundaries. `MR_CLAMSCAN_PATH` enables a real separately installed engine integration with a synthetic custom signature and benign control. It does not use real malware or pretend that custom fixtures validate official malware coverage. Linux CI requires `/usr/bin/clamscan`; Windows controlled-child tests do not substitute for real Windows ClamAV acceptance.
+
+`mr_catalog_tests` checks exact model matching, cyclic/malformed trees, license/source requirements, persistence and generic fallback validity. QML covers new profile/tracking/security/tree tabs and saving findings, alongside existing maintenance/navigation/RTL/theme tests. Packaged smoke makes an actual localhost status request and captures every new tab in AR/EN and dark/light, in addition to existing forensic/recovery/board smoke. Qt6Network.dll is a required runtime dependency.
+
+Read the tested head's CI results and artifacts in PR #3; source compilation alone is not release acceptance.
+
+## Official dependency/source review — 2026-10-18
+
+ClamAV reviewed upstream head: `72cd48c9faed4fa4afc22bc4ed0b9b19f8d3f8f7`, [COPYING.txt](https://github.com/Cisco-Talos/clamav/blob/72cd48c9faed4fa4afc22bc4ed0b9b19f8d3f8f7/COPYING.txt), GPL version 2. The adapter invokes a separately installed process, does not link libclamav, copy upstream code, redistribute binaries or bundle signature databases. Bundling or commercial redistribution needs its own dependency/license review.
+
+- [ClamAV scanning and scope](https://docs.clamav.net/manual/Usage/Scanning.html)
+- [ClamAV signatures, custom rules and FreshClam](https://docs.clamav.net/manual/Signatures.html)
+- [clamscan options](https://github.com/Cisco-Talos/clamav/blob/72cd48c9faed4fa4afc22bc4ed0b9b19f8d3f8f7/docs/man/clamscan.1.in)
+- [Android OEM-driver guidance](https://developer.android.com/studio/run/oem-usb)
+- [Samsung](https://developer.samsung.com/android-usb-driver), [Huawei HiSuite](https://consumer.huawei.com/en/support/hisuite/), [OPPO](https://support.oppo.com/en/), [vivo](https://www.vivo.com/en/support), [LG](https://www.lg.com/us/support?popup=software), [ZTE](https://support.ztedevices.com/en-gl/).
+
+## Unfinished acceptance requirements
+
+1. Public remote tracking is **not deployed**. The HTTP portal is for a trusted LAN with the app/computer online. It must not be port-forwarded onto the internet. A separate authenticated sync service/hosting, HTTPS, operator authentication, rate controls, secure enrollment and deployment acceptance are needed for offsite customers. No external customer data has been published. QR receipts are not generated in this increment; real working links are provided.
+2. Device-wide Android scanning/acquisition, installed-app inventory/collection, runtime behavior and inaccessible/encrypted private data are not covered by a file scanner. No FRP, lock or encryption bypass. FreshClam update orchestration and real Windows ClamAV/database acceptance remain pending.
+3. A complete verified model-specific hardware fault library is **not supplied**. Licensed exact-model service guides, revision compatibility and qualified physical measurements are required. Imported operator guides are not automatically OEM-certified.
+4. Driver binaries, installation/elevation and model/VID/PID verification are not integrated. No universal Qualcomm/MediaTek/Unisoc installer is claimed. Physical device/USB and clean Windows 10/11 tests remain necessary.
+5. Phone ownership transfer/duplicate-profile reconciliation, estimate approvals/deposits, tax/accounting, role-based staff access and encrypted multi-user storage are future work. Existing local workshop database is not a multi-tenant server.
+
+Next engineering increment after latest-head Windows gates: add lawful Android app inventory/base+split APK collection through the existing ToolBridge; then verify real Windows ClamAV/fresh signatures; build separately hosted HTTPS customer tracking only after a concrete deployment target is available. Never replace those steps with a "whole phone clean" label.

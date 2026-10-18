@@ -7,11 +7,17 @@ Item {
  property var app
  property int selectedId:-1
  property var selectedOrder: ({})
+ property int existingCustomerId:-1
+ property int existingDeviceId:-1
+ function intakeForCustomer(id){resetIntake();existingCustomerId=id;const c=workshopBridge.customerProfile(id);customer.text=c.name||"";phone.text=c.phone||"";newOrder.open()}
+ function intakeForDevice(id){const d=workshopBridge.deviceProfile(id);intakeForCustomer(d.customer_id);existingDeviceId=id;brand.text=d.brand;model.text=d.model;serial.text=d.serial}
+ function resetIntake(){existingCustomerId=-1;existingDeviceId=-1;customer.clear();phone.clear();brand.clear();model.clear();serial.clear();symptom.clear();tech.clear();notes.clear()}
+
  ColumnLayout {
   anchors.fill:parent;spacing:12
   RowLayout {
    Layout.fillWidth:true
-   ActionButton {objectName:"newOrder";text:app.trx("أمر صيانة جديد","New repair order");primary:true;enabled:workshopBridge.ready;onClicked:{customer.clear();phone.clear();brand.clear();model.clear();serial.clear();symptom.clear();tech.clear();notes.clear();newOrder.open()}}
+   ActionButton {objectName:"newOrder";text:app.trx("أمر صيانة جديد","New repair order");primary:true;enabled:workshopBridge.ready;onClicked:{page.resetIntake();newOrder.open()}}
    TextField {id:search;Layout.fillWidth:true;placeholderText:app.trx("ابحث بالعميل، الموديل، الحالة أو رقم الأمر","Search customer, model, status or order ID")}
    ActionButton {text:app.trx("تصدير CSV","Export CSV");onClicked:csvDialog.open()}
   }
@@ -48,15 +54,16 @@ Item {
  Dialog {
   id:newOrder;objectName:"newOrderDialog";title:app.trx("أمر صيانة جديد","New repair order");modal:true;anchors.centerIn:parent;width:Math.min(650,page.width-24);standardButtons:Dialog.Save|Dialog.Cancel
   contentItem:ColumnLayout {
-   TextField {id:customer;objectName:"customerField";placeholderText:app.trx("اسم العميل *","Customer name *");Layout.fillWidth:true;maximumLength:240}
-   RowLayout {TextField{id:phone;placeholderText:app.trx("الهاتف","Phone");Layout.fillWidth:true;maximumLength:80} TextField{id:tech;placeholderText:app.trx("الفني المسؤول","Technician");Layout.fillWidth:true;maximumLength:160}}
-   RowLayout {TextField{id:brand;objectName:"brandField";placeholderText:app.trx("الشركة *","Brand *");Layout.fillWidth:true;maximumLength:240} TextField{id:model;objectName:"modelField";placeholderText:app.trx("الموديل *","Model *");Layout.fillWidth:true;maximumLength:240}}
-   TextField {id:serial;placeholderText:app.trx("الرقم التسلسلي المصرح بقراءته","Authorized serial number");Layout.fillWidth:true;maximumLength:160}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#69b7ff");text:page.existingDeviceId>0?app.trx("أمر جديد للهاتف المسجل #","New order for registered phone #")+page.existingDeviceId:page.existingCustomerId>0?app.trx("هاتف جديد للعميل #","New phone for customer #")+page.existingCustomerId:app.trx("عميل وهاتف جديدان. لإعادة استخدام بروفيل افتح تبويب البروفيلات.","New customer and phone. Reuse an existing profile from the Profiles tab.")}
+   TextField {id:customer;enabled:page.existingCustomerId<0;objectName:"customerField";placeholderText:app.trx("اسم العميل *","Customer name *");Layout.fillWidth:true;maximumLength:240}
+   RowLayout {TextField{id:phone;enabled:page.existingCustomerId<0;placeholderText:app.trx("الهاتف","Phone");Layout.fillWidth:true;maximumLength:80} TextField{id:tech;placeholderText:app.trx("الفني المسؤول","Technician");Layout.fillWidth:true;maximumLength:160}}
+   RowLayout {TextField{id:brand;enabled:page.existingDeviceId<0;objectName:"brandField";placeholderText:app.trx("الشركة *","Brand *");Layout.fillWidth:true;maximumLength:240} TextField{id:model;enabled:page.existingDeviceId<0;objectName:"modelField";placeholderText:app.trx("الموديل *","Model *");Layout.fillWidth:true;maximumLength:240}}
+   TextField {id:serial;enabled:page.existingDeviceId<0;placeholderText:app.trx("الرقم التسلسلي المصرح بقراءته","Authorized serial number");Layout.fillWidth:true;maximumLength:160}
    TextField {id:symptom;objectName:"symptomField";placeholderText:app.trx("وصف العطل *","Symptom *");Layout.fillWidth:true;maximumLength:2000}
    TextArea {id:notes;placeholderText:app.trx("الملاحظات وحالة الجهاز عند الاستلام","Notes and intake condition");Layout.fillWidth:true;Layout.preferredHeight:100;wrapMode:TextEdit.Wrap}
    Label {text:app.trx("بيانات العملاء محفوظة محليًا. احتفظ بنسخة احتياطية آمنة.","Customer data is stored locally. Keep a secure backup.");color:app.tone("#93a9bb");wrapMode:Text.WordWrap;Layout.fillWidth:true}
   }
-  onAccepted:{const id=workshopBridge.createOrder(customer.text,phone.text,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text);app.notice(id>0,app.trx("تم إنشاء أمر الصيانة #","Created repair order #")+id);if(id<=0)newOrder.open()}
+  onAccepted:{const id=page.existingDeviceId>0?workshopBridge.createOrderForDevice(page.existingDeviceId,symptom.text,tech.text,notes.text):page.existingCustomerId>0?workshopBridge.createOrderForCustomer(page.existingCustomerId,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text):workshopBridge.createOrder(customer.text,phone.text,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text);app.notice(id>0,app.trx("تم إنشاء أمر الصيانة #","Created repair order #")+id);if(id<=0)newOrder.open()}
  }
  Dialog {
   id:editDialog;modal:true;title:app.trx("تحديث أمر الصيانة","Update repair order");anchors.centerIn:parent;width:Math.min(560,page.width-24);standardButtons:Dialog.Save|Dialog.Cancel

@@ -14,7 +14,7 @@ Button {
  contentItem: Text {
   text: control.text
   font: control.font
-  color: control.enabled ? control.tone("#edf5ff") : control.tone("#8192a5")
+  color: control.enabled ? (control.primary || control.down ? "#ffffff" : control.tone("#edf5ff")) : control.tone("#8192a5")
   horizontalAlignment: Text.AlignHCenter
   verticalAlignment: Text.AlignVCenter
   elide: Text.ElideRight

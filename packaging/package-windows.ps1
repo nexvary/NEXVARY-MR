@@ -66,7 +66,7 @@ Copy-Item "$qtRoot/bin/Qt6Svg.dll" (Join-Path $bundle 'Qt6Svg.dll')
 $requiredRuntime = @(
   'NEXVARY-MR.exe', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
-  'Qt6Quick.dll', 'Qt6Sql.dll',
+  'Qt6Quick.dll', 'Qt6Sql.dll', 'Qt6Network.dll',
   'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll',
   'imageformats/qsvg.dll', 'Qt6Svg.dll'
 )

@@ -8,8 +8,33 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function init(){findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
  function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
+ function test_centerProfilesAndTracking(){
+  const id=workshopBridge.createOrder("SYNTHETIC UI owner","test-contact","OPPO","TRAINING-01","test-serial","USB","Tech","private");verify(id>0)
+  const order=workshopBridge.invoice(id)
+  const second=workshopBridge.createOrderForDevice(order.device_id,"Screen","Tech","second visit");verify(second>id)
+  compare(workshopBridge.deviceProfile(order.device_id).orders.length,2)
+  app.currentPage=5;const tabs=findChild(app,"workshopTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem))
+  verify(findChild(app,"customerProfiles").count>0);verify(findChild(app,"deviceProfiles").count>0)
+  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));verify(!findChild(app,"startPortal").enabled);verify(!findChild(app,"issueTracking").enabled)
+  verify(trackingPortal.start("127.0.0.1",0,true));verify(waitForRendering(app.contentItem));verify(findChild(app,"stopPortal").enabled)
+  trackingPortal.stop();verify(!trackingPortal.running)
+ }
+ function test_securityAndFaultTree(){
+  const id=workshopBridge.createOrder("Synthetic tree owner","","Samsung","SYNTHETIC-02","","USB","Tech","");verify(id>0)
+  app.currentPage=2;const tabs=findChild(app,"diagnosticTabs");tabs.currentIndex=2;verify(waitForRendering(app.contentItem))
+  verify(!findChild(app,"startSecurityScan").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
+  tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,6)
+  tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
+  const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
+  mouseClick(findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
+  findChild(app,"treeTechnician").text="Synthetic technician";findChild(app,"treeFinding").text="Synthetic safety observation only";
+  const save=findChild(app,"saveFaultTree");verify(save.enabled)
+  // The save control is below the first viewport: scroll it into view before clicking.
+  const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
+  verify(workshopBridge.diagnoses(selected).length>0)
+ }
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
   for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}

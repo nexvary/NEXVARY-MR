@@ -18,6 +18,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <limits>
+#include <QCryptographicHash>
+#include <QRandomGenerator>
+#include <QRegularExpression>
 namespace {
 QStringList migrationSql() {
     return {
@@ -32,6 +35,9 @@ QStringList migrationSql() {
 }
 QString diagnosisMigrationSql() {
     return QStringLiteral("CREATE TABLE diagnoses(id INTEGER PRIMARY KEY,order_id INTEGER NOT NULL REFERENCES orders(id),symptom TEXT NOT NULL CHECK(length(symptom) BETWEEN 1 AND 2000),guidance TEXT NOT NULL CHECK(length(guidance) BETWEEN 1 AND 8000),findings TEXT NOT NULL CHECK(length(findings) BETWEEN 1 AND 8000),evidence TEXT NOT NULL DEFAULT '' CHECK(length(evidence)<=4000),technician TEXT NOT NULL CHECK(length(technician) BETWEEN 1 AND 160),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+}
+QString trackingSql() {
+    return QStringLiteral("CREATE TABLE tracking_links(order_id INTEGER PRIMARY KEY REFERENCES orders(id),token_hash TEXT NOT NULL UNIQUE CHECK(length(token_hash)=64),expires_at TEXT NOT NULL,message TEXT NOT NULL DEFAULT '' CHECK(length(message)<=1000))");
 }
 QVariantList rows(QSqlQuery &q) {
     QVariantList list;
@@ -85,25 +91,27 @@ bool WorkshopBridge::open() {
 bool WorkshopBridge::migrate() {
     QSqlQuery q(db_); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()) return fail(q.lastError().text());
     const int v=q.value(0).toInt(); q.finish();
-    if(v>2) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
-    if(v==2) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
-    if(v==1 && !validDb(db_,true)) return fail(QStringLiteral("Legacy database schema/integrity validation failed."));
+    if(v>3) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
+    if(v==3) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
+    if(v>0 && !validDb(db_,true)) return fail(QStringLiteral("Legacy database schema/integrity validation failed."));
     if(!db_.transaction()) return fail(db_.lastError().text());
     if(v==0) for(const auto &sql:migrationSql()) if(!q.exec(sql)) { db_.rollback(); return fail(q.lastError().text()); }
-    if(!q.exec(diagnosisMigrationSql())||!q.exec(QStringLiteral("PRAGMA user_version=2"))) { db_.rollback();return fail(q.lastError().text()); }
+    if(v<2&&!q.exec(diagnosisMigrationSql())) { db_.rollback();return fail(q.lastError().text()); }
+    if(!q.exec(trackingSql())||!q.exec(QStringLiteral("PRAGMA user_version=3"))) { db_.rollback();return fail(q.lastError().text()); }
     if(!db_.commit()) {db_.rollback();return fail(db_.lastError().text());}
     return validDb(db_) || fail(QStringLiteral("Migrated database failed validation."));
 }
 bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
     QSqlQuery q(db); if(!q.exec(QStringLiteral("PRAGMA integrity_check"))||!q.next()||q.value(0).toString()!=QStringLiteral("ok")) return false;
     q.finish(); if(!q.exec(QStringLiteral("PRAGMA foreign_key_check"))||q.next()) return false;
-    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||(q.value(0).toInt()!=2 && !(allowLegacy&&q.value(0).toInt()==1))) return false;
+    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||(q.value(0).toInt()!=3 && !(allowLegacy&&(q.value(0).toInt()==1||q.value(0).toInt()==2)))) return false;
     const int version=q.value(0).toInt();
     QMap<QString,QStringList> required={
       {"customers",{"id","name","phone"}}, {"devices",{"id","customer_id","brand","model","serial"}},
       {"orders",{"id","device_id","symptom","technician","status","labor_cents","notes","created_at","updated_at"}},
       {"parts",{"id","sku","name","quantity","unit_cents"}}, {"order_parts",{"id","order_id","part_id","quantity","unit_cents"}}, {"events",{"id","order_id","action","created_at"}}};
-    if(version==2) required.insert(QStringLiteral("diagnoses"),{"id","order_id","symptom","guidance","findings","evidence","technician","created_at"});
+    if(version>=2) required.insert(QStringLiteral("diagnoses"),{"id","order_id","symptom","guidance","findings","evidence","technician","created_at"});
+    if(version==3) required.insert(QStringLiteral("tracking_links"),{"order_id","token_hash","expires_at","message"});
     // Match our own schema, including CHECK/UNIQUE/foreign-key constraints. A file
     // with familiar column names but relaxed constraints is not an application backup.
     QMap<QString,QString> expectedSql;
@@ -112,7 +120,8 @@ bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
         const auto name=sql.mid(13,sql.indexOf('(')-13);
         expectedSql.insert(name,sql);
     }
-    if(version==2) expectedSql.insert(QStringLiteral("diagnoses"),diagnosisMigrationSql());
+    if(version>=2) expectedSql.insert(QStringLiteral("diagnoses"),diagnosisMigrationSql());
+    if(version==3) expectedSql.insert(QStringLiteral("tracking_links"),trackingSql());
     // A backup is application data, not a mechanism to install executable triggers/views.
     q.finish();if(!q.exec(QStringLiteral("SELECT name,type,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'"))) return false;
     while(q.next()) {
@@ -143,7 +152,7 @@ bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
         total+=amount;
     }
     if(q.lastError().isValid()) return false;
-    if(version==2) {
+    if(version>=2) {
         q.finish();if(!q.exec(QStringLiteral("SELECT symptom,guidance,findings,evidence,technician FROM diagnoses"))) return false;
         while(q.next()) if(!textOk(q.value(0).toString(),2000)||!textOk(q.value(1).toString(),8000)||!textOk(q.value(2).toString(),8000)||!optionalTextOk(q.value(3).toString(),4000)||!textOk(q.value(4).toString(),160)) return false;
         if(q.lastError().isValid()) return false;
@@ -154,7 +163,7 @@ bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
 QString WorkshopBridge::checkIntegrity() { return validDb(db_)?QStringLiteral("ok"):QStringLiteral("failed"); }
 QVariantList WorkshopBridge::orders() const {
     if(!ready_) return {};
-    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,d.brand,d.model,d.serial,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); auto result=rows(q);for(auto &v:result){auto row=v.toMap();row.insert("total_display",money(row.value("total_cents").toLongLong()));v=row;}return result;
+    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,c.id AS customer_id,d.brand,d.model,d.serial,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); auto result=rows(q);for(auto &v:result){auto row=v.toMap();row.insert("total_display",money(row.value("total_cents").toLongLong()));v=row;}return result;
 }
 QVariantList WorkshopBridge::inventory() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM parts ORDER BY name"));return rows(q); }
 QVariantList WorkshopBridge::events() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM events ORDER BY id DESC LIMIT 300"));return rows(q); }
@@ -278,6 +287,7 @@ bool WorkshopBridge::restore(const QString &value,bool confirmed) {
     if(ok) {const auto bytes=input.readAll();ok=dest.write(bytes)==bytes.size()&&dest.commit();}
     input.close();QFile::remove(stage);
     ready_=db_.open()&&migrate();QSqlQuery q(db_);ready_=q.exec(QStringLiteral("PRAGMA foreign_keys=ON"))&&q.exec(QStringLiteral("PRAGMA trusted_schema=OFF"))&&ready_;
+    if(ready_) ready_=q.exec(QStringLiteral("DELETE FROM tracking_links"));
     QFile::setPermissions(path_,QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     emit changed();if(ok&&ready_) {error_.clear();emit errorChanged();return true;}return fail(QStringLiteral("Restore failed; original preserved in ")+previous);
 }
@@ -323,4 +333,80 @@ bool WorkshopBridge::exportDiagnosisReport(int orderId,const QString &value) {
     const auto bytes=QJsonDocument(report).toJson(QJsonDocument::Indented);
     QSaveFile file(target);if(!file.open(QIODevice::WriteOnly)||file.write(bytes)!=bytes.size()||!file.commit()) return fail(QStringLiteral("Could not write diagnostic report."));
     error_.clear();emit errorChanged();return true;
+}
+
+QVariantList WorkshopBridge::customers() const {
+    if(!ready_)return {};
+    QSqlQuery q(db_);q.exec(QStringLiteral("SELECT c.*,(SELECT COUNT(*) FROM devices d WHERE d.customer_id=c.id) AS device_count,(SELECT COUNT(*) FROM orders o JOIN devices d ON d.id=o.device_id WHERE d.customer_id=c.id) AS order_count FROM customers c ORDER BY c.name,c.id"));return rows(q);
+}
+QVariantList WorkshopBridge::devices() const {
+    if(!ready_)return {};
+    QSqlQuery q(db_);q.exec(QStringLiteral("SELECT d.*,c.name AS owner,c.phone,(SELECT COUNT(*) FROM orders o WHERE o.device_id=d.id) AS order_count FROM devices d JOIN customers c ON c.id=d.customer_id ORDER BY d.id DESC"));return rows(q);
+}
+QVariantMap WorkshopBridge::customerProfile(int id) const {
+    for(const auto &item:customers())if(item.toMap().value("id").toInt()==id){
+        auto result=item.toMap();QVariantList phones,history;
+        for(const auto &d:devices())if(d.toMap().value("customer_id").toInt()==id)phones.append(d);
+        for(const auto &o:orders())if(o.toMap().value("customer_id").toInt()==id)history.append(o);
+        result.insert("devices",phones);result.insert("orders",history);return result;
+    }return {};
+}
+QVariantMap WorkshopBridge::deviceProfile(int id) const {
+    for(const auto &item:devices())if(item.toMap().value("id").toInt()==id){
+        auto result=item.toMap();QVariantList history;
+        for(const auto &o:orders())if(o.toMap().value("device_id").toInt()==id)history.append(o);
+        result.insert("orders",history);return result;
+    }return {};
+}
+bool WorkshopBridge::updateCustomer(int id,const QString &name,const QString &phone) {
+    if(!ready_||!textOk(name)||!optionalTextOk(phone,80))return fail(QStringLiteral("Valid customer name and phone are required."));
+    if(!db_.transaction())return fail(db_.lastError().text());
+    QSqlQuery q(db_);q.prepare(QStringLiteral("UPDATE customers SET name=?,phone=? WHERE id=?"));q.addBindValue(name.trimmed());q.addBindValue(sqlText(phone.trimmed()));q.addBindValue(id);
+    return finish(q.exec()&&q.numRowsAffected()==1&&log(0,QStringLiteral("Customer profile updated #%1").arg(id)));
+}
+int WorkshopBridge::createOrderForDevice(int id,const QString &symptom,const QString &tech,const QString &notes) {
+    if(!ready_||!textOk(symptom,2000)||!optionalTextOk(tech,160)||!optionalTextOk(notes,20000)){fail(QStringLiteral("Invalid order values."));return -1;}
+    if(!db_.transaction()){fail(db_.lastError().text());return -1;}
+    QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO orders(device_id,symptom,technician,notes) VALUES(?,?,?,?)"));q.addBindValue(id);q.addBindValue(symptom.trimmed());q.addBindValue(sqlText(tech.trimmed()));q.addBindValue(sqlText(notes));
+    if(!q.exec()){db_.rollback();fail(QStringLiteral("Existing device not found or order could not be saved."));return -1;}
+    const int order=q.lastInsertId().toInt();return finish(log(order,QStringLiteral("Created")))?order:-1;
+}
+int WorkshopBridge::createOrderForCustomer(int customerId,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &tech,const QString &notes) {
+    if(!ready_||!textOk(brand)||!textOk(model)||!optionalTextOk(serial,160)||!textOk(symptom,2000)||!optionalTextOk(tech,160)||!optionalTextOk(notes,20000)){fail(QStringLiteral("Invalid device/order values."));return -1;}
+    if(!db_.transaction()){fail(db_.lastError().text());return -1;}
+    QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO devices(customer_id,brand,model,serial) VALUES(?,?,?,?)"));q.addBindValue(customerId);q.addBindValue(brand.trimmed());q.addBindValue(model.trimmed());q.addBindValue(sqlText(serial.trimmed()));
+    if(!q.exec()){db_.rollback();fail(QStringLiteral("Customer not found or phone could not be saved."));return -1;}
+    const int device=q.lastInsertId().toInt();q.prepare(QStringLiteral("INSERT INTO orders(device_id,symptom,technician,notes) VALUES(?,?,?,?)"));q.addBindValue(device);q.addBindValue(symptom.trimmed());q.addBindValue(sqlText(tech.trimmed()));q.addBindValue(sqlText(notes));
+    if(!q.exec()){db_.rollback();fail(QStringLiteral("Could not save order."));return -1;}
+    const int order=q.lastInsertId().toInt();return finish(log(order,QStringLiteral("Created")))?order:-1;
+}
+QString WorkshopBridge::issueTrackingToken(int id,int days,bool consent) {
+    if(!ready_||!consent||days<1||days>90){fail(QStringLiteral("Tracking needs explicit sharing consent and expiry of 1–90 days."));return {};}
+    QByteArray random(32,Qt::Uninitialized);for(int i=0;i<32;i+=4){const auto word=QRandomGenerator::system()->generate();for(int j=0;j<4;++j)random[i+j]=static_cast<char>((word>>(8*j))&255);}
+    const auto token=random.toHex();const auto digest=QCryptographicHash::hash(token,QCryptographicHash::Sha256).toHex();
+    if(!db_.transaction()){fail(db_.lastError().text());return {};}
+    QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT INTO tracking_links(order_id,token_hash,expires_at) VALUES(?,?,?) ON CONFLICT(order_id) DO UPDATE SET token_hash=excluded.token_hash,expires_at=excluded.expires_at"));q.addBindValue(id);q.addBindValue(QString::fromLatin1(digest));q.addBindValue(QDateTime::currentDateTimeUtc().addDays(days).toString(Qt::ISODate));
+    return finish(q.exec()&&log(id,QStringLiteral("Tracking link issued/rotated")))?QString::fromLatin1(token):QString();
+}
+bool WorkshopBridge::revokeTracking(int id) {
+    if(!ready_||!db_.transaction())return fail(QStringLiteral("Database unavailable."));
+    QSqlQuery q(db_);q.prepare(QStringLiteral("DELETE FROM tracking_links WHERE order_id=?"));q.addBindValue(id);return finish(q.exec()&&q.numRowsAffected()==1&&log(id,QStringLiteral("Tracking link revoked")));
+}
+bool WorkshopBridge::setPublicMessage(int id,const QString &message) {
+    if(!ready_||!optionalTextOk(message,1000)||!db_.transaction())return fail(QStringLiteral("Customer update must be at most 1000 characters."));
+    QSqlQuery q(db_);q.prepare(QStringLiteral("UPDATE tracking_links SET message=? WHERE order_id=?"));q.addBindValue(sqlText(message));q.addBindValue(id);return finish(q.exec()&&q.numRowsAffected()==1&&log(id,QStringLiteral("Customer-visible update changed")));
+}
+QVariantMap WorkshopBridge::publicTracking(const QString &token) const {
+    static const QRegularExpression format(QStringLiteral("^[0-9a-f]{64}$"));
+    if(!ready_||!format.match(token).hasMatch())return {};
+    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT order_id,expires_at,message FROM tracking_links WHERE token_hash=?"));q.addBindValue(QString::fromLatin1(QCryptographicHash::hash(token.toLatin1(),QCryptographicHash::Sha256).toHex()));
+    if(!q.exec()||!q.next())return {};
+    const int id=q.value(0).toInt();const auto expiry=QDateTime::fromString(q.value(1).toString(),Qt::ISODate);const auto message=q.value(2).toString();
+    if(!expiry.isValid()||expiry<=QDateTime::currentDateTimeUtc())return {};
+    q.finish();q.prepare(QStringLiteral("SELECT o.id,o.status,o.updated_at,d.brand,d.model FROM orders o JOIN devices d ON d.id=o.device_id WHERE o.id=?"));q.addBindValue(id);if(!q.exec()||!q.next())return {};
+    QVariantMap result;for(int i=0;i<q.record().count();++i)result.insert(q.record().fieldName(i),q.value(i));result.insert("message",message);
+    q.finish();q.prepare(QStringLiteral("SELECT action,created_at FROM events WHERE order_id=? ORDER BY id"));q.addBindValue(id);if(!q.exec())return {};
+    const QStringList states={"Received","Diagnosing","Awaiting parts","Repairing","Ready","Delivered","Cancelled"};QVariantList history;
+    while(q.next()) {const auto action=q.value(0).toString();const auto status=action==QStringLiteral("Created")?QStringLiteral("Received"):action.startsWith(QStringLiteral("Status: "))?action.mid(8):QString();if(states.contains(status))history.append(QVariantMap{{"status",status},{"atUtc",q.value(1).toString()+QStringLiteral("Z")}});}
+    result.insert("history",history);return result;
 }

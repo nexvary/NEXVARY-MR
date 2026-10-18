@@ -58,3 +58,7 @@ Commit `4d1ef274bbf5036874f4a1829c095eaa02fbdd60` passed core Linux/Windows, all
 The following visual increment uses the requested `#0A0A0A` black base, neutral charcoal surfaces, restrained silver edges and native passive gradient reflections. The shared `GlossSurface` draws no input layer and requires no bitmap or shader plugin. Light mode and colored SVG/status accents remain available. Local strict Qt build, 17 QML checks and the actual 40-step GUI smoke passed; AR/dark, EN/light, recovery and board screenshots were inspected. Latest-head Windows validation and artifacts must be read from PR #3, not inferred from the baseline above.
 
 Next: confirm the glossy UI head's Windows/package run, then implement bounded read-only SQLite or iOS backup structure analysis with synthetic fixtures. Android acquisition, malware analysis, most external adapters, OEM capabilities and physical-device disconnect tests remain incomplete.
+
+## Workshop/security continuation
+
+The next actual increment extends existing SQLite profiles and introduces an opt-in customer status portal, ClamAV file/APK-copy scanning, a validated exact-model guide library with explicit general fallback, and official OEM source links. See [CENTER_SECURITY.md](../workshop/CENTER_SECURITY.md) for implemented behavior, tests, source/license review, limits and the next step. Public HTTPS tracking, whole-phone antivirus, a comprehensive model library and driver installation are not claimed. The newest tested head and Windows artifact are linked in PR #3.

@@ -6,6 +6,8 @@
 class WorkshopBridge final : public QObject {
     Q_OBJECT
     Q_PROPERTY(QVariantList orders READ orders NOTIFY changed)
+    Q_PROPERTY(QVariantList customers READ customers NOTIFY changed)
+    Q_PROPERTY(QVariantList devices READ devices NOTIFY changed)
     Q_PROPERTY(QVariantList inventory READ inventory NOTIFY changed)
     Q_PROPERTY(QVariantList events READ events NOTIFY changed)
     Q_PROPERTY(QString error READ error NOTIFY errorChanged)
@@ -20,6 +22,17 @@ public:
     QVariantList orders() const;
     QVariantList inventory() const;
     QVariantList events() const;
+    QVariantList customers() const;
+    QVariantList devices() const;
+    Q_INVOKABLE QVariantMap customerProfile(int id) const;
+    Q_INVOKABLE QVariantMap deviceProfile(int id) const;
+    Q_INVOKABLE bool updateCustomer(int id,const QString &name,const QString &phone);
+    Q_INVOKABLE int createOrderForDevice(int deviceId,const QString &symptom,const QString &technician,const QString &notes);
+    Q_INVOKABLE int createOrderForCustomer(int customerId,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &technician,const QString &notes);
+    Q_INVOKABLE QString issueTrackingToken(int orderId,int days,bool consent);
+    Q_INVOKABLE bool revokeTracking(int orderId);
+    Q_INVOKABLE bool setPublicMessage(int orderId,const QString &message);
+    QVariantMap publicTracking(const QString &token) const;
     Q_INVOKABLE int createOrder(const QString &customer,const QString &phone,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &technician,const QString &notes);
     Q_INVOKABLE bool updateOrder(int id,const QString &status,const QString &technician,int laborCents,const QString &notes);
     Q_INVOKABLE bool addPart(const QString &sku,const QString &name,int quantity,int unitCents);
