@@ -20,6 +20,7 @@
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
 #include "TrackingPortal.hpp"
+#include "CloudTracking.hpp"
 #include "SecurityBridge.hpp"
 #include "ServiceCatalog.hpp"
 #include "BoardBridge.hpp"
@@ -48,6 +49,7 @@ int main(int argc,char *argv[]) {
  RepairBridge repair;
  WorkshopBridge workshop(QDir(dir).filePath(QStringLiteral("repairs.db")));
  TrackingPortal portal(&workshop);
+ CloudTracking cloud(&workshop,QDir(dir).filePath(QStringLiteral("remote-tracking.dat")));
  SecurityBridge security(QDir(dir).filePath(QStringLiteral("security-tools.json")));
  ServiceCatalog catalog(QDir(dir).filePath(QStringLiteral("model-guides.json")));
  BoardBridge board;
@@ -64,6 +66,7 @@ int main(int argc,char *argv[]) {
  engine.rootContext()->setContextProperty(QStringLiteral("trackingPortal"),&portal);
  engine.rootContext()->setContextProperty(QStringLiteral("securityBridge"),&security);
  engine.rootContext()->setContextProperty(QStringLiteral("serviceCatalog"),&catalog);
+ engine.rootContext()->setContextProperty(QStringLiteral("cloudTracking"),&cloud);
  bool qmlWarning=false;
  QObject::connect(&engine,&QQmlEngine::warnings,&app,[&qmlWarning](const QList<QQmlError> &warnings){if(!warnings.isEmpty())qmlWarning=true;});
  engine.load(QUrl(QStringLiteral("qrc:/NexvaryMR/qml/Main.qml")));

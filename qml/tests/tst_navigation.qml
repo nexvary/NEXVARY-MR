@@ -35,6 +35,16 @@ TestCase {
   const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
   verify(workshopBridge.diagnoses(selected).length>0)
  }
+ function test_cloudTrackingConsent(){
+  app.currentPage=5;findChild(app,"workshopTabs").currentIndex=2;verify(waitForRendering(app.contentItem))
+  const approval=findChild(app,"cloudUploadConsent"),load=findChild(app,"importCloudCredentials")
+  approval.checked=false;compare(load.enabled,false)
+  compare(findChild(app,"syncCloudNow").enabled,false);compare(findChild(app,"issueCloudLink").enabled,false);compare(findChild(app,"copyCloudLink").enabled,false)
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;approval.checked=true;tryCompare(load,"enabled",true)
+   approval.checked=false;tryCompare(load,"enabled",false)
+  }
+ }
  function test_newWorkspaceMinimumSize(){
   app.width=1180;app.height=760
   const checks=[{page:2,tab:1,bar:"diagnosticTabs",scroll:"faultTreePage",target:"importModelGuide"},{page:2,tab:2,bar:"diagnosticTabs",scroll:"securityPage",target:"exportSecurityReport"},{page:5,tab:1,bar:"workshopTabs",scroll:"profilesScroll",target:"repeatRepair"},{page:5,tab:2,bar:"workshopTabs",scroll:"trackingScroll",target:"publicTrackingMessage"}]

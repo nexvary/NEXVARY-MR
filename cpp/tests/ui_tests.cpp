@@ -9,6 +9,7 @@
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
 #include "TrackingPortal.hpp"
+#include "CloudTracking.hpp"
 #include "SecurityBridge.hpp"
 #include "ServiceCatalog.hpp"
 #include "BoardBridge.hpp"
@@ -22,6 +23,7 @@ class Setup:public QObject {
  std::unique_ptr<WorkshopBridge> workshop;
  std::unique_ptr<ServiceCatalog> catalog;
  std::unique_ptr<SecurityBridge> security;
+ std::unique_ptr<CloudTracking> cloud;
  std::unique_ptr<TrackingPortal> portal;
  std::unique_ptr<BoardBridge> board;
  std::unique_ptr<FirmwareBridge> firmware;
@@ -35,6 +37,7 @@ public slots:
   workshop=std::make_unique<WorkshopBridge>(temp.filePath(QStringLiteral("ui.db")));
   catalog=std::make_unique<ServiceCatalog>(temp.filePath("guides.json"));
   security=std::make_unique<SecurityBridge>(temp.filePath("security.json"));
+  cloud=std::make_unique<CloudTracking>(workshop.get(),temp.filePath("remote.dat"),true);
   portal=std::make_unique<TrackingPortal>(workshop.get());
   recovery=std::make_unique<RecoveryBridge>(temp.filePath(QStringLiteral("cases")),true);
   board=std::make_unique<BoardBridge>();firmware=std::make_unique<FirmwareBridge>();
@@ -48,6 +51,7 @@ public slots:
   engine->rootContext()->setContextProperty("workshopBridge",workshop.get());
   engine->rootContext()->setContextProperty("serviceCatalog",catalog.get());
   engine->rootContext()->setContextProperty("securityBridge",security.get());
+  engine->rootContext()->setContextProperty("cloudTracking",cloud.get());
   engine->rootContext()->setContextProperty("trackingPortal",portal.get());
   engine->rootContext()->setContextProperty("boardBridge",board.get());
   engine->rootContext()->setContextProperty("firmwareBridge",firmware.get());
@@ -55,7 +59,7 @@ public slots:
  }
  void cleanupTestCase() {
   // Release runtime-dependent objects before QuickTest destroys its application.
-  catalog.reset();security.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
  }
 };
 QUICK_TEST_MAIN_WITH_SETUP(mr_ui,Setup)

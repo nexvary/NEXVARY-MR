@@ -40,13 +40,17 @@ jobs:
       - name: Install Qt and separately packaged TSK for synthetic integration
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav
+          sudo apt-get install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav python3-venv curl
       - name: Configure and build native GUI and fixtures
         run: |
           cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
           cmake --build build --parallel 2
       - name: Run Qt, recovery and real mmls synthetic-image integration
         run: ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
+      - name: Native Qt client through real Gunicorn and verified Caddy TLS
+        run: |
+          bash server/tracking-portal/tests/prepare_runtime.sh build/portal-runtime
+          build/portal-runtime/venv/bin/python server/tracking-portal/tests/integration.py --caddy build/portal-runtime/caddy --native-tests build/mr_cloud_tests
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -56,6 +60,27 @@ jobs:
             build/*-results.txt
             build/smoke*.png
             build/Testing/Temporary/LastTest.log
+  tracking-server:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test portal, validate and bundle single-file server installer
+        run: |
+          python3 -m unittest discover -s server/tracking-portal/tests -v
+          bash -n server/tracking-portal/install.sh
+          python3 server/tracking-portal/build_bundle.py dist/NEXVARY-Portal-Setup.sh
+          bash dist/NEXVARY-Portal-Setup.sh --domain tracking.example.com --email admin@example.com --dry-run
+          cd dist
+          sha256sum NEXVARY-Portal-Setup.sh > NEXVARY-Portal-SHA256SUMS.txt
+      - name: Install, upgrade, back up, restore and rotate on disposable systemd VM
+        run: sudo --preserve-env=GITHUB_ACTIONS python3 server/tracking-portal/tests/vm_smoke.py dist/NEXVARY-Portal-Setup.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-Portal-Server-Installer
+          path: |
+            dist/NEXVARY-Portal-Setup.sh
+            dist/NEXVARY-Portal-SHA256SUMS.txt
+          if-no-files-found: error
   qt:
     runs-on: windows-2022
     env:

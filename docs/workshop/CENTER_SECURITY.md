@@ -32,13 +32,13 @@ ClamAV reviewed upstream head: `72cd48c9faed4fa4afc22bc4ed0b9b19f8d3f8f7`, [COPY
 
 ## Unfinished acceptance requirements
 
-1. Public remote tracking is **not deployed**. The HTTP portal is for a trusted LAN with the app/computer online. It must not be port-forwarded onto the internet. A separate authenticated sync service/hosting, HTTPS, operator authentication, rate controls, secure enrollment and deployment acceptance are needed for offsite customers. No external customer data has been published. QR receipts are not generated in this increment; real working links are provided.
+1. Public remote tracking is **not deployed on an operator server**. A separate single-workshop HTTPS service, credential enrollment, authenticated snapshot sync, bounded requests, backups and Linux systemd installer are now implemented in [server/tracking-portal](../../server/tracking-portal/README_AR.md). The retained HTTP portal remains trusted-LAN only and must not be port-forwarded. Public DNS/ACME and operator-server acceptance remain pending. No external customer data has been published. QR receipts are not generated; actual private links are provided.
 2. Device-wide Android scanning/acquisition, installed-app inventory/collection, runtime behavior and inaccessible/encrypted private data are not covered by a file scanner. No FRP, lock or encryption bypass. FreshClam update orchestration and real Windows official-database/device acceptance remain pending.
 3. A complete verified model-specific hardware fault library is **not supplied**. Licensed exact-model service guides, revision compatibility and qualified physical measurements are required. Imported operator guides are not automatically OEM-certified.
 4. Driver binaries, installation/elevation and model/VID/PID verification are not integrated. No universal Qualcomm/MediaTek/Unisoc installer is claimed. Physical device/USB and clean Windows 10/11 tests remain necessary.
 5. Phone ownership transfer/duplicate-profile reconciliation, estimate approvals/deposits, tax/accounting, role-based staff access and encrypted multi-user storage are future work. Existing local workshop database is not a multi-tenant server.
 
-Next engineering increment after latest-head Windows gates: add lawful Android app inventory/base+split APK collection through the existing ToolBridge; then verify fresh official Windows signatures; build separately hosted HTTPS customer tracking only after a concrete deployment target is available. Never replace those steps with a "whole phone clean" label.
+Next engineering increment after latest-head Windows/server gates: accept the HTTPS portal on the operator's actual DNS/server; add lawful Android app inventory/base+split APK collection through the existing ToolBridge; then verify fresh official Windows signatures. Never replace those steps with a "whole phone clean" label.
 
 ### Follow-up acceptance gate
 
@@ -47,3 +47,11 @@ The real Windows test runtime is pinned to the official [ClamAV 1.5.4 release](h
 ### Windows feedback on first workshop increment
 
 Run [39132569833](https://github.com/nexvary/NEXVARY-MR/actions/runs/39132569833) at `8eadc37` is **failed**: native compilation, portable and installer checks passed, but the center test suite failed. The token-at-rest test retained its own read-only QFile handle while exercising backup restore; Windows file replacement disallows that open inspection handle. The follow-up closes this test-only inspection handle before restore, preserves the restore assertions, and makes QtTest write explicit text logs for every suite on all platforms. The next run must confirm the diagnosis; passing packaging does not make the failed test run green.
+
+### Server installation increment — 2026-10-18
+
+Accepted starting head `c9dd78275ba1232b26c42d5b67436ebdc17356a6` passed all four jobs in [39133227949](https://github.com/nexvary/NEXVARY-MR/actions/runs/39133227949), including 14 Qt/CTest suites on Windows/Linux, 20 QML checks, real separately installed ClamAV fixtures, portable and install/uninstall smoke. Those artifacts predate the server increment.
+
+The next source increment adds `CloudTracking`: explicit public-data upload consent, a Windows current-user DPAPI-protected credential file, HTTPS-only transport, no redirect/TLS bypass, publisher identity and revision checks, automatic 30-second/debounced sync, and copy only after server acknowledgment. Server state expires after six hours without sync; revocation while offline is explicitly pending. No customer/contact/serial/fault/cost/technician/internal notes are included. The service stores only SHA256 token digests. Backup restoration empties published links until fresh desktop sync, avoiding revival of revoked tokens.
+
+Local validation: six Python unit tests; real Gunicorn/Caddy trusted TLS publication/customer page/revocation/log redaction; native Qt client through the same real HTTPS service. CI adds a disposable Ubuntu 24.04 systemd VM install/upgrade/backup/restore/key-rotation test of the actual single-file bundle. Read the new head's job conclusions before accepting this increment. Debian, Ubuntu 22.04, ARM64, public ACME and the operator's actual server are target environments, not already-tested deployments.

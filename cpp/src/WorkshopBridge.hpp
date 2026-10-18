@@ -33,6 +33,7 @@ public:
     Q_INVOKABLE bool revokeTracking(int orderId);
     Q_INVOKABLE bool setPublicMessage(int orderId,const QString &message);
     QVariantMap publicTracking(const QString &token) const;
+    QVariantList publicTrackingSnapshot() const;
     Q_INVOKABLE int createOrder(const QString &customer,const QString &phone,const QString &brand,const QString &model,const QString &serial,const QString &symptom,const QString &technician,const QString &notes);
     Q_INVOKABLE bool updateOrder(int id,const QString &status,const QString &technician,int laborCents,const QString &notes);
     Q_INVOKABLE bool addPart(const QString &sku,const QString &name,int quantity,int unitCents);
@@ -53,6 +54,7 @@ signals:
     void changed();
     void errorChanged();
 private:
+    QVariantMap publicOrderStatus(int id,const QString &message) const;
     bool open();
     bool migrate();
     bool fail(const QString &message);

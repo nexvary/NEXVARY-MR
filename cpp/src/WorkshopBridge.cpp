@@ -403,10 +403,28 @@ QVariantMap WorkshopBridge::publicTracking(const QString &token) const {
     if(!q.exec()||!q.next())return {};
     const int id=q.value(0).toInt();const auto expiry=QDateTime::fromString(q.value(1).toString(),Qt::ISODate);const auto message=q.value(2).toString();
     if(!expiry.isValid()||expiry<=QDateTime::currentDateTimeUtc())return {};
-    q.finish();q.prepare(QStringLiteral("SELECT o.id,o.status,o.updated_at,d.brand,d.model FROM orders o JOIN devices d ON d.id=o.device_id WHERE o.id=?"));q.addBindValue(id);if(!q.exec()||!q.next())return {};
+    return publicOrderStatus(id,message);
+}
+QVariantMap WorkshopBridge::publicOrderStatus(int id,const QString &message) const {
+    QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT o.id,o.status,o.updated_at,d.brand,d.model FROM orders o JOIN devices d ON d.id=o.device_id WHERE o.id=?"));q.addBindValue(id);if(!q.exec()||!q.next())return {};
     QVariantMap result;for(int i=0;i<q.record().count();++i)result.insert(q.record().fieldName(i),q.value(i));result.insert("message",message);
     q.finish();q.prepare(QStringLiteral("SELECT action,created_at FROM events WHERE order_id=? ORDER BY id"));q.addBindValue(id);if(!q.exec())return {};
     const QStringList states={"Received","Diagnosing","Awaiting parts","Repairing","Ready","Delivered","Cancelled"};QVariantList history;
     while(q.next()) {const auto action=q.value(0).toString();const auto status=action==QStringLiteral("Created")?QStringLiteral("Received"):action.startsWith(QStringLiteral("Status: "))?action.mid(8):QString();if(states.contains(status))history.append(QVariantMap{{"status",status},{"atUtc",q.value(1).toString()+QStringLiteral("Z")}});}
     result.insert("history",history);return result;
+}
+
+QVariantList WorkshopBridge::publicTrackingSnapshot() const {
+    if(!ready_)return {};
+    QSqlQuery q(db_);if(!q.exec(QStringLiteral("SELECT order_id,token_hash,expires_at,message FROM tracking_links ORDER BY order_id")))return {};
+    QVariantList records;
+    while(q.next()){
+        const auto expiry=QDateTime::fromString(q.value(2).toString(),Qt::ISODate);if(!expiry.isValid()||expiry<=QDateTime::currentDateTimeUtc())continue;
+        auto record=publicOrderStatus(q.value(0).toInt(),q.value(3).toString());if(record.isEmpty())continue;
+        auto updated=QDateTime::fromString(record.take("updated_at").toString(),QStringLiteral("yyyy-MM-dd HH:mm:ss"));updated.setTimeSpec(Qt::UTC);
+        record.insert("updatedAtUtc",updated.toString(Qt::ISODate));record.insert("expiresAtUtc",expiry.toUTC().toString(Qt::ISODate));record.insert("tokenHash",q.value(1));
+        auto history=record.value("history").toList();if(history.size()>100)history=history.mid(history.size()-100);record.insert("history",history);
+        records.append(record);
+    }
+    return records;
 }

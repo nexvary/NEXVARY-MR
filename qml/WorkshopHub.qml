@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 Item {
  id:hub
  objectName:"workshopHub"
@@ -8,6 +9,7 @@ Item {
  property var customerData:({})
  property var deviceData:({})
  property string issuedLink:""
+ property string cloudLink:""
  function refresh(){customerData=workshopBridge.customerProfile(customerData.id||-1);deviceData=workshopBridge.deviceProfile(deviceData.id||-1)}
  Connections {target:workshopBridge;function onChanged(){hub.refresh()}}
  ColumnLayout {
@@ -50,8 +52,20 @@ Item {
    }
    ScrollView {id:trackingScroll;objectName:"trackingScroll";contentWidth:availableWidth;clip:true
     ColumnLayout {width:trackingScroll.availableWidth;spacing:12
+     Panel {objectName:"cloudTrackingPanel";Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:570;title:app.trx("بوابة متابعة العميل عبر الإنترنت — HTTPS","Internet customer tracking — HTTPS")
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");text:app.trx("ثبّت حزمة السيرفر على نطاقك، ثم استورد ملف client-credentials.json الآمن. تُرفع حقول المتابعة العامة للروابط النشطة فقط، دون بروفيلات العملاء أو الأعطال أو التكلفة. تتم المزامنة كل 30 ثانية وعند التغييرات.","Install the server bundle on your domain, then import its private client-credentials.json. Only public status fields for active tracking links are uploaded; customer profiles, faults and costs stay local. Sync runs every 30 seconds and after changes.")}
+      CheckBox {id:cloudApprove;objectName:"cloudUploadConsent";Layout.fillWidth:true;text:app.trx("أوافق على رفع حقول المتابعة العامة إلى السيرفر الذي أختاره","Approve uploading public tracking fields to my selected server")}
+      RowLayout {Layout.fillWidth:true;ActionButton {objectName:"importCloudCredentials";text:app.trx("استيراد ملف ربط السيرفر","Import server credentials");enabled:cloudApprove.checked&&!cloudTracking.busy;onClicked:cloudCredentials.open()}ActionButton {objectName:"syncCloudNow";text:app.trx("مزامنة الآن","Sync now");enabled:cloudTracking.configured&&!cloudTracking.busy;onClicked:cloudTracking.syncNow()}ActionButton {text:app.trx("إزالة الربط المحلي","Disconnect locally");enabled:cloudTracking.configured&&!cloudTracking.busy;onClicked:disconnectCloud.open()}}
+      Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:cloudTracking.inSync?app.tone("#51d6a2"):app.tone("#eab775");text:cloudTracking.serverUrl+"\n"+(cloudTracking.inSync?app.trx("تم نشر آخر التغييرات","Latest changes published"):app.trx("لم يُؤكّد نشر آخر التغييرات بعد","Latest changes not yet acknowledged"))+" · "+cloudTracking.lastSync+"\n"+cloudTracking.error}
+      RowLayout {Layout.fillWidth:true;ComboBox {id:cloudOrder;objectName:"cloudTrackingOrder";Layout.fillWidth:true;model:workshopBridge.orders;textRole:"id";valueRole:"id";onCurrentValueChanged:hub.cloudLink=""}SpinBox {id:cloudDays;from:1;to:90;value:30}Label {text:app.trx("يوم صلاحية","days validity");color:app.tone("#c6daeb")}}
+      CheckBox {id:cloudShare;objectName:"cloudShareConsent";Layout.fillWidth:true;text:app.trx("أوافق على مشاركة حالة هذا الأمر عبر رابط خاص","Approve sharing this order status using a private link")}
+      RowLayout {ActionButton {objectName:"issueCloudLink";text:app.trx("إنشاء / تغيير رابط العميل","Issue / rotate customer link");primary:true;enabled:cloudTracking.configured&&cloudOrder.currentValue>0&&cloudShare.checked;onClicked:hub.cloudLink=cloudTracking.issueLink(cloudOrder.currentValue,cloudDays.value,cloudShare.checked)}ActionButton {text:app.trx("إلغاء رابط هذا الأمر","Revoke order link");enabled:cloudTracking.configured&&cloudOrder.currentValue>0;onClicked:{app.notice(workshopBridge.revokeTracking(cloudOrder.currentValue),app.trx("ألغي محليًا؛ يسري على السيرفر بعد نجاح المزامنة","Revoked locally; takes effect on the server after successful sync"));hub.cloudLink=""}}}
+      TextField {objectName:"cloudCustomerLink";Layout.fillWidth:true;readOnly:true;selectByMouse:true;text:hub.cloudLink;placeholderText:app.trx("لن يُتاح نسخ الرابط حتى تؤكد المزامنة نشره","Copy is enabled only after the server acknowledges publication")}
+      RowLayout {ActionButton {objectName:"copyCloudLink";text:app.trx("نسخ رابط العميل","Copy customer link");enabled:hub.cloudLink!==""&&cloudTracking.inSync;onClicked:cloudTracking.copyLink(hub.cloudLink)}ActionButton {text:app.trx("فتح صفحة العميل","Open customer page");enabled:hub.cloudLink!==""&&cloudTracking.inSync;onClicked:Qt.openUrlExternally(hub.cloudLink)}}
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("وقت آخر مزامنة يظهر للعميل. عند انقطاع المزامنة 6 ساعات تُخفى الحالة حتى تعود المزامنة. مفتاح الربط يُحمى باستخدام Windows DPAPI؛ احفظ ملف المفاتيح بعيدًا عن المجلدات المشتركة.","Customers see the last sync time. After six hours without sync, status becomes unavailable until syncing resumes. Windows protects credentials with DPAPI; keep the original credentials file out of shared folders.")}
+     }
      Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:310;title:app.trx("بوابة متابعة العميل — شبكة المركز","Customer status portal — workshop network")
-      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("هذه بوابة HTTP لشبكة موثوقة فقط. ليعمل الرابط على هاتف العميل، اختر عنوان شبكة المركز واجعله على الشبكة نفسها. التطبيق والكمبيوتر يجب أن يبقيا قيد التشغيل. الوصول من خارج المركز يحتاج استضافة HTTPS منفصلة؛ لم تُنشر بوابة إنترنت بعد.","Trusted-network HTTP portal only. Choose the workshop LAN address and connect the customer's phone to that network. Keep this application and computer running. Access outside the workshop needs separate HTTPS hosting; no internet portal has been deployed.")}
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("هذه بوابة HTTP لشبكة موثوقة فقط. ليعمل الرابط على هاتف العميل، اختر عنوان شبكة المركز واجعله على الشبكة نفسها. التطبيق والكمبيوتر يجب أن يبقيا قيد التشغيل. للمتابعة من خارج المركز استخدم ربط السيرفر HTTPS أعلاه.","Trusted-network HTTP portal only. Choose the workshop LAN address and connect the customer's phone to that network. Keep this application and computer running. For offsite customers, use the HTTPS server connection above.")}
       RowLayout {Layout.fillWidth:true;ComboBox {id:bindAddress;Layout.fillWidth:true;model:trackingPortal.addresses;enabled:!trackingPortal.running}SpinBox {id:port;from:1024;to:65535;value:8085;editable:true;enabled:!trackingPortal.running}}
       CheckBox {id:networkConsent;objectName:"portalConsent";Layout.fillWidth:true;text:app.trx("أوافق على تشغيل البوابة على الشبكة الموثوقة المختارة","Approve serving on the selected trusted network")}
       RowLayout {ActionButton {objectName:"startPortal";text:app.trx("تشغيل البوابة","Start portal");enabled:!trackingPortal.running&&networkConsent.checked;onClicked:trackingPortal.start(bindAddress.currentText,port.value,networkConsent.checked)}ActionButton {objectName:"stopPortal";text:app.trx("إيقاف","Stop");enabled:trackingPortal.running;onClicked:{trackingPortal.stop();hub.issuedLink=""}}Label {text:trackingPortal.baseUrl;color:app.tone("#51d6a2");textFormat:Text.PlainText}}
@@ -72,6 +86,11 @@ Item {
     }
    }
   }
+ }
+ FileDialog {id:cloudCredentials;fileMode:FileDialog.OpenFile;nameFilters:["Server credentials (*.json)"];onAccepted:app.notice(cloudTracking.importCredentials(selectedFile.toString(),cloudApprove.checked),app.trx("حُفظ الربط؛ انتظر نجاح المزامنة","Connection saved; wait for successful sync"),cloudTracking.error)}
+ Dialog {id:disconnectCloud;modal:true;anchors.centerIn:parent;width:Math.min(550,hub.width-20);title:app.trx("إيقاف المزامنة وإزالة المفتاح المحلي؟","Stop syncing and remove local credentials?");standardButtons:Dialog.Yes|Dialog.No
+  Label {width:Math.min(500,hub.width-60);wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لن يلغِ هذا البيانات المنشورة فورًا. قد تبقى الروابط حتى 6 ساعات من آخر مزامنة أو حتى انتهاء صلاحيتها. لإلغاء رابط الآن، ألغِه وانتظر نجاح المزامنة قبل قطع الربط.","This does not immediately revoke published data. Links may remain available for up to six hours after last sync or until expiry. To revoke now, revoke the link and wait for successful sync before disconnecting.")}
+  onAccepted:{cloudTracking.disconnectServer(true);hub.cloudLink=""}
  }
  Dialog {id:editCustomer;modal:true;anchors.centerIn:parent;width:Math.min(540,hub.width-20);title:app.trx("تعديل بروفيل العميل","Edit customer profile");standardButtons:Dialog.Save|Dialog.Cancel
   contentItem:ColumnLayout {TextField {id:customerName;Layout.fillWidth:true;maximumLength:240}TextField {id:customerPhone;Layout.fillWidth:true;maximumLength:80}}
