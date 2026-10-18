@@ -53,7 +53,7 @@ jobs:
           name: NEXVARY-MR-Linux-forensic-integration-evidence
           path: |
             build/linux-qt-results.xml
-            build/ui-results.txt
+            build/*-results.txt
             build/smoke*.png
             build/Testing/Temporary/LastTest.log
   qt:
@@ -72,13 +72,29 @@ jobs:
       - name: Build GUI
         id: native_build
         run: cmake --build build --config Release --parallel
+      - name: Prepare verified standalone ClamAV for synthetic Windows integration
+        if: ${{ steps.native_build.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $archive = Join-Path $env:RUNNER_TEMP 'clamav-1.5.4.win.x64.zip'
+          $destination = Join-Path $env:RUNNER_TEMP 'nexvary-clamav-fixture-runtime'
+          Invoke-WebRequest -Uri 'https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.win.x64.zip' -OutFile $archive
+          $expected = '0d9e0228b2674137ea1a2853566c98a0278ad52ab2582c3d6dbd75373848c395'
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) { throw 'Official ClamAV artifact SHA256 mismatch' }
+          Expand-Archive -Path $archive -DestinationPath $destination
+          $engine = Get-ChildItem $destination -Filter clamscan.exe -File -Recurse | Select-Object -First 1
+          if (-not $engine) { throw 'ClamAV executable missing from verified package' }
+          & $engine.FullName --version
+          if ($LASTEXITCODE -ne 0) { throw 'Standalone ClamAV runtime failed to start' }
+          "MR_CLAMSCAN_PATH=$($engine.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Run CTest suite
         id: tests
         shell: pwsh
         run: |
           ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
           $testResult = $LASTEXITCODE
-          if (Test-Path build/ui-results.txt) { Get-Content build/ui-results.txt }
+          Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
       - name: Assemble portable Qt runtime
         id: portable
@@ -136,7 +152,7 @@ jobs:
           name: NEXVARY-MR-Windows-validation-evidence
           path: |
             build/qt-results.xml
-            build/ui-results.txt
+            build/*-results.txt
             build/smoke*.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/

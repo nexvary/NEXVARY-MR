@@ -35,6 +35,14 @@ TestCase {
   const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
   verify(workshopBridge.diagnoses(selected).length>0)
  }
+ function test_newWorkspaceMinimumSize(){
+  app.width=1180;app.height=760
+  const checks=[{page:2,tab:1,bar:"diagnosticTabs",scroll:"faultTreePage",target:"importModelGuide"},{page:2,tab:2,bar:"diagnosticTabs",scroll:"securityPage",target:"exportSecurityReport"},{page:5,tab:1,bar:"workshopTabs",scroll:"profilesScroll",target:"repeatRepair"},{page:5,tab:2,bar:"workshopTabs",scroll:"trackingScroll",target:"publicTrackingMessage"}]
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark
+   for(const c of checks){app.currentPage=c.page;findChild(app,c.bar).currentIndex=c.tab;wait(50);const scroll=findChild(app,c.scroll);const target=findChild(app,c.target);verify(target!==null);verify(scroll.availableHeight>0);let point=target.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,scroll.contentItem.contentY+point.y-scroll.availableHeight+target.height+20);wait(30);let center=target.mapToItem(scroll,target.width/2,target.height/2);verify(center.y>=0&&center.y<scroll.height,"Bottom action remains reachable: "+c.target);scroll.contentItem.contentY=0}
+  }
+ }
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
   for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}

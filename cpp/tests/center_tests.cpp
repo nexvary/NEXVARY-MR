@@ -29,7 +29,7 @@ private slots:
   QVERIFY(w.updateOrder(id,"Repairing","PRIVATE-TECH",1200,"DO-NOT-PUBLISH-NOTES"));QVERIFY(w.setPublicMessage(id,"<script>alert('x')</script>"));
   const auto snapshot=w.publicTracking(token);QCOMPARE(snapshot.value("status").toString(),QStringLiteral("Repairing"));QCOMPARE(snapshot.value("history").toList().size(),2);
   const auto html=TrackingPortal::html(snapshot);QVERIFY(html.contains("&lt;script&gt;"));QVERIFY(!html.contains("<script>"));QVERIFY(!html.contains("DO-NOT-PUBLISH"));QVERIFY(!html.contains("PRIVATE-TECH"));QVERIFY(!html.contains("1200"));
-  QVERIFY(w.backup(t.filePath("saved.db")));QFile db(w.databasePath());QVERIFY(db.open(QIODevice::ReadOnly));QVERIFY(!db.readAll().contains(token.toLatin1()));
+  QVERIFY(w.backup(t.filePath("saved.db")));QFile db(w.databasePath());QVERIFY(db.open(QIODevice::ReadOnly));QVERIFY(!db.readAll().contains(token.toLatin1()));db.close();
   const auto next=w.issueTrackingToken(id,1,true);QVERIFY(next!=token);QVERIFY(w.publicTracking(token).isEmpty());QVERIFY(!w.publicTracking(next).isEmpty());
   QVERIFY(w.revokeTracking(id));QVERIFY(w.publicTracking(next).isEmpty());QVERIFY(w.restore(t.filePath("saved.db"),true));QVERIFY(w.publicTracking(token).isEmpty());QCOMPARE(w.orders().size(),1);
  }
