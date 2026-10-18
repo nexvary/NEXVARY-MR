@@ -140,6 +140,9 @@ private slots:
   QVERIFY(!failed.value("success").toBool());
   QVERIFY(failed.value("result").toString().contains("missing"));
   QVERIFY(b.serviceProfile().isEmpty());
+  // Refresh the disconnected ADB transport before discovering the same serial
+  // in Fastboot; simultaneous serials are deliberately rejected as ambiguous.
+  QVERIFY(waitFor(b,[&]{b.scanAdb();}));
   qunsetenv("MR_SERVICE_MODE");QVERIFY(probe(b,true));
   QCOMPARE(b.serviceHistory().first().toMap().value("transport").toString(),QStringLiteral("fastboot"));
   QCOMPARE(b.serviceHistory().at(1).toMap(),failed);
