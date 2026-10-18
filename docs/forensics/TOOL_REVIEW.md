@@ -12,7 +12,7 @@
 | Volatility 3 | Volatility Software License 1.0, **not** the Volatility 2 GPL assumption. Explicit redistribution/legal review required. No memory acquisition capability implied. |
 | MVT | MVT License 1.1 includes a consent restriction; **not** unmodified MPL and not assumed OSI permissive. Explicit owner consent is required by its terms. |
 | Plaso | Apache-2.0 main license; heavy parser/dependency review and explicit offline operation needed. |
-| bulk_extractor | Repository uses a project/copyright status notice rather than one universal permissive label; review LICENSE.md and incorporated dependencies/components before any distribution. |
+| bulk_extractor | Pinned LICENSE.md assigns post-NPS project code GPL-3.0-or-later, while original NPS government material and third-party components retain different status/terms. Review per-component notices before any distribution. |
 
 Official source URLs and immutable revisions are in the JSON snapshot. Additional official references: https://www.cgsecurity.org/wiki/TestDisk_Download , https://www.cgsecurity.org/testdisk_doc/presentation.html , https://sleuthkit.org/autopsy/licenses.php , https://github.com/mvt-project/license .
 

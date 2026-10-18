@@ -40,3 +40,13 @@ Run native checks with `cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON
 5. Complete physical-device disconnect/authorization checks and independent clean Windows 10/11 VM acceptance. Existing fake-ADB tests are not a real USB test.
 
 No final release, court accreditation, Android post-reset decryption or Shizuku root access is claimed.
+
+## Next increment: TSK mmls adapter
+
+The first case-workspace increment was uploaded as `3d1229d12ef66e3fb8e250a0a239b51c17546810`. The following increment adds a separately installed, explicitly selected `mmls` partition-listing adapter. It creates a private bounded working copy, verifies its SHA256, records the executable digest/version, executes only fixed `-V` / `-i raw <working-copy>` arguments, verifies both working copy and original again, and saves the report as case evidence. It supports cancellation, execution timeout, bounded captured output and failed-tool/no-commit behavior. It does not bundle TSK or claim OS sandboxing. Other discovered tools remain non-executable candidates.
+
+A real local TSK 4.12.1 integration test uses an original synthetic MBR image, separately from the controlled executable tests. Windows fake-process tests validate the adapter mechanics; real Windows TSK/device validation remains a distinct gate. The Linux Qt CI job installs the distribution's TSK separately and runs the same real-image integration test using `MR_TSK_MMLS_PATH=/usr/bin/mmls`.
+
+### First Windows feedback addressed
+
+At `3d1229d`, Windows compilation, recovery/forensic suites, portable smoke, setup creation, installation and uninstallation passed. QML's minimum-size test incorrectly required the retained device panel to overflow even after the sidebar layout reclaimed vertical space; failure also left smaller dimensions for the next navigation test. The test now checks reachable content with or without overflow, resets geometry/panel/theme between cases, and waits for rendered layout before navigation clicks. These changes retain the actual accessibility checks. Run https://github.com/nexvary/NEXVARY-MR/actions/runs/39108839476 is recorded as **failed**, not accepted as green.

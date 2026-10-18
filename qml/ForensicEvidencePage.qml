@@ -31,7 +31,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
    TextField {id:search;objectName:"forensicSearch";placeholderText:app.trx("بحث بالاسم أو المعرّف أو البصمة","Search name, ID or SHA256");Layout.fillWidth:true;Layout.minimumWidth:0}
-   ComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata"];Layout.preferredWidth:180}
+   ComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis"];Layout.preferredWidth:180}
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
   RowLayout {

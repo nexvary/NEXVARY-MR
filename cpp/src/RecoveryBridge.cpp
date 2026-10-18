@@ -3,6 +3,7 @@
 #include "RecoveryImage.hpp"
 #include "RecoveryFile.hpp"
 #include "ForensicRecord.hpp"
+#include "TskImage.hpp"
 #include <QBuffer>
 #include <QPdfWriter>
 #include <QTextDocument>
@@ -427,4 +428,25 @@ bool RecoveryBridge::exportTimeline(const QString &value,bool confirmed){
  if(!writeNew(path,QJsonDocument(report).toJson(),error))return fail(error);
  if(!persist(doc,path_,synthetic_,error))return fail(QStringLiteral("Timeline exported, but audit update failed: ")+error);
  document_=doc;error_.clear();status_=QStringLiteral("Case activity timeline exported.");emit changed();return true;
+}
+
+bool RecoveryBridge::analyzePartitions(const QString &image,const QString &executable,bool consent){
+ if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record the operator, and authorize the raw image and trusted mmls executable."));
+ const auto path=local(image),tool=local(executable);if(path.isEmpty()||tool.isEmpty()||path==path_)return fail(QStringLiteral("Choose separate local raw-image and tool files."));
+ return start([this,path,tool](const QJsonObject &snapshot,const auto &cancelled){
+  JobResult result{snapshot,{}};double last=-1;
+  const auto scan=mr::forensic::analyzePartitions(path,tool,cancelled,[this,&last](qint64 done,qint64 total){
+   const double p=total>0?static_cast<double>(done)/static_cast<double>(total):0;
+   if(p-last<0.005&&done!=total){return;}
+   last=p;QMetaObject::invokeMethod(this,[this,p]{progress_=p;emit changed();},Qt::QueuedConnection);
+  });
+  if(!scan.error.isEmpty()||!scan.sourceUnchanged||scan.cancelled){result.error=scan.error.isEmpty()?QStringLiteral("External analysis was not verified; no result committed."):scan.error;return result;}
+  const auto sourceHash=QString::fromLatin1(scan.sourceSha256.toHex());
+  const QJsonObject provenance{{"schema","nexvary-tsk-partitions/v1"},{"tool","mmls"},{"version",scan.version},{"executable",tool},{"executableSha256",QString::fromLatin1(scan.toolSha256.toHex())},
+   {"sourceSha256",sourceHash},{"originalUnchanged",true},{"workingCopyVerified",true},{"output",scan.output},{"atUtc",now()},
+   {"limits","Partition listing only. Separate user-installed process; not an OS sandbox. No filesystem recovery, protected device acquisition or executable/dependency authenticity verification."}};
+  auto entries=result.document.value("evidence").toArray();entries.append(evidenceRecord(QJsonDocument(provenance).toJson(),"tsk-partitions.json","external-analysis",path,sourceHash,"0"));result.document.insert("evidence",entries);
+  auto sources=result.document.value("sources").toArray();sources.append(QJsonObject{{"path",path},{"sha256",sourceHash},{"verifiedUnchanged",true},{"workingCopyVerified",true},{"method","TSK mmls partition listing on private working copy"},{"version",scan.version},{"toolSha256",QString::fromLatin1(scan.toolSha256.toHex())},{"atUtc",now()}});result.document.insert("sources",sources);
+  addAudit(result.document,"tsk-partition-analysis",QStringLiteral("Original and working-copy SHA256 verified. %1; executable SHA256 %2. Separate process, not OS-sandboxed.").arg(scan.version,QString::fromLatin1(scan.toolSha256.toHex())));return result;
+ });
 }

@@ -8,17 +8,17 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){app.allowClose=false;app.ar=true;app.currentPage=0}
- function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase()}
+ function init(){app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
   for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
-  let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);tryVerify(function(){return deviceScroll.contentHeight>deviceScroll.availableHeight});
-  deviceScroll.contentItem.contentY=deviceScroll.contentHeight-deviceScroll.availableHeight;verify(waitForRendering(app.contentItem));
+  let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);verify(deviceScroll.availableHeight>0);
+  deviceScroll.contentItem.contentY=Math.max(0,deviceScroll.contentHeight-deviceScroll.availableHeight);verify(waitForRendering(app.contentItem));
   let backup=findChild(app,"quickBackup");let bp=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);verify(bp.y>=0&&bp.y<deviceScroll.height,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
   app.showDevicePanel=false;app.width=1536;app.height=980;
  }
- function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);mouseClick(b);compare(app.currentPage,i)}}
+ function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);wait(50);let point=b.mapToItem(app.contentItem,b.width/2,b.height/2);verify(point.y>=0&&point.y<app.height,"Navigation remains reachable: "+i);mouseClick(b);tryCompare(app,"currentPage",i)}}
  function test_forensicLabNavigation(){
   app.currentPage=0;
   let nav=app.navigationButton(9);
@@ -28,7 +28,7 @@ TestCase {
   let lab=findChild(app,"forensicLabWorkspace");
   verify(lab!==null,"Forensic Lab workspace missing");
   compare(lab.modules.length,12);
-  compare(lab.modules.filter(function(m){return m.ready}).length,8);
+  compare(lab.modules.filter(function(m){return m.ready}).length,9);
   verify(waitForRendering(app.contentItem));
   app.ar=false;
   verify(waitForRendering(app.contentItem));
@@ -59,7 +59,8 @@ TestCase {
   findChild(app,"forensicCustodyRecipient").text="Lab storage";findChild(app,"forensicCustodyReason").text="Synthetic review";
   tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true);mouseClick(dialog.standardButton(Dialog.Ok));tryCompare(dialog,"opened",false);compare(recoveryBridge.evidenceCustodian(0),"Lab storage");
   tabs.currentIndex=2;let events=findChild(app,"forensicTimelineList");tryVerify(function(){return events.count>=5});findChild(app,"forensicTimelineSearch").text="custody-transfer";tryCompare(events,"count",1);findChild(app,"forensicTimelineSearch").text="";
-  for(let language=0;language<2;language++){app.ar=language===0;for(let i=0;i<4;i++){tabs.currentIndex=i;verify(waitForRendering(app.contentItem))}}
+  for(let language=0;language<2;language++){app.ar=language===0;for(let i=0;i<tabs.count;i++){tabs.currentIndex=i;verify(waitForRendering(app.contentItem))}}
+  tabs.currentIndex=3;compare(findChild(app,"runTskAnalysis").enabled,false);compare(toolBridge.forensicTools.length,10);
   verify(recoveryBridge.closeCase());tabs.currentIndex=0;
  }
  function test_backNavigation(){
@@ -73,7 +74,7 @@ TestCase {
    app.ar=language===0;
    for(let mode=0;mode<2;mode++){
     mouseClick(theme);compare(app.darkTheme,mode===1);
-    for(let tab=0;tab<4;tab++){tabs.currentIndex=tab;verify(waitForRendering(app.contentItem))}
+    for(let tab=0;tab<tabs.count;tab++){tabs.currentIndex=tab;verify(waitForRendering(app.contentItem))}
    }
   }
   tabs.currentIndex=0;app.darkTheme=true;app.width=1536;app.height=980;

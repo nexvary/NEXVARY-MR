@@ -17,7 +17,7 @@ Item {
   {ar:"التحقق من البصمة",en:"Hash verification",ready:true,detail:"SHA-256 verification on imported case evidence"},
   {ar:"التقارير",en:"Forensic reporting",ready:true,detail:"Case export with provenance limitations"},
   {ar:"سلسلة الحيازة",en:"Chain of custody",ready:true,detail:"Hash-linked local custody declarations; no independent signatures"},
-  {ar:"مدير الأدوات",en:"Tool integration manager",ready:false,detail:"External tool execution not integrated"}
+  {ar:"مدير الأدوات",en:"Tool integration manager",ready:true,detail:"mmls raw-image partition adapter only; other candidates not integrated"}
  ]
  ColumnLayout {
   anchors.fill:parent;spacing:10
@@ -28,6 +28,7 @@ Item {
    TabButton{text:app.trx("مساحة القضايا والأدلة","Cases and evidence")}
    TabButton{text:app.trx("مستعرض الأدلة","Evidence")}
    TabButton{text:app.trx("الخط الزمني","Timeline")}
+   TabButton{text:app.trx("مدير الأدوات","Tools")}
    TabButton{text:app.trx("القدرات والحدود","Capabilities")}
   }
   StackLayout {
@@ -35,6 +36,7 @@ Item {
    RecoveryPage {app:lab.app}
    ForensicEvidencePage {app:lab.app}
    ForensicTimelinePage {app:lab.app}
+   ForensicToolsPage {app:lab.app}
    ScrollView {
     clip:true
     GridLayout {
