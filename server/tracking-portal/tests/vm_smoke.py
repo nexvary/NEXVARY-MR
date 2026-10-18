@@ -84,9 +84,14 @@ def run(bundle):
     active()
     assert request('/t/' + token)[0] == 200
     admin = ['/opt/nexvary-portal/current/venv/bin/python', '/opt/nexvary-portal/current/portal_admin.py', '--config', '/etc/nexvary-portal/settings.json']
-    command('systemctl', 'stop', 'nexvary-portal.service')
+    refused = subprocess.run(admin + ['restore', str(saved[-1]), '--confirmed-service-stopped'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    assert refused.returncode != 0, 'Restoration must reject active writers/timer'
+    assert request('/t/' + token)[0] == 200
+    command('systemctl', 'stop', 'nexvary-portal-backup.timer')
+    command('systemctl', 'stop', 'nexvary-portal-backup.service', 'nexvary-portal.service')
     command(*admin, 'restore', str(saved[-1]), '--confirmed-service-stopped')
     command('systemctl', 'start', 'nexvary-portal.service')
+    command('systemctl', 'start', 'nexvary-portal-backup.timer')
     for _ in range(40):
         try:
             if request('/api/v1/state')[0] == 200:

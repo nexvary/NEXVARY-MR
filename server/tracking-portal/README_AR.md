@@ -64,12 +64,14 @@ sudo /opt/nexvary-portal/current/venv/bin/python /opt/nexvary-portal/current/por
 sudo systemctl restart nexvary-portal.service
 ```
 
-للاستعادة، أوقف API أولًا ثم استعمل نسخة معروفة تخص هذا المركز. تُحفظ الملفات الحالية قبل الاستبدال. لا تُعاد الروابط الملغاة من النسخة القديمة: تُفرغ بيانات الروابط عند الاستعادة وتُنشر الحالة الحالية مجددًا عند مزامنة Windows.
+للاستعادة، أوقف مؤقت النسخ الاحتياطي أولًا، ثم خدمة النسخ وAPI، حتى لا يكتب أي منهما إلى SQLite أثناء الاستبدال. يرفض أمر الاستعادة العمل ما دامت إحدى هذه الوحدات نشطة. استعمل نسخة معروفة تخص هذا المركز. تُحفظ الملفات الحالية قبل الاستبدال. لا تُعاد الروابط الملغاة من النسخة القديمة: تُفرغ بيانات الروابط عند الاستعادة وتُنشر الحالة الحالية مجددًا عند مزامنة Windows.
 
 ```bash
-sudo systemctl stop nexvary-portal.service
+sudo systemctl stop nexvary-portal-backup.timer
+sudo systemctl stop nexvary-portal-backup.service nexvary-portal.service
 sudo /opt/nexvary-portal/current/venv/bin/python /opt/nexvary-portal/current/portal_admin.py --config /etc/nexvary-portal/settings.json restore /var/backups/nexvary-portal/REPLACE_WITH_REAL_BACKUP.sqlite3 --confirmed-service-stopped
 sudo systemctl start nexvary-portal.service
+sudo systemctl start nexvary-portal-backup.timer
 ```
 
 لا تمرر علامة التأكيد مع خدمة قيد التشغيل. لا تقبل ملفات نسخ احتياطية مجهولة. احتفظ كذلك بإعداد المركز وملف ربط آمن مستقل؛ قاعدة المتابعة ليست بديلًا لنسخة قاعدة صيانة Windows.

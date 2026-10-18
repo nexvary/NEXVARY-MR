@@ -5,6 +5,7 @@ import json
 import os
 import secrets
 import sqlite3
+import subprocess
 import tempfile
 import time
 from datetime import datetime, timezone
@@ -108,6 +109,16 @@ def rotate(config_path, destination):
     return credentials
 
 
+def require_offline_services():
+    # Stopping the API alone is insufficient: the daily backup also writes expiry cleanup.
+    # Stop its timer first, then both writers, before replacing SQLite/WAL files.
+    for unit in ('nexvary-portal-backup.timer', 'nexvary-portal-backup.service', 'nexvary-portal.service'):
+        state = subprocess.run(['systemctl', 'show', '--property=ActiveState', '--value', unit],
+                               check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if state.stdout.strip() not in ('inactive', 'failed'):
+            raise ValueError('Stop the backup timer, backup service and API before restoration')
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--config', required=True)
@@ -120,6 +131,7 @@ if __name__ == '__main__':
     if args.action == 'backup':
         print('Backup saved:', backup(cfg, args.directory))
     elif args.action == 'restore':
+        require_offline_services()
         restore(cfg, args.source, args.confirmed_service_stopped)
         print('Public links invalidated. Start service and sync the current desktop.')
     else:
