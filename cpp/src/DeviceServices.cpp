@@ -76,8 +76,11 @@ bool failedText(const QString &text) {
  return error.match(text).hasMatch();
 }
 QString fastbootValue(const QString &key,const QString &text) {
- const QRegularExpression pattern(QStringLiteral("^(?:\\(bootloader\\)\\s*)?")+QRegularExpression::escape(key)+QStringLiteral(":\\s*([^\\r\\n]+)$"),QRegularExpression::MultilineOption);
- const auto match=pattern.match(text);return match.hasMatch()?match.captured(1).trimmed().left(240):QString();
+ const QRegularExpression pattern(QStringLiteral("^(?:\\(bootloader\\)\\s*)?")+QRegularExpression::escape(key)+QStringLiteral(":\\s*([^\\r\\n]+)$"));
+ // Windows tools emit CRLF; match trimmed individual lines rather than a
+ // multiline $ anchor immediately before an unconsumed carriage return.
+ for(const auto &line:text.split(QLatin1Char('\n'))){const auto match=pattern.match(line.trimmed());if(match.hasMatch())return match.captured(1).trimmed().left(240);}
+ return {};
 }
 QVariantMap preparePackage(const QString &input,const QString &destination,bool zip,const QString &expected,const std::shared_ptr<std::atomic_bool> &cancel) {
  auto fail=[](const QString &message){return QVariantMap{{"ok",false},{"error",message}};};

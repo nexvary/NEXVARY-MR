@@ -17,7 +17,7 @@ static int child(QStringList args, bool fast) {
  if (!journal.open(QIODevice::Append)) return 98;
  journal.write(QJsonDocument(QJsonArray::fromStringList(args)).toJson(QJsonDocument::Compact)+"\n");journal.close();
  const auto mode=qEnvironmentVariable("MR_SERVICE_MODE");
- auto out=[](const QString &value,bool error=false){const auto bytes=value.toUtf8();std::fwrite(bytes.constData(),1,static_cast<size_t>(bytes.size()),error?stderr:stdout);};
+ auto out=[&mode](const QString &value,bool error=false){const auto bytes=(mode=="crlf"&&error?QString(value).replace("\n","\r\n"):value).toUtf8();std::fwrite(bytes.constData(),1,static_cast<size_t>(bytes.size()),error?stderr:stdout);};
  if(args==QStringList{"devices","-l"}||args==QStringList{"devices"}) {
   if(mode=="disconnected") {out("List of devices attached\n");return 0;}
   if(mode=="duplicate"){out(fast?"TEST42\tfastboot\nTEST42\tfastboot\n":"List of devices attached\nTEST42\tdevice\nTEST42\tdevice\n");return 0;}
@@ -124,6 +124,7 @@ private slots:
  void apkHashAndManagerFailure(){QFETCH(QByteArray,mode);QFETCH(bool,wrongHash);ToolBridge b;QVERIFY(probe(b));qputenv("MR_SERVICE_MODE",mode);auto a=approval();a.insert("file",package());if(wrongHash)a.insert("sha256",QString(64,'0'));QVERIFY(waitFor(b,[&]{b.startService("install_apk","TEST42",a);},false));if(wrongHash)QVERIFY(!journal().contains("\"install\""));}
  void sideloadConsentAndMode(){qputenv("MR_SERVICE_MODE","sideload");ToolBridge b;QVERIFY(waitFor(b,[&]{b.scanAdb();}));b.selectDevice("TEST42");QVERIFY(!available(b,"probe"));QVERIFY(available(b,"sideload_zip"));const auto path=package("fixture.zip");auto a=approval(true);a.insert("file",path);a.insert("sha256",hash(path));QVERIFY(!b.startService("sideload_zip","TEST42",a));a.insert("compatible",true);QVERIFY(waitFor(b,[&]{b.startService("sideload_zip","TEST42",a);}));QVERIFY(b.serviceOutput().contains("not proof"));QVERIFY(!journal().contains("\"getprop\""));}
  void fastbootFreshEraseGuard(){ToolBridge b;QVERIFY(probe(b,true));QVERIFY(available(b,"erase_userdata"));QVERIFY(!b.startService("erase_userdata","TEST42",approval()));qputenv("MR_SERVICE_MODE","locked");QVERIFY(waitFor(b,[&]{b.startService("erase_userdata","TEST42",approval(true));},false));QVERIFY(!journal().contains("\"erase\""));}
+ void fastbootCrLfQueries(){qputenv("MR_SERVICE_MODE","crlf");ToolBridge b;QVERIFY(probe(b,true));QCOMPARE(b.serviceProfile().value("product").toString(),QStringLiteral("training-model"));QVERIFY(available(b,"erase_cache"));}
  void syntheticErase(){ToolBridge b;QVERIFY(probe(b,true));QVERIFY(waitFor(b,[&]{b.startService("erase_cache","TEST42",approval(true));}));QVERIFY(journal().contains("\"erase\",\"cache\""));}
  void noPartitionNoErase(){qputenv("MR_SERVICE_MODE","no-partition");ToolBridge b;QVERIFY(probe(b,true));QVERIFY(!available(b,"erase_userdata"));QVERIFY(!available(b,"erase_cache"));}
  void rebootInvalidatesDiscovery(){ToolBridge b;QVERIFY(probe(b));QVERIFY(waitFor(b,[&]{b.startService("reboot_recovery","TEST42",approval());}));QVERIFY(b.selectedSerial().isEmpty());QVERIFY(b.serviceProfile().isEmpty());QVERIFY(journal().contains("\"reboot\",\"recovery\""));}
