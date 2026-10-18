@@ -1,0 +1,182 @@
+{
+  "reviewedAtUtc": "2026-10-18",
+  "commercialProgramsExecuted": false,
+  "videoFramesReviewed": false,
+  "sources": [
+    {
+      "id": "C1",
+      "url": "https://chimeratool.com/en/docs/what-is-the-use-of-the-mediatek-mtk-module",
+      "classification": "official-vendor",
+      "observation": "Protocol/module selection rationale; no internal implementation inspected."
+    },
+    {
+      "id": "C2",
+      "url": "https://chimeratool.com/en/features/device-info",
+      "classification": "official-vendor",
+      "observation": "Samsung Download information differs from ADB Get Info."
+    },
+    {
+      "id": "C3",
+      "url": "https://chimeratool.com/en/models",
+      "classification": "official-vendor",
+      "observation": "Model/procedure catalog; complete dynamic filtered results not exported."
+    },
+    {
+      "id": "C4",
+      "url": "https://chimeratool.com/en/download",
+      "classification": "official-vendor",
+      "observation": "Changelog includes detection and individual-procedure corrections."
+    },
+    {
+      "id": "C5",
+      "url": "https://chimeratool.com/en/features/update-firmware",
+      "classification": "official-vendor",
+      "observation": "Mode, source and power requirements; pricing is operation-specific."
+    },
+    {
+      "id": "C6",
+      "url": "https://chimeratool.com/en/features/restore-store-backup",
+      "classification": "official-vendor",
+      "observation": "Calibration/safety backup scope; not proof of universal personal-data backup."
+    },
+    {
+      "id": "C7",
+      "url": "https://chimeratool.com/en/docs/how-many-computers-can-be-used-on-your-license",
+      "classification": "official-vendor",
+      "observation": "License PC attachment and authenticator rules."
+    },
+    {
+      "id": "C8",
+      "url": "https://chimeratool.com/en/docs/chimera-procedure-prices",
+      "classification": "official-vendor",
+      "observation": "Per-procedure credits; no exact prices hard-coded."
+    },
+    {
+      "id": "C9",
+      "url": "https://chimeratool.com/info/installation-instructions",
+      "classification": "official-vendor",
+      "observation": "Public installation/account instructions."
+    },
+    {
+      "id": "C10",
+      "url": "https://chimeratool.com/en/video-guide/general/advanced-update-firmware-with-chimeratool",
+      "classification": "official-vendor-video-description",
+      "observation": "Landing-page description read; video frames/transcript not reviewed."
+    },
+    {
+      "id": "U1",
+      "url": "https://www.unlocktool.org/",
+      "classification": "independent-reseller",
+      "observation": "Footer disclaims software-developer status; statements not accepted as vendor capabilities."
+    },
+    {
+      "id": "U2",
+      "url": "https://unlocktool.net/",
+      "classification": "access-blocked",
+      "observation": "HTTP 403; models/, download/ and file.unlocktool.net also blocked. No access control bypass."
+    },
+    {
+      "id": "U3",
+      "url": "https://edl.unlocktool.net/category/oppo",
+      "classification": "vendor-hosted-reference",
+      "observation": "ChuyenMobileGsm-attributed reference library; labels not independent OEM evidence; no images copied."
+    },
+    {
+      "id": "O1",
+      "url": "https://octoplusbox.com/en/info/how-to-activate-octoplus-tools-register-octoplus-box/",
+      "classification": "official-vendor",
+      "observation": "Distinct module activations, digital licenses and registration-log location; embedded videos not watched."
+    },
+    {
+      "id": "O2",
+      "url": "https://octoplusbox.com/en/info/working-with-phones-based-on-qualcomm-microcontrollers/",
+      "classification": "official-vendor-legacy-manual",
+      "observation": "LG Qualcomm module procedure; not modern Qualcomm universal support."
+    },
+    {
+      "id": "O3",
+      "url": "https://octoplusbox.com/en/features/features/",
+      "classification": "official-vendor",
+      "observation": "Feature list is not an exact-model operation matrix."
+    },
+    {
+      "id": "O4",
+      "url": "https://octoplusbox.com/en/features/models/",
+      "classification": "official-vendor",
+      "observation": "Model inventory does not certify every operation."
+    },
+    {
+      "id": "O5",
+      "url": "https://octoplusbox.com/en/download/drivers/",
+      "classification": "official-vendor",
+      "observation": "Driver families and dates; no Windows 11 certification inferred."
+    },
+    {
+      "id": "O6",
+      "url": "https://octoplusbox.com/en/news/octoplus-frp-tool-v-3-1-0-is-out/",
+      "classification": "official-vendor-release-note",
+      "observation": "2026-10-08; model/bit/mode-specific claims and Xiaomi server-credit dependency; no bypass implementation."
+    },
+    {
+      "id": "A1",
+      "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md",
+      "classification": "official-protocol",
+      "observation": "Selected serial, reboot, install and sideload CLI documentation."
+    },
+    {
+      "id": "A2",
+      "url": "https://android.googlesource.com/platform/system/core/+/refs/heads/main/fastboot/fastboot.cpp",
+      "classification": "official-protocol",
+      "observation": "Fixed Fastboot getvar and command grammar; no source copied."
+    },
+    {
+      "id": "A3",
+      "url": "https://developer.android.com/tools/releases/platform-tools",
+      "classification": "official-sdk",
+      "observation": "Platform Tools revisions and external downloads; no binary redistribution."
+    },
+    {
+      "id": "A4",
+      "url": "https://github.com/Genymobile/scrcpy/blob/master/LICENSE",
+      "classification": "official-upstream-license",
+      "observation": "Apache-2.0 notice inspected."
+    },
+    {
+      "id": "A5",
+      "url": "https://github.com/libusb/libusb/blob/master/COPYING",
+      "classification": "official-upstream-license",
+      "observation": "LGPL text inspected; candidate not linked or redistributed."
+    },
+    {
+      "id": "A6",
+      "url": "https://github.com/Benjamin-Dobell/Heimdall",
+      "classification": "official-upstream",
+      "observation": "Candidate repository inspected; exact device/release/license audit required before integration.",
+      "licenseUrl": "https://github.com/Benjamin-Dobell/Heimdall/blob/master/LICENSE"
+    },
+    {
+      "id": "A7",
+      "url": "https://developer.android.com/reference/android/provider/Settings",
+      "classification": "official-api",
+      "observation": "Locale/input-method settings intents may lack a matching activity."
+    },
+    {
+      "id": "A8",
+      "url": "https://source.android.com/docs/core/architecture/bootloader/locking_unlocking",
+      "classification": "official-protocol",
+      "observation": "OEM eligibility, user confirmation and data-loss requirements; generic unlocking not implemented."
+    },
+    {
+      "id": "A9",
+      "url": "https://twrp.me/faq/ADBSideload.html",
+      "classification": "official-recovery",
+      "observation": "Sideload requires supported recovery; not TWRP installation or proof of flash success."
+    },
+    {
+      "id": "A10",
+      "url": "https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/services/core/java/com/android/server/UiModeManagerService.java",
+      "classification": "official-protocol",
+      "observation": "Night-mode shell interface; runtime help and readback additionally required."
+    }
+  ]
+}

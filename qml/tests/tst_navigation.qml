@@ -8,7 +8,24 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function test_deviceServiceNavigationAndConsent(){
+  app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const page=findChild(app,"deviceServicesPage");verify(page!==null)
+  compare(findChild(app,"serviceBrand").count,14);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
+   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150)
+   page.review({id:"sideload_zip",ar:"اختبار موافقة اصطناعي",en:"Synthetic consent test",risk:"destructive"})
+   const dialog=findChild(app,"deviceServiceConfirm");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled)
+   findChild(app,"serviceOwnerConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
+   findChild(app,"serviceDataLossConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
+   dialog.reject();tryCompare(dialog,"opened",false)
+  }
+  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));const rows=findChild(app,"deviceCatalogList");compare(rows.count,44)
+  const search=findChild(app,"deviceCatalogSearch");search.text="SM-A057G";tryCompare(rows,"count",1);search.text="nothing matches";tryCompare(rows,"count",0);search.text=""
+  mouseClick(findChild(app,"importDeviceCatalog"));const dialog=findChild(app,"deviceCatalogDialog");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled);dialog.reject()
+  mouseClick(app.navigationButton(0));compare(app.currentPage,0)
+ }
  function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
  function test_centerProfilesAndTracking(){
   const id=workshopBridge.createOrder("SYNTHETIC UI owner","test-contact","OPPO","TRAINING-01","test-serial","USB","Tech","private");verify(id>0)

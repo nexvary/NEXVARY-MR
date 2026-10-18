@@ -1,0 +1,57 @@
+# Device services — behavior, verification and continuation
+
+Branch: `feature/device-service-engine`, based on forensic head `0f979797f03cabf0dc0a504f23dc5c5f9c2cd116`. The independent draft PR targets `feature/forensic-lab-foundation` so its diff contains this increment rather than all prior forensic/workshop work. It is not merged into main and is not a final commercial release.
+
+## What is executable
+
+`ToolBridge` remains the sole native device process owner. `DeviceProtocol.hpp` defines ADB and Fastboot adapters with discovery, query plans and an explicit command allowlist. `DeviceServices.cpp` owns service orchestration and checks. Neither QML nor an imported catalog supplies shell text or command templates. Legacy Python OEM code is not the desktop executor.
+
+Devices & USB → **OEM services** offers 18 implemented service entries. This count is not 18 verified procedures for every model:
+
+| Entry | Required observation / result semantics |
+|---|---|
+| Information/capabilities | Explicit authorized target; allowlisted getprop fields or fixed Fastboot getvar keys. Device-reported manufacturer/model/Android/SoC/boot state are not independently attested. Missing values stay unknown. |
+| Battery/storage/partition observations | Part of normal ADB probe; optional reads can be unavailable at current permissions. No root or partition write. |
+| Normal/recovery/bootloader/sideload reboot | Normal authorized ADB. Acceptance is a reboot request, not proof of successful boot. Selection/discovery invalidated afterward. |
+| Dark mode on/off | SDK ≥29 and observed cmd uimode help support, followed by matching readback. OEM denial is a failure even if a child returns zero. |
+| Languages/keyboard/settings/APN | SDK ≥24 and resolved system activity. Opens supported on-device settings; does not add absent translations, silently change APNs, factory-reset or install a keyboard by itself. |
+| APK install | Verified private local copy; explicit owner/target review. No replacement unless opted in, no downgrade/grant flags, and Package Manager must report Success. |
+| ZIP sideload | Actual ADB sideload state; reviewed SHA-256, exact model/build/recovery compatibility declaration and explicit data-loss consent. TWRP must already be compatible/installed. Transfer acknowledgment is not proof of firmware signature acceptance or successful flashing. |
+| Fastboot reboot / reboot-bootloader | A freshly checked product in Fastboot. Request acknowledgment, then rediscover. |
+| Unlock eligibility | Reads flashing get_unlock_ability only. It does not unlock, relock, submit a vendor code or bypass protection. |
+| Cache/userdata erasure | Freshly reported unlocked=yes and existing nonzero named partition. Exact serial challenge and data-loss consent. Only controlled child-process fixtures were erased in tests; no physical device was addressed. Userdata erasure does not remove FRP. |
+
+Each action rechecks current discovery and normal ADB identity/build or Fastboot product before a command. Capabilities expire after 60 seconds and on selection/discovery change. Duplicate serials across transports fail closed. Reboot, any non-probe service and failures invalidate the snapshot. The typed serial and authorization declaration are checked in C++, not just the dialog. An operator declaration is **not independent proof of ownership**.
+
+One job runs at a time. Probe deadlines are 12 seconds, APK/sideload execution up to 10 minutes, total process output ≤512 KiB. Phases and bounded execution output update live; progress is indeterminate because arbitrary tools do not expose a trustworthy percentage. Cancellation kills the host child and clears queued steps; a device operation already accepted cannot be rolled back. A disconnected/changed target stops the queue. No automatic retry of a write occurs.
+
+Package staging reads the original, copies and hashes it, rereads the source and verifies the private copy, comparing SHA-256 and size/mtime before any device command. APK ≤512 MiB, ZIP ≤2 GiB; bounded worker time/cancellation, local regular non-symlink input, ZIP/APK header required. This is **not full archive parsing, APK signature/malware analysis, OEM firmware authentication or automated ZIP/model validation**. Exact ZIP compatibility is an explicit operator review. The private copy is deleted on completion. Concurrent hostile filesystem replacement is not fully prevented by portable Qt path checks; use trusted workstation storage.
+
+Session history is bounded to 100 local rows with UTC/action/result/hash/authorization declaration. A new-file-only JSON report requires plaintext approval and includes the current profile/last output with validation limitations. Earlier snapshots are not a durable multi-device service archive. Existing workshop diagnostic events are still recorded through `diagnosticCompleted`; customer records and evidence APIs are retained. No service report is automatically uploaded.
+
+## Catalog and UI
+
+`assets/data/device-service-catalog.json` contains 14 brand groups, five chipset families, 42 unverified user-requested OPPO/vivo references and two attributed vendor-documentation references. Unknown fields are blank. `nexvaryValidated` is false in every row. Neither model labels nor imported catalogs enable operations.
+
+The native catalog validator rejects unknown/executable fields, duplicate model keys, invalid provenance URLs and attempts to mark a model hardware-validated. A reviewed SHA-256 and source/license consent are required to atomically save a bounded data update. This is reference-data replacement, not a signed automatic update service or a native binary-plugin loader. Native adapters require code review, tests and an application release.
+
+Device services and catalog are new tabs under the preserved Devices workspace. Existing firmware, diagnostics, recovery, forensic lab, board, workshop, inventory and settings navigation remains intact. A future eleven-section service layout is not claimed complete. Fluent MIT color SVGs are reused with existing provenance/notices; no commercial graphics were copied. Dark surfaces use the requested #0A0A0A/#121212/#191919 palette, #F5F5F5/#A8A8A8 text and #303030 borders with existing silver gloss. Arabic/English and light mode remain available.
+
+All 12 unavailable service entries explain why: EDL/DA/firehose, exact-model Download, FRP/accounts, screen locks/root/security/RMM, modem/baseband, EFS/PIT/DIAG/SPC, carrier unlock, generic factory-reset, F2FS conversion, bootloader unlock/relock and unreviewed carrier-app removal. These are not hidden implemented functions. Owner-authenticated OEM/account recovery is the supported route. Existing PnP inventory and six official driver links remain; physical USB instance → selected device → signed driver correlation and automatic installation are **not implemented**.
+
+## Verification contract
+
+Run the existing full CMake/CTest/QtTest/QML suite plus `mr_service_tests`, `mr_catalog_tests` and Python regression tests. The new child executables impersonate adb/fastboot from a private temporary PATH and reject every unexpected command. They never invoke real platform-tools or a phone. Coverage includes six manufacturer aliases, permission/old-SDK/activity absence, wrong target, blocked options, USB loss, changed identity, dark readback, package hash/manager failure, ZIP prerequisites, fresh lock/partition erasure gates, cancellation, rescan invalidation, transport ambiguity, explicit APK replacement, invalid package paths, report consent and no overwrite. Catalog tests cover update hashes, persistence and rejection of command/certification grants.
+
+QML tests exercise service/catalog navigation, search, initially disabled actions and multi-step destructive consent at 1180×760 in Arabic/English and dark/light modes. Deployed smoke captures add services/catalog in all four combinations. Actual images are emitted by `nexvary_mr --smoke-test`, not design mockups. UI fixtures are clearly synthetic and no phone is connected.
+
+The final local Linux Qt 6.4.2 run passed **16/16 CTest targets**, including **31 service QtTest checks**, **4 catalog checks**, **22 QML checks**, deployed GUI smoke and the existing native regression suites. The existing Python regression suite passed **4/4**. Real local mmls was selected for the TSK fixture; unrelated optional external-tool skips are recorded in their result files. Final exact-head Windows/MSVC, Linux Qt, installer/portable, server and regression evidence must be checked in the draft PR's Actions before calling this increment accepted. Previous green parent artifacts do not contain these new services. The PR records the tested SHA and run/artifact URLs, avoiding a self-referential commit ID in this file. Build warnings, QML warnings, failed tests or skipped external dependencies must not be relabeled as success.
+
+## Continuation / remaining gates
+
+1. Require all new-head CI jobs green; inspect Windows compilation and QML warnings, then installer/portable artifacts and deployed screenshots.
+2. Pending Hardware Validation: each brand/model/build/transport, driver binding, unauthorized/locked devices, actual unplug/replug, reboot outcomes, dark/settings behavior and permitted APK/sideload. Real destructive operations require separate explicit consent and sacrificial hardware; no such consent/test occurred here.
+3. Add read-only Windows USB-instance/driver correlation and a provenance-backed exact-model compatibility source. Do not infer a chipset or signed loader from VID/PID, model name or a reseller table.
+4. Add scoped, cancelable authorized visible-file backup with source/copy hashes and restore review, reusing the evidence engine. General root/private-app backup and device restore remain absent.
+5. Review licensed official OEM interfaces per module. Proprietary server/auth/credits cannot be replaced by an undocumented open-source command. FRP/account/lock bypass stays out of scope.
+6. Expand exact-model tests/catalog sources, durable service-case history, signed data updates and the requested service-centered navigation without removing existing maintenance pages. Clean Windows 10/11 acceptance, code signing and full distribution/license/privacy review remain release gates.

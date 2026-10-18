@@ -9,16 +9,55 @@
 #include <QUrl>
 #include <QRegularExpression>
 #include <QSet>
+#include <QCryptographicHash>
+#include <QDate>
 #include <functional>
 namespace {
 bool text(const QString &s,int max){return !s.trimmed().isEmpty()&&s.size()<=max&&!s.contains(QChar::Null);}
 QString key(const QString &s){return s.trimmed().toCaseFolded();}
 }
 ServiceCatalog::ServiceCatalog(const QString &storage,QObject *parent):QObject(parent),storage_(storage){
+ static const bool initialized=[] { Q_INIT_RESOURCE(device_catalog);return true; }();Q_UNUSED(initialized);
+ // Data updates cannot supply code, command templates or capability grants.
+ for(const auto &path:QStringList{QStringLiteral(":/assets/data/device-service-catalog.json"),storage+QStringLiteral(".devices.json")}){
+  QFile data(path);if(data.size()<=256*1024&&data.open(QIODevice::ReadOnly)){const auto doc=QJsonDocument::fromJson(data.readAll());const auto catalog=doc.object().toVariantMap();if(doc.isObject()&&validDeviceCatalog(catalog))deviceCatalog_=catalog;}
+ }
  QFile f(storage);if(f.size()<=2*1024*1024&&f.open(QIODevice::ReadOnly)){
   const auto parsed=QJsonDocument::fromJson(f.readAll());const auto list=parsed.array().toVariantList();
   if(parsed.isArray()&&list.size()<=200){bool valid=true;for(const auto &g:list)valid=valid&&validGuide(g.toMap());if(valid)guides_=list;else error_="Stored guides failed validation.";}
  }
+}
+bool ServiceCatalog::validDeviceCatalog(const QVariantMap &c){
+ const QSet<QString> top{"schemaVersion","revision","brands","chipsets","models","modules"};
+ for(auto it=c.cbegin();it!=c.cend();++it)if(!top.contains(it.key()))return false;
+ if(c.value("schemaVersion").toInt()!=1||!QDate::fromString(c.value("revision").toString(),Qt::ISODate).isValid())return false;
+ const auto brands=c.value("brands").toStringList(),chipsets=c.value("chipsets").toStringList();
+ if(brands.isEmpty()||brands.size()>64||chipsets.size()>32||QSet<QString>(brands.begin(),brands.end()).size()!=brands.size())return false;
+ for(const auto &s:brands)if(!text(s,80))return false;
+ for(const auto &s:chipsets)if(!text(s,80))return false;
+ const auto modules=c.value("modules").toList();if(modules.size()!=2)return false;
+ QSet<QString> moduleIds;
+ for(const auto &v:modules){const auto m=v.toMap();if(m.size()!=3||!m.contains("id")||!m.contains("scope")||!m.contains("permissions")||!QStringList{"adb","fastboot"}.contains(m.value("id").toString())||!text(m.value("scope").toString(),500)||m.value("permissions").toString()!="operator-consent")return false;moduleIds.insert(m.value("id").toString());}
+ if(moduleIds.size()!=2)return false;
+ const auto models=c.value("models").toList();if(models.size()>2000)return false;QSet<QString> identities;
+ for(const auto &v:models){const auto m=v.toMap();const QSet<QString> fields{"brand","model","chipset","android","evidence","sourceUrl","requirements","nexvaryValidated"};if(m.size()!=fields.size())return false;
+  for(auto it=m.cbegin();it!=m.cend();++it)if(!fields.contains(it.key()))return false;
+  if(!brands.contains(m.value("brand").toString())||!text(m.value("model").toString(),160)||!text(m.value("requirements").toString(),1000)||m.value("nexvaryValidated").typeId()!=QMetaType::Bool||m.value("nexvaryValidated").toBool())return false;
+  const auto id=key(m.value("brand").toString()+"/"+m.value("model").toString());if(identities.contains(id))return false;identities.insert(id);
+  if(m.value("chipset").toString().size()>160||m.value("android").toString().size()>80)return false;
+  const auto evidence=m.value("evidence").toString(),url=m.value("sourceUrl").toString();if(evidence!="requested"&&evidence!="vendor-documentation")return false;
+  if(evidence=="requested"&&(!url.isEmpty()||!m.value("chipset").toString().isEmpty()||!m.value("android").toString().isEmpty()))return false;
+  if(evidence=="vendor-documentation"){const QUrl u(url);if(u.scheme()!="https"||u.host().isEmpty()||!u.userInfo().isEmpty()||url.size()>2000)return false;}
+ }
+ return true;
+}
+bool ServiceCatalog::importDeviceCatalog(const QString &value,const QString &expected,bool reviewed){
+ const auto path=WorkshopBridge::localPath(value);QFile f(path);static const QRegularExpression digest("^[a-fA-F0-9]{64}$");
+ if(!reviewed||!digest.match(expected).hasMatch()||!QFileInfo(path).isFile()||QFileInfo(path).isSymLink()||f.size()>256*1024||!f.open(QIODevice::ReadOnly)){error_="Choose a bounded local catalog and review its source, license and SHA-256.";emit changed();return false;}
+ const auto bytes=f.read(256*1024+1);const auto doc=QJsonDocument::fromJson(bytes);const auto catalog=doc.object().toVariantMap();
+ if(bytes.size()>256*1024||QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex()!=expected.toLower().toLatin1()||!doc.isObject()||!validDeviceCatalog(catalog)){error_="Invalid catalog or SHA-256; executable fields and capability grants are forbidden.";emit changed();return false;}
+ QSaveFile out(storage_+".devices.json");if(!out.open(QIODevice::WriteOnly)||out.write(bytes)!=bytes.size()||!out.commit()){error_="Could not save the catalog.";emit changed();return false;}
+ deviceCatalog_=catalog;error_.clear();emit changed();return true;
 }
 QVariantList ServiceCatalog::drivers() const {
  // Official landing pages only; no driver binary is redistributed or silently installed.
