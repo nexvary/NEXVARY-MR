@@ -39,7 +39,7 @@ Item {
    ListView {
     id:files;objectName:"forensicEvidenceList";Layout.preferredWidth:Math.max(220,page.width*0.38);Layout.fillHeight:true;clip:true;spacing:8;model:page.filteredEvidence
     ScrollBar.vertical:ScrollBar {}
-    delegate:Rectangle {
+    delegate:GlossSurface {
      required property var modelData
      width:ListView.view.width;height:96;radius:8;color:page.selectedId===modelData.entry.id?app.tone("#173b57"):app.tone("#0d2538");border.color:app.tone("#284b65")
      ColumnLayout {

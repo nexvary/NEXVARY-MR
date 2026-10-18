@@ -19,7 +19,8 @@ Button {
   verticalAlignment: Text.AlignVCenter
   elide: Text.ElideRight
  }
- background: Rectangle {
+ background: GlossSurface {
+  reflection:control.enabled?(control.down?0.05:control.hovered?0.20:0.12):0.035
   radius: 9
   color: !control.enabled ? control.tone("#162434") : control.down ? control.tone("#124b94") : control.primary ? (control.hovered ? control.tone("#307ef3") : control.tone("#1767dc")) : (control.hovered ? control.tone("#1d3b55") : control.tone("#10293e"))
   border.width: control.activeFocus ? 2 : 1

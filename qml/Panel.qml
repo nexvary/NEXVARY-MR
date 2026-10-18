@@ -1,8 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-Rectangle {
+GlossSurface {
  id: card
+ reflection:0.10
  readonly property var themeWindow:ApplicationWindow.window
  function tone(value){return themeWindow?themeWindow.tone(value):value}
  property string title: ""

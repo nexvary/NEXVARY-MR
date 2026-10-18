@@ -12,7 +12,7 @@ Item {
   TextField {id:query;objectName:"forensicTimelineSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث في الخط الزمني","Search case timeline")}
   ListView {
    objectName:"forensicTimelineList";Layout.fillWidth:true;Layout.fillHeight:true;clip:true;spacing:8;model:page.events;ScrollBar.vertical:ScrollBar {}
-   delegate:Rectangle {
+   delegate:GlossSurface {
     required property var modelData
     width:ListView.view.width;height:eventColumn.implicitHeight+24;radius:8;color:app.tone("#0d2538");border.color:app.tone("#284b65")
     ColumnLayout {id:eventColumn;anchors.left:parent.left;anchors.right:parent.right;anchors.top:parent.top;anchors.margins:12;spacing:5

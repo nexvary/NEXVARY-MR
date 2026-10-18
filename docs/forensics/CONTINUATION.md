@@ -33,8 +33,8 @@ Run native checks with `cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON
 
 ## Next engineering work
 
-1. Inspect this commit's Windows run; fix any MSVC/Qt 6.8.3/package issue before considering merge.
-2. Implement a single external-process adapter under explicit tool selection, with real upstream fixture tests, time/output bounds, cancellation and no claims of OS sandboxing without an actual sandbox.
+1. Keep the latest head's Windows/Qt/package validation green before considering merge.
+2. Extend the tested mmls adapter only with a bounded, documented integration and real upstream fixtures; remaining candidates are not executable integrations.
 3. Add read-only SQLite artifact and iOS backup structure parsers with immutable evidence copies, bounded results and encrypted-backup capability detection; no credential bypass.
 4. Review OEM safe operations against the existing ToolBridge before porting model-aware catalogs. Chipset/OEM-specific capabilities remain device/protocol dependent.
 5. Complete physical-device disconnect/authorization checks and independent clean Windows 10/11 VM acceptance. Existing fake-ADB tests are not a real USB test.
@@ -50,3 +50,11 @@ A real local TSK 4.12.1 integration test uses an original synthetic MBR image, s
 ### First Windows feedback addressed
 
 At `3d1229d`, Windows compilation, recovery/forensic suites, portable smoke, setup creation, installation and uninstallation passed. QML's minimum-size test incorrectly required the retained device panel to overflow even after the sidebar layout reclaimed vertical space; failure also left smaller dimensions for the next navigation test. The test now checks reachable content with or without overflow, resets geometry/panel/theme between cases, and waits for rendered layout before navigation clicks. These changes retain the actual accessibility checks. Run https://github.com/nexvary/NEXVARY-MR/actions/runs/39108839476 is recorded as **failed**, not accepted as green.
+
+## Accepted build baseline and glossy black UI
+
+Commit `4d1ef274bbf5036874f4a1829c095eaa02fbdd60` passed core Linux/Windows, all 11 Linux Qt/CTest suites including real TSK integration, Windows Qt/CTest, isolated portable runtime smoke, and installer build/install/runtime/uninstall in [run 39110092461](https://github.com/nexvary/NEXVARY-MR/actions/runs/39110092461). The unsigned installer artifact for that tested baseline is `12129992927`. These results do not replace physical USB tests or independent Windows 10/11 VM acceptance.
+
+The following visual increment uses the requested `#0A0A0A` black base, neutral charcoal surfaces, restrained silver edges and native passive gradient reflections. The shared `GlossSurface` draws no input layer and requires no bitmap or shader plugin. Light mode and colored SVG/status accents remain available. Local strict Qt build, 17 QML checks and the actual 40-step GUI smoke passed; AR/dark, EN/light, recovery and board screenshots were inspected. Latest-head Windows validation and artifacts must be read from PR #3, not inferred from the baseline above.
+
+Next: confirm the glossy UI head's Windows/package run, then implement bounded read-only SQLite or iOS backup structure analysis with synthetic fixtures. Android acquisition, malware analysis, most external adapters, OEM capabilities and physical-device disconnect tests remain incomplete.

@@ -43,7 +43,7 @@ Item {
      width:parent.width;columns:2;columnSpacing:12;rowSpacing:12
      Repeater {
       model:lab.modules
-      delegate:Rectangle {
+      delegate:GlossSurface {
        required property var modelData
        Layout.fillWidth:true;Layout.preferredHeight:105;radius:8
        color:app.tone("#10283a");border.color:modelData.ready?app.tone("#2a786f"):app.tone("#465160")
