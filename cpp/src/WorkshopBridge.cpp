@@ -421,7 +421,7 @@ QVariantList WorkshopBridge::publicTrackingSnapshot() const {
     while(q.next()){
         const auto expiry=QDateTime::fromString(q.value(2).toString(),Qt::ISODate);if(!expiry.isValid()||expiry<=QDateTime::currentDateTimeUtc())continue;
         auto record=publicOrderStatus(q.value(0).toInt(),q.value(3).toString());if(record.isEmpty())continue;
-        auto updated=QDateTime::fromString(record.take("updated_at").toString(),QStringLiteral("yyyy-MM-dd HH:mm:ss"));updated.setTimeSpec(Qt::UTC);
+        const auto updated=QDateTime::fromString(record.take("updated_at").toString().replace(QLatin1Char(' '),QLatin1Char('T'))+QStringLiteral("Z"),Qt::ISODate);
         record.insert("updatedAtUtc",updated.toString(Qt::ISODate));record.insert("expiresAtUtc",expiry.toUTC().toString(Qt::ISODate));record.insert("tokenHash",q.value(1));
         auto history=record.value("history").toList();if(history.size()>100)history=history.mid(history.size()-100);record.insert("history",history);
         records.append(record);
