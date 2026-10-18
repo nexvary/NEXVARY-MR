@@ -13,7 +13,7 @@
 namespace {
 QByteArray read(const QString &path){QFile file(path);return file.open(QIODevice::ReadOnly)?file.readAll():QByteArray();}
 bool write(const QString &path,const QByteArray &bytes){QFile file(path);return file.open(QIODevice::WriteOnly)&&file.write(bytes)==bytes.size();}
-QByteArray image(){QByteArray bytes(4*1024*1024,'\0');bytes[510]=char(0x55);bytes[511]=char(0xaa);bytes[450]=char(0x83);bytes[455]=char(0x08);bytes[459]=char(0x08);return bytes;}
+QByteArray image(){QByteArray bytes(4*1024*1024,'\0');bytes.replace(510,2,QByteArray::fromHex("55aa"));bytes.replace(450,1,QByteArray::fromHex("83"));bytes[455]='\x08';bytes[459]='\x08';return bytes;}
 int fakeTool(const QStringList &arguments){
  if(arguments==QStringList{"-V"}){std::fputs("The Sleuth Kit ver 4.12.1\n",stdout);return 0;}
  if(arguments.size()!=3||arguments[0]!="-i"||arguments[1]!="raw")return 99;
