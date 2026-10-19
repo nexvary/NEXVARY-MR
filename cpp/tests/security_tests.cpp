@@ -75,6 +75,7 @@ private slots:
   QVERIFY(!bridge.scan(t.filePath("customer.apk"),true));QVERIFY(!bridge.configure(engine,db));QVERIFY(!bridge.updateDatabase(true));
   QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),10000);QVERIFY(!bridge.updating());
   QVERIFY2(bridge.updateResult().value("success").toBool(),qPrintable(bridge.error()));QVERIFY(bridge.result().isEmpty());
+  QVERIFY(bridge.configure(engine,db));QVERIFY(bridge.updateResult().isEmpty());
   qputenv("MR_TEST_UPDATE_MODE","sleep");QVERIFY(bridge.updateDatabase(true));bridge.cancel();
   QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),10000);QVERIFY(!bridge.updateResult().value("success").toBool());QVERIFY(bridge.result().isEmpty());
  }

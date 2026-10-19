@@ -158,7 +158,7 @@ bool SecurityBridge::configure(const QString &executable,const QString &database
  if(busy()){return false;}
  const auto e=WorkshopBridge::localPath(executable),d=WorkshopBridge::localPath(database);
  if(!localFile(e)||!QFileInfo(e).isExecutable()||!QDir::isAbsolutePath(d)||!QFileInfo(d).isDir()){error_="Select installed clamscan and a signature directory.";emit changed();return false;}
- QSaveFile f(config_);const auto b=QJsonDocument(QJsonObject{{"executable",e},{"database",d}}).toJson();if(!f.open(QIODevice::WriteOnly)||f.write(b)!=b.size()||!f.commit()){error_="Cannot save scanner configuration.";emit changed();return false;}executable_=e;database_=d;error_.clear();emit changed();return true;
+ QSaveFile f(config_);const auto b=QJsonDocument(QJsonObject{{"executable",e},{"database",d}}).toJson();if(!f.open(QIODevice::WriteOnly)||f.write(b)!=b.size()||!f.commit()){error_="Cannot save scanner configuration.";emit changed();return false;}executable_=e;database_=d;updateResult_.clear();error_.clear();emit changed();return true;
 }
 bool SecurityBridge::scan(const QString &source,bool authorized){
  if(busy()){return false;}
