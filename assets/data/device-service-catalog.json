@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "revision": "2026-10-18",
+  "brands": [
+    "Samsung",
+    "Xiaomi / Redmi / POCO",
+    "Huawei / Honor",
+    "Oppo",
+    "Vivo",
+    "Realme",
+    "LG",
+    "ZTE",
+    "Motorola",
+    "Lenovo",
+    "Tecno",
+    "Infinix",
+    "Itel",
+    "Nokia / HMD"
+  ],
+  "chipsets": [
+    "Qualcomm Snapdragon",
+    "MediaTek",
+    "Unisoc / Spreadtrum",
+    "Samsung Exynos",
+    "HiSilicon Kirin"
+  ],
+  "models": [
+    {
+      "brand": "Oppo",
+      "model": "A30",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A33",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A33F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A33M",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A37F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A51F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "A51W",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH1607 R9S",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH1611 R9s Plus",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH1613 F3 Plus",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH1701 A57",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH1707 R11",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "F1f",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7 (R7g)",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7 Plus F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7 Plus M",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7sf",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7sm",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R7s Plus",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R9 PlusmA",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R9 PlusTM",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R9 PlustmA",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "R9st",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "X9079",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V3 MAX PD1523F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V3 PD1524F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V5 PLUS PD1624F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V7 PD1718F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V7 PLUS PD1708F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V9 PD1730F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "V9 YOUTH PD1730BF",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "X5 PRO PD1421F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "X9 PD1616",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y51-Y51L PD1510F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y53 PD1628F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y55S PD1613BF",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y55-Y55L PD1613F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y65 PD1621BF",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y71 PD1731F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "XPLAY5 PD1522A",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y35 PD1502F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Vivo",
+      "model": "Y37 PD1503F",
+      "chipset": "",
+      "android": "",
+      "evidence": "requested",
+      "sourceUrl": "",
+      "requirements": "Unvalidated request reference; actual transport and permission checks are required. No OEM procedure is enabled by this row.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "SM-A057G",
+      "chipset": "Qualcomm (vendor release note; exact SoC unspecified)",
+      "android": "",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://octoplusbox.com/en/news/octoplus-frp-tool-v-3-1-0-is-out/",
+      "requirements": "Vendor-specific EDL claim with bootloader bit G. Not a NEXVARY adapter, license or hardware test.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "CPH2577 A58 4G",
+      "chipset": "MT6768 (UnlockTool-hosted reference label)",
+      "android": "",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://edl.unlocktool.net/category/oppo",
+      "requirements": "Reference label only; not an OEM specification or verified operation matrix. No test-point images are copied.",
+      "nexvaryValidated": false
+    }
+  ],
+  "modules": [
+    {
+      "id": "adb",
+      "scope": "Authorized normal Android and separately detected recovery sideload; fixed native commands only.",
+      "permissions": "operator-consent"
+    },
+    {
+      "id": "fastboot",
+      "scope": "Reported bootloader product, lock and partition capabilities; fixed native commands only.",
+      "permissions": "operator-consent"
+    }
+  ]
+}

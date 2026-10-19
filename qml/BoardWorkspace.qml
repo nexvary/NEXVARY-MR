@@ -105,7 +105,7 @@ Item {
         contentItem: ColumnLayout {
             spacing: 14
             Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; text: workspace.tr("تأكد من حقك في استخدام الملف. وجود حقل الترخيص داخل الملف لا يثبت ملكية المصدر.", "Confirm your right to use this file. Its license metadata does not independently prove ownership."); color: app.tone("#d9e6f5") }
-            CheckBox { id: rightsCheck; Layout.fillWidth: true; text: workspace.tr("لدي ترخيص أو تصريح باستخدام هذا المخطط", "I have permission to use this board data") }
+            NeonCheckBox { id: rightsCheck; Layout.fillWidth: true; text: workspace.tr("لدي ترخيص أو تصريح باستخدام هذا المخطط", "I have permission to use this board data") }
         }
         footer: DialogButtonBox {
             ActionButton { text: workspace.tr("إلغاء", "Cancel"); DialogButtonBox.buttonRole: DialogButtonBox.RejectRole }
@@ -263,7 +263,7 @@ Item {
                         Label { Layout.fillWidth: true; text: workspace.tr("إضاءة الشبكة تُظهر عضوية المكونات فقط؛ لا تتوفر مسارات الأسلاك.", "Net highlighting indicates component membership; trace geometry is not available."); color: app.tone("#7696ad"); font.pixelSize: 11; wrapMode: Text.WordWrap }
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("قياس يدوي · فولت", "Manual measurement · volts"); color: app.tone("#d9e8f2"); font.bold: true }
-                        ComboBox { id: netBox; Layout.fillWidth: true; enabled: boardBridge.loaded; model: boardBridge.nets; textRole: "name"; valueRole: "name"; onActivated: workspace.activeNet = currentText }
+                        NeonComboBox { id: netBox; Layout.fillWidth: true; enabled: boardBridge.loaded; model: boardBridge.nets; textRole: "name"; valueRole: "name"; onActivated: workspace.activeNet = currentText }
                         TextField { id: voltageField; objectName: "boardVoltage"; Layout.fillWidth: true; enabled: boardBridge.loaded; placeholderText: "3.30 V"; inputMethodHints: Qt.ImhFormattedNumbersOnly; validator: DoubleValidator { bottom: -1000; top: 1000; locale: "C"; notation: DoubleValidator.StandardNotation } }
                         TextField { id: measurementNote; Layout.fillWidth: true; enabled: boardBridge.loaded; maximumLength: 2000; placeholderText: workspace.tr("ظروف القياس أو ملاحظة", "Measurement conditions or note") }
                         ActionButton { Layout.fillWidth: true; objectName: "recordMeasurement"; text: workspace.tr("تسجيل القياس", "Record measurement"); enabled: boardBridge.loaded && voltageField.acceptableInput && voltageField.text.trim() !== "" && netBox.currentIndex >= 0; onClicked: if (boardBridge.addMeasurement(netBox.currentText, Number(voltageField.text), measurementNote.text)) { voltageField.clear(); measurementNote.clear(); workspace.status = workspace.tr("سُجل القياس اليدوي", "Manual measurement recorded") } }

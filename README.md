@@ -1,22 +1,28 @@
 # NEXVARY MR — Mobile Repair Workstation
 
-Native **C++20 / Qt 6 Quick** Windows workstation for authorized phone diagnostics, licensed board data and local repair-shop operations. **0.3.0 is an unsigned development build, not a commercially accepted final release.**
+Native **C++20 / Qt 6 Quick** Windows workstation for authorized phone diagnostics, licensed board data and local repair-shop operations. **0.4.0 is an unsigned development build, not a commercially accepted final release.**
 
 ## Implemented
 
-- Arabic RTL / English desktop workspace with eight functional sections, keyboard navigation and explicit exit confirmation.
+- Arabic RTL / English desktop workspace with ten preserved workspaces and device-service/catalog tabs, keyboard navigation and explicit exit confirmation.
 - Async bounded ADB / Fastboot discovery, explicit device selection, read-only properties, 200-line logcat and evidence-based text-pattern indicators, Windows PnP inspection, optional polling and cancellation. Tools can be selected using a native file picker and persisted locally without editing PATH.
 - Optional separately installed official scrcpy, launched only on request for an authorized selected device.
 - Native component/net board viewer: zoom, pan, search, component/net highlighting, manual measurements, reference comparisons, text/photo annotations and atomic session files. Imports require declared license metadata and explicit permission. The bundled CC0 training board is fictional.
 - SQLite v1 migration: customers, devices, repair orders, repair status, technicians, inventory, atomic stock allocation/restocking with historical prices preserved, exact integer monetary values, operation history, CSV export, PDF invoices/printing through a PDF reader, backups and validated restoration with pre-restore snapshots.
-- Firmware preflight: exact device brand/model metadata match and cancellable local SHA-256 hash. A matching untrusted manifest **does not authenticate a firmware package**. No flashing is implemented.
+- Firmware preflight: exact device brand/model metadata match and cancellable local SHA-256 hash. A matching untrusted manifest **does not authenticate a firmware package**. Native preflight does not authenticate OEM signatures. Reviewed ZIP transfer to an already compatible ADB sideload recovery is available separately; transfer completion is not proof of successful flashing.
 - CTest/QtTest/Qt Quick tests and Windows CI deployment/installer smoke tests.
 
-No lock/FRP bypass, device-identity modification, data erasure, automatic driver installation or unrestricted shell command interface is provided. Devices without authorized ADB access, iOS diagnostics, proprietary board formats and real instrument telemetry are unsupported.
+No lock/FRP bypass, device-identity modification, automatic driver installation or unrestricted shell command interface is provided. Selected-device services require owner authorization; optional Fastboot cache/userdata erasure requires fresh unlocked/partition checks and explicit serial/data-loss confirmation. Devices without authorized ADB access, iOS diagnostics, proprietary board formats and real instrument telemetry are unsupported.
+
+## Capability-based service increment
+
+Devices & USB now includes services and a searchable reference catalog. The same bounded native process runner uses separate ADB/Fastboot protocol adapters, a 60-second capability snapshot and fresh target/identity checks before execution. Implemented services include information/health observations, reboot requests, dark-mode write/readback, system language/keyboard/APN settings, verified private APK copies and recovery ZIP sideload transfer. Settings availability is probed; languages absent from firmware are not installed.
+
+The data-only catalog covers 14 requested brand groups and 44 model references with evidence labels. It grants no operations or hardware certification. Hash-reviewed catalog updates cannot inject commands. See [competitive research and comparison](docs/device-services/COMPETITIVE_ENGINEERING.md), [service behavior and validation](docs/device-services/IMPLEMENTATION.md), and [catalog data](assets/data/device-service-catalog.json). All phone/OEM acceptance remains **Pending Hardware Validation**.
 
 ## Windows usage
 
-Download the **unsigned portable ZIP** or **unsigned setup EXE** only from the successful [C++/Qt Actions run](https://github.com/nexvary/NEXVARY-MR/actions/workflows/cpp-qt.yml). Extract the portable folder and double-click `NEXVARY-MR.exe`, or run the installer. No Terminal is needed for normal use. Artifacts are published only after the workflow tests pass; an artifact's presence is not physical-device acceptance.
+Download the **unsigned portable ZIP** or **unsigned setup EXE** only from the successful [C++/Qt Actions run](https://github.com/nexvary/NEXVARY-MR/actions/workflows/cpp-qt.yml). Extract the portable folder and double-click `NEXVARY-MR.exe`, or run the installer. No Terminal is needed for normal use. Use artifacts from a fully successful run for the exact commit; diagnostic artifacts may also be retained on failure. An artifact's presence is not physical-device acceptance.
 
 See [user guide](docs/USER_GUIDE.md), [verification gates](docs/REQUIREMENTS.md), [dependency notices](docs/THIRD_PARTY.md), [external integration/license register](docs/INTEGRATIONS.md), [board format](docs/BOARD_FORMAT.md), and [firmware manifest format](docs/FIRMWARE_FORMAT.md).
 

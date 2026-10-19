@@ -18,7 +18,7 @@ Item {
   Panel {
    title:app.trx("توريد مخزون لقطعة موجودة","Restock an existing item");Layout.fillWidth:true;Layout.preferredHeight:130
    RowLayout {
-    ComboBox{id:restockItem;Layout.fillWidth:true;model:workshopBridge.inventory;textRole:"name";valueRole:"id"}
+    NeonComboBox{id:restockItem;Layout.fillWidth:true;model:workshopBridge.inventory;textRole:"name";valueRole:"id"}
     SpinBox{id:restockQuantity;from:1;to:1000000;value:1;editable:true}
     Label{text:app.trx("السعر الجديد ×100","New price ×100");color:app.tone("#8da8bd")}
     SpinBox{id:restockPrice;from:0;to:100000000;editable:true;stepSize:100}

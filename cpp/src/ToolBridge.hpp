@@ -6,8 +6,13 @@
 #include <QMap>
 #include <QVariantList>
 #include <QVariantMap>
+#include <QQueue>
+#include <QFutureWatcher>
+#include <QTemporaryDir>
+#include <atomic>
+#include <memory>
 
-// Only fixed, read-only device commands are exposed to QML. No shell command API.
+// One runner for discovery and allowlisted device services. No arbitrary shell API.
 class ToolBridge final : public QObject {
   Q_OBJECT
   Q_PROPERTY(QString status READ status NOTIFY statusChanged)
@@ -20,11 +25,17 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(QString logcat READ logcat NOTIFY logcatChanged)
   Q_PROPERTY(QString driverInfo READ driverInfo NOTIFY driverInfoChanged)
   Q_PROPERTY(bool autoRefresh READ autoRefresh WRITE setAutoRefresh NOTIFY autoRefreshChanged)
+  Q_PROPERTY(QVariantList serviceActions READ serviceActions NOTIFY serviceChanged)
+  Q_PROPERTY(QVariantMap serviceProfile READ serviceProfile NOTIFY serviceChanged)
+  Q_PROPERTY(QString serviceOutput READ serviceOutput NOTIFY serviceChanged)
+  Q_PROPERTY(QVariantList serviceHistory READ serviceHistory NOTIFY serviceChanged)
+  Q_PROPERTY(QString servicePhase READ servicePhase NOTIFY serviceChanged)
+  Q_PROPERTY(QVariantList requestedModels READ requestedModels CONSTANT)
 public:
   explicit ToolBridge(QObject *parent = nullptr);
   ~ToolBridge() override;
   QString status() const { return status_; }
-  bool busy() const { return active_; }
+  bool busy() const { return active_ || serviceRunning_; }
   QVariantList tools() const;
   QVariantList forensicTools() const;
   QVariantList devices() const { return devices_; }
@@ -50,6 +61,14 @@ public:
   static QVariantList parseAdbDevices(const QString &output);
   static QVariantList parseFastbootDevices(const QString &output);
   static QVariantMap parseDeviceProperties(const QString &output);
+  QVariantList serviceActions() const;
+  QVariantMap serviceProfile() const { return serviceProfile_; }
+  QString serviceOutput() const { return serviceOutput_; }
+  QString servicePhase() const { return servicePhase_; }
+  QVariantList serviceHistory() const { return serviceHistory_; }
+  static QVariantList requestedModels();
+  Q_INVOKABLE bool startService(const QString &action, const QString &expectedSerial, const QVariantMap &approval);
+  Q_INVOKABLE bool exportServiceReport(const QString &localPath, bool plaintextApproved);
 signals:
   void statusChanged();
   void busyChanged();
@@ -60,10 +79,11 @@ signals:
   void logcatChanged();
   void driverInfoChanged();
   void autoRefreshChanged();
+  void serviceChanged();
   void operationFinished(bool success);
   void diagnosticCompleted(const QString &operation, bool success);
 private:
-  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers };
+  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service };
   bool runReadOnly(const QString &program, const QStringList &arguments, Operation operation);
   bool selectedAdbReady();
   QString resolveExecutable(const QString &name) const;
@@ -89,4 +109,25 @@ private:
   QVariantMap deviceInfo_;
   QString logcat_;
   QString driverInfo_;
+  struct ServiceStep { QStringList arguments; QString key; bool optional=false; };
+  QVariantMap selectedServiceDevice() const;
+  bool serviceAvailable(const QString &action, QString *reason=nullptr) const;
+  void initServices();
+  void shutdownServices();
+  void serviceNext();
+  void serviceStepFinished(bool success, const QString &out, const QString &err);
+  void serviceAfterState();
+  void serviceDispatch();
+  void serviceComplete(bool success, const QString &reason);
+  void serviceInvalidate();
+  bool serviceRunning_=false;
+  QString serviceAction_,serviceTarget_,serviceTool_,servicePhase_,serviceOutput_;
+  ServiceStep serviceCurrent_;
+  QQueue<ServiceStep> serviceSteps_;
+  QVariantMap serviceProfile_,serviceScratch_,serviceApproval_;
+  QVariantList serviceHistory_;
+  QTimer serviceExpiry_;
+  QFutureWatcher<QVariantMap> serviceCopy_;
+  std::shared_ptr<std::atomic_bool> serviceCancel_;
+  std::unique_ptr<QTemporaryDir> serviceDirectory_;
 };

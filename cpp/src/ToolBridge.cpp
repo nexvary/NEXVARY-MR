@@ -76,8 +76,10 @@ ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
     if (error == QProcess::FailedToStart) finish(-1, QProcess::CrashExit);
   });
   refreshTools();
+  initServices();
 }
 ToolBridge::~ToolBridge() {
+  shutdownServices();
   pollTimer_.stop();
   timeoutTimer_.stop();
   if (process_.state() != QProcess::NotRunning) {
@@ -243,7 +245,7 @@ QVariantMap ToolBridge::parseDeviceProperties(const QString &output) {
   return result;
 }
 bool ToolBridge::runReadOnly(const QString &program, const QStringList &arguments, Operation operation) {
-  if (busy()) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
+  if (active_ || (serviceRunning_ && operation != Operation::Service)) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
@@ -252,7 +254,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
     if (operation == Operation::AdbScan) replaceDevices({}, adbTransport);
     if (operation == Operation::FastbootScan) replaceDevices({}, fastbootTransport);
     setStatus(QStringLiteral("الأداة غير مثبتة أو غير موجودة في PATH: ") + program);
-    emit operationFinished(false);
+    if(operation!=Operation::Service)emit operationFinished(false);
     return false;
   }
   output_.clear(); errors_.clear(); terminalReason_.clear();
@@ -260,7 +262,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   commandSerial_ = selectedSerial_;
   active_ = true;
   emit busyChanged();
-  setStatus(QStringLiteral("جار تنفيذ فحص قراءة فقط…"));
+  setStatus(operation==Operation::Service?QStringLiteral("جار تنفيذ خدمة الجهاز المحددة؛ راقب الهاتف…"):QStringLiteral("جار تنفيذ فحص قراءة فقط…"));
   process_.setProgram(path);
   process_.setArguments(arguments);
   timeoutTimer_.start();
@@ -274,6 +276,10 @@ void ToolBridge::collectOutput() {
   const qsizetype room = qMax<qsizetype>(0, maxOutputBytes - output_.size() - errors_.size());
   output_.append(out.left(room));
   errors_.append(err.left(qMax<qsizetype>(0, room - out.size())));
+  if (operation_ == Operation::Service && serviceCurrent_.key == QStringLiteral("execute")) {
+    serviceOutput_ = QString::fromUtf8(output_ + errors_).left(8192);
+    emit serviceChanged();
+  }
   if (out.size() + err.size() > room && terminalReason_.isEmpty()) {
     terminalReason_ = QStringLiteral("تجاوزت نتيجة الفحص الحد المسموح (512 KiB)؛ أُوقف لحماية الذاكرة");
     process_.kill();
@@ -285,6 +291,12 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
   timeoutTimer_.stop();
   const bool success = terminalReason_.isEmpty() && exitStatus == QProcess::NormalExit && exitCode == 0;
   const QString output = QString::fromUtf8(output_).trimmed();
+  if (operation_ == Operation::Service) {
+    active_=false;
+    operation_=Operation::None;
+    serviceStepFinished(success,output,QString::fromUtf8(errors_).trimmed());
+    return;
+  }
   if (success) {
     switch (operation_) {
     case Operation::AdbScan: replaceDevices(parseAdbDevices(output), adbTransport); break;
@@ -297,6 +309,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
       break;
     case Operation::Drivers: driverInfo_ = output; emit driverInfoChanged(); break;
     case Operation::None: break;
+    case Operation::Service: break;
     }
     if (operation_ == Operation::AdbScan || operation_ == Operation::FastbootScan) setStatus(QStringLiteral("اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: ") + QString::number(devices_.size()));
     else setStatus(output.isEmpty() ? QStringLiteral("اكتمل الفحص دون بيانات متاحة") : QStringLiteral("اكتمل الفحص بنجاح"));
@@ -314,6 +327,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
   emit operationFinished(success);
 }
 void ToolBridge::replaceDevices(const QVariantList &found, const QString &transport) {
+  if (!serviceRunning_) serviceInvalidate();
   QVariantList combined;
   for (const auto &entry : devices_) if (entry.toMap().value(QStringLiteral("transport")).toString() != transport) combined.append(entry);
   combined.append(found);
@@ -339,6 +353,8 @@ void ToolBridge::selectDevice(const QString &serial) {
     if (!found) { setStatus(QStringLiteral("اختر جهازًا من نتائج الفحص الحالية")); return; }
   }
   selectedSerial_ = serial;
+  if (serviceRunning_) cancel();
+  serviceInvalidate();
   deviceInfo_.clear(); logcat_.clear();
   emit selectedSerialChanged(); emit deviceInfoChanged(); emit logcatChanged();
 }
@@ -367,6 +383,13 @@ void ToolBridge::inspectDrivers() {
 #endif
 }
 void ToolBridge::cancel() {
+  if (serviceRunning_) {
+    serviceCancel_->store(true);
+    serviceSteps_.clear();
+    if (active_) { terminalReason_=QStringLiteral("Cancelled; device changes already started cannot be undone.");process_.kill(); }
+    else if (!serviceCopy_.isRunning()) serviceComplete(false,QStringLiteral("Cancelled; verify device state before continuing."));
+    return;
+  }
   if (!active_) return;
   terminalReason_ = QStringLiteral("أُلغي الفحص بواسطة المستخدم");
   process_.kill();

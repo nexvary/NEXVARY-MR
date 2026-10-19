@@ -8,8 +8,47 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function test_deviceServiceNavigationAndConsent(){
+  app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const page=findChild(app,"deviceServicesPage");verify(page!==null)
+  compare(findChild(app,"serviceBrand").count,14);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
+  findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
+   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150)
+   page.review({id:"sideload_zip",ar:"اختبار موافقة اصطناعي",en:"Synthetic consent test",risk:"destructive"})
+   const dialog=findChild(app,"deviceServiceConfirm");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled)
+   findChild(app,"serviceOwnerConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
+   findChild(app,"serviceDataLossConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
+   dialog.reject();tryCompare(dialog,"opened",false)
+  }
+  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));const rows=findChild(app,"deviceCatalogList");compare(rows.count,44)
+  const search=findChild(app,"deviceCatalogSearch");search.text="SM-A057G";tryCompare(rows,"count",1);search.text="nothing matches";tryCompare(rows,"count",0);search.text=""
+  mouseClick(findChild(app,"importDeviceCatalog"));const dialog=findChild(app,"deviceCatalogDialog");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled);dialog.reject()
+  mouseClick(app.navigationButton(0));compare(app.currentPage,0)
+ }
  function cleanup(){if(recoveryBridge.active&&!recoveryBridge.busy)recoveryBridge.closeCase();app.showDevicePanel=false;app.width=1536;app.height=980}
+ function test_serviceHistoryDetailsArePlainText(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;verify(waitForRendering(app.contentItem))
+  const page=findChild(app,"deviceServicesPage")
+  page.reviewRecord({serial:"SYNTHETIC-42",transport:"adb",action:"dark_on",atUtc:"2026-10-18T00:00:00Z",result:"<b>Permission denied</b>"})
+  const dialog=findChild(app,"deviceServiceHistoryDetail");tryCompare(dialog,"opened",true)
+  const output=findChild(app,"deviceServiceHistoryText");verify(output.text.indexOf("SYNTHETIC-42")>=0);verify(output.text.indexOf("<b>Permission denied</b>")>=0);compare(output.textFormat,TextEdit.PlainText)
+  dialog.close();tryCompare(dialog,"opened",false)
+ }
+ function test_serviceMinimumSizeOutputAndHistory(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;findChild(app,"serviceBrand").currentIndex=1
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(80)
+   const result=findChild(app,"deviceServiceResultPanel");verify(result.height>=180,"Operation result must remain readable at minimum size")
+   const details=findChild(app,"deviceServiceDetailsScroll");verify(details!==null);details.contentItem.contentY=0;wait(30)
+   let point=result.mapToItem(details,result.width/2,80);verify(point.y>=0&&point.y<details.height,"Result remains visible at the top")
+   details.contentItem.contentY=Math.max(0,details.contentHeight-details.availableHeight);wait(30)
+   const report=findChild(app,"exportDeviceServiceReport");point=report.mapToItem(details,report.width/2,report.height/2);verify(point.y>=0&&point.y<details.height,"Report remains reachable by scrolling")
+   details.contentItem.contentY=0
+  }
+  findChild(app,"serviceBrand").currentIndex=0
+ }
  function test_centerProfilesAndTracking(){
   const id=workshopBridge.createOrder("SYNTHETIC UI owner","test-contact","OPPO","TRAINING-01","test-serial","USB","Tech","private");verify(id>0)
   const order=workshopBridge.invoice(id)
@@ -24,7 +63,7 @@ TestCase {
  function test_securityAndFaultTree(){
   const id=workshopBridge.createOrder("Synthetic tree owner","","Samsung","SYNTHETIC-02","","USB","Tech","");verify(id>0)
   app.currentPage=2;const tabs=findChild(app,"diagnosticTabs");tabs.currentIndex=2;verify(waitForRendering(app.contentItem))
-  verify(!findChild(app,"startSecurityScan").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
+  verify(!findChild(app,"startSecurityScan").enabled);verify(!findChild(app,"updateSignatures").enabled);verify(!findChild(app,"cancelSignatureUpdate").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
   tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,6)
   tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
   const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
@@ -137,8 +176,9 @@ TestCase {
  }
  function test_createOrder(){
   app.currentPage=5;let before=workshopBridge.orders.length;mouseClick(findChild(app,"newOrder"));let dialog=findChild(app,"newOrderDialog");tryCompare(dialog,"opened",true);
+  mouseClick(findChild(app,"saveIntakeButton"));compare(workshopBridge.orders.length,before);compare(dialog.opened,true);verify(findChild(app,"intakeError").visible);
   findChild(app,"customerField").text="UI test customer";findChild(app,"brandField").text="TestBrand";findChild(app,"modelField").text="Model-01";findChild(app,"symptomField").text="USB not detected";
-  mouseClick(dialog.standardButton(Dialog.Save));compare(workshopBridge.orders.length,before+1);tryCompare(dialog,"visible",false);
+  mouseClick(findChild(app,"saveIntakeButton"));compare(workshopBridge.orders.length,before+1);tryCompare(dialog,"visible",false);
  }
  function test_diagnosis(){app.currentPage=2;let b=findChild(app,"diagnoseButton");mouseClick(b);let r=findChild(app,"diagnosisResult");verify(r.text.length>40);verify(r.readOnly)}
  function test_savedDiagnosis(){

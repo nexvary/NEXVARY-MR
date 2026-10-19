@@ -19,8 +19,8 @@ ScrollView {
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:245;title:app.trx("شجرة التشخيص المرتبطة بالهاتف","Phone-bound diagnostic tree")
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("الأجوبة نتائج يدخلها الفني، وليست قياسات تلقائية. الدليل الخاص لا يُستخدم إلا إذا طابق الشركة والموديل والعَرَض تمامًا؛ وإلا يظهر مسار عام بحدوده. لا توجد مكتبة موثقة لكل الموديلات بعد.","Answers are technician observations, not automatic measurements. An imported guide is used only for an exact brand/model/symptom match; otherwise a general triage path is explicitly labeled. A verified library for all models is not yet supplied.")}
-   ComboBox {id:orderChoice;objectName:"faultTreeOrder";Layout.fillWidth:true;model:workshopBridge.orders;textRole:"id";valueRole:"id";onCurrentValueChanged:{page.guide=({});page.node=({});page.boundOrder=-1}}
-   RowLayout {Layout.fillWidth:true;ComboBox {id:symptom;Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.guide=({});page.node=({})}}ActionButton {objectName:"startFaultTree";text:app.trx("بدء شجرة الفحص","Start fault tree");primary:true;enabled:orderChoice.currentValue>0;onClicked:page.start()}}
+   NeonComboBox {id:orderChoice;objectName:"faultTreeOrder";Layout.fillWidth:true;model:workshopBridge.orders;textRole:"id";valueRole:"id";onCurrentValueChanged:{page.guide=({});page.node=({});page.boundOrder=-1}}
+   RowLayout {Layout.fillWidth:true;NeonComboBox {id:symptom;Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.guide=({});page.node=({})}}ActionButton {objectName:"startFaultTree";text:app.trx("بدء شجرة الفحص","Start fault tree");primary:true;enabled:orderChoice.currentValue>0;onClicked:page.start()}}
   }
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:310;title:app.trx("الخطوة الحالية","Current step")
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:(page.guide.brand||"")+" "+(page.guide.model||"")+"\n"+(page.guide.scope||"");color:app.tone("#8eb6d6")}
@@ -34,7 +34,7 @@ ScrollView {
    ActionButton {objectName:"saveFaultTree";text:app.trx("حفظ مسار الفحص والنتيجة","Save path and findings");enabled:page.boundOrder>0&&page.node.terminal===true&&technician.text.trim()!==""&&finding.text.trim()!=="";onClicked:app.notice(workshopBridge.saveDiagnosis(page.boundOrder,page.guide.symptom,page.historyText(),finding.text,page.guide.sourceUrl||"General triage; no exact-model guide",technician.text),app.trx("حُفظ التشخيص في سجل الهاتف","Saved in the phone's repair history"))}
   }
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:200;title:app.trx("مكتبة أدلة الموديلات","Model guide library")
-   CheckBox {id:rights;Layout.fillWidth:true;text:app.trx("راجعت مصدر الدليل وترخيص استخدامه ودقة الموديل","I reviewed guide source, usage rights and exact model")}
+   NeonCheckBox {id:rights;Layout.fillWidth:true;text:app.trx("راجعت مصدر الدليل وترخيص استخدامه ودقة الموديل","I reviewed guide source, usage rights and exact model")}
    ActionButton {objectName:"importModelGuide";text:app.trx("استيراد شجرة موديل JSON","Import model tree JSON");enabled:rights.checked;onClicked:guidePicker.open()}
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;text:serviceCatalog.guides.length+app.trx(" أدلة موديلات محفوظة. "," saved model guides. ")+serviceCatalog.error;color:app.tone("#eab775")}
   }

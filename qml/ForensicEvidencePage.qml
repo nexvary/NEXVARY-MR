@@ -31,7 +31,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
    TextField {id:search;objectName:"forensicSearch";placeholderText:app.trx("بحث بالاسم أو المعرّف أو البصمة","Search name, ID or SHA256");Layout.fillWidth:true;Layout.minimumWidth:0}
-   ComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis"];Layout.preferredWidth:180}
+   NeonComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis"];Layout.preferredWidth:180}
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
   RowLayout {
@@ -67,7 +67,7 @@ Item {
        visible:page.editingOperator||recoveryBridge.caseOperator==="";Layout.fillWidth:true
       TextField {id:operatorName;objectName:"forensicOperator";placeholderText:app.trx("اسم أو معرف المشغّل","Operator name or identifier");maximumLength:160;Layout.fillWidth:true;Layout.minimumWidth:0}
       TextField {id:authorization;objectName:"forensicAuthorization";placeholderText:app.trx("مرجع التفويض ونطاقه","Authorization reference and scope");maximumLength:500;Layout.fillWidth:true;Layout.minimumWidth:0}
-      CheckBox {id:operatorConsent;objectName:"forensicOperatorConsent";text:app.trx("أؤكد صحة البيانات المسجلة","I confirm these recorded details")}
+      NeonCheckBox {id:operatorConsent;objectName:"forensicOperatorConsent";text:app.trx("أؤكد صحة البيانات المسجلة","I confirm these recorded details")}
       ActionButton {objectName:"forensicRecordOperator";text:app.trx("حفظ هوية المشغّل","Record operator");enabled:recoveryBridge.active&&!recoveryBridge.busy&&operatorConsent.checked&&operatorName.text.trim()!==""&&authorization.text.trim()!=="";onClicked:{const ok=recoveryBridge.recordOperator(operatorName.text,authorization.text,true);notify(ok);if(ok)page.editingOperator=false;operatorConsent.checked=false}}
       }
      }
@@ -84,8 +84,8 @@ Item {
   }
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
-   CheckBox {id:plaintext;objectName:"forensicPlaintext";text:app.trx("أوافق على تصدير غير مشفر","Authorize plaintext export")}
-   ComboBox {id:format;objectName:"forensicFormat";model:["PDF","HTML","JSON"];Layout.preferredWidth:100}
+   NeonCheckBox {id:plaintext;objectName:"forensicPlaintext";text:app.trx("أوافق على تصدير غير مشفر","Authorize plaintext export")}
+   NeonComboBox {id:format;objectName:"forensicFormat";model:["PDF","HTML","JSON"];Layout.preferredWidth:100}
    ActionButton {objectName:"forensicReport";text:app.trx("تصدير تقرير","Export report");enabled:recoveryBridge.active&&!recoveryBridge.busy&&plaintext.checked;onClicked:report.open()}
    ActionButton {text:app.trx("تصدير الدليل","Export evidence");enabled:page.selectedIndex>=0&&!recoveryBridge.busy&&plaintext.checked;onClicked:evidence.open()}
    Item {Layout.fillWidth:true;Layout.minimumWidth:0}
