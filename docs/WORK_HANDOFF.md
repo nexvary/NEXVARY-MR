@@ -1,3 +1,11 @@
+# FreshClam continuation — 2026-10-19
+
+Resume `feature/device-service-engine`. Baseline `f4f19de340f8c40ddb4bd2ab35aea1a4671712f2` completed Windows/Qt, packaging and Linux integration successfully in run `39156482449`; Python run `39156482507` also passed.
+
+This increment adds asynchronous, explicitly initiated official signature updates through separately installed FreshClam, GUI cancellation/output, scan/update exclusion and bounded failure handling. See `docs/workshop/CENTER_SECURITY.md` for the workflow, tests and remaining live-CDN/physical-device validation. No signing, device-support or whole-phone antivirus claim is added. Exact-revision CI must be checked independently.
+
+---
+
 # Current continuation — 2026-10-18
 
 Actual latest development branch: `feature/device-service-engine`, based on `eb533d55744379a2dbdc9b27600195b0aafc9929`. The older checkpoint below is historical, not the branch to resume.

@@ -63,7 +63,7 @@ TestCase {
  function test_securityAndFaultTree(){
   const id=workshopBridge.createOrder("Synthetic tree owner","","Samsung","SYNTHETIC-02","","USB","Tech","");verify(id>0)
   app.currentPage=2;const tabs=findChild(app,"diagnosticTabs");tabs.currentIndex=2;verify(waitForRendering(app.contentItem))
-  verify(!findChild(app,"startSecurityScan").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
+  verify(!findChild(app,"startSecurityScan").enabled);verify(!findChild(app,"updateSignatures").enabled);verify(!findChild(app,"cancelSignatureUpdate").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
   tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,6)
   tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
   const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
