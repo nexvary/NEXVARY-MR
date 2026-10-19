@@ -21,7 +21,7 @@ ScrollView {
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:270;title:app.trx("تحديث قاعدة الفيروسات — FreshClam","Update virus signatures — FreshClam")
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");text:app.trx("ثبّت FreshClam بجوار clamscan واختر مجلد تواقيع قابلًا للكتابة. ينزّل التواقيع الرسمية فقط؛ لا يرسل ملفات العميل. قد يكون التنزيل الأول كبيرًا. الإلغاء لا يتراجع عن قواعد اكتمل استبدالها.","Install FreshClam beside clamscan and select a writable database directory. Downloads official signatures only; customer files are not sent. Initial downloads can be large. Cancellation does not roll back databases already replaced.")}
    Label {objectName:"signatureUpdaterPath";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");text:securityBridge.updater||app.trx("FreshClam غير موجود بجوار المحرك المحدد","FreshClam not found beside the selected engine")}
-   CheckBox {id:updateConsent;objectName:"signatureUpdateConsent";text:app.trx("أوافق على تنزيل وتحديث التواقيع الرسمية","Approve official signature download and update");enabled:!securityBridge.busy}
+   NeonCheckBox {id:updateConsent;objectName:"signatureUpdateConsent";text:app.trx("أوافق على تنزيل وتحديث التواقيع الرسمية","Approve official signature download and update");enabled:!securityBridge.busy}
    RowLayout {
     ActionButton {objectName:"updateSignatures";text:app.trx("تحديث التواقيع الآن","Update signatures now");enabled:!securityBridge.busy&&updateConsent.checked&&securityBridge.updater!=="";onClicked:securityBridge.updateDatabase(updateConsent.checked)}
     ActionButton {objectName:"cancelSignatureUpdate";text:app.trx("إلغاء التحديث","Cancel update");enabled:securityBridge.updating;onClicked:securityBridge.cancel()}
@@ -31,7 +31,7 @@ ScrollView {
   }
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:230;title:app.trx("بدء الفحص المصرح به","Start authorized scan")
    RowLayout {Layout.fillWidth:true;TextField {id:source;objectName:"securitySource";Layout.fillWidth:true;placeholderText:app.trx("ملف أو APK محلي — حتى 128 MiB","Local file or APK — up to 128 MiB")}ActionButton {text:app.trx("اختيار الملف","Choose file");enabled:!securityBridge.busy;onClicked:sourcePicker.open()}}
-   CheckBox {id:consent;objectName:"securityConsent";Layout.fillWidth:true;text:app.trx("أملك تفويضًا لفحص هذا الملف أو نسخة الهاتف","I am authorized to scan this file or phone copy")}
+   NeonCheckBox {id:consent;objectName:"securityConsent";Layout.fillWidth:true;text:app.trx("أملك تفويضًا لفحص هذا الملف أو نسخة الهاتف","I am authorized to scan this file or phone copy")}
    RowLayout {ActionButton {objectName:"startSecurityScan";text:app.trx("فحص الفيروسات","Scan for malware");primary:true;enabled:!securityBridge.busy&&consent.checked&&source.text!==""&&securityBridge.executable!=="";onClicked:securityBridge.scan(source.text,consent.checked)}ActionButton {objectName:"cancelSecurityScan";text:app.trx("إلغاء العملية","Cancel operation");enabled:securityBridge.busy;onClicked:securityBridge.cancel()}}
    ProgressBar {Layout.fillWidth:true;indeterminate:securityBridge.busy;visible:securityBridge.busy}
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;text:securityBridge.error;color:app.tone("#eab775")}
@@ -39,7 +39,7 @@ ScrollView {
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:360;title:app.trx("نتيجة الفحص وحدوده","Scan result and scope")
    Label {objectName:"securityVerdict";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:securityBridge.result.verdict||app.trx("لم يُجرَ فحص بعد","No scan performed yet");color:app.tone("#e0ecfa");font.bold:true}
    ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;text:JSON.stringify(securityBridge.result,null,2);wrapMode:TextEdit.Wrap;color:app.tone("#c6daeb");background:null}}
-   CheckBox {id:exportConsent;text:app.trx("أوافق على تصدير التقرير الذي يتضمن مسار الملف","Approve exporting this report including the file path")}
+   NeonCheckBox {id:exportConsent;text:app.trx("أوافق على تصدير التقرير الذي يتضمن مسار الملف","Approve exporting this report including the file path")}
    ActionButton {objectName:"exportSecurityReport";text:app.trx("تصدير التقرير JSON","Export JSON report");enabled:!securityBridge.busy&&!!securityBridge.result.verdict&&exportConsent.checked;onClicked:reportPicker.open()}
   }
  }

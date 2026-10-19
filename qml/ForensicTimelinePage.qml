@@ -22,7 +22,7 @@ Item {
     }
    }
   }
-  RowLayout {Layout.fillWidth:true;CheckBox {id:consent;objectName:"timelinePlaintext";text:app.trx("أوافق على تصدير غير مشفر","Authorize plaintext export")}ActionButton {objectName:"exportForensicTimeline";text:app.trx("تصدير الخط الزمني JSON","Export timeline JSON");enabled:recoveryBridge.active&&!recoveryBridge.busy&&consent.checked;onClicked:output.open()}Item {Layout.fillWidth:true}}
+  RowLayout {Layout.fillWidth:true;NeonCheckBox {id:consent;objectName:"timelinePlaintext";text:app.trx("أوافق على تصدير غير مشفر","Authorize plaintext export")}ActionButton {objectName:"exportForensicTimeline";text:app.trx("تصدير الخط الزمني JSON","Export timeline JSON");enabled:recoveryBridge.active&&!recoveryBridge.busy&&consent.checked;onClicked:output.open()}Item {Layout.fillWidth:true}}
  }
  FileDialog {id:output;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:app.notice(recoveryBridge.exportTimeline(selectedFile.toString(),consent.checked),app.trx("تم التصدير","Exported"),recoveryBridge.error)}
 }

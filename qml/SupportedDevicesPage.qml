@@ -16,7 +16,7 @@ ColumnLayout {
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("هذه قاعدة مراجع وليست قائمة هواتف اجتازت الاختبار. لا يُفعّل اسم الشركة أو الموديل أي أمر. القدرات تُقرأ من الاتصال الحالي، وأدوات OEM التجارية غير مدمجة.","This is a reference database, not a list of tested phones. Brand/model names cannot enable commands. Capabilities come from the current connection; commercial OEM tools are not integrated.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:(serviceCatalog.deviceCatalog.revision||"")+" · "+(serviceCatalog.deviceCatalog.chipsets||[]).join(" / ")}
  RowLayout {Layout.fillWidth:true
-  ComboBox {id:brand;objectName:"catalogBrand";Layout.preferredWidth:220;model:[app.trx("جميع الشركات","All brands")].concat(serviceCatalog.deviceCatalog.brands||[])}
+  NeonComboBox {id:brand;objectName:"catalogBrand";Layout.preferredWidth:220;model:[app.trx("جميع الشركات","All brands")].concat(serviceCatalog.deviceCatalog.brands||[])}
   TextField {id:search;objectName:"deviceCatalogSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث بالموديل أو المعالج","Search model or chipset")}
  }
  ListView {id:rows;objectName:"deviceCatalogList";Layout.fillWidth:true;Layout.fillHeight:true;spacing:8;clip:true
@@ -39,7 +39,7 @@ ColumnLayout {
    ActionButton {text:app.trx("اختيار JSON","Choose JSON");onClicked:inputFile.open()}
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;text:page.catalogFile;color:app.tone("#a8bfd4")}
    TextField {id:digest;Layout.fillWidth:true;placeholderText:"Reviewed SHA-256"}
-   CheckBox {id:reviewed;text:app.trx("راجعت مصدر الكتالوج وترخيصه وبصمته","I reviewed the catalog source, license and hash")}
+   NeonCheckBox {id:reviewed;text:app.trx("راجعت مصدر الكتالوج وترخيصه وبصمته","I reviewed the catalog source, license and hash")}
   }
  }
  FileDialog {id:inputFile;fileMode:FileDialog.OpenFile;nameFilters:["Reference catalog (*.json)"];onAccepted:page.catalogFile=selectedFile.toString()}

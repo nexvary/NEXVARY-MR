@@ -51,14 +51,14 @@ Item {
      text: app.trx("تقييم محلي لا يقرأ الهاتف ولا يعد باستعادة الملفات. لا يبدأ أي فحص دون إذن صاحب الجهاز.",
        "Local assessment only: no device access, no recovery promise, and no acquisition without owner authorization.")
     }
-    CheckBox {
+    NeonCheckBox {
      id: authorization
      objectName: "recoveryConsent"
      text: app.trx("لدي موافقة موثقة من مالك الجهاز","I have documented authorization from the owner")
      checked: page.consent
      onCheckedChanged: page.consent = checked
     }
-    CheckBox {
+    NeonCheckBox {
      id: resetChoice
      objectName: "recoveryReset"
      text: app.trx("تمت إعادة ضبط المصنع","Device was factory-reset")
@@ -66,7 +66,7 @@ Item {
      onCheckedChanged: page.reset = checked
     }
     Label { text: app.trx("مصدر البيانات","Data source"); color: app.tone("#e8f2ff") }
-    ComboBox {
+    NeonComboBox {
      id: source
      objectName: "recoverySource"
      Layout.fillWidth: true
@@ -80,7 +80,7 @@ Item {
      text: app.trx("هل البطاقة قابلة للقراءة؟","Is the card readable?")
      color: app.tone("#e8f2ff")
     }
-    ComboBox {
+    NeonComboBox {
      id: readable
      objectName: "recoveryReadable"
      visible: page.sourceIndex === 0

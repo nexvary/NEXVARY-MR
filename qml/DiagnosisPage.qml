@@ -29,15 +29,17 @@ Item {
     Label {text:app.trx("1  حدد العَرَض   ←   2  راجع الإرشادات والدليل   ←   3  احفظ ملاحظات الفني لأمر محدد","1  Select symptom   →   2  Review guidance and evidence   →   3  Save findings to a specific order");color:app.tone("#69b7ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
     RowLayout {
      Layout.fillWidth:true
-     ComboBox {id:symptom;objectName:"symptomChoice";Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.analyzedSymptom="";page.guidanceSnapshot=""}}
+     NeonComboBox {id:symptom;objectName:"symptomChoice";Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.analyzedSymptom="";page.guidanceSnapshot=""}}
      ActionButton {objectName:"diagnoseButton";text:app.trx("تحليل العَرَض","Analyze symptom");primary:true;onClicked:{page.analyzedSymptom=symptom.currentText;page.guidanceSnapshot=repairBridge.diagnoseLocalized(page.analyzedSymptom,app.ar)}}
     }
-    TextArea {id:result;objectName:"diagnosisResult";Layout.fillWidth:true;Layout.fillHeight:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;text:page.guidanceSnapshot||app.trx("اختر العَرَض ثم اضغط تحليل لتوليد إرشادات قابلة للحفظ.","Select a symptom, then Analyze to generate guidance for saving.");color:app.tone("#d0e0ef");font.pixelSize:16;background:Rectangle{color:app.tone("#0c2232");radius:6}}
+    ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;clip:true;contentWidth:availableWidth
+    TextArea {id:result;objectName:"diagnosisResult";Layout.fillWidth:true;Layout.fillHeight:true;width:parent.width;readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;text:page.guidanceSnapshot||app.trx("اختر العَرَض ثم اضغط تحليل لتوليد إرشادات قابلة للحفظ.","Select a symptom, then Analyze to generate guidance for saving.");color:app.tone("#d0e0ef");font.pixelSize:16;background:Rectangle{color:app.tone("#0c2232");radius:6}}
+    }
     Label {text:app.trx("إرشادات قائمة على قواعد وليست تشخيصًا مؤكدًا. الدليل والملاحظات بالأسفل تُدخل يدويًا؛ لا تُنسخ سجلات الهاتف تلقائيًا.","Rule-based guidance, not a confirmed diagnosis. Findings and reviewed evidence below are entered manually; phone logs are never copied automatically.");color:app.tone("#eab775");wrapMode:Text.WordWrap;Layout.fillWidth:true}
    }
    Panel {
     title:app.trx("توثيق نتائج التشخيص","Save diagnostic findings");Layout.fillWidth:true;Layout.preferredHeight:485
-    ComboBox {
+    NeonComboBox {
      id:orderChooser;objectName:"diagnosisOrder";Layout.fillWidth:true;textRole:"label";valueRole:"id"
      model:[]
      onCurrentValueChanged:page.savedEntries=workshopBridge.diagnoses(currentValue||-1)

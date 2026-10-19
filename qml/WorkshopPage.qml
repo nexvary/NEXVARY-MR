@@ -9,9 +9,10 @@ Item {
  property var selectedOrder: ({})
  property int existingCustomerId:-1
  property int existingDeviceId:-1
+ property string intakeError:""
  function intakeForCustomer(id){resetIntake();existingCustomerId=id;const c=workshopBridge.customerProfile(id);customer.text=c.name||"";phone.text=c.phone||"";newOrder.open()}
  function intakeForDevice(id){const d=workshopBridge.deviceProfile(id);intakeForCustomer(d.customer_id);existingDeviceId=id;brand.text=d.brand;model.text=d.model;serial.text=d.serial}
- function resetIntake(){existingCustomerId=-1;existingDeviceId=-1;customer.clear();phone.clear();brand.clear();model.clear();serial.clear();symptom.clear();tech.clear();notes.clear()}
+ function resetIntake(){intakeError="";existingCustomerId=-1;existingDeviceId=-1;customer.clear();phone.clear();brand.clear();model.clear();serial.clear();symptom.clear();tech.clear();notes.clear()}
 
  ColumnLayout {
   anchors.fill:parent;spacing:12
@@ -45,34 +46,48 @@ Item {
    title:app.trx("تخصيص قطع الغيار للأمر المحدد","Allocate parts to selected order");Layout.fillWidth:true;Layout.preferredHeight:126
    RowLayout {
     Label {text:page.selectedId>0?"#"+page.selectedId:app.trx("اختر أمرًا أولًا","Select an order");color:app.tone("#93adc4")}
-    ComboBox {id:part;Layout.fillWidth:true;model:workshopBridge.inventory;textRole:"name";valueRole:"id"}
+    NeonComboBox {id:part;Layout.fillWidth:true;model:workshopBridge.inventory;textRole:"name";valueRole:"id"}
     SpinBox {id:qty;from:1;to:10000;value:1;editable:true}
     ActionButton {text:app.trx("تخصيص القطعة وخصم المخزون","Allocate and deduct stock");enabled:page.selectedId>0&&part.count>0;onClicked:app.notice(workshopBridge.usePart(page.selectedId,part.currentValue,qty.value),app.trx("تم تخصيص القطعة","Part allocated"))}
    }
   }
  }
  Dialog {
-  id:newOrder;objectName:"newOrderDialog";title:app.trx("أمر صيانة جديد","New repair order");modal:true;anchors.centerIn:parent;width:Math.min(650,page.width-24);standardButtons:Dialog.Save|Dialog.Cancel
+  id:newOrder;background:Rectangle {color:app.tone("#0a0a0a");radius:10;border.color:"#39ff14";border.width:1};objectName:"newOrderDialog";title:app.trx("أمر صيانة جديد","New repair order");modal:true;anchors.centerIn:parent;width:Math.min(650,page.width-24)
   contentItem:ColumnLayout {
+   Label {objectName:"intakeError";visible:page.intakeError.length>0;text:page.intakeError;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ff7777")}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#69b7ff");text:page.existingDeviceId>0?app.trx("أمر جديد للهاتف المسجل #","New order for registered phone #")+page.existingDeviceId:page.existingCustomerId>0?app.trx("هاتف جديد للعميل #","New phone for customer #")+page.existingCustomerId:app.trx("عميل وهاتف جديدان. لإعادة استخدام بروفيل افتح تبويب البروفيلات.","New customer and phone. Reuse an existing profile from the Profiles tab.")}
-   TextField {id:customer;enabled:page.existingCustomerId<0;objectName:"customerField";placeholderText:app.trx("اسم العميل *","Customer name *");Layout.fillWidth:true;maximumLength:240}
-   RowLayout {TextField{id:phone;enabled:page.existingCustomerId<0;placeholderText:app.trx("الهاتف","Phone");Layout.fillWidth:true;maximumLength:80} TextField{id:tech;placeholderText:app.trx("الفني المسؤول","Technician");Layout.fillWidth:true;maximumLength:160}}
-   RowLayout {TextField{id:brand;enabled:page.existingDeviceId<0;objectName:"brandField";placeholderText:app.trx("الشركة *","Brand *");Layout.fillWidth:true;maximumLength:240} TextField{id:model;enabled:page.existingDeviceId<0;objectName:"modelField";placeholderText:app.trx("الموديل *","Model *");Layout.fillWidth:true;maximumLength:240}}
-   TextField {id:serial;enabled:page.existingDeviceId<0;placeholderText:app.trx("الرقم التسلسلي المصرح بقراءته","Authorized serial number");Layout.fillWidth:true;maximumLength:160}
-   TextField {id:symptom;objectName:"symptomField";placeholderText:app.trx("وصف العطل *","Symptom *");Layout.fillWidth:true;maximumLength:2000}
-   TextArea {id:notes;placeholderText:app.trx("الملاحظات وحالة الجهاز عند الاستلام","Notes and intake condition");Layout.fillWidth:true;Layout.preferredHeight:100;wrapMode:TextEdit.Wrap}
+   TextField {id:customer;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:customer.activeFocus?2:1;opacity:customer.enabled?1:0.5};enabled:page.existingCustomerId<0;objectName:"customerField";placeholderText:app.trx("اسم العميل *","Customer name *");Layout.fillWidth:true;maximumLength:240}
+   RowLayout {TextField{id:phone;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:phone.activeFocus?2:1;opacity:phone.enabled?1:0.5};enabled:page.existingCustomerId<0;placeholderText:app.trx("الهاتف","Phone");Layout.fillWidth:true;maximumLength:80} TextField{id:tech;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:tech.activeFocus?2:1;opacity:tech.enabled?1:0.5};placeholderText:app.trx("الفني المسؤول","Technician");Layout.fillWidth:true;maximumLength:160}}
+   RowLayout {TextField{id:brand;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:brand.activeFocus?2:1;opacity:brand.enabled?1:0.5};enabled:page.existingDeviceId<0;objectName:"brandField";placeholderText:app.trx("الشركة *","Brand *");Layout.fillWidth:true;maximumLength:240} TextField{id:model;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:model.activeFocus?2:1;opacity:model.enabled?1:0.5};enabled:page.existingDeviceId<0;objectName:"modelField";placeholderText:app.trx("الموديل *","Model *");Layout.fillWidth:true;maximumLength:240}}
+   TextField {id:serial;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:serial.activeFocus?2:1;opacity:serial.enabled?1:0.5};enabled:page.existingDeviceId<0;placeholderText:app.trx("الرقم التسلسلي المصرح بقراءته","Authorized serial number");Layout.fillWidth:true;maximumLength:160}
+   TextField {id:symptom;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:symptom.activeFocus?2:1;opacity:symptom.enabled?1:0.5};objectName:"symptomField";placeholderText:app.trx("وصف العطل *","Symptom *");Layout.fillWidth:true;maximumLength:2000}
+   TextArea {id:notes;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:notes.activeFocus?2:1;opacity:notes.enabled?1:0.5};placeholderText:app.trx("الملاحظات وحالة الجهاز عند الاستلام","Notes and intake condition");Layout.fillWidth:true;Layout.preferredHeight:100;wrapMode:TextEdit.Wrap}
    Label {text:app.trx("بيانات العملاء محفوظة محليًا. احتفظ بنسخة احتياطية آمنة.","Customer data is stored locally. Keep a secure backup.");color:app.tone("#93a9bb");wrapMode:Text.WordWrap;Layout.fillWidth:true}
   }
-  onAccepted:{const id=page.existingDeviceId>0?workshopBridge.createOrderForDevice(page.existingDeviceId,symptom.text,tech.text,notes.text):page.existingCustomerId>0?workshopBridge.createOrderForCustomer(page.existingCustomerId,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text):workshopBridge.createOrder(customer.text,phone.text,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text);app.notice(id>0,app.trx("تم إنشاء أمر الصيانة #","Created repair order #")+id);if(id<=0)newOrder.open()}
+  footer:ToolBar {
+   contentItem:RowLayout {
+    ActionButton {objectName:"saveIntakeButton";text:app.trx("حفظ","Save");primary:true;onClicked:newOrder.saveIntake()}
+    ActionButton {text:app.trx("إلغاء","Cancel");onClicked:newOrder.reject()}
+   }
+  }
+  function saveIntake(){
+   page.intakeError="";
+   if(!customer.text.trim()||!brand.text.trim()||!model.text.trim()||!symptom.text.trim()){
+    page.intakeError=app.trx("أكمل الحقول المطلوبة: اسم العميل، الشركة، الموديل ووصف العطل.","Complete the required fields: customer name, brand, model and symptom.");return;
+   }
+   if(notes.text.length>20000){page.intakeError=app.trx("الملاحظات تتجاوز الحد المسموح: 20000 حرف.","Notes exceed the 20000 character limit.");return;}
+const id=page.existingDeviceId>0?workshopBridge.createOrderForDevice(page.existingDeviceId,symptom.text,tech.text,notes.text):page.existingCustomerId>0?workshopBridge.createOrderForCustomer(page.existingCustomerId,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text):workshopBridge.createOrder(customer.text,phone.text,brand.text,model.text,serial.text,symptom.text,tech.text,notes.text);app.notice(id>0,app.trx("تم إنشاء أمر الصيانة #","Created repair order #")+id);if(id>0){page.selectedId=id;search.clear();newOrder.close()}else{page.intakeError=app.trx("تعذر حفظ الأمر: ","Could not save order: ")+workshopBridge.error}}
+
  }
  Dialog {
-  id:editDialog;modal:true;title:app.trx("تحديث أمر الصيانة","Update repair order");anchors.centerIn:parent;width:Math.min(560,page.width-24);standardButtons:Dialog.Save|Dialog.Cancel
+  id:editDialog;background:Rectangle {color:app.tone("#0a0a0a");radius:10;border.color:"#39ff14";border.width:1};modal:true;title:app.trx("تحديث أمر الصيانة","Update repair order");anchors.centerIn:parent;width:Math.min(560,page.width-24);standardButtons:Dialog.Save|Dialog.Cancel
   contentItem:ColumnLayout {
-   ComboBox {id:state;model:app.ar?app.statesAr:app.states;Layout.fillWidth:true}
-   TextField {id:editTech;placeholderText:app.trx("الفني","Technician");Layout.fillWidth:true}
+   NeonComboBox {id:state;model:app.ar?app.statesAr:app.states;Layout.fillWidth:true}
+   TextField {id:editTech;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:editTech.activeFocus?2:1;opacity:editTech.enabled?1:0.5};placeholderText:app.trx("الفني","Technician");Layout.fillWidth:true}
    Label {text:app.trx("أجرة العمل × 100 (مثال: 1250 = 12.50)","Labor in minor units (1250 = 12.50)");color:app.tone("#b3c8dc")}
    SpinBox {id:labor;from:0;to:100000000;editable:true;stepSize:100;Layout.fillWidth:true}
-   TextArea {id:editNotes;Layout.fillWidth:true;Layout.preferredHeight:140;wrapMode:TextEdit.Wrap}
+   TextArea {id:editNotes;background:Rectangle {implicitWidth:180;implicitHeight:40;radius:6;color:app.tone("#0a0a0a");border.color:"#39ff14";border.width:editNotes.activeFocus?2:1;opacity:editNotes.enabled?1:0.5};Layout.fillWidth:true;Layout.preferredHeight:140;wrapMode:TextEdit.Wrap}
   }
   onAccepted:app.notice(workshopBridge.updateOrder(page.selectedId,app.states[state.currentIndex],editTech.text,labor.value,editNotes.text),app.trx("تم تحديث الأمر","Order updated"))
  }

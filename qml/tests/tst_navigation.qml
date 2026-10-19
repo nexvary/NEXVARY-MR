@@ -176,8 +176,9 @@ TestCase {
  }
  function test_createOrder(){
   app.currentPage=5;let before=workshopBridge.orders.length;mouseClick(findChild(app,"newOrder"));let dialog=findChild(app,"newOrderDialog");tryCompare(dialog,"opened",true);
+  mouseClick(findChild(app,"saveIntakeButton"));compare(workshopBridge.orders.length,before);compare(dialog.opened,true);verify(findChild(app,"intakeError").visible);
   findChild(app,"customerField").text="UI test customer";findChild(app,"brandField").text="TestBrand";findChild(app,"modelField").text="Model-01";findChild(app,"symptomField").text="USB not detected";
-  mouseClick(dialog.standardButton(Dialog.Save));compare(workshopBridge.orders.length,before+1);tryCompare(dialog,"visible",false);
+  mouseClick(findChild(app,"saveIntakeButton"));compare(workshopBridge.orders.length,before+1);tryCompare(dialog,"visible",false);
  }
  function test_diagnosis(){app.currentPage=2;let b=findChild(app,"diagnoseButton");mouseClick(b);let r=findChild(app,"diagnosisResult");verify(r.text.length>40);verify(r.readOnly)}
  function test_savedDiagnosis(){
