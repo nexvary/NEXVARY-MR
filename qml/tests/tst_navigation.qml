@@ -196,19 +196,27 @@ TestCase {
   app.currentPage=8;
   let result=findChild(app,"recoveryVerdict");
   verify(result!==null);
-  compare(result.text,"not_supported");
+  compare(result.code,"not_supported");
+  let reason=findChild(app,"recoveryReason");
+  verify(reason.text.indexOf(app.ar?"موافقة المالك":"owner authorization")>=0);
+  verify(result.text!==result.code);
   let consent=findChild(app,"recoveryConsent");
   verify(consent!==null);
   consent.checked=true;
-  tryCompare(result,"text","need_more_information");
+  tryCompare(result,"code","need_more_information");
   let source=findChild(app,"recoverySource");
   source.currentIndex=3;
   app.currentPage=0;
   app.currentPage=8;
   let reset=findChild(app,"recoveryReset");
   reset.checked=true;
-  compare(result.text,"not_supported");
+  compare(result.code,"not_supported");
+  verify(reason.text.indexOf(app.ar?"التخزين الداخلي":"Internal storage")>=0);
   reset.checked=false;
+  source.currentIndex=0;findChild(app,"recoveryReadable").currentIndex=2;
+  compare(result.code,"not_supported");
+  verify(reason.text.indexOf(app.ar?"البطاقة غير قابلة":"card was marked unreadable")>=0);
+  findChild(app,"recoveryReadable").currentIndex=0;
   consent.checked=false;
  }
  function test_recoveryWizard(){

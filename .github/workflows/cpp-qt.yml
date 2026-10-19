@@ -121,6 +121,14 @@ jobs:
           $testResult = $LASTEXITCODE
           Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
+      - name: Verify read-only Windows USB inventory
+        shell: pwsh
+        run: |
+          $raw = & "$env:SystemRoot/System32/WindowsPowerShell/v1.0/powershell.exe" -NoLogo -NoProfile -NonInteractive -File packaging/inspect-usb.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'USB inventory collector failed' }
+          $inventory = $raw | ConvertFrom-Json
+          if ($inventory.schemaVersion -ne 1 -or $null -eq $inventory.devices) { throw 'Invalid USB inventory schema' }
+          "USB inventory schema validated; device count: $($inventory.devices.Count). No phone binding asserted."
       - name: Assemble portable Qt runtime
         id: portable
         if: ${{ !cancelled() && steps.native_build.outcome == 'success' }}

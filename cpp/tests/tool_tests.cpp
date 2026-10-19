@@ -1,4 +1,6 @@
 #include "ToolBridge.hpp"
+#include "UsbDriver.hpp"
+#include <QJsonArray>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -44,6 +46,28 @@ static int fakeAdb(const QStringList &args) {
 class ToolTests : public QObject {
   Q_OBJECT
 private slots:
+  void usbSerialAndParentCorrelation() {
+    const QJsonArray nodes{
+      QJsonObject{{"instanceId","USB\\VID_1234&PID_5678\\DEVICE42"},{"name","Phone"}},
+      QJsonObject{{"instanceId","USB\\VID_1234&PID_5678&MI_01\\6&ABC&0&0001"},{"parentId","USB\\VID_1234&PID_5678\\DEVICE42"},{"service","WinUSB"},{"infName","oem42.inf"},{"signed",true}},
+      QJsonObject{{"instanceId","USB\\VID_1111&PID_2222\\OTHER"},{"name","Other phone"}}};
+    const auto bytes=QJsonDocument(QJsonObject{{"schemaVersion",1},{"devices",nodes},{"signatureInventoryAvailable",true}}).toJson();
+    const auto result=mr::usb::correlate(bytes,"device42");
+    QCOMPARE(result.value("state").toString(),QString("serial-correlated"));
+    QCOMPARE(result.value("nodes").toList().size(),2);
+    QVERIFY(!result.value("interfaceBindingVerified").toBool());
+    QCOMPARE(mr::usb::correlate(bytes,"DEVICE4").value("state").toString(),QString("no-match"));
+    QCOMPARE(mr::usb::correlate(bytes,"192.168.1.2:5555").value("state").toString(),QString("unsupported-serial"));
+  }
+  void usbAmbiguityAndMalformedInventory() {
+    QJsonArray nodes{QJsonObject{{"instanceId","USB\\VID_1234&PID_5678\\SAME"}},QJsonObject{{"instanceId","USB\\VID_0001&PID_0002\\SAME"}}};
+    auto encode=[&]{return QJsonDocument(QJsonObject{{"schemaVersion",1},{"devices",nodes}}).toJson();};
+    QCOMPARE(mr::usb::correlate(encode(),"SAME").value("state").toString(),QString("ambiguous"));
+    nodes.append(nodes.first());
+    QCOMPARE(mr::usb::correlate(encode(),"SAME").value("state").toString(),QString("unavailable"));
+    QCOMPARE(mr::usb::correlate("not JSON","SAME").value("state").toString(),QString("unavailable"));
+    QCOMPARE(mr::usb::correlate(QByteArray(513*1024,'x'),"SAME").value("state").toString(),QString("unavailable"));
+  }
   void initTestCase() {
     QVERIFY(directory_.isValid());
     oldPath_ = qgetenv("PATH");

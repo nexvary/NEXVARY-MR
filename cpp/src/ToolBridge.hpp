@@ -24,6 +24,7 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(QVariantMap deviceInfo READ deviceInfo NOTIFY deviceInfoChanged)
   Q_PROPERTY(QString logcat READ logcat NOTIFY logcatChanged)
   Q_PROPERTY(QString driverInfo READ driverInfo NOTIFY driverInfoChanged)
+  Q_PROPERTY(QVariantMap driverBinding READ driverBinding NOTIFY driverInfoChanged)
   Q_PROPERTY(bool autoRefresh READ autoRefresh WRITE setAutoRefresh NOTIFY autoRefreshChanged)
   Q_PROPERTY(QVariantList serviceActions READ serviceActions NOTIFY serviceChanged)
   Q_PROPERTY(QVariantMap serviceProfile READ serviceProfile NOTIFY serviceChanged)
@@ -43,6 +44,7 @@ public:
   QVariantMap deviceInfo() const { return deviceInfo_; }
   QString logcat() const { return logcat_; }
   QString driverInfo() const { return driverInfo_; }
+  QVariantMap driverBinding() const { return driverBinding_; }
   bool autoRefresh() const { return pollTimer_.isActive(); }
   Q_INVOKABLE void refreshTools();
   Q_INVOKABLE bool configureTool(const QString &name, const QString &localPath);
@@ -55,6 +57,7 @@ public:
   Q_INVOKABLE void readDeviceInfo();
   Q_INVOKABLE void readLogcat();
   Q_INVOKABLE void inspectDrivers();
+  Q_INVOKABLE void inspectSelectedDriver();
   Q_INVOKABLE void cancel();
   Q_INVOKABLE void setAutoRefresh(bool enabled);
   static bool isValidSerial(const QString &serial);
@@ -83,7 +86,7 @@ signals:
   void operationFinished(bool success);
   void diagnosticCompleted(const QString &operation, bool success);
 private:
-  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service };
+  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service, DriverBinding };
   bool runReadOnly(const QString &program, const QStringList &arguments, Operation operation);
   bool selectedAdbReady();
   QString resolveExecutable(const QString &name) const;
@@ -109,6 +112,7 @@ private:
   QVariantMap deviceInfo_;
   QString logcat_;
   QString driverInfo_;
+  QVariantMap driverBinding_;
   struct ServiceStep { QStringList arguments; QString key; bool optional=false; };
   QVariantMap selectedServiceDevice() const;
   bool serviceAvailable(const QString &action, QString *reason=nullptr) const;
