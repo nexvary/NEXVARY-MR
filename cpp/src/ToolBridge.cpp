@@ -1,4 +1,6 @@
 #include "ToolBridge.hpp"
+#include "UsbDriver.hpp"
+#include <QDateTime>
 
 #include <QDir>
 #include <QFile>
@@ -17,6 +19,10 @@ const QString adbTransport = QStringLiteral("adb");
 const QString fastbootTransport = QStringLiteral("fastboot");
 QString pathExecutable(const QString &name) {
 #ifdef Q_OS_WIN
+  if (name == QStringLiteral("powershell")) {
+    const auto root=qEnvironmentVariable("SystemRoot");
+    return root.isEmpty()?QString():QDir(root).filePath(QStringLiteral("System32/WindowsPowerShell/v1.0/powershell.exe"));
+  }
   if (name == QStringLiteral("pnputil")) {
     const QString root = qEnvironmentVariable("SystemRoot");
     if (!root.isEmpty()) return QDir(root).filePath(QStringLiteral("System32/pnputil.exe"));
@@ -56,6 +62,7 @@ QString validatedExecutable(const QString &input) {
 }
 
 ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
+  static const bool resources=[] { Q_INIT_RESOURCE(device_catalog);return true; }();Q_UNUSED(resources);
   timeoutTimer_.setSingleShot(true);
   timeoutTimer_.setTimerType(Qt::PreciseTimer);
   timeoutTimer_.setInterval(12000);
@@ -249,6 +256,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
+  if (operation == Operation::DriverBinding) { driverBinding_.clear(); emit driverInfoChanged(); }
   const QString path = resolveExecutable(program);
   if (path.isEmpty()) {
     if (operation == Operation::AdbScan) replaceDevices({}, adbTransport);
@@ -265,7 +273,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   setStatus(operation==Operation::Service?QStringLiteral("جار تنفيذ خدمة الجهاز المحددة؛ راقب الهاتف…"):QStringLiteral("جار تنفيذ فحص قراءة فقط…"));
   process_.setProgram(path);
   process_.setArguments(arguments);
-  timeoutTimer_.start();
+  timeoutTimer_.start(operation==Operation::DriverBinding?30000:12000);
   process_.start();
   return true;
 }
@@ -308,6 +316,13 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
       if (commandSerial_ == selectedSerial_) { logcat_ = output; emit logcatChanged(); }
       break;
     case Operation::Drivers: driverInfo_ = output; emit driverInfoChanged(); break;
+    case Operation::DriverBinding:
+      if(commandSerial_==selectedSerial_) {
+        driverBinding_=mr::usb::correlate(output_,commandSerial_);
+        driverBinding_.insert("observedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+        emit driverInfoChanged();
+      }
+      break;
     case Operation::None: break;
     case Operation::Service: break;
     }
@@ -320,13 +335,14 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
     setStatus(!terminalReason_.isEmpty() ? terminalReason_ : QStringLiteral("فشل الفحص (رمز ") + QString::number(exitCode) + QStringLiteral("): ") + QString::fromUtf8(errors_).trimmed().left(2048));
   }
   const QStringList operationNames{QStringLiteral("none"),QStringLiteral("adb-scan"),QStringLiteral("fastboot-scan"),QStringLiteral("properties"),QStringLiteral("logcat"),QStringLiteral("drivers")};
-  emit diagnosticCompleted(operationNames.value(static_cast<int>(operation_)), success);
+  emit diagnosticCompleted(operation_==Operation::DriverBinding?QStringLiteral("usb-correlation"):operationNames.value(static_cast<int>(operation_)), success);
   active_ = false;
   operation_ = Operation::None;
   emit busyChanged();
   emit operationFinished(success);
 }
 void ToolBridge::replaceDevices(const QVariantList &found, const QString &transport) {
+  driverBinding_.clear();emit driverInfoChanged();
   if (!serviceRunning_) serviceInvalidate();
   QVariantList combined;
   for (const auto &entry : devices_) if (entry.toMap().value(QStringLiteral("transport")).toString() != transport) combined.append(entry);
@@ -353,6 +369,7 @@ void ToolBridge::selectDevice(const QString &serial) {
     if (!found) { setStatus(QStringLiteral("اختر جهازًا من نتائج الفحص الحالية")); return; }
   }
   selectedSerial_ = serial;
+  driverBinding_.clear();emit driverInfoChanged();
   if (serviceRunning_) cancel();
   serviceInvalidate();
   deviceInfo_.clear(); logcat_.clear();
@@ -380,6 +397,20 @@ void ToolBridge::inspectDrivers() {
 #else
   driverInfo_ = QStringLiteral("فحص تعريفات Windows متاح على Windows فقط. يُستخدم PnPUtil للقراءة دون تثبيت أو تعديل أي تعريف.");
   emit driverInfoChanged(); setStatus(driverInfo_);
+#endif
+}
+void ToolBridge::inspectSelectedDriver() {
+  if(busy())return;
+  driverBinding_.clear();emit driverInfoChanged();
+  int matches=0;for(const auto &entry:devices_)if(entry.toMap().value("serial").toString()==selectedSerial_)++matches;
+  if(selectedSerial_.isEmpty()||matches!=1){setStatus(QStringLiteral("اختر جهازًا واحدًا غير ملتبس قبل مطابقة USB / Select one unambiguous device first."));return;}
+#ifdef Q_OS_WIN
+  QFile script(QStringLiteral(":/packaging/inspect-usb.ps1"));
+  if(!script.open(QIODevice::ReadOnly)){setStatus(QStringLiteral("USB inventory resource unavailable."));return;}
+  runReadOnly(QStringLiteral("powershell"),{QStringLiteral("-NoLogo"),QStringLiteral("-NoProfile"),QStringLiteral("-NonInteractive"),QStringLiteral("-Command"),QString::fromUtf8(script.readAll())},Operation::DriverBinding);
+#else
+  driverBinding_={{"state","windows-only"}};emit driverInfoChanged();
+  setStatus(QStringLiteral("مطابقة تعريف USB متاحة على Windows فقط / USB driver correlation requires Windows."));
 #endif
 }
 void ToolBridge::cancel() {
