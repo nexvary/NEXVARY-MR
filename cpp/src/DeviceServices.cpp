@@ -1,5 +1,6 @@
 #include "ToolBridge.hpp"
 #include "DeviceProtocol.hpp"
+#include "DeviceHealth.hpp"
 #include <QtConcurrent/QtConcurrentRun>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -240,6 +241,7 @@ void ToolBridge::serviceDispatch() {
   if(serviceTool_=="fastboot"&&serviceScratch_.value("product").toString().isEmpty()){serviceComplete(false,"Fastboot did not report a product identity.");return;}
   serviceProfile_=serviceScratch_;serviceProfile_.insert("serial",serviceTarget_);serviceProfile_.insert("transport",serviceTool_);serviceProfile_.insert("verifiedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
   if(serviceTool_=="adb"){deviceInfo_=serviceScratch_;deviceInfo_.insert("serial",serviceTarget_);emit deviceInfoChanged();}
+  serviceProfile_.insert("diagnostics",mr::service::deviceHealth(serviceProfile_));
   serviceExpiry_.start();serviceComplete(true,"Capabilities read. Reported support is not physical-device/model acceptance; snapshot expires in 60 seconds.");return;
  }
  const auto *protocol=mr::service::adapter(serviceTool_);
