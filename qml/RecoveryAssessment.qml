@@ -11,6 +11,7 @@ Item {
  property int readabilityIndex: 0
  readonly property var sourceKeys: ["external_card", "accessible_backup", "cloud_export", "internal_storage"]
  readonly property bool blocked: !consent || (sourceIndex === 3 && reset) || (sourceIndex === 0 && readabilityIndex === 2)
+ readonly property string blockReason: !consent ? "consent-required" : sourceIndex===3&&reset ? "reset-internal" : sourceIndex===0&&readabilityIndex===2 ? "unreadable-card" : ""
  readonly property string verdict: !consent ? "not_supported" :
    sourceIndex === 3 && reset ? "not_supported" :
    sourceIndex === 0 && readabilityIndex === 0 ? "need_more_information" :
@@ -95,14 +96,19 @@ Item {
     Layout.fillWidth: true
     Label {
      objectName: "recoveryVerdict"
-     text: page.verdict
+     readonly property string code:page.verdict
+     text: {
+      const labels={not_supported:["المتابعة متوقفة — راجع السبب","Cannot proceed — review reason"],need_more_information:["نحتاج معلومات إضافية","More information needed"],acquire_copy:["ابدأ بنسخة للقراءة فقط","Start with a read-only copy"],verify_backup:["تحقق من النسخة الاحتياطية","Verify the backup"],request_export:["اطلب تصديرًا رسميًا","Request an official export"]}
+      return app.ar?labels[page.verdict][0]:labels[page.verdict][1]
+     }
      font.bold: true
      color: page.blocked ? app.tone("#f4b56f") : app.tone("#58d7ae")
     }
     Label {
+     objectName:"recoveryReason"
      Layout.fillWidth: true
      wrapMode: Text.WordWrap
-     text: app.ar ? page.instructionsAr[page.verdict] : page.instructionsEn[page.verdict]
+     text: page.blockReason==="consent-required" ? app.trx("فعّل مربع موافقة المالك بعد توثيق تفويضه. عدم تفعيله لا يعني أن موديل الهاتف غير مدعوم.","Check owner authorization after documenting consent. An unchecked box does not mean the phone model is unsupported.") : page.blockReason==="reset-internal" ? app.trx("تم اختيار التخزين الداخلي بعد ضبط المصنع. لا توجد هنا طريقة مثبتة لاستعادة البيانات التي فقدت مفاتيح تشفيرها؛ تحقق من نسخة احتياطية أو تصدير سحابي متاح.","Internal storage after factory reset was selected. Recovery of data whose encryption keys were lost is not demonstrated here; check accessible backups or cloud exports.") : page.blockReason==="unreadable-card" ? app.trx("البطاقة غير قابلة للقراءة حسب اختيارك. يلزم تقييمها وتأمين صورة قابلة للقراءة قبل التحليل المحلي؛ لا تهيئ البطاقة.","The card was marked unreadable. It needs assessment and a readable image before local analysis; do not format it.") : app.ar ? page.instructionsAr[page.verdict] : page.instructionsEn[page.verdict]
      color: app.tone("#e4efff")
     }
     Label {

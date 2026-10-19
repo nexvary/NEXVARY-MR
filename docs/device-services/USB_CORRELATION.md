@@ -26,3 +26,5 @@ No third-party code or driver binaries were copied. Windows-provided PowerShell/
 Synthetic C++ tests cover exact matching, case normalization, composite parent ancestry, unrelated phones, substring rejection, network serial exclusion, duplicate/ambiguous instances, malformed JSON and oversized output. Windows CI executes the actual collector and validates its schema without claiming a phone match. Existing Qt navigation/packaging tests continue. Local Python tests: 4 passed. Local CMake/Qt unavailable; native results belong to the PR Actions run.
 
 Physical phone-to-driver acceptance: **Pending Hardware Validation**. Current firmware/backup/driver-install support is unchanged.
+
+The same delivery fixes recovery assessment messaging: missing consent, internal storage after reset, and unreadable card have separate bilingual explanations. UI tests check each reason and the localized status label; the underlying assessment gates remain unchanged.
