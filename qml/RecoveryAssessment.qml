@@ -92,6 +92,7 @@ Item {
     }
    }
    Panel {
+    accent: "blue"
     title: app.trx("نتيجة التقييم الأولي","Preliminary assessment")
     Layout.fillWidth: true
     Label {

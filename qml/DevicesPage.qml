@@ -21,7 +21,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true; Layout.fillHeight:true;spacing:12
    Panel {
-    title:app.trx("الأجهزة المكتشفة","Discovered devices");Layout.preferredWidth:290;Layout.fillHeight:true
+    accent:"blue";title:app.trx("الأجهزة المكتشفة","Discovered devices");Layout.preferredWidth:290;Layout.fillHeight:true
     Label {visible:toolBridge.devices.length===0;text:app.trx("لم يتم اكتشاف جهاز. صِل هاتفًا بكابل بيانات، ثم اسمح بتصحيح USB من الهاتف.","No device discovered. Connect a data cable, then authorize USB debugging on the phone.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#91a6bc")}
     ListView {
      Layout.fillWidth:true;Layout.fillHeight:true;model:toolBridge.devices;spacing:8;clip:true
