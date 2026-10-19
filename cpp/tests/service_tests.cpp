@@ -1,5 +1,6 @@
 #include "ToolBridge.hpp"
 #include "DeviceProtocol.hpp"
+#include "DeviceHealth.hpp"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QFile>
@@ -86,6 +87,40 @@ class ServiceTests: public QObject {
  QString package(const QString &name="fixture.apk")const{const auto path=dir_.filePath(name);QFile f(path);if(!f.open(QIODevice::WriteOnly))return {};f.write(QByteArray("PK\003\004SYNTHETIC PACKAGE FIXTURE",29));f.close();return path;}
  QString hash(const QString &path)const{QFile f(path);if(!f.open(QIODevice::ReadOnly))return {};return QString::fromLatin1(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Sha256).toHex());}
 private slots:
+ void structuredDiagnostics(){
+  const QVariantMap profile{{"transport","adb"},{"observation:battery","level: 42\nscale: 50\ntemperature: 315\nstatus: 2\nhealth: 2\n"},{"observation:storage","Filesystem 1K-blocks Used Available Use% Mounted on\n/dev/block/dm-1 1000 700 250 74% /data\n"},{"observation:partitions","major minor  #blocks  name\n   8  0  1048576 sda\n   8  1  512 sda1\n"}};
+  const auto report=mr::service::deviceHealth(profile);
+  QCOMPARE(report.value("battery").toMap().value("chargePercent").toDouble(),84.0);
+  QCOMPARE(report.value("battery").toMap().value("temperatureC").toDouble(),31.5);
+  QCOMPARE(report.value("storage").toMap().value("availableKiB").toLongLong(),250);
+  QCOMPARE(report.value("partitions").toMap().value("entries").toList().size(),2);
+  QCOMPARE(report.value("assessment").toString(),QString("observations-only"));
+ }
+ void incompleteDiagnosticsDoNotClaimHealth(){
+  QVariantMap p{{"transport","adb"},{"observation:battery","level: 85\n"},{"observation:storage","Permission denied"}};
+  auto r=mr::service::deviceHealth(p);
+  QCOMPARE(r.value("battery").toMap().value("state").toString(),QString("unavailable"));
+  QVERIFY(!r.value("battery").toMap().contains("chargePercent"));
+  p.insert("observation:battery","level: 50\nlevel: 99\nscale: 100\ntemperature: 999999999999999\n");
+  p.insert("observation:storage","/dev/a 100 110 10 90% /data\n");
+  r=mr::service::deviceHealth(p);
+  QCOMPARE(r.value("battery").toMap().value("state").toString(),QString("unavailable"));
+  QCOMPARE(r.value("storage").toMap().value("state").toString(),QString("unavailable"));
+  p.insert("observation:storage","/dev/a 100 20 80 20% /data\n/dev/b 100 20 80 20% /data\n");
+  QCOMPARE(mr::service::deviceHealth(p).value("storage").toMap().value("state").toString(),QString("unavailable"));
+  p.insert("transport","fastboot");p.insert("observation:battery","level: 50\nscale: 100\n");
+  QCOMPARE(mr::service::deviceHealth(p).value("battery").toMap().value("state").toString(),QString("unavailable"));
+ }
+ void diagnosticsIncludedInProbeAndExport(){
+  ToolBridge b;QVERIFY(probe(b));
+  const auto d=b.serviceProfile().value("diagnostics").toMap();
+  QCOMPARE(d.value("storage").toMap().value("availableKiB").toLongLong(),80);
+  QCOMPARE(d.value("partitions").toMap().value("state").toString(),QString("unavailable"));
+  const auto path=dir_.filePath("diagnostics-report.json");QVERIFY(b.exportServiceReport(path,true));
+  QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));
+  const auto exported=QJsonDocument::fromJson(f.readAll()).object().value("profile").toObject().value("diagnostics").toObject();
+  QCOMPARE(exported.value("storage").toObject().value("availableKiB").toInt(),80);
+ }
  void adapterCommandAllowlist(){
   for(const auto &id:QStringList{"adb","fastboot"}){const auto *a=mr::service::adapter(id);QVERIFY(a);QCOMPARE(a->id(),id);QCOMPARE(a->addressed("TEST42",{"version"}),QStringList({"-s","TEST42","version"}));for(const auto &blocked:QStringList{"frp","lockscreen","shell","bootloader_unlock","edl"})QVERIFY(a->command(blocked,"file",true).isEmpty());}
   QVERIFY(!mr::service::adapter("edl"));

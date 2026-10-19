@@ -9,6 +9,10 @@ Item {
  property var selectedAction:({})
  property string reviewedTarget:""
  property var reviewedRecord:({})
+ readonly property var diagnostics:toolBridge.serviceProfile.diagnostics||({})
+ readonly property var battery:diagnostics.battery||({})
+ readonly property var storage:diagnostics.storage||({})
+ readonly property var partitions:diagnostics.partitions||({})
  function reviewRecord(record){reviewedRecord=record;historyDetail.open()}
  readonly property var brands:serviceCatalog.deviceCatalog.brands||[]
  readonly property var driverSource:serviceCatalog.drivers.find(function(r){return r.brand.toLowerCase()===brand.currentText.split(" / ")[0].toLowerCase()})
@@ -57,6 +61,14 @@ Item {
    }
    ScrollView {id:detailsScroll;objectName:"deviceServiceDetailsScroll";implicitWidth:0;implicitHeight:0;Layout.minimumWidth:0;Layout.minimumHeight:0;Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
     ColumnLayout {width:detailsScroll.availableWidth;spacing:10
+    Panel {objectName:"deviceHealthPanel";title:app.trx("قراءات تشخيص الجهاز","Device diagnostic observations");Layout.fillWidth:true;visible:!!page.diagnostics.schemaVersion
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("قراءات لحظية وليست شهادة سلامة للبطارية أو الذاكرة. البيانات غير المتاحة لا تعني أن الجهاز سليم.","Point-in-time observations, not battery or storage health certification. Missing data does not mean the device is healthy.")}
+     Label {objectName:"deviceBatterySummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#39ff14";text:app.trx("شحن البطارية: ","Battery charge: ")+(page.battery.chargePercent!==undefined?Number(page.battery.chargePercent).toFixed(1)+"%":app.trx("غير متاح","Unavailable"))+" · "+app.trx("الحرارة: ","Temperature: ")+(page.battery.temperatureC!==undefined?Number(page.battery.temperatureC).toFixed(1)+" °C":app.trx("غير متاحة","Unavailable"))}
+     Label {Layout.fillWidth:true;visible:!!page.battery.updatesStopped;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("أبلغ Android عن إيقاف تحديثات البطارية؛ قد تكون القيم محاكاة وليست قراءة حالية.","Android reports stopped battery updates; values may be simulated rather than current readings.")}
+     Label {objectName:"deviceStorageSummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#39ff14";text:app.trx("مساحة /data المتاحة: ","Available /data storage: ")+(page.storage.state==="observed"?(Number(page.storage.availableKiB)/1048576).toFixed(2)+" GiB / "+(Number(page.storage.totalKiB)/1048576).toFixed(2)+" GiB":app.trx("غير متاحة في وضع الاتصال والصلاحيات الحالية","Unavailable in the current mode or permissions"))}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("أجهزة التخزين الظاهرة للنظام: ","Kernel-visible block devices: ")+(page.partitions.entries?page.partitions.entries.length:app.trx("غير متاحة","Unavailable"))+" · "+app.trx("ليست خريطة أقسام معتمدة للتفليش","Not a validated firmware partition map")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("وقت القراءة UTC: ","Observed UTC: ")+(page.diagnostics.observedAtUtc||"");textFormat:Text.PlainText}
+    }
     Panel {objectName:"deviceServiceResultPanel";title:app.trx("نتيجة العملية — بيانات محلية","Operation result — local data");Layout.fillWidth:true;Layout.minimumHeight:200;Layout.preferredHeight:Math.max(200,detailsScroll.availableHeight-references.implicitHeight-history.implicitHeight-20)
      ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
     }
