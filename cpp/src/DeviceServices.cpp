@@ -1,5 +1,9 @@
 #include "ToolBridge.hpp"
 #include "DeviceProtocol.hpp"
+#include "ServiceOperationPolicy.hpp"
+#include "DeviceHealth.hpp"
+#include "PackagePreflight.hpp"
+#include "ServiceReport.hpp"
 #include <QtConcurrent/QtConcurrentRun>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -90,6 +94,7 @@ QVariantMap preparePackage(const QString &input,const QString &destination,bool 
  const QFileInfo before(path);const qint64 limit=zip?2LL*1024*1024*1024:512LL*1024*1024;
  if(!before.isFile()||before.isSymLink()||before.size()<4||before.size()>limit||before.suffix().compare(zip?"zip":"apk",Qt::CaseInsensitive)!=0)return fail("Invalid package type, symlink or size (APK <=512 MiB; ZIP <=2 GiB).");
  QFile source(path),copy(destination);if(!source.open(QIODevice::ReadOnly)||source.read(4)!=QByteArray("PK\003\004",4)||!source.seek(0)||!copy.open(QIODevice::WriteOnly|QIODevice::NewOnly))return fail("Package is unreadable or lacks a ZIP/APK header; no device command was sent.");
+ if(!mr::service::validPackageStructure(source,!zip))return fail("Malformed, truncated or unsupported ZIP/APK directory; no device command was sent. Structural checks do not verify signatures or firmware compatibility.");
  QElapsedTimer deadline;deadline.start();
  auto digest=[&](QFile &file,bool write){QCryptographicHash hash(QCryptographicHash::Sha256);qint64 read=0;while(!file.atEnd()){
   if(cancel->load()||deadline.elapsed()>120000)return QByteArray();
@@ -133,6 +138,7 @@ bool ToolBridge::serviceAvailable(const QString &id,QString *reason) const {
  auto no=[reason](const QString &s){if(reason)*reason=s;return false;};
  const auto *action=definition(id);if(!action)return no("Unknown service.");
  if(*action->blocked)return no(QString::fromUtf8(action->blocked));
+ if(!mr::service::operationAllowed(id.toStdString()))return no("Production is read-only. This operation requires the separate experimental Laboratory build.");
  if(busy())return no("Wait for the current operation or cancel it.");
  const auto device=selectedServiceDevice();const auto transport=device.value("transport").toString(),state=device.value("state").toString();
  if(device.isEmpty()||!isValidSerial(selectedSerial_))return no("Select one unambiguous device from current discovery results.");
@@ -162,9 +168,14 @@ QVariantList ToolBridge::requestedModels() {
  QVariantList result;for(const auto &name:oppo)result.append(QVariantMap{{"brand","Oppo"},{"model",name},{"validated",false}});for(const auto &name:vivo)result.append(QVariantMap{{"brand","Vivo"},{"model",name},{"validated",false}});return result;
 }
 bool ToolBridge::startService(const QString &action,const QString &expectedSerial,const QVariantMap &approval) {
+ if(!mr::service::operationAllowed(action.toStdString())){setStatus("Operation denied by compiled build policy; no device command was started.");return false;}
  QString reason;if(expectedSerial!=selectedSerial_||!serviceAvailable(action,&reason)){setStatus(reason.isEmpty()?QStringLiteral("Device selection changed; review the target again."):reason);return false;}
  const QSet<QString> allowed{"authorized","destructive","challenge","file","sha256","compatible","replace"};
  for(auto it=approval.cbegin();it!=approval.cend();++it)if(!allowed.contains(it.key())){setStatus("Unexpected service options.");return false;}
+ for(const auto &key:{"authorized","destructive","compatible","replace"})
+  if(approval.contains(key)&&approval.value(key).metaType().id()!=QMetaType::Bool){setStatus("Approval flags must be explicit booleans.");return false;}
+ for(const auto &key:{"challenge","file","sha256"})
+  if(approval.contains(key)&&approval.value(key).metaType().id()!=QMetaType::QString){setStatus("Approval target and package fields must be strings.");return false;}
  if(!approval.value("authorized").toBool()){setStatus("Explicit owner authorization is required.");return false;}
  const auto *def=definition(action);const bool destructive=QLatin1String(def->risk)=="destructive";
  if(action!="probe"&&(approval.value("challenge").toString()!=expectedSerial||(destructive&&!approval.value("destructive").toBool()))){setStatus("Review the exact device serial and explicitly confirm possible data loss.");return false;}
@@ -182,6 +193,7 @@ bool ToolBridge::startService(const QString &action,const QString &expectedSeria
 }
 void ToolBridge::serviceNext() {
  if(!serviceRunning_)return;
+ if(!mr::service::operationAllowed(serviceAction_.toStdString())){serviceComplete(false,"Operation denied by compiled build policy.");return;}
  if(serviceCancel_->load()||selectedSerial_!=serviceTarget_){serviceComplete(false,"Cancelled or device selection changed; verify any operation already started on the phone.");return;}
  if(serviceSteps_.isEmpty()){serviceDispatch();return;}
  serviceCurrent_=serviceSteps_.dequeue();servicePhase_=serviceCurrent_.key=="state"?"connection":serviceCurrent_.key=="identity"?"identity":serviceCurrent_.key=="execute"?"applying":serviceCurrent_.key=="verify-night"?"verifying":"capability";emit serviceChanged();
@@ -232,6 +244,7 @@ void ToolBridge::serviceStepFinished(bool success,const QString &out,const QStri
  serviceNext();
 }
 void ToolBridge::serviceDispatch() {
+ if(!mr::service::operationAllowed(serviceAction_.toStdString())){serviceComplete(false,"Operation denied by compiled build policy.");return;}
  const QStringList prefix{"-s",serviceTarget_};
  if(serviceCurrent_.key=="execute"||serviceCurrent_.key=="verify-night"){
   const auto message=serviceAction_=="sideload_zip"?QStringLiteral("ADB reports transfer completion. Check recovery's installation/signature/compatibility result on the device; this is not proof of a successful flash."):serviceAction_.startsWith("reboot_")||serviceAction_.startsWith("fastboot_")?QStringLiteral("Reboot request accepted; rescan and verify the new device mode."):QStringLiteral("Device command completed; verify the result on the phone.");serviceComplete(true,message);return;
@@ -240,6 +253,7 @@ void ToolBridge::serviceDispatch() {
   if(serviceTool_=="fastboot"&&serviceScratch_.value("product").toString().isEmpty()){serviceComplete(false,"Fastboot did not report a product identity.");return;}
   serviceProfile_=serviceScratch_;serviceProfile_.insert("serial",serviceTarget_);serviceProfile_.insert("transport",serviceTool_);serviceProfile_.insert("verifiedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
   if(serviceTool_=="adb"){deviceInfo_=serviceScratch_;deviceInfo_.insert("serial",serviceTarget_);emit deviceInfoChanged();}
+  serviceProfile_.insert("diagnostics",mr::service::deviceHealth(serviceProfile_));
   serviceExpiry_.start();serviceComplete(true,"Capabilities read. Reported support is not physical-device/model acceptance; snapshot expires in 60 seconds.");return;
  }
  const auto *protocol=mr::service::adapter(serviceTool_);
@@ -274,8 +288,9 @@ void ToolBridge::serviceComplete(bool success,const QString &reason) {
 bool ToolBridge::exportServiceReport(const QString &input,bool approved) {
  const QUrl url(input);const QString path=input.startsWith("file:")?url.toLocalFile():input;
  if(!approved||busy()||serviceHistory_.isEmpty()||!QDir::isAbsolutePath(path)||path.startsWith("//")||path.startsWith("\\\\")||(!url.host().isEmpty()&&url.isLocalFile())||QFileInfo::exists(path)){setStatus("Approve a plaintext report and choose a new local filename.");return false;}
- const auto document=QJsonObject{{"schemaVersion",2},{"generatedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},{"profile",QJsonObject::fromVariantMap(serviceProfile_)},{"operations",QJsonArray::fromVariantList(serviceHistory_)},{"lastResult",serviceOutput_},{"hardwareValidation","Pending Hardware Validation; observed capabilities are not model certification"},{"ownership","Operator declaration; not independent ownership verification"},{"usbDriverBinding","Not correlated to a physical USB instance; inspect Windows PnP inventory"}};
+ const auto document=QJsonObject{{"schemaVersion",3},{"generatedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},{"profile",QJsonObject::fromVariantMap(mr::service::reportProfile(serviceProfile_))},{"operations",QJsonArray::fromVariantList(mr::service::reportHistory(serviceHistory_))},{"privacy","Technical projection: raw command output, device serials, USB identifiers and local paths excluded"},{"hardwareValidation","Pending Hardware Validation; observed capabilities are not model certification"},{"ownership","Operator declaration; not independent ownership verification"},{"usbDriverBinding","Not correlated to a physical USB instance; inspect Windows PnP inventory"}};
  const auto bytes=QJsonDocument(document).toJson();QFile file(path);
  if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly)){setStatus("Could not create the report.");return false;}
  file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner);const bool ok=file.write(bytes)==bytes.size()&&file.flush();file.close();if(!ok)QFile::remove(path);setStatus(ok?"Service report exported; review personal identifiers before sharing.":"Report write failed.");return ok;
 }
+

@@ -17,6 +17,8 @@
 #include <QNetworkRequest>
 #include <QSslSocket>
 #include <memory>
+#include <cstdio>
+#include "ServiceOperationPolicy.hpp"
 #include "ToolBridge.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
@@ -29,18 +31,22 @@
 #include "RecoveryBridge.hpp"
 int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
- QGuiApplication::setApplicationName(QStringLiteral("NEXVARY-MR"));
+ QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
  QGuiApplication::setApplicationVersion(QStringLiteral("0.4.0"));
  QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/assets/nexvary-mr.png")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
+ cli.addOption({QStringLiteral("build-profile"),QStringLiteral("Print the compiled device-operation profile and exit")});
  cli.addHelpOption();
  cli.addVersionOption();
  cli.addOption({QStringLiteral("data-dir"),QStringLiteral("Local data directory"),QStringLiteral("path")});
  cli.addOption({QStringLiteral("smoke-test"),QStringLiteral("Exercise all pages in an isolated test profile, capture and close")});
  cli.addOption({QStringLiteral("screenshot"),QStringLiteral("Runtime PNG output in smoke test"),QStringLiteral("path")});
  cli.process(app);
+ if(cli.isSet(QStringLiteral("build-profile"))) {
+  std::puts(mr::service::laboratoryBuild()?"laboratory-experimental":"production-read-only");return 0;
+ }
  const bool smoke=cli.isSet(QStringLiteral("smoke-test"));
  if(smoke&&!cli.isSet(QStringLiteral("data-dir"))) return 2;
  const QString dir=cli.isSet(QStringLiteral("data-dir"))?cli.value(QStringLiteral("data-dir")):QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
@@ -154,3 +160,4 @@ int main(int argc,char *argv[]) {
  }
  return app.exec();
 }
+

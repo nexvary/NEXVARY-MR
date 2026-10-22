@@ -1,0 +1,70 @@
+********* Start testing of ServiceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ServiceTests::initTestCase()
+PASS   : ServiceTests::approvalTypesFailClosedBeforeProcess()
+PASS   : ServiceTests::compiledPolicyCannotBeOverridden()
+PASS   : ServiceTests::exportPrivacyProjection()
+PASS   : ServiceTests::packageStructureRejectsCorruption()
+SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(139)]
+PASS   : ServiceTests::exactCommandPlanOnly()
+PASS   : ServiceTests::structuredDiagnostics()
+PASS   : ServiceTests::incompleteDiagnosticsDoNotClaimHealth()
+PASS   : ServiceTests::diagnosticsIncludedInProbeAndExport()
+PASS   : ServiceTests::adapterCommandAllowlist()
+PASS   : ServiceTests::capabilityIdentity(samsung)
+PASS   : ServiceTests::capabilityIdentity(LGE)
+PASS   : ServiceTests::capabilityIdentity(HUAWEI)
+PASS   : ServiceTests::capabilityIdentity(OPPO)
+PASS   : ServiceTests::capabilityIdentity(vivo)
+PASS   : ServiceTests::capabilityIdentity(ZTE)
+PASS   : ServiceTests::authorizationAndBlockedActions()
+SKIP   : ServiceTests::darkModeVerification() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(211)]
+SKIP   : ServiceTests::deniedAndUnconfirmedReadback(permission) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(213)]
+SKIP   : ServiceTests::deniedAndUnconfirmedReadback(readback) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(213)]
+PASS   : ServiceTests::missingSettingsAndOldAndroid(missing-activity)
+PASS   : ServiceTests::missingSettingsAndOldAndroid(old-sdk)
+SKIP   : ServiceTests::disconnectAndIdentityChange(usb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(217)]
+SKIP   : ServiceTests::disconnectAndIdentityChange(identity) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(217)]
+SKIP   : ServiceTests::apkPrivateCopyIntegrity() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(218)]
+SKIP   : ServiceTests::invalidPackageNeverReachesDevice() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(219)]
+SKIP   : ServiceTests::explicitApkReplace() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(222)]
+PASS   : ServiceTests::ambiguousTransportAndRescanInvalidate()
+SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(adb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(225)]
+SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(fastboot) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(225)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(hash) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(227)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(manager) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(227)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(no-confirmation) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(227)]
+SKIP   : ServiceTests::sideloadConsentAndMode() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(228)]
+SKIP   : ServiceTests::fastbootFreshEraseGuard() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(229)]
+PASS   : ServiceTests::fastbootCrLfQueries()
+SKIP   : ServiceTests::syntheticErase() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(231)]
+PASS   : ServiceTests::noPartitionNoErase()
+SKIP   : ServiceTests::rebootInvalidatesDiscovery() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(233)]
+SKIP   : ServiceTests::cancellation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(234)]
+SKIP   : ServiceTests::historyRetainsTargetAndFailureAfterAnotherOperation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(235)]
+SKIP   : ServiceTests::rebootHistoryKeepsTargetAfterDiscoveryCleared() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/tmp/nexvary-mr-final-source/cpp/tests/service_tests.cpp(259)]
+PASS   : ServiceTests::reportConsentAndNoOverwrite()
+PASS   : ServiceTests::cleanupTestCase()
+Totals: 24 passed, 0 failed, 21 skipped, 0 blacklisted, 2291ms
+********* Finished testing of ServiceTests *********

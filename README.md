@@ -47,3 +47,14 @@ GitHub-hosted Windows build, Qt integration/UI tests and isolated portable/insta
 ## Development recovery increment
 
 The ninth workspace now retains source assessment and adds native local image analysis and encrypted Windows cases. See [recovery guide](docs/RECOVERY_GUIDE.md), [research](research/android-recovery/FACTORY_RESET_RESEARCH.md), [tool/license matrix](research/android-recovery/TOOLS.md) and [optional Android companion](recovery-agent/README.md). Existing Python research scanners remain offset-only tools; they are not the desktop processing engine. Builds are unsigned development artifacts. Physical Shizuku/OEM/reset experiments and clean Windows acceptance remain unverified.
+
+
+## Device-operation build profiles
+
+The native desktop build defaults to **production-read-only** for connected
+phones. Device changes (including reboot, Settings activities, APK installation,
+sideload and erase) cannot be enabled through the UI or configuration.
+`MR_ENABLE_LAB_OPERATIONS=ON` creates a separate experimental Laboratory binary
+and default data directory; model-specific physical acceptance is still pending.
+Screen mirroring is unavailable until its consent/lifecycle gate is completed.
+See [the current development checkpoint](docs/release/DEVELOPMENT_CHECKPOINT_2026-10-23.md).

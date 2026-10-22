@@ -1,13 +1,25 @@
 #pragma once
-#include <QString>
+#include <array>
+#include <string_view>
 
+// Compile-time profile only. No environment, configuration or QML override.
 namespace mr::service {
-inline bool productionOperationAllowed(const QString &operation) {
-#ifdef MR_ENABLE_LAB_OPERATIONS
-    Q_UNUSED(operation);
+inline constexpr bool laboratoryBuild() {
+#if defined(MR_ENABLE_LAB_OPERATIONS) && MR_ENABLE_LAB_OPERATIONS == 1
     return true;
 #else
-    return operation == QStringLiteral("probe") || operation == QStringLiteral("unlock_ability");
+    return false;
 #endif
+}
+inline constexpr bool operationAllowed(std::string_view operation) {
+    if (operation == "probe" || operation == "unlock_ability") return true;
+    if (!laboratoryBuild()) return false;
+    constexpr std::array writes{
+        "reboot_normal", "reboot_recovery", "reboot_bootloader", "reboot_sideload",
+        "dark_on", "dark_off", "languages", "keyboard", "settings", "apn",
+        "install_apk", "sideload_zip", "fastboot_reboot", "fastboot_bootloader",
+        "erase_cache", "erase_userdata"};
+    for (const auto allowed : writes) if (operation == allowed) return true;
+    return false; // Laboratory also denies unknown/protection-bypass operations.
 }
 }

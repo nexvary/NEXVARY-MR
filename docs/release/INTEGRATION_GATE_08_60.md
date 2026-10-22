@@ -27,3 +27,11 @@ For every promotion record: commit SHA, exact workflow run URLs, test counts and
 
 ## Gate decision
 Gate 1 passes only when exact integration HEAD is green, changed files reviewed, all write-capable paths verified disabled by default in the release profile, and known skips explicitly documented. Until then: DO NOT MERGE TO MAIN / DO NOT CLAIM COMMERCIAL OEM SUPPORT.
+
+
+## Current continuation
+
+See [2026-10-23 checkpoint](DEVELOPMENT_CHECKPOINT_2026-10-23.md) for the actual
+implemented native policy, integrated branch stack, test evidence and remaining
+stage-specific blockers. The build defaults to read-only device operations.
+Stages 37–42 and the final RC decision remain blocked by physical acceptance.

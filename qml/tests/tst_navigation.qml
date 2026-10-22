@@ -9,6 +9,12 @@ TestCase {
  width:1536;height:980
  MR.Main {id:app}
  function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function test_compiledBuildProfileIsVisible(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;verify(waitForRendering(app.contentItem))
+  const label=findChild(app,"serviceBuildProfile");verify(label.visible)
+  app.ar=false;verify(label.text.indexOf(toolBridge.laboratoryBuild?"Laboratory":"read-only")>=0)
+  verify(findChild(app,"serviceWorkflow").text.indexOf("Discover")>=0)
+ }
  function test_deviceServiceNavigationAndConsent(){
   app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const page=findChild(app,"deviceServicesPage");verify(page!==null)
   compare(findChild(app,"serviceBrand").count,14);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
@@ -196,19 +202,27 @@ TestCase {
   app.currentPage=8;
   let result=findChild(app,"recoveryVerdict");
   verify(result!==null);
-  compare(result.text,"not_supported");
+  compare(result.code,"not_supported");
+  let reason=findChild(app,"recoveryReason");
+  verify(reason.text.indexOf(app.ar?"موافقة المالك":"owner authorization")>=0);
+  verify(result.text!==result.code);
   let consent=findChild(app,"recoveryConsent");
   verify(consent!==null);
   consent.checked=true;
-  tryCompare(result,"text","need_more_information");
+  tryCompare(result,"code","need_more_information");
   let source=findChild(app,"recoverySource");
   source.currentIndex=3;
   app.currentPage=0;
   app.currentPage=8;
   let reset=findChild(app,"recoveryReset");
   reset.checked=true;
-  compare(result.text,"not_supported");
+  compare(result.code,"not_supported");
+  verify(reason.text.indexOf(app.ar?"التخزين الداخلي":"Internal storage")>=0);
   reset.checked=false;
+  source.currentIndex=0;findChild(app,"recoveryReadable").currentIndex=2;
+  compare(result.code,"not_supported");
+  verify(reason.text.indexOf(app.ar?"البطاقة غير قابلة":"card was marked unreadable")>=0);
+  findChild(app,"recoveryReadable").currentIndex=0;
   consent.checked=false;
  }
  function test_recoveryWizard(){

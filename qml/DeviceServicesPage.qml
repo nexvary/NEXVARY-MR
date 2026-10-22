@@ -9,6 +9,10 @@ Item {
  property var selectedAction:({})
  property string reviewedTarget:""
  property var reviewedRecord:({})
+ readonly property var diagnostics:toolBridge.serviceProfile.diagnostics||({})
+ readonly property var battery:diagnostics.battery||({})
+ readonly property var storage:diagnostics.storage||({})
+ readonly property var partitions:diagnostics.partitions||({})
  function reviewRecord(record){reviewedRecord=record;historyDetail.open()}
  readonly property var brands:serviceCatalog.deviceCatalog.brands||[]
  readonly property var driverSource:serviceCatalog.drivers.find(function(r){return r.brand.toLowerCase()===brand.currentText.split(" / ")[0].toLowerCase()})
@@ -16,6 +20,7 @@ Item {
  function explain(row){
   const unavailable={download:"يحتاج Download Mode إلى إجراء موثق ومختبر للموديل نفسه.",edl:"وضع EDL وأدوات DA وFirehose تعتمد على المعالج والتوقيع والتفويض الحقيقي.",frp:"استعادة الحساب تتم من صاحب الحساب عبر Google أو الشركة المصنعة؛ لا توجد أداة لتجاوز الحماية.",lockscreen:"استخدم الاسترداد الرسمي بصلاحيات المالك؛ لا نحذف بيانات القفل أو نتجاوز الأمان.",modem:"إصلاح المودم يحتاج Firmware مطابقًا وإجراء OEM مختبرًا؛ إعدادات APN متاحة منفصلة.",efs:"لا يوجد أمر عام آمن لمسح EFS أو تعديل SPC أو هوية الشبكة.",sim_unlock:"فتح الشبكة يتبع الإجراء الرسمي لشركة الاتصالات.",factory_reset:"نفّذ الاستعادة الرسمية من إعدادات الهاتف أو Recovery؛ مسح Userdata منفصل ولا يزيل FRP.",f2fs:"تحويل نظام الملفات يحتاج مخطط أقسام وإجراء موثقًا للموديل.",bootloader_unlock:"سنة التصنيع لا تثبت قابلية الفتح؛ استخدم إجراء الشركة الرسمي.",bootloader_relock:"إعادة القفل تتطلب Firmware رسميًا موقعًا ومطابقًا؛ الإجراء العام قد يمنع الإقلاع.",carrier_apps:"إزالة تطبيقات شركات الاتصالات تحتاج مراجعة الحزم واعتمادياتها لكل إصدار."}
   if(!app.ar)return row.reason||""
+  if(row.implemented&&!toolBridge.laboratoryBuild&&row.id!=="probe"&&row.id!=="unlock_ability")return "غير متاح في نسخة الإنتاج المخصصة للقراءة والتشخيص فقط. يحتاج نسخة المختبر التجريبية واختبارًا فعليًا للموديل."
   if(!row.implemented)return unavailable[row.id]||row.reason
   return row.available?"":app.trx("تحقق من الجهاز والوضع وقراءة القدرات الحديثة.","")+"\n"+row.reason
  }
@@ -27,6 +32,8 @@ Item {
    NeonComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:190}
    ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:Qt.openUrlExternally(page.driverSource.url)}
   }
+  Label {objectName:"serviceBuildProfile";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:toolBridge.laboratoryBuild?"#FF465C":"#39FF14";text:toolBridge.laboratoryBuild?app.trx("نسخة المختبر التجريبية — عمليات تغيير الجهاز تحتاج تفويضًا واختبارًا فعليًا لكل موديل.","Experimental Laboratory build — device changes require authorization and per-model physical testing."):app.trx("نسخة الإنتاج: قراءة وتشخيص فقط. عمليات تغيير الجهاز غير متاحة.","Production build: read-only diagnostics. Device-changing operations are unavailable.")}
+  Label {objectName:"serviceWorkflow";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
   Label {objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");text:app.trx("اختيار الشركة يرشّح المراجع فقط. تُقرأ هوية الجهاز وقدراته من الاتصال الحالي. العربية والإنجليزية والفرنسية والتركية تتبع اللغات الموجودة في Firmware؛ لن تُضاف ترجمة غير موجودة.","The brand filter selects references only. Device identity/capabilities come from the current connection. Arabic, English, French and Turkish depend on the languages present in the installed firmware.")}
   RowLayout {Layout.fillWidth:true
@@ -57,6 +64,14 @@ Item {
    }
    ScrollView {id:detailsScroll;objectName:"deviceServiceDetailsScroll";implicitWidth:0;implicitHeight:0;Layout.minimumWidth:0;Layout.minimumHeight:0;Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
     ColumnLayout {width:detailsScroll.availableWidth;spacing:10
+    Panel {objectName:"deviceHealthPanel";title:app.trx("قراءات تشخيص الجهاز","Device diagnostic observations");Layout.fillWidth:true;visible:!!page.diagnostics.schemaVersion
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("قراءات لحظية وليست شهادة سلامة للبطارية أو الذاكرة. البيانات غير المتاحة لا تعني أن الجهاز سليم.","Point-in-time observations, not battery or storage health certification. Missing data does not mean the device is healthy.")}
+     Label {objectName:"deviceBatterySummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#39ff14";text:app.trx("شحن البطارية: ","Battery charge: ")+(page.battery.chargePercent!==undefined?Number(page.battery.chargePercent).toFixed(1)+"%":app.trx("غير متاح","Unavailable"))+" · "+app.trx("الحرارة: ","Temperature: ")+(page.battery.temperatureC!==undefined?Number(page.battery.temperatureC).toFixed(1)+" °C":app.trx("غير متاحة","Unavailable"))}
+     Label {Layout.fillWidth:true;visible:!!page.battery.updatesStopped;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("أبلغ Android عن إيقاف تحديثات البطارية؛ قد تكون القيم محاكاة وليست قراءة حالية.","Android reports stopped battery updates; values may be simulated rather than current readings.")}
+     Label {objectName:"deviceStorageSummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#39ff14";text:app.trx("مساحة /data المتاحة: ","Available /data storage: ")+(page.storage.state==="observed"?(Number(page.storage.availableKiB)/1048576).toFixed(2)+" GiB / "+(Number(page.storage.totalKiB)/1048576).toFixed(2)+" GiB":app.trx("غير متاحة في وضع الاتصال والصلاحيات الحالية","Unavailable in the current mode or permissions"))}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("أجهزة التخزين الظاهرة للنظام: ","Kernel-visible block devices: ")+(page.partitions.entries?page.partitions.entries.length:app.trx("غير متاحة","Unavailable"))+" · "+app.trx("ليست خريطة أقسام معتمدة للتفليش","Not a validated firmware partition map")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("وقت القراءة UTC: ","Observed UTC: ")+(page.diagnostics.observedAtUtc||"");textFormat:Text.PlainText}
+    }
     Panel {objectName:"deviceServiceResultPanel";title:app.trx("نتيجة العملية — بيانات محلية","Operation result — local data");Layout.fillWidth:true;Layout.minimumHeight:200;Layout.preferredHeight:Math.max(200,detailsScroll.availableHeight-references.implicitHeight-history.implicitHeight-20)
      ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
     }
@@ -105,3 +120,4 @@ Item {
   }
  }
 }
+

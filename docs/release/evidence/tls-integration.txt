@@ -1,0 +1,2 @@
+Native Qt -> verified TLS -> real Python service -> status/revocation passed
+Verified TLS, authenticated publish, customer page, revocation and log redaction passed

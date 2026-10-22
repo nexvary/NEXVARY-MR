@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+  "buildProfile": "production-read-only",
+  "unresolvedCriticalRisks": [
+    "Physical Android, Windows acceptance, signing, dependency review and upgrade/rollback remain pending"
+  ],
+  "gates": {
+    "exact_head_ci": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "production_policy": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "android_physical_read_only": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "windows_10_acceptance": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "windows_11_acceptance": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "installer_portable_uninstall": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "signing": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "sbom_review": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "upgrade_rollback": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "privacy_review": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    },
+    "reviewer_signoff": {
+      "passed": false,
+      "commit": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "reference": "",
+      "reviewer": ""
+    }
+  }
+}

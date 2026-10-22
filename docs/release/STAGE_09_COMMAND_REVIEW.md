@@ -13,3 +13,12 @@ A production build must enforce an independent, default-off gate for ALL device-
 
 ## Evidence needed
 Record exact head SHA, compile/test jobs, release-profile negative tests, laboratory positive fixtures, and physical-device results. This review is static and does not certify runtime behavior.
+
+
+## Implementation update — 2026-10-23
+
+The previously missing native gate is now implemented and locally exercised in
+both compiled profiles. See [the development checkpoint](DEVELOPMENT_CHECKPOINT_2026-10-23.md)
+and [recorded validation](LOCAL_VALIDATION_2026-10-23.md). The original static
+review above remains a historical baseline. Local synthetic success does not
+satisfy exact-head remote CI, physical-device acceptance, or RC promotion.

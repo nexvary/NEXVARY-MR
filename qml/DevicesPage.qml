@@ -21,7 +21,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true; Layout.fillHeight:true;spacing:12
    Panel {
-    title:app.trx("الأجهزة المكتشفة","Discovered devices");Layout.preferredWidth:290;Layout.fillHeight:true
+    accent:"blue";title:app.trx("الأجهزة المكتشفة","Discovered devices");Layout.preferredWidth:290;Layout.fillHeight:true
     Label {visible:toolBridge.devices.length===0;text:app.trx("لم يتم اكتشاف جهاز. صِل هاتفًا بكابل بيانات، ثم اسمح بتصحيح USB من الهاتف.","No device discovered. Connect a data cable, then authorize USB debugging on the phone.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#91a6bc")}
     ListView {
      Layout.fillWidth:true;Layout.fillHeight:true;model:toolBridge.devices;spacing:8;clip:true
@@ -33,7 +33,7 @@ Item {
       contentItem:Column {spacing:6;Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;textFormat:Text.PlainText} Label{text:modelData.serial+" • "+modelData.state;color:modelData.state==="device"?app.tone("#48dea4"):app.tone("#f6bb67");font.pixelSize:12;textFormat:Text.PlainText}}
      }
     }
-    ActionButton {text:app.trx("عرض شاشة الهاتف · scrcpy","Mirror device · scrcpy");Layout.fillWidth:true;enabled:toolBridge.selectedSerial!==""&&!toolBridge.busy;onClicked:toolBridge.startMirror()}
+    ActionButton {text:app.trx("عرض شاشة الهاتف · scrcpy","Mirror device · scrcpy");Layout.fillWidth:true;enabled:false;ToolTip.visible:hovered;ToolTip.text:app.trx("عرض الشاشة غير متاح حتى اعتماد التفويض ودورة تشغيل الأداة","Mirroring unavailable pending consent and process-lifecycle acceptance");onClicked:toolBridge.startMirror()}
    }
    ColumnLayout {
     Layout.fillWidth:true;Layout.fillHeight:true;spacing:12
@@ -51,3 +51,4 @@ Item {
   }
  }
 }
+

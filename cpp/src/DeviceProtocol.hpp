@@ -1,5 +1,6 @@
 #pragma once
 #include <QStringList>
+#include "ServiceOperationPolicy.hpp"
 #include <QList>
 
 // Protocol adapters produce bounded command plans; ToolBridge alone owns the
@@ -37,6 +38,7 @@ public:
   result.append({{"shell","cat","/proc/partitions"},"observation:partitions",true});return result;
  }
  QStringList command(const QString &action,const QString &package,bool replace)const override{
+  if(!operationAllowed(action.toStdString()))return {};
   if(QStringList{"reboot_normal","reboot_recovery","reboot_bootloader","reboot_sideload"}.contains(action)){QStringList args{"reboot"};if(action!="reboot_normal")args.append(action.mid(7));return args;}
   if(action=="dark_on"||action=="dark_off")return {"shell","cmd","uimode","night",action=="dark_on"?"yes":"no"};
   const auto intent=settingsIntent(action);if(!intent.isEmpty())return {"shell","am","start","-W","-a",intent};
@@ -56,6 +58,7 @@ public:
   QList<Query> result;for(const auto &var:vars)result.append({{"getvar",var},"var:"+var,var!="product"});return result;
  }
  QStringList command(const QString &action,const QString &,bool)const override{
+  if(!operationAllowed(action.toStdString()))return {};
   if(action=="fastboot_reboot")return {"reboot"};
   if(action=="fastboot_bootloader")return {"reboot-bootloader"};
   if(action=="unlock_ability")return {"flashing","get_unlock_ability"};
@@ -66,3 +69,4 @@ public:
 };
 inline const ProtocolAdapter *adapter(const QString &id){static const AdbAdapter adb;static const FastbootAdapter fastboot;return id=="adb"?static_cast<const ProtocolAdapter *>(&adb):id=="fastboot"?static_cast<const ProtocolAdapter *>(&fastboot):nullptr;}
 }
+

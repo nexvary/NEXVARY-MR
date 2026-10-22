@@ -1,4 +1,7 @@
 #include "ToolBridge.hpp"
+#include "ServiceCommandPolicy.hpp"
+#include "UsbDriver.hpp"
+#include <QDateTime>
 
 #include <QDir>
 #include <QFile>
@@ -17,6 +20,10 @@ const QString adbTransport = QStringLiteral("adb");
 const QString fastbootTransport = QStringLiteral("fastboot");
 QString pathExecutable(const QString &name) {
 #ifdef Q_OS_WIN
+  if (name == QStringLiteral("powershell")) {
+    const auto root=qEnvironmentVariable("SystemRoot");
+    return root.isEmpty()?QString():QDir(root).filePath(QStringLiteral("System32/WindowsPowerShell/v1.0/powershell.exe"));
+  }
   if (name == QStringLiteral("pnputil")) {
     const QString root = qEnvironmentVariable("SystemRoot");
     if (!root.isEmpty()) return QDir(root).filePath(QStringLiteral("System32/pnputil.exe"));
@@ -56,6 +63,7 @@ QString validatedExecutable(const QString &input) {
 }
 
 ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
+  static const bool resources=[] { Q_INIT_RESOURCE(device_catalog);return true; }();Q_UNUSED(resources);
   timeoutTimer_.setSingleShot(true);
   timeoutTimer_.setTimerType(Qt::PreciseTimer);
   timeoutTimer_.setInterval(12000);
@@ -202,9 +210,14 @@ QVariantList ToolBridge::parseAdbDevices(const QString &output) {
   QSet<QString> seen;
   for (const auto &line : output.split(QLatin1Char('\n'))) {
     const auto fields = line.trimmed().split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
-    if (fields.size() < 2 || !isValidSerial(fields[0]) || seen.contains(fields[0])) continue;
+    if (fields.size() < 2 || !isValidSerial(fields[0]) ) continue;
     const QString state = fields[1];
     if (state != QStringLiteral("device") && state != QStringLiteral("offline") && state != QStringLiteral("unauthorized") && state != QStringLiteral("recovery") && state != QStringLiteral("sideload") && state != QStringLiteral("rescue") && state != QStringLiteral("bootloader") && !(state == QStringLiteral("no") && fields.value(2) == QStringLiteral("permissions"))) continue;
+    if (seen.contains(fields[0])) {
+      for (auto &row : result) { auto item=row.toMap();if(item.value("serial").toString()==fields[0]){item.insert("state","ambiguous");row=item;} }
+      continue;
+    }
+    if(result.size()>=256)continue; // Keep scanning for duplicates of retained rows.
     QVariantMap item{{QStringLiteral("serial"), fields[0]}, {QStringLiteral("state"), state == QStringLiteral("no") ? QStringLiteral("no permissions") : state}, {QStringLiteral("transport"), adbTransport}, {QStringLiteral("model"), QString()}, {QStringLiteral("product"), QString()}};
     for (qsizetype index = 2; index < fields.size(); ++index) {
       const auto split = fields[index].indexOf(QLatin1Char(':'));
@@ -214,7 +227,6 @@ QVariantList ToolBridge::parseAdbDevices(const QString &output) {
     }
     result.append(item);
     seen.insert(fields[0]);
-    if (result.size() >= 256) break;
   }
   return result;
 }
@@ -223,10 +235,14 @@ QVariantList ToolBridge::parseFastbootDevices(const QString &output) {
   QSet<QString> seen;
   for (const auto &line : output.split(QLatin1Char('\n'))) {
     const auto fields = line.trimmed().split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
-    if (fields.size() < 2 || fields[1] != fastbootTransport || !isValidSerial(fields[0]) || seen.contains(fields[0])) continue;
+    if (fields.size() < 2 || fields[1] != fastbootTransport || !isValidSerial(fields[0]) ) continue;
+    if (seen.contains(fields[0])) {
+      for (auto &row : result) { auto item=row.toMap();if(item.value("serial").toString()==fields[0]){item.insert("state","ambiguous");row=item;} }
+      continue;
+    }
+    if(result.size()>=256)continue;
     result.append(QVariantMap{{QStringLiteral("serial"), fields[0]}, {QStringLiteral("state"), fastbootTransport}, {QStringLiteral("transport"), fastbootTransport}, {QStringLiteral("model"), QString()}});
     seen.insert(fields[0]);
-    if (result.size() >= 256) break;
   }
   return result;
 }
@@ -245,10 +261,17 @@ QVariantMap ToolBridge::parseDeviceProperties(const QString &output) {
   return result;
 }
 bool ToolBridge::runReadOnly(const QString &program, const QStringList &arguments, Operation operation) {
+  // Validate the complete service command plan before resolving or starting a process.
+  if(operation == Operation::Service && (!serviceRunning_ || serviceTarget_ != selectedSerial_ ||
+      !mr::service::serviceCommandAllowed(program, arguments, serviceAction_, serviceTarget_,
+        serviceCurrent_.key, serviceScratch_.value("package").toMap().value("path").toString(), serviceApproval_.value("replace").toBool()))) {
+    setStatus(QStringLiteral("Device command rejected by centralized allowlist."));return false;
+  }
   if (active_ || (serviceRunning_ && operation != Operation::Service)) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
+  if (operation == Operation::DriverBinding) { driverBinding_.clear(); emit driverInfoChanged(); }
   const QString path = resolveExecutable(program);
   if (path.isEmpty()) {
     if (operation == Operation::AdbScan) replaceDevices({}, adbTransport);
@@ -265,7 +288,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   setStatus(operation==Operation::Service?QStringLiteral("جار تنفيذ خدمة الجهاز المحددة؛ راقب الهاتف…"):QStringLiteral("جار تنفيذ فحص قراءة فقط…"));
   process_.setProgram(path);
   process_.setArguments(arguments);
-  timeoutTimer_.start();
+  timeoutTimer_.start(operation==Operation::DriverBinding?30000:12000);
   process_.start();
   return true;
 }
@@ -308,6 +331,13 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
       if (commandSerial_ == selectedSerial_) { logcat_ = output; emit logcatChanged(); }
       break;
     case Operation::Drivers: driverInfo_ = output; emit driverInfoChanged(); break;
+    case Operation::DriverBinding:
+      if(commandSerial_==selectedSerial_) {
+        driverBinding_=mr::usb::correlate(output_,commandSerial_);
+        driverBinding_.insert("observedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+        emit driverInfoChanged();
+      }
+      break;
     case Operation::None: break;
     case Operation::Service: break;
     }
@@ -320,13 +350,14 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
     setStatus(!terminalReason_.isEmpty() ? terminalReason_ : QStringLiteral("فشل الفحص (رمز ") + QString::number(exitCode) + QStringLiteral("): ") + QString::fromUtf8(errors_).trimmed().left(2048));
   }
   const QStringList operationNames{QStringLiteral("none"),QStringLiteral("adb-scan"),QStringLiteral("fastboot-scan"),QStringLiteral("properties"),QStringLiteral("logcat"),QStringLiteral("drivers")};
-  emit diagnosticCompleted(operationNames.value(static_cast<int>(operation_)), success);
+  emit diagnosticCompleted(operation_==Operation::DriverBinding?QStringLiteral("usb-correlation"):operationNames.value(static_cast<int>(operation_)), success);
   active_ = false;
   operation_ = Operation::None;
   emit busyChanged();
   emit operationFinished(success);
 }
 void ToolBridge::replaceDevices(const QVariantList &found, const QString &transport) {
+  driverBinding_.clear();emit driverInfoChanged();
   if (!serviceRunning_) serviceInvalidate();
   QVariantList combined;
   for (const auto &entry : devices_) if (entry.toMap().value(QStringLiteral("transport")).toString() != transport) combined.append(entry);
@@ -353,16 +384,15 @@ void ToolBridge::selectDevice(const QString &serial) {
     if (!found) { setStatus(QStringLiteral("اختر جهازًا من نتائج الفحص الحالية")); return; }
   }
   selectedSerial_ = serial;
+  driverBinding_.clear();emit driverInfoChanged();
   if (serviceRunning_) cancel();
   serviceInvalidate();
   deviceInfo_.clear(); logcat_.clear();
   emit selectedSerialChanged(); emit deviceInfoChanged(); emit logcatChanged();
 }
 bool ToolBridge::selectedAdbReady() {
-  for (const auto &entry : devices_) {
-    const auto item = entry.toMap();
-    if (item.value(QStringLiteral("serial")).toString() == selectedSerial_ && item.value(QStringLiteral("transport")).toString() == adbTransport && item.value(QStringLiteral("state")).toString() == QStringLiteral("device")) return true;
-  }
+  const auto item = selectedServiceDevice();
+  if (!item.isEmpty() && item.value("transport").toString()==adbTransport && item.value("state").toString()=="device") return true;
   setStatus(QStringLiteral("اختر جهاز ADB متصلًا ومصرّحًا؛ وافق على طلب USB debugging على الهاتف ثم أعد الفحص"));
   return false;
 }
@@ -380,6 +410,20 @@ void ToolBridge::inspectDrivers() {
 #else
   driverInfo_ = QStringLiteral("فحص تعريفات Windows متاح على Windows فقط. يُستخدم PnPUtil للقراءة دون تثبيت أو تعديل أي تعريف.");
   emit driverInfoChanged(); setStatus(driverInfo_);
+#endif
+}
+void ToolBridge::inspectSelectedDriver() {
+  if(busy())return;
+  driverBinding_.clear();emit driverInfoChanged();
+  int matches=0;for(const auto &entry:devices_)if(entry.toMap().value("serial").toString()==selectedSerial_)++matches;
+  if(selectedSerial_.isEmpty()||matches!=1){setStatus(QStringLiteral("اختر جهازًا واحدًا غير ملتبس قبل مطابقة USB / Select one unambiguous device first."));return;}
+#ifdef Q_OS_WIN
+  QFile script(QStringLiteral(":/packaging/inspect-usb.ps1"));
+  if(!script.open(QIODevice::ReadOnly)){setStatus(QStringLiteral("USB inventory resource unavailable."));return;}
+  runReadOnly(QStringLiteral("powershell"),{QStringLiteral("-NoLogo"),QStringLiteral("-NoProfile"),QStringLiteral("-NonInteractive"),QStringLiteral("-Command"),QString::fromUtf8(script.readAll())},Operation::DriverBinding);
+#else
+  driverBinding_={{"state","windows-only"}};emit driverInfoChanged();
+  setStatus(QStringLiteral("مطابقة تعريف USB متاحة على Windows فقط / USB driver correlation requires Windows."));
 #endif
 }
 void ToolBridge::cancel() {
@@ -400,7 +444,9 @@ void ToolBridge::setAutoRefresh(bool enabled) {
   else pollTimer_.stop();
   emit autoRefreshChanged();
 }
+bool ToolBridge::laboratoryBuild() const { return mr::service::laboratoryBuild(); }
 void ToolBridge::startMirror() {
+  if(!mr::service::operationAllowed("mirror")){setStatus(QStringLiteral("Screen mirroring unavailable pending Laboratory ownership-consent and process-lifecycle validation (scrcpy uploads a device component)."));return;}
   if (busy()) { setStatus(QStringLiteral("انتظر اكتمال الفحص الحالي")); return; }
   if (!selectedAdbReady()) return;
   const QString path = resolveExecutable(QStringLiteral("scrcpy"));
@@ -408,3 +454,4 @@ void ToolBridge::startMirror() {
   const bool launched = QProcess::startDetached(path, {QStringLiteral("--serial"), selectedSerial_});
   setStatus(launched ? QStringLiteral("تم طلب تشغيل scrcpy للجهاز المحدد؛ راجع نافذتها الخارجية") : QStringLiteral("تعذر تشغيل scrcpy"));
 }
+
