@@ -1,0 +1,44 @@
+Internal ctest changing into directory: /tmp/nexvary-mr-production
+Test project /tmp/nexvary-mr-production
+      Start  1: mr_policy_tests
+ 1/19 Test  #1: mr_policy_tests ..................   Passed    0.00 sec
+      Start  2: mr_core_tests
+ 2/19 Test  #2: mr_core_tests ....................   Passed    0.00 sec
+      Start  3: mr_workshop_tests
+ 3/19 Test  #3: mr_workshop_tests ................   Passed    1.51 sec
+      Start  4: mr_center_tests
+ 4/19 Test  #4: mr_center_tests ..................   Passed    0.08 sec
+      Start  5: mr_cloud_tests
+ 5/19 Test  #5: mr_cloud_tests ...................   Passed    6.57 sec
+      Start  6: mr_security_tests
+ 6/19 Test  #6: mr_security_tests ................   Passed    1.05 sec
+      Start  7: mr_catalog_tests
+ 7/19 Test  #7: mr_catalog_tests .................   Passed    0.02 sec
+      Start  8: mr_tool_tests
+ 8/19 Test  #8: mr_tool_tests ....................   Passed   24.52 sec
+      Start  9: mr_service_tests
+ 9/19 Test  #9: mr_service_tests .................   Passed    2.27 sec
+      Start 10: mr_board_tests
+10/19 Test #10: mr_board_tests ...................   Passed    0.02 sec
+      Start 11: mr_firmware_tests
+11/19 Test #11: mr_firmware_tests ................   Passed    0.02 sec
+      Start 12: mr_avb_tests
+12/19 Test #12: mr_avb_tests .....................   Passed    0.03 sec
+      Start 13: mr_recovery_tests
+13/19 Test #13: mr_recovery_tests ................   Passed    8.32 sec
+      Start 14: mr_recovery_image_tests
+14/19 Test #14: mr_recovery_image_tests ..........   Passed    0.02 sec
+      Start 15: mr_forensic_tests
+15/19 Test #15: mr_forensic_tests ................   Passed    0.53 sec
+      Start 16: mr_tsk_tests
+16/19 Test #16: mr_tsk_tests .....................   Passed    1.49 sec
+      Start 17: mr_avb_mutation_tests
+17/19 Test #17: mr_avb_mutation_tests ............   Passed    0.13 sec
+      Start 18: mr_ui_tests
+18/19 Test #18: mr_ui_tests ......................   Passed    9.31 sec
+      Start 19: mr_gui_smoke
+19/19 Test #19: mr_gui_smoke .....................   Passed   14.43 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =  70.32 sec

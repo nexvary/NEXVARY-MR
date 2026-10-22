@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-23",
+  "sources": [
+    {"id":"aosp.avb.header", "publisher":"Android Open Source Project", "kind":"primary-format", "url":"https://android.googlesource.com/platform/external/avb/+/refs/heads/main/libavb/avb_vbmeta_image.h", "reviewedBlob":"f9cbac447d0941429d813ca0aadef4401e7ec8d7"},
+    {"id":"aosp.avb.descriptor", "publisher":"Android Open Source Project", "kind":"primary-format", "url":"https://android.googlesource.com/platform/external/avb/+/refs/heads/main/libavb/avb_descriptor.h", "reviewedBlob":"5d0f0c699fe18f68d7504f2f9842a685ae3a53ec"}
+  ],
+  "technologies": [{"id":"avb.vbmeta.envelope", "sourceIds":["aosp.avb.header","aosp.avb.descriptor"]}],
+  "chipsets": [],
+  "devices": [],
+  "firmware": [],
+  "capabilities": [{
+    "id":"firmware.avb.metadata.v1",
+    "technologyIds":["avb.vbmeta.envelope"],
+    "chipsetIds":[], "deviceIds":[], "firmwareIds":[],
+    "proofLevel":"synthetic-only", "mutatesDevice":false,
+    "implementationPaths":["cpp/src/AvbMetadata.cpp","cpp/src/FirmwareBridge.cpp","qml/FirmwarePage.qml"],
+    "testEvidenceIds":["avb.synthetic.native","avb.synthetic.mutation","avb.synthetic.ui"],
+    "limits":["raw-vbmeta-only","16-MiB-input","descriptor-envelopes-only","no-signature-verification","no-oem-trust-verification","no-device-approval"]
+  }],
+  "testEvidence": [
+    {"id":"avb.synthetic.native","kind":"synthetic","path":"cpp/tests/avb_tests.cpp","deviceIds":[],"firmwareIds":[]},
+    {"id":"avb.synthetic.mutation","kind":"synthetic","path":"cpp/tests/avb_mutation_tests.cpp","deviceIds":[],"firmwareIds":[]},
+    {"id":"avb.synthetic.ui","kind":"synthetic","path":"qml/tests/tst_navigation.qml","deviceIds":[],"firmwareIds":[]}
+  ]
+}

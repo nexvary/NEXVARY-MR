@@ -40,7 +40,7 @@ App-local deployment preserves portable and per-user installation without requir
 
 ## Optional external tools
 
-- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected and started as a separate user-installed application. Its dependency notices apply to its own package.
+- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected as a separate user-installed application; launch is currently blocked by the compiled operation policy pending consent/lifecycle validation. Its dependency notices apply to its own package.
 - [Android SDK platform-tools](https://developer.android.com/tools/releases/platform-tools): Google SDK terms; obtain directly from Google. No binary redistribution is performed here.
 - OpenBoardView and TRACE Boardviewer are researched, separately licensed products. No source, executable, icons or file parsers from them are bundled.
 
@@ -59,3 +59,4 @@ The optional Android companion uses the official MIT Shizuku API/provider13.1.5,
 ## Fluent navigation SVGs
 
 Ten unmodified Microsoft Fluent System Icons color SVGs are bundled. MIT copyright/permission notice: `licenses/FLUENT-ICONS-MIT.txt`. Exact upstream revision, paths, Git blob IDs and SHA256 digests are recorded in `assets/icons/PROVENANCE.json` in the source repository. SVG decoding uses Qt SVG (matching Qt 6.8.3), deployed dynamically as Qt6Svg.dll and qsvg.dll and covered by the Qt source/license links above. No emoji or font glyph is used for navigation.
+

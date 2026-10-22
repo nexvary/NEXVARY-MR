@@ -1,0 +1,70 @@
+{
+  "reviewedOn": "2026-10-23",
+  "securityAuditCompleted": false,
+  "distributionLicenseApproved": false,
+  "repositories": [
+    {
+      "repository": "libusb/libusb",
+      "licenseDetected": "LGPL-2.1",
+      "archived": false,
+      "defaultBranch": "master",
+      "pushedAt": "2026-10-21T02:42:26Z",
+      "updatedAt": "2026-10-22T15:17:27Z"
+    },
+    {
+      "repository": "Genymobile/scrcpy",
+      "licenseDetected": "Apache-2.0",
+      "archived": false,
+      "defaultBranch": "master",
+      "pushedAt": "2026-10-22T17:50:35Z",
+      "updatedAt": "2026-10-22T22:50:37Z"
+    },
+    {
+      "repository": "RikkaApps/Shizuku-API",
+      "licenseDetected": "MIT",
+      "archived": false,
+      "defaultBranch": "master",
+      "pushedAt": "2025-05-29T19:12:40Z",
+      "updatedAt": "2026-10-22T19:13:10Z"
+    },
+    {
+      "repository": "Cisco-Talos/clamav",
+      "licenseDetected": "GPL-2.0",
+      "archived": false,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-22T17:34:48Z",
+      "updatedAt": "2026-10-22T21:22:07Z"
+    },
+    {
+      "repository": "sleuthkit/sleuthkit",
+      "archived": false,
+      "defaultBranch": "develop-4.1x",
+      "pushedAt": "2026-10-20T00:48:59Z",
+      "updatedAt": "2026-10-22T08:15:00Z"
+    },
+    {
+      "repository": "abrignoni/ALEAPP",
+      "licenseDetected": "MIT",
+      "archived": false,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-22T21:07:09Z",
+      "updatedAt": "2026-10-22T21:07:13Z"
+    },
+    {
+      "repository": "wireshark/wireshark",
+      "licenseDetected": "GPL-2.0",
+      "archived": false,
+      "defaultBranch": "master",
+      "pushedAt": "2026-10-22T21:42:29Z",
+      "updatedAt": "2026-10-22T21:42:35Z"
+    },
+    {
+      "repository": "libarchive/libarchive",
+      "licenseDetected": "NOASSERTION",
+      "archived": false,
+      "defaultBranch": "master",
+      "pushedAt": "2026-10-22T16:42:05Z",
+      "updatedAt": "2026-10-22T16:42:11Z"
+    }
+  ]
+}

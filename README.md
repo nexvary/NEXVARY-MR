@@ -58,3 +58,7 @@ sideload and erase) cannot be enabled through the UI or configuration.
 and default data directory; model-specific physical acceptance is still pending.
 Screen mirroring is unavailable until its consent/lifecycle gate is completed.
 See [the current development checkpoint](docs/release/DEVELOPMENT_CHECKPOINT_2026-10-23.md).
+
+### Advanced Mobile Research Lab
+
+Firmware Lab now includes bounded local raw-vbmeta AVB metadata inspection and JSON export. It never treats parsed declarations as signature/OEM trust, rollback safety or phone compatibility. See [scope and tests](research/advanced-mobile/README.md), [traceability registry](research/advanced-mobile/knowledge.json), [competitive evidence](docs/research/COMPETITIVE_EVIDENCE_2026-10-23.md) and [open-source integration decisions](docs/research/OPEN_SOURCE_SELECTION_2026-10-23.md). No physical model is approved by the registry.

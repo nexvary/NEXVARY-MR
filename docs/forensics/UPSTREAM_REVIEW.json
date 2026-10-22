@@ -25,7 +25,7 @@
     "commitDate": "2026-10-14T20:15:07Z",
     "archived": false,
     "licenseDetected": null,
-    "integrationStatus": "not integrated; no executable bundled",
+    "integrationStatus": "bounded external mmls adapter implemented; no executable bundled; not full libtsk integration",
     "reviewedOn": "2026-10-18",
     "licenseReviewPending": "HTTP Error 404: Not Found",
     "additionalLicenseSources": [
@@ -47,7 +47,8 @@
         "sha256": "c44ddab37556dec46db7d443004b3479b298ef0518938c1449794292f2fd7765",
         "opening": "IBM PUBLIC LICENSE VERSION 1.0 - CORONER TOOLKIT UTILITIES\n\nTHE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS IBM PUBLIC\nLICENSE (\"AGREEMENT\").  ANY USE, REPRODUCTION OR DISTRIBUTION OF THE\nPROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.\n\n1.  DEFINITIONS\n\n\"Contribution\" means:  \n    a) in the case of International Business Machines Corporation (\"IBM\"), \n       the Original Program, and \n    b) in the case of each Contributor, \n       i)  changes to the Program, and\n       ii) additions to the Program;\n           where such changes and/or additions to the Program originate\n           from and are distributed by that particular Contributor.  \n           A Contribution 'originates' from a Contributor if it was added \n           to the Program by such Contributor itself or anyone acting on \n           such Contributor's behalf.  \n    Contributions do not include additions to the Program which:\n       (i)  are separate modules of software distributed in conjunction \n            with the Program under their own license agreement, and \n       (ii) are not derivative works of the Program.\n\n\"Contributor\" means IBM and any other entity that distributes the Program.\n\n\"Licensed Patents \" mean patent claims licensable by a Contributor which\nare necessarily infringed by the use or sale of its Contribution alone\nor when combined with the Program.\n\n\"Original Program\" means the original version of the software accompanying\nthis Agreement as released by IBM, including "
       }
-    ]
+    ],
+    "integrationStatusReviewedOn": "2026-10-23"
   },
   {
     "repository": "abrignoni/ALEAPP",

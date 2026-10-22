@@ -9,6 +9,17 @@ TestCase {
  width:1536;height:980
  MR.Main {id:app}
  function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function test_avbScopeAndMinimumSize(){
+  app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=1
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
+   const result=findChild(app,"avbResult");verify(result.visible);verify(result.height>=100)
+   verify(findChild(app,"avbTrustNotice").visible);verify(findChild(app,"avbScope").text.indexOf("16 MiB")>=0)
+   compare(findChild(app,"inspectAvb").enabled,false);compare(findChild(app,"exportAvb").enabled,false)
+   const choose=findChild(app,"chooseAvb");const point=choose.mapToItem(app.contentItem,choose.width/2,choose.height/2);verify(point.y>0&&point.y<app.height)
+  }
+  findChild(app,"firmwareTabs").currentIndex=0
+ }
  function test_compiledBuildProfileIsVisible(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;verify(waitForRendering(app.contentItem))
   const label=findChild(app,"serviceBuildProfile");verify(label.visible)
