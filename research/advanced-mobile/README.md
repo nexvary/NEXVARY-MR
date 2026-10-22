@@ -33,4 +33,6 @@ ctest --test-dir build-avb-sanitized -R '^mr_avb_mutation_tests$' --output-on-fa
 
 AVB signature/trust validation, dm-verity, TEE/TrustZone, KeyMint/StrongBox, FBE/metadata encryption, published Qualcomm EDL and MediaTek DA protocols, Knox, Secure Enclave/Data Protection, USB/ADB/Fastboot/Recovery, chip-off/ISP/JTAG, damaged-device recovery and attestation need separate scoped source reviews and acceptance tests. They are **not implemented or endorsed by this AVB parser**. Raw memory access does not establish access to plaintext user data.
 
-Next practical research: select stable OEM-provided vbmeta samples with redistribution rights, compare envelope results with a pinned official avbtool, then design a separate signature verifier with explicit OEM trust anchors. Do not authorize device writes from parser success.
+Official AOSP avbtool 1.3.0 reference fixtures are now generated and compared in native tests; see `samples/avb-reference/README.md`. Both a valid synthetic signature and its corrupted counterpart remain unverified by NEXVARY.
+
+Next practical research: select stable OEM-provided vbmeta samples with redistribution rights and design a separate signature verifier with explicit OEM trust anchors. Do not authorize device writes from parser success.

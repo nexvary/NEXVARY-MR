@@ -1,0 +1,8 @@
+Synthetic valid signature:
+Verifying image /workspace/scratch/59ed88a44a1c/NEXVARY-MR/samples/avb-reference/signed-property.img using key at /tmp/nexvary-avb-synthetic-l3ejv_0a/ephemeral-fixture-only.pem
+vbmeta: Successfully verified SHA256_RSA2048 vbmeta struct in /workspace/scratch/59ed88a44a1c/NEXVARY-MR/samples/avb-reference/signed-property.img
+
+Synthetic corrupted signature (expected rejection):
+Verifying image /workspace/scratch/59ed88a44a1c/NEXVARY-MR/samples/avb-reference/corrupt-signature.img using key at /tmp/nexvary-avb-synthetic-l3ejv_0a/ephemeral-fixture-only.pem
+Signature not correct
+/tmp/nexvary-official-avbtool.py: Signature check failed for SHA256_RSA2048 vbmeta struct /workspace/scratch/59ed88a44a1c/NEXVARY-MR/samples/avb-reference/corrupt-signature.img

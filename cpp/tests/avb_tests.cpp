@@ -24,6 +24,32 @@ class AvbTests : public QObject {
     return b;
   }
 private slots:
+  void officialToolReferenceImages() {
+    const QString directory = QString::fromUtf8(MR_AVB_SAMPLE_DIR);
+    QFile manifest(directory + QStringLiteral("/expected.json"));
+    QVERIFY(manifest.open(QIODevice::ReadOnly));
+    const auto expected = QJsonDocument::fromJson(manifest.readAll()).object();
+    QVERIFY(expected["fixtureOnly"].toBool());
+    QCOMPARE(expected["toolVersion"].toString(), QStringLiteral("avbtool 1.3.0"));
+    const auto images = expected["images"].toArray(); QCOMPARE(images.size(), 3);
+    for (const auto &entry : images) {
+      const auto row = entry.toObject();
+      QFile file(directory + '/' + row["file"].toString()); QVERIFY(file.open(QIODevice::ReadOnly));
+      const auto bytes = file.readAll(); const auto report = AvbMetadata::inspect(bytes);
+      QCOMPARE(report["status"].toString(), QStringLiteral("metadata-only"));
+      QCOMPARE(report["sha256"].toString(), row["sha256"].toString());
+      QCOMPARE(report["declaredRollbackIndex"].toString(), row["rollbackIndex"].toString());
+      QCOMPARE(report["declaredRollbackLocation"].toInt(), row["rollbackLocation"].toInt());
+      QCOMPARE(report["declaredFlags"].toInt(), row["flags"].toInt());
+      QCOMPARE(report["declaredAlgorithmId"].toInt(), row["algorithmId"].toInt());
+      QCOMPARE(report["requiredVersion"].toString(), row["requiredVersion"].toString());
+      QCOMPARE(report["descriptorEnvelopes"].toArray().size(), row["descriptorCount"].toInt());
+      // Both valid and corrupted signatures are deliberately UNVERIFIED here.
+      QVERIFY(!report["signatureVerified"].toBool(true));
+      QVERIFY(!report["oemTrustVerified"].toBool(true));
+      QVERIFY(!report["deviceCompatibilityVerified"].toBool(true));
+    }
+  }
   void declarationsNeverBecomeTrust() {
     const auto b = fixture(); const auto r = AvbMetadata::inspect(b);
     QCOMPARE(r["status"].toString(), QStringLiteral("metadata-only"));
