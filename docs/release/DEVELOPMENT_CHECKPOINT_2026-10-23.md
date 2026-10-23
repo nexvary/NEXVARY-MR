@@ -59,7 +59,7 @@ Production:
 ```sh
 python3 scripts/prepare_sodium.py --destination "$PWD/build-deps/sodium"
 export MR_SODIUM_ROOT="$PWD/build-deps/sodium"
-cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure --output-junit production-results.xml
 ```
@@ -68,7 +68,7 @@ Laboratory (separate directory; never package as production):
 
 ```sh
 # Reuse the already prepared MR_SODIUM_ROOT from the production command above.
-cmake -S . -B build-lab -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=ON
+cmake -S . -B build-lab -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=ON
 cmake --build build-lab --parallel 2
 ctest --test-dir build-lab --output-on-failure --output-junit laboratory-results.xml
 ```
@@ -190,3 +190,7 @@ Staging is temporary, not OS-enforced immutable or crash-durable. Windows parent
 ### Windows original-name verification correction
 
 Run `39968684309` showed the hostile backslash case still failed after fixing ZIP fixture generation: Python `ZipInfo` normalizes separators while reading too. Dependency preparation now validates `orig_filename` before normalized names, rejects changed names and control/NUL characters before any extraction, and preserves all existing rejection checks. A host-independent normalization regression supplements actual hostile archives. Linux Python **27/27**; the pinned official Windows release archive is still accepted. Evidence: `evidence/update-staging-2026-10-23/python-linux-after-windows-reader-fix.txt`. Windows/native/sanitizer CI must pass on the containing commit; prior superseded runs are not approval.
+
+### Build dependency boundary
+
+The intentionally internal verifier is opt-in (`MR_BUILD_UPDATE_VERIFIER=ON`) instead of forcing an unused crypto dependency on ordinary GUI builders. A fresh normal GUI configuration succeeds without any sodium prefix and records the option OFF. All native Production/Laboratory CI configurations and the Linux ASan/UBSan configuration explicitly set it ON; no CI test is removed. README and verifier build instructions explain the boundary. Next remains full exact-head CI review, then a durable validated update-state journal; no installer is enabled.

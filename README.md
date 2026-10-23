@@ -38,6 +38,8 @@ ctest --test-dir build -C Release --output-on-failure
 
 `MR_WARNINGS_AS_ERRORS=ON` and `MR_SANITIZERS=ON` are available. Core-only builds omit Qt with `MR_BUILD_GUI=OFF`. Release tests use actual checks, including in `NDEBUG` builds.
 
+The separate internal signed-update verifier is opt-in with `MR_BUILD_UPDATE_VERIFIER=ON` and a prepared, pinned `MR_SODIUM_ROOT`; see [UPDATE_VERIFIER.md](docs/UPDATE_VERIFIER.md). Normal desktop builds do not require this unused runtime dependency. Native Production/Laboratory CI and the Linux sanitizer gate explicitly enable and test it. It does not enable installation or supply a production signing key.
+
 The Python 0.1 foundation remains available for parity review (`python -m nexvary_mr`); it is not the new commercial runtime. Its regression suite is `python -m unittest discover -s tests -v`. No legacy user database is silently migrated or removed. Importing legacy records into the native schema is not implemented.
 
 ## Validation boundaries

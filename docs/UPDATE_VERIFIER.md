@@ -107,7 +107,9 @@ cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure
 ```
 
-A core-only build remains dependency-free by default. For verifier-only testing,
+A normal desktop build leaves this unused internal component disabled by default;
+native CI explicitly enables it in both profiles and the sanitizer build. A
+core-only build remains dependency-free by default. For verifier-only testing,
 use `MR_BUILD_GUI=OFF` and `MR_BUILD_UPDATE_VERIFIER=ON`. Build dependency receipts,
 upstream checks and native results are retained by CI. RAII cleanup covers normal cancellation/failure/destruction, not abrupt process
 termination or power loss. No physical phone, Windows
