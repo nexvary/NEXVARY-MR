@@ -39,12 +39,13 @@ jobs:
       QT_QUICK_BACKEND: software
       MR_TSK_MMLS_PATH: /usr/bin/mmls
       MR_CLAMSCAN_PATH: /usr/bin/clamscan
+      MR_REQUIRE_BARCODE_DECODER: "1"
     steps:
       - uses: actions/checkout@v4
       - name: Install Qt and separately packaged TSK for synthetic integration
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav python3-venv curl
+          sudo apt-get install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv curl
       - name: Configure and build native GUI and fixtures
         run: |
           cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}

@@ -60,3 +60,9 @@ The optional Android companion uses the official MIT Shizuku API/provider13.1.5,
 
 Ten unmodified Microsoft Fluent System Icons color SVGs are bundled. MIT copyright/permission notice: `licenses/FLUENT-ICONS-MIT.txt`. Exact upstream revision, paths, Git blob IDs and SHA256 digests are recorded in `assets/icons/PROVENANCE.json` in the source repository. SVG decoding uses Qt SVG (matching Qt 6.8.3), deployed dynamically as Qt6Svg.dll and qsvg.dll and covered by the Qt source/license links above. No emoji or font glyph is used for navigation.
 
+
+## Workshop Code 39 labels
+
+The encoding table in `cpp/src/Code39Label.hpp` derives from ZXing-C++ **v2.3.0** `core/src/oned/ODCode39Writer.cpp` (Apache-2.0; Copyright 2016 Huy Cuong Nguyen and ZXing authors). The table is used with an original Qt renderer restricted to `NMR-` plus 16 uppercase hex characters. Source: https://github.com/zxing-cpp/zxing-cpp/blob/v2.3.0/core/src/oned/ODCode39Writer.cpp . The Apache license and attribution are in `packaging/licenses/ZXING-CODE39-*`, automatically copied by the Windows packager. No ZXing decoder/runtime is linked. There is no optional Mod-43 check character in these standard Code 39 labels; a successful lookup still requires operator review of the displayed order/device. The barcode is not an authentication or public tracking credential.
+
+Independent test decoding uses separately installed ZBar and Poppler on synthetic images/PDFs. These test-only tools and their libraries are not bundled. Scanner/printer hardware, Windows rendering and final distribution compliance remain acceptance gates.

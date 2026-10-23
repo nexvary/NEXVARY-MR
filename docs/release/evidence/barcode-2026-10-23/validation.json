@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-23",
+  "parentCommit": "aa8602ce4c589f06581718a77e4cfff518234c57",
+  "source": {
+    "project": "ZXing-C++",
+    "tag": "v2.3.0",
+    "file": "core/src/oned/ODCode39Writer.cpp",
+    "gitBlob": "3e02253e7b75a2896155f804238d23b8cb035b58",
+    "licenseGitBlob": "8f71f43fee3f78649d238238cbde51e6d7055c82",
+    "license": "Apache-2.0",
+    "integration": "encoding table only; original restricted Qt renderer"
+  },
+  "validation": {
+    "productionCTest": "24/24, 90.25 seconds",
+    "laboratoryCTest": "24/24, 125.90 seconds (full recheck)",
+    "barcodeQt": "13 passed, zero failures/skips per profile",
+    "qmlQt": "30 passed per profile",
+    "independentTools": "ZBar 0.23.93; Poppler pdftoppm",
+    "screenshotDecode": "Both production AR and EN screenshots decoded NMR-9AD7B2FF40F9DF74",
+    "initialLabRun": "23/24; GUI smoke reached unchanged 30-second CTest timeout. Standalone recheck passed in 17.41 seconds; full recheck passed with smoke 15.03 seconds. Root cause unproven; no timeout was increased/test disabled.",
+    "observedWarnings": "Qt UI teardown reports one item still being created; sandbox AF_NETLINK/DBus socket limitations visible in raw output. Passing assertions do not imply warning-free UI."
+  },
+  "limits": [
+    "No physical scanner/printer/Android acceptance",
+    "No Windows host or current successful Windows CI",
+    "ZBar/Poppler separately installed test tools, not shipped",
+    "No authentication granted by barcode",
+    "Workshop SQLite remains local plaintext; PDF includes customer data after explicit approval",
+    "No Release Candidate; main unchanged"
+  ]
+}

@@ -20,6 +20,22 @@ TestCase {
   }
   findChild(app,"firmwareTabs").currentIndex=0
  }
+ function test_workshopBarcodeCard(){
+  app.currentPage=5;findChild(app,"workshopTabs").currentIndex=0;verify(waitForRendering(app.contentItem))
+  const page=findChild(app,"workshopPage"),input=findChild(app,"barcodeLookup"),lookup=findChild(app,"findBarcode")
+  const id=workshopBridge.createOrder("Synthetic barcode customer","","Synthetic","Card fixture","SYNTHETIC-BC","USB","UI technician","");verify(id>0)
+  page.selectedId=id;mouseClick(findChild(app,"issueDeviceCard"));const dialog=findChild(app,"deviceCardDialog");tryCompare(dialog,"opened",true)
+  const code=findChild(app,"deviceCardCode").text;verify(/^NMR-[0-9A-F]{16}$/.test(code));verify(findChild(app,"deviceCardBarcode").source.toString().indexOf("data:image/png;base64,")===0)
+  compare(findChild(app,"exportDeviceCard").enabled,false);findChild(app,"deviceCardPrivacy").checked=true;compare(findChild(app,"exportDeviceCard").enabled,true)
+  verify(findChild(app,"deviceCardHistory").count>=2)
+  const scroll=findChild(app,"deviceCardScroll"),exportButton=findChild(app,"exportDeviceCard")
+  for(const arabic of [true,false])for(const dark of [true,false]){app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(dialog.width<=app.width-48);verify(findChild(app,"deviceCardBarcode").width>200);scroll.contentItem.contentY=Math.max(0,scroll.contentHeight-scroll.availableHeight);wait(30);const point=exportButton.mapToItem(scroll,exportButton.width/2,exportButton.height/2);verify(point.y>=0&&point.y<scroll.height,"Card export remains reachable");scroll.contentItem.contentY=0}
+  app.darkTheme=true
+  for(const arabic of [true,false]){app.ar=arabic;wait(60);verify(waitForRendering(app.contentItem));verify(uiEvidence.captureWindow(app,workshopScreenshotBase+(arabic?"ar":"en")+".png"))}
+  dialog.close();tryCompare(dialog,"visible",false);input.text=code;mouseClick(lookup);tryCompare(dialog,"opened",true);compare(page.selectedId,id);compare(findChild(app,"deviceCardCode").text,code);compare(findChild(app,"deviceCardPrivacy").checked,false)
+  dialog.close();tryCompare(dialog,"visible",false);input.text="INVALID";mouseClick(lookup);verify(findChild(app,"barcodeLookupError").visible);compare(dialog.opened,false);input.clear()
+  verify(waitForRendering(app.contentItem));mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
+ }
  function test_mirrorConsentAndNavigation(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(waitForRendering(app.contentItem))
   verify(findChild(app,"mirrorScope").visible);compare(findChild(app,"reviewMirror").enabled,false);compare(findChild(app,"stopMirror").enabled,false)

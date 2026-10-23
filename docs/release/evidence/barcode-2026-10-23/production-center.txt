@@ -1,0 +1,13 @@
+********* Start testing of CenterTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CenterTests::initTestCase()
+PASS   : CenterTests::profilesPersistWithoutDuplicateOwnership()
+PASS   : CenterTests::trackingPrivacyRotationAndRestore()
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : CenterTests::realHttpPortal()
+PASS   : CenterTests::migrationV2AndExpiry()
+PASS   : CenterTests::cleanupTestCase()
+Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 127ms
+********* Finished testing of CenterTests *********

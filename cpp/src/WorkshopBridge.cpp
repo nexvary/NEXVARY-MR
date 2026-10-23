@@ -1,4 +1,7 @@
 #include "WorkshopBridge.hpp"
+#include "Code39Label.hpp"
+#include "RecoveryFile.hpp"
+#include <QBuffer>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
@@ -39,6 +42,7 @@ QString diagnosisMigrationSql() {
 QString trackingSql() {
     return QStringLiteral("CREATE TABLE tracking_links(order_id INTEGER PRIMARY KEY REFERENCES orders(id),token_hash TEXT NOT NULL UNIQUE CHECK(length(token_hash)=64),expires_at TEXT NOT NULL,message TEXT NOT NULL DEFAULT '' CHECK(length(message)<=1000))");
 }
+QString labelSql(){return QStringLiteral("CREATE TABLE order_labels(order_id INTEGER PRIMARY KEY REFERENCES orders(id),barcode TEXT NOT NULL UNIQUE CHECK(length(barcode)=20 AND substr(barcode,1,4)='NMR-' AND substr(barcode,5) NOT GLOB '*[^0-9A-F]*'),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)");}
 QVariantList rows(QSqlQuery &q) {
     QVariantList list;
     while(q.next()) { QVariantMap row; for(int i=0;i<q.record().count();++i) row.insert(q.record().fieldName(i),q.value(i)); list.append(row); }
@@ -91,27 +95,28 @@ bool WorkshopBridge::open() {
 bool WorkshopBridge::migrate() {
     QSqlQuery q(db_); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()) return fail(q.lastError().text());
     const int v=q.value(0).toInt(); q.finish();
-    if(v>3) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
-    if(v==3) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
+    if(v>4) return fail(QStringLiteral("Database belongs to a newer version; refusing downgrade."));
+    if(v==4) return validDb(db_) || fail(QStringLiteral("Database schema/integrity validation failed."));
     if(v>0 && !validDb(db_,true)) return fail(QStringLiteral("Legacy database schema/integrity validation failed."));
     if(!db_.transaction()) return fail(db_.lastError().text());
     if(v==0) for(const auto &sql:migrationSql()) if(!q.exec(sql)) { db_.rollback(); return fail(q.lastError().text()); }
     if(v<2&&!q.exec(diagnosisMigrationSql())) { db_.rollback();return fail(q.lastError().text()); }
-    if(!q.exec(trackingSql())||!q.exec(QStringLiteral("PRAGMA user_version=3"))) { db_.rollback();return fail(q.lastError().text()); }
+    if((v<3&&!q.exec(trackingSql()))||!q.exec(labelSql())||!q.exec(QStringLiteral("PRAGMA user_version=4"))) { db_.rollback();return fail(q.lastError().text()); }
     if(!db_.commit()) {db_.rollback();return fail(db_.lastError().text());}
     return validDb(db_) || fail(QStringLiteral("Migrated database failed validation."));
 }
 bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
     QSqlQuery q(db); if(!q.exec(QStringLiteral("PRAGMA integrity_check"))||!q.next()||q.value(0).toString()!=QStringLiteral("ok")) return false;
     q.finish(); if(!q.exec(QStringLiteral("PRAGMA foreign_key_check"))||q.next()) return false;
-    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||(q.value(0).toInt()!=3 && !(allowLegacy&&(q.value(0).toInt()==1||q.value(0).toInt()==2)))) return false;
+    q.finish(); if(!q.exec(QStringLiteral("PRAGMA user_version"))||!q.next()||(q.value(0).toInt()!=4 && !(allowLegacy&&(q.value(0).toInt()>=1&&q.value(0).toInt()<=3)))) return false;
     const int version=q.value(0).toInt();
     QMap<QString,QStringList> required={
       {"customers",{"id","name","phone"}}, {"devices",{"id","customer_id","brand","model","serial"}},
       {"orders",{"id","device_id","symptom","technician","status","labor_cents","notes","created_at","updated_at"}},
       {"parts",{"id","sku","name","quantity","unit_cents"}}, {"order_parts",{"id","order_id","part_id","quantity","unit_cents"}}, {"events",{"id","order_id","action","created_at"}}};
     if(version>=2) required.insert(QStringLiteral("diagnoses"),{"id","order_id","symptom","guidance","findings","evidence","technician","created_at"});
-    if(version==3) required.insert(QStringLiteral("tracking_links"),{"order_id","token_hash","expires_at","message"});
+    if(version>=3) required.insert(QStringLiteral("tracking_links"),{"order_id","token_hash","expires_at","message"});
+    if(version>=4)required.insert(QStringLiteral("order_labels"),{"order_id","barcode","created_at"});
     // Match our own schema, including CHECK/UNIQUE/foreign-key constraints. A file
     // with familiar column names but relaxed constraints is not an application backup.
     QMap<QString,QString> expectedSql;
@@ -121,7 +126,8 @@ bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
         expectedSql.insert(name,sql);
     }
     if(version>=2) expectedSql.insert(QStringLiteral("diagnoses"),diagnosisMigrationSql());
-    if(version==3) expectedSql.insert(QStringLiteral("tracking_links"),trackingSql());
+    if(version>=3) expectedSql.insert(QStringLiteral("tracking_links"),trackingSql());
+    if(version>=4)expectedSql.insert(QStringLiteral("order_labels"),labelSql());
     // A backup is application data, not a mechanism to install executable triggers/views.
     q.finish();if(!q.exec(QStringLiteral("SELECT name,type,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'"))) return false;
     while(q.next()) {
@@ -158,12 +164,17 @@ bool WorkshopBridge::validDb(QSqlDatabase &db,bool allowLegacy) const {
         if(q.lastError().isValid()) return false;
         q.finish();if(!q.exec(QStringLiteral("SELECT order_id FROM diagnoses GROUP BY order_id HAVING COUNT(*)>100 LIMIT 1"))||q.next()) return false;
     }
+    if(version>=4){
+        q.finish();if(!q.exec(QStringLiteral("SELECT barcode,created_at,typeof(barcode) FROM order_labels")))return false;
+        while(q.next())if(q.value(2).toString()!=QStringLiteral("text")||!mr::workshop::validBarcode(q.value(0).toString())||!QDateTime::fromString(q.value(1).toString(),QStringLiteral("yyyy-MM-dd HH:mm:ss")).isValid())return false;
+        if(q.lastError().isValid())return false;
+    }
     return true;
 }
 QString WorkshopBridge::checkIntegrity() { return validDb(db_)?QStringLiteral("ok"):QStringLiteral("failed"); }
 QVariantList WorkshopBridge::orders() const {
     if(!ready_) return {};
-    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,c.id AS customer_id,d.brand,d.model,d.serial,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); auto result=rows(q);for(auto &v:result){auto row=v.toMap();row.insert("total_display",money(row.value("total_cents").toLongLong()));v=row;}return result;
+    QSqlQuery q(db_); q.exec(QStringLiteral("SELECT o.*,c.name AS customer,c.phone,c.id AS customer_id,d.brand,d.model,d.serial,COALESCE((SELECT barcode FROM order_labels WHERE order_id=o.id),'') AS barcode,COALESCE((SELECT SUM(quantity*unit_cents) FROM order_parts WHERE order_id=o.id),0)+o.labor_cents AS total_cents FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id ORDER BY o.id DESC")); auto result=rows(q);for(auto &v:result){auto row=v.toMap();row.insert("total_display",money(row.value("total_cents").toLongLong()));v=row;}return result;
 }
 QVariantList WorkshopBridge::inventory() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM parts ORDER BY name"));return rows(q); }
 QVariantList WorkshopBridge::events() const { if(!ready_) return {}; QSqlQuery q(db_); q.exec(QStringLiteral("SELECT * FROM events ORDER BY id DESC LIMIT 300"));return rows(q); }
@@ -224,8 +235,8 @@ bool WorkshopBridge::exportOrders(const QString &value) {
     const auto target=localPath(value);
     if(!ready_||target.isEmpty()||databaseTarget(target,path_)) return fail(QStringLiteral("Export requires a local file separate from the active database."));
     QSaveFile file(target);if(!file.open(QIODevice::WriteOnly)) return fail(file.errorString());
-    QString out=QString(QChar(0xFEFF))+QStringLiteral("id,customer,phone,brand,model,serial,symptom,status,technician,total_cents,notes\r\n");
-    for(const auto &v:orders()) {const auto m=v.toMap(); QStringList line;for(const auto &key:QStringList{"id","customer","phone","brand","model","serial","symptom","status","technician","total_cents","notes"}) line<<csv(m.value(key).toString());out+=line.join(',')+QStringLiteral("\r\n");}
+    QString out=QString(QChar(0xFEFF))+QStringLiteral("id,customer,phone,brand,model,serial,symptom,status,technician,total_cents,notes,barcode\r\n");
+    for(const auto &v:orders()) {const auto m=v.toMap(); QStringList line;for(const auto &key:QStringList{"id","customer","phone","brand","model","serial","symptom","status","technician","total_cents","notes","barcode"}) line<<csv(m.value(key).toString());out+=line.join(',')+QStringLiteral("\r\n");}
     const auto bytes=out.toUtf8();if(file.write(bytes)!=bytes.size()||!file.commit()) return fail(file.errorString());error_.clear();emit errorChanged();return true;
 }
 bool WorkshopBridge::exportInvoice(int id,const QString &value) {
@@ -427,4 +438,56 @@ QVariantList WorkshopBridge::publicTrackingSnapshot() const {
         records.append(record);
     }
     return records;
+}
+
+
+QVariantMap WorkshopBridge::deviceCard(int orderId) const {
+ if(!ready_||orderId<=0)return {};
+ QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT o.id AS order_id,o.device_id,c.name AS customer,d.brand,d.model,d.serial,o.symptom,o.status,o.created_at AS received_at,l.barcode FROM orders o JOIN devices d ON d.id=o.device_id JOIN customers c ON c.id=d.customer_id JOIN order_labels l ON l.order_id=o.id WHERE o.id=?"));q.addBindValue(orderId);
+ if(!q.exec()||!q.next())return {};
+ QVariantMap card;for(int i=0;i<q.record().count();++i)card.insert(q.record().fieldName(i),q.value(i));
+ const auto image=mr::workshop::barcodeImage(card.value("barcode").toString());if(image.isNull())return {};
+ QByteArray png;QBuffer buffer(&png);if(!buffer.open(QIODevice::WriteOnly)||!image.save(&buffer,"PNG"))return {};
+ card.insert("barcodeImage",QStringLiteral("data:image/png;base64,")+QString::fromLatin1(png.toBase64()));return card;
+}
+QVariantMap WorkshopBridge::issueDeviceCard(int orderId){
+ if(!ready_||orderId<=0){fail(QStringLiteral("Select an existing repair order."));return {};}
+ QSqlQuery exists(db_);exists.prepare(QStringLiteral("SELECT id FROM orders WHERE id=?"));exists.addBindValue(orderId);if(!exists.exec()||!exists.next()){fail(QStringLiteral("Repair order not found."));return {};}
+ exists.finish();const auto existing=deviceCard(orderId);if(!existing.isEmpty())return existing;
+ if(!db_.transaction()){fail(db_.lastError().text());return {};}
+ for(int attempt=0;attempt<5;++attempt){
+  const auto code=QStringLiteral("NMR-%1%2").arg(QRandomGenerator::system()->generate(),8,16,QChar('0')).arg(QRandomGenerator::system()->generate(),8,16,QChar('0')).toUpper();
+  QSqlQuery q(db_);q.prepare(QStringLiteral("INSERT OR IGNORE INTO order_labels(order_id,barcode) VALUES(?,?)"));q.addBindValue(orderId);q.addBindValue(code);
+  if(!q.exec()){db_.rollback();fail(QStringLiteral("Could not create device barcode."));return {};}
+  const bool inserted=q.numRowsAffected()==1;q.finish();const auto card=deviceCard(orderId);
+  if(card.isEmpty())continue;
+  if((inserted&&!log(orderId,QStringLiteral("Device intake barcode issued")))||!db_.commit()){db_.rollback();fail(QStringLiteral("Device card transaction failed."));return {};}
+  error_.clear();emit errorChanged();emit changed();return card;
+ }
+ db_.rollback();fail(QStringLiteral("Could not allocate a unique device barcode."));return {};
+}
+QVariantMap WorkshopBridge::lookupBarcode(const QString &input){
+ const auto code=input.trimmed();
+ if(!ready_||input.size()>64||!mr::workshop::validBarcode(code)){fail(QStringLiteral("Scan or enter a complete NMR device barcode."));return {};}
+ QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT order_id FROM order_labels WHERE barcode=?"));q.addBindValue(code);
+ if(!q.exec()||!q.next()){fail(QStringLiteral("Barcode not found in this workshop database."));return {};}
+ const int id=q.value(0).toInt();q.finish();error_.clear();emit errorChanged();return deviceCard(id);
+}
+QVariantList WorkshopBridge::orderHistory(int orderId) const {
+ if(!ready_||orderId<=0)return {};
+ QSqlQuery q(db_);q.prepare(QStringLiteral("SELECT id,action,created_at FROM events WHERE order_id=? ORDER BY id DESC LIMIT 200"));q.addBindValue(orderId);return q.exec()?rows(q):QVariantList();
+}
+bool WorkshopBridge::exportIntakeCard(int orderId,const QString &input,bool approved){
+ const auto path=mr::recovery::localFilePath(input);const auto card=deviceCard(orderId);
+ if(!ready_||!approved||path.isEmpty()||card.isEmpty()||databaseTarget(path,path_)||QFileInfo::exists(path))return fail(QStringLiteral("Approve customer-data export and choose a new local PDF filename."));
+ auto safe=[&](const char *key){return card.value(QLatin1String(key)).toString().toHtmlEscaped();};
+ const auto code=card.value("barcode").toString();
+ QString html=QStringLiteral("<html><body><h1>NEXVARY MR</h1><h2>Device intake receipt / بطاقة استلام جهاز</h2><p>Order / الأمر: #%1</p><p>%2<br>%3 %4<br>Serial / التسلسلي: %5</p><p>Received UTC / الاستلام: %6<br>Status / الحالة: %7</p><p>Symptom / العَرَض: %8</p><p><img src='mr-device-barcode' width='600' height='72'></p><p style='font-family:monospace'>%9</p><p>Local order lookup only; not a tracking credential / باركود محلي للأمر، وليس تصريحًا لدخول بوابة التتبع</p></body></html>").arg(orderId).arg(safe("customer"),safe("brand"),safe("model"),safe("serial"),safe("received_at"),safe("status"),safe("symptom"),code);
+ QByteArray bytes;QBuffer buffer(&bytes);if(!buffer.open(QIODevice::WriteOnly))return fail(QStringLiteral("Could not prepare intake PDF."));
+ {QPdfWriter writer(&buffer);writer.setTitle(QStringLiteral("NEXVARY MR intake card"));writer.setCreator(QStringLiteral("NEXVARY MR"));writer.setPageSize(QPageSize(QPageSize::A4));writer.setResolution(96);QTextDocument document;document.addResource(QTextDocument::ImageResource,QUrl("mr-device-barcode"),mr::workshop::barcodeImage(code));document.setHtml(html);document.print(&writer);}
+ if(!bytes.startsWith("%PDF-"))return fail(QStringLiteral("Intake PDF generation failed."));
+ QFile out(path);if(!out.open(QIODevice::WriteOnly|QIODevice::NewOnly))return fail(QStringLiteral("Could not create new intake PDF."));out.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner);
+ const bool ok=out.write(bytes)==bytes.size()&&out.flush();out.close();if(!ok){QFile::remove(path);return fail(QStringLiteral("Intake PDF write failed."));}
+ if(!log(orderId,QStringLiteral("Device intake PDF exported with customer-data approval")))return fail(QStringLiteral("Intake PDF exported, but its audit entry failed."));
+ error_.clear();emit errorChanged();emit changed();return true;
 }
