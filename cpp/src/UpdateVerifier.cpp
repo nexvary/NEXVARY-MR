@@ -1,4 +1,5 @@
 #include "UpdateVerifier.hpp"
+#include "UpdateFormat.hpp"
 #include "RecoveryFile.hpp"
 #include "ServiceOperationPolicy.hpp"
 #include <QCryptographicHash>
@@ -16,20 +17,8 @@
 namespace mr::update {
 namespace {
 CheckResult fail(const char *code) { return {QString::fromLatin1(code), {}}; }
-bool decimal(const QString &value, quint64 &number) {
-  static const QRegularExpression pattern(QStringLiteral("\\A(?:0|[1-9][0-9]{0,19})\\z"));
-  if (!pattern.match(value).hasMatch()) return false;
-  bool ok = false; number = value.toULongLong(&ok); return ok;
-}
-bool version(const QString &value, std::array<quint64,3> &parts) {
-  const auto components = value.split(QLatin1Char('.'));
-  if (components.size() != 3) return false;
-  for (qsizetype i = 0; i < 3; ++i) {
-    auto &part = parts[static_cast<std::size_t>(i)];
-    if (!decimal(components[i], part) || part > 65535) return false;
-  }
-  return true;
-}
+using detail::decimal;
+using detail::version;
 bool keyId(const QString &value) {
   static const QRegularExpression pattern(QStringLiteral("\\A[a-z0-9][a-z0-9._-]{0,63}\\z"));
   return pattern.match(value).hasMatch();
@@ -98,9 +87,8 @@ CheckResult Verifier::checkManifest(const QByteArray &manifest, const QByteArray
   const auto object = document.object();
   const auto id = object.value(QStringLiteral("keyId")).toString();
   if (!keyId(id) || !keys_.contains(id)) return fail("unapproved-signing-key");
-  static const int initialized = sodium_init();
-  if (initialized < 0) return fail("crypto-initialization");
-  if (QByteArray(SODIUM_VERSION_STRING) != "1.0.22" || QByteArray(sodium_version_string()) != "1.0.22")
+  if (!detail::cryptoInitialized()) return fail("crypto-initialization");
+  if (!detail::approvedCryptoVersion())
     return fail("crypto-version-unapproved");
   const auto message = signingMessage(manifest);
   const auto publicKey = keys_.value(id);

@@ -114,3 +114,85 @@ use `MR_BUILD_GUI=OFF` and `MR_BUILD_UPDATE_VERIFIER=ON`. Build dependency recei
 upstream checks and native results are retained by CI. RAII cleanup covers normal cancellation/failure/destruction, not abrupt process
 termination or power loss. No physical phone, Windows
 10/11 client, production signing key or end-to-end update acceptance is implied.
+
+## Authenticated atomic transaction journal
+
+`UpdateJournal.hpp` adds a separate internal ledger to the same native library.
+It records checkpoints, not installer commands or proof that files were installed.
+The caller supplies an existing approved local private directory, an independently
+provisioned random 32-byte authentication secret, and a `JournalAnchor` containing
+an opaque installation identifier, trusted installed version/sequence and minimum
+journal revision. Empty/invalid/all-zero keys reject; no default key is generated,
+serialized or embedded. The object's private key copy is zeroed on destruction;
+the caller must protect and clear its own secret. The secret must not be reused
+as an update signing key.
+
+Each bounded compact JSON checkpoint is authenticated using libsodium
+`crypto_auth` (HMAC-SHA512-256), with a journal-specific domain and installation/
+build-profile binding. MAC authentication does not encrypt metadata. The record
+contains version/floor/revision/phase and selected candidate hashes/size/kind;
+source/staging paths and keys are absent. Malformed, noncanonical, unauthenticated,
+wrong-scope, out-of-range or internally inconsistent records fail without reset
+or an apparently successful report. Initialization refuses every existing target,
+including corrupt state. A missing file with a nonzero trusted revision floor
+cannot silently bootstrap a new history.
+
+All readers/writers cooperate through a bounded nonblocking `QLockFile` acquisition
+with age-based lock stealing disabled. A revision compare-and-swap rejects stale
+writers. `QSaveFile`, with direct-write fallback explicitly disabled, commits a
+new whole record by replacement; write/commit failure returns an error rather than
+falling back to in-place overwrite. An object also remembers its highest observed
+revision and installed state. An uncertain I/O result must be followed by a fresh
+read, not a blind retry or reset. Only the fixed owned state/lock names are used;
+unrelated files and software installation contents are untouched.
+
+| Checkpoint | Permitted next action |
+| --- | --- |
+| idle | Prepare a currently approved and rehashed `StagedPackage` |
+| prepared | Recheck the exact candidate, then record applying; or discard before execution |
+| applying | Record verifying; or record an independently verified restoration of the exact baseline |
+| verifying | Record an independently verified candidate outcome, or verified baseline restoration |
+
+A reopened pending transaction remains pending. It does not launch or resume an
+installer automatically. Applying requires the exact prepared candidate's manifest
+hash and package metadata plus a fresh signature/time/key/hash check. Confirmation
+also rechecks that candidate and requires trusted native postcondition observations
+matching its version and sequence exactly. Only then does the ledger checkpoint
+the newer installed version/floor. Recording restoration preserves the baseline
+floor; it cannot lower a committed floor. These methods **record supplied trusted
+observations**; they neither inspect installed program files nor perform a rollback.
+`postconditionVerifiedByJournal`, `protectedAnchorPersisted` and
+`installationAuthorized` explicitly remain false.
+
+A MAC cannot detect replay of a previously valid checkpoint by itself. The trusted
+revision/version/floor anchor must live in independently protected state and be
+advanced by the future orchestrator. The RAM high-water mark protects only the
+current object lifetime. A test explicitly demonstrates that reopening with an
+old/unprotected anchor can accept an old valid MAC; this is not described as
+complete anti-rollback protection. OS key provisioning, anchor persistence/ordering,
+Windows DACL and directory-handle hardening remain integration gates. POSIX rejects
+parents owned by another user or writable by group/others. Explicit network paths
+are rejected, but mounted/virtual filesystems cannot all be identified; the caller
+must select a supported private local filesystem. QLockFile's cross-host/container
+limitations apply. A malicious same-user process or administrator is not excluded
+by these primitives alone.
+
+Atomic checkpoint replacement and process-restart recovery are tested separately
+from power-loss durability. The suite kills real owned children while holding a
+lock, before a QSaveFile commit, and after a journal prepare commit; then reopens
+and validates state. The before-commit child exercises the underlying QSaveFile
+primitive explicitly, not an injected production crash hook. Two real writers
+race on the same revision and exactly one may commit. Test-only ephemeral MAC keys
+travel over stdin, never command-line arguments, environment variables or files;
+hex framing avoids Windows CRT text-mode transformations. No failure injection or
+pause switch is added to the desktop application.
+
+There is no power-cut/filesystem certification, guaranteed directory fsync on all
+platforms, cross-file atomic installer, persistent package store, crash-leftover
+collector or OS-protected anchor yet. `powerLossDurabilityGuaranteed` remains false.
+The journal and verifier are intentionally internal and do not enable an update UI,
+unattended installation, production trust anchors or stage 57/60 approval.
+
+References: [Qt QSaveFile](https://doc.qt.io/qt-6/qsavefile.html),
+[Qt QLockFile and its filesystem limitations](https://doc.qt.io/qt-6/qlockfile.html),
+[libsodium secret-key authentication](https://doc.libsodium.org/secret-key_cryptography/secret-key_authentication).
