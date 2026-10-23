@@ -8,7 +8,7 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
- function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
+ function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(waitForRendering(app.contentItem))}
  function test_avbScopeAndMinimumSize(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=1
   for(const arabic of [true,false])for(const dark of [true,false]){
@@ -128,8 +128,8 @@ TestCase {
   compare(app.currentPage,9);
   let lab=findChild(app,"forensicLabWorkspace");
   verify(lab!==null,"Forensic Lab workspace missing");
-  compare(lab.modules.length,12);
-  compare(lab.modules.filter(function(m){return m.ready}).length,9);
+  compare(lab.modules.length,13);
+  compare(lab.modules.filter(function(m){return m.ready}).length,10);
   verify(waitForRendering(app.contentItem));
   app.ar=false;
   verify(waitForRendering(app.contentItem));
@@ -139,6 +139,33 @@ TestCase {
   compare(app.titles[9],"مختبر الأدلة الرقمية");
   mouseClick(app.navigationButton(0));
   compare(app.currentPage,0);
+ }
+ function test_forensicCaptureWorkflow(){
+  app.currentPage=9;const tabs=findChild(app,"forensicTabs");tabs.currentIndex=3
+  const page=findChild(app,"forensicToolsPage"),run=findChild(app,"runPcapAnalysis"),consent=findChild(app,"pcapConsent")
+  findChild(app,"forensicToolsScroll").contentItem.contentY=0
+  page.capturePath="";consent.checked=false;compare(run.enabled,false)
+  verify(recoveryBridge.createCase("Synthetic PCAP UI","Fixture consent","Synthetic","No phone","","backup","none",true))
+  page.capturePath=syntheticCapturePath;consent.checked=true;compare(run.enabled,false)
+  verify(recoveryBridge.recordOperator("UI operator","Synthetic capture authorization",true));tryCompare(run,"enabled",true)
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(50)
+   const heading=findChild(app,"forensicHeading");verify(heading.height>=heading.implicitHeight)
+   const scope=findChild(app,"pcapScope");verify(scope.visible);verify(scope.text.indexOf("8 MiB")>=0)
+   const point=run.mapToItem(app.contentItem,run.width/2,run.height/2);verify(point.y>0&&point.y<app.height)
+  }
+  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-pcap-summary/v1")>=0)
+  const show=findChild(app,"showPcapResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
+  verify(findChild(app,"forensicPreview").text.indexOf("nexvary-pcap-summary/v1")>=0);tabs.currentIndex=3
+  app.toastText="";app.darkTheme=true
+  for(const arabic of [true,false]){
+   app.ar=arabic;wait(60);verify(waitForRendering(app.contentItem))
+   verify(uiEvidence.captureWindow(app,pcapScreenshotBase+(arabic?"ar":"en")+".png"))
+  }
+  tabs.currentIndex=1;const kind=findChild(app,"forensicKind");kind.currentIndex=kind.count-1;tryCompare(findChild(app,"forensicEvidenceList"),"count",1);kind.currentIndex=0;tabs.currentIndex=3
+  page.capturePath="";compare(consent.checked,false);compare(run.enabled,false)
+  verify(recoveryBridge.closeCase());tabs.currentIndex=0
  }
  function test_forensicWorkspace(){
   app.currentPage=9;

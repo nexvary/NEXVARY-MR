@@ -3,6 +3,10 @@
 #include <QQmlContext>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QDir>
+#include <QCoreApplication>
+#include <QQuickWindow>
+#include <QImage>
 #include <QQuickStyle>
 #include <memory>
 #include "ToolBridge.hpp"
@@ -28,6 +32,11 @@ class Setup:public QObject {
  std::unique_ptr<BoardBridge> board;
  std::unique_ptr<FirmwareBridge> firmware;
  std::unique_ptr<RecoveryBridge> recovery;
+public:
+ Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
+  auto *window=qobject_cast<QQuickWindow *>(object);
+  return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+ }
 public slots:
  void applicationAvailable() {
   // QuickTest constructs Setup before QGuiApplication. Qt plug-ins, SQL and
@@ -45,6 +54,11 @@ public slots:
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  const auto capture=temp.filePath(QStringLiteral("synthetic-ui.pcap"));
+  QFile captureFile(capture);if(captureFile.open(QIODevice::WriteOnly))captureFile.write(QByteArray::fromHex("d4c3b2a1020004000000000000000000ffff00000100000001000000000000000300000003000000616263"));captureFile.close();
+  engine->rootContext()->setContextProperty("uiEvidence",this);
+  engine->rootContext()->setContextProperty("pcapScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-pcap-ui-"));
+  engine->rootContext()->setContextProperty("syntheticCapturePath",capture);
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("toolBridge",tools.get());
   engine->rootContext()->setContextProperty("repairBridge",repair.get());
@@ -64,3 +78,4 @@ public slots:
 };
 QUICK_TEST_MAIN_WITH_SETUP(mr_ui,Setup)
 #include "ui_tests.moc"
+

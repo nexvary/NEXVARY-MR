@@ -62,3 +62,7 @@ See [the current development checkpoint](docs/release/DEVELOPMENT_CHECKPOINT_202
 ### Advanced Mobile Research Lab
 
 Firmware Lab now includes bounded local raw-vbmeta AVB metadata inspection and JSON export. It never treats parsed declarations as signature/OEM trust, rollback safety or phone compatibility. See [scope and tests](research/advanced-mobile/README.md), [traceability registry](research/advanced-mobile/knowledge.json), [competitive evidence](docs/research/COMPETITIVE_EVIDENCE_2026-10-23.md) and [open-source integration decisions](docs/research/OPEN_SOURCE_SELECTION_2026-10-23.md). No physical model is approved by the registry.
+
+### Offline capture summaries
+
+Forensic Lab can now summarize an explicitly authorized local classic-PCAP file (up to 8 MiB / 200,000 records) through the existing case/evidence engine. It records source SHA-256, aggregate packet/time/header statistics and audit evidence after a second matching source read. No addresses or packet payload are included in the summary. PCAPNG, live capture, flow reconstruction and TLS decryption are unsupported. See [scope and test evidence](docs/forensics/PCAP_SUMMARY.md).

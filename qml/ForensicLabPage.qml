@@ -17,12 +17,13 @@ Item {
   {ar:"التحقق من البصمة",en:"Hash verification",ready:true,detail:"SHA-256 verification on imported case evidence"},
   {ar:"التقارير",en:"Forensic reporting",ready:true,detail:"Case export with provenance limitations"},
   {ar:"سلسلة الحيازة",en:"Chain of custody",ready:true,detail:"Hash-linked local custody declarations; no independent signatures"},
+  {ar:"تحليل PCAP",en:"PCAP analysis",ready:true,detail:"Bounded local classic-PCAP statistics; no addresses, payload or TLS decryption"},
   {ar:"مدير الأدوات",en:"Tool integration manager",ready:true,detail:"mmls raw-image partition adapter only; other candidates not integrated"}
  ]
  ColumnLayout {
   anchors.fill:parent;spacing:10
-  Label {text:app.trx("مختبر الأدلة الرقمية — محلي، بتفويض، دون تعديل المصدر","DIGITAL FORENSICS LAB — LOCAL, AUTHORIZED, SOURCE-PRESERVING");font.bold:true;font.pixelSize:17;color:app.tone("#8ac7f5");Layout.fillWidth:true;wrapMode:Text.WordWrap}
-  Label {text:app.trx("الوحدات المتاحة تستخدم محرك القضايا والاستعادة الحالي. غير المنفذ معطل بوضوح. لا يوجد تجاوز تشفير أو قفل.","Available functions use the existing case/recovery engine. Unimplemented functions are clearly disabled. No encryption or lock bypass.");color:app.tone("#adc1d3");wrapMode:Text.WordWrap;Layout.fillWidth:true}
+  Label {objectName:"forensicHeading";Layout.minimumHeight:implicitHeight;text:app.trx("مختبر الأدلة الرقمية — محلي، بتفويض، دون تعديل المصدر","DIGITAL FORENSICS LAB — LOCAL, AUTHORIZED, SOURCE-PRESERVING");font.bold:true;font.pixelSize:17;color:app.tone("#8ac7f5");Layout.fillWidth:true;wrapMode:Text.WordWrap}
+  Label {Layout.minimumHeight:implicitHeight;text:app.trx("الوحدات المتاحة تستخدم محرك القضايا والاستعادة الحالي. غير المنفذ معطل بوضوح. لا يوجد تجاوز تشفير أو قفل.","Available functions use the existing case/recovery engine. Unimplemented functions are clearly disabled. No encryption or lock bypass.");color:app.tone("#adc1d3");wrapMode:Text.WordWrap;Layout.fillWidth:true}
   TabBar {
    id:tabs;objectName:"forensicTabs";Layout.fillWidth:true
    TabButton{text:app.trx("مساحة القضايا والأدلة","Cases and evidence")}
@@ -34,9 +35,9 @@ Item {
   StackLayout {
    currentIndex:tabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true
    RecoveryPage {app:lab.app}
-   ForensicEvidencePage {app:lab.app}
+   ForensicEvidencePage {id:evidenceBrowser;app:lab.app}
    ForensicTimelinePage {app:lab.app}
-   ForensicToolsPage {app:lab.app}
+   ForensicToolsPage {app:lab.app;onEvidenceRequested:function(evidenceId){evidenceBrowser.showEvidence(evidenceId);tabs.currentIndex=1}}
    ScrollView {
     clip:true
     GridLayout {

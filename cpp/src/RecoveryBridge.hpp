@@ -61,6 +61,7 @@ public:
  Q_INVOKABLE QString evidenceCustodian(int index) const;
  Q_INVOKABLE bool transferCustody(int index,const QString &recipient,const QString &reason,bool confirmed);
  Q_INVOKABLE bool exportFormattedReport(const QString &path,const QString &format,bool arabic,bool confirmed);
+ Q_INVOKABLE bool analyzeCapture(const QString &path,bool consent);
  Q_INVOKABLE bool analyzePartitions(const QString &image,const QString &mmlsExecutable,bool consent);
  Q_INVOKABLE bool exportTimeline(const QString &path,bool confirmed);
  Q_INVOKABLE bool deleteCase(bool confirmed);
@@ -84,3 +85,4 @@ private:
  std::shared_ptr<std::atomic_bool> cancelled_;
  QFutureWatcher<JobResult> watcher_;
 };
+

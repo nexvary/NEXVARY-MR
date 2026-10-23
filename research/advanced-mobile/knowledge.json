@@ -22,6 +22,24 @@
       "kind": "primary-reference-tool",
       "url": "https://android.googlesource.com/platform/external/avb/+/refs/tags/android-15.0.0_r1/avbtool.py",
       "reviewedSha256": "78a50c8620985709f2e131cf948dcd66ecc43f09ed735e09d75751a7e21e4eb8"
+    },
+    {
+      "id": "ietf.pcap.draft09",
+      "publisher": "IETF OPSAWG",
+      "kind": "primary-format-work-in-progress",
+      "url": "https://www.ietf.org/archive/id/draft-ietf-opsawg-pcap-09.html"
+    },
+    {
+      "id": "ietf.ipv4",
+      "publisher": "RFC Editor",
+      "kind": "primary-format",
+      "url": "https://www.rfc-editor.org/rfc/rfc791"
+    },
+    {
+      "id": "ietf.ipv6",
+      "publisher": "RFC Editor",
+      "kind": "primary-format",
+      "url": "https://www.rfc-editor.org/rfc/rfc8200"
     }
   ],
   "technologies": [
@@ -31,6 +49,14 @@
         "aosp.avb.header",
         "aosp.avb.descriptor",
         "aosp.avb.reference-tool"
+      ]
+    },
+    {
+      "id": "pcap.classic.summary",
+      "sourceIds": [
+        "ietf.pcap.draft09",
+        "ietf.ipv4",
+        "ietf.ipv6"
       ]
     }
   ],
@@ -67,6 +93,35 @@
         "no-oem-trust-verification",
         "no-device-approval"
       ]
+    },
+    {
+      "id": "forensic.pcap.summary.v1",
+      "technologyIds": [
+        "pcap.classic.summary"
+      ],
+      "chipsetIds": [],
+      "deviceIds": [],
+      "firmwareIds": [],
+      "proofLevel": "synthetic-only",
+      "mutatesDevice": false,
+      "implementationPaths": [
+        "cpp/src/PcapSummary.cpp",
+        "cpp/src/RecoveryBridge.cpp",
+        "qml/ForensicToolsPage.qml"
+      ],
+      "testEvidenceIds": [
+        "pcap.synthetic.native",
+        "pcap.synthetic.mutation",
+        "pcap.synthetic.ui"
+      ],
+      "limits": [
+        "classic-pcap-2.4-only",
+        "8-MiB-input",
+        "200000-records",
+        "no-address-or-payload-output",
+        "header-declarations-only",
+        "no-live-capture-or-decryption"
+      ]
     }
   ],
   "testEvidence": [
@@ -95,6 +150,27 @@
       "id": "avb.synthetic.official-tool",
       "kind": "synthetic",
       "path": "samples/avb-reference/expected.json",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.native",
+      "kind": "synthetic",
+      "path": "cpp/tests/pcap_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.mutation",
+      "kind": "synthetic",
+      "path": "cpp/tests/pcap_mutation_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.ui",
+      "kind": "synthetic",
+      "path": "qml/tests/tst_navigation.qml",
       "deviceIds": [],
       "firmwareIds": []
     }
