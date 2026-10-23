@@ -4,6 +4,7 @@ import QtQuick.Layouts
 Item {
  id:lab
  objectName:"forensicLabWorkspace"
+ property alias currentTab:tabs.currentIndex
  property var app
  property var modules:[
   {ar:"إدارة القضايا",en:"Case management",ready:true,detail:"Encrypted local case create/open"},
@@ -18,6 +19,7 @@ Item {
   {ar:"التقارير",en:"Forensic reporting",ready:true,detail:"Case export with provenance limitations"},
   {ar:"سلسلة الحيازة",en:"Chain of custody",ready:true,detail:"Hash-linked local custody declarations; no independent signatures"},
   {ar:"تحليل PCAP",en:"PCAP analysis",ready:true,detail:"Bounded local classic-PCAP statistics; no addresses, payload or TLS decryption"},
+  {ar:"بيانات الصور EXIF",en:"Photo EXIF",ready:true,detailAr:"JPEG محلي: بيانات محددة وتواريخ خام؛ دون قيم GPS أو إثبات وقت التصوير",detail:"Local JPEG allowlist and raw dates; no GPS values or capture-time authentication"},
   {ar:"مدير الأدوات",en:"Tool integration manager",ready:true,detail:"mmls raw-image partition adapter only; other candidates not integrated"}
  ]
  ColumnLayout {
@@ -34,7 +36,7 @@ Item {
   }
   StackLayout {
    currentIndex:tabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true
-   RecoveryPage {app:lab.app}
+   RecoveryPage {app:lab.app;caseWorkspace:true}
    ForensicEvidencePage {id:evidenceBrowser;app:lab.app}
    ForensicTimelinePage {app:lab.app}
    ForensicToolsPage {app:lab.app;onEvidenceRequested:function(evidenceId){evidenceBrowser.showEvidence(evidenceId);tabs.currentIndex=1}}
@@ -52,7 +54,7 @@ Item {
         anchors.fill:parent;anchors.margins:12;spacing:4
         Label{text:app.ar?modelData.ar:modelData.en;color:app.tone("#e3effa");font.bold:true;font.pixelSize:15}
         Label{text:modelData.ready?app.trx("متاح ضمن الحدود المذكورة","Available with limitations"):app.trx("غير متاح بعد","Not yet available");color:modelData.ready?app.tone("#64dbb0"):app.tone("#f0bb78");font.pixelSize:12}
-        Label{text:modelData.detail;color:app.tone("#a7bed0");wrapMode:Text.WordWrap;Layout.fillWidth:true;font.pixelSize:11}
+        Label{text:app.ar&&modelData.detailAr?modelData.detailAr:modelData.detail;color:app.tone("#a7bed0");wrapMode:Text.WordWrap;Layout.fillWidth:true;font.pixelSize:11}
        }
       }
      }

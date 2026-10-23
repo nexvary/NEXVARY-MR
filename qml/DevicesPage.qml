@@ -3,58 +3,153 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Item {
  id:page
+ objectName:"deviceManagerPage"
+ property var app
  property string reviewedMirrorTarget:""
  property bool showMirror:false
- property var app
  property bool showDrivers:false
- ColumnLayout {
-  anchors.fill:parent; spacing:12
-  RowLayout {
-   Layout.fillWidth:true
-   ActionButton {objectName:"scanAdb";text:app.trx("فحص ADB","Scan ADB");primary:true;enabled:!toolBridge.busy;onClicked:toolBridge.scanAdb()}
-   ActionButton {text:"Fastboot";enabled:!toolBridge.busy;onClicked:toolBridge.scanFastboot()}
-   ActionButton {text:app.trx("فحص التعريفات","Inspect drivers");enabled:!toolBridge.busy;onClicked:{page.showMirror=false;showDrivers=true;toolBridge.inspectDrivers()}}
-   Switch {text:app.trx("تحديث تلقائي","Auto refresh");checked:toolBridge.autoRefresh;onToggled:toolBridge.autoRefresh=checked}
-   Item {Layout.fillWidth:true}
-   BusyIndicator {running:toolBridge.busy;Layout.preferredWidth:32;Layout.preferredHeight:32}
-   ActionButton {text:app.trx("إلغاء","Cancel");enabled:toolBridge.busy;onClicked:toolBridge.cancel()}
-  }
-  Item {id:logAnalysis;property string text:""}
-  Connections {target:toolBridge;function onLogcatChanged(){logAnalysis.text=""}}
-  RowLayout {
-   Layout.fillWidth:true; Layout.fillHeight:true;spacing:12
+ readonly property bool selected:toolBridge.selectedSerial!==""
+ readonly property var selectedConnections:toolBridge.devices.filter(function(device){return device.serial===toolBridge.selectedSerial})
+ readonly property bool adbReady:page.selected&&selectedConnections.length===1&&selectedConnections[0].transport==="adb"&&selectedConnections[0].state==="device"
+ readonly property string selectionReason:!page.selected?app.trx("حدد جهازًا أولًا","Select a device first"):selectedConnections.length!==1?app.trx("اتصال الجهاز غائب أو ملتبس؛ أعد الاكتشاف","Target missing or ambiguous; rediscover devices"):selectedConnections[0].state==="unauthorized"?app.trx("وافق على تصحيح USB من الهاتف","Authorize USB debugging on the phone"):selectedConnections[0].state==="offline"?app.trx("اتصال ADB غير متاح؛ افحص الكابل والتفويض","ADB is offline; check the cable and authorization"):app.trx("تتطلب هذه العملية اتصال ADB بحالة device","This operation requires an ADB connection in device state")
+ readonly property bool identified:!!toolBridge.deviceInfo["ro.build.fingerprint"]
+ readonly property var identityFields:[
+  {label:app.trx("الشركة والموديل","Manufacturer / model"),value:[toolBridge.deviceInfo["ro.product.manufacturer"],toolBridge.deviceInfo["ro.product.model"]].filter(Boolean).join(" · ")},
+  {label:app.trx("إصدار Android","Android version"),value:toolBridge.deviceInfo["ro.build.version.release"]},
+  {label:app.trx("تصحيح الأمان","Security patch"),value:toolBridge.deviceInfo["ro.build.version.security_patch"]},
+  {label:app.trx("المعالج المعلن","Reported SoC"),value:toolBridge.deviceInfo["ro.soc.model"]||toolBridge.deviceInfo["ro.hardware"]},
+  {label:app.trx("حالة الإقلاع","Boot verification"),value:toolBridge.deviceInfo["ro.boot.verifiedbootstate"]},
+  {label:app.trx("حالة القفل","Bootloader state"),value:toolBridge.deviceInfo["ro.boot.vbmeta.device_state"]},
+  {label:app.trx("التشفير","Encryption"),value:toolBridge.deviceInfo["ro.crypto.type"]},
+  {label:app.trx("المعرّف المحدد","Selected serial"),value:toolBridge.selectedSerial}
+ ]
+ function reviewMirror(){
+  reviewedMirrorTarget=toolBridge.selectedSerial
+  mirrorOwner.checked=false;mirrorComponent.checked=false;mirrorChallenge.clear();mirrorConfirm.open()
+ }
+ Item {id:logAnalysis;property string text:""}
+ Connections {
+  target:toolBridge
+  function onDeviceInfoChanged(){resultTabs.currentIndex=0}
+  function onLogcatChanged(){logAnalysis.text="";page.showMirror=false;page.showDrivers=false;resultTabs.currentIndex=1}
+  function onDriverInfoChanged(){page.showMirror=false;page.showDrivers=true;resultTabs.currentIndex=2}
+ }
+ ScrollView {
+  id:workspace;objectName:"deviceManagerScroll";anchors.fill:parent;contentWidth:availableWidth;clip:true
+  ColumnLayout {
+   width:workspace.availableWidth;spacing:16
    Panel {
-    accent:"blue";title:app.trx("الأجهزة المكتشفة","Discovered devices");Layout.preferredWidth:290;Layout.fillHeight:true
-    Label {visible:toolBridge.devices.length===0;text:app.trx("لم يتم اكتشاف جهاز. صِل هاتفًا بكابل بيانات، ثم اسمح بتصحيح USB من الهاتف.","No device discovered. Connect a data cable, then authorize USB debugging on the phone.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#91a6bc")}
+    title:app.trx("1. الاتصال واختيار الجهاز","1. CONNECT AND SELECT");accent:"blue";Layout.fillWidth:true
+    RowLayout {
+     Layout.fillWidth:true;spacing:12
+     Image {source:"qrc:/assets/icons/phone.svg";Layout.preferredWidth:40;Layout.preferredHeight:40;fillMode:Image.PreserveAspectFit}
+     ColumnLayout {
+      Layout.fillWidth:true;spacing:4
+      Label {text:page.selected?app.trx("جهاز محدد وجاهز للفحوص المتاحة","A target is selected for available checks"):app.trx("اختر هاتفًا قبل تشغيل أي عملية","Select a phone before starting an operation");font.bold:true;color:app.tone("#edf5ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
+      Label {text:app.trx("اكشف الأجهزة، اختر الهدف، ثم اقرأ هويته. لا يتغير الجهاز المحدد تلقائيًا.","Discover devices, choose the target, then read its identity. The selected target never changes automatically.");color:app.tone("#9bbbd3");Layout.fillWidth:true;wrapMode:Text.WordWrap}
+     }
+     Label {text:toolBridge.devices.length+app.trx(" جهاز مكتشف"," discovered");color:app.tone("#64dbb0");font.bold:true}
+    }
+    Flow {
+     Layout.fillWidth:true;spacing:8
+     ActionButton {objectName:"scanAdb";text:app.trx("اكتشاف ADB","Discover ADB");primary:true;enabled:!toolBridge.busy;onClicked:toolBridge.scanAdb()}
+     ActionButton {objectName:"scanFastboot";text:app.trx("اكتشاف Fastboot","Discover Fastboot");enabled:!toolBridge.busy;onClicked:toolBridge.scanFastboot()}
+     ActionButton {objectName:"inspectDeviceDrivers";text:app.trx("فحص USB والتعريفات","Inspect USB / drivers");enabled:!toolBridge.busy;onClicked:{page.showMirror=false;page.showDrivers=true;resultTabs.currentIndex=2;toolBridge.inspectDrivers()}}
+     Switch {objectName:"deviceAutoRefresh";text:app.trx("تحديث تلقائي","Auto refresh");checked:toolBridge.autoRefresh;onToggled:toolBridge.autoRefresh=checked}
+     ActionButton {objectName:"cancelDeviceOperation";text:app.trx("إلغاء العملية","Cancel operation");enabled:toolBridge.busy;onClicked:toolBridge.cancel()}
+    }
+    Label {visible:toolBridge.devices.length===0;text:app.trx("لا يوجد جهاز مكتشف. صِل كابل بيانات ووافق على تصحيح USB في هاتفك، ثم اضغط اكتشاف ADB.","No devices discovered. Connect a data cable, authorize USB debugging on your phone, then click Discover ADB.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#9bbbd3")}
     ListView {
-     Layout.fillWidth:true;Layout.fillHeight:true;model:toolBridge.devices;spacing:8;clip:true
+     objectName:"deviceSelectionList";visible:toolBridge.devices.length>0
+     Layout.fillWidth:true;Layout.preferredHeight:Math.min(240,Math.max(76,toolBridge.devices.length*80));model:toolBridge.devices;spacing:8;clip:true
+     ScrollBar.vertical:ScrollBar {}
      delegate:ItemDelegate {
       required property var modelData
-      width:ListView.view.width;height:76
+      width:ListView.view.width;height:72
+      Accessible.name:(modelData.model||modelData.serial)+" "+modelData.state
       onClicked:toolBridge.selectDevice(modelData.serial)
-      background:Rectangle {radius:6;color:toolBridge.selectedSerial===modelData.serial?app.tone("#143c64"):app.tone("#0b2131");border.color:app.tone("#234a63")}
-      contentItem:Column {spacing:6;Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;textFormat:Text.PlainText} Label{text:modelData.serial+" • "+modelData.state;color:modelData.state==="device"?app.tone("#48dea4"):app.tone("#f6bb67");font.pixelSize:12;textFormat:Text.PlainText}}
+      background:Rectangle {radius:8;color:toolBridge.selectedSerial===modelData.serial?app.tone("#143c64"):app.tone("#0b2131");border.width:toolBridge.selectedSerial===modelData.serial?2:1;border.color:toolBridge.selectedSerial===modelData.serial?"#299bff":app.tone("#234a63")}
+      contentItem:RowLayout {
+       spacing:12
+       Image {source:"qrc:/assets/icons/phone.svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       ColumnLayout {
+        Layout.fillWidth:true;spacing:4
+        Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
+        Label {text:modelData.serial;color:app.tone("#9bbbd3");font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText}
+       }
+       Label {text:modelData.state;color:modelData.state==="device"?app.tone("#48dea4"):app.tone("#f6bb67");font.bold:true;textFormat:Text.PlainText}
+       Label {visible:toolBridge.selectedSerial===modelData.serial;text:app.trx("محدد","Selected");color:"#60bdff"}
+      }
      }
     }
-    Label {objectName:"mirrorScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:toolBridge.laboratoryBuild?app.trx("عرض تجريبي عبر scrcpy 5.0.1: اقرأ معلومات الهاتف ثم راجع الموافقة. دون تحكم أو صوت أو مزامنة الحافظة.","Experimental scrcpy 5.0.1 view: read phone information, then review consent. No control, audio or clipboard sync."):app.trx("عرض الشاشة يحتاج نسخة Laboratory؛ الإنتاج للقراءة والتشخيص فقط.","Screen view requires Laboratory; production is read-only diagnostics.")}
-    ActionButton {objectName:"reviewMirror";text:app.trx("مراجعة عرض الشاشة","Review screen view");Layout.fillWidth:true;enabled:toolBridge.laboratoryBuild&&!toolBridge.busy&&!!toolBridge.deviceInfo["ro.build.fingerprint"]&&toolBridge.selectedSerial!=="";onClicked:{page.reviewedMirrorTarget=toolBridge.selectedSerial;mirrorOwner.checked=false;mirrorComponent.checked=false;mirrorChallenge.clear();mirrorConfirm.open()}}
-    ActionButton {objectName:"stopMirror";text:app.trx("إيقاف عرض الشاشة","Stop screen view");Layout.fillWidth:true;enabled:toolBridge.mirrorActive;onClicked:toolBridge.stopMirror()}
-    ActionButton {text:app.trx("سجل عرض الشاشة","Screen-view log");Layout.fillWidth:true;enabled:toolBridge.mirrorStatus!=="";onClicked:{page.showMirror=true;showDrivers=false}}
-    Label {objectName:"mirrorState";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:toolBridge.mirrorActive?app.trx("حالة جلسة العرض: ","Screen-view state: ")+toolBridge.mirrorState:""}
-
    }
-   ColumnLayout {
-    Layout.fillWidth:true;Layout.fillHeight:true;spacing:12
-    Panel {
-     title:app.trx("خصائص الجهاز · قراءة فقط","Device properties · read only");Layout.fillWidth:true;Layout.fillHeight:true
-     RowLayout {ActionButton {text:app.trx("قراءة المعلومات","Read properties");enabled:toolBridge.selectedSerial!==""&&!toolBridge.busy;onClicked:toolBridge.readDeviceInfo()} ActionButton{text:app.trx("قراءة آخر 200 سجل","Read last 200 logs");enabled:toolBridge.selectedSerial!==""&&!toolBridge.busy;onClicked:{page.showMirror=false;showDrivers=false;toolBridge.readLogcat()}}}
-     ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {readOnly:true;selectByMouse:true;text:JSON.stringify(toolBridge.deviceInfo,null,2);color:app.tone("#c7deef");font.family:"Consolas";background:null;wrapMode:TextEdit.Wrap}}
+   GridLayout {
+    Layout.fillWidth:true;columns:page.width>=960?3:2;columnSpacing:12;rowSpacing:12
+    ActionCard {
+     app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
+     iconName:"phone";title:app.trx("معلومات الهاتف","Phone information");description:app.trx("قراءة الموديل وإصدار النظام والبناء وحالات الحماية المعلنة من الهاتف.","Read the phone model, OS, build and reported security states.")
+     statusText:page.identified?app.trx("تمت قراءة الهوية","Identity read"):app.trx("قراءة فقط","Read only")
+     actionText:app.trx("قراءة المعلومات","Read properties");actionName:"readDeviceInfo";available:page.adbReady&&!toolBridge.busy;working:toolBridge.busy;primary:true
+     unavailableReason:!page.adbReady?page.selectionReason:app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
+     onTriggered:{resultTabs.currentIndex=0;toolBridge.readDeviceInfo()}
     }
-    Panel {
-     title:app.trx("السجلات والتعريفات","Logs and drivers");Layout.fillWidth:true;Layout.fillHeight:true
-     ActionButton {text:app.trx("تحليل مؤشرات السجل","Analyze log indicators");enabled:toolBridge.logcat!=="";onClicked:logAnalysis.text=repairBridge.analyzeLogReport(toolBridge.logcat,app.ar)}
-     ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {readOnly:true;selectByMouse:true;text:page.showMirror?toolBridge.mirrorStatus+"\n\n"+toolBridge.mirrorOutput:showDrivers?toolBridge.driverInfo:(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||toolBridge.driverInfo||app.trx("نتائج الفحص ستظهر هنا. قد تحتوي السجلات على بيانات شخصية؛ شاركها بعد المراجعة.","Read-only results appear here. Logs may contain personal data; review before sharing."));color:app.tone("#a8bfd4");font.family:"Consolas";wrapMode:TextEdit.Wrap;background:null}}
+    ActionCard {
+     app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
+     iconName:"history";title:app.trx("سجلات النظام","System logs");description:app.trx("قراءة آخر 200 سجل محليًا، ثم تحليل المؤشرات مع الاحتفاظ بالدليل النصي.","Read the last 200 log entries locally, then inspect indicators with their text evidence.")
+     statusText:toolBridge.logcat!==""?app.trx("سجل متاح للمراجعة","Log available"):app.trx("قراءة فقط","Read only")
+     actionText:app.trx("قراءة آخر 200 سجل","Read last 200 logs");actionName:"readDeviceLogcat";available:page.adbReady&&!toolBridge.busy;working:toolBridge.busy
+     unavailableReason:!page.adbReady?page.selectionReason:app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
+     onTriggered:{page.showMirror=false;page.showDrivers=false;resultTabs.currentIndex=1;toolBridge.readLogcat()}
     }
+    ActionCard {
+     app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
+     iconName:"gauge";title:app.trx("عرض شاشة الهاتف","Phone screen view");description:app.trx("جلسة scrcpy تجريبية بإذن المالك، مع تثبيت الهدف وإيقاف العملية من التطبيق.","An owner-consented experimental scrcpy session with a pinned target and owned process lifecycle.")
+     statusText:toolBridge.mirrorActive?toolBridge.mirrorState:toolBridge.laboratoryBuild?app.trx("تجريبي · Laboratory","Experimental · Laboratory"):app.trx("غير متاح في الإنتاج","Unavailable in production")
+     actionText:app.trx("مراجعة عرض الشاشة","Review screen view");actionName:"reviewMirror";available:toolBridge.laboratoryBuild&&!toolBridge.busy&&page.identified&&page.adbReady
+     unavailableReason:!toolBridge.laboratoryBuild?app.trx("يتطلب نسخة Laboratory","Requires a Laboratory build"):!page.adbReady?page.selectionReason:!page.identified?app.trx("حدد الهاتف واقرأ معلوماته أولًا","Select the phone and read properties first"):app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
+     onTriggered:page.reviewMirror()
+    }
+   }
+   Panel {
+    objectName:"deviceIdentitySummary";title:app.trx("2. ملخص هوية الجهاز","2. DEVICE IDENTITY");Layout.fillWidth:true
+    Label {visible:!page.identified;text:page.selected?app.trx("الجهاز محدد. اضغط قراءة المعلومات لعرض الموديل والنظام وحالات الحماية المعلنة.","A target is selected. Read properties to display its model, OS and reported security state."):app.trx("ستظهر هنا هوية الهاتف المحدد بعد اكتشافه وقراءة معلوماته.","The selected phone identity appears here after discovery and a properties read.");color:app.tone("#9bbbd3");Layout.fillWidth:true;wrapMode:Text.WordWrap}
+    GridLayout {
+     Layout.fillWidth:true;columns:page.width>=1100?4:2;columnSpacing:20;rowSpacing:12
+     Repeater {
+      model:page.identityFields
+      delegate:ColumnLayout {
+       required property var modelData
+       Layout.fillWidth:true;Layout.minimumWidth:0;spacing:4
+       Label {text:modelData.label;color:app.tone("#9bbbd3");font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
+       Label {text:modelData.value||app.trx("لم تُقرأ بعد","Not read yet");color:modelData.value?app.tone("#edf5ff"):app.tone("#8192a5");font.bold:true;font.pixelSize:13;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText}
+      }
+     }
+    }
+   }
+   Label {objectName:"mirrorScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:toolBridge.laboratoryBuild?app.trx("عرض تجريبي عبر scrcpy 5.0.1: اقرأ معلومات الهاتف ثم راجع الموافقة. دون تحكم أو صوت أو مزامنة الحافظة.","Experimental scrcpy 5.0.1 view: read phone information, then review consent. No control, audio or clipboard sync."):app.trx("عرض الشاشة يحتاج نسخة Laboratory؛ الإنتاج للقراءة والتشخيص فقط.","Screen view requires Laboratory; production is read-only diagnostics.")}
+   Panel {
+    title:app.trx("3. النتائج والتفاصيل","3. RESULTS AND DETAILS");Layout.fillWidth:true
+    TabBar {
+     id:resultTabs;objectName:"deviceResultTabs";Layout.fillWidth:true
+     TabButton {text:app.trx("الخصائص الخام","Raw properties")}
+     TabButton {text:app.trx("Logcat والمؤشرات","Logcat / indicators")}
+     TabButton {text:app.trx("USB والتعريفات","USB / drivers")}
+     TabButton {text:app.trx("جلسة الشاشة","Screen session")}
+    }
+    Flow {
+     Layout.fillWidth:true;spacing:8
+     ActionButton {objectName:"analyzeDeviceLog";visible:resultTabs.currentIndex===1;text:app.trx("تحليل مؤشرات السجل","Analyze log indicators");enabled:toolBridge.logcat!=="";onClicked:logAnalysis.text=repairBridge.analyzeLogReport(toolBridge.logcat,app.ar)}
+     ActionButton {objectName:"stopMirror";visible:resultTabs.currentIndex===3||toolBridge.mirrorActive;text:app.trx("إيقاف عرض الشاشة","Stop screen view");enabled:toolBridge.mirrorActive;onClicked:toolBridge.stopMirror()}
+     Label {objectName:"mirrorState";visible:resultTabs.currentIndex===3&&toolBridge.mirrorActive;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:app.trx("حالة جلسة العرض: ","Screen-view state: ")+toolBridge.mirrorState}
+    }
+    ScrollView {
+     Layout.fillWidth:true;Layout.preferredHeight:page.height>850?300:220;contentWidth:availableWidth;clip:true
+     TextArea {
+      objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:12;color:app.tone("#c7deef");background:null
+      text:resultTabs.currentIndex===0?(page.identified?JSON.stringify(toolBridge.deviceInfo,null,2):app.trx("اقرأ معلومات الهاتف لعرض الخصائص هنا.","Read phone properties to display them here.")):resultTabs.currentIndex===1?(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||app.trx("لم تتم قراءة السجل بعد.","No log has been read yet.")):resultTabs.currentIndex===2?(toolBridge.driverInfo||app.trx("شغّل فحص USB والتعريفات لعرض النتائج هنا.","Run USB / driver inspection to display the results here.")):(toolBridge.mirrorStatus!==""||toolBridge.mirrorOutput!==""?toolBridge.mirrorStatus+"\n\n"+toolBridge.mirrorOutput:app.trx("لم تبدأ جلسة عرض بعد.","No screen session has started."))
+     }
+    }
+    Label {text:app.trx("الخصائص والسجلات تصريحات مقروءة من الجهاز وليست اعتمادًا شاملًا لسلامته. راجع البيانات الشخصية قبل مشاركة النتائج.","Properties and logs are device observations, not complete health certification. Review personal data before sharing results.");color:app.tone("#9bbbd3");font.pixelSize:11;Layout.fillWidth:true;wrapMode:Text.WordWrap}
    }
   }
  }
@@ -71,4 +166,3 @@ Item {
  }
 
 }
-

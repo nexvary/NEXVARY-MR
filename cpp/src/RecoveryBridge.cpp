@@ -5,6 +5,7 @@
 #include "ForensicRecord.hpp"
 #include "TskImage.hpp"
 #include "PcapSummary.hpp"
+#include "ExifSummary.hpp"
 #include <QBuffer>
 #include <QPdfWriter>
 #include <QTextDocument>
@@ -464,6 +465,32 @@ bool RecoveryBridge::analyzeCapture(const QString &value,bool consent){
   sources.append(QJsonObject{{"path",path},{"sha256",hash},{"verifiedUnchanged",true},{"method","native bounded offline classic-PCAP statistics; immutable memory working copy"},{"atUtc",now()}});
   result.document.insert("sources",sources);
   addAudit(result.document,"pcap-summary-analysis","Selected-file consent; source SHA256 checked twice; aggregate header declarations only; no packet payload, addresses or TLS decryption.");
+  return result;
+ });
+}
+
+bool RecoveryBridge::analyzeExif(const QString &value,bool consent){
+ if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record its operator, and authorize this local JPEG metadata analysis."));
+ const auto path=local(value);
+ if(path.isEmpty()||path==path_)return fail(QStringLiteral("Choose a separate local JPEG file."));
+ return start([path](const QJsonObject &snapshot,const auto &cancelled){
+  JobResult result{snapshot,{}};
+  const auto bytes=readBounded(path,mr::forensic::maximumExifSourceBytes,result.error);
+  if(!result.error.isEmpty()||cancelled->load())return result;
+  const auto summary=mr::forensic::summarizeExif(bytes,cancelled);
+  if(!summary.error.isEmpty()){result.error=QStringLiteral("EXIF: ")+summary.error;return result;}
+  const auto second=readBounded(path,mr::forensic::maximumExifSourceBytes,result.error);
+  if(!result.error.isEmpty())return result;
+  const auto hash=QString::fromLatin1(QCryptographicHash::hash(second,QCryptographicHash::Sha256).toHex());
+  if(hash!=summary.report.value("sourceSha256").toString()){result.error=QStringLiteral("JPEG source changed; no summary committed.");return result;}
+  if(cancelled->load())return result;
+  auto entries=result.document.value("evidence").toArray();
+  entries.append(evidenceRecord(QJsonDocument(summary.report).toJson(),"exif-summary.json","native-analysis",path,hash,"0"));
+  result.document.insert("evidence",entries);
+  auto sources=result.document.value("sources").toArray();
+  sources.append(QJsonObject{{"path",path},{"sha256",hash},{"verifiedUnchanged",true},{"method","native bounded JPEG Exif allowlist; immutable memory working copy"},{"atUtc",now()}});
+  result.document.insert("sources",sources);
+  addAudit(result.document,"exif-summary-analysis","Selected-file consent; source SHA256 checked twice; allowlisted raw declarations only; GPS values and identity-sensitive tags omitted; no inferred capture timeline.");
   return result;
  });
 }

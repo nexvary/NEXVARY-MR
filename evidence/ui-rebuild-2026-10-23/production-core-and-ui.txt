@@ -1,0 +1,68 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+      Start  1: mr_policy_tests
+ 1/31 Test  #1: mr_policy_tests ..................   Passed    0.00 sec
+      Start  2: mr_core_tests
+ 2/31 Test  #2: mr_core_tests ....................   Passed    0.01 sec
+      Start  3: mr_update_tests
+ 3/31 Test  #3: mr_update_tests ..................   Passed    0.97 sec
+      Start  4: mr_update_journal_tests
+ 4/31 Test  #4: mr_update_journal_tests ..........   Passed    0.22 sec
+      Start  5: mr_update_key_tests
+ 5/31 Test  #5: mr_update_key_tests ..............   Passed    0.01 sec
+      Start  6: mr_workshop_tests
+ 6/31 Test  #6: mr_workshop_tests ................   Passed    1.73 sec
+      Start  7: mr_barcode_tests
+ 7/31 Test  #7: mr_barcode_tests .................   Passed    0.29 sec
+      Start  8: mr_center_tests
+ 8/31 Test  #8: mr_center_tests ..................   Passed    0.11 sec
+      Start  9: mr_cloud_tests
+ 9/31 Test  #9: mr_cloud_tests ...................   Passed    6.66 sec
+      Start 10: mr_security_tests
+10/31 Test #10: mr_security_tests ................   Passed    1.16 sec
+      Start 11: mr_catalog_tests
+11/31 Test #11: mr_catalog_tests .................   Passed    0.03 sec
+      Start 12: mr_tool_tests
+12/31 Test #12: mr_tool_tests ....................   Passed   24.60 sec
+      Start 13: mr_service_tests
+13/31 Test #13: mr_service_tests .................   Passed    4.95 sec
+      Start 14: mr_mirror_tests
+14/31 Test #14: mr_mirror_tests ..................   Passed    0.06 sec
+      Start 15: mr_compatibility_tests
+15/31 Test #15: mr_compatibility_tests ...........   Passed    0.02 sec
+      Start 16: mr_board_tests
+16/31 Test #16: mr_board_tests ...................   Passed    0.03 sec
+      Start 17: mr_firmware_tests
+17/31 Test #17: mr_firmware_tests ................   Passed    0.04 sec
+      Start 18: mr_avb_tests
+18/31 Test #18: mr_avb_tests .....................   Passed    0.04 sec
+      Start 19: mr_pcap_tests
+19/31 Test #19: mr_pcap_tests ....................   Passed    0.29 sec
+      Start 20: mr_exif_tests
+20/31 Test #20: mr_exif_tests ....................   Passed    0.28 sec
+      Start 21: mr_recovery_tests
+21/31 Test #21: mr_recovery_tests ................   Passed   10.05 sec
+      Start 22: mr_recovery_image_tests
+22/31 Test #22: mr_recovery_image_tests ..........   Passed    0.02 sec
+      Start 23: mr_forensic_tests
+23/31 Test #23: mr_forensic_tests ................   Passed    0.53 sec
+      Start 24: mr_tsk_tests
+24/31 Test #24: mr_tsk_tests .....................   Passed    1.55 sec
+      Start 25: mr_avb_mutation_tests
+25/31 Test #25: mr_avb_mutation_tests ............   Passed    0.14 sec
+      Start 26: mr_pcap_mutation_tests
+26/31 Test #26: mr_pcap_mutation_tests ...........   Passed    0.25 sec
+      Start 27: mr_exif_mutation_tests
+27/31 Test #27: mr_exif_mutation_tests ...........   Passed    0.06 sec
+      Start 28: mr_ui_tests
+28/31 Test #28: mr_ui_tests ......................   Passed   33.79 sec
+      Start 29: mr_ui_scale_1.25
+29/31 Test #29: mr_ui_scale_1.25 .................   Passed   13.27 sec
+      Start 30: mr_ui_scale_1.5
+30/31 Test #30: mr_ui_scale_1.5 ..................   Passed   16.63 sec
+      Start 31: mr_gui_smoke
+31/31 Test #31: mr_gui_smoke .....................   Passed   16.51 sec
+
+100% tests passed, 0 tests failed out of 31
+
+Total Test time (real) = 134.33 sec

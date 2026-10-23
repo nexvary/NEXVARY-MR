@@ -120,7 +120,7 @@ int main(int argc,char *argv[]) {
  timer->setInterval(160);
   int page=0;
   QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page,portalOk]() mutable {
-   if(page<40){window->setProperty("darkTheme",page<20);window->setProperty("ar",page%20<10);window->setProperty("currentPage",page%10);++page;return;}
+   if(page<48){window->setProperty("darkTheme",page<24);window->setProperty("ar",page%24<12);window->setProperty("currentPage",page%12);++page;return;}
    timer->stop();window->setProperty("darkTheme",true);window->setProperty("ar",true);window->setProperty("currentPage",3);
    if(auto *viewer=window->findChild<QObject *>(QStringLiteral("boardWorkspace")); viewer && board.components().size()>2) {viewer->setProperty("selected",board.components().at(2));}
    QTimer::singleShot(400,&app,[&,window] {
