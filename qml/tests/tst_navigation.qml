@@ -264,12 +264,12 @@ TestCase {
   app.navigateSection(1);app.width=1366;app.height=768;app.ar=false
   const page=findChild(app,"deviceManagerPage"),scroll=findChild(app,"deviceManagerScroll"),read=findChild(app,"readDeviceInfo")
   tryCompare(toolBridge,"busy",false);verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.devices.length,1)
-  const list=findChild(app,"deviceSelectionList");verify(renderedFrame());mouseClick(list.itemAtIndex(0));compare(toolBridge.selectedSerial,"SYNTHETIC42");compare(page.adbReady,true)
+  const list=findChild(app,"deviceSelectionList");verify(renderedFrame());mouseClick(list.itemAtIndex(0));compare(toolBridge.selectedSerial,"SYNTHETIC42");compare(page.adbReady,true);compare(findChild(app,"connectionBadge").text,"ADB authorized")
   reveal(scroll,read);verify(read.enabled);mouseClick(read);tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.deviceInfo["ro.product.model"],"Synthetic Phone")
   scroll.contentItem.contentY=0;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-connected-en.png"))
   for(const mode of ["unauthorized","offline"]){
    verify(uiEvidence.setSyntheticDeviceMode(mode));tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.devices[0].state,mode)
-   toolBridge.selectDevice("SYNTHETIC42");compare(page.adbReady,false);compare(read.enabled,false);verify(page.selectionReason.length>0)
+   toolBridge.selectDevice("SYNTHETIC42");compare(page.adbReady,false);compare(findChild(app,"connectionBadge").text,"ADB "+mode);compare(read.enabled,false);verify(page.selectionReason.length>0)
    verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-"+mode+"-en.png"))
   }
   verify(uiEvidence.setSyntheticDeviceMode("progress"));compare(toolBridge.busy,true);verify(renderedFrame());verify(findChild(app,"cancelActiveOperation").visible)

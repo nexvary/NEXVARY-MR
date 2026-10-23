@@ -24,7 +24,10 @@ that research are in [competitive-ui-review.md](competitive-ui-review.md).
 ## Reproducible evidence
 
 - Linux Qt 6.4.2/GCC 13 Release, warnings as errors: 31/31 CTest suites passed.
-- Final production UI regression: 37 QtTest results passed, zero QML warnings.
+- Final production and Laboratory UI regression: 37 QtTest results each passed, zero QML warnings.
+- Connection-badge follow-up: focused device-state and all-section layout tests
+  passed in both profiles (4 QtTest results each); unauthorized/offline targets
+  cannot appear as an authorized green connection.
 - Three logical window sizes: 1366×768, 1920×1080, 2560×1440, AR/EN.
 - Separate Qt scale-factor 1.25 and 1.5 CTest runs exercise every section and
   capture real frames. They are offscreen rendering tests, not consumer Windows

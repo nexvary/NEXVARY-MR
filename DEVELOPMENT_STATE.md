@@ -6,7 +6,10 @@ SVG assets are implemented. Current acceptance/evidence: `docs/ui/REBUILD_ACCEPT
 Native services/policy remain authoritative; no main merge or Stage 60 claim.
 
 Local production CTest 31/31; final UI regression 37 passed with zero QML warnings.
-Laboratory and Windows validation are being rerun for this source increment.
+Laboratory CTest also passed 31/31, UI 37 with zero QML warnings.
+Review PR #9 is published; exact-source Windows CI is in progress.
+A focused follow-up distinguishes authorized/unauthorized/offline/Fastboot target
+states in the header and covers all four asynchronous engines.
 GitHub connector access is now working for the NEXVARY account; the earlier
 connection-failure statements below describe the preceding checkpoint only.
 Remote Desktop Commander still reports no connected device. Use Windows CI,
