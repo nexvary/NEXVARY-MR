@@ -36,3 +36,5 @@ AVB signature/trust validation, dm-verity, TEE/TrustZone, KeyMint/StrongBox, FBE
 Official AOSP avbtool 1.3.0 reference fixtures are now generated and compared in native tests; see `samples/avb-reference/README.md`. Both a valid synthetic signature and its corrupted counterpart remain unverified by NEXVARY.
 
 Next practical research: select stable OEM-provided vbmeta samples with redistribution rights and design a separate signature verifier with explicit OEM trust anchors. Do not authorize device writes from parser success.
+
+Local firmware input handling now shares the forensic local-path/regular-descriptor policy. See `docs/release/LOCAL_FILE_POLICY_2026-10-23.md` for tested Linux protections and unverified Windows reparse/race boundaries. This does not strengthen AVB declarations into cryptographic verification.

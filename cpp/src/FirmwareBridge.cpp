@@ -1,5 +1,6 @@
 #include "FirmwareBridge.hpp"
 #include "AvbMetadata.hpp"
+#include "RecoveryFile.hpp"
 #include <QSaveFile>
 #include <QCryptographicHash>
 #include <QFile>
@@ -84,18 +85,14 @@ void FirmwareBridge::inspect(const QString &manifestPath, const QString &firmwar
   clearAvbReport();
   compatible_ = false; progress_ = 0;
   emit compatibleChanged(); emit progressChanged();
-  const auto localPath = [](const QString &path) {
-    if (path.startsWith(QStringLiteral("file:"), Qt::CaseInsensitive)) return QUrl(path).toLocalFile();
-    return path;
-  };
-  const QString localManifest = localPath(manifestPath);
-  const QString localFirmware = localPath(firmwarePath);
+  const QString localManifest = mr::recovery::localFilePath(manifestPath);
+  const QString localFirmware = mr::recovery::localFilePath(firmwarePath);
   QFile manifest(localManifest);
-  if (!QFileInfo(localManifest).isFile() || !manifest.open(QIODevice::ReadOnly)) { reject(QStringLiteral("تعذر فتح ملف الوصف المحلي")); return; }
+  if (!QFileInfo(localManifest).isFile() || QFileInfo(localManifest).isSymLink() || !mr::recovery::openRegularInput(manifest)) { reject(QStringLiteral("تعذر فتح ملف الوصف المحلي")); return; }
   const auto validation = validateManifest(manifest.read(maxManifestBytes + 1), actualBrand, actualModel);
   if (!validation.valid) { reject(validation.error); return; }
   const QFileInfo package(localFirmware);
-  if (localFirmware.isEmpty() || !package.isFile() || package.size() <= 0 || package.size() > maxFirmwareBytes) { reject(QStringLiteral("مطلوب ملف حزمة محلي غير فارغ بحجم لا يتجاوز 64 GiB؛ الوصف وحده لا يجتاز التحقق")); return; }
+  if (localFirmware.isEmpty() || !package.isFile() || package.isSymLink() || package.size() <= 0 || package.size() > maxFirmwareBytes) { reject(QStringLiteral("مطلوب ملف حزمة محلي غير فارغ بحجم لا يتجاوز 64 GiB؛ الوصف وحده لا يجتاز التحقق")); return; }
   invalidated_ = false;
   busy_ = true;
   emit busyChanged();
@@ -103,7 +100,7 @@ void FirmwareBridge::inspect(const QString &manifestPath, const QString &firmwar
   watcher_.setFuture(QtConcurrent::run([](QPromise<FirmwareInspection> &promise, const QString &path, const QString &expected) {
     promise.setProgressRange(0, 100);
     QFile file(path);
-    if (!file.open(QIODevice::ReadOnly)) { promise.addResult(FirmwareInspection{false, QStringLiteral("تعذر قراءة الحزمة المحلية"), {}}); return; }
+    if (!mr::recovery::openRegularInput(file)) { promise.addResult(FirmwareInspection{false, QStringLiteral("تعذر قراءة الحزمة المحلية"), {}}); return; }
     const qint64 total = file.size();
     if (total <= 0 || total > maxFirmwareBytes) { promise.addResult(FirmwareInspection{false, QStringLiteral("حجم الحزمة غير مدعوم"), {}}); return; }
     QCryptographicHash hash(QCryptographicHash::Sha256);
@@ -152,7 +149,7 @@ void FirmwareBridge::inspectAvb(const QString &path) {
   clearAvbReport();
   compatible_ = false; progress_ = 0; invalidated_ = false;
   emit compatibleChanged(); emit progressChanged();
-  const QString local = path.startsWith(QStringLiteral("file:"), Qt::CaseInsensitive) ? QUrl(path).toLocalFile() : path;
+  const QString local = mr::recovery::localFilePath(path);
   const QFileInfo info(local);
   if (local.isEmpty() || !info.isFile() || info.isSymLink() || info.size() < 256 || info.size() > AvbMetadata::maxImageBytes) {
     reject(QStringLiteral("اختر صورة vbmeta خام محلية بين 256 بايت و16 MiB / Select a raw local vbmeta image (256 bytes–16 MiB)"));
@@ -164,7 +161,7 @@ void FirmwareBridge::inspectAvb(const QString &path) {
   watcher_.setFuture(QtConcurrent::run([](QPromise<FirmwareInspection> &promise, const QString &filePath) {
     if (promise.isCanceled()) return;
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) { promise.addResult(FirmwareInspection{false, QStringLiteral("AVB: file-open-failed"), {}}); return; }
+    if (!mr::recovery::openRegularInput(file)) { promise.addResult(FirmwareInspection{false, QStringLiteral("AVB: file-open-failed"), {}}); return; }
     const qint64 size = file.size();
     if (size < 256 || size > AvbMetadata::maxImageBytes) { promise.addResult(FirmwareInspection{false, QStringLiteral("AVB: image-size-limit"), {}}); return; }
     const auto bytes = file.read(AvbMetadata::maxImageBytes + 1);
@@ -181,7 +178,7 @@ void FirmwareBridge::inspectAvb(const QString &path) {
 }
 bool FirmwareBridge::exportAvbReport(const QString &path) {
   if (busy_ || avbReport_.isEmpty()) return false;
-  const QString local = path.startsWith(QStringLiteral("file:"), Qt::CaseInsensitive) ? QUrl(path).toLocalFile() : path;
+  const QString local = mr::recovery::localFilePath(path);
   if (local.isEmpty() || QFileInfo(local).canonicalFilePath() == avbSourcePath_) return false;
   QSaveFile output(local);
   if (!output.open(QIODevice::WriteOnly)) return false;
