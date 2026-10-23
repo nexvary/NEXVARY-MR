@@ -1,5 +1,6 @@
 #pragma once
 #include <QVariantMap>
+#include "DeviceCompatibility.hpp"
 #include <QVariantList>
 
 namespace mr::service {
@@ -10,6 +11,7 @@ inline QVariantMap reportProfile(const QVariantMap &profile) {
     for(const auto &key:{"transport","vendor","product","verifiedAtUtc","ro.product.manufacturer",
         "ro.product.model","ro.build.version.release","ro.build.version.sdk","ro.build.version.security_patch"})
         if(profile.contains(key))safe.insert(key,profile.value(key));
+    if(profile.contains("compatibility"))safe.insert("compatibility",compatibilityReport(profile.value("compatibility").toMap()));
     const auto diagnostic=profile.value("diagnostics").toMap();QVariantMap d;
     for(const auto &key:{"schemaVersion","assessment","transport","observedAtUtc","hardwareValidation"})
         if(diagnostic.contains(key))d.insert(key,diagnostic.value(key));

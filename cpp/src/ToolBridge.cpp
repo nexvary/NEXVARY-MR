@@ -250,13 +250,19 @@ QVariantMap ToolBridge::parseDeviceProperties(const QString &output) {
   static const QSet<QString> allowed{
     QStringLiteral("ro.product.manufacturer"), QStringLiteral("ro.product.brand"), QStringLiteral("ro.product.model"), QStringLiteral("ro.product.device"), QStringLiteral("ro.product.name"),
     QStringLiteral("ro.build.version.release"), QStringLiteral("ro.build.version.sdk"), QStringLiteral("ro.build.version.security_patch"), QStringLiteral("ro.build.fingerprint"),
+    QStringLiteral("ro.build.version.codename"), QStringLiteral("ro.build.version.preview_sdk"), QStringLiteral("ro.product.first_api_level"),
+    QStringLiteral("ro.boot.dynamic_partitions"), QStringLiteral("ro.virtual_ab.enabled"), QStringLiteral("ro.build.ab_update"), QStringLiteral("ro.boot.slot_suffix"),
+    QStringLiteral("ro.crypto.state"), QStringLiteral("ro.crypto.type"), QStringLiteral("ro.boot.vbmeta.device_state"),
     QStringLiteral("ro.bootloader"), QStringLiteral("ro.boot.bootreason"), QStringLiteral("ro.bootmode"), QStringLiteral("ro.boot.verifiedbootstate"), QStringLiteral("ro.boot.flash.locked"),
     QStringLiteral("sys.boot_completed"), QStringLiteral("init.svc.bootanim"), QStringLiteral("ro.hardware"), QStringLiteral("ro.soc.manufacturer"), QStringLiteral("ro.soc.model")};
   static const QRegularExpression property(QStringLiteral("^\\[([^]\\r\\n]+)\\]: \\[([^\\r\\n]*)\\]$"));
-  QVariantMap result;
+  QVariantMap result;QSet<QString> seen;
   for (const auto &line : output.split(QLatin1Char('\n'))) {
     const auto match = property.match(line.trimmed());
-    if (match.hasMatch() && allowed.contains(match.captured(1))) result.insert(match.captured(1), match.captured(2).left(4096));
+    if (!match.hasMatch() || !allowed.contains(match.captured(1))) continue;
+    const auto key=match.captured(1);
+    if(seen.contains(key)){result.remove(key);continue;}
+    seen.insert(key);result.insert(key, match.captured(2).left(4096));
   }
   return result;
 }

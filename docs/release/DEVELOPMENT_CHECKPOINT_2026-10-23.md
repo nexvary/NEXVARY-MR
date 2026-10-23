@@ -2,6 +2,8 @@
 
 This is an engineering test checkpoint, **not a Release Candidate or commercial release**.
 
+Latest continuation: [Modern Android observation increment](MODERN_ANDROID_INCREMENT_2026-10-23.md), built on verified HEAD `9f9298351c12c4107d05ca2b85a9aa2ff047f346`. The commit containing that increment is the source checkpoint; PR #8 records the exact resulting SHA and Actions links. Android/model acceptance remains pending; no stage 37–42 or 60 promotion is implied.
+
 ## Restored state and ancestry
 
 - Starting integration HEAD: `026cc5d2b0d2140cff3810d0b6e56ffa0a4bb94f`.
@@ -67,3 +69,5 @@ ctest --test-dir build-lab --output-on-failure --output-junit laboratory-results
 ```
 
 Next: inspect Actions on the committed integration SHA, fix any actionable code/build failures, then collect clean Windows and authorized Android evidence. Do not merge to main or label stage 60 complete until those gates are satisfied. Current success on Linux is not a Windows or phone acceptance result.
+
+Current next step: inspect Actions for the modern-Android commit, then collect exact regional model/build/transport and Windows driver evidence as described in the modern-Android increment. Generic API recognition is not phone approval. No background execution is scheduled.

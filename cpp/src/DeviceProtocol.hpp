@@ -33,6 +33,7 @@ public:
   if(action!="probe")return result;
   result.append({{"shell","cmd","uimode","help"},"night",true});
   for(const auto &a:QStringList{"languages","keyboard","settings","apn"})result.append({{"shell","cmd","package","resolve-activity","--brief","-a",settingsIntent(a)},"intent:"+a,true});
+  result.append({{"shell","getconf","PAGE_SIZE"},"observation:page-size",true});
   result.append({{"shell","dumpsys","battery"},"observation:battery",true});
   result.append({{"shell","df","-k","/data"},"observation:storage",true});
   result.append({{"shell","cat","/proc/partitions"},"observation:partitions",true});return result;
@@ -52,8 +53,8 @@ public:
  QString id()const override{return "fastboot";}
  QStringList discovery()const override{return {"devices"};}
  QList<Query> queries(const QString &action)const override{
-  QStringList vars{"product","unlocked"};
-  if(action=="probe")vars.append({"version-bootloader","is-userspace","partition-size:cache","partition-size:userdata","partition-type:userdata"});
+  QStringList vars{"product","unlocked","is-userspace"};
+  if(action=="probe")vars.append({"version-bootloader","partition-size:cache","partition-size:userdata","partition-type:userdata"});
   else if(action=="erase_cache"||action=="erase_userdata")vars.append(action=="erase_cache"?"partition-size:cache":"partition-size:userdata");
   QList<Query> result;for(const auto &var:vars)result.append({{"getvar",var},"var:"+var,var!="product"});return result;
  }

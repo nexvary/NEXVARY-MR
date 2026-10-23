@@ -9,7 +9,7 @@ class CatalogTests:public QObject {
 private slots:
  void dataCatalogUpdatesCannotGrantCapabilities(){
   QTemporaryDir t;const auto storage=t.filePath("guides.json"),input=t.filePath("catalog.json");ServiceCatalog c(storage);auto catalog=c.deviceCatalog();
-  QVERIFY(ServiceCatalog::validDeviceCatalog(catalog));QCOMPARE(catalog.value("brands").toStringList().size(),14);QCOMPARE(catalog.value("models").toList().size(),44);
+  QVERIFY(ServiceCatalog::validDeviceCatalog(catalog));QCOMPARE(catalog.value("brands").toStringList().size(),18);QCOMPARE(catalog.value("models").toList().size(),48);
   auto bad=catalog;bad.insert("commands",QVariantList{QStringLiteral("adb shell arbitrary")});QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));
   auto models=catalog.value("models").toList();auto model=models[0].toMap();model["nexvaryValidated"]=true;models[0]=model;bad=catalog;bad["models"]=models;QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));
   model["nexvaryValidated"]=false;model["command"]="erase";models[0]=model;bad["models"]=models;QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));
@@ -17,7 +17,7 @@ private slots:
   QVERIFY(!c.importDeviceCatalog(input,hash,false));QVERIFY(!c.importDeviceCatalog(input,QString(64,'0'),true));QVERIFY(c.importDeviceCatalog(input,hash,true));ServiceCatalog reopened(storage);QCOMPARE(reopened.deviceCatalog(),catalog);
  }
  void exactMatchAndValidation(){
-  QTemporaryDir t;const auto storage=t.filePath("guides.json"),input=t.filePath("import.json");ServiceCatalog c(storage);QCOMPARE(c.drivers().size(),6);
+  QTemporaryDir t;const auto storage=t.filePath("guides.json"),input=t.filePath("import.json");ServiceCatalog c(storage);QCOMPARE(c.drivers().size(),7);
   for(const auto &d:c.drivers()){const QUrl u(d.toMap().value("url").toString());QCOMPARE(u.scheme(),QStringLiteral("https"));QVERIFY(!u.host().isEmpty());}
   QVariantMap leaf{{"id","end"},{"terminal",true},{"ar",QStringLiteral("نتيجة تدريبية")},{"en","Training outcome"}};
   QVariantMap root{{"id","start"},{"terminal",false},{"ar",QStringLiteral("سؤال تدريبي؟")},{"en","Training question?"},{"yes","end"},{"no","end"}};
@@ -33,3 +33,4 @@ private slots:
 };
 QTEST_MAIN(CatalogTests)
 #include "catalog_tests.moc"
+

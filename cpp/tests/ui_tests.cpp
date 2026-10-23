@@ -10,6 +10,7 @@
 #include <QQuickStyle>
 #include <memory>
 #include "ToolBridge.hpp"
+#include "DeviceCompatibility.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
 #include "TrackingPortal.hpp"
@@ -56,6 +57,9 @@ public slots:
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
   const auto capture=temp.filePath(QStringLiteral("synthetic-ui.pcap"));
   QFile captureFile(capture);if(captureFile.open(QIODevice::WriteOnly))captureFile.write(QByteArray::fromHex("d4c3b2a1020004000000000000000000ffff00000100000001000000000000000300000003000000616263"));captureFile.close();
+  const auto modern=mr::service::deviceCompatibility({{"transport","adb"},{"ro.build.version.sdk","37"},{"ro.build.version.codename","REL"},{"ro.build.version.preview_sdk","0"},{"ro.boot.dynamic_partitions","true"},{"ro.virtual_ab.enabled","true"},{"observation:page-size","16384"},{"ro.crypto.type","file"},{"ro.crypto.state","encrypted"}});
+  engine->rootContext()->setContextProperty("syntheticModernCompatibility",modern);
+  engine->rootContext()->setContextProperty("modernScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-modern-ui-"));
   engine->rootContext()->setContextProperty("uiEvidence",this);
   engine->rootContext()->setContextProperty("pcapScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-pcap-ui-"));
   engine->rootContext()->setContextProperty("syntheticCapturePath",capture);

@@ -20,6 +20,25 @@ TestCase {
   }
   findChild(app,"firmwareTabs").currentIndex=0
  }
+ function test_modernCompatibilityPanel(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1
+  const panel=findChild(app,"deviceCompatibilityPanel"),scroll=findChild(app,"deviceServiceDetailsScroll")
+  compare(panel.visible,false);panel.profile=syntheticModernCompatibility
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;scroll.contentItem.contentY=0;wait(60)
+   verify(panel.visible);verify(panel.width>180);verify(panel.height>=panel.implicitHeight)
+   verify(findChild(app,"compatibilityPlatform").text.indexOf("37")>=0)
+   verify(findChild(app,"compatibilityPageSize").text.indexOf("16384")>=0)
+   const evidence=findChild(app,"compatibilityEvidence");verify(evidence.height>=evidence.implicitHeight)
+   const point=evidence.mapToItem(app.contentItem,0,0);verify(point.y>0&&point.y+evidence.height<app.height)
+  }
+  app.darkTheme=true
+  for(const arabic of [true,false]){app.ar=arabic;wait(60);verify(waitForRendering(app.contentItem));verify(uiEvidence.captureWindow(app,modernScreenshotBase+(arabic?"ar":"en")+".png"))}
+  panel.profile={schemaVersion:1,transport:"fastboot",layout:{fastbootMode:"userspace-fastbootd"}}
+  verify(findChild(app,"compatibilityFastbootMode").visible);verify(findChild(app,"compatibilityFastbootMode").text.indexOf("fastbootd")>=0)
+  panel.profile=Qt.binding(function(){return toolBridge.serviceProfile.compatibility||({})})
+  compare(panel.visible,false)
+ }
  function test_compiledBuildProfileIsVisible(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1;verify(waitForRendering(app.contentItem))
   const label=findChild(app,"serviceBuildProfile");verify(label.visible)
@@ -28,7 +47,7 @@ TestCase {
  }
  function test_deviceServiceNavigationAndConsent(){
   app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const page=findChild(app,"deviceServicesPage");verify(page!==null)
-  compare(findChild(app,"serviceBrand").count,14);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
+  compare(findChild(app,"serviceBrand").count,18);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
   findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
@@ -39,7 +58,7 @@ TestCase {
    findChild(app,"serviceDataLossConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
    dialog.reject();tryCompare(dialog,"opened",false)
   }
-  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));const rows=findChild(app,"deviceCatalogList");compare(rows.count,44)
+  tabs.currentIndex=2;verify(waitForRendering(app.contentItem));const rows=findChild(app,"deviceCatalogList");compare(rows.count,48)
   const search=findChild(app,"deviceCatalogSearch");search.text="SM-A057G";tryCompare(rows,"count",1);search.text="nothing matches";tryCompare(rows,"count",0);search.text=""
   mouseClick(findChild(app,"importDeviceCatalog"));const dialog=findChild(app,"deviceCatalogDialog");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled);dialog.reject()
   mouseClick(app.navigationButton(0));compare(app.currentPage,0)
@@ -81,7 +100,7 @@ TestCase {
   const id=workshopBridge.createOrder("Synthetic tree owner","","Samsung","SYNTHETIC-02","","USB","Tech","");verify(id>0)
   app.currentPage=2;const tabs=findChild(app,"diagnosticTabs");tabs.currentIndex=2;verify(waitForRendering(app.contentItem))
   verify(!findChild(app,"startSecurityScan").enabled);verify(!findChild(app,"updateSignatures").enabled);verify(!findChild(app,"cancelSignatureUpdate").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
-  tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,6)
+  tabs.currentIndex=3;verify(waitForRendering(app.contentItem));compare(serviceCatalog.drivers.length,7);verify(serviceCatalog.drivers.some(function(d){return d.brand==="Google"&&d.url.indexOf("https://developer.android.com/")===0}))
   tabs.currentIndex=1;verify(waitForRendering(app.contentItem));const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
   const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
   mouseClick(findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)

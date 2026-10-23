@@ -36,7 +36,7 @@ static int child(QStringList args, bool fast) {
    if(key=="product")value="training-model";
    else if(key=="unlocked")value=mode=="locked"?"no":"yes";
    else if(key=="version-bootloader")value="fixture-1";
-   else if(key=="is-userspace")value="no";
+   else if(key=="is-userspace"){if(mode=="duplicate-fastboot-mode"){out("(bootloader) is-userspace: no\n(bootloader) is-userspace: yes\n",true);return 0;}if(mode=="unknown-fastboot-mode")return 1;value=mode=="fastbootd"?"yes":"no";}
    else if(key.startsWith("partition-size:"))value=mode=="no-partition"?"0x0":"0x100000";
    else if(key=="partition-type:userdata")value="ext4";
    else return 99;
@@ -46,6 +46,7 @@ static int child(QStringList args, bool fast) {
   return 99;
  }
  if(args==QStringList{"shell","getprop"}) {
+  if(mode=="modern"||mode=="modern-no-page"){out("[ro.product.manufacturer]: [google]\n[ro.product.model]: [Synthetic API37 phone]\n[ro.build.version.sdk]: [37]\n[ro.build.version.codename]: [REL]\n[ro.build.version.preview_sdk]: [0]\n[ro.product.first_api_level]: [37]\n[ro.build.version.release]: [17]\n[ro.build.fingerprint]: [synthetic/api37]\n[ro.boot.dynamic_partitions]: [true]\n[ro.virtual_ab.enabled]: [true]\n[ro.crypto.state]: [encrypted]\n[ro.crypto.type]: [file]\n[ro.boot.verifiedbootstate]: [green]\n");return 0;}
   const auto manufacturer=qEnvironmentVariable("MR_SERVICE_BRAND","samsung");
   out("[ro.product.manufacturer]: ["+manufacturer+"]\n[ro.product.model]: ["+(mode=="changed"?QString("other-model"):QString("training-model"))+"]\n[ro.build.version.sdk]: ["+(mode=="old"?QString("23"):QString("34"))+"]\n[ro.build.version.release]: [14]\n[ro.build.fingerprint]: [synthetic/test]\n[gsm.sim.operator.alpha]: [PRIVATE]\n");return 0;
  }
@@ -57,6 +58,7 @@ static int child(QStringList args, bool fast) {
   out("Night mode set\n");return 0;
  }
  if(args.size()==7&&args.mid(0,6)==QStringList{"shell","cmd","package","resolve-activity","--brief","-a"}){out(mode=="no-activity"?"No activity found\n":"com.android.settings/.Settings\n");return 0;}
+ if(args==QStringList{"shell","getconf","PAGE_SIZE"}){if(mode=="modern-no-page")return 1;out("16384\n");return 0;}
  if(args==QStringList{"shell","dumpsys","battery"}){out("level: 85\n");return 0;}
  if(args==QStringList{"shell","df","-k","/data"}){out("/dev/test 100 20 80 20% /data\n");return 0;}
  if(args==QStringList{"shell","cat","/proc/partitions"}){out("Permission denied\n",true);return 1;}
@@ -90,6 +92,22 @@ class ServiceTests: public QObject {
  QString package(const QString &name="fixture.apk")const{const auto path=dir_.filePath(name);QFile f(path);if(!f.open(QIODevice::WriteOnly))return {};f.write(QByteArray::fromHex("504b030414000000000068b5565df0e731382b0000002b00000013000000416e64726f69644d616e69666573742e786d6c53594e544845544943205041434b4147452046495854555245202d204e4f5420494e5354414c4c41424c45504b0102140314000000000068b5565df0e731382b0000002b000000130000000000000000000000800100000000416e64726f69644d616e69666573742e786d6c504b05060000000001000100410000005c0000000000"));f.close();return path;}
  QString hash(const QString &path)const{QFile f(path);if(!f.open(QIODevice::ReadOnly))return {};return QString::fromLatin1(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Sha256).toHex());}
 private slots:
+ void modernProbeAndReport(){
+  qputenv("MR_SERVICE_MODE","modern");ToolBridge b;QVERIFY(probe(b));
+  const auto compatibility=b.serviceProfile().value("compatibility").toMap();
+  QCOMPARE(compatibility.value("platform").toMap().value("apiLevel").toInt(),37);
+  QCOMPARE(compatibility.value("platform").toMap().value("pageSizeBytes").toInt(),16384);
+  QCOMPARE(compatibility.value("layout").toMap().value("virtualAb").toString(),QString("reported-enabled"));
+  QCOMPARE(b.serviceProfile().value("vendor").toString(),QString("Google"));
+  const auto path=dir_.filePath("modern-report.json");QVERIFY(b.exportServiceReport(path,true));QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));
+  const auto exported=QJsonDocument::fromJson(f.readAll()).object().value("profile").toObject().value("compatibility").toObject();
+  QCOMPARE(exported.value("platform").toObject().value("apiLevel").toInt(),37);QVERIFY(!exported.value("attestationVerified").toBool());
+  QVERIFY(journal().contains("\"getconf\",\"PAGE_SIZE\""));
+ }
+ void unsupportedOptionalPageQuery(){qputenv("MR_SERVICE_MODE","modern-no-page");ToolBridge b;QVERIFY(probe(b));const auto c=b.serviceProfile().value("compatibility").toMap();QCOMPARE(c.value("platform").toMap().value("apiLevel").toInt(),37);QVERIFY(!c.value("platform").toMap().contains("pageSizeBytes"));}
+ void fastbootdAndUnknownDoNotGrantOperations_data(){QTest::addColumn<QByteArray>("mode");QTest::newRow("userspace")<<QByteArray("fastbootd");QTest::newRow("unknown")<<QByteArray("unknown-fastboot-mode");QTest::newRow("duplicate")<<QByteArray("duplicate-fastboot-mode");}
+ void fastbootdAndUnknownDoNotGrantOperations(){QFETCH(QByteArray,mode);qputenv("MR_SERVICE_MODE",mode);ToolBridge b;QVERIFY(probe(b,true));const auto before=journal();for(const auto &action:{"unlock_ability","erase_cache","erase_userdata","fastboot_reboot","fastboot_bootloader"}){QVERIFY(!available(b,action));QVERIFY(!b.startService(action,"TEST42",approval(true)));}QCOMPARE(journal(),before);}
+ void freshFastbootModeChangeBlocksExecution(){ToolBridge b;QVERIFY(probe(b,true));qputenv("MR_SERVICE_MODE","fastbootd");QVERIFY(waitFor(b,[&]{b.startService("unlock_ability","TEST42",approval());},false));QVERIFY(!journal().contains("\"flashing\""));QVERIFY(b.serviceOutput().contains("Fastboot mode changed"));}
  void approvalTypesFailClosedBeforeProcess(){
   ToolBridge b;QVERIFY(probe(b));const auto before=journal();
   for(const auto &key:{"authorized","destructive","compatible","replace"})
@@ -145,6 +163,8 @@ private slots:
   using mr::service::serviceCommandAllowed;
   QVERIFY(serviceCommandAllowed("adb",{"devices","-l"},"probe","TEST42","state"));
   QVERIFY(serviceCommandAllowed("adb",{"-s","TEST42","shell","getprop"},"probe","TEST42","identity"));
+  QVERIFY(serviceCommandAllowed("adb",{"-s","TEST42","shell","getconf","PAGE_SIZE"},"probe","TEST42","observation:page-size"));
+  QVERIFY(!serviceCommandAllowed("adb",{"-s","TEST42","shell","getconf","PAGE_SIZE; reboot"},"probe","TEST42","observation:page-size"));
   QVERIFY(!serviceCommandAllowed("adb",{"-s","OTHER","shell","getprop"},"probe","TEST42","identity"));
   QVERIFY(!serviceCommandAllowed("adb",{"-s","TEST42","shell","getprop; reboot"},"probe","TEST42","identity"));
   QVERIFY(!serviceCommandAllowed("adb",{"-s","TEST42","shell","rm","-rf","/data"},"probe","TEST42","execute"));
@@ -205,7 +225,7 @@ private slots:
  }
  void init(){qputenv("PATH",QFile::encodeName(dir_.path())+QDir::listSeparator().toLatin1()+oldPath_);qputenv("MR_SERVICE_JOURNAL",QFile::encodeName(journal_));qunsetenv("MR_SERVICE_MODE");qunsetenv("MR_SERVICE_BRAND");QFile::remove(journal_);}
  void cleanup(){qputenv("PATH",oldPath_);qunsetenv("MR_SERVICE_JOURNAL");qunsetenv("MR_SERVICE_MODE");qunsetenv("MR_SERVICE_BRAND");}
- void capabilityIdentity_data(){QTest::addColumn<QString>("reported");QTest::addColumn<QString>("canonical");for(const auto &p:QList<QPair<QString,QString>>{{"samsung","Samsung"},{"LGE","LG"},{"HUAWEI","Huawei"},{"OPPO","Oppo"},{"vivo","Vivo"},{"ZTE","ZTE"}})QTest::newRow(qPrintable(p.first))<<p.first<<p.second;}
+ void capabilityIdentity_data(){QTest::addColumn<QString>("reported");QTest::addColumn<QString>("canonical");for(const auto &p:QList<QPair<QString,QString>>{{"samsung","Samsung"},{"LGE","LG"},{"HUAWEI","Huawei"},{"OPPO","Oppo"},{"vivo","Vivo"},{"ZTE","ZTE"},{"GOOGLE","Google"},{"OnePlus","OnePlus"},{"Nothing","Nothing"},{"HONOR","Honor"},{"xiaomi","Xiaomi / Redmi / POCO"}})QTest::newRow(qPrintable(p.first))<<p.first<<p.second;}
  void capabilityIdentity(){QFETCH(QString,reported);QFETCH(QString,canonical);qputenv("MR_SERVICE_BRAND",reported.toUtf8());ToolBridge b;QVERIFY(probe(b));QCOMPARE(b.serviceProfile().value("vendor").toString(),canonical);QCOMPARE(available(b,"dark_on"),b.laboratoryBuild());QCOMPARE(available(b,"languages"),b.laboratoryBuild());QVERIFY(!b.serviceProfile().contains("gsm.sim.operator.alpha"));QVERIFY(b.serviceProfile().value("observation:partitions").toString().startsWith("Unavailable"));QCOMPARE(b.requestedModels().size(),42);for(const auto &r:b.requestedModels())QVERIFY(!r.toMap().value("validated").toBool());}
  void authorizationAndBlockedActions(){ToolBridge b;QVERIFY(probe(b));const auto before=journal();for(const auto &id:{"frp","lockscreen","edl","efs","bootloader_unlock","sim_unlock"})QVERIFY(!b.startService(id,"TEST42",approval(true)));QVERIFY(!b.startService("dark_on","other",approval()));QVERIFY(!b.startService("dark_on","TEST42",{}));auto bad=approval();bad.insert("shell","rm -rf");QVERIFY(!b.startService("dark_on","TEST42",bad));QCOMPARE(journal(),before);}
  void darkModeVerification(){if(!mr::service::laboratoryBuild())QSKIP("Write fixture runs only in the separate Laboratory build; production denial is tested independently.");ToolBridge b;QVERIFY(probe(b));QVERIFY(waitFor(b,[&]{b.startService("dark_on","TEST42",approval());}));QVERIFY(journal().contains("\"night\",\"yes\""));QVERIFY(b.serviceProfile().isEmpty());}

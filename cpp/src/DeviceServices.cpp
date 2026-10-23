@@ -2,6 +2,7 @@
 #include "DeviceProtocol.hpp"
 #include "ServiceOperationPolicy.hpp"
 #include "DeviceHealth.hpp"
+#include "DeviceCompatibility.hpp"
 #include "PackagePreflight.hpp"
 #include "ServiceReport.hpp"
 #include <QtConcurrent/QtConcurrentRun>
@@ -55,13 +56,17 @@ const Action *definition(const QString &id) { for (const auto &a:actions) if (id
 QString vendor(const QString &value) {
  const auto v=value.toLower().simplified();
  if(v=="samsung")return "Samsung";
+ if(v=="google")return "Google";
+ if(v=="oneplus")return "OnePlus";
+ if(v=="nothing")return "Nothing";
+ if(v=="honor")return "Honor";
  if(v=="lg"||v=="lge"||v=="lg electronics")return "LG";
  if(v=="huawei")return "Huawei";
  if(v=="oppo")return "Oppo";
  if(v=="vivo")return "Vivo";
  if(v=="zte")return "ZTE";
  if(v=="xiaomi"||v=="redmi"||v=="poco")return "Xiaomi / Redmi / POCO";
- if(v=="honor")return "Huawei / Honor";
+
  if(v=="realme")return "Realme";
  if(v=="motorola")return "Motorola";
  if(v=="lenovo")return "Lenovo";
@@ -83,8 +88,9 @@ QString fastbootValue(const QString &key,const QString &text) {
  const QRegularExpression pattern(QStringLiteral("^(?:\\(bootloader\\)\\s*)?")+QRegularExpression::escape(key)+QStringLiteral(":\\s*([^\\r\\n]+)$"));
  // Windows tools emit CRLF; match trimmed individual lines rather than a
  // multiline $ anchor immediately before an unconsumed carriage return.
- for(const auto &line:text.split(QLatin1Char('\n'))){const auto match=pattern.match(line.trimmed());if(match.hasMatch())return match.captured(1).trimmed().left(240);}
- return {};
+ QString value;int matches=0;
+ for(const auto &line:text.split(QLatin1Char('\n'))){const auto match=pattern.match(line.trimmed());if(match.hasMatch()){++matches;value=match.captured(1).trimmed().left(240);}}
+ return matches==1?value:QString();
 }
 QVariantMap preparePackage(const QString &input,const QString &destination,bool zip,const QString &expected,const std::shared_ptr<std::atomic_bool> &cancel) {
  auto fail=[](const QString &message){return QVariantMap{{"ok",false},{"error",message}};};
@@ -148,6 +154,7 @@ bool ToolBridge::serviceAvailable(const QString &id,QString *reason) const {
  if(serviceProfile_.value("serial").toString()!=selectedSerial_||serviceProfile_.value("transport").toString()!=transport)return no("Read capabilities first; the snapshot expires after 60 seconds or a discovery/selection change.");
  const bool fast=id.startsWith("fastboot_")||id.startsWith("erase_")||id=="unlock_ability";
  if(fast!=(transport=="fastboot"))return no("This operation requires the other device transport; rescan in the requested mode.");
+ if(transport=="fastboot"&&serviceProfile_.value("is-userspace").toString()!="no")return no("This operation requires a reported bootloader fastboot mode; userspace fastbootd and unknown modes are not approved. Read-only probing remains available.");
  if(transport=="adb"&&state!="device")return no("Requires authorized normal Android ADB, not recovery/sideload.");
  if((id=="dark_on"||id=="dark_off")&&!serviceProfile_.value("night").toBool())return no("Android 10+ and a responding cmd uimode night interface are required.");
  if(!mr::service::settingsIntent(id).isEmpty()&&!serviceProfile_.value("intent:"+id).toBool())return no("No supported Settings activity was resolved on this firmware (probe requires Android 7+).");
@@ -254,11 +261,13 @@ void ToolBridge::serviceDispatch() {
   serviceProfile_=serviceScratch_;serviceProfile_.insert("serial",serviceTarget_);serviceProfile_.insert("transport",serviceTool_);serviceProfile_.insert("verifiedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
   if(serviceTool_=="adb"){deviceInfo_=serviceScratch_;deviceInfo_.insert("serial",serviceTarget_);emit deviceInfoChanged();}
   serviceProfile_.insert("diagnostics",mr::service::deviceHealth(serviceProfile_));
+  serviceProfile_.insert("compatibility",mr::service::deviceCompatibility(serviceProfile_));
   serviceExpiry_.start();serviceComplete(true,"Capabilities read. Reported support is not physical-device/model acceptance; snapshot expires in 60 seconds.");return;
  }
  const auto *protocol=mr::service::adapter(serviceTool_);
  if(!protocol){serviceComplete(false,"Unsupported protocol adapter.");return;}
  if(serviceTool_=="fastboot"){
+  if(serviceScratch_.value("is-userspace").toString()!="no"||serviceScratch_.value("is-userspace")!=serviceProfile_.value("is-userspace")){serviceComplete(false,"Fastboot mode changed or is not an approved bootloader mode; no operation command was sent.");return;}
   if(serviceScratch_.value("product")!=serviceProfile_.value("product")){serviceComplete(false,"Fastboot product changed; read capabilities again.");return;}
   if(serviceAction_.startsWith("erase_")){
    const auto part=serviceAction_=="erase_cache"?QStringLiteral("cache"):QStringLiteral("userdata");

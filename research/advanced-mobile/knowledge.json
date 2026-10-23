@@ -40,6 +40,30 @@
       "publisher": "RFC Editor",
       "kind": "primary-format",
       "url": "https://www.rfc-editor.org/rfc/rfc8200"
+    },
+    {
+      "id": "android.api-levels",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/setup/reference/build-numbers"
+    },
+    {
+      "id": "android.page-size",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/architecture/16kb-page-size/getting-page-size"
+    },
+    {
+      "id": "android.fastbootd",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/architecture/bootloader/fastbootd"
+    },
+    {
+      "id": "android.virtual-ab",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/ota/virtual_ab"
     }
   ],
   "technologies": [
@@ -57,6 +81,15 @@
         "ietf.pcap.draft09",
         "ietf.ipv4",
         "ietf.ipv6"
+      ]
+    },
+    {
+      "id": "android.modern-observations",
+      "sourceIds": [
+        "android.api-levels",
+        "android.page-size",
+        "android.fastbootd",
+        "android.virtual-ab"
       ]
     }
   ],
@@ -122,6 +155,35 @@
         "header-declarations-only",
         "no-live-capture-or-decryption"
       ]
+    },
+    {
+      "id": "device.android.compatibility.v1",
+      "technologyIds": [
+        "android.modern-observations"
+      ],
+      "chipsetIds": [],
+      "deviceIds": [],
+      "firmwareIds": [],
+      "proofLevel": "synthetic-only",
+      "mutatesDevice": false,
+      "implementationPaths": [
+        "cpp/src/DeviceCompatibility.hpp",
+        "cpp/src/DeviceServices.cpp",
+        "qml/DeviceCompatibilityPanel.qml"
+      ],
+      "testEvidenceIds": [
+        "android.compatibility.native",
+        "android.compatibility.command",
+        "android.compatibility.ui"
+      ],
+      "limits": [
+        "device-reported-not-attested",
+        "no-physical-phone-acceptance",
+        "no-oem-write-approval",
+        "no-decryption",
+        "unknown-future-api-unapproved",
+        "no-minor-api-discrimination"
+      ]
     }
   ],
   "testEvidence": [
@@ -173,6 +235,21 @@
       "path": "qml/tests/tst_navigation.qml",
       "deviceIds": [],
       "firmwareIds": []
+    },
+    {
+      "id": "android.compatibility.native",
+      "kind": "synthetic",
+      "path": "cpp/tests/compatibility_tests.cpp"
+    },
+    {
+      "id": "android.compatibility.command",
+      "kind": "synthetic",
+      "path": "cpp/tests/service_tests.cpp"
+    },
+    {
+      "id": "android.compatibility.ui",
+      "kind": "synthetic",
+      "path": "qml/tests/tst_navigation.qml"
     }
   ]
 }
