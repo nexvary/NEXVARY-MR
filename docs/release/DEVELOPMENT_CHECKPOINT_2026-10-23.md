@@ -2,7 +2,9 @@
 
 This is an engineering test checkpoint, **not a Release Candidate or commercial release**.
 
-Latest continuation: [Modern Android observation increment](MODERN_ANDROID_INCREMENT_2026-10-23.md), built on verified HEAD `9f9298351c12c4107d05ca2b85a9aa2ff047f346`. The commit containing that increment is the source checkpoint; PR #8 records the exact resulting SHA and Actions links. Android/model acceptance remains pending; no stage 37–42 or 60 promotion is implied.
+Latest continuation: [Offline signed-update verifier](../UPDATE_VERIFIER.md), based on source HEAD `c0187dccca60dff1dc67ad20d3c98f14e77d0259`. The containing commit is the verifier checkpoint; PR #8 carries its exact SHA and CI links. No production update key or install path is enabled.
+
+Earlier continuation: [Modern Android observation increment](MODERN_ANDROID_INCREMENT_2026-10-23.md), built on verified HEAD `9f9298351c12c4107d05ca2b85a9aa2ff047f346`. The commit containing that increment is the source checkpoint; PR #8 records the exact resulting SHA and Actions links. Android/model acceptance remains pending; no stage 37–42 or 60 promotion is implied.
 
 ## Restored state and ancestry
 
@@ -55,6 +57,8 @@ Latest continuation: [Modern Android observation increment](MODERN_ANDROID_INCRE
 Production:
 
 ```sh
+python3 scripts/prepare_sodium.py --destination "$PWD/build-deps/sodium"
+export MR_SODIUM_ROOT="$PWD/build-deps/sodium"
 cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure --output-junit production-results.xml
@@ -63,6 +67,7 @@ ctest --test-dir build --output-on-failure --output-junit production-results.xml
 Laboratory (separate directory; never package as production):
 
 ```sh
+# Reuse the already prepared MR_SODIUM_ROOT from the production command above.
 cmake -S . -B build-lab -G Ninja -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=ON
 cmake --build build-lab --parallel 2
 ctest --test-dir build-lab --output-on-failure --output-junit laboratory-results.xml
@@ -163,3 +168,11 @@ Review also identified an installer-test scope gap: the prior smoke copied insta
 Parent `3be52311bb48a1b53f9a6179914936a379101cd1`. Run 39941480148: both Windows profiles now pass 24/24 CTest and QML 33/33 (zero QML skips), including the actual AVB completion/consent case. Production logs confirm portable isolated-copy exit 0 and actual installed-in-place exit 0; registry/executable uninstall assertions pass. Artifacts: portable 12496766376, installer/checksums 12496926079, actual Windows screenshots/results/lifecycle JSON 12496168828. Linux production, core and portal also succeed. Python/public-history workflows succeed.
 
 The sole unfinished job is Linux Laboratory 120373702975: its dependency-install step began 10:46:45 UTC and remained active at 10:58:58 (over 12 minutes), while the matching production job completed. Live REST job-log download returns BlobNotFound until logs archive; this is not treated as an identity/permission failure. Underlying package/mirror cause is not yet established. Bound only dependency acquisition to ten minutes with three connection attempts and 30-second HTTP/HTTPS timeouts, explicitly noninteractive apt. Preserve all build/test/integration gates and their existing deadlines. The normal PR concurrency rule will close the old stalled run after this push; inspect its archived dependency log and the fresh exact-head run. Do not call the cancelled or current pending run green. Last fully successful seven-job run remains 39938403233 at d85fd15; newer Windows packages are real test artifacts with the stated scope. Main/RC/hardware/signing gates stay closed. Local execution environment remains unavailable; no assistant background session is scheduled.
+
+## Offline signed-update verifier continuation
+
+Source base `c0187dccca60dff1dc67ad20d3c98f14e77d0259`; the containing commit is the source checkpoint, with exact SHA and CI links in PR #8. Added the intentionally internal `mr_update_verifier` C++ library, not linked to the desktop. libsodium 1.0.22 verifies domain-separated pure Ed25519 signatures against caller-approved public keys; empty trust stores reject. Strict compact JSON, target/profile, version/sequence floor, validity window and bounded local SHA256 checks reject before opening a package. The public fixture was independently signed with Python cryptography; no private key was serialized. There is no production signing key, network, installer execution or device-write path.
+
+Local Linux Release warnings-as-errors CTest: **25/25 per profile**, with **36 verifier cases** (zero skips) and **33 Qt/QML UI cases** per profile. Python **26/26**; official libsodium upstream `make check` **101/101**. The Laboratory build had interrupted generated executables with missing execute bits; affected generated outputs were rebuilt and final complete CTest XML reports zero failures. Existing optional real TLS/ClamAV/mmls/ZBar integrations are not configured in this local run; CI still requires those gates. Raw XML, verifier text, dependency receipt and validation: `evidence/update-verifier-2026-10-23/`. Both official point-release archives were minisign-verified, then SHA256-pinned before preparation; only Windows Release x64 v143 DLL/import files were selected. Windows execution for this new slice is pending CI, not inferred from extracting its archive.
+
+Remaining updater gates: owned staging snapshot, persistent protected anti-rollback state, trust-key provisioning/revocation, package Authenticode, atomic installation and interruption recovery. Successful library results explicitly do not authorize installation. No stage 57/60 completion, Windows 10/11 or physical Android acceptance is claimed. Next executable slice: an owned staging copy verified from its retained handle, with cleanup/cancellation/source-replacement tests, followed by fresh native CI.

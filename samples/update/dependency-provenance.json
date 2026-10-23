@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "dependency": "libsodium",
+  "version": "1.0.22",
+  "license": "ISC",
+  "reviewDate": "2026-10-23",
+  "keySource": "https://doc.libsodium.org/installation",
+  "reviewCommand": "minisign -Vm <archive> -P RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3",
+  "reviewResult": "Signature and comment signature verified for both official point-release archives",
+  "ciCheck": "Pinned SHA256 before extraction or running configure; minisign is not a CI runtime dependency",
+  "archives": [
+    {
+      "platform": "linux",
+      "url": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.22.tar.gz",
+      "sha256": "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349",
+      "minisig": "untrusted comment: signature from minisign secret key\nRUQf6LRCGA9i5wo9HfNnazrIs0NImEukX60BIekT/3jXngTz10KIA0QNHhbHH8sobMtntYu/Y2j+3BP3lzI/elViHDtShDBTEAI=\ntrusted comment: timestamp:1775774745\tfile:libsodium-1.0.22.tar.gz\thashed\nxq+smflKzg6XXuK7wqArJvpfGCxFQ15TmhsnNRab0P9PcokZ/X4wGVSv7GGgi9s3duNWgXLpjjO747+uHvrXDA==\n"
+    },
+    {
+      "platform": "windows",
+      "url": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.22-msvc.zip",
+      "sha256": "3e03a726fac4bc09cb61d8f29d658ef7a5eca0811de59082130414f7ca2e4279",
+      "minisig": "untrusted comment: signature from minisign secret key\nRUQf6LRCGA9i520h3CYUnPKlUoPXzkPrr6lUTep1ViN8W0KKiruc0I6x729hEyPTX8EnYR2vGLvXAa38gFSWG50ztbD0c2903Qc=\ntrusted comment: timestamp:1775772663\tfile:libsodium-1.0.22-msvc.zip\thashed\nsLIEJfG8whAQWmlipwnPg+fgppywK5pTALhXcNpYuxlZ1VVAbEZtlvQTbyy0tIzSrY0dFUEHnR6c4Ipb9JKwBw==\n"
+    }
+  ]
+}

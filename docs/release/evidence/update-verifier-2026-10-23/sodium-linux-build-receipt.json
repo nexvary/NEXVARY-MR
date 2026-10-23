@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.22",
+  "source": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.22.tar.gz",
+  "archiveSha256": "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349",
+  "platform": "linux",
+  "files": {
+    "lib/libsodium.a": "7d591a5af8b0137301c7bfe8410a6d2619aa73ecb232815db75a5da867d3a25f"
+  },
+  "upstreamSignatureReviewed": true,
+  "ciIntegrityCheck": "pinned-sha256",
+  "upstreamSelfTestsRun": true,
+  "inventoryScope": "Compiled static library only in this checked-in receipt summary; complete header/library inventory is retained in the CI build-receipt artifact."
+}
