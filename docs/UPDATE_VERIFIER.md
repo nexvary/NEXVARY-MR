@@ -196,3 +196,60 @@ unattended installation, production trust anchors or stage 57/60 approval.
 References: [Qt QSaveFile](https://doc.qt.io/qt-6/qsavefile.html),
 [Qt QLockFile and its filesystem limitations](https://doc.qt.io/qt-6/qlockfile.html),
 [libsodium secret-key authentication](https://doc.libsodium.org/secret-key_cryptography/secret-key_authentication).
+
+## Windows-protected local journal key
+
+`UpdateKeyStore` can explicitly bootstrap a local journal MAC key and construct a
+`Journal` without returning decrypted key bytes to its caller. This is **not** a
+publisher signing key or an approved NEXVARY update trust anchor. The backend uses
+the project's existing current-user DPAPI provider in `CaseVault.cpp`; CMake now
+builds that unchanged provider once as `mr_user_protection`, shared by the desktop
+case workflow and the optional update library. Existing recovery-case formats and
+synthetic-case behavior are unchanged.
+
+Creation requires a trusted bootstrap anchor with revision floor zero and a valid
+installation identity/version. It acquires the journal lock and refuses any existing
+key or journal, including corrupt files and symlinks. A random libsodium MAC key is
+wrapped with a fixed purpose, installation identity and compiled profile, plus an
+inner SHA256 consistency check, then protected with Windows current-user DPAPI.
+Only the sealed `update-auth.dpapi` checkpoint is committed through QSaveFile with
+no direct-write fallback. Decrypted temporary buffers and the journal's private
+key copy are cleared after use. No key is returned in a report or written in
+plaintext/hex to disk. No key creation occurs simply by opening or reading state.
+
+`openJournal` bounds and validates the sealed file, invokes DPAPI integrity/account
+checks, then validates the decrypted purpose/profile/identity/length/checksum before
+constructing the native object. A successful handle means its key was loaded; the
+caller must still call `read()` or explicit first-time `initialize()` and enforce
+the independently protected revision/version/floor anchor. Missing, damaged,
+wrong-scope or inaccessible keys fail; existing journal state prevents silent key
+regeneration. An incomplete first bootstrap (key exists, no journal yet) can reuse
+the protected key with the trusted original bootstrap anchor. Existing state is
+never reset to recover a lost key.
+
+Linux, including Laboratory, refuses this backend before creating any file; there
+is no synthetic or plaintext key fallback. Linux tests assert that refusal. The
+Windows-only cases test actual same-user DPAPI round-trip into a MAC-authenticated
+journal, no overwrite/regeneration, scope/corruption/size/format rejection, protected
+bootstrap-floor refusal and live journal-lock exclusion. These checks must pass on
+hosted Windows and remain separate from cross-account, roaming-profile, lost-key,
+clean Windows 10/11, filesystem ACL and power-cut acceptance.
+
+DPAPI normally binds decryption to the Windows logon identity and machine; roaming
+profile exceptions apply. It is not protection against arbitrary code running as
+that same user or an administrator, and it does not establish publisher identity.
+The existing provider's encrypted wrapper is reused; the additional inner purpose,
+profile and identity checks prevent confusing recovery-case plaintext with a journal
+key. The inner digest detects malformed/corrupted decrypted payloads; it is not a
+replacement for DPAPI or a custom encryption scheme.
+
+Protected **anchor** provisioning/ordering, rollback-resistant storage, Windows
+DACL/directory-handle enforcement, installed-tree postcondition checks, persistent
+staging, installation/rollback execution and production publisher-key approval are
+still absent. DPAPI sealing a local MAC key does not solve valid-state replay.
+`protectedAnchorPersisted` and `installationAuthorized` remain false. This factory
+is intentionally internal, with no update UI or automatic installation enabled.
+
+Windows key protection references:
+[CryptProtectData](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata),
+[CryptUnprotectData and integrity limits](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata).

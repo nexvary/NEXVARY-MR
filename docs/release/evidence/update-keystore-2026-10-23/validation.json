@@ -1,0 +1,65 @@
+{
+  "sourceBase": "229baadae2830ecb06077785cf618ba0639fd287",
+  "environment": "Linux Qt 6.4.2 Release warnings-as-errors",
+  "results": {
+    "production": {
+      "ctestSuites": 27,
+      "failures": 0,
+      "cases": {
+        "journal": {
+          "passed": 42,
+          "failed": 0,
+          "skipped": 0
+        },
+        "verifier": {
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0
+        },
+        "key-backend": {
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        "qml": {
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    },
+    "laboratory": {
+      "ctestSuites": 27,
+      "failures": 0,
+      "cases": {
+        "journal": {
+          "passed": 42,
+          "failed": 0,
+          "skipped": 0
+        },
+        "verifier": {
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0
+        },
+        "key-backend": {
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        "qml": {
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    }
+  },
+  "linuxKeyBackendScope": "Refusal with no plaintext/synthetic fallback; NOT Windows DPAPI round-trip evidence",
+  "windowsExecution": "pending hosted CI",
+  "publisherSigningKeyCreated": false,
+  "protectedAnchorPersisted": false,
+  "installationAuthorized": false,
+  "powerLossAcceptance": false,
+  "physicalAndroidAcceptance": false
+}

@@ -12,6 +12,7 @@
 #include <QTemporaryDir>
 #include <QTest>
 #include <QTimer>
+#include <QThread>
 #include <array>
 #include <cstdio>
 #include <limits>
@@ -64,7 +65,14 @@ int runJournalChild(QCoreApplication &app,const QStringList &args){
  Journal journal(root,key,anchor());sodium_memzero(key.data(),static_cast<size_t>(key.size()));
  QTemporaryDir source,stage;Reference fixture;auto snapshot=fixture.stage(source.filePath("fixture.bin"),stage.path());
  if(!snapshot.accepted())return 55;
- if(mode=="race"){ready();if(input.read(1).size()!=1)return 56;}
+ if(mode=="race"){
+  // Windows QFile(FILE*) may fill its read buffer until EOF. Key input ends
+  // before READY; a separate test-only file barrier starts both writers.
+  ready();QElapsedTimer barrier;barrier.start();
+  const auto release=QDir(root).filePath("race-release");
+  while(!QFile::exists(release)&&barrier.elapsed()<20000)QThread::msleep(1);
+  if(!QFile::exists(release))return 56;
+ }
  const auto result=journal.prepare(1,*snapshot.snapshot,fixture.keys,clockNow());
  if(!result.accepted())return result.error=="journal-conflict"?11:result.error=="journal-busy"?12:57;
  if(mode=="prepared"){ready();QTimer::singleShot(10000,&app,&QCoreApplication::quit);return app.exec();}
@@ -247,8 +255,8 @@ private slots:
  void twoProcessesCannotBothCommitSameRevision(){
   QTemporaryDir root;Journal j(root.path(),key_,anchor());QVERIFY(j.initialize().accepted());QProcess first,second;
   QVERIFY(start(first,root.path(),"race"));QVERIFY(start(second,root.path(),"race"));
-  QVERIFY(sendKey(first));QVERIFY(sendKey(second));QVERIFY(receiveReady(first));QVERIFY(receiveReady(second));
-  QCOMPARE(first.write("g"),qint64(1));QCOMPARE(second.write("g"),qint64(1));first.closeWriteChannel();second.closeWriteChannel();
+  QVERIFY(sendKey(first));QVERIFY(sendKey(second));first.closeWriteChannel();second.closeWriteChannel();
+  QVERIFY(receiveReady(first));QVERIFY(receiveReady(second));QVERIFY(write(root.filePath("race-release"),"go"));
   QVERIFY(first.waitForFinished(10000));QVERIFY(second.waitForFinished(10000));QCOMPARE(first.exitStatus(),QProcess::NormalExit);QCOMPARE(second.exitStatus(),QProcess::NormalExit);
   const auto a=first.exitCode(),b=second.exitCode();QVERIFY((a==0&&(b==11||b==12))||(b==0&&(a==11||a==12)));
   const auto r=j.read();QVERIFY(r.accepted());QCOMPARE(r.report["revision"].toString(),QString("2"));
