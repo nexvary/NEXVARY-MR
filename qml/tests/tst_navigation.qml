@@ -9,14 +9,21 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
+ SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
  function test_avbReportExportConsent(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=1
   const path=findChild(app,"avbPath"),privacy=findChild(app,"avbExportPrivacy"),exportButton=findChild(app,"exportAvb")
   path.text=syntheticAvbPath;compare(privacy.checked,false);compare(exportButton.enabled,false)
-  mouseClick(findChild(app,"inspectAvb"));tryCompare(firmwareBridge,"busy",false,5000)
-  compare(firmwareBridge.avbReport.status,"metadata-only");compare(firmwareBridge.compatible,false)
+  function inspectAndWait(){
+   const inspectButton=findChild(app,"inspectAvb");avbInspectionFinished.clear()
+   tryCompare(inspectButton,"enabled",true);verify(inspectButton.visible);verify(renderedFrame())
+   mouseClick(inspectButton);tryCompare(avbInspectionFinished,"count",1,5000)
+   tryCompare(firmwareBridge,"busy",false,5000)
+   compare(firmwareBridge.avbReport.status,"metadata-only",firmwareBridge.status);compare(firmwareBridge.compatible,false)
+  }
+  inspectAndWait()
   compare(exportButton.enabled,false);privacy.checked=true;compare(exportButton.enabled,true)
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(renderedFrame())
@@ -27,7 +34,7 @@ TestCase {
    }
    if(dark)verify(uiEvidence.captureWindow(app,avbScreenshotBase+(arabic?"ar":"en")+".png"))
   }
-  mouseClick(findChild(app,"inspectAvb"));compare(privacy.checked,false);tryCompare(firmwareBridge,"busy",false,5000)
+  inspectAndWait();compare(privacy.checked,false)
   privacy.checked=true;firmwareBridge.invalidate();compare(firmwareBridge.avbJson,"");compare(privacy.checked,false);compare(exportButton.enabled,false)
   path.text="";findChild(app,"firmwareTabs").currentIndex=0;mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
  }

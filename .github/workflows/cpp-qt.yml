@@ -221,9 +221,22 @@ jobs:
           $setup = (Resolve-Path 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe').Path
           $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=`"$destination`"" -Wait -PassThru
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
-          ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed
+          $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
+          if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Per-user uninstall registration was not created' }
+          # Execute the installed binary itself; keep only synthetic data outside
+          # its installation directory and exclude developer/Qt SDK paths.
+          ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed -RunInPlace
           $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
           if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
+          $installedExe = Join-Path $destination 'NEXVARY-MR.exe'
+          for ($attempt=0; $attempt -lt 25 -and (Test-Path -LiteralPath $installedExe); $attempt++) { Start-Sleep -Milliseconds 200 }
+          if (Test-Path -LiteralPath $installedExe) { throw 'Uninstaller left the installed application executable' }
+          if (Test-Path -LiteralPath $uninstallKey) { throw 'Uninstaller left its per-user registry entry' }
+          [ordered]@{
+            schemaVersion=1; installationDirectory=$destination; installExit=$result.ExitCode
+            launchMode='installed-in-place'; uninstallExit=$uninstall.ExitCode
+            installedExecutableRemoved=$true; perUserUninstallRegistrationRemoved=$true
+          } | ConvertTo-Json | Set-Content dist/evidence/installer-lifecycle.json
       - name: Record artifact checksums
         if: matrix.profile == 'production'
         shell: pwsh
