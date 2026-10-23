@@ -1,6 +1,7 @@
 #include "UpdateVerifier.hpp"
 #include <QCryptographicHash>
 #include <QElapsedTimer>
+#include <QDir>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -9,6 +10,8 @@
 #include <QUrl>
 #include <array>
 #include <limits>
+#include <future>
+#include <thread>
 #include <sodium.h>
 #ifndef Q_OS_WIN
 #include <sys/stat.h>
@@ -167,6 +170,72 @@ private slots:
     QVERIFY(elapsed.elapsed()<1000);
 #endif
     QVERIFY(!QFile::exists(path));
+  }
+  void stagingRetainsVerifiedBytesAndCleansUp() {
+    QTemporaryDir source,root;const auto path=source.filePath("replaceable.bin");QVERIFY(write(path,payload_));
+    const auto unrelated=root.filePath("keep.txt");QVERIFY(write(unrelated,"caller-owned file"));
+    const auto bytes=compact(manifest());
+    auto staged=verifier().stagePackage(bytes,sign(bytes),path,root.path(),now());
+    QVERIFY2(staged.accepted(),qPrintable(staged.check.error));
+    QVERIFY(staged.check.report["stagedCopyCreated"].toBool());QVERIFY(staged.check.report["retainedHandleVerified"].toBool());
+    QVERIFY(!staged.check.report["installationAuthorized"].toBool(true));QVERIFY(!staged.check.report["immutableSnapshotCreated"].toBool(true));
+    QVERIFY(!QJsonDocument(staged.check.report).toJson().contains(root.path().toUtf8()));
+    const auto children=QDir(root.path()).entryList(QDir::Dirs|QDir::NoDotAndDotDot);QCOMPARE(children.size(),1);
+    const auto copied=QDir(root.path()).filePath(children.first()+"/package.bin");QCOMPARE(read(copied),payload_);
+#ifndef Q_OS_WIN
+    QVERIFY(!(QFile::permissions(copied)&(QFileDevice::ReadGroup|QFileDevice::WriteGroup|QFileDevice::ReadOther|QFileDevice::WriteOther)));
+    QVERIFY(!(QFile::permissions(QDir(root.path()).filePath(children.first()))&(QFileDevice::ReadGroup|QFileDevice::WriteGroup|QFileDevice::ReadOther|QFileDevice::WriteOther)));
+#endif
+    QVERIFY(QFile::remove(path));QVERIFY(write(path,"replaced source"));
+    for(int i=0;i<2;++i)QVERIFY(staged.snapshot->recheck(verifier(),now()).accepted());
+    staged.snapshot.reset();QCOMPARE(QDir(root.path()).entryList(QDir::AllEntries|QDir::NoDotAndDotDot),QStringList{"keep.txt"});
+    QCOMPARE(read(unrelated),QByteArray("caller-owned file"));
+    QCOMPARE(read(path),QByteArray("replaced source"));
+  }
+  void stagingRechecksCurrentTrustStateAndActualCopy() {
+    QTemporaryDir source,root;const auto path=source.filePath("source.bin");QVERIFY(write(path,payload_));const auto bytes=compact(manifest());
+    auto staged=verifier().stagePackage(bytes,sign(bytes),path,root.path(),now());QVERIFY(staged.accepted());
+    QCOMPARE(staged.snapshot->recheck(Verifier({},{"0.4.0",5}),now()).error,QStringLiteral("no-approved-trust-anchors"));
+    QCOMPARE(staged.snapshot->recheck(Verifier(keys(),{"0.4.0",6}),now()).error,QStringLiteral("sequence-not-newer"));
+    QCOMPARE(staged.snapshot->recheck(verifier(),now().addDays(2)).error,QStringLiteral("manifest-time-window"));
+    const auto token=std::make_shared<std::atomic_bool>(true);
+    QCOMPARE(staged.snapshot->recheck(verifier(),now(),token).error,QStringLiteral("cancelled"));
+    const auto child=QDir(root.path()).entryList(QDir::Dirs|QDir::NoDotAndDotDot).first();
+    auto changed=payload_;changed[0]='X';QVERIFY(write(QDir(root.path()).filePath(child+"/package.bin"),changed));
+    const auto result=staged.snapshot->recheck(verifier(),now());QCOMPARE(result.error,QStringLiteral("package-hash-mismatch"));QVERIFY(result.report.isEmpty());
+  }
+  void stagingFailuresLeaveNoCopy() {
+    QTemporaryDir source,root;const auto path=source.filePath("source.bin");QVERIFY(write(path,payload_));const auto bytes=compact(manifest()),signature=sign(bytes);
+    auto empty=[&]{QVERIFY(QDir(root.path()).entryList(QDir::AllEntries|QDir::NoDotAndDotDot).isEmpty());};
+    auto invalid=verifier().stagePackage(bytes,QByteArray(64,'\0'),"missing",root.filePath("not-created"),now());
+    QCOMPARE(invalid.check.error,QStringLiteral("invalid-signature"));QVERIFY(!invalid.snapshot);empty();
+    const auto token=std::make_shared<std::atomic_bool>(true);
+    QCOMPARE(verifier().stagePackage(bytes,signature,path,root.path(),now(),token).check.error,QStringLiteral("cancelled"));empty();
+    for(const auto &bad:QStringList{"https://example.invalid/stage",root.filePath("missing"),path})
+      QCOMPARE(verifier().stagePackage(bytes,signature,path,bad,now()).check.error,QStringLiteral("local-staging-directory-required"));
+#ifndef Q_OS_WIN
+    const auto alias=source.filePath("stage-alias");QVERIFY(QFile::link(root.path(),alias));
+    QCOMPARE(verifier().stagePackage(bytes,signature,path,alias,now()).check.error,QStringLiteral("local-staging-directory-required"));empty();
+#endif
+    auto corrupt=payload_;corrupt[0]='X';QVERIFY(write(path,corrupt));
+    auto rejected=verifier().stagePackage(bytes,signature,path,root.path(),now());
+    QCOMPARE(rejected.check.error,QStringLiteral("package-hash-mismatch"));QVERIFY(!rejected.snapshot);QVERIFY(rejected.check.report.isEmpty());empty();
+    QCOMPARE(read(path),corrupt);
+  }
+  void cancelDuringStagingRemovesPartialCopy() {
+    QTemporaryDir source,root;const auto path=source.filePath("large.bin");
+    QFile input(path);QVERIFY(input.open(QIODevice::WriteOnly));const QByteArray chunk(1024*1024,'S');QCryptographicHash hash(QCryptographicHash::Sha256);
+    for(int i=0;i<64;++i){QCOMPARE(input.write(chunk),chunk.size());hash.addData(chunk);}input.close();
+    auto object=manifest();object["packageBytes"]=QString::number(64*1024*1024);object["sha256"]=QString::fromLatin1(hash.result().toHex());
+    const auto bytes=compact(object),signature=sign(bytes);const auto token=std::make_shared<std::atomic_bool>(false);const auto policy=verifier();const auto clock=now();
+    auto work=std::async(std::launch::async,[&]{return policy.stagePackage(bytes,signature,path,root.path(),clock,token);});
+    QElapsedTimer elapsed;elapsed.start();bool observed=false;
+    while(elapsed.elapsed()<5000&&work.wait_for(std::chrono::milliseconds(0))!=std::future_status::ready) {
+      if(!QDir(root.path()).entryList(QDir::Dirs|QDir::NoDotAndDotDot).isEmpty()){observed=true;break;}
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    token->store(true);auto result=work.get();QVERIFY(observed);QCOMPARE(result.check.error,QStringLiteral("cancelled"));QVERIFY(!result.snapshot);
+    QVERIFY(QDir(root.path()).entryList(QDir::AllEntries|QDir::NoDotAndDotDot).isEmpty());QCOMPARE(QFileInfo(path).size(),qint64(64*1024*1024));
   }
 };
 QTEST_GUILESS_MAIN(UpdateTests)

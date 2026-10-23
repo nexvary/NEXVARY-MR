@@ -7,6 +7,8 @@
 #include <QJsonDocument>
 #include <QRegularExpression>
 #include <QSet>
+#include <QDir>
+#include <QTemporaryDir>
 #include <array>
 #include <utility>
 #include <sodium.h>
@@ -37,6 +39,38 @@ bool utcTime(const QString &value, QDateTime &time) {
   return time.isValid() && value.endsWith(QLatin1Char('Z')) &&
          value == time.toUTC().toString(Qt::ISODate);
 }
+CheckResult verifyOpened(QFile &file, CheckResult result,
+                         const std::shared_ptr<std::atomic_bool> &cancelled,
+                         QFile *copy = nullptr) {
+  const auto stopped = [&] { return cancelled && cancelled->load(); };
+  if (!file.isOpen() || !file.seek(0)) return fail("package-read");
+  const auto expectedSize = result.report.value("packageBytes").toString().toLongLong();
+  if (file.size() != expectedSize) return fail("package-size-mismatch");
+  const auto modified = file.fileTime(QFileDevice::FileModificationTime);
+  QCryptographicHash hash(QCryptographicHash::Sha256);
+  qint64 read = 0;
+  while (!file.atEnd()) {
+    if (stopped()) return fail("cancelled");
+    const auto chunk = file.read(1024 * 1024);
+    if (chunk.isEmpty() || file.error() != QFileDevice::NoError) return fail("package-read");
+    read += chunk.size();
+    if (read > expectedSize) return fail("package-changed");
+    if (copy && copy->write(chunk) != chunk.size()) return fail("staging-write");
+    hash.addData(chunk);
+  }
+  if (stopped()) return fail("cancelled");
+  if (read != expectedSize || file.size() != expectedSize || file.fileTime(QFileDevice::FileModificationTime) != modified)
+    return fail("package-changed");
+  if (QString::fromLatin1(hash.result().toHex()) != result.report.value("sha256").toString()) return fail("package-hash-mismatch");
+  if (copy && !copy->flush()) return fail("staging-write");
+  result.report.insert("status", "package-hash-verified");
+  result.report.insert("packageHashVerified", true);
+  result.report.insert("immutableSnapshotCreated", false);
+  result.report.insert("authenticodeVerified", false);
+  result.report.insert("installed", false);
+  return result;
+}
+
 }
 Verifier::Verifier(TrustedKeys keys, InstalledState installed)
   : keys_(std::move(keys)), installed_(std::move(installed)) {}
@@ -126,28 +160,57 @@ CheckResult Verifier::checkPackage(const QByteArray &manifest, const QByteArray 
   if (path.isEmpty() || !info.isFile() || info.isSymLink()) return fail("local-regular-package-required");
   QFile file(path);
   if (!mr::recovery::openRegularInput(file)) return fail("package-open");
-  const auto expectedSize = result.report.value("packageBytes").toString().toLongLong();
-  if (file.size() != expectedSize) return fail("package-size-mismatch");
-  const auto modified = file.fileTime(QFileDevice::FileModificationTime);
-  QCryptographicHash hash(QCryptographicHash::Sha256);
-  qint64 read = 0;
-  while (!file.atEnd()) {
-    if (stopped()) return fail("cancelled");
-    const auto chunk = file.read(1024 * 1024);
-    if (chunk.isEmpty() || file.error() != QFileDevice::NoError) return fail("package-read");
-    read += chunk.size();
-    if (read > expectedSize) return fail("package-changed");
-    hash.addData(chunk);
-  }
-  if (stopped()) return fail("cancelled");
-  if (read != expectedSize || file.size() != expectedSize || file.fileTime(QFileDevice::FileModificationTime) != modified)
-    return fail("package-changed");
-  if (QString::fromLatin1(hash.result().toHex()) != result.report.value("sha256").toString()) return fail("package-hash-mismatch");
-  result.report.insert("status", "package-hash-verified");
-  result.report.insert("packageHashVerified", true);
-  result.report.insert("immutableSnapshotCreated", false);
-  result.report.insert("authenticodeVerified", false);
-  result.report.insert("installed", false);
+  return verifyOpened(file, std::move(result), cancelled);
+}
+
+SnapshotResult Verifier::stagePackage(const QByteArray &manifest, const QByteArray &signature,
+                                      const QString &input, const QString &stagingDirectory,
+                                      const QDateTime &trustedNow,
+                                      const std::shared_ptr<std::atomic_bool> &cancelled) const {
+  const auto reject = [](const char *code) -> SnapshotResult { return {fail(code), nullptr}; };
+  if (cancelled && cancelled->load()) return reject("cancelled");
+  auto result = checkManifest(manifest, signature, trustedNow);
+  if (!result.accepted()) return {std::move(result), nullptr};
+  const auto path = mr::recovery::localFilePath(input);
+  const QFileInfo sourceInfo(path);
+  if (path.isEmpty() || !sourceInfo.isFile() || sourceInfo.isSymLink()) return reject("local-regular-package-required");
+  QFile source(path);
+  if (!mr::recovery::openRegularInput(source)) return reject("package-open");
+  if (source.size() != result.report.value("packageBytes").toString().toLongLong()) return reject("package-size-mismatch");
+  const auto root = mr::recovery::localFilePath(stagingDirectory);
+  const QFileInfo rootInfo(root);
+  if (root.isEmpty() || !rootInfo.isDir() || rootInfo.isSymLink()) return reject("local-staging-directory-required");
+  const auto canonicalRoot = rootInfo.canonicalFilePath();
+  if (canonicalRoot.isEmpty()) return reject("local-staging-directory-required");
+  if (cancelled && cancelled->load()) return reject("cancelled");
+  auto directory = std::make_unique<QTemporaryDir>(QDir(canonicalRoot).filePath("nexvary-update-XXXXXX"));
+  if (!directory->isValid()) return reject("staging-create");
+  auto copy = std::make_unique<QFile>(directory->filePath("package.bin"));
+  if (!copy->open(QIODevice::ReadWrite | QIODevice::NewOnly)) return reject("staging-create");
+#ifndef Q_OS_WIN
+  if (!copy->setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner)) return reject("staging-permissions");
+#endif
+  result = verifyOpened(source, std::move(result), cancelled, copy.get());
+  if (!result.accepted()) return {std::move(result), nullptr};
+  auto snapshot = std::unique_ptr<StagedPackage>(new StagedPackage(manifest, signature, std::move(directory), std::move(copy)));
+  result = snapshot->recheck(*this, trustedNow, cancelled); // Verify the bytes actually written.
+  if (!result.accepted()) return {std::move(result), nullptr};
+  return {std::move(result), std::move(snapshot)};
+}
+StagedPackage::StagedPackage(QByteArray manifest, QByteArray signature,
+                             std::unique_ptr<QTemporaryDir> directory, std::unique_ptr<QFile> file)
+  : manifest_(std::move(manifest)), signature_(std::move(signature)),
+    directory_(std::move(directory)), file_(std::move(file)) {}
+StagedPackage::~StagedPackage() = default;
+CheckResult StagedPackage::recheck(const Verifier &currentPolicy, const QDateTime &trustedNow,
+                                  const std::shared_ptr<std::atomic_bool> &cancelled) {
+  if (cancelled && cancelled->load()) return fail("cancelled");
+  auto result = currentPolicy.checkManifest(manifest_, signature_, trustedNow);
+  if (!result.accepted()) return result;
+  result = verifyOpened(*file_, std::move(result), cancelled);
+  if (!result.accepted()) return result;
+  result.report.insert("stagedCopyCreated", true);
+  result.report.insert("retainedHandleVerified", true);
   return result;
 }
 }

@@ -47,18 +47,44 @@ post-read changes, and compares SHA-256. It never changes the source. Reports
 exclude the local input path. File URIs are accepted; explicit network paths and
 non-file URLs are rejected. OS-mounted network filesystems are not distinguished.
 
+## Owned staging copy
+
+`stagePackage` authenticates before opening a source or creating any output. It
+requires an existing, caller-approved local staging parent and creates a fresh
+owned temporary child. It copies and hashes bounded chunks, flushes, then hashes
+the actual stored bytes before returning a move-only `StagedPackage`. No source
+or staging pathname is exposed by the object or its report. Its retained file
+handle is reused by `recheck(currentPolicy, trustedNow)`, which reauthenticates
+with the latest supplied trust anchors/version/floor/time and rehashes that same
+handle. Replacing the original source does not affect the staged bytes.
+
+RAII closes the handle before removing only the owned child directory. Source
+and unrelated parent files are preserved; failed hash, partial copy and mid-copy
+cancellation remove temporary outputs. POSIX staging children and files are
+owner-only. Windows relies on the approved parent's inherited ACL; this increment
+does not establish or audit a hardened Windows DACL. Parent path resolution is
+not anchored by a directory handle against a malicious same-user process. The
+object is used by one worker at a time and is not a persistent journal.
+
+The success flags `stagedCopyCreated` and `retainedHandleVerified` indicate these
+specific checks. They do not grant an installer capability. `immutableSnapshotCreated`
+and `installationAuthorized` remain false. The caller must not persist an old
+successful report as authorization: a newer floor, revoked key, expiry or altered
+copy makes a later recheck fail. No package pathname is offered for execution.
+
 ## Limits before installation can be enabled
 
 A successful result means these observed bytes match an approved signature and
 hash under the caller's trust assumptions. It does not certify publisher identity,
 ZIP/PE validity, Authenticode, OEM firmware compatibility or installation safety.
 The mutable source pathname is not an installable capability. Same-size concurrent
-changes or later path replacement are not protected by a snapshot. There is no
-immutable staging copy, protected/persistent sequence floor, clock rollback defense,
+changes or later path replacement are not protected by a snapshot. The owned temporary copy is not OS-enforced immutable storage. There is no
+protected/persistent sequence floor, clock rollback defense,
 key rotation/revocation workflow, atomic install journal or interruption recovery.
 Every success explicitly reports `installationAuthorized=false` and
 `rollbackStatePersisted=false`; package results also report `installed=false`.
-A future installer must revalidate an owned staging snapshot and enforce these
+A future installer must add durable private staging/journaling, crash-leftover
+cleanup, and revalidate the retained snapshot under current policy while enforcing these
 remaining gates; it must not execute the input path based on this result.
 
 ## Dependency and build
@@ -83,5 +109,6 @@ ctest --test-dir build --output-on-failure
 
 A core-only build remains dependency-free by default. For verifier-only testing,
 use `MR_BUILD_GUI=OFF` and `MR_BUILD_UPDATE_VERIFIER=ON`. Build dependency receipts,
-upstream checks and native results are retained by CI. No physical phone, Windows
+upstream checks and native results are retained by CI. RAII cleanup covers normal cancellation/failure/destruction, not abrupt process
+termination or power loss. No physical phone, Windows
 10/11 client, production signing key or end-to-end update acceptance is implied.
