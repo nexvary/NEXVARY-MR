@@ -49,7 +49,7 @@ public:
   QVariantMap avbReport() const { return avbReport_.toVariantMap(); }
   QString avbJson() const;
   Q_INVOKABLE void inspectAvb(const QString &path);
-  Q_INVOKABLE bool exportAvbReport(const QString &path);
+  Q_INVOKABLE bool exportAvbReport(const QString &path, bool approved = false);
   Q_INVOKABLE void clearAvbReport();
   Q_INVOKABLE void cancel();
   Q_INVOKABLE void invalidate();

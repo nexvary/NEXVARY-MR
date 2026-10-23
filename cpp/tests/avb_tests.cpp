@@ -105,20 +105,77 @@ private slots:
     b = QByteArray(256 + 65600, '\0'); b.replace(0, 4, "AVB0"); put32(b, 4, 1); put64(b, 20, 65600); put64(b, 104, 4097 * 16);
     QCOMPARE(AvbMetadata::inspect(b)["error"].toString(), QStringLiteral("descriptor-count-limit"));
   }
+  void exportRequiresApprovalAndNeverOverwrites() {
+    QTemporaryDir dir; QVERIFY(dir.isValid());
+    const auto source = dir.filePath("source.img");
+    const auto bytes = fixture();
+    auto write = [](const QString &path, const QByteArray &data) {
+      QFile file(path); return file.open(QIODevice::WriteOnly) && file.write(data) == data.size();
+    };
+    auto read = [](const QString &path) {
+      QFile file(path); return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray{};
+    };
+    QVERIFY(write(source, bytes));
+    FirmwareBridge bridge; QSignalSpy finished(&bridge, &FirmwareBridge::inspectionFinished);
+    bridge.inspectAvb(source); QVERIFY(finished.wait(5000));
+    const auto output = dir.filePath("new-report.json");
+    QVERIFY(!bridge.exportAvbReport(output));
+    QVERIFY(!bridge.exportAvbReport(output, false));
+    QVERIFY(!QFile::exists(output));
+    QVERIFY(!bridge.exportAvbReport("file://server/share/report.json", true));
+    QVERIFY(!bridge.exportAvbReport(source, true));
+    QVERIFY(!bridge.exportAvbReport(QUrl::fromLocalFile(source).toString(), true));
+    QCOMPARE(read(source), bytes);
+    const auto unrelated = dir.filePath("customer-notes.json");
+    const QByteArray original("SYNTHETIC ORIGINAL FILE - DO NOT REPLACE");
+    QVERIFY(write(unrelated, original));
+    QVERIFY(!bridge.exportAvbReport(unrelated, true));
+    QCOMPARE(read(unrelated), original);
+#ifndef Q_OS_WIN
+    const auto alias = dir.filePath("existing-alias.json");
+    QVERIFY(QFile::link(unrelated, alias));
+    QVERIFY(!bridge.exportAvbReport(alias, true));
+    QCOMPARE(read(unrelated), original);
+#endif
+    QVERIFY(bridge.exportAvbReport(output, true));
+    const auto exported = read(output);
+    QCOMPARE(exported, bridge.avbJson().toUtf8());
+    QVERIFY(!bridge.exportAvbReport(output, true));
+    QCOMPARE(read(output), exported);
+    QVERIFY(!bridge.compatible());
+  }
+  void invalidationRevokesAvbReports() {
+    QTemporaryDir dir; QVERIFY(dir.isValid());
+    const auto source = dir.filePath("invalidate.img");
+    QFile file(source); QVERIFY(file.open(QIODevice::WriteOnly));
+    QCOMPARE(file.write(fixture()), fixture().size()); file.close();
+    FirmwareBridge bridge; QSignalSpy finished(&bridge, &FirmwareBridge::inspectionFinished);
+    bridge.inspectAvb(source); QVERIFY(finished.wait(5000));
+    QVERIFY(!bridge.avbJson().isEmpty());
+    bridge.invalidate();
+    QVERIFY(bridge.avbJson().isEmpty()); QVERIFY(bridge.avbReport().isEmpty());
+    QVERIFY(!bridge.exportAvbReport(dir.filePath("stale.json"), true));
+    bridge.inspectAvb(source); QVERIFY(bridge.busy());
+    QVERIFY(!bridge.exportAvbReport(dir.filePath("busy.json"), true));
+    bridge.invalidate(); QVERIFY(finished.wait(5000));
+    QVERIFY(bridge.avbJson().isEmpty()); QVERIFY(!bridge.compatible());
+    QVERIFY(!QFile::exists(dir.filePath("stale.json")));
+    QVERIFY(!QFile::exists(dir.filePath("busy.json")));
+  }
   void asyncBridgeAndSourcePreservation() {
     QTemporaryDir dir; QVERIFY(dir.isValid()); const auto source = dir.filePath("private-client.img");
     const auto bytes = fixture(); QFile file(source); QVERIFY(file.open(QIODevice::WriteOnly)); QCOMPARE(file.write(bytes), bytes.size()); file.close();
     FirmwareBridge bridge; QSignalSpy finished(&bridge, &FirmwareBridge::inspectionFinished);
-    QVERIFY(!bridge.exportAvbReport(dir.filePath("empty.json")));
+    QVERIFY(!bridge.exportAvbReport(dir.filePath("empty.json"), true));
     bridge.inspectAvb(QUrl::fromLocalFile(source).toString()); QVERIFY(bridge.busy()); QVERIFY(finished.wait(5000));
     QVERIFY(!bridge.compatible()); QCOMPARE(bridge.avbReport().value("status").toString(), QStringLiteral("metadata-only"));
     QVERIFY(!bridge.avbJson().contains("private-client")); QVERIFY(!bridge.avbJson().contains(dir.path()));
-    QVERIFY(!bridge.exportAvbReport(source)); QVERIFY(!bridge.exportAvbReport(QUrl::fromLocalFile(source).toString()));
-    const auto output = dir.filePath("report.json"); QVERIFY(bridge.exportAvbReport(output));
+    QVERIFY(!bridge.exportAvbReport(source, true)); QVERIFY(!bridge.exportAvbReport(QUrl::fromLocalFile(source).toString(), true));
+    const auto output = dir.filePath("report.json"); QVERIFY(bridge.exportAvbReport(output, true));
     QFile report(output); QVERIFY(report.open(QIODevice::ReadOnly)); QCOMPARE(report.readAll(), bridge.avbJson().toUtf8());
     QVERIFY(file.open(QIODevice::ReadOnly)); QCOMPARE(file.readAll(), bytes); file.close();
     bridge.inspectAvb(dir.filePath("missing.img")); QVERIFY(!bridge.busy()); QVERIFY(bridge.avbJson().isEmpty());
-    QVERIFY(!bridge.exportAvbReport(output));
+    QVERIFY(!bridge.exportAvbReport(output, true));
     bridge.inspectAvb(source); bridge.cancel(); QVERIFY(finished.wait(5000)); QVERIFY(bridge.avbJson().isEmpty()); QVERIFY(!bridge.compatible());
     bridge.inspectAvb(source); bridge.clearAvbReport(); QVERIFY(finished.wait(5000)); QVERIFY(bridge.avbJson().isEmpty());
   }

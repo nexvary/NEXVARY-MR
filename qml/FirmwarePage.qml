@@ -33,19 +33,20 @@ Item {
    title:app.trx("Firmware Intelligence · بيانات AVB غير الموثوقة","Firmware Intelligence · untrusted AVB metadata")
    Label {objectName:"avbScope";text:app.trx("صورة vbmeta خام فقط، حتى 16 MiB. قراءة محلية دون هاتف. لا يشمل التحليل ZIP أو Sparse أو صور الأقسام ذات Footer.","Raw vbmeta images only, up to 16 MiB. Local inspection without a phone. ZIP, sparse images and partition footer discovery are unsupported.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#a9bfd2")}
    RowLayout {
-    TextField {id:avbPath;objectName:"avbPath";readOnly:true;Layout.fillWidth:true;placeholderText:app.trx("اختر صورة vbmeta محلية","Choose a local vbmeta image");onTextChanged:firmwareBridge.clearAvbReport()}
+    TextField {id:avbPath;objectName:"avbPath";readOnly:true;Layout.fillWidth:true;placeholderText:app.trx("اختر صورة vbmeta محلية","Choose a local vbmeta image");onTextChanged:{avbPrivacy.checked=false;avbExportStatus.text="";firmwareBridge.clearAvbReport()}}
     ActionButton {objectName:"chooseAvb";text:app.trx("اختيار الصورة","Choose image");enabled:!firmwareBridge.busy;onClicked:avbDialog.open()}
    }
    RowLayout {
     ActionButton {objectName:"inspectAvb";text:app.trx("تحليل البيانات","Inspect metadata");primary:true;enabled:!firmwareBridge.busy&&avbPath.text!=="";onClicked:firmwareBridge.inspectAvb(avbPath.text)}
     ActionButton {text:app.trx("إلغاء","Cancel");enabled:firmwareBridge.busy;onClicked:firmwareBridge.cancel()}
-    ActionButton {objectName:"exportAvb";text:app.trx("تصدير JSON","Export JSON");enabled:!firmwareBridge.busy&&firmwareBridge.avbJson!=="";onClicked:avbExport.open()}
+    ActionButton {objectName:"exportAvb";text:app.trx("تصدير JSON","Export JSON");enabled:avbPrivacy.checked&&!firmwareBridge.busy&&firmwareBridge.avbJson!=="";onClicked:avbExport.open()}
    }
    Label {objectName:"avbTrustNotice";text:app.trx("الحقول التالية تصريحات داخل الملف، وليست إثباتًا للتوقيع أو أصالة الشركة أو أمان الرجوع أو توافق الجهاز. لا تمنح هذه النتيجة إذنًا بالتفليش.","These are file declarations. Signature, OEM authenticity, rollback safety and device compatibility remain unverified. This result does not authorize flashing.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#f0bc75")}
    Label {text:firmwareBridge.avbReport.status==="metadata-only"?app.trx("مؤشر الرجوع المعلن: ","Declared rollback index: ")+firmwareBridge.avbReport.declaredRollbackIndex+" · "+app.trx("أعلام الحماية المعلنة: ","Declared flags: ")+firmwareBridge.avbReport.declaredFlags:"";wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#c0c8d0")}
    Flickable {id:avbScroll;objectName:"avbScroll";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:100;contentWidth:width;contentHeight:avbText.height;clip:true;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
    TextArea {id:avbText;objectName:"avbResult";width:avbScroll.width;height:Math.max(avbScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;text:firmwareBridge.avbJson||firmwareBridge.status;color:app.tone("#a9bfd2");background:Rectangle{color:app.tone("#0b2030");radius:6}}
    }
+   NeonCheckBox {id:avbPrivacy;objectName:"avbExportPrivacy";Layout.fillWidth:true;text:app.trx("أوافق على تصدير بيانات الأقسام والبصمة في تقرير محلي","I approve exporting partition metadata and hash in a local report")}
    Label {id:avbExportStatus;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a9bfd2")}
   }
   Panel {
@@ -71,9 +72,13 @@ Item {
  }
  FileDialog {id:packageDialog;nameFilters:["ZIP (*.zip)"];onAccepted:packagePath.text=selectedFile.toString()}
  FileDialog {id:packageExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:packageExportStatus.text=firmwareBridge.exportPackageReport(selectedFile.toString(),packagePrivacy.checked)?app.trx("حُفظ التقرير في ملف جديد","Report saved to a new file"):app.trx("تعذر الحفظ؛ اختر اسمًا محليًا جديدًا وراجع الموافقة","Could not save; choose a new local filename and review approval")}
+ Connections {target:firmwareBridge
+  function onBusyChanged(){if(firmwareBridge.busy){avbPrivacy.checked=false;packagePrivacy.checked=false}}
+  function onAvbReportChanged(){if(firmwareBridge.avbJson==="")avbPrivacy.checked=false}
+ }
  Connections {target:toolBridge;function onDeviceInfoChanged(){firmwareBridge.invalidate()} function onSelectedSerialChanged(){firmwareBridge.invalidate()}}
  FileDialog {id:manifestDialog;nameFilters:["JSON (*.json)"];onAccepted:manifest.text=selectedFile.toString()}
  FileDialog {id:firmwareDialog;onAccepted:firmware.text=selectedFile.toString()}
  FileDialog {id:avbDialog;onAccepted:{avbExportStatus.text="";avbPath.text=selectedFile.toString()}}
- FileDialog {id:avbExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:avbExportStatus.text=firmwareBridge.exportAvbReport(selectedFile.toString())?app.trx("حُفظ التقرير محليًا","Report saved locally"):app.trx("تعذر حفظ التقرير؛ لا يمكن استبدال الصورة الأصلية","Could not save report; the source image cannot be replaced")}
+ FileDialog {id:avbExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:avbExportStatus.text=firmwareBridge.exportAvbReport(selectedFile.toString(),avbPrivacy.checked)?app.trx("حُفظ التقرير في ملف جديد","Report saved to a new file"):app.trx("تعذر الحفظ؛ اختر اسمًا محليًا جديدًا وراجع الموافقة","Could not save; choose a new local filename and review approval")}
 }

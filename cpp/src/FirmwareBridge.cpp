@@ -6,7 +6,6 @@
 #include <QStringDecoder>
 #include <QDateTime>
 #include "RecoveryFile.hpp"
-#include <QSaveFile>
 #include <QCryptographicHash>
 #include <QFile>
 #include <QFileInfo>
@@ -25,6 +24,19 @@ bool plainField(const QString &text, qsizetype maximum) {
   if (text.isEmpty() || text.size() > maximum || text != text.trimmed()) return false;
   for (const auto character : text) if (character.isNull() || character.category() == QChar::Other_Control) return false;
   return true;
+}
+bool exportNewReport(const QJsonObject &report, const QString &input, const QString &source, bool approved, bool busy) {
+  const QString path = mr::recovery::localFilePath(input);
+  if (!approved || busy || report.isEmpty() || path.isEmpty() || QFileInfo(path).canonicalFilePath() == source) return false;
+  // NewOnly rejects existing files and aliases before any byte is written.
+  QFile output(path);
+  if (!output.open(QIODevice::WriteOnly | QIODevice::NewOnly)) return false;
+  output.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+  const auto bytes = QJsonDocument(report).toJson(QJsonDocument::Indented);
+  const bool ok = output.write(bytes) == bytes.size() && output.flush();
+  output.close();
+  if (!ok) QFile::remove(path);
+  return ok;
 }
 }
 FirmwareBridge::FirmwareBridge(QObject *parent) : QObject(parent) {
@@ -134,12 +146,15 @@ void FirmwareBridge::cancel() {
 }
 
 void FirmwareBridge::invalidate() {
-  packageReport_ = {}; emit packageReportChanged();
   invalidated_ = true;
   compatible_ = false;
   progress_ = 0;
+  avbReport_ = {}; avbSourcePath_.clear();
+  packageReport_ = {}; packageSourcePath_.clear();
   if (busy_) watcher_.cancel();
   setStatus(QStringLiteral("تغيرت هوية الجهاز أو مدخلات الحزمة؛ يلزم تحقق جديد") + trustNotice);
+  emit avbReportChanged();
+  emit packageReportChanged();
   emit compatibleChanged();
   emit progressChanged();
 }
@@ -150,7 +165,7 @@ QString FirmwareBridge::avbJson() const {
 }
 void FirmwareBridge::clearAvbReport() {
   if (busy_) { invalidated_ = true; watcher_.cancel(); }
-  avbReport_ = {};
+  avbReport_ = {}; avbSourcePath_.clear();
   emit avbReportChanged();
 }
 void FirmwareBridge::inspectAvb(const QString &path) {
@@ -186,22 +201,17 @@ void FirmwareBridge::inspectAvb(const QString &path) {
       : QStringLiteral("AVB rejected: ") + report.value(QStringLiteral("error")).toString(), report});
   }, local));
 }
-bool FirmwareBridge::exportAvbReport(const QString &path) {
-  if (busy_ || avbReport_.isEmpty()) return false;
-  const QString local = mr::recovery::localFilePath(path);
-  if (local.isEmpty() || QFileInfo(local).canonicalFilePath() == avbSourcePath_) return false;
-  QSaveFile output(local);
-  if (!output.open(QIODevice::WriteOnly)) return false;
-  const auto bytes = QJsonDocument(avbReport_).toJson(QJsonDocument::Indented);
-  return output.write(bytes) == bytes.size() && output.commit();
+bool FirmwareBridge::exportAvbReport(const QString &path, bool approved) {
+  return exportNewReport(avbReport_, path, avbSourcePath_, approved, busy_);
 }
+
 
 QString FirmwareBridge::packageJson() const {
  return packageReport_.isEmpty()?QString():QString::fromUtf8(QJsonDocument(packageReport_).toJson(QJsonDocument::Indented));
 }
 void FirmwareBridge::clearPackageReport(){
  if(busy_){invalidated_=true;watcher_.cancel();}
- packageReport_={};emit packageReportChanged();
+ packageReport_={};packageSourcePath_.clear();emit packageReportChanged();
 }
 void FirmwareBridge::inspectPackage(const QString &input){
  if(busy_)return;
@@ -253,9 +263,5 @@ void FirmwareBridge::inspectPackage(const QString &input){
  },path));
 }
 bool FirmwareBridge::exportPackageReport(const QString &input,bool approved){
- const auto path=mr::recovery::localFilePath(input);
- if(!approved||busy_||packageReport_.isEmpty()||path.isEmpty()||QFileInfo(path).canonicalFilePath()==packageSourcePath_)return false;
- QFile output(path);if(!output.open(QIODevice::WriteOnly|QIODevice::NewOnly))return false;
- output.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner);const auto bytes=QJsonDocument(packageReport_).toJson(QJsonDocument::Indented);
- const bool ok=output.write(bytes)==bytes.size()&&output.flush();output.close();if(!ok)QFile::remove(path);return ok;
+ return exportNewReport(packageReport_, input, packageSourcePath_, approved, busy_);
 }

@@ -8,6 +8,7 @@
 #include <QQuickWindow>
 #include <QImage>
 #include <QQuickStyle>
+#include <QtEndian>
 #include <memory>
 #include "ToolBridge.hpp"
 #include "FirmwareZipFixture.hpp"
@@ -59,6 +60,13 @@ public slots:
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  const auto avb=temp.filePath(QStringLiteral("synthetic-vbmeta.img"));
+  QByteArray avbBytes(320, '\0'); avbBytes.replace(0,4,"AVB0");
+  qToBigEndian<quint32>(1,avbBytes.data()+4); qToBigEndian<quint64>(64,avbBytes.data()+20);
+  qToBigEndian<quint64>(16,avbBytes.data()+104); qToBigEndian<quint64>(2,avbBytes.data()+256);
+  QFile avbFile(avb);if(avbFile.open(QIODevice::WriteOnly))avbFile.write(avbBytes);avbFile.close();
+  engine->rootContext()->setContextProperty("syntheticAvbPath",avb);
+  engine->rootContext()->setContextProperty("avbScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-avb-export-ui-"));
   const auto package=temp.filePath(QStringLiteral("synthetic-firmware.zip"));
   QFile packageFile(package);if(packageFile.open(QIODevice::WriteOnly))packageFile.write(syntheticFirmwareZip());packageFile.close();
   engine->rootContext()->setContextProperty("syntheticFirmwarePackagePath",package);

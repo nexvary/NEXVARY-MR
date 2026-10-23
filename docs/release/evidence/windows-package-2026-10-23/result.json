@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "sourceHead": "d85fd15f584837efb1e4de6593d28775edfe8b43",
+  "runId": 39938403233,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39938403233",
+  "conclusion": "success",
+  "platform": "GitHub-hosted Windows Server 2022, Qt 6.8.3 MSVC x64",
+  "validated": [
+    "13 GUI child/profile regressions in each build profile",
+    "24 CTest suites in each Windows profile",
+    "32 QML cases in each profile",
+    "production portable launch/close isolated from Qt SDK in path with spaces",
+    "per-user installer compilation, install, deployed launch/close and uninstall"
+  ],
+  "artifacts": [
+    {
+      "id": 12495566356,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "artifactArchiveSha256": "sha256:56d609d769f679b92a31ff053438cbbab2fd384e727a2efe6d6b3820e0c340ea",
+      "sizeBytes": 13591839,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39938403233/artifacts/12495566356"
+    },
+    {
+      "id": 12494893463,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "artifactArchiveSha256": "sha256:c9b431a12f081ce84be8b08b45aa60aa7e3e63dac7aa2bd4208831066fb5f3a1",
+      "sizeBytes": 36619422,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39938403233/artifacts/12494893463"
+    },
+    {
+      "id": 12494648356,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "artifactArchiveSha256": "sha256:1cca1460bd6521ccf8a20f1275adf07bb1c7d857b1cbe87e6f420a396cbee051",
+      "sizeBytes": 6183778,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39938403233/artifacts/12494648356"
+    },
+    {
+      "id": 12494639679,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "artifactArchiveSha256": "sha256:11bffe34df57053569fa0ad60f17d4900bb903760b44fd47bbaad863c7774681",
+      "sizeBytes": 24292546,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39938403233/artifacts/12494639679"
+    }
+  ],
+  "evidenceScope": "Observed connector job logs, completed workflow steps and GitHub artifact metadata. Outer artifact ZIP digests are not inner installer/portable file hashes. No independent download verification in unavailable local runtime.",
+  "releaseApproved": false,
+  "remainingGates": [
+    "physical Windows 10/11",
+    "authorized exact-model Android acceptance",
+    "signing",
+    "full dependency/license review",
+    "upgrade/rollback acceptance"
+  ]
+}
