@@ -1,0 +1,17 @@
+{
+  "source": "https://github.com/Genymobile/scrcpy/releases/tag/v5.0.1",
+  "tag": "v5.0.1",
+  "publishedAt": "2026-10-08T06:44:27Z",
+  "cliBlob": "c751ec860efd357eb6d4111e6268ab75a474f02b",
+  "faqBlob": "f9da5d1f4eba28949e5db876ee8ae341e3b995d4",
+  "reviewedFlags": [
+    "--serial",
+    "--no-control",
+    "--no-audio",
+    "--no-clipboard-autosync",
+    "--no-power-on"
+  ],
+  "implementation": "original bounded process manager, no upstream implementation copied",
+  "physicalAcceptance": false,
+  "windowsAcceptance": false
+}

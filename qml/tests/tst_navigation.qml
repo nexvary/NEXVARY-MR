@@ -20,6 +20,18 @@ TestCase {
   }
   findChild(app,"firmwareTabs").currentIndex=0
  }
+ function test_mirrorConsentAndNavigation(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(waitForRendering(app.contentItem))
+  verify(findChild(app,"mirrorScope").visible);compare(findChild(app,"reviewMirror").enabled,false);compare(findChild(app,"stopMirror").enabled,false)
+  const dialog=findChild(app,"mirrorConfirm")
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;dialog.open();tryCompare(dialog,"opened",true)
+   verify(!dialog.standardButton(Dialog.Ok).enabled);verify(findChild(app,"mirrorComponentNotice").visible)
+   findChild(app,"mirrorOwner").checked=true;findChild(app,"mirrorComponent").checked=true;findChild(app,"mirrorChallenge").text="OTHER"
+   verify(!dialog.standardButton(Dialog.Ok).enabled);verify(dialog.width<=app.width-48);dialog.reject();tryCompare(dialog,"opened",false);tryCompare(dialog,"visible",false)
+  }
+  verify(waitForRendering(app.contentItem));mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
+ }
  function test_modernCompatibilityPanel(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=1
   const panel=findChild(app,"deviceCompatibilityPanel"),scroll=findChild(app,"deviceServiceDetailsScroll")

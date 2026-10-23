@@ -18,7 +18,7 @@ inline constexpr bool operationAllowed(std::string_view operation) {
         "reboot_normal", "reboot_recovery", "reboot_bootloader", "reboot_sideload",
         "dark_on", "dark_off", "languages", "keyboard", "settings", "apn",
         "install_apk", "sideload_zip", "fastboot_reboot", "fastboot_bootloader",
-        "erase_cache", "erase_userdata"};
+        "erase_cache", "erase_userdata", "mirror"};
     for (const auto allowed : writes) if (operation == allowed) return true;
     return false; // Laboratory also denies unknown/protection-bypass operations.
 }

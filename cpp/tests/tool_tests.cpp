@@ -187,7 +187,8 @@ private slots:
     QCOMPARE(finished.size(), 1);
     QCOMPARE(finished[0][0].toBool(), false);
     bridge.startMirror();
-    QVERIFY(bridge.status().contains(QStringLiteral("Laboratory")));
+    QVERIFY(!bridge.mirrorActive());
+    if(!bridge.laboratoryBuild())QVERIFY(bridge.status().contains(QStringLiteral("Laboratory")));
     bridge.selectDevice(QStringLiteral("unknown"));
     QVERIFY(bridge.selectedSerial().isEmpty());
   }

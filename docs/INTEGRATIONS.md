@@ -29,7 +29,7 @@ ERPNext was observed on an actively changing development branch; the pinned SHA 
 ## Implemented adapters
 
 - Android platform-tools: discover ADB/Fastboot; structured read-only device enumeration, properties and bounded logs. No bundled Google binaries, firmware, driver installer, shell console, unlocking or flashing.
-- scrcpy: external executable detection and explicit separate-process launch. Authorized USB debugging and a compatible installed version are required; physical-phone acceptance remains separate from mocked process tests.
+- scrcpy: Laboratory-only owned process lifecycle with strict owner/component consent, reviewed serial, exact 5.0.1 CLI version, pinned ADB executable, fresh identity checks, bounded output/deadlines, periodic disconnect checks and terminate/kill cleanup. Control, audio and clipboard synchronization are disabled. No detached launch or automatic target fallback. Production refuses before any child process. Host process startup is not frame delivery or physical-phone acceptance.
 - Boardview: native C++ importer and QML renderer for the documented NEXVARY JSON format; original synthetic training data. This does not import OpenBoardView or TRACE file parsers and does not imply compatibility with their proprietary board formats.
 - Workshop: independently implemented local Qt SQL / SQLite workflows; no FixTrack/ERPNext source or data copied.
 
@@ -38,3 +38,4 @@ ERPNext was observed on an actively changing development branch; the pinned SHA 
 License permission for an application does not license the phone manufacturer's schematics, firmware, product photos or device-data sources. Users import only files they have permission to use. No protected schematics, production repair voltages, firmware or customer information is bundled. External tools must be obtained from their official sources and remain separately licensed.
 
 No bypass of FRP, iCloud, device locks, authorization prompts or IMEI identity protection is exposed. No external project is claimed as a direct source integration when it is only researched, independently reimplemented or launched as a separate process.
+

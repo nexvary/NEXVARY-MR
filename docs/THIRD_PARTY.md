@@ -40,7 +40,7 @@ App-local deployment preserves portable and per-user installation without requir
 
 ## Optional external tools
 
-- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected as a separate user-installed application; launch is currently blocked by the compiled operation policy pending consent/lifecycle validation. Its dependency notices apply to its own package.
+- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected as a separate user-installed application; controlled screen-view launch is experimental and Laboratory-only, with explicit owner/component consent and an exact reviewed 5.0.1 CLI boundary. Production refuses launch. Physical display/cleanup and Windows acceptance remain pending. Its dependency notices apply to its own package.
 - [Android SDK platform-tools](https://developer.android.com/tools/releases/platform-tools): Google SDK terms; obtain directly from Google. No binary redistribution is performed here.
 - OpenBoardView and TRACE Boardviewer are researched, separately licensed products. No source, executable, icons or file parsers from them are bundled.
 

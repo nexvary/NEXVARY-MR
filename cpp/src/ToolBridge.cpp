@@ -83,10 +83,12 @@ ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
     // FailedToStart does not emit finished. Crashes do, so they use normal cleanup.
     if (error == QProcess::FailedToStart) finish(-1, QProcess::CrashExit);
   });
+  connect(&mirror_,&MirrorSession::changed,this,[this]{setStatus(mirror_.status());emit mirrorChanged();emit busyChanged();});
   refreshTools();
   initServices();
 }
 ToolBridge::~ToolBridge() {
+  mirror_.shutdown();
   shutdownServices();
   pollTimer_.stop();
   timeoutTimer_.stop();
@@ -273,7 +275,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
         serviceCurrent_.key, serviceScratch_.value("package").toMap().value("path").toString(), serviceApproval_.value("replace").toBool()))) {
     setStatus(QStringLiteral("Device command rejected by centralized allowlist."));return false;
   }
-  if (active_ || (serviceRunning_ && operation != Operation::Service)) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
+  if (mirror_.active() || active_ || (serviceRunning_ && operation != Operation::Service)) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
@@ -389,6 +391,7 @@ void ToolBridge::selectDevice(const QString &serial) {
     for (const auto &entry : devices_) if (entry.toMap().value(QStringLiteral("serial")).toString() == serial) found = true;
     if (!found) { setStatus(QStringLiteral("اختر جهازًا من نتائج الفحص الحالية")); return; }
   }
+  if(mirror_.active())mirror_.stop(QStringLiteral("Device selection changed; screen-view session stopped."));
   selectedSerial_ = serial;
   driverBinding_.clear();emit driverInfoChanged();
   if (serviceRunning_) cancel();
@@ -433,6 +436,7 @@ void ToolBridge::inspectSelectedDriver() {
 #endif
 }
 void ToolBridge::cancel() {
+  if(mirror_.active()){stopMirror();return;}
   if (serviceRunning_) {
     serviceCancel_->store(true);
     serviceSteps_.clear();
@@ -451,13 +455,15 @@ void ToolBridge::setAutoRefresh(bool enabled) {
   emit autoRefreshChanged();
 }
 bool ToolBridge::laboratoryBuild() const { return mr::service::laboratoryBuild(); }
-void ToolBridge::startMirror() {
-  if(!mr::service::operationAllowed("mirror")){setStatus(QStringLiteral("Screen mirroring unavailable pending Laboratory ownership-consent and process-lifecycle validation (scrcpy uploads a device component)."));return;}
-  if (busy()) { setStatus(QStringLiteral("انتظر اكتمال الفحص الحالي")); return; }
-  if (!selectedAdbReady()) return;
-  const QString path = resolveExecutable(QStringLiteral("scrcpy"));
-  if (path.isEmpty()) { setStatus(QStringLiteral("scrcpy غير مثبتة؛ استخدم النسخة الرسمية فقط")); return; }
-  const bool launched = QProcess::startDetached(path, {QStringLiteral("--serial"), selectedSerial_});
-  setStatus(launched ? QStringLiteral("تم طلب تشغيل scrcpy للجهاز المحدد؛ راجع نافذتها الخارجية") : QStringLiteral("تعذر تشغيل scrcpy"));
+bool ToolBridge::startMirror(const QString &expectedSerial,const QVariantMap &approval) {
+  if(!mr::service::operationAllowed("mirror")){setStatus(QStringLiteral("Screen view requires the separate Laboratory build; production remains read-only."));return false;}
+  if(busy()||expectedSerial!=selectedSerial_||!selectedAdbReady())return false;
+  if(approval.size()!=3||approval.value("authorized").metaType().id()!=QMetaType::Bool||!approval.value("authorized").toBool()||
+      approval.value("component").metaType().id()!=QMetaType::Bool||!approval.value("component").toBool()||
+      approval.value("challenge").metaType().id()!=QMetaType::QString||approval.value("challenge").toString()!=expectedSerial){
+    setStatus(QStringLiteral("Explicit owner/device-component consent and the exact reviewed serial are required."));return false;
+  }
+  if(deviceInfo_.value("serial").toString()!=expectedSerial){setStatus(QStringLiteral("Read this device's information before screen view."));return false;}
+  return mirror_.start(resolveExecutable("scrcpy"),resolveExecutable("adb"),expectedSerial,deviceInfo_,true,true);
 }
-
+void ToolBridge::stopMirror(){mirror_.stop();}
