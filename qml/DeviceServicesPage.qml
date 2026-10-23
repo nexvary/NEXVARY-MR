@@ -62,8 +62,8 @@ Item {
      }
     }
    }
-   ScrollView {id:detailsScroll;objectName:"deviceServiceDetailsScroll";implicitWidth:0;implicitHeight:0;Layout.minimumWidth:0;Layout.minimumHeight:0;Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
-    ColumnLayout {width:detailsScroll.availableWidth;spacing:10
+   ScrollView {id:detailsScroll;objectName:"deviceServiceDetailsScroll";implicitWidth:0;implicitHeight:0;Layout.minimumWidth:0;Layout.minimumHeight:0;Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;contentHeight:detailsContent.implicitHeight;clip:true
+    ColumnLayout {id:detailsContent;width:detailsScroll.availableWidth;height:implicitHeight;spacing:10
     DeviceCompatibilityPanel {app:page.app;profile:toolBridge.serviceProfile.compatibility||({});Layout.fillWidth:true}
     Panel {objectName:"deviceHealthPanel";title:app.trx("قراءات تشخيص الجهاز","Device diagnostic observations");Layout.fillWidth:true;visible:!!page.diagnostics.schemaVersion
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("قراءات لحظية وليست شهادة سلامة للبطارية أو الذاكرة. البيانات غير المتاحة لا تعني أن الجهاز سليم.","Point-in-time observations, not battery or storage health certification. Missing data does not mean the device is healthy.")}

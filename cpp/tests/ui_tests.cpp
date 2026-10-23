@@ -61,6 +61,7 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticModernCompatibility",modern);
   engine->rootContext()->setContextProperty("modernScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-modern-ui-"));
   engine->rootContext()->setContextProperty("workshopScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-workshop-barcode-ui-"));
+  engine->rootContext()->setContextProperty("serviceScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-service-scroll-"));
   engine->rootContext()->setContextProperty("uiEvidence",this);
   engine->rootContext()->setContextProperty("pcapScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-pcap-ui-"));
   engine->rootContext()->setContextProperty("syntheticCapturePath",capture);

@@ -108,7 +108,9 @@ TestCase {
    const details=findChild(app,"deviceServiceDetailsScroll");verify(details!==null);details.contentItem.contentY=0;wait(30)
    let point=result.mapToItem(details,result.width/2,80);verify(point.y>=0&&point.y<details.height,"Result remains visible at the top")
    details.contentItem.contentY=Math.max(0,details.contentHeight-details.availableHeight);wait(30)
-   const report=findChild(app,"exportDeviceServiceReport");point=report.mapToItem(details,report.width/2,report.height/2);verify(point.y>=0&&point.y<details.height,"Report remains reachable by scrolling")
+   const report=findChild(app,"exportDeviceServiceReport");point=report.mapToItem(details,report.width/2,report.height/2);verify(point.y>=0&&point.y<details.height,"Report remains reachable by scrolling: "+JSON.stringify({y:point.y,view:details.height,available:details.availableHeight,content:details.contentHeight,offset:details.contentItem.contentY,origin:details.contentItem.originY}))
+   verify(point.y+report.height/2<=details.height,"Entire report control remains inside the scrolled viewport")
+   if(dark){verify(uiEvidence.captureWindow(app,serviceScreenshotBase+(arabic?"ar":"en")+".png"))}
    details.contentItem.contentY=0
   }
   findChild(app,"serviceBrand").currentIndex=0
