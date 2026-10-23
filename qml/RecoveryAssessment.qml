@@ -43,6 +43,7 @@ Item {
    width: recoveryScroll.availableWidth
    spacing: 14
    Panel {
+    iconName: "history"
     title: app.trx("تقييم استعادة البيانات","Recovery feasibility assessment")
     Layout.fillWidth: true
     Label {
@@ -92,6 +93,7 @@ Item {
     }
    }
    Panel {
+    iconName: "document_lock"
     accent: "blue"
     title: app.trx("نتيجة التقييم الأولي","Preliminary assessment")
     Layout.fillWidth: true

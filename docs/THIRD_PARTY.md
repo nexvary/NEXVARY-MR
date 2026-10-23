@@ -58,7 +58,7 @@ The optional Android companion uses the official MIT Shizuku API/provider13.1.5,
 
 ## Fluent navigation SVGs
 
-Ten unmodified Microsoft Fluent System Icons color SVGs are bundled. MIT copyright/permission notice: `licenses/FLUENT-ICONS-MIT.txt`. Exact upstream revision, paths, Git blob IDs and SHA256 digests are recorded in `assets/icons/PROVENANCE.json` in the source repository. SVG decoding uses Qt SVG (matching Qt 6.8.3), deployed dynamically as Qt6Svg.dll and qsvg.dll and covered by the Qt source/license links above. No emoji or font glyph is used for navigation.
+Twenty-four unmodified Microsoft Fluent System Icons color SVGs are bundled. MIT copyright/permission notice: `licenses/FLUENT-ICONS-MIT.txt`. Exact upstream revision, paths, Git blob IDs and SHA256 digests are recorded in `assets/icons/PROVENANCE.json` in the source repository. SVG decoding uses Qt SVG (matching Qt 6.8.3), deployed dynamically as Qt6Svg.dll and qsvg.dll and covered by the Qt source/license links above. No emoji or font glyph is used for navigation.
 
 
 ## Workshop Code 39 labels

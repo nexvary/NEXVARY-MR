@@ -65,12 +65,12 @@ jobs:
           cmake --build build --parallel 2
       - name: Run Qt, recovery and real mmls synthetic-image integration
         run: ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
-      - name: Instrument AVB, PCAP and signed-update staging regressions
+      - name: Instrument AVB, PCAP, EXIF and signed-update staging regressions
         if: matrix.profile == 'production'
         run: |
           cmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-avb-sanitized --target mr_avb_mutation_tests mr_pcap_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
-          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_((avb|pcap)_mutation|update|update_journal|update_key)_tests$' --output-on-failure --output-junit avb-sanitizer-results.xml
+          cmake --build build-avb-sanitized --target mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
+          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_((avb|pcap|exif)_mutation|update|update_journal|update_key)_tests$' --output-on-failure --output-junit avb-sanitizer-results.xml
       - name: Native Qt client through real Gunicorn and verified Caddy TLS
         if: matrix.profile == 'production'
         run: |

@@ -6,6 +6,7 @@ Item {
  id:page
  objectName:"recoveryWorkspace"
  property var app
+ property bool caseWorkspace:false
  property int step:0
  property string sourcePath:""
  property int selectedEvidence:-1
@@ -13,7 +14,7 @@ Item {
  property var encryptionKeys:["unknown","fbe","fde","none"]
  property var steps:app.ar?["1  المصدر","2  الجهاز","3  نوع الفقد","4  التقييم والمخاطر","5  الموافقة والقضية","6  التحليل","7  معاينة النتائج","8  التصدير"]:["1  Source","2  Device","3  Loss type","4  Assessment & risks","5  Consent & case","6  Analysis","7  Review results","8  Export"]
  function notify(ok){app.notice(ok,app.trx("اكتملت العملية المحلية","Local operation completed"),recoveryBridge.error)}
- TabBar {id:recoveryTabs;objectName:"recoveryTabs";anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;TabButton{text:app.trx("تقييم المصدر","Source assessment")}TabButton{text:app.trx("القضايا والتحليل المحلي","Cases & local analysis")}}
+ TabBar {id:recoveryTabs;visible:!page.caseWorkspace;height:visible?implicitHeight:0;currentIndex:page.caseWorkspace?1:0;objectName:"recoveryTabs";anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;TabButton{text:app.trx("تقييم المصدر","Source assessment")}TabButton{text:app.trx("القضايا والتحليل المحلي","Cases & local analysis")}}
  RecoveryAssessment {app:page.app;anchors.top:recoveryTabs.bottom;anchors.left:parent.left;anchors.right:parent.right;anchors.bottom:parent.bottom;visible:recoveryTabs.currentIndex===0}
  ColumnLayout {
   visible:recoveryTabs.currentIndex===1

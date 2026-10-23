@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 Item {
  id:hub
  objectName:"workshopHub"
+ property alias currentTab:tabs.currentIndex
  property var app
  property var customerData:({})
  property var deviceData:({})

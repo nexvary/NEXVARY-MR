@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-sanitized
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-sanitized
+    Start 24: mr_exif_mutation_tests
+1/1 Test #24: mr_exif_mutation_tests ...........   Passed    0.30 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.30 sec

@@ -58,7 +58,9 @@ phones. Device changes (including reboot, Settings activities, APK installation,
 sideload and erase) cannot be enabled through the UI or configuration.
 `MR_ENABLE_LAB_OPERATIONS=ON` creates a separate experimental Laboratory binary
 and default data directory; model-specific physical acceptance is still pending.
-Screen mirroring is unavailable until its consent/lifecycle gate is completed.
+Screen mirroring has an owned, consent-gated Laboratory lifecycle for reviewed
+scrcpy 5.0.1; production denies it. Physical frame delivery, device cleanup and
+exact-model acceptance remain pending.
 See [the current development checkpoint](docs/release/DEVELOPMENT_CHECKPOINT_2026-10-23.md).
 
 ### Advanced Mobile Research Lab
@@ -68,3 +70,10 @@ Firmware Lab now includes bounded local raw-vbmeta AVB metadata inspection and J
 ### Offline capture summaries
 
 Forensic Lab can now summarize an explicitly authorized local classic-PCAP file (up to 8 MiB / 200,000 records) through the existing case/evidence engine. It records source SHA-256, aggregate packet/time/header statistics and audit evidence after a second matching source read. No addresses or packet payload are included in the summary. PCAPNG, live capture, flow reconstruction and TLS decryption are unsupported. See [scope and test evidence](docs/forensics/PCAP_SUMMARY.md).
+
+Forensic Lab → Tools also reads a bounded JPEG Exif allowlist and stores a
+hash-linked case summary after explicit source consent and operator recording.
+Raw metadata dates are not authenticated or converted to UTC. GPS values,
+serials, owner comments and MakerNotes are omitted. See
+[Exif scope](docs/forensics/EXIF_SUMMARY.md) and the current
+[requirements gap matrix](docs/REQUIREMENTS_GAP_MATRIX.md).
