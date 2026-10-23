@@ -1,0 +1,13 @@
+{
+  "cpp/src/FirmwareBridge.cpp": "b8609b08e471799d20f6586c82f91cc8f928f3877c066bca07a5359d156bfca6",
+  "cpp/src/FirmwareBridge.hpp": "ae38387ecf0e0f03cf6629ff763c549e831dfdd435153610dd92920948acd9f5",
+  "cpp/src/PackagePreflight.hpp": "131a04b8d1996ff5a27c2922d4616bfef4f85b8005d2e8568068d7fd197dcf84",
+  "cpp/tests/firmware_tests.cpp": "61eed5c36772e2edc3143533745369bc3d50f7fd5d7e075372252176494abcff",
+  "cpp/tests/FirmwareZipFixture.hpp": "3f53d9e073dd2b696453403d34436719943c37715a8da182e341b3178ee9eb4e",
+  "cpp/tests/ui_tests.cpp": "08d79fa7f1f7e9e01a386d9bcf8b67d5e63507f5d0a22a70ae13cee3815427ed",
+  "qml/FirmwarePage.qml": "cffa2c9f38f372e1e2ff9e203967ee7ac92591b162916099f32149778d9c0328",
+  "qml/DeviceServicesPage.qml": "e8f0e378c13e6898eeb100236065fb979704902d661d89827f7e14263539ee41",
+  "qml/tests/tst_navigation.qml": "7799f2aadf9cc97cbf9af2dc819b66d658554ada2addc7835eceea0eabc06628",
+  "docs/INTEGRATIONS.md": "07edb941a95143302a1d8247f16230a59355e1c68b7d2e346e596bbf2b615687",
+  "docs/release/DEVELOPMENT_CHECKPOINT_2026-10-23.md": "caf817c30e584fb687250c92c41d8f4027d125db2ccdcee0601979d335e31789"
+}

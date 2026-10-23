@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtTest
 import ".." as MR
 TestCase {
@@ -19,6 +20,17 @@ TestCase {
    const choose=findChild(app,"chooseAvb");const point=choose.mapToItem(app.contentItem,choose.width/2,choose.height/2);verify(point.y>0&&point.y<app.height)
   }
   findChild(app,"firmwareTabs").currentIndex=0
+ }
+ function test_firmwarePackageStructure(){
+  app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=2
+  const path=findChild(app,"firmwarePackagePath");path.text=syntheticFirmwarePackagePath
+  compare(findChild(app,"exportFirmwarePackage").enabled,false);mouseClick(findChild(app,"inspectFirmwarePackage"));tryCompare(firmwareBridge,"busy",false,5000)
+  compare(firmwareBridge.packageReport.status,"structure-only");compare(firmwareBridge.compatible,false)
+  const output=findChild(app,"firmwarePackageResult");compare(output.textFormat,TextEdit.PlainText);verify(output.text.indexOf("snapshotSha256")>=0)
+  const privacy=findChild(app,"firmwarePackagePrivacy");privacy.checked=true;compare(findChild(app,"exportFirmwarePackage").enabled,true)
+  for(const arabic of [true,false])for(const dark of [true,false]){app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(findChild(app,"packageScope").height>=findChild(app,"packageScope").implicitHeight);verify(findChild(app,"firmwarePackageScroll").height>=100);if(dark)verify(uiEvidence.captureWindow(app,packageScreenshotBase+(arabic?"ar":"en")+".png"))}
+  path.text="";compare(firmwareBridge.packageJson,"");compare(privacy.checked,false);compare(findChild(app,"exportFirmwarePackage").enabled,false)
+  findChild(app,"firmwareTabs").currentIndex=0;mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
  }
  function test_workshopBarcodeCard(){
   app.currentPage=5;findChild(app,"workshopTabs").currentIndex=0;verify(waitForRendering(app.contentItem))
@@ -105,13 +117,18 @@ TestCase {
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(80)
    const result=findChild(app,"deviceServiceResultPanel");verify(result.height>=180,"Operation result must remain readable at minimum size")
-   const details=findChild(app,"deviceServiceDetailsScroll");verify(details!==null);details.contentItem.contentY=0;wait(30)
+   const details=findChild(app,"deviceServiceDetailsScroll");verify(details!==null)
+   const originalMaximum=details.Layout.maximumHeight
+   for(const maximum of [100,originalMaximum]){
+   details.Layout.maximumHeight=maximum;wait(40);if(maximum===100)compare(details.height,100);details.contentItem.contentY=0;wait(30)
    let point=result.mapToItem(details,result.width/2,80);verify(point.y>=0&&point.y<details.height,"Result remains visible at the top")
    details.contentItem.contentY=Math.max(0,details.contentHeight-details.availableHeight);wait(30)
    const report=findChild(app,"exportDeviceServiceReport");point=report.mapToItem(details,report.width/2,report.height/2);verify(point.y>=0&&point.y<details.height,"Report remains reachable by scrolling: "+JSON.stringify({y:point.y,view:details.height,available:details.availableHeight,content:details.contentHeight,offset:details.contentItem.contentY,origin:details.contentItem.originY}))
    verify(point.y+report.height/2<=details.height,"Entire report control remains inside the scrolled viewport")
-   if(dark){verify(uiEvidence.captureWindow(app,serviceScreenshotBase+(arabic?"ar":"en")+".png"))}
+   if(dark){verify(uiEvidence.captureWindow(app,serviceScreenshotBase+(arabic?"ar":"en")+(maximum===100?"-100px":"")+".png"))}
    details.contentItem.contentY=0
+   }
+   details.Layout.maximumHeight=originalMaximum
   }
   findChild(app,"serviceBrand").currentIndex=0
  }

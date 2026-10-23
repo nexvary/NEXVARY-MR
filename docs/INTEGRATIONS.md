@@ -39,3 +39,11 @@ License permission for an application does not license the phone manufacturer's 
 
 No bypass of FRP, iCloud, device locks, authorization prompts or IMEI identity protection is exposed. No external project is claimed as a direct source integration when it is only researched, independently reimplemented or launched as a separate process.
 
+
+### Bounded local ZIP metadata inspection
+
+Firmware → ZIP structure and risks reads a regular local ZIP working copy into a bounded memory snapshot (22 bytes–128 MiB, at most 4096 entries). The shared native ZIP structural validator provides declared entry names, compression methods and sizes; the report lists at most 256 entries and explicitly flags truncation. SHA-256 describes the same memory snapshot used for parsing. The original synthetic test ZIP was generated independently with Python `zipfile`; its known SHA-256 is recorded in the test fixture/evidence.
+
+No extraction/decompression, payload CRC, AVB/OEM signature verification, device compatibility, partition-layout approval or flashing is performed. Image filenames are candidates only. Large ROMs, ZIP64, encryption, multiple disks and ambiguous/non-UTF-8 entry-name encodings are unsupported. Unsafe names/control formatting and malformed local/central headers are rejected. Existing SHA-256/model matching and raw AVB inspection remain separate tabs using the same FirmwareBridge lifecycle; no device-write permission is granted by any ZIP result.
+
+Export requires explicit filename/hash sharing approval and a new local output file; source/other files cannot be overwritten. Cancellation and input/device invalidation clear results. The AR/EN interface and synthetic fixtures do not establish acceptance of any physical phone, OEM ROM or Windows 10/11 installation.

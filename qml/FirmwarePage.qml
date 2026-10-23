@@ -9,6 +9,7 @@ Item {
   TabBar {id:firmwareTabs;objectName:"firmwareTabs";Layout.fillWidth:true
    TabButton {text:app.trx("مطابقة الحزمة","Package matching")}
    TabButton {text:app.trx("تحليل AVB المحلي","Local AVB inspection")}
+   TabButton {text:app.trx("بنية ZIP والمخاطر","ZIP structure and risks")}
   }
   StackLayout {currentIndex:firmwareTabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true
   ColumnLayout {spacing:14
@@ -47,8 +48,29 @@ Item {
    }
    Label {id:avbExportStatus;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a9bfd2")}
   }
+  Panel {
+   title:app.trx("فحص بنية حزمة محلية · دون استخراج","Local package structure · no extraction")
+   Label {objectName:"packageScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#f0bc75");text:app.trx("ZIP محلي حتى 128 MiB و4096 مدخلًا. قراءة الأسماء والأحجام وبصمة النسخة المقروءة فقط؛ لا يُفك الضغط أو تُفحص محتويات الأقسام. الحزم الكبيرة وZIP64 والمشفرة غير مدعومة.","Local ZIP up to 128 MiB and 4096 entries. Reads names, sizes and snapshot SHA-256; no decompression or partition payload analysis. Large, ZIP64 and encrypted packages are unsupported.")}
+   RowLayout {Layout.fillWidth:true
+    TextField {id:packagePath;objectName:"firmwarePackagePath";Layout.fillWidth:true;readOnly:true;placeholderText:app.trx("اختر نسخة ZIP محلية للعمل عليها","Choose a local ZIP working copy");onTextChanged:{packagePrivacy.checked=false;packageExportStatus.text="";firmwareBridge.clearPackageReport()}}
+    ActionButton {objectName:"chooseFirmwarePackage";text:app.trx("اختيار الحزمة","Choose package");enabled:!firmwareBridge.busy;onClicked:packageDialog.open()}
+   }
+   RowLayout {Layout.fillWidth:true
+    ActionButton {objectName:"inspectFirmwarePackage";text:app.trx("فحص البنية","Inspect structure");primary:true;enabled:!firmwareBridge.busy&&packagePath.text!=="";onClicked:{packagePrivacy.checked=false;packageExportStatus.text="";firmwareBridge.inspectPackage(packagePath.text)}}
+    ActionButton {text:app.trx("إلغاء","Cancel");enabled:firmwareBridge.busy;onClicked:firmwareBridge.cancel()}
+    ActionButton {objectName:"exportFirmwarePackage";text:app.trx("تصدير JSON","Export JSON");enabled:packagePrivacy.checked&&!firmwareBridge.busy&&firmwareBridge.packageJson!=="";onClicked:packageExport.open()}
+   }
+   Label {objectName:"packageTrustNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#f0bc75");text:app.trx("أسماء الصور ليست خريطة أقسام. توقيع OEM وسلامة محتوى الملفات وتوافق الهاتف غير متحقق منها. لا يمنح التقرير إذنًا للتفليش.","Image names are not a partition map. OEM signatures, payload integrity and phone compatibility remain unverified. This report never authorizes flashing.")}
+   Flickable {id:packageScroll;objectName:"firmwarePackageScroll";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:100;contentWidth:width;contentHeight:packageText.height;clip:true;ScrollBar.vertical:ScrollBar {}
+    TextArea {id:packageText;objectName:"firmwarePackageResult";width:packageScroll.width;height:Math.max(packageScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.WrapAnywhere;text:firmwareBridge.packageJson||firmwareBridge.status;color:app.tone("#a9bfd2");background:Rectangle {color:app.tone("#0b2030");radius:6}}
+   }
+   NeonCheckBox {id:packagePrivacy;objectName:"firmwarePackagePrivacy";Layout.fillWidth:true;text:app.trx("أوافق على تصدير أسماء الملفات والبصمة في تقرير محلي","I approve exporting filenames and hash in a local report")}
+   Label {id:packageExportStatus;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a9bfd2")}
+  }
   }
  }
+ FileDialog {id:packageDialog;nameFilters:["ZIP (*.zip)"];onAccepted:packagePath.text=selectedFile.toString()}
+ FileDialog {id:packageExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:packageExportStatus.text=firmwareBridge.exportPackageReport(selectedFile.toString(),packagePrivacy.checked)?app.trx("حُفظ التقرير في ملف جديد","Report saved to a new file"):app.trx("تعذر الحفظ؛ اختر اسمًا محليًا جديدًا وراجع الموافقة","Could not save; choose a new local filename and review approval")}
  Connections {target:toolBridge;function onDeviceInfoChanged(){firmwareBridge.invalidate()} function onSelectedSerialChanged(){firmwareBridge.invalidate()}}
  FileDialog {id:manifestDialog;nameFilters:["JSON (*.json)"];onAccepted:manifest.text=selectedFile.toString()}
  FileDialog {id:firmwareDialog;onAccepted:firmware.text=selectedFile.toString()}

@@ -2,11 +2,16 @@
 #include <QFile>
 #include <QtEndian>
 #include <QSet>
+#include <QList>
+#include <utility>
 
 namespace mr::service {
 // Structural ZIP/APK validation only: does not certify signatures, payload CRC,
 // firmware compatibility, or recovery acceptance. No archive extraction occurs.
-inline bool validPackageStructure(QFile &file, bool apk) {
+struct PackageEntry { QByteArray name; quint32 compressed; quint32 uncompressed; quint16 method; quint16 flags; };
+inline bool validPackageStructure(QIODevice &file, bool apk, QList<PackageEntry> *listing=nullptr) {
+    if(listing)listing->clear();
+    QList<PackageEntry> metadata;
     auto u16=[](const QByteArray &b,qsizetype p){return qFromLittleEndian<quint16>(b.constData()+p);};
     auto u32=[](const QByteArray &b,qsizetype p){return qFromLittleEndian<quint32>(b.constData()+p);};
     if(file.size()<22||!file.seek(qMax<qint64>(0,file.size()-65557)))return false;
@@ -15,7 +20,7 @@ inline bool validPackageStructure(QFile &file, bool apk) {
         if(tail.mid(p,4)==QByteArray("PK\005\006",4)&&p+22+u16(tail,p+20)==tail.size()){end=p;break;}
     if(end<0||u16(tail,end+4)!=0||u16(tail,end+6)!=0)return false;
     const auto entries=u16(tail,end+10);
-    if(entries==0||entries==65535||u16(tail,end+8)!=entries)return false;
+    if(entries==0||entries==65535||u16(tail,end+8)!=entries||(listing&&entries>4096))return false;
     const auto bytes=u32(tail,end+12),offset=u32(tail,end+16);
     const qint64 endOffset=file.size()-tail.size()+end;
     if(bytes>8*1024*1024||qint64(offset)+bytes!=endOffset||!file.seek(offset))return false;
@@ -38,8 +43,11 @@ inline bool validPackageStructure(QFile &file, bool apk) {
             u16(header,8)!=method||u16(header,26)!=length||
             qint64(local)+30+length+u16(header,28)+compressed>offset||file.read(length)!=name)return false;
         if(!(flags&8)&&(u32(header,14)!=u32(directory,pos+16)||u32(header,18)!=compressed||u32(header,22)!=uncompressed))return false;
+        if(listing)metadata.append({name,compressed,uncompressed,method,flags});
         pos+=46+length+extra+comment;
     }
-    return pos==directory.size()&&(!apk||manifest)&&file.seek(0);
+    const bool ok=pos==directory.size()&&(!apk||manifest)&&file.seek(0);
+    if(ok&&listing)*listing=std::move(metadata);
+    return ok;
 }
 }

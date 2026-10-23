@@ -1,5 +1,10 @@
 #include "FirmwareBridge.hpp"
 #include "AvbMetadata.hpp"
+#include "PackagePreflight.hpp"
+#include <QBuffer>
+#include <QJsonArray>
+#include <QStringDecoder>
+#include <QDateTime>
 #include "RecoveryFile.hpp"
 #include <QSaveFile>
 #include <QCryptographicHash>
@@ -33,6 +38,8 @@ FirmwareBridge::FirmwareBridge(QObject *parent) : QObject(parent) {
     const bool canceled = invalidated_ || watcher_.future().isCanceled();
     const auto result = canceled ? FirmwareInspection{false, QStringLiteral("أُلغي التحقق"), {}} : watcher_.result();
     avbReport_ = result.avbReport;
+    packageReport_ = result.packageReport;
+    emit packageReportChanged();
     emit avbReportChanged();
     compatible_ = result.matched;
     busy_ = false;
@@ -83,6 +90,7 @@ FirmwareManifestValidation FirmwareBridge::validateManifest(const QByteArray &js
 void FirmwareBridge::inspect(const QString &manifestPath, const QString &firmwarePath, const QString &actualBrand, const QString &actualModel) {
   if (busy_) { setStatus(QStringLiteral("هناك تحقق جارٍ؛ ألغِه أو انتظر اكتماله") + trustNotice); return; }
   clearAvbReport();
+  clearPackageReport();
   compatible_ = false; progress_ = 0;
   emit compatibleChanged(); emit progressChanged();
   const QString localManifest = mr::recovery::localFilePath(manifestPath);
@@ -126,6 +134,7 @@ void FirmwareBridge::cancel() {
 }
 
 void FirmwareBridge::invalidate() {
+  packageReport_ = {}; emit packageReportChanged();
   invalidated_ = true;
   compatible_ = false;
   progress_ = 0;
@@ -147,6 +156,7 @@ void FirmwareBridge::clearAvbReport() {
 void FirmwareBridge::inspectAvb(const QString &path) {
   if (busy_) return;
   clearAvbReport();
+  clearPackageReport();
   compatible_ = false; progress_ = 0; invalidated_ = false;
   emit compatibleChanged(); emit progressChanged();
   const QString local = mr::recovery::localFilePath(path);
@@ -184,4 +194,68 @@ bool FirmwareBridge::exportAvbReport(const QString &path) {
   if (!output.open(QIODevice::WriteOnly)) return false;
   const auto bytes = QJsonDocument(avbReport_).toJson(QJsonDocument::Indented);
   return output.write(bytes) == bytes.size() && output.commit();
+}
+
+QString FirmwareBridge::packageJson() const {
+ return packageReport_.isEmpty()?QString():QString::fromUtf8(QJsonDocument(packageReport_).toJson(QJsonDocument::Indented));
+}
+void FirmwareBridge::clearPackageReport(){
+ if(busy_){invalidated_=true;watcher_.cancel();}
+ packageReport_={};emit packageReportChanged();
+}
+void FirmwareBridge::inspectPackage(const QString &input){
+ if(busy_)return;
+ clearAvbReport();clearPackageReport();compatible_=false;progress_=0;invalidated_=false;
+ emit compatibleChanged();emit progressChanged();
+ constexpr qint64 limit=128*1024*1024;
+ const auto path=mr::recovery::localFilePath(input);const QFileInfo info(path);
+ if(path.isEmpty()||!info.isFile()||info.isSymLink()||info.size()<22||info.size()>limit){reject(QStringLiteral("ZIP inspector: choose a regular local ZIP (22 bytes–128 MiB) / اختر ZIP محليًا ضمن الحد"));return;}
+ packageSourcePath_=info.canonicalFilePath();busy_=true;emit busyChanged();
+ setStatus(QStringLiteral("قراءة نسخة ZIP إلى الذاكرة دون استخراج / Reading bounded ZIP snapshot without extraction"));
+ watcher_.setFuture(QtConcurrent::run([](QPromise<FirmwareInspection> &promise,const QString &source){
+  constexpr qint64 maxBytes=128*1024*1024;
+  promise.setProgressRange(0,100);QFile file(source);
+  auto fail=[&promise](const QString &error){promise.addResult(FirmwareInspection{false,QStringLiteral("ZIP rejected: ")+error,{},{}});};
+  if(!mr::recovery::openRegularInput(file)){fail(QStringLiteral("file-open-failed"));return;}
+  const auto size=file.size();const auto modified=file.fileTime(QFileDevice::FileModificationTime);
+  if(size<22||size>maxBytes){fail(QStringLiteral("snapshot-size-limit"));return;}
+  QByteArray bytes;bytes.reserve(static_cast<qsizetype>(size));
+  while(!file.atEnd()){
+   if(promise.isCanceled())return;
+   const auto chunk=file.read(1024*1024);
+   if(chunk.isEmpty()||file.error()!=QFileDevice::NoError||bytes.size()+chunk.size()>maxBytes){fail(QStringLiteral("read-or-size-limit"));return;}
+   bytes.append(chunk);promise.setProgressValue(static_cast<int>(qMin<qint64>(90,bytes.size()*90/size)));
+  }
+  if(bytes.size()!=size||file.size()!=size||file.fileTime(QFileDevice::FileModificationTime)!=modified){fail(QStringLiteral("source-changed"));return;}
+  if(promise.isCanceled())return;
+  QBuffer snapshot(&bytes);snapshot.open(QIODevice::ReadOnly);QList<mr::service::PackageEntry> entries;
+  if(!mr::service::validPackageStructure(snapshot,false,&entries)){fail(QStringLiteral("unsupported-or-malformed-zip (ZIP64, encrypted and multi-disk unsupported)"));return;}
+  QJsonArray listing,candidates;quint64 compressed=0,uncompressed=0;
+  const QSet<QString> imageNames={"boot.img","init_boot.img","vendor_boot.img","vbmeta.img","super.img","system.img","vendor.img","product.img","odm.img","dtbo.img","recovery.img"};
+  for(const auto &entry:entries){
+   if(promise.isCanceled())return;
+   QStringDecoder decoder(QStringDecoder::Utf8);const QString name=decoder(entry.name);
+   bool ascii=true,control=false;for(const auto c:entry.name)if(static_cast<unsigned char>(c)>=128)ascii=false;
+   for(const auto c:name)if(c.category()==QChar::Other_Control||c.category()==QChar::Other_Format||c.category()==QChar::Separator_Line||c.category()==QChar::Separator_Paragraph)control=true;
+   if(decoder.hasError()||control||(!ascii&&!(entry.flags&0x800))){fail(QStringLiteral("unsupported-entry-name-encoding"));return;}
+   compressed+=entry.compressed;uncompressed+=entry.uncompressed;
+   if(listing.size()<256)listing.append(QJsonObject{{"name",name},{"compressedBytes",QString::number(entry.compressed)},{"declaredBytes",QString::number(entry.uncompressed)},{"method",entry.method==0?"stored":"deflate"}});
+   if(imageNames.contains(name.section('/',-1))&&candidates.size()<256)candidates.append(name);
+  }
+  if(promise.isCanceled())return;
+  QJsonObject report{{"schemaVersion",1},{"status","structure-only"},{"format","zip"},{"snapshotBytes",QString::number(size)},
+   {"snapshotSha256",QString::fromLatin1(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex())},
+   {"entryCount",entries.size()},{"listedEntriesTruncated",entries.size()>256},{"entries",listing},{"imageNameCandidates",candidates},
+   {"compressedBytes",QString::number(compressed)},{"declaredUncompressedBytes",QString::number(uncompressed)},
+   {"oemSignatureVerified",false},{"payloadCrcVerified",false},{"partitionLayoutVerified",false},{"deviceCompatibilityVerified",false},{"extracted",false},
+   {"notice","ZIP declarations and memory-snapshot SHA-256 only. Image names are candidates, not a partition map. No decompression, payload/AVB verification, OEM authenticity, device compatibility or flashing approval. ZIP64/encrypted/multi-disk and files over 128 MiB unsupported."}};
+  promise.setProgressValue(100);promise.addResult(FirmwareInspection{false,QStringLiteral("ZIP metadata parsed; all device/authenticity gates remain closed / قُرئت البنية فقط"),{},report});
+ },path));
+}
+bool FirmwareBridge::exportPackageReport(const QString &input,bool approved){
+ const auto path=mr::recovery::localFilePath(input);
+ if(!approved||busy_||packageReport_.isEmpty()||path.isEmpty()||QFileInfo(path).canonicalFilePath()==packageSourcePath_)return false;
+ QFile output(path);if(!output.open(QIODevice::WriteOnly|QIODevice::NewOnly))return false;
+ output.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner);const auto bytes=QJsonDocument(packageReport_).toJson(QJsonDocument::Indented);
+ const bool ok=output.write(bytes)==bytes.size()&&output.flush();output.close();if(!ok)QFile::remove(path);return ok;
 }

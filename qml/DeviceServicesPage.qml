@@ -81,8 +81,8 @@ Item {
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("إضافة اسم موديل ليست اعتمادًا لعمليات FRP أو Format أو Firmware الخاصة به.","A model reference does not validate its FRP, format or firmware operations.");color:app.tone("#eab775");font.pixelSize:12}
     }
     Panel {id:history;title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true
-     ActionButton {objectName:"exportDeviceServiceReport";text:app.trx("تصدير تقرير محلي","Export local report");enabled:!toolBridge.busy&&toolBridge.serviceHistory.length>0;onClicked:reportConsent.open()}
      ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:ItemDelegate {required property var modelData;width:ListView.view.width;onClicked:page.reviewRecord(modelData);contentItem:Label {text:modelData.atUtc+" · "+modelData.serial+" · "+modelData.transport+" · "+modelData.action+" · "+(modelData.success?app.trx("اكتملت","Completed"):app.trx("توقفت","Stopped"));textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}}
+     ActionButton {objectName:"exportDeviceServiceReport";text:app.trx("تصدير تقرير محلي","Export local report");enabled:!toolBridge.busy&&toolBridge.serviceHistory.length>0;onClicked:reportConsent.open()}
     }
     }
    }
