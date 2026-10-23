@@ -105,6 +105,22 @@ jobs:
       QT_QUICK_BACKEND: software
     steps:
       - uses: actions/checkout@v4
+      - name: Parse Windows deployment scripts before building
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force dist/evidence | Out-Null
+          $syntaxFailures = @()
+          foreach ($sourceFile in (Get-ChildItem packaging -Filter '*.ps1' -File)) {
+            $parseTokens = $null
+            $parseErrors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($sourceFile.FullName,[ref]$parseTokens,[ref]$parseErrors)
+            foreach ($entry in $parseErrors) {
+              $syntaxFailures += [ordered]@{file=$sourceFile.Name;line=$entry.Extent.StartLineNumber;message=$entry.Message}
+            }
+          }
+          ConvertTo-Json -InputObject @($syntaxFailures) -Depth 4 | Set-Content dist/evidence/powershell-syntax.json
+          if ($syntaxFailures.Count) { $syntaxFailures | Format-Table | Out-String | Write-Host; throw 'Windows deployment script syntax errors' }
       - uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.3'
@@ -117,7 +133,7 @@ jobs:
           $fontSource = Join-Path $env:SystemRoot 'Fonts'
           $fontTarget = Join-Path $env:RUNNER_TEMP 'NEXVARY-MR-test-fonts'
           New-Item -ItemType Directory -Force $fontTarget | Out-Null
-          foreach ($name in @('segoeui.ttf','segoeuib.ttf','tahoma.ttf','tahomabd.ttf','consola.ttf','consolab.ttf')) {
+          foreach ($name in @('segoeui.ttf','segoeuib.ttf','tahoma.ttf','tahomabd.ttf','consola.ttf','consolab.ttf','seguisym.ttf')) {
             $source = Join-Path $fontSource $name
             if (-not (Test-Path $source)) { throw "Required installed test font missing: $name" }
             Copy-Item $source $fontTarget

@@ -1,0 +1,25 @@
+{
+  "sourceParent": "ab7ea3ac5f85323843d28c922efd09726f5a6d4e",
+  "windowsEvidence": {
+    "run": 39932434701,
+    "artifact": 12493200102,
+    "sha256": "f69362fc7073d9c99ecc4784eadf24b0f3da501f0b4bd0c58fc654099b107297",
+    "glyphTest": "passed; actual Windows firmware capture now has readable Arabic and Latin",
+    "failures": "Production modern/card screenshot waits expected a future frame after the scene had settled; failure retained modified compatibility/dialog state and cascaded to two later tests. Laboratory job succeeded on the same source."
+  },
+  "change": [
+    "Explicit QQuickWindow::update before waiting for after-rendering; retain all rendering, visibility and navigation assertions",
+    "Restore test-owned profile binding, viewport constraint and close transient dialogs after each case",
+    "Include Segoe UI Symbol and require checkmark glyph coverage as well as Arabic/Latin",
+    "Parse PowerShell deployment scripts to durable syntax artifact before GUI build; keep package transcript"
+  ],
+  "local": {
+    "production": "UI+smoke 2/2, 29.98 s",
+    "laboratory": "UI+smoke 2/2, 28.93 s",
+    "qml": "32 passed, zero failures/skips per profile"
+  },
+  "limits": [
+    "Windows next-head verification pending",
+    "Portable assembly cause pending durable transcript; no package success claimed"
+  ]
+}
