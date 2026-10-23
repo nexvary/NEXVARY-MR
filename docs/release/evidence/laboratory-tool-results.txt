@@ -1,0 +1,21 @@
+********* Start testing of ToolTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ToolTests::initTestCase()
+PASS   : ToolTests::usbSerialAndParentCorrelation()
+PASS   : ToolTests::usbAmbiguityAndMalformedInventory()
+PASS   : ToolTests::configureToolsAndPersistence()
+PASS   : ToolTests::rejectUnsafeToolConfiguration()
+PASS   : ToolTests::serialValidation()
+PASS   : ToolTests::parseDevicesAndPermissions()
+PASS   : ToolTests::duplicateBeyondDisplayLimitRemainsAmbiguous()
+PASS   : ToolTests::propertyPrivacyAndMalformedInput()
+PASS   : ToolTests::ambiguousSerialCannotReadPropertiesOrLogs()
+PASS   : ToolTests::missingToolAndNoSelection()
+PASS   : ToolTests::asynchronousReadOnlyFlowAndDisconnect()
+PASS   : ToolTests::cancellationAndOutputLimit()
+PASS   : ToolTests::failedStartDoesNotLeaveBusy()
+PASS   : ToolTests::timeoutStopsUnresponsiveChild()
+PASS   : ToolTests::completedCommandCannotTimeoutNextCommand()
+PASS   : ToolTests::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 24545ms
+********* Finished testing of ToolTests *********

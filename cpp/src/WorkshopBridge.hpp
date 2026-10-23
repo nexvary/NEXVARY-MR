@@ -24,6 +24,11 @@ public:
     QVariantList events() const;
     QVariantList customers() const;
     QVariantList devices() const;
+    Q_INVOKABLE QVariantMap issueDeviceCard(int orderId);
+    Q_INVOKABLE QVariantMap deviceCard(int orderId) const;
+    Q_INVOKABLE QVariantMap lookupBarcode(const QString &barcode);
+    Q_INVOKABLE QVariantList orderHistory(int orderId) const;
+    Q_INVOKABLE bool exportIntakeCard(int orderId,const QString &path,bool customerDataApproved);
     Q_INVOKABLE QVariantMap customerProfile(int id) const;
     Q_INVOKABLE QVariantMap deviceProfile(int id) const;
     Q_INVOKABLE bool updateCustomer(int id,const QString &name,const QString &phone);
@@ -65,3 +70,4 @@ private:
     QString path_, connection_, error_;
     bool ready_=false;
 };
+

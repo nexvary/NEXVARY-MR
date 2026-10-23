@@ -6,14 +6,14 @@ Rectangle {
  id:surface
  readonly property var themeWindow:ApplicationWindow.window
  property bool glossy:!themeWindow||themeWindow.darkTheme
- property real reflection:0.12
+ property real reflection:0.16
  color:"#0A0A0A"
  radius:12
  clip:true
  gradient:glossy?blackGlass:null
  Gradient {
   id:blackGlass
-  GradientStop {position:0;color:Qt.lighter(surface.color,1.7)}
+  GradientStop {position:0;color:Qt.lighter(surface.color,1.9)}
   GradientStop {position:0.22;color:surface.color}
   GradientStop {position:0.72;color:Qt.darker(surface.color,1.25)}
   GradientStop {position:1;color:Qt.lighter(surface.color,1.15)}

@@ -29,7 +29,7 @@ ERPNext was observed on an actively changing development branch; the pinned SHA 
 ## Implemented adapters
 
 - Android platform-tools: discover ADB/Fastboot; structured read-only device enumeration, properties and bounded logs. No bundled Google binaries, firmware, driver installer, shell console, unlocking or flashing.
-- scrcpy: external executable detection and explicit separate-process launch. Authorized USB debugging and a compatible installed version are required; physical-phone acceptance remains separate from mocked process tests.
+- scrcpy: Laboratory-only owned process lifecycle with strict owner/component consent, reviewed serial, exact 5.0.1 CLI version, pinned ADB executable, fresh identity checks, bounded output/deadlines, periodic disconnect checks and terminate/kill cleanup. Control, audio and clipboard synchronization are disabled. No detached launch or automatic target fallback. Production refuses before any child process. Host process startup is not frame delivery or physical-phone acceptance.
 - Boardview: native C++ importer and QML renderer for the documented NEXVARY JSON format; original synthetic training data. This does not import OpenBoardView or TRACE file parsers and does not imply compatibility with their proprietary board formats.
 - Workshop: independently implemented local Qt SQL / SQLite workflows; no FixTrack/ERPNext source or data copied.
 
@@ -38,3 +38,12 @@ ERPNext was observed on an actively changing development branch; the pinned SHA 
 License permission for an application does not license the phone manufacturer's schematics, firmware, product photos or device-data sources. Users import only files they have permission to use. No protected schematics, production repair voltages, firmware or customer information is bundled. External tools must be obtained from their official sources and remain separately licensed.
 
 No bypass of FRP, iCloud, device locks, authorization prompts or IMEI identity protection is exposed. No external project is claimed as a direct source integration when it is only researched, independently reimplemented or launched as a separate process.
+
+
+### Bounded local ZIP metadata inspection
+
+Firmware → ZIP structure and risks reads a regular local ZIP working copy into a bounded memory snapshot (22 bytes–128 MiB, at most 4096 entries). The shared native ZIP structural validator provides declared entry names, compression methods and sizes; the report lists at most 256 entries and explicitly flags truncation. SHA-256 describes the same memory snapshot used for parsing. The original synthetic test ZIP was generated independently with Python `zipfile`; its known SHA-256 is recorded in the test fixture/evidence.
+
+No extraction/decompression, payload CRC, AVB/OEM signature verification, device compatibility, partition-layout approval or flashing is performed. Image filenames are candidates only. Large ROMs, ZIP64, encryption, multiple disks and ambiguous/non-UTF-8 entry-name encodings are unsupported. Unsafe names/control formatting and malformed local/central headers are rejected. Existing SHA-256/model matching and raw AVB inspection remain separate tabs using the same FirmwareBridge lifecycle; no device-write permission is granted by any ZIP result.
+
+Export requires explicit filename/hash sharing approval and a new local output file; source/other files cannot be overwritten. Cancellation and input/device invalidation clear results. The AR/EN interface and synthetic fixtures do not establish acceptance of any physical phone, OEM ROM or Windows 10/11 installation.

@@ -40,7 +40,7 @@ App-local deployment preserves portable and per-user installation without requir
 
 ## Optional external tools
 
-- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected and started as a separate user-installed application. Its dependency notices apply to its own package.
+- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected as a separate user-installed application; controlled screen-view launch is experimental and Laboratory-only, with explicit owner/component consent and an exact reviewed 5.0.1 CLI boundary. Production refuses launch. Physical display/cleanup and Windows acceptance remain pending. Its dependency notices apply to its own package.
 - [Android SDK platform-tools](https://developer.android.com/tools/releases/platform-tools): Google SDK terms; obtain directly from Google. No binary redistribution is performed here.
 - OpenBoardView and TRACE Boardviewer are researched, separately licensed products. No source, executable, icons or file parsers from them are bundled.
 
@@ -59,3 +59,20 @@ The optional Android companion uses the official MIT Shizuku API/provider13.1.5,
 ## Fluent navigation SVGs
 
 Ten unmodified Microsoft Fluent System Icons color SVGs are bundled. MIT copyright/permission notice: `licenses/FLUENT-ICONS-MIT.txt`. Exact upstream revision, paths, Git blob IDs and SHA256 digests are recorded in `assets/icons/PROVENANCE.json` in the source repository. SVG decoding uses Qt SVG (matching Qt 6.8.3), deployed dynamically as Qt6Svg.dll and qsvg.dll and covered by the Qt source/license links above. No emoji or font glyph is used for navigation.
+
+
+## Workshop Code 39 labels
+
+The encoding table in `cpp/src/Code39Label.hpp` derives from ZXing-C++ **v2.3.0** `core/src/oned/ODCode39Writer.cpp` (Apache-2.0; Copyright 2016 Huy Cuong Nguyen and ZXing authors). The table is used with an original Qt renderer restricted to `NMR-` plus 16 uppercase hex characters. Source: https://github.com/zxing-cpp/zxing-cpp/blob/v2.3.0/core/src/oned/ODCode39Writer.cpp . The Apache license and attribution are in `packaging/licenses/ZXING-CODE39-*`, automatically copied by the Windows packager. No ZXing decoder/runtime is linked. There is no optional Mod-43 check character in these standard Code 39 labels; a successful lookup still requires operator review of the displayed order/device. The barcode is not an authentication or public tracking credential.
+
+Independent test decoding uses separately installed ZBar and Poppler on synthetic images/PDFs. These test-only tools and their libraries are not bundled. Scanner/printer hardware, Windows rendering and final distribution compliance remain acceptance gates.
+
+Windows CI offscreen checks use copies of six fonts already installed on the hosted Windows runner (Segoe UI, Tahoma and Consolas regular/bold). These stay in RUNNER_TEMP, are excluded from artifacts and packages, and are not repository assets or redistributed dependencies. Native deployment validation clears this test-only font override and uses the operating system's font facilities. The application adds no font download or telemetry.
+
+`assets/icons/check_mark.svg` is an original NEXVARY control asset. Checked indicators use this image rather than a font-dependent Unicode symbol; deployment smoke requires its SVG decoder and QML verifies its loaded/visible state.
+
+## Internal signed-update verification tests
+
+The separate `mr_update_verifier` C++ library uses [libsodium 1.0.22](https://download.libsodium.org/libsodium/releases/) under the ISC license (Copyright 2013–2026 Frank Denis). Its complete upstream notice is included as `licenses/LIBSODIUM-ISC.txt`. The official point-release source and MSVC archives have reviewed minisign signatures and pinned SHA256 hashes in `samples/update/dependency-provenance.json`; preparation verifies those hashes before extraction. Linux builds a static PIC library and runs upstream self-tests. Windows tests use the official x64 Release v143 dynamic DLL/import library. This internal library is not linked into the desktop application; its test DLL is not a desktop runtime dependency or bundled in the portable/installer. The SHA-pinned dependency is a build/test input, not a production trust anchor. No private update signing key is stored. See [UPDATE_VERIFIER.md](UPDATE_VERIFIER.md) for protocol and outstanding installation gates.
+
+The internal update journal uses the same pinned libsodium dependency for HMAC-SHA512-256 and local MAC-key generation. Its Windows key-store factory reuses the project's existing current-user DPAPI provider; `CaseVault.cpp` is now compiled once into a shared static project target. No new encryption library or Windows system binary is redistributed. The protected local MAC key is distinct from a publisher update signing key. Linux key persistence refuses without a plaintext fallback. Existing case formats are unchanged; OS-account recovery, ACL enforcement and protected anti-replay anchors remain acceptance gates.

@@ -10,6 +10,6 @@ CheckBox {
   y: (control.height-height)/2
   radius: 4; color: control.checked ? "#39ff14" : "#0a0a0a"
   border.color: "#39ff14"; border.width: control.activeFocus ? 3 : 2
-  Text {anchors.centerIn:parent;text:control.checked ? "✓" : "";color:"#071007";font.pixelSize:20;font.bold:true}
+  Image {objectName:"neonCheckmark";anchors.fill:parent;anchors.margins:2;source:"qrc:/assets/icons/check_mark.svg";visible:control.checked;fillMode:Image.PreserveAspectFit}
  }
 }

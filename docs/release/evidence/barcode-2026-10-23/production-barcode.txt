@@ -1,0 +1,17 @@
+********* Start testing of BarcodeTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : BarcodeTests::initTestCase()
+PASS   : BarcodeTests::knownBarcodeAndInvalidInput()
+PASS   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar()
+PASS   : BarcodeTests::persistentMappingAndLookup()
+PASS   : BarcodeTests::differentOrdersEvenForSameDevice()
+PASS   : BarcodeTests::malformedUnknownAndMissingOrder()
+PASS   : BarcodeTests::scopedRepairHistoryAndCsv()
+PASS   : BarcodeTests::backupRestorePreservesLabels()
+PASS   : BarcodeTests::legacyV3MigrationAndRestore()
+PASS   : BarcodeTests::corruptLabelBackupRefused()
+PASS   : BarcodeTests::intakePdfConsentAndNoOverwrite()
+PASS   : BarcodeTests::barcodeSurvivesPdfRendering()
+PASS   : BarcodeTests::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 679ms
+********* Finished testing of BarcodeTests *********

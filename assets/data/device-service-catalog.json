@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "2026-10-18",
+  "revision": "2026-10-23",
   "brands": [
     "Samsung",
     "Xiaomi / Redmi / POCO",
@@ -15,14 +15,19 @@
     "Tecno",
     "Infinix",
     "Itel",
-    "Nokia / HMD"
+    "Nokia / HMD",
+    "Google",
+    "OnePlus",
+    "Nothing",
+    "Honor"
   ],
   "chipsets": [
     "Qualcomm Snapdragon",
     "MediaTek",
     "Unisoc / Spreadtrum",
     "Samsung Exynos",
-    "HiSilicon Kirin"
+    "HiSilicon Kirin",
+    "Google Tensor"
   ],
   "models": [
     {
@@ -463,6 +468,46 @@
       "evidence": "vendor-documentation",
       "sourceUrl": "https://edl.unlocktool.net/category/oppo",
       "requirements": "Reference label only; not an OEM specification or verified operation matrix. No test-point images are copied.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Google",
+      "model": "Pixel 11",
+      "chipset": "",
+      "android": "17",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://store.google.com/product/pixel_11_specs?hl=en-US",
+      "requirements": "Official product reference only, checked 2026-10-23. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S26",
+      "chipset": "",
+      "android": "",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://news.samsung.com/us/samsung-unveils-galaxy-s26-series-most-intuitive-galaxy-ai-phone-yet/",
+      "requirements": "Official product reference only, checked 2026-10-23. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S26+",
+      "chipset": "",
+      "android": "",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://news.samsung.com/us/samsung-unveils-galaxy-s26-series-most-intuitive-galaxy-ai-phone-yet/",
+      "requirements": "Official product reference only, checked 2026-10-23. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S26 Ultra",
+      "chipset": "",
+      "android": "",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://news.samsung.com/us/samsung-unveils-galaxy-s26-series-most-intuitive-galaxy-ai-phone-yet/",
+      "requirements": "Official product reference only, checked 2026-10-23. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
       "nexvaryValidated": false
     }
   ],

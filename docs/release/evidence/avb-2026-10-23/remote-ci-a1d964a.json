@@ -1,0 +1,120 @@
+{
+  "implementationCommit": "a1d964ab8364dca50fbcdb8296a0bc2dc98990a3",
+  "runs": [
+    {
+      "id": 39869181773,
+      "name": "C++20 and Qt Windows",
+      "headSha": "a1d964ab8364dca50fbcdb8296a0bc2dc98990a3",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39869181773"
+    },
+    {
+      "id": 39869181742,
+      "name": "Python checks",
+      "headSha": "a1d964ab8364dca50fbcdb8296a0bc2dc98990a3",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39869181742"
+    },
+    {
+      "id": 39869176767,
+      "name": "Python checks",
+      "headSha": "a1d964ab8364dca50fbcdb8296a0bc2dc98990a3",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39869176767"
+    }
+  ],
+  "observedJobs": [
+    {
+      "run": 39869181773,
+      "jobs": [
+        {
+          "id": 120138978523,
+          "name": "qt (laboratory)",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978762,
+          "name": "linux-forensic-integration (laboratory)",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978791,
+          "name": "core (windows-2022)",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978814,
+          "name": "core (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978851,
+          "name": "linux-forensic-integration (production)",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978855,
+          "name": "qt (production)",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        },
+        {
+          "id": 120138978881,
+          "name": "tracking-server",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "run": 39869181742,
+      "jobs": [
+        {
+          "id": 120138978149,
+          "name": "test",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "run": 39869176767,
+      "jobs": [
+        {
+          "id": 120138961781,
+          "name": "test",
+          "status": "completed",
+          "conclusion": "failure",
+          "runner": "",
+          "steps": []
+        }
+      ]
+    }
+  ],
+  "rootCause": "unproven",
+  "windowsDesktopCommander": "No devices connected"
+}

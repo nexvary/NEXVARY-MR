@@ -1,0 +1,10 @@
+Internal ctest changing into directory: /tmp/nexvary-public-lab
+Test project /tmp/nexvary-public-lab
+    Start 23: mr_ui_tests
+1/2 Test #23: mr_ui_tests ......................   Passed   15.18 sec
+    Start 24: mr_gui_smoke
+2/2 Test #24: mr_gui_smoke .....................   Passed   14.65 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =  29.84 sec

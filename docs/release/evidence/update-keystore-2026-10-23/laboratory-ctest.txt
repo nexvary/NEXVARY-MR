@@ -1,0 +1,60 @@
+Internal ctest changing into directory: /workspace/scratch/59ed88a44a1c/nexvary-update-lab
+Test project /workspace/scratch/59ed88a44a1c/nexvary-update-lab
+      Start 22: mr_forensic_tests
+      Start 23: mr_tsk_tests
+ 1/27 Test #22: mr_forensic_tests ................   Passed    0.55 sec
+      Start 12: mr_tool_tests
+ 2/27 Test #23: mr_tsk_tests .....................   Passed    1.38 sec
+      Start 26: mr_ui_tests
+ 3/27 Test #26: mr_ui_tests ......................   Passed   15.59 sec
+      Start 27: mr_gui_smoke
+ 4/27 Test #12: mr_tool_tests ....................   Passed   24.54 sec
+      Start 14: mr_mirror_tests
+ 5/27 Test #27: mr_gui_smoke .....................   Passed   14.44 sec
+      Start 20: mr_recovery_tests
+ 6/27 Test #14: mr_mirror_tests ..................   Passed   12.20 sec
+      Start 13: mr_service_tests
+ 7/27 Test #20: mr_recovery_tests ................   Passed    8.71 sec
+      Start  9: mr_cloud_tests
+ 8/27 Test #13: mr_service_tests .................   Passed    8.07 sec
+      Start  6: mr_workshop_tests
+ 9/27 Test  #9: mr_cloud_tests ...................   Passed    6.57 sec
+      Start 10: mr_security_tests
+10/27 Test  #6: mr_workshop_tests ................   Passed    1.48 sec
+      Start 19: mr_pcap_tests
+11/27 Test #19: mr_pcap_tests ....................   Passed    0.29 sec
+      Start  7: mr_barcode_tests
+12/27 Test  #7: mr_barcode_tests .................   Passed    0.24 sec
+      Start  3: mr_update_tests
+13/27 Test #10: mr_security_tests ................   Passed    1.06 sec
+      Start 25: mr_pcap_mutation_tests
+14/27 Test  #3: mr_update_tests ..................   Passed    0.43 sec
+      Start  4: mr_update_journal_tests
+15/27 Test  #4: mr_update_journal_tests ..........   Passed    0.15 sec
+      Start 24: mr_avb_mutation_tests
+16/27 Test #25: mr_pcap_mutation_tests ...........   Passed    0.20 sec
+      Start  8: mr_center_tests
+17/27 Test  #8: mr_center_tests ..................   Passed    0.08 sec
+      Start 18: mr_avb_tests
+18/27 Test #18: mr_avb_tests .....................   Passed    0.03 sec
+      Start 16: mr_board_tests
+19/27 Test #16: mr_board_tests ...................   Passed    0.02 sec
+      Start 11: mr_catalog_tests
+20/27 Test #11: mr_catalog_tests .................   Passed    0.03 sec
+      Start 17: mr_firmware_tests
+21/27 Test #24: mr_avb_mutation_tests ............   Passed    0.17 sec
+      Start 21: mr_recovery_image_tests
+22/27 Test #17: mr_firmware_tests ................   Passed    0.02 sec
+      Start 15: mr_compatibility_tests
+23/27 Test #21: mr_recovery_image_tests ..........   Passed    0.02 sec
+      Start  5: mr_update_key_tests
+24/27 Test  #5: mr_update_key_tests ..............   Passed    0.00 sec
+      Start  1: mr_policy_tests
+25/27 Test  #1: mr_policy_tests ..................   Passed    0.00 sec
+      Start  2: mr_core_tests
+26/27 Test  #2: mr_core_tests ....................   Passed    0.00 sec
+27/27 Test #15: mr_compatibility_tests ...........   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  48.14 sec

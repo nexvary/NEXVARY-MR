@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-23",
+  "sourceHead": "f7576d9b0e712408ba341d79d5b18b7b6bcd8c06",
+  "private": false,
+  "connectorLogin": "nexvary",
+  "repositoryPermission": "admin",
+  "gitleaks": {
+    "version": "8.30.1",
+    "archiveSha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+    "source": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "historyNonMergeCommitsScanned": 132,
+    "historyFindings": 0,
+    "treeFindings": 0
+  },
+  "operationalGuard": {
+    "reachableCommits": 141,
+    "uniqueBlobs": 750,
+    "findings": 0,
+    "fetchedRefs": "All advertised branches plus PR 1\u20138 head/merge refs; no tags advertised"
+  },
+  "originalActions": {
+    "run": 39896846776,
+    "head": "c674f0b38802c9cace2dc73694f8c1062815f9dc",
+    "evidence": "Public run summary Annotations and unauthenticated GitHub check-run annotations API returned the same error.",
+    "classification": "GitHub account billing/spending gate; the message does not distinguish failed payments from spending limit."
+  },
+  "retry": {
+    "run": 39901371652,
+    "attempt": 2,
+    "head": "f7576d9b0e712408ba341d79d5b18b7b6bcd8c06",
+    "result": "Runners allocated. Core Windows/Linux, Linux Qt production/laboratory and tracking-server pass. Windows Qt compiles, but one UI report-scroll assertion fails in both profiles; fix under validation."
+  },
+  "limits": [
+    "Heuristic checks are not proof of absence of all PII/unknown credentials",
+    "No unreachable/deleted remote refs, external artifacts, issues or user machines scanned",
+    "No history rewrite, credential change or billing action performed",
+    "No connected Desktop Commander device; hosted Windows CI is separate from clean Windows 10/11 acceptance"
+  ]
+}

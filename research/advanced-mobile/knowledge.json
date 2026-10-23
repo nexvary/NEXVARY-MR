@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-23",
+  "sources": [
+    {
+      "id": "aosp.avb.header",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-format",
+      "url": "https://android.googlesource.com/platform/external/avb/+/refs/heads/main/libavb/avb_vbmeta_image.h",
+      "reviewedBlob": "f9cbac447d0941429d813ca0aadef4401e7ec8d7"
+    },
+    {
+      "id": "aosp.avb.descriptor",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-format",
+      "url": "https://android.googlesource.com/platform/external/avb/+/refs/heads/main/libavb/avb_descriptor.h",
+      "reviewedBlob": "5d0f0c699fe18f68d7504f2f9842a685ae3a53ec"
+    },
+    {
+      "id": "aosp.avb.reference-tool",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-reference-tool",
+      "url": "https://android.googlesource.com/platform/external/avb/+/refs/tags/android-15.0.0_r1/avbtool.py",
+      "reviewedSha256": "78a50c8620985709f2e131cf948dcd66ecc43f09ed735e09d75751a7e21e4eb8"
+    },
+    {
+      "id": "ietf.pcap.draft09",
+      "publisher": "IETF OPSAWG",
+      "kind": "primary-format-work-in-progress",
+      "url": "https://www.ietf.org/archive/id/draft-ietf-opsawg-pcap-09.html"
+    },
+    {
+      "id": "ietf.ipv4",
+      "publisher": "RFC Editor",
+      "kind": "primary-format",
+      "url": "https://www.rfc-editor.org/rfc/rfc791"
+    },
+    {
+      "id": "ietf.ipv6",
+      "publisher": "RFC Editor",
+      "kind": "primary-format",
+      "url": "https://www.rfc-editor.org/rfc/rfc8200"
+    },
+    {
+      "id": "android.api-levels",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/setup/reference/build-numbers"
+    },
+    {
+      "id": "android.page-size",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/architecture/16kb-page-size/getting-page-size"
+    },
+    {
+      "id": "android.fastbootd",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/architecture/bootloader/fastbootd"
+    },
+    {
+      "id": "android.virtual-ab",
+      "publisher": "Android Open Source Project",
+      "kind": "primary-documentation",
+      "url": "https://source.android.com/docs/core/ota/virtual_ab"
+    }
+  ],
+  "technologies": [
+    {
+      "id": "avb.vbmeta.envelope",
+      "sourceIds": [
+        "aosp.avb.header",
+        "aosp.avb.descriptor",
+        "aosp.avb.reference-tool"
+      ]
+    },
+    {
+      "id": "pcap.classic.summary",
+      "sourceIds": [
+        "ietf.pcap.draft09",
+        "ietf.ipv4",
+        "ietf.ipv6"
+      ]
+    },
+    {
+      "id": "android.modern-observations",
+      "sourceIds": [
+        "android.api-levels",
+        "android.page-size",
+        "android.fastbootd",
+        "android.virtual-ab"
+      ]
+    }
+  ],
+  "chipsets": [],
+  "devices": [],
+  "firmware": [],
+  "capabilities": [
+    {
+      "id": "firmware.avb.metadata.v1",
+      "technologyIds": [
+        "avb.vbmeta.envelope"
+      ],
+      "chipsetIds": [],
+      "deviceIds": [],
+      "firmwareIds": [],
+      "proofLevel": "synthetic-only",
+      "mutatesDevice": false,
+      "implementationPaths": [
+        "cpp/src/AvbMetadata.cpp",
+        "cpp/src/FirmwareBridge.cpp",
+        "qml/FirmwarePage.qml"
+      ],
+      "testEvidenceIds": [
+        "avb.synthetic.native",
+        "avb.synthetic.mutation",
+        "avb.synthetic.ui",
+        "avb.synthetic.official-tool"
+      ],
+      "limits": [
+        "raw-vbmeta-only",
+        "16-MiB-input",
+        "descriptor-envelopes-only",
+        "no-signature-verification",
+        "no-oem-trust-verification",
+        "no-device-approval"
+      ]
+    },
+    {
+      "id": "forensic.pcap.summary.v1",
+      "technologyIds": [
+        "pcap.classic.summary"
+      ],
+      "chipsetIds": [],
+      "deviceIds": [],
+      "firmwareIds": [],
+      "proofLevel": "synthetic-only",
+      "mutatesDevice": false,
+      "implementationPaths": [
+        "cpp/src/PcapSummary.cpp",
+        "cpp/src/RecoveryBridge.cpp",
+        "qml/ForensicToolsPage.qml"
+      ],
+      "testEvidenceIds": [
+        "pcap.synthetic.native",
+        "pcap.synthetic.mutation",
+        "pcap.synthetic.ui"
+      ],
+      "limits": [
+        "classic-pcap-2.4-only",
+        "8-MiB-input",
+        "200000-records",
+        "no-address-or-payload-output",
+        "header-declarations-only",
+        "no-live-capture-or-decryption"
+      ]
+    },
+    {
+      "id": "device.android.compatibility.v1",
+      "technologyIds": [
+        "android.modern-observations"
+      ],
+      "chipsetIds": [],
+      "deviceIds": [],
+      "firmwareIds": [],
+      "proofLevel": "synthetic-only",
+      "mutatesDevice": false,
+      "implementationPaths": [
+        "cpp/src/DeviceCompatibility.hpp",
+        "cpp/src/DeviceServices.cpp",
+        "qml/DeviceCompatibilityPanel.qml"
+      ],
+      "testEvidenceIds": [
+        "android.compatibility.native",
+        "android.compatibility.command",
+        "android.compatibility.ui"
+      ],
+      "limits": [
+        "device-reported-not-attested",
+        "no-physical-phone-acceptance",
+        "no-oem-write-approval",
+        "no-decryption",
+        "unknown-future-api-unapproved",
+        "no-minor-api-discrimination"
+      ]
+    }
+  ],
+  "testEvidence": [
+    {
+      "id": "avb.synthetic.native",
+      "kind": "synthetic",
+      "path": "cpp/tests/avb_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "avb.synthetic.mutation",
+      "kind": "synthetic",
+      "path": "cpp/tests/avb_mutation_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "avb.synthetic.ui",
+      "kind": "synthetic",
+      "path": "qml/tests/tst_navigation.qml",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "avb.synthetic.official-tool",
+      "kind": "synthetic",
+      "path": "samples/avb-reference/expected.json",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.native",
+      "kind": "synthetic",
+      "path": "cpp/tests/pcap_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.mutation",
+      "kind": "synthetic",
+      "path": "cpp/tests/pcap_mutation_tests.cpp",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "pcap.synthetic.ui",
+      "kind": "synthetic",
+      "path": "qml/tests/tst_navigation.qml",
+      "deviceIds": [],
+      "firmwareIds": []
+    },
+    {
+      "id": "android.compatibility.native",
+      "kind": "synthetic",
+      "path": "cpp/tests/compatibility_tests.cpp"
+    },
+    {
+      "id": "android.compatibility.command",
+      "kind": "synthetic",
+      "path": "cpp/tests/service_tests.cpp"
+    },
+    {
+      "id": "android.compatibility.ui",
+      "kind": "synthetic",
+      "path": "qml/tests/tst_navigation.qml"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "MirrorSession.hpp"
 #include <QProcess>
 #include <QTimer>
 #include <QMap>
@@ -15,6 +16,11 @@
 // One runner for discovery and allowlisted device services. No arbitrary shell API.
 class ToolBridge final : public QObject {
   Q_OBJECT
+  Q_PROPERTY(bool mirrorActive READ mirrorActive NOTIFY mirrorChanged)
+  Q_PROPERTY(QString mirrorState READ mirrorState NOTIFY mirrorChanged)
+  Q_PROPERTY(QString mirrorStatus READ mirrorStatus NOTIFY mirrorChanged)
+  Q_PROPERTY(QString mirrorOutput READ mirrorOutput NOTIFY mirrorChanged)
+  Q_PROPERTY(bool laboratoryBuild READ laboratoryBuild CONSTANT)
   Q_PROPERTY(QString status READ status NOTIFY statusChanged)
   Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
   Q_PROPERTY(QVariantList forensicTools READ forensicTools NOTIFY toolsChanged)
@@ -24,6 +30,7 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(QVariantMap deviceInfo READ deviceInfo NOTIFY deviceInfoChanged)
   Q_PROPERTY(QString logcat READ logcat NOTIFY logcatChanged)
   Q_PROPERTY(QString driverInfo READ driverInfo NOTIFY driverInfoChanged)
+  Q_PROPERTY(QVariantMap driverBinding READ driverBinding NOTIFY driverInfoChanged)
   Q_PROPERTY(bool autoRefresh READ autoRefresh WRITE setAutoRefresh NOTIFY autoRefreshChanged)
   Q_PROPERTY(QVariantList serviceActions READ serviceActions NOTIFY serviceChanged)
   Q_PROPERTY(QVariantMap serviceProfile READ serviceProfile NOTIFY serviceChanged)
@@ -34,8 +41,9 @@ class ToolBridge final : public QObject {
 public:
   explicit ToolBridge(QObject *parent = nullptr);
   ~ToolBridge() override;
+  bool laboratoryBuild() const;
   QString status() const { return status_; }
-  bool busy() const { return active_ || serviceRunning_; }
+  bool busy() const { return active_ || serviceRunning_ || mirror_.active(); }
   QVariantList tools() const;
   QVariantList forensicTools() const;
   QVariantList devices() const { return devices_; }
@@ -43,6 +51,7 @@ public:
   QVariantMap deviceInfo() const { return deviceInfo_; }
   QString logcat() const { return logcat_; }
   QString driverInfo() const { return driverInfo_; }
+  QVariantMap driverBinding() const { return driverBinding_; }
   bool autoRefresh() const { return pollTimer_.isActive(); }
   Q_INVOKABLE void refreshTools();
   Q_INVOKABLE bool configureTool(const QString &name, const QString &localPath);
@@ -50,11 +59,17 @@ public:
   Q_INVOKABLE bool loadToolConfiguration(const QString &configPath);
   Q_INVOKABLE void scanAdb();
   Q_INVOKABLE void scanFastboot();
-  Q_INVOKABLE void startMirror();
+  bool mirrorActive()const{return mirror_.active();}
+  QString mirrorState()const{return mirror_.state();}
+  QString mirrorStatus()const{return mirror_.status();}
+  QString mirrorOutput()const{return mirror_.output();}
+  Q_INVOKABLE bool startMirror(const QString &expectedSerial=QString(),const QVariantMap &approval=QVariantMap());
+  Q_INVOKABLE void stopMirror();
   Q_INVOKABLE void selectDevice(const QString &serial);
   Q_INVOKABLE void readDeviceInfo();
   Q_INVOKABLE void readLogcat();
   Q_INVOKABLE void inspectDrivers();
+  Q_INVOKABLE void inspectSelectedDriver();
   Q_INVOKABLE void cancel();
   Q_INVOKABLE void setAutoRefresh(bool enabled);
   static bool isValidSerial(const QString &serial);
@@ -70,6 +85,7 @@ public:
   Q_INVOKABLE bool startService(const QString &action, const QString &expectedSerial, const QVariantMap &approval);
   Q_INVOKABLE bool exportServiceReport(const QString &localPath, bool plaintextApproved);
 signals:
+  void mirrorChanged();
   void statusChanged();
   void busyChanged();
   void toolsChanged();
@@ -83,7 +99,7 @@ signals:
   void operationFinished(bool success);
   void diagnosticCompleted(const QString &operation, bool success);
 private:
-  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service };
+  enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service, DriverBinding };
   bool runReadOnly(const QString &program, const QStringList &arguments, Operation operation);
   bool selectedAdbReady();
   QString resolveExecutable(const QString &name) const;
@@ -94,6 +110,7 @@ private:
   void finish(int exitCode, QProcess::ExitStatus exitStatus);
   void replaceDevices(const QVariantList &found, const QString &transport);
   void setStatus(const QString &value);
+  MirrorSession mirror_;
   QProcess process_;
   QTimer timeoutTimer_;
   QTimer pollTimer_;
@@ -109,6 +126,7 @@ private:
   QVariantMap deviceInfo_;
   QString logcat_;
   QString driverInfo_;
+  QVariantMap driverBinding_;
   struct ServiceStep { QStringList arguments; QString key; bool optional=false; };
   QVariantMap selectedServiceDevice() const;
   bool serviceAvailable(const QString &action, QString *reason=nullptr) const;
@@ -131,3 +149,4 @@ private:
   std::shared_ptr<std::atomic_bool> serviceCancel_;
   std::unique_ptr<QTemporaryDir> serviceDirectory_;
 };
+

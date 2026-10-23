@@ -1,0 +1,42 @@
+********* Start testing of MirrorTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : MirrorTests::initTestCase()
+PASS   : MirrorTests::versionBoundary()
+PASS   : MirrorTests::productionAndConsentRefuseBeforeProcess()
+SKIP   : MirrorTests::ownedProcessAndPinnedEnvironment() Screen-view lifecycle runs in Laboratory; production denial is tested separately.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(79)]
+SKIP   : MirrorTests::cancelDuringVersionStartsNoViewer() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(89)]
+SKIP   : MirrorTests::cleanWindowClose() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(90)]
+SKIP   : MirrorTests::preflightFailure(bad-version) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(version-timeout) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(duplicate) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(offline) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(disconnected) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(identity-changed) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(disconnected) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(identity-changed) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(duplicate) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::viewerErrorAndOutputLimit(error) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(96)]
+SKIP   : MirrorTests::viewerErrorAndOutputLimit(bounded-output) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(96)]
+SKIP   : MirrorTests::selectionChangeStopsSession() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(97)]
+SKIP   : MirrorTests::cancelAndEscalatedTermination() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(98)]
+SKIP   : MirrorTests::destructorStopsChild() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/59ed88a44a1c/nexvary-public-audit/cpp/tests/mirror_tests.cpp(99)]
+PASS   : MirrorTests::cleanupTestCase()
+Totals: 4 passed, 0 failed, 17 skipped, 0 blacklisted, 34ms
+********* Finished testing of MirrorTests *********

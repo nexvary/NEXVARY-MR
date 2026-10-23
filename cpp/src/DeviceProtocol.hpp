@@ -1,5 +1,6 @@
 #pragma once
 #include <QStringList>
+#include "ServiceOperationPolicy.hpp"
 #include <QList>
 
 // Protocol adapters produce bounded command plans; ToolBridge alone owns the
@@ -32,11 +33,13 @@ public:
   if(action!="probe")return result;
   result.append({{"shell","cmd","uimode","help"},"night",true});
   for(const auto &a:QStringList{"languages","keyboard","settings","apn"})result.append({{"shell","cmd","package","resolve-activity","--brief","-a",settingsIntent(a)},"intent:"+a,true});
+  result.append({{"shell","getconf","PAGE_SIZE"},"observation:page-size",true});
   result.append({{"shell","dumpsys","battery"},"observation:battery",true});
   result.append({{"shell","df","-k","/data"},"observation:storage",true});
   result.append({{"shell","cat","/proc/partitions"},"observation:partitions",true});return result;
  }
  QStringList command(const QString &action,const QString &package,bool replace)const override{
+  if(!operationAllowed(action.toStdString()))return {};
   if(QStringList{"reboot_normal","reboot_recovery","reboot_bootloader","reboot_sideload"}.contains(action)){QStringList args{"reboot"};if(action!="reboot_normal")args.append(action.mid(7));return args;}
   if(action=="dark_on"||action=="dark_off")return {"shell","cmd","uimode","night",action=="dark_on"?"yes":"no"};
   const auto intent=settingsIntent(action);if(!intent.isEmpty())return {"shell","am","start","-W","-a",intent};
@@ -50,12 +53,13 @@ public:
  QString id()const override{return "fastboot";}
  QStringList discovery()const override{return {"devices"};}
  QList<Query> queries(const QString &action)const override{
-  QStringList vars{"product","unlocked"};
-  if(action=="probe")vars.append({"version-bootloader","is-userspace","partition-size:cache","partition-size:userdata","partition-type:userdata"});
+  QStringList vars{"product","unlocked","is-userspace"};
+  if(action=="probe")vars.append({"version-bootloader","partition-size:cache","partition-size:userdata","partition-type:userdata"});
   else if(action=="erase_cache"||action=="erase_userdata")vars.append(action=="erase_cache"?"partition-size:cache":"partition-size:userdata");
   QList<Query> result;for(const auto &var:vars)result.append({{"getvar",var},"var:"+var,var!="product"});return result;
  }
  QStringList command(const QString &action,const QString &,bool)const override{
+  if(!operationAllowed(action.toStdString()))return {};
   if(action=="fastboot_reboot")return {"reboot"};
   if(action=="fastboot_bootloader")return {"reboot-bootloader"};
   if(action=="unlock_ability")return {"flashing","get_unlock_ability"};
@@ -66,3 +70,4 @@ public:
 };
 inline const ProtocolAdapter *adapter(const QString &id){static const AdbAdapter adb;static const FastbootAdapter fastboot;return id=="adb"?static_cast<const ProtocolAdapter *>(&adb):id=="fastboot"?static_cast<const ProtocolAdapter *>(&fastboot):nullptr;}
 }
+

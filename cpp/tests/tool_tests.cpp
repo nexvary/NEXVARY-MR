@@ -1,4 +1,6 @@
 #include "ToolBridge.hpp"
+#include "UsbDriver.hpp"
+#include <QJsonArray>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -25,6 +27,9 @@ static int fakeAdb(const QStringList &args) {
     std::fwrite(flood.constData(), 1, static_cast<size_t>(flood.size()), stdout);
     return 0;
   }
+  if (mode == "duplicate" && args == QStringList{"devices","-l"}) {
+    std::fputs("List of devices attached\nDEVICE42 device\nDEVICE42 device\n",stdout);return 0;
+  }
   if (args == QStringList{QStringLiteral("devices"), QStringLiteral("-l")}) {
     std::fputs("List of devices attached\nDEVICE42\tdevice product:test model:Test_Phone transport_id:1\nLOCKED\tunauthorized\n", stdout);
     return 0;
@@ -44,6 +49,28 @@ static int fakeAdb(const QStringList &args) {
 class ToolTests : public QObject {
   Q_OBJECT
 private slots:
+  void usbSerialAndParentCorrelation() {
+    const QJsonArray nodes{
+      QJsonObject{{"instanceId","USB\\VID_1234&PID_5678\\DEVICE42"},{"name","Phone"}},
+      QJsonObject{{"instanceId","USB\\VID_1234&PID_5678&MI_01\\6&ABC&0&0001"},{"parentId","USB\\VID_1234&PID_5678\\DEVICE42"},{"service","WinUSB"},{"infName","oem42.inf"},{"signed",true}},
+      QJsonObject{{"instanceId","USB\\VID_1111&PID_2222\\OTHER"},{"name","Other phone"}}};
+    const auto bytes=QJsonDocument(QJsonObject{{"schemaVersion",1},{"devices",nodes},{"signatureInventoryAvailable",true}}).toJson();
+    const auto result=mr::usb::correlate(bytes,"device42");
+    QCOMPARE(result.value("state").toString(),QString("serial-correlated"));
+    QCOMPARE(result.value("nodes").toList().size(),2);
+    QVERIFY(!result.value("interfaceBindingVerified").toBool());
+    QCOMPARE(mr::usb::correlate(bytes,"DEVICE4").value("state").toString(),QString("no-match"));
+    QCOMPARE(mr::usb::correlate(bytes,"192.168.1.2:5555").value("state").toString(),QString("unsupported-serial"));
+  }
+  void usbAmbiguityAndMalformedInventory() {
+    QJsonArray nodes{QJsonObject{{"instanceId","USB\\VID_1234&PID_5678\\SAME"}},QJsonObject{{"instanceId","USB\\VID_0001&PID_0002\\SAME"}}};
+    auto encode=[&]{return QJsonDocument(QJsonObject{{"schemaVersion",1},{"devices",nodes}}).toJson();};
+    QCOMPARE(mr::usb::correlate(encode(),"SAME").value("state").toString(),QString("ambiguous"));
+    nodes.append(nodes.first());
+    QCOMPARE(mr::usb::correlate(encode(),"SAME").value("state").toString(),QString("unavailable"));
+    QCOMPARE(mr::usb::correlate("not JSON","SAME").value("state").toString(),QString("unavailable"));
+    QCOMPARE(mr::usb::correlate(QByteArray(513*1024,'x'),"SAME").value("state").toString(),QString("unavailable"));
+  }
   void initTestCase() {
     QVERIFY(directory_.isValid());
     oldPath_ = qgetenv("PATH");
@@ -122,16 +149,34 @@ private slots:
     const auto devices = ToolBridge::parseAdbDevices(QStringLiteral("* daemon started successfully\nList of devices attached\nABC device product:p model:Pixel_8 transport_id:2\nABC device\nOFF offline\nAUTH unauthorized\nUSB no permissions (missing udev rules)\n-s device\nERR random\n"));
     QCOMPARE(devices.size(), 4);
     QCOMPARE(devices[0].toMap().value(QStringLiteral("model")).toString(), QStringLiteral("Pixel_8"));
+    QCOMPARE(devices[0].toMap().value("state").toString(),QStringLiteral("ambiguous"));
     QCOMPARE(devices[3].toMap().value(QStringLiteral("state")).toString(), QStringLiteral("no permissions"));
     const auto fastboot = ToolBridge::parseFastbootDevices(QStringLiteral("ABC fastboot\nABC fastboot\nwaiting for any device\n-s fastboot\n"));
     QCOMPARE(fastboot.size(), 1);
+    QCOMPARE(fastboot[0].toMap().value("state").toString(),QStringLiteral("ambiguous"));
     QVERIFY(ToolBridge::parseAdbDevices(QStringLiteral("List of devices attached\n")).isEmpty());
+  }
+  void duplicateBeyondDisplayLimitRemainsAmbiguous() {
+    QString adb="TARGET device\n",fast="TARGET fastboot\n";
+    for(int i=0;i<300;++i){adb+=QString("ROW%1 device\n").arg(i);fast+=QString("ROW%1 fastboot\n").arg(i);}
+    adb+="TARGET device\n";fast+="TARGET fastboot\n";
+    const auto a=ToolBridge::parseAdbDevices(adb),f=ToolBridge::parseFastbootDevices(fast);
+    QCOMPARE(a.size(),256);QCOMPARE(f.size(),256);
+    QCOMPARE(a.first().toMap().value("state").toString(),QStringLiteral("ambiguous"));
+    QCOMPARE(f.first().toMap().value("state").toString(),QStringLiteral("ambiguous"));
   }
   void propertyPrivacyAndMalformedInput() {
     const auto info = ToolBridge::parseDeviceProperties(QStringLiteral("[ro.product.model]: [Pixel 8]\n[gsm.sim.operator.alpha]: [Private]\n[ro.boot.bootreason]: [reboot,watchdog]\n[ro.product.brand: broken\n"));
     QCOMPARE(info.size(), 2);
     QCOMPARE(info.value(QStringLiteral("ro.product.model")).toString(), QStringLiteral("Pixel 8"));
     QVERIFY(!info.contains(QStringLiteral("gsm.sim.operator.alpha")));
+  }
+  void ambiguousSerialCannotReadPropertiesOrLogs() {
+    qputenv("MR_TEST_TOOL_MODE","duplicate");ToolBridge bridge;QSignalSpy finished(&bridge,&ToolBridge::operationFinished);
+    bridge.scanAdb();QVERIFY(finished.wait(5000));QCOMPARE(bridge.devices().size(),1);
+    bridge.selectDevice("DEVICE42");finished.clear();bridge.readDeviceInfo();QVERIFY(!bridge.busy());
+    bridge.readLogcat();QVERIFY(!bridge.busy());QVERIFY(finished.isEmpty());QVERIFY(bridge.deviceInfo().isEmpty());
+    QVERIFY(!bridge.startService("probe","DEVICE42",{{"authorized",true}}));QVERIFY(!bridge.busy());
   }
   void missingToolAndNoSelection() {
     qputenv("PATH", QByteArray());
@@ -142,7 +187,8 @@ private slots:
     QCOMPARE(finished.size(), 1);
     QCOMPARE(finished[0][0].toBool(), false);
     bridge.startMirror();
-    QVERIFY(bridge.status().contains(QStringLiteral("ADB")));
+    QVERIFY(!bridge.mirrorActive());
+    if(!bridge.laboratoryBuild())QVERIFY(bridge.status().contains(QStringLiteral("Laboratory")));
     bridge.selectDevice(QStringLiteral("unknown"));
     QVERIFY(bridge.selectedSerial().isEmpty());
   }
@@ -251,3 +297,4 @@ int main(int argc, char **argv) {
   return QTest::qExec(&tests, argc, argv);
 }
 #include "tool_tests.moc"
+

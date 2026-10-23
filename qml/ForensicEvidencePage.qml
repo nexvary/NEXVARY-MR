@@ -24,6 +24,7 @@ Item {
   for(let i=0;i<entries.length;i++)if(entries[i].id===selectedId)return i;
   return -1;
  }
+ function showEvidence(id){kind.currentIndex=0;search.text="";page.selectedId=id}
  function notify(ok){app.notice(ok,app.trx("اكتملت العملية","Operation completed"),recoveryBridge.error)}
  ColumnLayout {
   anchors.fill:parent;spacing:10
@@ -31,7 +32,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
    TextField {id:search;objectName:"forensicSearch";placeholderText:app.trx("بحث بالاسم أو المعرّف أو البصمة","Search name, ID or SHA256");Layout.fillWidth:true;Layout.minimumWidth:0}
-   NeonComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis"];Layout.preferredWidth:180}
+   NeonComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis","native-analysis"];Layout.preferredWidth:180}
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
   RowLayout {

@@ -1,0 +1,41 @@
+{
+  "sourceParent": "1795b8ecd9a338d79a47514a6c5bfcffc0d6392f",
+  "scope": "Bounded local classic ZIP metadata snapshot; no decompression or phone operation",
+  "limitBytes": 134217728,
+  "maxEntries": 4096,
+  "maxListedEntries": 256,
+  "syntheticZipSha256": "93f6b65816647c6790f39c88e2f44827af5d1429db471455657ecf7a4b944863",
+  "localFullCTest": {
+    "production": "24/24, 77.76 s",
+    "laboratory": "24/24, 92.99 s"
+  },
+  "finalLayoutChecks": {
+    "production": "UI + GUI smoke 2/2, 28.43 s",
+    "laboratory": "UI + GUI smoke 2/2, 29.08 s",
+    "qml": "31 passed per profile",
+    "firmware": "15 passed per profile",
+    "additional": "Final 100-pixel viewport assertions rerun independently per profile"
+  },
+  "windowsTrigger": {
+    "run": 39928055692,
+    "head": "1795b8ecd9a338d79a47514a6c5bfcffc0d6392f",
+    "observedFailure": {
+      "viewHeight": 100,
+      "contentHeight": 580,
+      "scrollOffset": 480,
+      "reportCenterY": -27
+    },
+    "change": "Move export below history list so its complete control is visible at the lower scroll endpoint; explicitly bind content extent and test a forced 100px viewport."
+  },
+  "skips": [
+    "Independent barcode ZBar/Poppler tests not installed in this restored local runtime; required on Linux CI",
+    "Real TLS/ClamAV/mmls integrations not configured in these local runs",
+    "Production intentionally skips Laboratory write/mirror fixtures"
+  ],
+  "limits": [
+    "No large ROM/ZIP64/encrypted/multi-disk support in this slice",
+    "No payload CRC, AVB signatures or OEM trust verified",
+    "Image names are not partition layouts or device compatibility",
+    "Snapshots and screenshots contain synthetic data only; no phone/Windows 10/11 hardware acceptance"
+  ]
+}

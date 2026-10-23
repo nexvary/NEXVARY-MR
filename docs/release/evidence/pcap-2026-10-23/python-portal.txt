@@ -1,0 +1,11 @@
+test_backup_restore_revokes_and_recovers_missing_database (test_portal.PortalTests.test_backup_restore_revokes_and_recovers_missing_database) ... ok
+test_expiry_lease_host_scheme_limits_and_source (test_portal.PortalTests.test_expiry_lease_host_scheme_limits_and_source) ... ok
+test_rate_limit_and_malformed_json (test_portal.PortalTests.test_rate_limit_and_malformed_json) ... ok
+test_rejects_private_extra_fields_and_transaction_is_atomic (test_portal.PortalTests.test_rejects_private_extra_fields_and_transaction_is_atomic) ... ok
+test_render_no_secrets_in_units_and_upgrade_retains_key (test_portal.PortalTests.test_render_no_secrets_in_units_and_upgrade_retains_key) ... ok
+test_status_auth_privacy_revision_rotation (test_portal.PortalTests.test_status_auth_privacy_revision_rotation) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.102s
+
+OK

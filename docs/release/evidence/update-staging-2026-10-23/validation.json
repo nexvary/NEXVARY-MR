@@ -1,0 +1,12 @@
+{
+  "sourceBase": "9c868bc1ec85870efbd3a2cc6a27aad5b0641ee5",
+  "testEnvironment": "Linux Qt 6.4.2 Release warnings-as-errors",
+  "targetedVerifierCasesPerProfile": 40,
+  "targetedVerifierSkips": 0,
+  "localSanitizer": "All 40 functional cases pass, then LeakSanitizer fails reading /proc/task in this isolated host. This is NOT a successful sanitizer gate. GitHub must run with default leak detection.",
+  "newWindowsExecution": "pending CI",
+  "phoneAcceptance": false,
+  "installationAuthorized": false,
+  "immutableStorageGuaranteed": false,
+  "durableCrashRecoveryImplemented": false
+}

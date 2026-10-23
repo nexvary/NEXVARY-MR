@@ -1,0 +1,20 @@
+********* Start testing of CompatibilityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CompatibilityTests::initTestCase()
+PASS   : CompatibilityTests::modernApiFamilies(Android15)
+PASS   : CompatibilityTests::modernApiFamilies(Android16)
+PASS   : CompatibilityTests::modernApiFamilies(Android17)
+PASS   : CompatibilityTests::layoutAndEncryptionAreOnlyReported()
+PASS   : CompatibilityTests::futureApiAndPreviewStayUnapproved()
+PASS   : CompatibilityTests::missingDoesNotMeanDisabled()
+PASS   : CompatibilityTests::invalidValuesAreNotInferred()
+PASS   : CompatibilityTests::inconsistentFirstApi()
+PASS   : CompatibilityTests::fastbootModes(bootloader)
+PASS   : CompatibilityTests::fastbootModes(fastbootd)
+PASS   : CompatibilityTests::fastbootModes(missing)
+PASS   : CompatibilityTests::fastbootModes(malformed)
+PASS   : CompatibilityTests::exportProjection()
+PASS   : CompatibilityTests::duplicatePropertiesAreUnknown()
+PASS   : CompatibilityTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms
+********* Finished testing of CompatibilityTests *********

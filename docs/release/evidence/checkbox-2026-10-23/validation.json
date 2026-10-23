@@ -1,0 +1,20 @@
+{
+  "sourceParent": "70771096d6b65e83bfc82a2f3773aad544fa7f13",
+  "windowsEvidence": {
+    "run": 39934265994,
+    "artifact": 12493332155,
+    "sha256": "736f374da9b4454f9e3894489e5f4904fdd506e09ea0fcb222e6ee72d618567b",
+    "result": "Every navigation/geometry/render case passed; only newly required Unicode checkmark coverage and dependent GUI smoke failed. PowerShell syntax artifact is empty; packaging remains gated."
+  },
+  "change": [
+    "Replace font-dependent checked symbol with original embedded SVG, verify loaded/visible image in QML and require decoder in deployed smoke",
+    "Keep mandatory Latin/Arabic glyph coverage and missing-character negative case",
+    "Record compiled profile stdout/exit before CTest for independent deployment diagnostics"
+  ],
+  "local": {
+    "production": "2/2 UI+smoke, 29.11 s",
+    "laboratory": "2/2 UI+smoke, 29.84 s",
+    "qml": "32 passed per profile, zero failures/skips"
+  },
+  "license": "Original NEXVARY SVG recorded separately from MIT Fluent icons; no OS font files redistributed"
+}

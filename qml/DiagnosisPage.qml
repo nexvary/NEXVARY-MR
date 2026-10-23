@@ -32,8 +32,8 @@ Item {
      NeonComboBox {id:symptom;objectName:"symptomChoice";Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.analyzedSymptom="";page.guidanceSnapshot=""}}
      ActionButton {objectName:"diagnoseButton";text:app.trx("تحليل العَرَض","Analyze symptom");primary:true;onClicked:{page.analyzedSymptom=symptom.currentText;page.guidanceSnapshot=repairBridge.diagnoseLocalized(page.analyzedSymptom,app.ar)}}
     }
-    ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;clip:true;contentWidth:availableWidth
-    TextArea {id:result;objectName:"diagnosisResult";Layout.fillWidth:true;Layout.fillHeight:true;width:parent.width;readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;text:page.guidanceSnapshot||app.trx("اختر العَرَض ثم اضغط تحليل لتوليد إرشادات قابلة للحفظ.","Select a symptom, then Analyze to generate guidance for saving.");color:app.tone("#d0e0ef");font.pixelSize:16;background:Rectangle{color:app.tone("#0c2232");radius:6}}
+    Flickable {id:guidanceScroll;Layout.fillWidth:true;Layout.fillHeight:true;clip:true;contentWidth:width;contentHeight:result.height;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
+    TextArea {id:result;objectName:"diagnosisResult";width:guidanceScroll.width;height:Math.max(guidanceScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;text:page.guidanceSnapshot||app.trx("اختر العَرَض ثم اضغط تحليل لتوليد إرشادات قابلة للحفظ.","Select a symptom, then Analyze to generate guidance for saving.");color:app.tone("#d0e0ef");font.pixelSize:16;background:Rectangle{color:app.tone("#0c2232");radius:6}}
     }
     Label {text:app.trx("إرشادات قائمة على قواعد وليست تشخيصًا مؤكدًا. الدليل والملاحظات بالأسفل تُدخل يدويًا؛ لا تُنسخ سجلات الهاتف تلقائيًا.","Rule-based guidance, not a confirmed diagnosis. Findings and reviewed evidence below are entered manually; phone logs are never copied automatically.");color:app.tone("#eab775");wrapMode:Text.WordWrap;Layout.fillWidth:true}
    }

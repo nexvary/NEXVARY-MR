@@ -62,6 +62,7 @@ bool ServiceCatalog::importDeviceCatalog(const QString &value,const QString &exp
 QVariantList ServiceCatalog::drivers() const {
  // Official landing pages only; no driver binary is redistributed or silently installed.
  return {
+  QVariantMap{{"brand","Google"},{"url","https://developer.android.com/studio/run/win-usb"},{"kind","Official Google USB driver; Windows model and interface binding must be verified"},{"availablePackage",true}},
   QVariantMap{{"brand","Samsung"},{"url","https://developer.samsung.com/android-usb-driver"},{"kind","Official Samsung Android USB driver page"},{"availablePackage",true}},
   QVariantMap{{"brand","Huawei"},{"url","https://consumer.huawei.com/en/support/hisuite/"},{"kind","Official HiSuite/support page; verify model/OS requirements"},{"availablePackage",true}},
   QVariantMap{{"brand","OPPO"},{"url","https://support.oppo.com/en/"},{"kind","Official support; model-specific Windows driver availability must be checked"},{"availablePackage",false}},
@@ -120,3 +121,4 @@ QVariantMap ServiceCatalog::tree(const QString &brand,const QString &model,const
  if(symptom=="USB not detected")leaf("usb",QStringLiteral("راجع تعريف OEM ووضع USB ثم الموصل بكابل سليم. الفحص الحالي لم يحدد السبب؛ يلزم دليل مطابق قبل قياس اللوحة."),"Review OEM driver and USB mode, then the connector with a known-good cable. Cause remains unconfirmed; use a matching guide before board measurements.");
  return {{"brand",brand.trimmed()},{"model",model.trimmed()},{"symptom",symptom},{"root","safety"},{"nodes",nodes},{"scope",arabic?QStringLiteral("مسار عام مرتبط بسجل هذا الهاتف؛ ليس دليل أعطال خاصًا بالموديل. لا توجد مكتبة شاملة لكل الموديلات بعد."):QStringLiteral("General triage bound to this phone record; not an exact-model service guide. A comprehensive model library is not yet supplied.")}};
 }
+

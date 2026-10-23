@@ -1,0 +1,23 @@
+********* Start testing of AvbTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : AvbTests::initTestCase()
+PASS   : AvbTests::declarationsNeverBecomeTrust()
+PASS   : AvbTests::rejectsHostileLengths(auth-overflow)
+PASS   : AvbTests::rejectsHostileLengths(aux-overflow)
+PASS   : AvbTests::rejectsHostileLengths(unaligned)
+PASS   : AvbTests::rejectsHostileLengths(hash-offset)
+PASS   : AvbTests::rejectsHostileLengths(signature-size)
+PASS   : AvbTests::rejectsHostileLengths(key-size)
+PASS   : AvbTests::rejectsHostileLengths(keymeta-offset)
+PASS   : AvbTests::rejectsHostileLengths(descriptors-offset)
+PASS   : AvbTests::rejectsHostileLengths(partial-descriptor)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-overflow)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-unaligned)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-outside)
+PASS   : AvbTests::truncationAndUnsupportedFormats()
+PASS   : AvbTests::flagsAndUntrustedText()
+PASS   : AvbTests::overlapsAndCountBound()
+PASS   : AvbTests::asyncBridgeAndSourcePreservation()
+PASS   : AvbTests::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 15ms
+********* Finished testing of AvbTests *********

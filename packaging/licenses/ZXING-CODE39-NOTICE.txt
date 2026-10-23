@@ -1,0 +1,12 @@
+Code 39 encoding table attribution
+
+The table in cpp/src/Code39Label.hpp derives from ZXing-C++ v2.3.0:
+https://github.com/zxing-cpp/zxing-cpp/blob/v2.3.0/core/src/oned/ODCode39Writer.cpp
+Copyright 2016 Huy Cuong Nguyen
+Copyright 2016 ZXing authors
+Licensed under Apache License 2.0; complete text in ZXING-CODE39-APACHE-2.0.txt.
+
+NEXVARY uses the encoding table with an original bounded Qt image renderer for
+NMR local repair-order labels. The full ZXing runtime/decoder is not linked or
+redistributed. ZBar and Poppler are separately installed test tools only, not
+product runtime dependencies or bundled programs.

@@ -12,6 +12,8 @@ if (-not $qtRoot) { throw 'QT_ROOT_DIR must identify the Qt 6.8.3 MSVC installat
 $exe = Join-Path $BuildDirectory "$Configuration/nexvary_mr.exe"
 if (-not (Test-Path $exe)) { $exe = Join-Path $BuildDirectory 'nexvary_mr.exe' }
 if (-not (Test-Path $exe)) { throw 'Built nexvary_mr.exe was not found' }
+. (Join-Path $PSScriptRoot 'build-profile.ps1')
+$compiledProfile = Assert-NexvaryProductionBinary -FilePath $exe
 $bundle = Join-Path $OutputDirectory 'NEXVARY-MR'
 New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item $exe (Join-Path $bundle 'NEXVARY-MR.exe')
@@ -88,11 +90,31 @@ Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }
 New-Item -ItemType Directory -Force (Join-Path $bundle 'licenses') | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'licenses/*') (Join-Path $bundle 'licenses') -Recurse -Force
+# File-level SPDX inventory for the actual deployed runtime; review NOASSERTION
+# entries before release. This is not a complete transitive dependency audit.
+$qtVersion = (& "$qtRoot/bin/qmake.exe" -query QT_VERSION).Trim()
+if ($LASTEXITCODE -ne 0 -or -not $qtVersion) { throw 'Cannot identify deployed Qt version' }
+$revision = if ($env:GITHUB_SHA) { $env:GITHUB_SHA } else { (git rev-parse HEAD).Trim() }
+[ordered]@{ schemaVersion=1; commit=$revision; buildProfile='production-read-only'; signed=$false; qtVersion=$qtVersion } |
+  ConvertTo-Json | Set-Content (Join-Path $bundle 'BUILD_PROFILE.json') -Encoding utf8
 # Preserve Qt's actual third-party notices when present in the SDK.
 if (Test-Path "$qtRoot/licenses") { Copy-Item "$qtRoot/licenses" (Join-Path $bundle 'licenses/qt-sdk') -Recurse -Force }
+$spdxIndex = 0
+$spdxFiles = @(foreach ($file in (Get-ChildItem $bundle -Recurse -File | Sort-Object FullName)) {
+  $spdxIndex++
+  $relative = [IO.Path]::GetRelativePath((Resolve-Path $bundle), $file.FullName).Replace('\','/')
+  [ordered]@{ SPDXID=('SPDXRef-File-' + $spdxIndex); fileName=('./'+$relative); checksums=@([ordered]@{algorithm='SHA256';checksum=(Get-FileHash $file.FullName -Algorithm SHA256).Hash.ToLower()}); licenseConcluded='NOASSERTION'; licenseInfoInFiles=@('NOASSERTION'); copyrightText='NOASSERTION' }
+})
+[ordered]@{
+  spdxVersion='SPDX-2.3'; dataLicense='CC0-1.0'; SPDXID='SPDXRef-DOCUMENT'; name='NEXVARY-MR deployed file inventory'
+  documentNamespace=('https://nexvary.com/spdx/' + [guid]::NewGuid().ToString())
+  creationInfo=[ordered]@{created=[DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ');creators=@('Tool: NEXVARY-MR-package-windows')}
+  files=$spdxFiles
+} | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $bundle 'SBOM.spdx.json') -Encoding utf8
 $manifest = Get-ChildItem $bundle -Recurse -File | Where-Object { $_.Name -ne 'SHA256SUMS.txt' } | Sort-Object FullName | ForEach-Object {
   $relative = [IO.Path]::GetRelativePath((Resolve-Path $bundle), $_.FullName)
   "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $relative"
 }
 $manifest | Set-Content (Join-Path $bundle 'SHA256SUMS.txt') -Encoding utf8
 Compress-Archive -Path $bundle -DestinationPath (Join-Path $OutputDirectory 'NEXVARY-MR-Windows-x64-portable-unsigned.zip') -Force
+

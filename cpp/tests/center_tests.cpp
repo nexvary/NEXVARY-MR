@@ -46,7 +46,7 @@ private slots:
   QTemporaryDir t;const auto path=t.filePath("v2.db");int order=0;
   {WorkshopBridge w(path);order=w.createOrder("C","P","B","M","S","USB","T","");QVERIFY(order>0);}
   const QString conn="center-expiry";
-  {auto db=QSqlDatabase::addDatabase("QSQLITE",conn);db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("DROP TABLE tracking_links"));QVERIFY(q.exec("PRAGMA user_version=2"));db.close();}QSqlDatabase::removeDatabase(conn);
+  {auto db=QSqlDatabase::addDatabase("QSQLITE",conn);db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("DROP TABLE order_labels"));QVERIFY(q.exec("DROP TABLE tracking_links"));QVERIFY(q.exec("PRAGMA user_version=2"));db.close();}QSqlDatabase::removeDatabase(conn);
   WorkshopBridge w(path);QVERIFY2(w.ready(),qPrintable(w.error()));QCOMPARE(w.orders().size(),1);const auto token=w.issueTrackingToken(order,1,true);QVERIFY(!token.isEmpty());
   {auto db=QSqlDatabase::addDatabase("QSQLITE",conn);db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);QVERIFY(q.exec("UPDATE tracking_links SET expires_at='2000-01-01T00:00:00Z'"));db.close();}QSqlDatabase::removeDatabase(conn);
   QVERIFY(w.publicTracking(token).isEmpty());QCOMPARE(w.checkIntegrity(),QStringLiteral("ok"));
@@ -54,3 +54,4 @@ private slots:
 };
 QTEST_MAIN(CenterTests)
 #include "center_tests.moc"
+

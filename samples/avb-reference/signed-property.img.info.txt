@@ -1,0 +1,12 @@
+Minimum libavb version:   1.0
+Header Block:             256 bytes
+Authentication Block:     320 bytes
+Auxiliary Block:          640 bytes
+Public key (sha1):        b8c6aa06e554f349974c52993526e78e12b3b95f
+Algorithm:                SHA256_RSA2048
+Rollback Index:           123
+Flags:                    0
+Rollback Index Location:  0
+Release String:           'avbtool 1.3.0'
+Descriptors:
+    Prop: nexvary.fixture -> 'synthetic-only'

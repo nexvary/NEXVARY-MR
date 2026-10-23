@@ -1,0 +1,52 @@
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+PASS   : mr_ui::WorkstationNavigation::test_cloudTrackingConsent()
+QWARN  : mr_ui::WorkstationNavigation::test_cloudTrackingConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_cloudTrackingConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_cloudTrackingConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_cloudTrackingConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_createOrder() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_createOrder() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+PASS   : mr_ui::WorkstationNavigation::test_createOrder()
+QWARN  : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:5: QML TextArea: Binding loop detected for property "implicitHeight"
+QWARN  : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+PASS   : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent()
+QWARN  : mr_ui::WorkstationNavigation::test_diagnosis() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_diagnosis() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+PASS   : mr_ui::WorkstationNavigation::test_diagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_exitCancel()
+PASS   : mr_ui::WorkstationNavigation::test_forensicLabNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_forensicWorkspace()
+PASS   : mr_ui::WorkstationNavigation::test_language()
+PASS   : mr_ui::WorkstationNavigation::test_minimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_navigation()
+PASS   : mr_ui::WorkstationNavigation::test_newWorkspaceMinimumSize()
+QWARN  : mr_ui::WorkstationNavigation::test_recoveryConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+QWARN  : mr_ui::WorkstationNavigation::test_recoveryConsent() file:///tmp/nexvary-mr-final-source/qml/DiagnosisPage.qml:36:99: QML TextArea: Binding loop detected for property "width"
+PASS   : mr_ui::WorkstationNavigation::test_recoveryConsent()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryWizard()
+PASS   : mr_ui::WorkstationNavigation::test_savedDiagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_securityAndFaultTree()
+PASS   : mr_ui::WorkstationNavigation::test_serviceHistoryDetailsArePlainText()
+PASS   : mr_ui::WorkstationNavigation::test_serviceMinimumSizeOutputAndHistory()
+PASS   : mr_ui::WorkstationNavigation::test_themeAndNarrowForensicTabs()
+PASS   : mr_ui::WorkstationNavigation::test_z_exitAccept()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 7239ms
+********* Finished testing of mr_ui *********

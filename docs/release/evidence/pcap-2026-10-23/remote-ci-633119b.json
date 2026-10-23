@@ -1,0 +1,101 @@
+{
+  "commit": "633119b341d3be1713899a730b93e9c47516fa67",
+  "runs": [
+    {
+      "id": 39893471795,
+      "name": "Python checks",
+      "headSha": "633119b341d3be1713899a730b93e9c47516fa67",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39893471795"
+    },
+    {
+      "id": 39893471803,
+      "name": "C++20 and Qt Windows",
+      "headSha": "633119b341d3be1713899a730b93e9c47516fa67",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39893471803"
+    },
+    {
+      "id": 39893467502,
+      "name": "Python checks",
+      "headSha": "633119b341d3be1713899a730b93e9c47516fa67",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/39893467502"
+    }
+  ],
+  "jobs": [
+    {
+      "run": 39893471795,
+      "jobs": [
+        {
+          "name": "test",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        }
+      ]
+    },
+    {
+      "run": 39893471803,
+      "jobs": [
+        {
+          "name": "core (ubuntu-latest)",
+          "result": "cancelled",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "core (windows-2022)",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "tracking-server",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "linux-forensic-integration (laboratory)",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "qt (production)",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "linux-forensic-integration (production)",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        },
+        {
+          "name": "qt (laboratory)",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        }
+      ]
+    },
+    {
+      "run": 39893467502,
+      "jobs": [
+        {
+          "name": "test",
+          "result": "failure",
+          "runner": "",
+          "steps": 0
+        }
+      ]
+    }
+  ],
+  "rootCause": "unproven"
+}

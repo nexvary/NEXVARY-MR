@@ -1,0 +1,25 @@
+# The build never fetches dependencies implicitly. Prepare the reviewed, pinned
+# distribution with scripts/prepare_sodium.py, then supply MR_SODIUM_ROOT.
+set(MR_SODIUM_ROOT "$ENV{MR_SODIUM_ROOT}" CACHE PATH "Prepared libsodium 1.0.22 prefix")
+if(NOT MR_SODIUM_ROOT)
+ message(FATAL_ERROR "Set MR_SODIUM_ROOT to a prefix prepared by scripts/prepare_sodium.py")
+endif()
+find_path(MR_SODIUM_INCLUDE sodium.h PATHS "${MR_SODIUM_ROOT}/include" NO_DEFAULT_PATH REQUIRED)
+if(WIN32)
+ find_library(MR_SODIUM_LIBRARY NAMES libsodium PATHS "${MR_SODIUM_ROOT}/lib" NO_DEFAULT_PATH REQUIRED)
+ if(NOT EXISTS "${MR_SODIUM_ROOT}/bin/libsodium.dll")
+  message(FATAL_ERROR "Prepared release x64 libsodium.dll is missing")
+ endif()
+ add_library(mr_sodium SHARED IMPORTED)
+ set_target_properties(mr_sodium PROPERTIES IMPORTED_IMPLIB "${MR_SODIUM_LIBRARY}"
+  IMPORTED_LOCATION "${MR_SODIUM_ROOT}/bin/libsodium.dll")
+else()
+ if(NOT EXISTS "${MR_SODIUM_ROOT}/lib/libsodium.a")
+  message(FATAL_ERROR "Prepared static libsodium.a is missing")
+ endif()
+ find_package(Threads REQUIRED)
+ add_library(mr_sodium STATIC IMPORTED)
+ set_target_properties(mr_sodium PROPERTIES IMPORTED_LOCATION "${MR_SODIUM_ROOT}/lib/libsodium.a"
+  INTERFACE_LINK_LIBRARIES "Threads::Threads;${CMAKE_DL_LIBS}")
+endif()
+set_target_properties(mr_sodium PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MR_SODIUM_INCLUDE}")

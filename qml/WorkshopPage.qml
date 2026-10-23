@@ -4,6 +4,12 @@ import QtQuick.Layouts
 import QtQuick.Dialogs
 Item {
  id:page
+ objectName:"workshopPage"
+ property var intakeCard:({})
+ property var intakeHistory:[]
+ property string barcodeError:""
+ function showDeviceCard(card){if(!card.order_id){barcodeError=workshopBridge.error;return;}barcodeError="";selectedId=card.order_id;selectedOrder=workshopBridge.invoice(selectedId);intakeCard=card;intakeHistory=workshopBridge.orderHistory(selectedId);cardPrivacy.checked=false;deviceCardDialog.open()}
+ function lookupDeviceBarcode(){const card=workshopBridge.lookupBarcode(barcodeInput.text);if(!card.order_id){barcodeError=workshopBridge.error;return;}search.text="";showDeviceCard(card);list.positionViewAtIndex(workshopBridge.orders.findIndex(function(o){return o.id===card.order_id}),ListView.Contain)}
  property var app
  property int selectedId:-1
  property var selectedOrder: ({})
@@ -22,6 +28,12 @@ Item {
    TextField {id:search;Layout.fillWidth:true;placeholderText:app.trx("ابحث بالعميل، الموديل، الحالة أو رقم الأمر","Search customer, model, status or order ID")}
    ActionButton {text:app.trx("تصدير CSV","Export CSV");onClicked:csvDialog.open()}
   }
+  RowLayout {Layout.fillWidth:true
+   TextField {id:barcodeInput;objectName:"barcodeLookup";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("امسح باركود بطاقة الجهاز أو اكتبه","Scan or enter the device-card barcode");onAccepted:page.lookupDeviceBarcode()}
+   ActionButton {objectName:"findBarcode";text:app.trx("بحث بالباركود","Find barcode");enabled:barcodeInput.text.trim()!=="";onClicked:page.lookupDeviceBarcode()}
+   ActionButton {objectName:"issueDeviceCard";text:app.trx("بطاقة الجهاز والاستلام","Device / intake card");enabled:page.selectedId>0;onClicked:page.showDeviceCard(workshopBridge.issueDeviceCard(page.selectedId))}
+  }
+  Label {objectName:"barcodeLookupError";Layout.fillWidth:true;visible:page.barcodeError!=="";text:page.barcodeError;textFormat:Text.PlainText;wrapMode:Text.WordWrap;color:app.tone("#e0787b")}
   Label {text:app.trx("المبالغ بالعملة المحلية؛ تُخزن الأجزاء النقدية كأعداد صحيحة. لا تُحتسب ضريبة تلقائيًا.","Amounts use local currency, stored as integer minor units. Tax is not calculated.");color:app.tone("#879fb7");Layout.fillWidth:true;wrapMode:Text.WordWrap}
   ListView {
    id:list;Layout.fillWidth:true;Layout.fillHeight:true;clip:true;spacing:8;model:workshopBridge.orders
@@ -91,6 +103,25 @@ const id=page.existingDeviceId>0?workshopBridge.createOrderForDevice(page.existi
   }
   onAccepted:app.notice(workshopBridge.updateOrder(page.selectedId,app.states[state.currentIndex],editTech.text,labor.value,editNotes.text),app.trx("تم تحديث الأمر","Order updated"))
  }
+ Dialog {id:deviceCardDialog;objectName:"deviceCardDialog";parent:Overlay.overlay;anchors.centerIn:parent;modal:true;width:Math.min(680,app.width-48);title:app.trx("بطاقة الجهاز وأمر الصيانة","Device and repair-order card");standardButtons:Dialog.Close
+  contentItem:ScrollView {id:cardScroll;objectName:"deviceCardScroll";implicitHeight:Math.min(520,app.height-200);contentWidth:availableWidth;clip:true
+   ColumnLayout {width:cardScroll.availableWidth;spacing:12
+    Label {objectName:"deviceCardOrder";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#edf4ff");text:"#"+(page.intakeCard.order_id||"")+" · "+(page.intakeCard.customer||"")+" · "+app.orderStatus(page.intakeCard.status||"")}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:(page.intakeCard.brand||"")+" "+(page.intakeCard.model||"")+" · "+(page.intakeCard.serial||"")}
+    Rectangle {Layout.fillWidth:true;Layout.preferredHeight:116;color:"white";Image {objectName:"deviceCardBarcode";anchors.fill:parent;anchors.margins:8;source:page.intakeCard.barcodeImage||"";fillMode:Image.PreserveAspectFit;smooth:false}}
+    Label {objectName:"deviceCardCode";Layout.fillWidth:true;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;text:page.intakeCard.barcode||"";font.family:"monospace";color:app.tone("#edf4ff")}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("الباركود يحدد أمرًا داخل قاعدة الورشة المحلية، ولا يمنح دخولًا لبوابة التتبع. راجع بيانات الجهاز بعد المسح.","The barcode identifies an order in this local database; it grants no tracking access. Review device details after scanning.")}
+    Label {Layout.fillWidth:true;text:app.trx("آخر 200 عملية لأمر الصيانة","Latest 200 repair-order events");font.bold:true;color:app.tone("#c7deef")}
+    ListView {objectName:"deviceCardHistory";Layout.fillWidth:true;Layout.preferredHeight:125;clip:true;model:page.intakeHistory;spacing:5;ScrollBar.vertical:ScrollBar {}
+     delegate:Label {required property var modelData;width:ListView.view.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:modelData.created_at+" UTC · "+modelData.action}
+    }
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("ملف PDF يتضمن اسم العميل وبيانات الجهاز والعَرَض. راجعه قبل تسليمه. الطباعة من قارئ PDF؛ اختبار الطابعة الفعلية معلق.","The PDF includes customer name, device details and symptom. Review before handing it over. Print through a PDF reader; physical printer acceptance is pending.")}
+    NeonCheckBox {id:cardPrivacy;objectName:"deviceCardPrivacy";text:app.trx("أوافق على تصدير بيانات بطاقة الاستلام","I approve intake-card data export")}
+    ActionButton {objectName:"exportDeviceCard";Layout.fillWidth:true;text:app.trx("حفظ بطاقة الاستلام PDF للطباعة","Save printable intake PDF");enabled:cardPrivacy.checked&&!!page.intakeCard.order_id;onClicked:intakePdf.open()}
+   }
+  }
+ }
+ FileDialog {id:intakePdf;fileMode:FileDialog.SaveFile;defaultSuffix:"pdf";nameFilters:["Intake receipt (*.pdf)"];onAccepted:app.notice(workshopBridge.exportIntakeCard(page.intakeCard.order_id,selectedFile.toString(),cardPrivacy.checked),app.trx("حُفظت بطاقة الاستلام؛ راجعها واطبعها من قارئ PDF","Intake card saved; review and print from your PDF reader"))}
  FileDialog {id:csvDialog;fileMode:FileDialog.SaveFile;defaultSuffix:"csv";nameFilters:["CSV (*.csv)"];onAccepted:app.notice(workshopBridge.exportOrders(selectedFile.toString()),app.trx("تم التصدير","Exported"))}
  FileDialog {id:pdfDialog;fileMode:FileDialog.SaveFile;defaultSuffix:"pdf";nameFilters:["PDF (*.pdf)"];onAccepted:app.notice(workshopBridge.exportInvoice(page.selectedId,selectedFile.toString()),app.trx("تم حفظ الفاتورة؛ يمكن طباعتها من قارئ PDF","Invoice saved; print using your PDF reader"))}
 }

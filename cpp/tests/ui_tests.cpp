@@ -3,9 +3,17 @@
 #include <QQmlContext>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QDir>
+#include <QCoreApplication>
+#include <QQuickWindow>
+#include <QImage>
 #include <QQuickStyle>
+#include <QtEndian>
 #include <memory>
 #include "ToolBridge.hpp"
+#include "FirmwareZipFixture.hpp"
+#include "FontReadability.hpp"
+#include "DeviceCompatibility.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
 #include "TrackingPortal.hpp"
@@ -28,6 +36,13 @@ class Setup:public QObject {
  std::unique_ptr<BoardBridge> board;
  std::unique_ptr<FirmwareBridge> firmware;
  std::unique_ptr<RecoveryBridge> recovery;
+public:
+ Q_INVOKABLE bool requestFrame(QObject *object) { auto *window=qobject_cast<QQuickWindow *>(object); if(!window||!window->isVisible())return false; window->update();return true; }
+ Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
+ Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
+  auto *window=qobject_cast<QQuickWindow *>(object);
+  return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+ }
 public slots:
  void applicationAvailable() {
   // QuickTest constructs Setup before QGuiApplication. Qt plug-ins, SQL and
@@ -45,6 +60,27 @@ public slots:
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  const auto avb=temp.filePath(QStringLiteral("synthetic-vbmeta.img"));
+  QByteArray avbBytes(320, '\0'); avbBytes.replace(0,4,"AVB0");
+  qToBigEndian<quint32>(1,avbBytes.data()+4); qToBigEndian<quint64>(64,avbBytes.data()+20);
+  qToBigEndian<quint64>(16,avbBytes.data()+104); qToBigEndian<quint64>(2,avbBytes.data()+256);
+  QFile avbFile(avb);if(!avbFile.open(QIODevice::WriteOnly)||avbFile.write(avbBytes)!=avbBytes.size())qFatal("Cannot create synthetic AVB UI fixture");avbFile.close();
+  engine->rootContext()->setContextProperty("syntheticAvbPath",avb);
+  engine->rootContext()->setContextProperty("avbScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-avb-export-ui-"));
+  const auto package=temp.filePath(QStringLiteral("synthetic-firmware.zip"));
+  QFile packageFile(package);if(packageFile.open(QIODevice::WriteOnly))packageFile.write(syntheticFirmwareZip());packageFile.close();
+  engine->rootContext()->setContextProperty("syntheticFirmwarePackagePath",package);
+  engine->rootContext()->setContextProperty("packageScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-package-ui-"));
+  const auto capture=temp.filePath(QStringLiteral("synthetic-ui.pcap"));
+  QFile captureFile(capture);if(captureFile.open(QIODevice::WriteOnly))captureFile.write(QByteArray::fromHex("d4c3b2a1020004000000000000000000ffff00000100000001000000000000000300000003000000616263"));captureFile.close();
+  const auto modern=mr::service::deviceCompatibility({{"transport","adb"},{"ro.build.version.sdk","37"},{"ro.build.version.codename","REL"},{"ro.build.version.preview_sdk","0"},{"ro.boot.dynamic_partitions","true"},{"ro.virtual_ab.enabled","true"},{"observation:page-size","16384"},{"ro.crypto.type","file"},{"ro.crypto.state","encrypted"}});
+  engine->rootContext()->setContextProperty("syntheticModernCompatibility",modern);
+  engine->rootContext()->setContextProperty("modernScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-modern-ui-"));
+  engine->rootContext()->setContextProperty("workshopScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-workshop-barcode-ui-"));
+  engine->rootContext()->setContextProperty("serviceScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-service-scroll-"));
+  engine->rootContext()->setContextProperty("uiEvidence",this);
+  engine->rootContext()->setContextProperty("pcapScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-pcap-ui-"));
+  engine->rootContext()->setContextProperty("syntheticCapturePath",capture);
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("toolBridge",tools.get());
   engine->rootContext()->setContextProperty("repairBridge",repair.get());
@@ -64,3 +100,4 @@ public slots:
 };
 QUICK_TEST_MAIN_WITH_SETUP(mr_ui,Setup)
 #include "ui_tests.moc"
+

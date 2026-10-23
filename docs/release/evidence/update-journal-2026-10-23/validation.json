@@ -1,0 +1,55 @@
+{
+  "sourceBase": "f9c8530b5f1f5869c599a7c034052590d9ac0b07",
+  "environment": "Linux Qt 6.4.2 Release warnings-as-errors",
+  "results": {
+    "production": {
+      "ctestSuites": 26,
+      "failures": 0,
+      "cases": {
+        "journal": {
+          "passed": 42,
+          "failed": 0,
+          "skipped": 0
+        },
+        "verifier": {
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0
+        },
+        "qml": {
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    },
+    "laboratory": {
+      "ctestSuites": 26,
+      "failures": 0,
+      "cases": {
+        "journal": {
+          "passed": 42,
+          "failed": 0,
+          "skipped": 0
+        },
+        "verifier": {
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0
+        },
+        "qml": {
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    }
+  },
+  "pythonRootTests": 27,
+  "windowsExecution": "pending CI",
+  "sanitizers": "pending hosted CI; no leak detection suppression",
+  "journalGuarantee": "Authenticated atomic checkpoint and process-restart recovery decisions; no automatic installer or power-loss/OS-anchor certification",
+  "installerExecutedByJournal": false,
+  "protectedExternalAnchorProvisioned": false,
+  "physicalAndroidAcceptance": false
+}

@@ -4,6 +4,7 @@
 #include "RecoveryFile.hpp"
 #include "ForensicRecord.hpp"
 #include "TskImage.hpp"
+#include "PcapSummary.hpp"
 #include <QBuffer>
 #include <QPdfWriter>
 #include <QTextDocument>
@@ -24,19 +25,8 @@ namespace {
 constexpr qint64 maximumFile=8*1024*1024;
 QString now(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
  }
-QString local(const QString &value){
- if(value.isEmpty()||value.contains(QChar::Null)||value.startsWith("\\\\")||value.startsWith("//"))return {};
- for(const auto c:value)if(c.unicode()<32||c.unicode()==127)return {};
- const QUrl url(value);
- const auto path=url.isLocalFile()?url.toLocalFile():(url.scheme().isEmpty()||QFileInfo(value).isAbsolute()?value:QString());
- if(path.startsWith("\\\\")||path.startsWith("//"))return {};
-#ifdef Q_OS_WIN
- if(path.mid(2).contains(QLatin1Char(':')))return {};
- static const QRegularExpression reserved(QStringLiteral("^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?$"),QRegularExpression::CaseInsensitiveOption);
- if(reserved.match(QFileInfo(path).fileName()).hasMatch())return {};
-#endif
- return path.isEmpty()?QString():QFileInfo(path).absoluteFilePath();
-}
+QString local(const QString &value){return mr::recovery::localFilePath(value);}
+
 bool text(const QString &s,int limit,bool required=true){
  for(const auto c:s)if((c.unicode()<32&&c!='\n'&&c!='\r'&&c!='\t')||c.unicode()==127)return false;
  return s.size()<=limit&&(!required||!s.trimmed().isEmpty());
@@ -448,5 +438,32 @@ bool RecoveryBridge::analyzePartitions(const QString &image,const QString &execu
   auto entries=result.document.value("evidence").toArray();entries.append(evidenceRecord(QJsonDocument(provenance).toJson(),"tsk-partitions.json","external-analysis",path,sourceHash,"0"));result.document.insert("evidence",entries);
   auto sources=result.document.value("sources").toArray();sources.append(QJsonObject{{"path",path},{"sha256",sourceHash},{"verifiedUnchanged",true},{"workingCopyVerified",true},{"method","TSK mmls partition listing on private working copy"},{"version",scan.version},{"toolSha256",QString::fromLatin1(scan.toolSha256.toHex())},{"atUtc",now()}});result.document.insert("sources",sources);
   addAudit(result.document,"tsk-partition-analysis",QStringLiteral("Original and working-copy SHA256 verified. %1; executable SHA256 %2. Separate process, not OS-sandboxed.").arg(scan.version,QString::fromLatin1(scan.toolSha256.toHex())));return result;
+ });
+}
+
+
+bool RecoveryBridge::analyzeCapture(const QString &value,bool consent){
+ if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record its operator, and authorize this local capture."));
+ const auto path=local(value);
+ if(path.isEmpty()||path==path_)return fail(QStringLiteral("Choose a separate local PCAP file."));
+ return start([path](const QJsonObject &snapshot,const auto &cancelled){
+  JobResult result{snapshot,{}};
+  const auto bytes=readBounded(path,mr::forensic::maximumCaptureBytes,result.error);
+  if(!result.error.isEmpty()||cancelled->load())return result;
+  const auto summary=mr::forensic::summarizeCapture(bytes,cancelled);
+  if(!summary.error.isEmpty()){result.error=QStringLiteral("PCAP: ")+summary.error;return result;}
+  const auto second=readBounded(path,mr::forensic::maximumCaptureBytes,result.error);
+  if(!result.error.isEmpty())return result;
+  const auto hash=QString::fromLatin1(QCryptographicHash::hash(second,QCryptographicHash::Sha256).toHex());
+  if(hash!=summary.report.value("sourceSha256").toString()){result.error=QStringLiteral("Capture source changed; no summary committed.");return result;}
+  if(cancelled->load())return result;
+  auto entries=result.document.value("evidence").toArray();
+  entries.append(evidenceRecord(QJsonDocument(summary.report).toJson(),"pcap-summary.json","native-analysis",path,hash,"0"));
+  result.document.insert("evidence",entries);
+  auto sources=result.document.value("sources").toArray();
+  sources.append(QJsonObject{{"path",path},{"sha256",hash},{"verifiedUnchanged",true},{"method","native bounded offline classic-PCAP statistics; immutable memory working copy"},{"atUtc",now()}});
+  result.document.insert("sources",sources);
+  addAudit(result.document,"pcap-summary-analysis","Selected-file consent; source SHA256 checked twice; aggregate header declarations only; no packet payload, addresses or TLS decryption.");
+  return result;
  });
 }

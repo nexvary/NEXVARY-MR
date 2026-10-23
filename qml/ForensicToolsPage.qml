@@ -4,13 +4,36 @@ import QtQuick.Layouts
 import QtQuick.Dialogs
 Item {
  id:page
+ objectName:"forensicToolsPage"
  property var app
  property string imagePath:""
+ property string capturePath:""
+ signal evidenceRequested(string evidenceId)
+ readonly property string lastCaptureId: {
+  const entries=recoveryBridge.evidence
+  for(let i=entries.length-1;i>=0;i--)if(entries[i].kind==="native-analysis"&&entries[i].name==="pcap-summary.json")return entries[i].id
+  return ""
+ }
+ onCapturePathChanged:pcapConsent.checked=false
  readonly property string mmlsPath:toolBridge.forensicTools.length?toolBridge.forensicTools[0].configuredPath:""
  ScrollView {
-  id:scroll;anchors.fill:parent;contentWidth:availableWidth;clip:true
+  id:scroll;objectName:"forensicToolsScroll";anchors.fill:parent;contentWidth:availableWidth;clip:true
   ColumnLayout {
    width:scroll.availableWidth;spacing:12
+   Panel {
+    title:app.trx("تحليل PCAP محلي — إحصاءات فقط","OFFLINE PCAP — STATISTICS ONLY");Layout.fillWidth:true
+    Label {objectName:"pcapScope";text:app.trx("ملف PCAP كلاسيكي حتى 8 MiB. إحصاءات الحزم والتوقيت وحقول IP على Ethernet فقط؛ لا تُحفظ عناوين أو محتويات الحزم. PCAPNG والتقاط الشبكة وفك TLS غير مدعومة.","Classic PCAP up to 8 MiB. Packet/time statistics and Ethernet IP header declarations only; packet addresses and payloads are omitted. No PCAPNG, live capture or TLS decryption.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3")}
+    Label {text:page.capturePath||app.trx("افتح قضية وسجّل المشغّل ثم اختر الملف المصرح به.","Open a case, record its operator, then choose the authorized file.");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#8ac7f5")}
+    ActionButton {objectName:"choosePcap";text:app.trx("اختيار PCAP","Choose PCAP");enabled:!recoveryBridge.busy;onClicked:capture.open()}
+    NeonCheckBox {id:pcapConsent;objectName:"pcapConsent";text:app.trx("أصرح بتحليل هذا الملف محليًا وإضافة إحصاءاته للقضية","Authorize local analysis of this file and case summary storage")}
+    RowLayout {
+     ActionButton {objectName:"runPcapAnalysis";text:app.trx("تحليل الملف","Analyze capture");primary:true;enabled:recoveryBridge.active&&recoveryBridge.caseOperator!==""&&!recoveryBridge.busy&&page.capturePath!==""&&pcapConsent.checked;onClicked:if(!recoveryBridge.analyzeCapture(page.capturePath,pcapConsent.checked))app.notice(false,"",recoveryBridge.error)}
+     ActionButton {text:app.trx("إلغاء","Cancel");enabled:recoveryBridge.busy;onClicked:recoveryBridge.cancel()}
+     ActionButton {objectName:"showPcapResult";text:app.trx("عرض النتيجة","View summary");enabled:page.lastCaptureId!==""&&!recoveryBridge.busy;onClicked:page.evidenceRequested(page.lastCaptureId)}
+    }
+    Label {text:app.trx("تُضاف النتيجة إلى مستعرض الأدلة بنفس البصمة وسجل التدقيق وضوابط التصدير. التوقيت والأطوال تصريحات غير موثقة من الملف.","Results use the existing evidence browser, hashes, audit and export controls. Timestamps and lengths are untrusted file declarations.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774")}
+    Label {text:recoveryBridge.status;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#9bbbd3")}
+   }
    Panel {
     title:app.trx("تحليل الأقسام — The Sleuth Kit","PARTITION ANALYSIS — THE SLEUTH KIT");Layout.fillWidth:true
     Label {text:app.trx("يحلل mmls جدول الأقسام على نسخة مؤقتة تُتحقق بصمتها. لا يُكتب على المصدر. التشغيل عملية مستقلة بصلاحيات حسابك؛ ليس صندوق عزل أمنيًا. اختر نسخة موثوقة من الأداة.","mmls lists partitions on a hash-verified temporary copy. The source is not written. It runs separately with your account permissions, without an OS sandbox. Select a trusted installed tool.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3")}
@@ -36,6 +59,7 @@ Item {
    }
   }
  }
+ FileDialog {id:capture;nameFilters:["Classic PCAP (*.pcap *.cap)","All files (*)"];onAccepted:page.capturePath=selectedFile.toString()}
  FileDialog {id:tool;nameFilters:["Executable (*.exe)","All files (*)"];onAccepted:{consent.checked=false;const ok=toolBridge.configureTool("mmls",selectedFile.toString());app.notice(ok,toolBridge.status,toolBridge.status)}}
  FileDialog {id:input;nameFilters:["Raw images (*.dd *.img *.raw *.bin)"];onAccepted:{page.imagePath=selectedFile.toString();consent.checked=false}}
 }

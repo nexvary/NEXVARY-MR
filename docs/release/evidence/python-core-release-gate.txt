@@ -1,0 +1,14 @@
+test_case_persistence (test_core.CoreTests.test_case_persistence) ... ok
+test_catalog_and_rules (test_core.CoreTests.test_catalog_and_rules) ... ok
+test_readiness (test_core.CoreTests.test_readiness) ... ok
+test_required_fields (test_core.CoreTests.test_required_fields) ... ok
+test_complete_fixture_only (test_release_gate.ReleaseGateTests.test_complete_fixture_only) ... ok
+test_malformed_evidence (test_release_gate.ReleaseGateTests.test_malformed_evidence) ... ok
+test_missing_gate_cannot_be_substituted_by_ci (test_release_gate.ReleaseGateTests.test_missing_gate_cannot_be_substituted_by_ci) ... ok
+test_string_booleans_missing_reference_and_stale_evidence (test_release_gate.ReleaseGateTests.test_string_booleans_missing_reference_and_stale_evidence) ... ok
+test_wrong_commit_profile_and_unresolved_risk (test_release_gate.ReleaseGateTests.test_wrong_commit_profile_and_unresolved_risk) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+OK

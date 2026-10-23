@@ -1,0 +1,18 @@
+********* Start testing of WorkshopTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : WorkshopTests::initTestCase()
+PASS   : WorkshopTests::lifecycle()
+PASS   : WorkshopTests::inputAndExport()
+PASS   : WorkshopTests::restockKeepsHistoricalPrice()
+PASS   : WorkshopTests::optionalNullStrings()
+PASS   : WorkshopTests::diagnosticAudit()
+PASS   : WorkshopTests::diagnosisPersistenceAndReport()
+PASS   : WorkshopTests::diagnosisEntryLimit()
+PASS   : WorkshopTests::migratesAndRestoresLegacyDiagnosisSchema()
+PASS   : WorkshopTests::newerSchema()
+PASS   : WorkshopTests::rejectsExecutableBackupSchema()
+PASS   : WorkshopTests::rejectsRelaxedBackupSchema()
+PASS   : WorkshopTests::invoiceIntegerBoundary()
+PASS   : WorkshopTests::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 2483ms
+********* Finished testing of WorkshopTests *********

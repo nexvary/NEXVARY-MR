@@ -1,0 +1,19 @@
+{
+  "fixtureOnly": true,
+  "generatedBy": "Python cryptography Ed25519 (independent implementation)",
+  "privateKeyPersisted": false,
+  "publicKeyHex": "01df2eeb049c67207a593c20232fa59cbfbdd043da760f0ec9315bc8158bb4f3",
+  "packageBase64": "SU5ERVBFTkRFTlQgU1lOVEhFVElDIFVQREFURSBSRUZFUkVOQ0UK",
+  "vectors": [
+    {
+      "profile": "production-read-only",
+      "manifestUtf8": "{\"channel\":\"stable\",\"expiresUtc\":\"2026-10-24T12:00:00Z\",\"issuedUtc\":\"2026-10-23T11:00:00Z\",\"keyId\":\"synthetic-reference\",\"packageBytes\":\"39\",\"packageKind\":\"portable-zip\",\"platform\":\"windows-x64\",\"product\":\"NEXVARY-MR\",\"profile\":\"production-read-only\",\"schema\":\"nexvary-update/v1\",\"sequence\":\"6\",\"sha256\":\"8b174dc6330035d582ffc37cbc2a3edaf69461b13c993cb03dc5c1e155a066db\",\"version\":\"0.4.1\"}",
+      "signatureHex": "313f6df2ecd6fda87817e8778c784bd77be551c66211332ac47291772f5f08e61110c17f0e8b9584d20452e209df05f7ecf732c514b54667044e5916c2286c04"
+    },
+    {
+      "profile": "laboratory-experimental",
+      "manifestUtf8": "{\"channel\":\"stable\",\"expiresUtc\":\"2026-10-24T12:00:00Z\",\"issuedUtc\":\"2026-10-23T11:00:00Z\",\"keyId\":\"synthetic-reference\",\"packageBytes\":\"39\",\"packageKind\":\"portable-zip\",\"platform\":\"windows-x64\",\"product\":\"NEXVARY-MR\",\"profile\":\"laboratory-experimental\",\"schema\":\"nexvary-update/v1\",\"sequence\":\"6\",\"sha256\":\"8b174dc6330035d582ffc37cbc2a3edaf69461b13c993cb03dc5c1e155a066db\",\"version\":\"0.4.1\"}",
+      "signatureHex": "fd9e1e54410739c95092f993c2d1a893cf4f1ab1c049ddcd75355b57146184cacf3fffb14a571759c1b044849ad197bf6304defd134b980eb1a65586c1657203"
+    }
+  ]
+}

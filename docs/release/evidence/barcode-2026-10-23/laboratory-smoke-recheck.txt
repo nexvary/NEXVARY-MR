@@ -1,0 +1,35 @@
+Internal ctest changing into directory: /tmp/nexvary-pcap-laboratory
+UpdateCTestConfiguration  from :/tmp/nexvary-pcap-laboratory/DartConfiguration.tcl
+Parse Config file:/tmp/nexvary-pcap-laboratory/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/tmp/nexvary-pcap-laboratory/DartConfiguration.tcl
+Parse Config file:/tmp/nexvary-pcap-laboratory/DartConfiguration.tcl
+Test project /tmp/nexvary-pcap-laboratory
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 24
+    Start 24: mr_gui_smoke
+
+24: Test command: /tmp/nexvary-pcap-laboratory/nexvary_mr_lab "--smoke-test" "--data-dir" "/tmp/nexvary-pcap-laboratory/smoke-data" "--screenshot" "/tmp/nexvary-pcap-laboratory/smoke.png"
+24: Working Directory: /tmp/nexvary-pcap-laboratory
+24: Environment variables: 
+24:  QT_QPA_PLATFORM=offscreen
+24:  QT_QUICK_BACKEND=software
+24: Test timeout computed to be: 30
+24: QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+24: Could not create AF_NETLINK socket (Operation not permitted)
+24: Could not create AF_NETLINK socket (Operation not permitted)
+24: Could not create AF_NETLINK socket (Operation not permitted)
+24: Could not create AF_NETLINK socket (Operation not permitted)
+24: Could not create AF_NETLINK socket (Operation not permitted)
+1/1 Test #24: mr_gui_smoke .....................   Passed   17.41 sec
+
+The following tests passed:
+	mr_gui_smoke
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  17.41 sec
