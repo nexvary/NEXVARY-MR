@@ -21,12 +21,14 @@ $savedPath = $env:PATH
 $savedQtPlugin = $env:QT_PLUGIN_PATH
 $savedQml = $env:QML_IMPORT_PATH
 $savedQml2 = $env:QML2_IMPORT_PATH
+$savedFontDirectory = $env:QT_QPA_FONTDIR
 try {
   # Exclude Qt SDK and developer tools: load libraries only from the bundle/OS.
   $env:PATH = "$isolated;$env:SystemRoot/System32;$env:SystemRoot"
   $env:QT_PLUGIN_PATH = ''
   $env:QML_IMPORT_PATH = ''
   $env:QML2_IMPORT_PATH = ''
+  $env:QT_QPA_FONTDIR = ''
   $env:QT_QUICK_BACKEND = 'software'
   $arguments = "--smoke-test --data-dir `"$data`" --screenshot `"$picture`""
   $process = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $isolated -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
@@ -40,4 +42,5 @@ try {
   $env:QT_PLUGIN_PATH = $savedQtPlugin
   $env:QML_IMPORT_PATH = $savedQml
   $env:QML2_IMPORT_PATH = $savedQml2
+  $env:QT_QPA_FONTDIR = $savedFontDirectory
 }

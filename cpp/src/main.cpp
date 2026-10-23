@@ -20,6 +20,7 @@
 #include <memory>
 #include <cstdio>
 #include "ServiceOperationPolicy.hpp"
+#include "FontReadability.hpp"
 #include "ToolBridge.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
@@ -82,6 +83,7 @@ int main(int argc,char *argv[]) {
  if(smoke) {
   // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
   if(!QSslSocket::supportsSsl())return 12;
+  if(!mr::ui::textHasGlyphs(QString::fromUtf8("NEXVARYالعربية"),QFont(QStringLiteral("Segoe UI"))))return 14;
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return 4;
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());
  if(!window)return 5;

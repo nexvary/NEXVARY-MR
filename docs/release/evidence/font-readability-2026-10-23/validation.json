@@ -1,0 +1,28 @@
+{
+  "sourceParent": "1b7a30789b3092bcdf1e375ffdbc5e05e548df93",
+  "observedWindowsImage": {
+    "run": 39928055692,
+    "head": "1795b8ecd9a338d79a47514a6c5bfcffc0d6392f",
+    "artifact": 12491260189,
+    "artifactSha256": "c3a20b94d60d09f0a38e73298705f1ed38ba091326ea167745b488c3d5582f75",
+    "image": "build/smoke-services-ar-dark.png",
+    "result": "Actual Windows offscreen capture shows missing-glyph boxes for Latin and Arabic; confirmed visually."
+  },
+  "change": [
+    "Use six already-installed Windows OS fonts in an isolated CI-only QT_QPA_FONTDIR, never uploaded/bundled",
+    "Fail QML and deployed GUI smoke if Qt shaping/fallback yields glyph zero for English/Arabic",
+    "Collect build/**/smoke*.png, including Release executable-directory captures",
+    "Clear CI font override in isolated portable/installed smoke tests",
+    "Persist package transcript/error artifact because GitHub logs returned Internal error/unavailable"
+  ],
+  "local": {
+    "production": "2/2 CTest UI+smoke, 29.13 seconds",
+    "laboratory": "2/2 CTest UI+smoke, 28.96 seconds",
+    "qml": "32 passed per profile including positive and missing-character glyph checks"
+  },
+  "windowsPackaging": {
+    "run": 39930668026,
+    "head": "1b7a30789b3092bcdf1e375ffdbc5e05e548df93",
+    "result": "Windows production CTest and USB inventory passed, but portable assembly failed; exact package error unavailable from job-log connector and GitHub page. New transcript must identify cause; no installer/portable success claimed."
+  }
+}

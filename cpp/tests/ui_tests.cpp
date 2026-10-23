@@ -11,6 +11,7 @@
 #include <memory>
 #include "ToolBridge.hpp"
 #include "FirmwareZipFixture.hpp"
+#include "FontReadability.hpp"
 #include "DeviceCompatibility.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
@@ -35,6 +36,7 @@ class Setup:public QObject {
  std::unique_ptr<FirmwareBridge> firmware;
  std::unique_ptr<RecoveryBridge> recovery;
 public:
+ Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
   auto *window=qobject_cast<QQuickWindow *>(object);
   return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);

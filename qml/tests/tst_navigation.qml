@@ -21,6 +21,10 @@ TestCase {
   }
   findChild(app,"firmwareTabs").currentIndex=0
  }
+ function test_fontGlyphCoverage(){
+  verify(uiEvidence.hasGlyphCoverage("NEXVARYالعربية"),"Rendered English and Arabic must have real font glyphs")
+  compare(uiEvidence.hasGlyphCoverage("\uDBFF\uDFFF"),false)
+ }
  function test_firmwarePackageStructure(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=2
   const path=findChild(app,"firmwarePackagePath");path.text=syntheticFirmwarePackagePath
