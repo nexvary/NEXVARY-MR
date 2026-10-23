@@ -42,7 +42,7 @@ class SodiumPreparationTests(unittest.TestCase):
             target = root / "output"
             dependency.extract_windows(archive, target)
             self.assertEqual((target / "bin/libsodium.dll").read_bytes(), b"synthetic release")
-            self.assertEqual({str(p.relative_to(target)) for p in target.rglob("*") if p.is_file()},
+            self.assertEqual({p.relative_to(target).as_posix() for p in target.rglob("*") if p.is_file()},
                              {"bin/libsodium.dll", "lib/libsodium.lib", "include/sodium.h"})
 
     def test_zip_traversal_and_normalized_duplicates_rejected_before_writing(self):
@@ -51,7 +51,13 @@ class SodiumPreparationTests(unittest.TestCase):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
                 archive = root / "fixture.zip"
-                self.archive(archive, [(name, b"synthetic")])
+                # ZipInfo normalizes os.sep on Windows while writing. Preserve
+                # the actual hostile name in BOTH local/central headers so the
+                # extractor, rather than the fixture writer, rejects it.
+                stored_name = name.replace("\\", "/")
+                self.archive(archive, [(stored_name, b"synthetic")])
+                if stored_name != name:
+                    archive.write_bytes(archive.read_bytes().replace(stored_name.encode("ascii"), name.encode("ascii")))
                 target = root / "output"
                 with self.assertRaises(ValueError):
                     dependency.extract_windows(archive, target)
