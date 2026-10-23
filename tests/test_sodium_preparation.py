@@ -47,14 +47,15 @@ class SodiumPreparationTests(unittest.TestCase):
 
     def test_zip_traversal_and_normalized_duplicates_rejected_before_writing(self):
         for name in ("../escape", "/absolute", "C:/escape", "libsodium/include/../escape",
-                     "libsodium\\include\\escape", "libsodium/include//sodium.h"):
+                     "libsodium\\include\\escape", "libsodium/include//sodium.h",
+                     "libsodium/include/esc\x00ape", "libsodium/include/esc\tape"):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
                 archive = root / "fixture.zip"
                 # ZipInfo normalizes os.sep on Windows while writing. Preserve
                 # the actual hostile name in BOTH local/central headers so the
                 # extractor, rather than the fixture writer, rejects it.
-                stored_name = name.replace("\\", "/")
+                stored_name = name.replace("\\", "/").replace("\x00", "X")
                 self.archive(archive, [(stored_name, b"synthetic")])
                 if stored_name != name:
                     archive.write_bytes(archive.read_bytes().replace(stored_name.encode("ascii"), name.encode("ascii")))
@@ -62,6 +63,21 @@ class SodiumPreparationTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     dependency.extract_windows(archive, target)
                 self.assertFalse(target.exists())
+
+    def test_parser_normalization_never_hides_unsafe_original_name(self):
+        # Exercise Windows reader normalization on every host, in addition to
+        # the real hostile ZIPs above. No archive bytes may be read or written.
+        for original in ("libsodium\\include\\escape", "libsodium/include/sodium.h\x00ignored"):
+            with self.subTest(original=original), tempfile.TemporaryDirectory() as temporary:
+                entry = zipfile.ZipInfo("libsodium/include/sodium.h")
+                entry.orig_filename = original
+                with mock.patch.object(dependency.zipfile, "ZipFile") as archive:
+                    bundle = archive.return_value.__enter__.return_value
+                    bundle.infolist.return_value = [entry]
+                    with self.assertRaises(ValueError):
+                        dependency.extract_windows(Path("synthetic.zip"), Path(temporary) / "output")
+                    bundle.read.assert_not_called()
+                self.assertFalse((Path(temporary) / "output").exists())
 
     def test_zip_symlink_header_refused(self):
         with tempfile.TemporaryDirectory() as temporary:

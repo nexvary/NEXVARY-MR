@@ -41,7 +41,8 @@ def checked_archive(path, expected):
 
 def relative_name(name):
     path = PurePosixPath(name)
-    if not name or "\\" in name or path.is_absolute() or ".." in path.parts or ":" in name:
+    if (not name or any(ord(character) < 32 or ord(character) == 127 for character in name)
+            or "\\" in name or path.is_absolute() or ".." in path.parts or ":" in name):
         raise ValueError("unsafe dependency archive path")
     return path
 
@@ -76,7 +77,11 @@ def extract_windows(archive, destination):
     selected = {}
     with zipfile.ZipFile(archive) as bundle:
         for entry in bundle.infolist():
-            path = relative_name(entry.filename)
+            # ZipInfo normalizes Windows separators and truncates NULs during
+            # reading too. Validate the original central-directory name first.
+            path = relative_name(entry.orig_filename)
+            if entry.orig_filename != entry.filename:
+                raise ValueError("normalized dependency archive member")
             if entry.is_dir():
                 continue
             if entry.filename.startswith("libsodium/include/"):
