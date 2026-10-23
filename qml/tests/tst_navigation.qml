@@ -23,7 +23,7 @@ TestCase {
   findChild(app,"firmwareTabs").currentIndex=0
  }
  function test_fontGlyphCoverage(){
-  verify(uiEvidence.hasGlyphCoverage("NEXVARYالعربية✓"),"Rendered English and Arabic must have real font glyphs")
+  verify(uiEvidence.hasGlyphCoverage("NEXVARYالعربية"),"Rendered English and Arabic must have real font glyphs")
   compare(uiEvidence.hasGlyphCoverage("\uDBFF\uDFFF"),false)
  }
  function test_firmwarePackageStructure(){
@@ -33,6 +33,7 @@ TestCase {
   compare(firmwareBridge.packageReport.status,"structure-only");compare(firmwareBridge.compatible,false)
   const output=findChild(app,"firmwarePackageResult");compare(output.textFormat,TextEdit.PlainText);verify(output.text.indexOf("snapshotSha256")>=0)
   const privacy=findChild(app,"firmwarePackagePrivacy");privacy.checked=true;compare(findChild(app,"exportFirmwarePackage").enabled,true)
+  const checkImage=findChild(privacy,"neonCheckmark");verify(checkImage!==null);tryCompare(checkImage,"status",Image.Ready);compare(checkImage.visible,true);verify(checkImage.source.toString().indexOf("check_mark.svg")>=0)
   for(const arabic of [true,false])for(const dark of [true,false]){app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(findChild(app,"packageScope").height>=findChild(app,"packageScope").implicitHeight);verify(findChild(app,"firmwarePackageScroll").height>=100);if(dark)verify(uiEvidence.captureWindow(app,packageScreenshotBase+(arabic?"ar":"en")+".png"))}
   path.text="";compare(firmwareBridge.packageJson,"");compare(privacy.checked,false);compare(findChild(app,"exportFirmwarePackage").enabled,false)
   findChild(app,"firmwareTabs").currentIndex=0;mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)

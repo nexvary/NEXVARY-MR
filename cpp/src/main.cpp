@@ -83,12 +83,12 @@ int main(int argc,char *argv[]) {
  if(smoke) {
   // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
   if(!QSslSocket::supportsSsl())return 12;
-  if(!mr::ui::textHasGlyphs(QString::fromUtf8("NEXVARYالعربية✓"),QFont(QStringLiteral("Segoe UI"))))return 14;
+  if(!mr::ui::textHasGlyphs(QString::fromUtf8("NEXVARYالعربية"),QFont(QStringLiteral("Segoe UI"))))return 14;
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return 4;
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());
  if(!window)return 5;
   if(QImage(QStringLiteral(":/assets/codec-check.jpg")).size()!=QSize(8,8)) return 8;
-  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()||QImage(QStringLiteral(":/assets/icons/home.svg")).isNull()) return 8;
+  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()||QImage(QStringLiteral(":/assets/icons/home.svg")).isNull()||QImage(QStringLiteral(":/assets/icons/check_mark.svg")).isNull()) return 8;
   if(!board.importBoard(QStringLiteral(":/samples/training-board.json"),true)) return 9;
   // Original synthetic raw-image fixture exercises deployed recovery decoding,
   // source verification and Windows DPAPI persistence without a phone.

@@ -63,5 +63,12 @@
       "blob": "f89800af7c657a5531252cd99b4dbceb3422cd4d",
       "sha256": "f47bdc6aa2d5065b1e2851bf489ebe724f9f9b67ffe46f5f2726f81f004258c0"
     }
+  ],
+  "originalFiles": [
+    {
+      "file": "check_mark.svg",
+      "provenance": "Original NEXVARY control artwork, independent of the Fluent files above",
+      "sha256": "5ab8ca8617f73f7dda020a8e68c09382205e40b800189ee77f0d3c73dbadfe2b"
+    }
   ]
 }
