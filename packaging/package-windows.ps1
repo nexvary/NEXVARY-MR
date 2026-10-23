@@ -12,8 +12,8 @@ if (-not $qtRoot) { throw 'QT_ROOT_DIR must identify the Qt 6.8.3 MSVC installat
 $exe = Join-Path $BuildDirectory "$Configuration/nexvary_mr.exe"
 if (-not (Test-Path $exe)) { $exe = Join-Path $BuildDirectory 'nexvary_mr.exe' }
 if (-not (Test-Path $exe)) { throw 'Built nexvary_mr.exe was not found' }
-$compiledProfile = & $exe --build-profile
-if ($LASTEXITCODE -ne 0 -or "$compiledProfile".Trim() -ne 'production-read-only') { throw 'Production packaging refuses a Laboratory or unidentified binary' }
+. (Join-Path $PSScriptRoot 'build-profile.ps1')
+$compiledProfile = Assert-NexvaryProductionBinary -FilePath $exe
 $bundle = Join-Path $OutputDirectory 'NEXVARY-MR'
 New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item $exe (Join-Path $bundle 'NEXVARY-MR.exe')

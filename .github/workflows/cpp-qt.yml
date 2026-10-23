@@ -145,18 +145,12 @@ jobs:
       - name: Build GUI
         id: native_build
         run: cmake --build build --config Release --parallel
-      - name: Record compiled profile invocation for deployment diagnostics
+      - name: Verify bounded GUI profile probe and production packaging guard
         if: ${{ steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force dist/evidence | Out-Null
           $binaryName = if ('${{ matrix.profile }}' -eq 'laboratory') { 'nexvary_mr_lab.exe' } else { 'nexvary_mr.exe' }
-          $binaryPath = (Resolve-Path (Join-Path 'build/Release' $binaryName)).Path
-          $profileOutput = & $binaryPath --build-profile
-          $profileExit = Get-Variable LASTEXITCODE -ValueOnly -ErrorAction SilentlyContinue
-          [ordered]@{ binary=$binaryName; expected='${{ matrix.profile }}'; output=@($profileOutput); exitCode=$profileExit } |
-            ConvertTo-Json -Depth 4 | Set-Content dist/evidence/compiled-profile-invocation.json
+          ./packaging/test-build-profile.ps1 -FixturePath build/Release/mr_build_profile_fixture.exe -ApplicationPath (Join-Path 'build/Release' $binaryName) -ExpectedProfile '${{ matrix.profile }}'
       - name: Prepare verified standalone ClamAV for synthetic Windows integration
         if: ${{ steps.native_build.outcome == 'success' }}
         shell: pwsh
