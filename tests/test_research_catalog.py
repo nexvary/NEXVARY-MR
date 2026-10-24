@@ -11,7 +11,7 @@ class ResearchCatalogTests(unittest.TestCase):
         self.assertEqual(validate(), [])
 
     def test_hostile_and_overclaiming_data(self):
-        original = json.loads((ROOT / 'research/program/catalog.json').read_text())
+        original = json.loads((ROOT / 'research/program/catalog.json').read_text(encoding='utf-8'))
         changes = [
             lambda d: d['atlas'][0].update(status='Lab Verified'),
             lambda d: d['tools'][0].update(sourceIds=['absent']),
@@ -32,7 +32,7 @@ class ResearchCatalogTests(unittest.TestCase):
             for change in changes:
                 data = copy.deepcopy(original)
                 change(data)
-                path.write_text(json.dumps(data))
+                path.write_text(json.dumps(data), encoding='utf-8')
                 with self.subTest(change=change):
                     self.assertTrue(validate(temp))
 
