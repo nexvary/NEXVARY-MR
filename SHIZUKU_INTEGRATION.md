@@ -42,7 +42,8 @@ Both managers still require separate physical interoperability acceptance.
 3. Keep the provider protected with `INTERACT_ACROSS_USERS_FULL`; its exported
    flag is required by upstream Binder delivery. The diagnostic Activity is not
    exported and the UserService is not registered as a public Android Service.
-4. Preserve UserService classes/constructors/AIDL when enabling R8. Current MR
+4. The AAR ships consumer rules preserving its UserService for R8. Preserve the
+   original host metadata helper as well when enabling minification. Current MR
    alpha has minification disabled. Require manager API v13+ for the Context
    constructor/caller-UID check; older service binding may fail closed.
 5. Never run a collection just because permission was granted. Per-action

@@ -1,7 +1,7 @@
 # NPSE checkpoint — 2026-10-24
 
 Branch: `feature/npse-shared-services`; review PR #14.
-Last published implementation commit: `353f7671ff0ccee490ae39c4c64d446312486f93`.
+Last published implementation commit: `7386d23da7424470b3f9d2143d0b87e2813fb13c`.
 The commit containing this checkpoint is the documentation/source continuation;
 use `git log -1` and current Actions for its final exact SHA/results.
 Base: `feature/usb-doctor-intelligence` at 9a4392a37b85186032ded8cdbe254b2064d8ed9b.
@@ -18,7 +18,12 @@ Read `ARCHITECTURE.md`, `CAPABILITY_MATRIX.md`, `SHIZUKU_INTEGRATION.md`,
 Initial API 34/35 emulator failures were a JSON display-string assertion; the test
 now parses the schema. Seven historical Gitleaks matches were public header
 hashes; exact historical exceptions and local 0-findings reruns are documented.
-Final emulator/current-source CI still needs recorded results.
+Local packaged-source build/lint, 12 JUnit tests, 47 core assertions and Maven
+publication passed at 7386d23. Final Android job 120927615683 remained in_progress with empty steps at handoff;
+API readbacks intermittently timed out/returned 502. Local API-35 software emulator
+boot timed out and was stopped; instrumentation/screenshots are pending. See the
+runtime blocker in TEST_RESULTS.md. Source, APK and reusable libraries are alpha
+artifacts, not a passed device-release gate.
 No OPPO/ColorOS hardware is connected, so device/Shizuku/reboot acceptance is pending.
 
 Next: run the current source checks, inspect exact CI errors, preserve actual
