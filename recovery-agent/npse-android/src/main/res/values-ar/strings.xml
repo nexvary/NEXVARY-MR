@@ -33,4 +33,5 @@
     <string name="npse_no_report">اجمع التشخيص العادي لمعاينة التقرير.</string>
     <string name="npse_local_only">اختر مزود ملفات محليًا مدعومًا.</string>
     <string name="npse_exported">تم حفظ تقرير JSON محليًا</string>
+    <string name="npse_timed_out">انتهت مهلة العملية؛ الوضع العادي ما زال متاحًا</string>
 </resources>

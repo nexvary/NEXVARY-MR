@@ -52,7 +52,7 @@ class ControlCenterActivity : Activity() {
     private val poll = object : Runnable {
         override fun run() { refresh(); handler.postDelayed(this, 1000) }
     }
-    private val timeout = Runnable { invalidate(); event("timeout"); refresh() }
+    private val timeout = Runnable { invalidate(); event("timeout"); message(R.string.npse_timed_out); refresh() }
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             if (!binding || !optedIn || ShizukuAccess.state() != AccessPolicy.State.SHELL || binder == null) { invalidate(); refresh(); return }
@@ -65,6 +65,7 @@ class ControlCenterActivity : Activity() {
                     if (generation == epoch && optedIn && ShizukuAccess.state() == AccessPolicy.State.SHELL) {
                         privileged = result
                         event(if (result == null) "diagnostics-failed" else "diagnostics-completed")
+                        if (result == null) message(R.string.npse_failed)
                         release(); refresh()
                     }
                 }
@@ -166,6 +167,8 @@ class ControlCenterActivity : Activity() {
     }
     private fun collectShell() {
         if (!optedIn || binding || ShizukuAccess.state() != AccessPolicy.State.SHELL) { refresh(); return }
+        standard = runCatching { standardProvider.diagnostics().put("application", standardProvider.ownAppInfo()) }.getOrNull()
+        if (standard == null) { message(R.string.npse_failed); return }
         privileged = null; epoch++
         args = Shizuku.UserServiceArgs(ComponentName(this, DiagnosticsService::class.java))
             .tag("npse-diagnostics-v1").version(1).daemon(false).debuggable(false).processNameSuffix("npse")
@@ -174,7 +177,7 @@ class ControlCenterActivity : Activity() {
             Shizuku.bindUserService(requireNotNull(args), connection)
             handler.postDelayed(timeout, 12_000)
             event("fixed-diagnostics-consented")
-        } catch (_: RuntimeException) { invalidate(); event("bind-failed") }
+        } catch (_: RuntimeException) { invalidate(); event("bind-failed"); message(R.string.npse_failed) }
         refresh()
     }
     private fun release() {

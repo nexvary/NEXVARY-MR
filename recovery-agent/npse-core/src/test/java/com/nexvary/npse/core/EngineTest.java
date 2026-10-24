@@ -12,12 +12,13 @@ public final class EngineTest {
         final boolean never;
         final int exit;
         volatile boolean destroyed;
+        final CountDownLatch waiting = new CountDownLatch(1);
         FakeProcess(String data, boolean never, int exit) { this.input = new ByteArrayInputStream(data.getBytes(java.nio.charset.StandardCharsets.UTF_8)); this.never = never; this.exit = exit; }
         public OutputStream getOutputStream() { return new ByteArrayOutputStream(); }
         public InputStream getInputStream() { return input; }
         public InputStream getErrorStream() { return new ByteArrayInputStream(new byte[0]); }
         public int waitFor() { return exit; }
-        public boolean waitFor(long time, TimeUnit unit) throws InterruptedException { if (never) { Thread.sleep(Math.min(5, unit.toMillis(time))); return false; } return true; }
+        public boolean waitFor(long time, TimeUnit unit) throws InterruptedException { waiting.countDown(); if (never) { Thread.sleep(Math.min(5, unit.toMillis(time))); return false; } return true; }
         public int exitValue() { return exit; }
         public void destroy() { destroyed = true; }
         public Process destroyForcibly() { destroyed = true; return this; }
@@ -59,8 +60,23 @@ public final class EngineTest {
         FakeProcess active = new FakeProcess("",true,0);
         ExecutorService thread = Executors.newSingleThreadExecutor();
         Future<BoundedRunner.Result> future = thread.submit(() -> new BoundedRunner(argv -> active).run(Probe.IDENTITY,during));
+        verify(active.waiting.await(1, TimeUnit.SECONDS),"child actually launched before cancel");
         during.cancel(); result = future.get(2,TimeUnit.SECONDS); thread.shutdownNow();
-        verify(result.status == BoundedRunner.Status.CANCELED,"active cancellation");
+        verify(result.status == BoundedRunner.Status.CANCELED && active.destroyed,"active cancellation destroys child");
+        BoundedRunner.Cancellation launchRace = new BoundedRunner.Cancellation();
+        FakeProcess late = new FakeProcess("",true,0);
+        CountDownLatch launching = new CountDownLatch(1), releaseLaunch = new CountDownLatch(1);
+        ExecutorService raceThread = Executors.newSingleThreadExecutor();
+        Future<BoundedRunner.Result> race = raceThread.submit(() -> new BoundedRunner(argv -> {
+            launching.countDown();
+            try { if (!releaseLaunch.await(1,TimeUnit.SECONDS)) throw new IOException("launch barrier timeout"); }
+            catch (InterruptedException e) { Thread.currentThread().interrupt(); throw new IOException("interrupted"); }
+            return late;
+        }).run(Probe.IDENTITY,launchRace));
+        verify(launching.await(1,TimeUnit.SECONDS),"launch race entered");
+        launchRace.cancel(); releaseLaunch.countDown();
+        result = race.get(2,TimeUnit.SECONDS); raceThread.shutdownNow();
+        verify(result.status == BoundedRunner.Status.CANCELED && late.destroyed,"startup race destroys late child");
         result = new BoundedRunner(argv -> { throw new SecurityException("secret"); }).run(Probe.IDENTITY,new BoundedRunner.Cancellation());
         verify(result.status == BoundedRunner.Status.DENIED && result.value.isEmpty(),"denial sanitized");
         result = new BoundedRunner(argv -> { throw new IOException("secret"); }).run(Probe.IDENTITY,new BoundedRunner.Cancellation());

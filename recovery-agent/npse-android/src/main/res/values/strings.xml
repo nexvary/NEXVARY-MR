@@ -33,4 +33,5 @@
     <string name="npse_no_report">Collect standard diagnostics to preview a report.</string>
     <string name="npse_local_only">Select a supported local document provider.</string>
     <string name="npse_exported">Local JSON report saved</string>
+    <string name="npse_timed_out">Operation timed out; standard mode remains available</string>
 </resources>

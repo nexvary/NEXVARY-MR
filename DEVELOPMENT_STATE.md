@@ -1,3 +1,33 @@
+# NPSE checkpoint — 2026-10-24
+
+Branch: `feature/npse-shared-services`; review PR #14.
+Last published implementation commit: `353f7671ff0ccee490ae39c4c64d446312486f93`.
+The commit containing this checkpoint is the documentation/source continuation;
+use `git log -1` and current Actions for its final exact SHA/results.
+Base: `feature/usb-doctor-intelligence` at 9a4392a37b85186032ded8cdbe254b2064d8ed9b.
+
+Implemented: reusable Java core + Android AAR; optional shell-only provider;
+fixed caller-checked UserService; bounded/cancelable execution shared by the
+original MR metadata helper; Standard Android diagnostics/visible-app settings;
+AR/EN RTL non-exported control center and wizard; explicit local JSON export.
+No desktop engine, new companion or new repository was duplicated.
+
+Read `ARCHITECTURE.md`, `CAPABILITY_MATRIX.md`, `SHIZUKU_INTEGRATION.md`,
+`SECURITY_MODEL.md`, `TEST_RESULTS.md`, `ROADMAP.md`, and
+`docs/npse/REPOSITORY_AUDIT.md` before continuing. Current core test passed 47 assertions. Android CI build/unit/lint passed at 353f767.
+Initial API 34/35 emulator failures were a JSON display-string assertion; the test
+now parses the schema. Seven historical Gitleaks matches were public header
+hashes; exact historical exceptions and local 0-findings reruns are documented.
+Final emulator/current-source CI still needs recorded results.
+No OPPO/ColorOS hardware is connected, so device/Shizuku/reboot acceptance is pending.
+
+Next: run the current source checks, inspect exact CI errors, preserve actual
+emulator screenshots/APK if available, classify redacted history findings,
+review Maven local publication, then plan Guardian adoption. Do not claim 60/60,
+production readiness or physical device success. Main was not merged.
+
+---
+
 # Current repair/USB priority — 2026-10-24
 
 New forensic features are paused by the current user directive. Preserve existing

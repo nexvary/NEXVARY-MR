@@ -94,9 +94,10 @@ jobs:
           working-directory: recovery-agent
           script: |
             chmod +x gradlew
-            ./gradlew --no-daemon --console=plain connectedDebugAndroidTest
+            ./gradlew --no-daemon --console=plain :app:connectedDebugAndroidTest
             adb pull /data/local/tmp/nexvary-agent-emulator-ui.png app/build/emulator-native-ui.png
             adb pull /data/local/tmp/nexvary-npse-ui.png app/build/npse-native-ui.png
+            adb pull /data/local/tmp/nexvary-npse-ui-ar.png app/build/npse-native-ui-ar.png
             test "$(file --brief --mime-type app/build/emulator-native-ui.png)" = image/png
             adb shell rm /data/local/tmp/nexvary-agent-emulator-ui.png
       - uses: actions/upload-artifact@v4
@@ -108,3 +109,4 @@ jobs:
             recovery-agent/app/build/outputs/androidTest-results/
             recovery-agent/app/build/emulator-native-ui.png
             recovery-agent/app/build/npse-native-ui.png
+            recovery-agent/app/build/npse-native-ui-ar.png
