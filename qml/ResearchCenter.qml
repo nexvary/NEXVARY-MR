@@ -30,7 +30,7 @@ Item {
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("الادعاءات والفرضيات منفصلة عن نتائج المختبر. لا تمنح سجلات الأبحاث صلاحية إجراء أو توافقًا تجاريًا.","Source claims, hypotheses and lab observations stay distinct. Research records grant no operation permission or commercial compatibility.")}
   Label {visible:researchBridge.error!=="";objectName:"researchError";text:researchBridge.error;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;textFormat:Text.PlainText}
   RowLayout {Layout.fillWidth:true
-   ComboBox {objectName:"researchSectionSelector";Layout.preferredWidth:Math.min(330,page.width*0.5);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
+   ComboBox {id:sectionSelector;objectName:"researchSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.5);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
    TextField {id:query;objectName:"researchQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
    ActionButton {objectName:"researchSearch";text:app.trx("بحث","Search");onClicked:page.refresh()}
   }

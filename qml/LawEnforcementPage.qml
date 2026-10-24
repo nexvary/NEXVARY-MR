@@ -27,7 +27,7 @@ Item {
   Label {text:lawCaseBridge.protection;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:lawCaseBridge.ready?app.design.muted:app.design.danger;font.pixelSize:11}
   Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:lawCaseBridge.error;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
   RowLayout {width:parent.width
-   ComboBox {objectName:"lawSectionSelector";Layout.preferredWidth:Math.min(330,page.width*0.45);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
+   ComboBox {id:sectionSelector;objectName:"lawSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.45);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
    ActionButton {objectName:"lawNewCase";text:app.trx("قضية جديدة","New case");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.create;onClicked:page.newCase()}
    ActionButton {objectName:"lawOpenCases";text:app.trx("فتح / بحث","Open / search");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.read;onClicked:{lawCaseBridge.searchCases("");page.section=2}}
    Item {Layout.fillWidth:true}
