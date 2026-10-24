@@ -2,6 +2,7 @@
 #include "ServiceCommandPolicy.hpp"
 #include "UsbDriver.hpp"
 #include "ConnectionDiagnosis.hpp"
+#include "DeviceIntelligence.hpp"
 #include <QDateTime>
 
 #include <QDir>
@@ -70,6 +71,11 @@ ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
   timeoutTimer_.setInterval(12000);
   pollTimer_.setInterval(5000);
   diagnosisClock_.setInterval(5000);
+  connect(this,&ToolBridge::deviceInfoChanged,this,[this]{
+    propertiesObservedAtUtc_=deviceInfo_.isEmpty()?QString():QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
+    emit deviceIntelligenceChanged();
+  });
+  connect(this,&ToolBridge::connectionDiagnosisChanged,this,&ToolBridge::deviceIntelligenceChanged);
   connect(&diagnosisClock_,&QTimer::timeout,this,&ToolBridge::connectionDiagnosisChanged);
   for(const auto signal:{&ToolBridge::devicesChanged,&ToolBridge::selectedSerialChanged,&ToolBridge::serviceChanged})
     connect(this,signal,this,&ToolBridge::connectionDiagnosisChanged);
@@ -476,6 +482,9 @@ void ToolBridge::recordConnectionObservation(Operation operation,const QString &
 }
 QVariantMap ToolBridge::connectionDiagnosis() const {
   return mr::diagnostics::connectionDiagnosis({selectedSerial_,devices_,discoveryObservations_,usbObservation_,serviceProfile_});
+}
+QVariantMap ToolBridge::deviceIntelligence() const {
+  return mr::diagnostics::deviceIntelligence({selectedSerial_,propertiesObservedAtUtc_,devices_,deviceInfo_,serviceProfile_,serviceActions(),connectionDiagnosis()});
 }
 void ToolBridge::cancel() {
   if(mirror_.active()){stopMirror();return;}
