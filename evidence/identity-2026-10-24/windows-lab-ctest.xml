@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="38"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="runnervmgnbhw"
+	time="232"
+	timestamp="2026-10-24T13:33:38"
+	>
+	<testcase name="mr_research_data_validation" classname="mr_research_data_validation" time="0.0461402" status="run">
+		<properties/>
+		<system-out>Research catalog: offline validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_policy_tests" classname="mr_policy_tests" time="0.008034" status="run">
+		<properties/>
+		<system-out>laboratory: policy passed
+</system-out>
+	</testcase>
+	<testcase name="mr_core_tests" classname="mr_core_tests" time="0.0086115" status="run">
+		<properties/>
+		<system-out>Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_law_enforcement_case_tests" classname="mr_law_enforcement_case_tests" time="0.0084089" status="run">
+		<properties/>
+		<system-out>432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+</system-out>
+	</testcase>
+	<testcase name="mr_update_tests" classname="mr_update_tests" time="0.547819" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_update_journal_tests" classname="mr_update_journal_tests" time="1.54912" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_update_key_tests" classname="mr_update_key_tests" time="0.214201" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_identity_tests" classname="mr_identity_tests" time="4.21517" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_law_workspace_tests" classname="mr_law_workspace_tests" time="0.761968" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_research_tests" classname="mr_research_tests" time="0.141332" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_intelligence_tests" classname="mr_intelligence_tests" time="0.0219276" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_connection_tests" classname="mr_connection_tests" time="0.0231186" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_workshop_tests" classname="mr_workshop_tests" time="5.1158" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_barcode_tests" classname="mr_barcode_tests" time="1.16969" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_center_tests" classname="mr_center_tests" time="0.671008" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_cloud_tests" classname="mr_cloud_tests" time="7.52304" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_security_tests" classname="mr_security_tests" time="2.01507" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_catalog_tests" classname="mr_catalog_tests" time="0.0553296" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_tool_tests" classname="mr_tool_tests" time="25.435" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_service_tests" classname="mr_service_tests" time="21.1091" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_mirror_tests" classname="mr_mirror_tests" time="22.9266" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_compatibility_tests" classname="mr_compatibility_tests" time="0.024795" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_board_tests" classname="mr_board_tests" time="0.0962634" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_firmware_tests" classname="mr_firmware_tests" time="0.0535094" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_avb_tests" classname="mr_avb_tests" time="0.0574486" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_pcap_tests" classname="mr_pcap_tests" time="0.373639" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_exif_tests" classname="mr_exif_tests" time="0.359007" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_recovery_tests" classname="mr_recovery_tests" time="17.413" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_recovery_image_tests" classname="mr_recovery_image_tests" time="0.0430803" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_forensic_tests" classname="mr_forensic_tests" time="0.711564" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_tsk_tests" classname="mr_tsk_tests" time="2.31587" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_avb_mutation_tests" classname="mr_avb_mutation_tests" time="0.265037" status="run">
+		<properties/>
+		<system-out>30000 deterministic AVB mutations passed; no trust assertion permitted.
+</system-out>
+	</testcase>
+	<testcase name="mr_pcap_mutation_tests" classname="mr_pcap_mutation_tests" time="0.344957" status="run">
+		<properties/>
+		<system-out>30000 deterministic PCAP mutations passed; no partial reports or payload/address output.
+</system-out>
+	</testcase>
+	<testcase name="mr_exif_mutation_tests" classname="mr_exif_mutation_tests" time="0.0796748" status="run">
+		<properties/>
+		<system-out>12000 deterministic bounded Exif mutations completed
+</system-out>
+	</testcase>
+	<testcase name="mr_ui_tests" classname="mr_ui_tests" time="56.9985" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.25" classname="mr_ui_scale_1.25" time="17.7212" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.5" classname="mr_ui_scale_1.5" time="22.5692" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_gui_smoke" classname="mr_gui_smoke" time="19.5772" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

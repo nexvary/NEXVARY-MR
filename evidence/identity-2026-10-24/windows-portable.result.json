@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "label": "portable",
+  "mode": "isolated-copy",
+  "executable": "D:\\a\\_temp\\NEXVARY MR isolated portable f68bc96acee149228676e0a619ce9998\\NEXVARY-MR.exe",
+  "exitCode": 0,
+  "screenshot": "D:\\a\\NEXVARY-MR\\NEXVARY-MR\\dist\\evidence\\portable.png",
+  "dataDirectory": "D:\\a\\_temp\\NEXVARY MR isolated portable f68bc96acee149228676e0a619ce9998\\test data",
+  "qtSdkExcludedFromPath": true,
+  "testFontOverrideCleared": true
+}

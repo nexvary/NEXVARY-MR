@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+  "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
   "buildProfile": "production-read-only",
   "unresolvedCriticalRisks": [
     "Physical phone and independent clean Windows acceptance lack evidence",
@@ -9,78 +9,78 @@
   ],
   "gates": {
     "exact_head_ci": {
-      "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
-      "reference": "",
-      "reviewer": "",
-      "reason": "Native CI 40096699282 is still running; final evidence must be verified before accepting."
+      "passed": true,
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+      "reference": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007",
+      "reviewer": "GitHub Actions automated validation; independent human sign-off is a separate pending gate",
+      "reason": "All seven exact-source jobs passed; automated verification only."
     },
     "production_policy": {
-      "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
-      "reference": "",
-      "reviewer": "",
-      "reason": "Native policy tests passed locally; awaiting exact-source hosted results and review."
+      "passed": true,
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+      "reference": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007",
+      "reviewer": "GitHub Actions automated validation; independent human sign-off is a separate pending gate",
+      "reason": "Core and native production policy suites passed; not device compatibility proof."
     },
     "android_physical_read_only": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "No owned physical phone connected; synthetic data is not physical acceptance."
     },
     "windows_10_acceptance": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "No independently configured clean Windows 10 host connected."
     },
     "windows_11_acceptance": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "No independently configured clean Windows 11 host connected."
     },
     "installer_portable_uninstall": {
-      "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
-      "reference": "",
-      "reviewer": "",
-      "reason": "Awaiting exact-source Windows packaging/isolation/installer lifecycle CI."
+      "passed": true,
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+      "reference": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561559735",
+      "reviewer": "GitHub Actions automated validation; independent human sign-off is a separate pending gate",
+      "reason": "Isolated portable plus actual install/run/uninstall passed on hosted Windows Server 2022."
     },
     "signing": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "No trusted publisher certificate/private-key provider supplied; no trusted Authenticode claim."
     },
     "sbom_review": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "Packaged inventory is generated, but independent dependency/license sign-off remains required."
     },
     "upgrade_rollback": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "Local signed-anchor rollback tests passed; full supported upgrade/restore and OS-account backup validation remain."
     },
     "privacy_review": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "No independent privacy/security reviewer sign-off supplied."
     },
     "reviewer_signoff": {
       "passed": false,
-      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "commit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
       "reference": "",
       "reviewer": "",
       "reason": "Local account signatures do not establish independent people or institutional release approval."

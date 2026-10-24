@@ -1,3 +1,80 @@
+# Current validation checkpoint — local identities and signed reviews
+
+Active branch: `feature/law-enforcement-case-foundation`; PR #11.
+Latest executable source: `03da82d981e4e192b20dcf12af4aeddac16d71e0`.
+Native CI: https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007
+All seven native jobs passed at that exact executable source. Windows production
+38/38 and Laboratory 38/38; Linux production/laboratory 38/38 each; production
+sanitizers 7/7 including identity; both OS core jobs, tracking-server and configured
+TLS/TSK/ClamAV integration passed. Both Python/public-history workflow events passed.
+Portable isolation plus installed launch and install/uninstall lifecycle passed.
+Downloaded Windows validation archives matched their GitHub SHA-256 metadata;
+real production AR/EN identity screens were visually reviewed. The following
+checkpoint changes documentation/evidence only, not compiler/QML/build inputs.
+
+Installer ZIP (unsigned development build):
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562251680
+Portable ZIP (unsigned development build):
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562251671
+Windows production validation:
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561559735
+Artifact metadata/digests/expiry and job steps are retained in
+`evidence/identity-2026-10-24/verified-ci.json`.
+
+Implemented: user-chosen local administrator setup, authenticated local roles,
+case ownership/grants, account disable/revocation, password rotation and session
+expiry; author/reviewer Ed25519 attestations over public/synthetic evidence;
+retained signed case audit anchors with explicit rollback comparison; native Qt
+account/review/anchor controls; scoped reviewed architecture references; pinned
+Windows crypto runtime/notices. Repair/workshop and shared device/USB/firmware
+engines remain in the unified application. Agency SSO is not supplied.
+
+Local evidence: original 37/38 all-suite run plus regenerated GUI-smoke retry 1/1,
+identity 10/10, QuickTest 41/41 and Python root 29/29. Following screenshot review,
+03da82d fixed language-change section selection; all four existing UI/scale/smoke
+groups passed again. Corrected AR/EN real screenshots and initial diagnostics are
+retained under `evidence/identity-2026-10-24`.
+
+First native CI 40096699282 passed native tests on both Windows/Linux profiles,
+including production identity sanitizers; Windows portable packaging failed at a
+redundant license copy. 1f4b213 corrected the path/check; 03da82d also includes the
+bilingual selector fix. The superseded intermediate run was cancelled by the
+workflow concurrency policy; it is not claimed as a successful final run.
+
+## Remaining acceptance and continuation
+
+No physical phone or independent Windows workstation is connected. Remaining gates
+are owned-phone repeatability with exact model/OS/firmware, clean Windows 10/11,
+institution-verified identity/SSO and independent people/review, external key/time
+custody, trusted publisher Authenticode, dependency/privacy/recovery review and
+release sign-off. Local credential signatures/clock labels do not establish these.
+Research approval never grants a commercial capability or Lab Verified phone entry.
+`release-candidate-evidence.json` / `release-gate.json` record the unfulfilled gates;
+no final institutional/commercial release or main merge is claimed.
+
+Next work requires those actual providers/devices/review materials. Continue safe
+repair improvements through the shared engines and collect exact-device evidence
+rather than assigning untested support. See `docs/LOCAL_IDENTITIES.md` for local
+account recovery, grants, reviewer and retained-anchor trust boundaries.
+
+Resume (Windows PowerShell or developer shell, with Qt on PATH):
+
+```sh
+git fetch origin
+git switch feature/law-enforcement-case-foundation
+git status --short --branch
+python scripts/prepare_sodium.py --destination build/sodium
+cmake -S . -B build -DMR_SODIUM_ROOT=build/sodium -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+python scripts/release_gate.py evidence/identity-2026-10-24/release-candidate-evidence.json --commit 03da82d981e4e192b20dcf12af4aeddac16d71e0
+```
+
+The release gate is expected to fail while independent/physical gates are pending.
+Historical checkpoints follow; this top record is the continuation reference.
+
+---
+
 # Local identity and independent-review increment — 2026-10-24
 
 Active branch: `feature/law-enforcement-case-foundation`; PR #11.
