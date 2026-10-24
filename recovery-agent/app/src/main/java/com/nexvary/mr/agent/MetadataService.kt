@@ -9,6 +9,7 @@ import kotlin.system.exitProcess
 /** Shizuku UserService: fixed metadata only, no client-selected commands or paths. */
 class MetadataService(context: android.content.Context) : IMetadataService.Stub() {
     private val ownerUid = context.applicationInfo.uid
+    private val cancellation = com.nexvary.npse.core.BoundedRunner.Cancellation()
 
     override fun collectMetadata(): String {
         check(com.nexvary.npse.core.AccessPolicy.callerAllowed(android.os.Binder.getCallingUid(), ownerUid)) { "Unexpected caller" }
@@ -34,7 +35,7 @@ class MetadataService(context: android.content.Context) : IMetadataService.Stub(
     }
     private fun runFixedProbe(name: String): MetadataProbe {
         val probe = com.nexvary.npse.core.Probe.find(name) ?: return MetadataProbe(name, "unavailable", "Unsupported probe")
-        val result = com.nexvary.npse.core.BoundedRunner().run(probe, com.nexvary.npse.core.BoundedRunner.Cancellation())
+        val result = com.nexvary.npse.core.BoundedRunner().run(probe, cancellation)
         val state = when (result.status) {
             com.nexvary.npse.core.BoundedRunner.Status.OK -> "ok"
             com.nexvary.npse.core.BoundedRunner.Status.DENIED -> "denied"
@@ -42,5 +43,8 @@ class MetadataService(context: android.content.Context) : IMetadataService.Stub(
         }
         return MetadataProbe(name, state, result.value)
     }
-    override fun destroy() { exitProcess(0) }
+    override fun destroy() {
+        check(android.os.Binder.getCallingUid() == 2000 || com.nexvary.npse.core.AccessPolicy.callerAllowed(android.os.Binder.getCallingUid(), ownerUid))
+        cancellation.cancel(); exitProcess(0)
+    }
 }

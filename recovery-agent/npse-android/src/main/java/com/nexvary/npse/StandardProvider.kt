@@ -35,7 +35,7 @@ class StandardProvider(private val context: Context) {
     fun ownAppInfo(): JSONObject {
         @Suppress("DEPRECATION") val info = context.packageManager.getPackageInfo(context.packageName, 0)
         return JSONObject().put("package", context.packageName).put("version", info.versionName)
-            .put("versionCode", info.longVersionCode).put("targetSdk", info.applicationInfo?.targetSdkVersion)
+            .put("versionCode", if (Build.VERSION.SDK_INT >= 28) info.longVersionCode else @Suppress("DEPRECATION") info.versionCode.toLong()).put("targetSdk", info.applicationInfo?.targetSdkVersion)
     }
     fun settings(packageName: String): Intent {
         require(packageName in visiblePackages())

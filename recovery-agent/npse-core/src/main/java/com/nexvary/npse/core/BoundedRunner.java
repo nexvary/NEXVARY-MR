@@ -17,7 +17,10 @@ public final class BoundedRunner {
     }
     public static final class Cancellation {
         private final AtomicBoolean canceled = new AtomicBoolean();
-        public void cancel() { canceled.set(true); }
+        private final java.util.concurrent.atomic.AtomicReference<Process> child = new java.util.concurrent.atomic.AtomicReference<>();
+        public void cancel() { canceled.set(true); Process p = child.get(); if (p != null) p.destroyForcibly(); }
+        private void attach(Process p) { child.set(p); if (canceled.get()) p.destroyForcibly(); }
+        private void detach(Process p) { child.compareAndSet(p, null); }
         public boolean isCanceled() { return canceled.get(); }
     }
     @FunctionalInterface interface Launcher { Process start(List<String> argv) throws IOException; }
@@ -32,6 +35,7 @@ public final class BoundedRunner {
         ExecutorService reader = Executors.newSingleThreadExecutor(r -> { Thread t = new Thread(r, "npse-output"); t.setDaemon(true); return t; });
         try {
             child = launcher.start(probe.arguments());
+            cancellation.attach(child);
             Process process = child;
             Future<String> output = reader.submit(() -> {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -61,6 +65,7 @@ public final class BoundedRunner {
         catch (IOException e) { return result(Status.UNAVAILABLE); }
         finally {
             if (child != null) {
+                cancellation.detach(child);
                 child.destroyForcibly();
                 try { child.getInputStream().close(); } catch (IOException ignored) {}
                 try { child.getOutputStream().close(); } catch (IOException ignored) {}
