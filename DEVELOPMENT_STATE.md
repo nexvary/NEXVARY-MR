@@ -1,3 +1,36 @@
+# NPSE alpha checkpoint — 2026-10-24
+
+Branch: feature/npse-shared-services; MR PR #14. Last tested engine source:
+`514afe8684504ce681b74d4722d5c275cc5ca9c5`. Library binary consumed by Guardian:
+`0908a3363401b2ccba4292fa82a27062ab6c908f` (production module code unchanged).
+Guardian PR #13, source `7f324204e2f60ab1aa42136668856676157e45b6`.
+The commit containing this documentation is a later documentation checkpoint;
+inspect git log -1 for its SHA. Fetch remote heads before trusting a cached workspace.
+
+Implemented: shared Java core + Android AAR; fixed caller-checked, shell-only
+Binder helper; bounded/cancelable probes; standard diagnostics, scoped app settings,
+AR/EN RTL control center/wizard, local JSON and audit. Both MR and Guardian consume
+this engine. Guardian reuses backend/readiness policy and disables Sui initialization.
+
+VERIFIED: no-manager API33–36 run 40126853530; official/Next real UID-2000 Binder,
+consent, death and Standard fallback run 40126853544; Guardian run 40126176694
+(80 UI cases on each API33/34/35 plus build/lint/unit/signature/backend).
+Core 47 assertions, app/library 12 JUnit tests. Real AR/EN/live-manager screenshots
+and CI APKs are available. Read TEST_RESULTS.md and docs/npse/COMPLETION_EVIDENCE.md.
+
+PENDING EXTERNAL: actual OPPO/ColorOS, wireless pairing, physical permission
+revocation, reboot/restart and OEM battery behavior; no authorized device is
+connected. No automatic persistence, root, final release or 60/60 claim. Main
+is unchanged. USB/NetScan Android integration is not applicable to their current
+Windows products; do not create unsupported adapters or duplicate companions.
+
+Next: use SHIZUKU_INTEGRATION.md's owner-device checklist when a device is
+available; record results without replacing emulator evidence. Avoid redoing
+completed engine/Guardian implementation. Other candidates need a concrete
+benefit and separate adoption scope.
+
+---
+
 # Current repair/USB priority — 2026-10-24
 
 New forensic features are paused by the current user directive. Preserve existing

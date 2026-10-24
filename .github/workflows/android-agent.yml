@@ -34,7 +34,7 @@ jobs:
       - name: Install SDK packages
         run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - name: Build, lint and unit tests
-        run: ./gradlew --no-daemon --console=plain assembleDebug testDebugUnitTest lintDebug
+        run: ./gradlew --no-daemon --console=plain assembleDebug assembleDebugAndroidTest testDebugUnitTest lintDebug :npse-core:check :npse-android:assembleRelease :npse-core:jar
       - name: Verify APK permission boundary
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump permissions app/build/outputs/apk/debug/app-debug.apk > app/build/outputs/apk/debug/permissions.txt
@@ -52,8 +52,21 @@ jobs:
           path: |
             recovery-agent/app/build/reports/
             recovery-agent/app/build/test-results/
+            recovery-agent/npse-android/build/reports/
+            recovery-agent/npse-android/build/test-results/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nexvary-npse-libraries-alpha
+          path: |
+            recovery-agent/npse-android/build/outputs/aar/*release.aar
+            recovery-agent/npse-core/build/libs/*.jar
+          if-no-files-found: error
   emulator:
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [33, 34, 35, 36]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -74,22 +87,26 @@ jobs:
       - name: Run native UI tests on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: ${{ matrix.api }}
           arch: x86_64
           target: google_apis
           disable-animations: true
           working-directory: recovery-agent
           script: |
             chmod +x gradlew
-            ./gradlew --no-daemon --console=plain connectedDebugAndroidTest
+            ./gradlew --no-daemon --console=plain :app:connectedDebugAndroidTest
             adb pull /data/local/tmp/nexvary-agent-emulator-ui.png app/build/emulator-native-ui.png
+            adb pull /data/local/tmp/nexvary-npse-ui.png app/build/npse-native-ui.png
+            adb pull /data/local/tmp/nexvary-npse-ui-ar.png app/build/npse-native-ui-ar.png
             test "$(file --brief --mime-type app/build/emulator-native-ui.png)" = image/png
             adb shell rm /data/local/tmp/nexvary-agent-emulator-ui.png
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: nexvary-mr-android-emulator-tests
+          name: nexvary-mr-android-emulator-tests-api-${{ matrix.api }}
           path: |
             recovery-agent/app/build/reports/androidTests/
             recovery-agent/app/build/outputs/androidTest-results/
             recovery-agent/app/build/emulator-native-ui.png
+            recovery-agent/app/build/npse-native-ui.png
+            recovery-agent/app/build/npse-native-ui-ar.png

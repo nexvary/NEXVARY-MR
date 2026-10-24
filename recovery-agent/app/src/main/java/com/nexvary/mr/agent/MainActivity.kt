@@ -145,6 +145,10 @@ class MainActivity : Activity() {
         }
         label(getString(R.string.app_name), 25f)
         label(getString(R.string.subtitle))
+        button(com.nexvary.npse.R.string.npse_title) {
+            startActivity(Intent(this, com.nexvary.npse.ControlCenterActivity::class.java))
+        }
+
         label(getString(R.string.install_warning), 15f, true)
         consent = CheckBox(this).apply {
             setText(R.string.consent); setTextColor(Color.rgb(220, 235, 247)); content.addView(this)
@@ -243,7 +247,7 @@ class MainActivity : Activity() {
         try {
             probes = emptyList()
             serviceArgs = Shizuku.UserServiceArgs(ComponentName(this, MetadataService::class.java))
-                .tag("nexvary-metadata-v1").version(1).daemon(false).debuggable(BuildConfig.DEBUG).processNameSuffix("metadata")
+                .tag("nexvary-metadata-v1").version(2).daemon(false).debuggable(BuildConfig.DEBUG).processNameSuffix("metadata")
             serviceRequested = true
             progress.isIndeterminate = true
             status.setText(R.string.connecting_shell)
