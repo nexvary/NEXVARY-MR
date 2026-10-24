@@ -9,3 +9,5 @@ val policySmoke by tasks.registering(JavaExec::class) {
     mainClass.set("com.nexvary.npse.core.EngineTest")
 }
 tasks.check { dependsOn(policySmoke) }
+
+tasks.withType<Jar>().configureEach { from("LICENSE") { into("META-INF") } }
