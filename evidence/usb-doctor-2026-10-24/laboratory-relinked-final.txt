@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor-lab
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor-lab
+    Start 23: mr_recovery_image_tests
+1/1 Test #23: mr_recovery_image_tests ..........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

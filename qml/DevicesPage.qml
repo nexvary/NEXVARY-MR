@@ -13,16 +13,6 @@ Item {
  readonly property bool adbReady:page.selected&&selectedConnections.length===1&&selectedConnections[0].transport==="adb"&&selectedConnections[0].state==="device"
  readonly property string selectionReason:!page.selected?app.trx("حدد جهازًا أولًا","Select a device first"):selectedConnections.length!==1?app.trx("اتصال الجهاز غائب أو ملتبس؛ أعد الاكتشاف","Target missing or ambiguous; rediscover devices"):selectedConnections[0].state==="unauthorized"?app.trx("وافق على تصحيح USB من الهاتف","Authorize USB debugging on the phone"):selectedConnections[0].state==="offline"?app.trx("اتصال ADB غير متاح؛ افحص الكابل والتفويض","ADB is offline; check the cable and authorization"):app.trx("تتطلب هذه العملية اتصال ADB بحالة device","This operation requires an ADB connection in device state")
  readonly property bool identified:!!toolBridge.deviceInfo["ro.build.fingerprint"]
- readonly property var identityFields:[
-  {label:app.trx("الشركة والموديل","Manufacturer / model"),value:[toolBridge.deviceInfo["ro.product.manufacturer"],toolBridge.deviceInfo["ro.product.model"]].filter(Boolean).join(" · ")},
-  {label:app.trx("إصدار Android","Android version"),value:toolBridge.deviceInfo["ro.build.version.release"]},
-  {label:app.trx("تصحيح الأمان","Security patch"),value:toolBridge.deviceInfo["ro.build.version.security_patch"]},
-  {label:app.trx("المعالج المعلن","Reported SoC"),value:toolBridge.deviceInfo["ro.soc.model"]||toolBridge.deviceInfo["ro.hardware"]},
-  {label:app.trx("حالة الإقلاع","Boot verification"),value:toolBridge.deviceInfo["ro.boot.verifiedbootstate"]},
-  {label:app.trx("حالة القفل","Bootloader state"),value:toolBridge.deviceInfo["ro.boot.vbmeta.device_state"]},
-  {label:app.trx("التشفير","Encryption"),value:toolBridge.deviceInfo["ro.crypto.type"]},
-  {label:app.trx("المعرّف المحدد","Selected serial"),value:toolBridge.selectedSerial}
- ]
  function reviewMirror(){
   reviewedMirrorTarget=toolBridge.selectedSerial
   mirrorOwner.checked=false;mirrorComponent.checked=false;mirrorChallenge.clear();mirrorConfirm.open()
@@ -110,22 +100,7 @@ Item {
      onTriggered:page.reviewMirror()
     }
    }
-   Panel {
-    objectName:"deviceIdentitySummary";title:app.trx("2. ملخص هوية الجهاز","2. DEVICE IDENTITY");Layout.fillWidth:true
-    Label {visible:!page.identified;text:page.selected?app.trx("الجهاز محدد. اضغط قراءة المعلومات لعرض الموديل والنظام وحالات الحماية المعلنة.","A target is selected. Read properties to display its model, OS and reported security state."):app.trx("ستظهر هنا هوية الهاتف المحدد بعد اكتشافه وقراءة معلوماته.","The selected phone identity appears here after discovery and a properties read.");color:app.tone("#9bbbd3");Layout.fillWidth:true;wrapMode:Text.WordWrap}
-    GridLayout {
-     Layout.fillWidth:true;columns:page.width>=1100?4:2;columnSpacing:20;rowSpacing:12
-     Repeater {
-      model:page.identityFields
-      delegate:ColumnLayout {
-       required property var modelData
-       Layout.fillWidth:true;Layout.minimumWidth:0;spacing:4
-       Label {text:modelData.label;color:app.tone("#9bbbd3");font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
-       Label {text:modelData.value||app.trx("لم تُقرأ بعد","Not read yet");color:modelData.value?app.tone("#edf5ff"):app.tone("#8192a5");font.bold:true;font.pixelSize:13;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText}
-      }
-     }
-    }
-   }
+   DeviceIntelligencePanel {objectName:"deviceIdentitySummary";app:page.app;Layout.fillWidth:true}
    Label {objectName:"mirrorScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:toolBridge.laboratoryBuild?app.trx("عرض تجريبي عبر scrcpy 5.0.1: اقرأ معلومات الهاتف ثم راجع الموافقة. دون تحكم أو صوت أو مزامنة الحافظة.","Experimental scrcpy 5.0.1 view: read phone information, then review consent. No control, audio or clipboard sync."):app.trx("عرض الشاشة يحتاج نسخة Laboratory؛ الإنتاج للقراءة والتشخيص فقط.","Screen view requires Laboratory; production is read-only diagnostics.")}
    Panel {
     title:app.trx("3. النتائج والتفاصيل","3. RESULTS AND DETAILS");Layout.fillWidth:true

@@ -230,6 +230,49 @@ TestCase {
   scroll.contentItem.contentY=Math.max(0,Math.min(scroll.contentHeight-scroll.availableHeight,scroll.contentItem.contentY+point.y-target.height))
   wait(30)
  }
+ function test_deviceIntelligenceProvenance(){
+  app.navigateSection(1);app.ar=false
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42")
+  compare(toolBridge.deviceIntelligence.reportedFieldCount,0)
+  const scroll=findChild(app,"deviceManagerScroll"),read=findChild(app,"readDeviceInfo")
+  reveal(scroll,read);verify(read.enabled);mouseClick(read);tryCompare(toolBridge,"busy",false,5000)
+  const panel=findChild(app,"deviceIdentitySummary")
+  tryVerify(function(){return panel.field("model")!==null&&panel.field("model").modelData.value==="Synthetic Phone"})
+  compare(findChild(panel.field("model"),"intelligenceValue-model").text,"Synthetic Phone")
+  compare(panel.field("model").modelData.source,"adb:shell getprop")
+  verify(panel.field("model").modelData.observedAtUtc.length>0)
+  compare(toolBridge.deviceIntelligence.attestationVerified,false)
+  compare(toolBridge.deviceIntelligence.health.battery.state,"unavailable")
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768;scroll.contentItem.contentY=panel.y
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-intelligence-"+(arabic?"ar":"en")+".png"))
+  }
+  const review=findChild(app,"intelligenceReviewCapabilities");reveal(scroll,review);verify(review.enabled);mouseClick(review)
+  compare(app.currentPage,1);compare(findChild(app,"deviceTabs").currentIndex,1)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+  compare(toolBridge.deviceIntelligence.reportedFieldCount,0);findChild(app,"deviceTabs").currentIndex=0;scroll.contentItem.contentY=0
+ }
+ function test_usbDoctorInterpretation(){
+  app.navigateSection(4);app.ar=false
+  const doctor=findChild(app,"usbDoctorPanel");verify(doctor!==null);verify(doctor.visible)
+  verify(findChild(app,"doctorReadUsb").enabled)
+  verify(uiEvidence.setSyntheticDeviceMode("unauthorized"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42")
+  tryVerify(function(){return doctor.finding("adb-unauthorized")!==null},5000,JSON.stringify(doctor.report))
+  verify(findChild(app,"doctorScope").text.indexOf("not USB descriptor reads")>=0)
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768;findChild(app,"driverCatalogPage").contentItem.contentY=0
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"usb-doctor-"+(arabic?"ar":"en")+".png"))
+  }
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000)
+  verify(uiEvidence.clearSyntheticTool());app.ar=false
+  mouseClick(findChild(app,"doctorReadUsb"));tryCompare(toolBridge,"busy",false,35000)
+  const source=toolBridge.connectionDiagnosis.sources.filter(function(s){return s.source==="windows-pnp"})[0]
+  verify(source.state==="ok"||source.state==="windows-only","Read-only inventory: "+toolBridge.status)
+  compare(toolBridge.connectionDiagnosis.physicalCauseVerified,false)
+  compare(toolBridge.connectionDiagnosis.interfaceBindingVerified,false)
+ }
  function test_navigation(){
   for(let i=0;i<12;i++){
    const button=app.sectionButton(i);verify(button!==null)

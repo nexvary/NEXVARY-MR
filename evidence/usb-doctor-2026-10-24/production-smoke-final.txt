@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor
+    Start 32: mr_gui_smoke
+1/1 Test #32: mr_gui_smoke .....................   Passed   15.65 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  15.65 sec

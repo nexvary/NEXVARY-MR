@@ -49,6 +49,24 @@ static int fakeAdb(const QStringList &args) {
 class ToolTests : public QObject {
   Q_OBJECT
 private slots:
+  void diagnosisUsesCompletedDiscoveryAndInvalidatesFailures() {
+    auto has=[](const QVariantMap &report,const QString &id){
+      for(const auto &entry:report.value("findings").toList())if(entry.toMap().value("id").toString()==id)return true;
+      return false;
+    };
+    ToolBridge bridge;bridge.scanAdb();QVERIFY(bridge.busy());
+    QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),5000);
+    bridge.selectDevice("DEVICE42");QVERIFY(has(bridge.connectionDiagnosis(),"adb-observed"));
+    bridge.selectDevice("LOCKED");QVERIFY(has(bridge.connectionDiagnosis(),"adb-unauthorized"));
+    QVERIFY(!has(bridge.connectionDiagnosis(),"adb-observed"));
+    qputenv("MR_TEST_TOOL_MODE","failure");bridge.scanAdb();
+    QVERIFY(!has(bridge.connectionDiagnosis(),"adb-unauthorized"));
+    QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),5000);
+    QVERIFY(has(bridge.connectionDiagnosis(),"adb-failed"));
+    QVERIFY(!has(bridge.connectionDiagnosis(),"no-transport-device"));
+    QVERIFY(bridge.configureTool("adb",QCoreApplication::applicationFilePath()));
+    QVERIFY(!has(bridge.connectionDiagnosis(),"adb-failed"));
+  }
   void usbSerialAndParentCorrelation() {
     const QJsonArray nodes{
       QJsonObject{{"instanceId","USB\\VID_1234&PID_5678\\DEVICE42"},{"name","Phone"}},
