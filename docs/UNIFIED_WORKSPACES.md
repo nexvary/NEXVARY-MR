@@ -61,3 +61,13 @@ project native warnings-as-errors and all runtime/packaging tests remain enabled
 Other platforms/SDK versions retain their existing compiler path. Exact-source
 Windows packaging must pass after this change before a binary is presented.
 Reference: https://doc.qt.io/qt-6.8/qt-add-qml-module.html#caching-compiled-qml-sources
+
+## Report visual verification
+
+The case PDF now renders metadata, devices, evidence, custody and audit as labelled
+AR/EN tables rather than raw JSON paragraphs. Technical identifiers/digests use
+LTR blocks and table captions repeat across page breaks. The synthetic Arabic
+fixture was exported by the native CaseBridge, rendered with Poppler and visually
+reviewed on all three pages. Text extraction confirmed that the complete evidence
+SHA-256 was preserved. The native case suite passed all 9 cases after the change.
+`evidence/unified-2026-10-24/synthetic-case-report.pdf` contains synthetic data only.

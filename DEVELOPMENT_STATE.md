@@ -9,6 +9,10 @@ Publication target: existing PR #11, `feature/law-enforcement-case-foundation`.
 Last published implementation: `4beff9ee8d1e4cac335d008c447f94ef5418fd06`.
 Last published Windows UTF-8 fix: `ff2196a7aa08038d120dea6274549cbb7b4712de`.
 Last published layout/source checkpoint: `db373b7b8a09652b3c07cd65f33982a429daa4bb`.
+Last Windows compiler workaround: `37ec1e7e3550a19b306d7fe5e0a42cbe090dcfdc`.
+Next source increment replaces raw PDF JSON with labelled AR/EN tables. Native
+case tests after that change: 9 passed; a three-page synthetic PDF was rendered
+and visually checked, including repeated table captions and complete SHA-256.
 Research foundation: `372b9636fce50a66e64360eb315f12ecdfff8c45` (PR #12).
 Shared USB/Device Intelligence source matches `9a4392a37b85186032ded8cdbe254b2064d8ed9b`.
 The implementation commit containing this checkpoint is resolved with `git rev-parse HEAD`;
