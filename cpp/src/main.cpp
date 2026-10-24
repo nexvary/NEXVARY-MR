@@ -31,6 +31,8 @@
 #include "BoardBridge.hpp"
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
+#include "LawCaseBridge.hpp"
+#include "ResearchBridge.hpp"
 int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
@@ -63,10 +65,14 @@ int main(int argc,char *argv[]) {
  ServiceCatalog catalog(QDir(dir).filePath(QStringLiteral("model-guides.json")));
  BoardBridge board;
  FirmwareBridge firmware;
+ LawCaseBridge law(QDir(dir).filePath(QStringLiteral("law-cases.db")),&tools,smoke);
+ ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware);
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
+ engine.rootContext()->setContextProperty(QStringLiteral("lawCaseBridge"),&law);
+ engine.rootContext()->setContextProperty(QStringLiteral("researchBridge"),&research);
  engine.rootContext()->setContextProperty(QStringLiteral("repairBridge"),&repair);
  engine.rootContext()->setContextProperty(QStringLiteral("workshopBridge"),&workshop);
  engine.rootContext()->setContextProperty(QStringLiteral("boardBridge"),&board);
@@ -120,7 +126,7 @@ int main(int argc,char *argv[]) {
  timer->setInterval(160);
   int page=0;
   QObject::connect(timer,&QTimer::timeout,&app,[&,timer,window,page,portalOk]() mutable {
-   if(page<40){window->setProperty("darkTheme",page<20);window->setProperty("ar",page%20<10);window->setProperty("currentPage",page%10);++page;return;}
+   if(page<48){window->setProperty("darkTheme",page<24);window->setProperty("ar",page%24<12);window->setProperty("currentPage",page%12);++page;return;}
    timer->stop();window->setProperty("darkTheme",true);window->setProperty("ar",true);window->setProperty("currentPage",3);
    if(auto *viewer=window->findChild<QObject *>(QStringLiteral("boardWorkspace")); viewer && board.components().size()>2) {viewer->setProperty("selected",board.components().at(2));}
    QTimer::singleShot(400,&app,[&,window] {

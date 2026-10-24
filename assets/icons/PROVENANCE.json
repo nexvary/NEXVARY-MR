@@ -62,6 +62,90 @@
       "upstream": "assets/Document Lock/SVG/ic_fluent_document_lock_24_color.svg",
       "blob": "f89800af7c657a5531252cd99b4dbceb3422cd4d",
       "sha256": "f47bdc6aa2d5065b1e2851bf489ebe724f9f9b67ffe46f5f2726f81f004258c0"
+    },
+    {
+      "file": "toolbox.svg",
+      "upstream": "assets/Toolbox/SVG/ic_fluent_toolbox_24_color.svg",
+      "blob": "05a1b55d7eb105aac30ca83e0a12ae0f76a806dc",
+      "sha256": "779aaaa9f41f34cdd24aa47e749001f5b79cef371cde354e91b62fad407156fa"
+    },
+    {
+      "file": "wrench.svg",
+      "upstream": "assets/Wrench/SVG/ic_fluent_wrench_24_color.svg",
+      "blob": "309871f2c55784beac9014c9cfed1cd72f21cd97",
+      "sha256": "aa22b006fc07ae368038a0c1ba82702caaaa3236afa4d9a89b6b150051042eba"
+    },
+    {
+      "file": "question_circle.svg",
+      "upstream": "assets/Question Circle/SVG/ic_fluent_question_circle_24_color.svg",
+      "blob": "f1a69443c8836204cd980f3068580df35beec3d8",
+      "sha256": "58a14133c6ffb9c43041e15a3968032f2cb82ea7fd3586d17509600ce947be93"
+    },
+    {
+      "file": "document_text.svg",
+      "upstream": "assets/Document Text/SVG/ic_fluent_document_text_24_color.svg",
+      "blob": "47dfa6f90ba2ea9ff1f642d37c0a1dee6bed2309",
+      "sha256": "6c6654a8db202201af9d8709f841dacd27ab74001655601bdb8e9314feb97374"
+    },
+    {
+      "file": "search_visual.svg",
+      "upstream": "assets/Search Visual/SVG/ic_fluent_search_visual_24_color.svg",
+      "blob": "7c682dd2b96849eccdc559d9e155b17c2ead2571",
+      "sha256": "0178f697fa83feb213c9c876b6051ce4aec36da472290c4db0909e33ac5fb2cd"
+    },
+    {
+      "file": "book_open_lightbulb.svg",
+      "upstream": "assets/Book Open Lightbulb/SVG/ic_fluent_book_open_lightbulb_24_color.svg",
+      "blob": "ae7f2330013e3abab57b92b9e13c0519e8e2be09",
+      "sha256": "f30fa22f81320b5a1ee86eb074b7338d0cf4555dbdd4797747cc687e59a9c31f"
+    },
+    {
+      "file": "shield_checkmark.svg",
+      "upstream": "assets/Shield Checkmark/SVG/ic_fluent_shield_checkmark_24_color.svg",
+      "blob": "43c61dda00d7fa668ddad911f6ec0920d95ad163",
+      "sha256": "79974746d0aac9f6910cb86e4e673e32f3b9e36c2b02eaff9c084810c6e578dc"
+    },
+    {
+      "file": "data_bar_vertical_ascending.svg",
+      "upstream": "assets/Data Bar Vertical Ascending/SVG/ic_fluent_data_bar_vertical_ascending_24_color.svg",
+      "blob": "ff54d18fe1359e475fd9e616e1fde92c5be3f634",
+      "sha256": "fbbc2b60b4b8b1b6296016a598f7705fdc1cf9c2729ad54b10e812cc0a3a5045"
+    },
+    {
+      "file": "puzzle_piece.svg",
+      "upstream": "assets/Puzzle Piece/SVG/ic_fluent_puzzle_piece_24_color.svg",
+      "blob": "e6624cd1e4f5e48ac37577f105f8ff390fc667cd",
+      "sha256": "80f0370d728cab619d6c16efb3f6a54058ab1206f03d85b8eebeb13a186e67b6"
+    },
+    {
+      "file": "phone_laptop.svg",
+      "upstream": "assets/Phone Laptop/SVG/ic_fluent_phone_laptop_24_color.svg",
+      "blob": "6ba8a974e9e08731e4c4ae2f8c1041cc5413b73c",
+      "sha256": "eccffe67e0ad1b53e29c96b65425e6d53fb8a0cb8eb6aad9fa0e591997aebdf4"
+    },
+    {
+      "file": "arrow_sync.svg",
+      "upstream": "assets/Arrow Sync/SVG/ic_fluent_arrow_sync_24_color.svg",
+      "blob": "7d38d90d925f05844fac5ab317c98994baaed904",
+      "sha256": "bb5b3763ca57b2dd31b31e309dd186886be05d38f1a29ad4e41284eb62289171"
+    },
+    {
+      "file": "checkmark_circle.svg",
+      "upstream": "assets/Checkmark Circle/SVG/ic_fluent_checkmark_circle_24_color.svg",
+      "blob": "5c62a272294e2540e759ea92ece1cdcfc2c221b8",
+      "sha256": "bf4fc912b3c2b41a3143f631f49cb5f6deda8c70083a1909528b899afe7dbed8"
+    },
+    {
+      "file": "error_circle.svg",
+      "upstream": "assets/Error Circle/SVG/ic_fluent_error_circle_24_color.svg",
+      "blob": "16cfbf740d14c4bde2346da1ff2bb48ecc2b2c98",
+      "sha256": "c6ee3d3d5510ab3269533edfa93864b420cfc03729290f8acbf09956f5ddc4d0"
+    },
+    {
+      "file": "warning.svg",
+      "upstream": "assets/Warning/SVG/ic_fluent_warning_24_color.svg",
+      "blob": "10e4c731e31744e6c03f8e29aabf0b8e7f366942",
+      "sha256": "148ebb9a2c5e9958fa74c4b11fc44da4edff63386f6b71bf5093acd8e2126b6d"
     }
   ],
   "originalFiles": [

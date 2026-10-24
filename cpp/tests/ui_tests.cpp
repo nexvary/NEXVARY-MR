@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QSaveFile>
 #include <QDir>
 #include <QCoreApplication>
 #include <QQuickWindow>
@@ -12,6 +13,7 @@
 #include <memory>
 #include "ToolBridge.hpp"
 #include "FirmwareZipFixture.hpp"
+#include "ExifFixture.hpp"
 #include "FontReadability.hpp"
 #include "DeviceCompatibility.hpp"
 #include "RepairBridge.hpp"
@@ -23,6 +25,8 @@
 #include "BoardBridge.hpp"
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
+#include "LawCaseBridge.hpp"
+#include "ResearchBridge.hpp"
 class Setup:public QObject {
  Q_OBJECT
  QTemporaryDir temp;
@@ -36,12 +40,35 @@ class Setup:public QObject {
  std::unique_ptr<BoardBridge> board;
  std::unique_ptr<FirmwareBridge> firmware;
  std::unique_ptr<RecoveryBridge> recovery;
+ std::unique_ptr<LawCaseBridge> law;
+ std::unique_ptr<ResearchBridge> research;
+ QByteArray originalSyntheticModeEnv;
+ bool syntheticModeEnvChanged=false;
 public:
  Q_INVOKABLE bool requestFrame(QObject *object) { auto *window=qobject_cast<QQuickWindow *>(object); if(!window||!window->isVisible())return false; window->update();return true; }
  Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
   auto *window=qobject_cast<QQuickWindow *>(object);
   return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+ }
+ Q_INVOKABLE bool setSyntheticDeviceMode(const QString &mode) {
+  if(!tools||tools->busy()||!QStringList{"connected","device","unauthorized","offline","disconnected","none","error","progress"}.contains(mode))return false;
+  const auto path=temp.filePath(QStringLiteral("ui-device-mode.txt"));
+  QSaveFile file(path);
+  const auto bytes=mode.toUtf8();
+  if(!file.open(QIODevice::WriteOnly)||file.write(bytes)!=bytes.size()||!file.commit())return false;
+  if(!syntheticModeEnvChanged) {
+   originalSyntheticModeEnv=qgetenv("MR_UI_DEVICE_MODE");syntheticModeEnvChanged=true;
+  }
+  qputenv("MR_UI_DEVICE_MODE",QFile::encodeName(path));
+  if(!tools->configureTool(QStringLiteral("adb"),QStringLiteral(MR_UI_DEVICE_FIXTURE_PATH)))return false;
+  tools->scanAdb();return tools->busy();
+ }
+ Q_INVOKABLE bool clearSyntheticTool() {
+  // Callers must complete a disconnected scan before clearing the override.
+  // Clearing it never starts a PATH executable or performs another discovery.
+  if(!tools||tools->busy()||!tools->devices().isEmpty()||!tools->selectedSerial().isEmpty())return false;
+  return tools->clearTool(QStringLiteral("adb"));
  }
 public slots:
  void applicationAvailable() {
@@ -56,6 +83,8 @@ public slots:
   portal=std::make_unique<TrackingPortal>(workshop.get());
   recovery=std::make_unique<RecoveryBridge>(temp.filePath(QStringLiteral("cases")),true);
   board=std::make_unique<BoardBridge>();firmware=std::make_unique<FirmwareBridge>();
+  law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true);
+  research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get());
  }
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
@@ -79,9 +108,17 @@ public slots:
   engine->rootContext()->setContextProperty("workshopScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-workshop-barcode-ui-"));
   engine->rootContext()->setContextProperty("serviceScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-service-scroll-"));
   engine->rootContext()->setContextProperty("uiEvidence",this);
+  engine->rootContext()->setContextProperty("uiScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-professional-ui-"));
+  engine->rootContext()->setContextProperty("uiScaleTag",qEnvironmentVariable("QT_SCALE_FACTOR",QStringLiteral("1")));
   engine->rootContext()->setContextProperty("pcapScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-pcap-ui-"));
   engine->rootContext()->setContextProperty("syntheticCapturePath",capture);
+  const auto exif=temp.filePath(QStringLiteral("synthetic-ui.jpg"));
+  QFile exifFile(exif);if(!exifFile.open(QIODevice::WriteOnly)||exifFile.write(syntheticExifJpeg())<0)qFatal("Cannot create Exif UI fixture");exifFile.close();
+  engine->rootContext()->setContextProperty("syntheticExifPath",exif);
+  engine->rootContext()->setContextProperty("exifScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-exif-ui-"));
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
+  engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
+  engine->rootContext()->setContextProperty("researchBridge",research.get());
   engine->rootContext()->setContextProperty("toolBridge",tools.get());
   engine->rootContext()->setContextProperty("repairBridge",repair.get());
   engine->rootContext()->setContextProperty("workshopBridge",workshop.get());
@@ -95,7 +132,10 @@ public slots:
  }
  void cleanupTestCase() {
   // Release runtime-dependent objects before QuickTest destroys its application.
-  catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  research.reset();law.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  if(syntheticModeEnvChanged) {
+   if(originalSyntheticModeEnv.isNull())qunsetenv("MR_UI_DEVICE_MODE");else qputenv("MR_UI_DEVICE_MODE",originalSyntheticModeEnv);
+  }
  }
 };
 QUICK_TEST_MAIN_WITH_SETUP(mr_ui,Setup)

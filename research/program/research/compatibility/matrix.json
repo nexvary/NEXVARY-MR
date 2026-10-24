@@ -1,0 +1,1 @@
+{"schema_version":1,"entries":[],"required_fields":["entry_id","manufacturer","model","os_version","security_patch","hardware_revision","capability","status","experiment_id","evidence_sha256","reviewer","tested_at_utc"]}
