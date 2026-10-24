@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="2"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="9e3b5f1a81ff"
+	time="2"
+	timestamp="2026-10-24T16:04:55"
+	>
+	<testcase name="mr_forensic_tests" classname="mr_forensic_tests" time="0.534476" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of ForensicTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ForensicTests::initTestCase()
+PASS   : ForensicTests::auditDetectsEditsAndReordering()
+PASS   : ForensicTests::oldCasesUpgradeWithoutInventingIdentity()
+PASS   : ForensicTests::caseAcquisitionCustodyTimelineAndReports()
+PASS   : ForensicTests::reopeningNeverAttributesLegacyEvidenceToAnotherCaseOperator()
+PASS   : ForensicTests::modifiedSealedAuditIsRefusedWithoutReplacingOpenCase()
+PASS   : ForensicTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 514ms
+********* Finished testing of ForensicTests *********
+</system-out>
+	</testcase>
+	<testcase name="mr_tsk_tests" classname="mr_tsk_tests" time="1.47364" status="run">
+		<properties/>
+		<system-out>********* Start testing of TskTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : TskTests::initTestCase()
+PASS   : TskTests::privateCopyHashAndProvenance()
+PASS   : TskTests::failureCancellationBoundsAndChanges()
+PASS   : TskTests::toolSelectionDoesNotExecuteAndPersists()
+PASS   : TskTests::inputPolicy()
+PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary.
+   Loc: [/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/tests/tsk_tests.cpp(85)]
+PASS   : TskTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 1452ms
+********* Finished testing of TskTests *********
+</system-out>
+	</testcase>
+</testsuite>

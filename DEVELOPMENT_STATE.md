@@ -1,3 +1,75 @@
+# Verified source checkpoint — 2026-10-24
+
+Active branch: `feature/law-enforcement-case-foundation`; PR #11.
+Last tested source: `c892faee4f4309ec074bfda64762cde28aed9da9`.
+The documentation-only commit containing this final record does not change any
+compiled source, QML, catalog, CMake or packaging input from that tested source.
+
+## Completed and verified
+
+- Native unified Law Enforcement and Research Center implementation is published.
+  Case create/search/reopen, devices, protected evidence, declared custody,
+  linked audit, native role policy, access assessment, training, AR/EN PDF tables,
+  source-backed research catalog/intake/results/validation, and shared engine context.
+- Exact-source native CI: all seven jobs passed in run 40092232679:
+  https://github.com/nexvary/NEXVARY-MR/actions/runs/40092232679
+- Windows production CTest: 37/37; Windows Laboratory: 37/37. Core on both OSes,
+  both Linux Qt profiles, configured TSK/ClamAV gates, production sanitizer/TLS
+  integrations and tracking-server passed.
+- Both Python workflows and both public-history checks at c892fae passed.
+- Windows portable and installer were built. Isolated portable launch, installed
+  application launch, installer registration and uninstall lifecycle passed.
+- Real AR/EN runtime screenshots exist in the Windows validation artifacts;
+  visually reviewed Linux workspace captures are committed alongside this record.
+- Native synthetic case PDF was rendered and reviewed on all three pages;
+  full evidence SHA-256 was checked in extracted text. It contains no real case data.
+
+Windows installer ZIP (unsigned development build):
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40092232679/artifacts/12558819701
+Portable ZIP (unsigned development build):
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40092232679/artifacts/12558784752
+Windows runtime/installer/screenshot validation:
+https://github.com/nexvary/NEXVARY-MR/actions/runs/40092232679/artifacts/12559885974
+These provider artifacts currently expire 2027-01-22; metadata/digests are retained
+in `evidence/unified-2026-10-24/verified-ci.json`.
+
+## Remaining acceptance gates
+
+This is a tested development increment, not a final institutional/commercial release.
+Authenticated agency identities and role provisioning, case-level multi-user grants,
+independent researcher review/promotion, external audit/custody anchoring,
+owned-phone acceptance and independent clean Windows 10/11 device validation remain.
+Current roles are native local action policy, not deployed agency identity proof.
+No protected-device extraction, PIN/FRP bypass, decryption or lab compatibility
+claim was added. No main merge or final-release gate is claimed.
+
+Next task: authenticated local/agency identity provisioning, then independently
+reviewed experiment promotion linked to exact device/firmware evidence and native
+capability gates. Continue repair improvements through the existing engines.
+
+## Resume
+
+```sh
+git fetch origin
+git checkout feature/law-enforcement-case-foundation
+git status --short --branch
+python3 scripts/validate_research_catalog.py
+python3 -m unittest discover -s tests -v
+cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+```
+
+Read `docs/UNIFIED_WORKSPACES.md` and `verified-ci.json` before changes. Recheck
+remote HEAD and existing changes. Previous failures and remediation are retained;
+the initial local post-report run had two execute-bit errors in generated ELF
+binaries, and both reruns passed after restoring those bits. Optional external
+ClamAV/TSK subcases were skipped locally but passed in configured hosted jobs.
+
+---
+
+## Earlier checkpoints (historical)
+
 # Active master directive — unified workspaces, 2026-10-24
 
 This checkpoint supersedes the older forensic-feature freeze below. The current
