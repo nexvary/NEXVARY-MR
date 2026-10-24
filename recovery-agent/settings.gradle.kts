@@ -7,3 +7,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NexvaryRecoveryAgent"
 include(":app")
+
+include(":npse-core", ":npse-android")

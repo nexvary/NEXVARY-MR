@@ -4,14 +4,15 @@ import android.os.Process
 import android.os.StatFs
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 /** Shizuku UserService: fixed metadata only, no client-selected commands or paths. */
-class MetadataService : IMetadataService.Stub() {
+class MetadataService(context: android.content.Context) : IMetadataService.Stub() {
+    private val ownerUid = context.applicationInfo.uid
+    private val cancellation = com.nexvary.npse.core.BoundedRunner.Cancellation()
+
     override fun collectMetadata(): String {
+        check(com.nexvary.npse.core.AccessPolicy.callerAllowed(android.os.Binder.getCallingUid(), ownerUid)) { "Unexpected caller" }
         check(Process.myUid() == 2000) { "Only shell UID 2000 is supported; root is refused" }
         val probes = JSONArray()
         for (name in listOf("shell-identity") + ProbePolicy.properties.keys) {
@@ -33,44 +34,17 @@ class MetadataService : IMetadataService.Stub() {
         }
     }
     private fun runFixedProbe(name: String): MetadataProbe {
-        val command = ProbePolicy.commandFor(name) ?: return MetadataProbe(name, "unavailable", "Unsupported probe")
-        var child: java.lang.Process? = null
-        val reader = Executors.newSingleThreadExecutor()
-        return try {
-            child = ProcessBuilder(command).redirectErrorStream(true).start()
-            val process = child
-            val output = reader.submit<String> {
-                val bytes = ByteArrayOutputStream()
-                process.inputStream.use { input ->
-                    val buffer = ByteArray(512)
-                    while (true) {
-                        val count = input.read(buffer)
-                        if (count < 0) break
-                        if (bytes.size() + count > ProbePolicy.MAX_PROBE_BYTES) {
-                            process.destroyForcibly()
-                            throw IllegalStateException("Probe output exceeded limit")
-                        }
-                        bytes.write(buffer, 0, count)
-                    }
-                }
-                bytes.toString(Charsets.UTF_8.name()).trim()
-            }
-            if (!process.waitFor(1500, TimeUnit.MILLISECONDS)) {
-                process.destroyForcibly()
-                MetadataProbe(name, "unavailable", "Probe timed out")
-            } else {
-                val text = output.get(500, TimeUnit.MILLISECONDS)
-                MetadataProbe(name, if (process.exitValue() == 0) "ok" else "denied", text)
-            }
-        } catch (_: SecurityException) {
-            MetadataProbe(name, "denied", "Metadata probe denied")
-        } catch (_: Exception) {
-            MetadataProbe(name, "unavailable", "Metadata probe unavailable or exceeded its limit")
-        } finally {
-            child?.destroyForcibly()
-            runCatching { child?.inputStream?.close() }
-            reader.shutdownNow()
+        val probe = com.nexvary.npse.core.Probe.find(name) ?: return MetadataProbe(name, "unavailable", "Unsupported probe")
+        val result = com.nexvary.npse.core.BoundedRunner().run(probe, cancellation)
+        val state = when (result.status) {
+            com.nexvary.npse.core.BoundedRunner.Status.OK -> "ok"
+            com.nexvary.npse.core.BoundedRunner.Status.DENIED -> "denied"
+            else -> "unavailable"
         }
+        return MetadataProbe(name, state, result.value)
     }
-    override fun destroy() { exitProcess(0) }
+    override fun destroy() {
+        check(android.os.Binder.getCallingUid() == 2000 || com.nexvary.npse.core.AccessPolicy.callerAllowed(android.os.Binder.getCallingUid(), ownerUid))
+        cancellation.cancel(); exitProcess(0)
+    }
 }
