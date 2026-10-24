@@ -1,0 +1,22 @@
+********* Start testing of ExifTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ExifTests::initTestCase()
+PASS   : ExifTests::byteOrder(little)
+PASS   : ExifTests::byteOrder(big)
+PASS   : ExifTests::independentPillowReference()
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-overflow)
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-header)
+PASS   : ExifTests::invalidOffsetsAndTypes(entry-count)
+PASS   : ExifTests::invalidOffsetsAndTypes(string-offset)
+PASS   : ExifTests::invalidOffsetsAndTypes(string-count)
+PASS   : ExifTests::invalidOffsetsAndTypes(wrong-type)
+PASS   : ExifTests::invalidOffsetsAndTypes(invalid-orientation)
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-cycle)
+PASS   : ExifTests::invalidOffsetsAndTypes(invalid-pointer-type)
+PASS   : ExifTests::invalidOffsetsAndTypes(duplicate-tag)
+PASS   : ExifTests::stringsAndExcludedMetadata()
+PASS   : ExifTests::markerBoundsAndNoExif()
+PASS   : ExifTests::caseWorkflow()
+PASS   : ExifTests::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 264ms
+********* Finished testing of ExifTests *********

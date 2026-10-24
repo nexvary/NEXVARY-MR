@@ -1,0 +1,621 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+  "run": {
+    "id": 40098038007,
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "id": 120884500708,
+      "name": "linux-forensic-integration (laboratory)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Qt and separately packaged TSK for synthetic integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure and build native GUI and fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Qt, recovery and real mmls synthetic-image integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Instrument parser, identity and signed-update regressions",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Native Qt client through real Gunicorn and verified Caddy TLS",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500826,
+      "name": "qt (production)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Parse Windows deployment scripts before building",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run jurplel/install-qt-action@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "conclusion": "success"
+        },
+        {
+          "name": "Supply installed Windows fonts to offscreen Qt tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure GUI and Qt integration tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build GUI",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify bounded GUI profile probe and production packaging guard",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare verified standalone ClamAV for synthetic Windows integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run CTest suite",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify read-only Windows USB inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Assemble portable Qt runtime",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify portable in isolated path with spaces",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build per-user Windows installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify installer installation and deployed runtime",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record artifact checksums",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run jurplel/install-qt-action@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500832,
+      "name": "linux-forensic-integration (production)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Qt and separately packaged TSK for synthetic integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure and build native GUI and fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Qt, recovery and real mmls synthetic-image integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Instrument parser, identity and signed-update regressions",
+          "conclusion": "success"
+        },
+        {
+          "name": "Native Qt client through real Gunicorn and verified Caddy TLS",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500884,
+      "name": "core (ubuntu-latest)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure C++ core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build core and tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500890,
+      "name": "tracking-server",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test portal, validate and bundle single-file server installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install, upgrade, back up, restore and rotate on disposable systemd VM",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500904,
+      "name": "qt (laboratory)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Parse Windows deployment scripts before building",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run jurplel/install-qt-action@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "conclusion": "success"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "conclusion": "success"
+        },
+        {
+          "name": "Supply installed Windows fonts to offscreen Qt tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure GUI and Qt integration tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build GUI",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify bounded GUI profile probe and production packaging guard",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare verified standalone ClamAV for synthetic Windows integration",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run CTest suite",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify read-only Windows USB inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Assemble portable Qt runtime",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify portable in isolated path with spaces",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build per-user Windows installer",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify installer installation and deployed runtime",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Record artifact checksums",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run jurplel/install-qt-action@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120884500934,
+      "name": "core (windows-2022)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Configure C++ core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build core and tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run core tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "testSummaries": [
+    {
+      "job": "linux-forensic-integration (laboratory)",
+      "summaries": [
+        "100% tests passed, 0 tests failed out of 38"
+      ]
+    },
+    {
+      "job": "qt (production)",
+      "summaries": [
+        "100% tests passed, 0 tests failed out of 38"
+      ]
+    },
+    {
+      "job": "linux-forensic-integration (production)",
+      "summaries": [
+        "100% tests passed, 0 tests failed out of 38",
+        "100% tests passed, 0 tests failed out of 7"
+      ]
+    },
+    {
+      "job": "qt (laboratory)",
+      "summaries": [
+        "100% tests passed, 0 tests failed out of 38"
+      ]
+    }
+  ],
+  "otherWorkflows": [
+    {
+      "id": 40098038002,
+      "name": "Public history safety",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038002",
+      "conclusion": "success"
+    },
+    {
+      "id": 40098038008,
+      "name": "Python checks",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038008",
+      "conclusion": "success"
+    },
+    {
+      "id": 40098034744,
+      "name": "Public history safety",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098034744",
+      "conclusion": "success"
+    },
+    {
+      "id": 40098034748,
+      "name": "Python checks",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098034748",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12562260179,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size": 18561,
+      "digest": "sha256:345ec32cf13340c6c22466cbb01bac884c86bd9abcea4a83587c8716c5e08ac2",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562260179",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12562251680,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size": 24618782,
+      "digest": "sha256:9f9c53b92ee840387f29d23cddd96d655638e4148573e07a8ca37c0e29f75cb2",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562251680",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12562251671,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size": 37065685,
+      "digest": "sha256:f278917afe1a8262092778404c0ac3d300e3506b8524c9a0e35d5b30658f0157",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562251671",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12562210597,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size": 59035079,
+      "digest": "sha256:8ba0117e602c543421d9c75002e5d8c35a0d1ceb98a9ff66ba890ee26594d70e",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12562210597",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12561997442,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size": 45760289,
+      "digest": "sha256:1d1b62e063c600582d5ed937be8e0fd2a4c4a5ebb903e6833d60231f53cf9cb3",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561997442",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12561846633,
+      "name": "core-test-results-ubuntu-latest",
+      "size": 645,
+      "digest": "sha256:7ddf62e9f2630fcd8ceed25f2bd7f37bda0a729add490ce9876f680a3b1852de",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561846633",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12561786752,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size": 59060786,
+      "digest": "sha256:52c559c1a0727d223e933bd084a8ad714b1371ec1aa75bb7d25d4cd17aceb224",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561786752",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12561559735,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size": 50989080,
+      "digest": "sha256:ca3bb0ab60506d3a13466155d785a1927ded8d2af9b825f1e10714edd76b45b5",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561559735",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    },
+    {
+      "id": 12561513242,
+      "name": "core-test-results-windows-2022",
+      "size": 656,
+      "digest": "sha256:c988f9bd84456fe3c80727adec457abf577d277e454ecb12d5291c72e857c431",
+      "expiresAt": "2027-01-22T13:25:01Z",
+      "expired": false,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40098038007/artifacts/12561513242",
+      "sourceCommit": "03da82d981e4e192b20dcf12af4aeddac16d71e0"
+    }
+  ],
+  "downloadVerified": [
+    {
+      "artifactId": 12561997442,
+      "sha256": "1d1b62e063c600582d5ed937be8e0fd2a4c4a5ebb903e6833d60231f53cf9cb3",
+      "selected": "Identity/Qt results and real AR/EN runtime screens"
+    },
+    {
+      "artifactId": 12561559735,
+      "sha256": "ca3bb0ab60506d3a13466155d785a1927ded8d2af9b825f1e10714edd76b45b5",
+      "selected": "Production identity/Qt results, real AR/EN screens, portable/installed results and installer lifecycle"
+    }
+  ],
+  "limitations": [
+    "Synthetic inputs only; no physical phone acceptance",
+    "Hosted Windows Server 2022 does not establish independent clean Windows 10/11 acceptance",
+    "Installer and portable remain unsigned development builds",
+    "Local account signatures and local clocks are not institution/independent-human/trusted-time proof"
+  ],
+  "extractedTextHandling": "CRLF normalized to LF for repository text. Original downloaded archives matched their recorded GitHub SHA-256 digests."
+}

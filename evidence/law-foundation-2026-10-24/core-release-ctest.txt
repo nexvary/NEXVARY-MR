@@ -1,0 +1,53 @@
+Start testing: Oct 23 23:30 CDT
+----------------------------------------------------------
+1/3 Testing: mr_policy_tests
+1/3 Test: mr_policy_tests
+Command: "/tmp/mr-law-core-release/mr_policy_tests"
+Directory: /tmp/mr-law-core-release
+"mr_policy_tests" start time: Oct 23 23:30 CDT
+Output:
+----------------------------------------------------------
+production-read-only: policy passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_tests" end time: Oct 23 23:30 CDT
+"mr_policy_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/3 Testing: mr_core_tests
+2/3 Test: mr_core_tests
+Command: "/tmp/mr-law-core-release/mr_core_tests"
+Directory: /tmp/mr-law-core-release
+"mr_core_tests" start time: Oct 23 23:30 CDT
+Output:
+----------------------------------------------------------
+Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_core_tests" end time: Oct 23 23:30 CDT
+"mr_core_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/3 Testing: mr_law_enforcement_case_tests
+3/3 Test: mr_law_enforcement_case_tests
+Command: "/tmp/mr-law-core-release/mr_law_enforcement_case_tests"
+Directory: /tmp/mr-law-core-release
+"mr_law_enforcement_case_tests" start time: Oct 23 23:30 CDT
+Output:
+----------------------------------------------------------
+432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_law_enforcement_case_tests" end time: Oct 23 23:30 CDT
+"mr_law_enforcement_case_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 23 23:30 CDT

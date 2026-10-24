@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {"id":"KN-001","title":"Hacking Team RCS network infrastructure","category":"spyware-defensive-research","status":"documented","source_ids":["SRC-CITIZENLAB-RCS"],"claim":"Published research maps network infrastructure associated with Hacking Team RCS.","limitations":"Historical research; does not imply present-day infrastructure or software behavior.","product_relevance":"PCAP correlation, threat intelligence and forensic artifact review"},
+    {"id":"KN-002","title":"Cellebrite-related mobile security research","category":"forensic-tool-intelligence","status":"documented","source_ids":["SRC-AMNESTY-SERBIA"],"claim":"A public investigation documents forensic tool usage and related mobile device security observations in specific cases.","limitations":"Case-specific; does not establish general unlock capability or present-day device support.","product_relevance":"Device security architecture, provenance and defensive lab validation"},
+    {"id":"KN-003","title":"MVT as a defensive research reference","category":"open-source-reference","status":"documented","source_ids":["SRC-MVT"],"claim":"An open-source mobile verification toolkit is published for forensic artifact review.","limitations":"Check platform coverage and licensing against the version selected for integration.","product_relevance":"Artifact analysis workflows and test fixtures"}
+  ]
+}

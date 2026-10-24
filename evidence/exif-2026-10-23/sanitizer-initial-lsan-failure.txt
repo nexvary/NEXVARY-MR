@@ -1,0 +1,42 @@
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE  
+-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   
+-- Found WrapOpenGL: TRUE  
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Found WrapVulkanHeaders: /usr/include  
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-sanitized
+[0/2] Re-checking globbed directories...
+[1/5] Automatic MOC and UIC for target mr_exif_mutation_tests
+[2/5] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/mr_exif_mutation_tests_autogen/mocs_compilation.cpp.o
+[3/5] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/tests/exif_mutation_tests.cpp.o
+[4/5] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/src/ExifSummary.cpp.o
+[5/5] Linking CXX executable mr_exif_mutation_tests
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-sanitized
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-sanitized
+    Start 24: mr_exif_mutation_tests
+1/1 Test #24: mr_exif_mutation_tests ...........***Failed    0.38 sec
+==131==Can't open /proc/130/task for reading.
+==130==LeakSanitizer has encountered a fatal error.
+==130==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==130==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.38 sec
+
+The following tests FAILED:
+	 24 - mr_exif_mutation_tests (Failed)
+Errors while running CTest

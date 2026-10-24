@@ -1,0 +1,24 @@
+test_authorized_card (test_assessment_cli.AssessmentCliTests.test_authorized_card) ... ok
+test_no_consent (test_assessment_cli.AssessmentCliTests.test_no_consent) ... ok
+test_reject_invalid_source (test_assessment_cli.AssessmentCliTests.test_reject_invalid_source) ... ok
+test_reject_string_boolean (test_assessment_cli.AssessmentCliTests.test_reject_string_boolean) ... ok
+test_reject_unknown_field (test_assessment_cli.AssessmentCliTests.test_reject_unknown_field) ... ok
+test_compare (test_evidence_manifest.EvidenceManifestTests.test_compare) ... ok
+test_known_hash (test_evidence_manifest.EvidenceManifestTests.test_known_hash) ... ok
+test_output_safety (test_evidence_manifest.EvidenceManifestTests.test_output_safety) ... ok
+test_backups (test_recovery_assessment.AssessmentTests.test_backups) ... ok
+test_denied_authorization (test_recovery_assessment.AssessmentTests.test_denied_authorization) ... ok
+test_external_card (test_recovery_assessment.AssessmentTests.test_external_card) ... ok
+test_reset_internal_storage (test_recovery_assessment.AssessmentTests.test_reset_internal_storage) ... ok
+test_report_hash_and_candidate (test_signature_report.SignatureReportTests.test_report_hash_and_candidate) ... ok
+test_boundary_crossing (test_signature_scan.SignatureScanTests.test_boundary_crossing) ... ok
+test_empty_image (test_signature_scan.SignatureScanTests.test_empty_image) ... ok
+test_jpeg_exif_marker (test_signature_scan.SignatureScanTests.test_jpeg_exif_marker) ... ok
+test_reject_excessive_matches (test_signature_scan.SignatureScanTests.test_reject_excessive_matches) ... ok
+test_reject_oversized_input (test_signature_scan.SignatureScanTests.test_reject_oversized_input) ... ok
+test_signatures_and_offsets (test_signature_scan.SignatureScanTests.test_signatures_and_offsets) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.005s
+
+OK

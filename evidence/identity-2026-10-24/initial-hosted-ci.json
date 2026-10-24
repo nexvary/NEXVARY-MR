@@ -1,0 +1,55 @@
+{
+  "source": "8034c4d6e41a120de38f353465687cc62689765a",
+  "runId": 40096699282,
+  "jobs": [
+    {
+      "id": 120880347706,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120880347809,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120880347874,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120880347889,
+      "name": "tracking-server",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120880347925,
+      "name": "linux-forensic-integration (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120880347997,
+      "name": "qt (production)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 120880348063,
+      "name": "qt (laboratory)",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "windowsProductionTestSummaries": [
+    "100% tests passed, 0 tests failed out of 38"
+  ],
+  "packageFailure": [
+    "2026-10-24T13:15:15.2622400Z Copy-Item: D:\\a\\NEXVARY-MR\\NEXVARY-MR\\packaging\\package-windows.ps1:95\r",
+    "2026-10-24T13:15:15.2625876Z      | Cannot find path 'D:\\a\\NEXVARY-MR\\NEXVARY-MR\\licenses\\LIBSODIUM-ISC.txt' because it does not exist.\r"
+  ]
+}

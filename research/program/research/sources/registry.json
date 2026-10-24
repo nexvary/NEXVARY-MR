@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {"id":"SRC-CITIZENLAB-RCS","title":"Mapping Hacking Team's Untraceable Spyware","publisher":"Citizen Lab","url":"https://citizenlab.ca/research/mapping-hacking-teams-untraceable-spyware/","topic":"RCS infrastructure analysis","license_note":"Read and cite public research; do not copy proprietary code"},
+    {"id":"SRC-AMNESTY-SERBIA","title":"A Digital Prison: Spyware and Cellebrite used on journalists and activists in Serbia","publisher":"Amnesty International Security Lab","url":"https://securitylab.amnesty.org/latest/2024/12/a-digital-prison-surveillance-and-the-suppression-of-civil-society-in-serbia/","topic":"Mobile forensic tool research and indicators","license_note":"Public research, citation required"},
+    {"id":"SRC-MVT","title":"Mobile Verification Toolkit","publisher":"Amnesty International","url":"https://github.com/mvt-project/mvt","topic":"Defensive mobile forensic artifact triage","license_note":"Review upstream license before integrating code"}
+  ]
+}

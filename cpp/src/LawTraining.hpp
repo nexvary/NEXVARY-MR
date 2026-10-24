@@ -1,0 +1,13 @@
+#pragma once
+#include <QVariantMap>
+#include <QVariantList>
+namespace nexvary::law {
+inline QVariantList trainingScenarios() {
+ return {QVariantMap{{"id","usb-authorization"},{"titleAr","USB: الجهاز غير مفوض"},{"titleEn","USB: unauthorized device"},{"evidenceAr","جهاز اصطناعي يظهر unauthorized. لا توجد موافقة USB مسجلة."},{"evidenceEn","Synthetic device reports unauthorized. No USB consent has been recorded."},{"choices",QVariantList{QVariantMap{{"id","consent"},{"labelAr","توقف واطلب موافقة المالك عبر الواجهة الرسمية"},{"labelEn","Stop and obtain owner consent through the official interface"}},QVariantMap{{"id","bypass"},{"labelAr","اعتبر الاتصال إذنًا لقراءة المحتوى"},{"labelEn","Treat a connection as permission to read content"}}}}},
+ QVariantMap{{"id","firmware-integrity"},{"titleAr","ملف النظام: تطابق الهاش"},{"titleEn","Firmware: matching hash"},{"evidenceAr","تطابق SHA-256 لملف اصطناعي مع manifest. لم يُثبت مصدر OEM."},{"evidenceEn","Synthetic package SHA-256 matches its manifest. OEM origin is unverified."},{"choices",QVariantList{QVariantMap{{"id","integrity"},{"labelAr","أثبت سلامة التطابق فقط وراجع المصدر والتوافق"},{"labelEn","Record integrity only; review origin and compatibility"}},QVariantMap{{"id","flash"},{"labelAr","اعتبر الملف أصليًا ومناسبًا للتفليش"},{"labelEn","Assume OEM authenticity and flashing compatibility"}}}}},
+ QVariantMap{{"id","custody-mismatch"},{"titleAr","الحيازة: اختلاف البصمة"},{"titleEn","Custody: hash mismatch"},{"evidenceAr","نسخة اصطناعية مستلمة لا تطابق البصمة المسجلة."},{"evidenceEn","A received synthetic copy differs from its recorded digest."},{"choices",QVariantList{QVariantMap{{"id","quarantine"},{"labelAr","أوقف المعالجة ووثّق الاختلاف واعزل النسخة"},{"labelEn","Stop processing, record the mismatch and isolate the copy"}},QVariantMap{{"id","replace"},{"labelAr","استبدل البصمة القديمة دون سجل"},{"labelEn","Replace the old hash without an audit record"}}}}}};
+}
+inline QVariantMap evaluateTraining(const QString &scenario,const QString &choice) {
+ const auto scenarios=trainingScenarios();for(const auto &v:scenarios){const auto s=v.toMap();if(s.value("id")!=scenario)continue;const auto choices=s.value("choices").toList();bool valid=false;for(const auto &c:choices)if(c.toMap().value("id")==choice)valid=true;if(!valid)return {{"valid",false}};const bool correct=choices.first().toMap().value("id")==choice;return {{"valid",true},{"correct",correct},{"score",correct?100:0},{"explanationAr","وثّق المصدر والتفويض وسلامة البيانات؛ النتيجة الاصطناعية لا تثبت قدرة على هاتف حقيقي."},{"explanationEn","Record provenance, authority and integrity. A synthetic result establishes no physical-device capability."}};}return {{"valid",false}};
+}
+}

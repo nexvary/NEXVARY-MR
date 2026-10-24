@@ -1,0 +1,24 @@
+********* Start testing of IntelligenceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : IntelligenceTests::initTestCase()
+PASS   : IntelligenceTests::valuesHaveSourceAndCollectionTime()
+PASS   : IntelligenceTests::unknownSocIsNotFilledFromAnotherPropertyOrCatalog()
+PASS   : IntelligenceTests::unavailableTarget(offline)
+PASS   : IntelligenceTests::unavailableTarget(unauthorized)
+PASS   : IntelligenceTests::unavailableTarget(recovery)
+PASS   : IntelligenceTests::unavailableTarget(sideload)
+PASS   : IntelligenceTests::unavailableTarget(ambiguous)
+PASS   : IntelligenceTests::wrongAndAmbiguousTargetsCannotInheritIdentity()
+PASS   : IntelligenceTests::expiredAndFuturePropertiesHaveNoCurrentValues(expired)
+PASS   : IntelligenceTests::expiredAndFuturePropertiesHaveNoCurrentValues(future)
+PASS   : IntelligenceTests::missingValuesRetainTheirReadSource()
+PASS   : IntelligenceTests::conflictingLockDeclarationsAreFlagged()
+PASS   : IntelligenceTests::healthRequiresFreshSameTargetProbe()
+PASS   : IntelligenceTests::batteryOverridesAreExplained()
+PASS   : IntelligenceTests::mixedBuildReadingsAreNotMerged()
+PASS   : IntelligenceTests::fastbootProductIsNotAnAndroidModelAssertion()
+PASS   : IntelligenceTests::serviceAvailabilityNeverApprovesExecutionOrHardware()
+PASS   : IntelligenceTests::unrelatedPrivatePropertiesAreNotProjected()
+PASS   : IntelligenceTests::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of IntelligenceTests *********

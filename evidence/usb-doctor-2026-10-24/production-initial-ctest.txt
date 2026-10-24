@@ -1,0 +1,77 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor
+      Start  1: mr_policy_tests
+ 1/32 Test  #1: mr_policy_tests ..................   Passed    0.00 sec
+      Start  2: mr_core_tests
+ 2/32 Test  #2: mr_core_tests ....................   Passed    0.00 sec
+      Start  3: mr_update_tests
+ 3/32 Test  #3: mr_update_tests ..................   Passed    0.45 sec
+      Start  4: mr_update_journal_tests
+ 4/32 Test  #4: mr_update_journal_tests ..........   Passed    0.19 sec
+      Start  5: mr_update_key_tests
+ 5/32 Test  #5: mr_update_key_tests ..............   Passed    0.01 sec
+      Start  6: mr_connection_tests
+ 6/32 Test  #6: mr_connection_tests ..............   Passed    0.01 sec
+      Start  7: mr_workshop_tests
+ 7/32 Test  #7: mr_workshop_tests ................   Passed    1.60 sec
+      Start  8: mr_barcode_tests
+ 8/32 Test  #8: mr_barcode_tests .................   Passed    0.25 sec
+      Start  9: mr_center_tests
+ 9/32 Test  #9: mr_center_tests ..................   Passed    0.07 sec
+      Start 10: mr_cloud_tests
+10/32 Test #10: mr_cloud_tests ...................   Passed    6.58 sec
+      Start 11: mr_security_tests
+11/32 Test #11: mr_security_tests ................   Passed    1.16 sec
+      Start 12: mr_catalog_tests
+12/32 Test #12: mr_catalog_tests .................   Passed    0.03 sec
+      Start 13: mr_tool_tests
+13/32 Test #13: mr_tool_tests ....................   Passed   24.65 sec
+      Start 14: mr_service_tests
+14/32 Test #14: mr_service_tests .................   Passed    4.87 sec
+      Start 15: mr_mirror_tests
+15/32 Test #15: mr_mirror_tests ..................   Passed    0.08 sec
+      Start 16: mr_compatibility_tests
+16/32 Test #16: mr_compatibility_tests ...........   Passed    0.02 sec
+      Start 17: mr_board_tests
+17/32 Test #17: mr_board_tests ...................   Passed    0.03 sec
+      Start 18: mr_firmware_tests
+18/32 Test #18: mr_firmware_tests ................   Passed    0.04 sec
+      Start 19: mr_avb_tests
+19/32 Test #19: mr_avb_tests .....................   Passed    0.04 sec
+      Start 20: mr_pcap_tests
+20/32 Test #20: mr_pcap_tests ....................   Passed    0.39 sec
+      Start 21: mr_exif_tests
+21/32 Test #21: mr_exif_tests ....................   Passed    0.28 sec
+      Start 22: mr_recovery_tests
+22/32 Test #22: mr_recovery_tests ................   Passed    8.25 sec
+      Start 23: mr_recovery_image_tests
+23/32 Test #23: mr_recovery_image_tests ..........   Passed    0.02 sec
+      Start 24: mr_forensic_tests
+24/32 Test #24: mr_forensic_tests ................   Passed    0.53 sec
+      Start 25: mr_tsk_tests
+25/32 Test #25: mr_tsk_tests .....................   Passed    1.40 sec
+      Start 26: mr_avb_mutation_tests
+26/32 Test #26: mr_avb_mutation_tests ............   Passed    0.13 sec
+      Start 27: mr_pcap_mutation_tests
+27/32 Test #27: mr_pcap_mutation_tests ...........   Passed    0.21 sec
+      Start 28: mr_exif_mutation_tests
+28/32 Test #28: mr_exif_mutation_tests ...........   Passed    0.03 sec
+      Start 29: mr_ui_tests
+29/32 Test #29: mr_ui_tests ......................   Passed   29.55 sec
+      Start 30: mr_ui_scale_1.25
+30/32 Test #30: mr_ui_scale_1.25 .................   Passed   12.33 sec
+      Start 31: mr_ui_scale_1.5
+31/32 Test #31: mr_ui_scale_1.5 ..................   Passed   15.16 sec
+      Start 32: mr_gui_smoke
+Process not started
+ /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-doctor/nexvary_mr
+[permission denied]
+32/32 Test #32: mr_gui_smoke .....................***Not Run   0.00 sec
+
+97% tests passed, 1 tests failed out of 32
+
+Total Test time (real) = 108.37 sec
+
+The following tests FAILED:
+	 32 - mr_gui_smoke (BAD_COMMAND)
+Errors while running CTest

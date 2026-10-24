@@ -1,0 +1,7 @@
+{
+  "source": "NEXVARY-Advanced-Mobile-Research-Program.zip",
+  "sha256": "0cb8b05ab1d44c415905c007558da1cc24aafbc6705146c1724fecdff47e3811",
+  "importedOn": "2026-10-24",
+  "review": "User-supplied NEXVARY foundation. No standalone license supplied. Integrated under explicit owner direction; not a grant to third-party source materials. No third-party code or compiled bytecode imported.",
+  "thirdPartyMaterials": "References only; each source retains its own rights."
+}

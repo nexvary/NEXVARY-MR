@@ -1,0 +1,17 @@
+{
+  "production": {
+    "ctestSuitesPassed": 29,
+    "ctestSuitesFailed": 0,
+    "qtCasesPassed": 380,
+    "qtCasesFailed": 0,
+    "qtCasesSkipped": 43
+  },
+  "laboratory": {
+    "ctestSuitesPassed": 29,
+    "ctestSuitesFailed": 0,
+    "qtCasesPassed": 418,
+    "qtCasesFailed": 0,
+    "qtCasesSkipped": 5
+  },
+  "windowsCiForNewIncrement": false
+}

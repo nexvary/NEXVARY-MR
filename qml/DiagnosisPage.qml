@@ -25,20 +25,20 @@ Item {
   ColumnLayout {
    width:scroll.availableWidth;spacing:14
    Panel {
-    title:app.trx("مسار التشخيص الإرشادي","Guided diagnostic workflow");Layout.fillWidth:true;Layout.preferredHeight:350
+    iconName:"gauge";title:app.trx("مسار التشخيص الإرشادي","Guided diagnostic workflow");Layout.fillWidth:true
     Label {text:app.trx("1  حدد العَرَض   ←   2  راجع الإرشادات والدليل   ←   3  احفظ ملاحظات الفني لأمر محدد","1  Select symptom   →   2  Review guidance and evidence   →   3  Save findings to a specific order");color:app.tone("#69b7ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
     RowLayout {
      Layout.fillWidth:true
      NeonComboBox {id:symptom;objectName:"symptomChoice";Layout.fillWidth:true;model:repairBridge.supportedSymptoms();onCurrentTextChanged:{page.analyzedSymptom="";page.guidanceSnapshot=""}}
      ActionButton {objectName:"diagnoseButton";text:app.trx("تحليل العَرَض","Analyze symptom");primary:true;onClicked:{page.analyzedSymptom=symptom.currentText;page.guidanceSnapshot=repairBridge.diagnoseLocalized(page.analyzedSymptom,app.ar)}}
     }
-    Flickable {id:guidanceScroll;Layout.fillWidth:true;Layout.fillHeight:true;clip:true;contentWidth:width;contentHeight:result.height;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
+    Flickable {id:guidanceScroll;Layout.fillWidth:true;Layout.preferredHeight:page.guidanceSnapshot!==""?220:96;clip:true;contentWidth:width;contentHeight:result.height;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
     TextArea {id:result;objectName:"diagnosisResult";width:guidanceScroll.width;height:Math.max(guidanceScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;text:page.guidanceSnapshot||app.trx("اختر العَرَض ثم اضغط تحليل لتوليد إرشادات قابلة للحفظ.","Select a symptom, then Analyze to generate guidance for saving.");color:app.tone("#d0e0ef");font.pixelSize:16;background:Rectangle{color:app.tone("#0c2232");radius:6}}
     }
     Label {text:app.trx("إرشادات قائمة على قواعد وليست تشخيصًا مؤكدًا. الدليل والملاحظات بالأسفل تُدخل يدويًا؛ لا تُنسخ سجلات الهاتف تلقائيًا.","Rule-based guidance, not a confirmed diagnosis. Findings and reviewed evidence below are entered manually; phone logs are never copied automatically.");color:app.tone("#eab775");wrapMode:Text.WordWrap;Layout.fillWidth:true}
    }
    Panel {
-    title:app.trx("توثيق نتائج التشخيص","Save diagnostic findings");Layout.fillWidth:true;Layout.preferredHeight:485
+    iconName:"clipboard_task";title:app.trx("توثيق نتائج التشخيص","Save diagnostic findings");Layout.fillWidth:true
     NeonComboBox {
      id:orderChooser;objectName:"diagnosisOrder";Layout.fillWidth:true;textRole:"label";valueRole:"id"
      model:[]
@@ -56,18 +56,18 @@ Item {
     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("يتضمن التقرير بيانات العميل والملاحظات المحفوظة. راجعه قبل المشاركة. تظهر النتائج أيضًا في ملف PDF الخاص بالأمر.","Reports contain customer data and saved notes. Review before sharing. Saved findings also appear in the order PDF.");color:app.tone("#c9aa78");font.pixelSize:12}
    }
    Panel {
-    title:app.trx("النتائج المحفوظة للأمر المختار","Saved findings for selected order");Layout.fillWidth:true;Layout.preferredHeight:225
+    iconName:"document_lock";title:app.trx("النتائج المحفوظة للأمر المختار","Saved findings for selected order");Layout.fillWidth:true
     ListView {
-     Layout.fillWidth:true;Layout.fillHeight:true;clip:true;spacing:8;model:page.savedEntries
+     Layout.fillWidth:true;Layout.preferredHeight:page.savedEntries.length?Math.min(240,contentHeight):0;visible:page.savedEntries.length>0;clip:true;spacing:8;model:page.savedEntries
      delegate:Label {required property var modelData;width:ListView.view.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8c1d7");text:modelData.created_at+" · "+modelData.technician+" · "+modelData.symptom+"\n"+modelData.findings}
     }
     Label {visible:page.savedEntries.length===0;text:app.trx("لا توجد نتائج محفوظة لهذا الأمر بعد","No saved findings for this order yet");color:app.tone("#7e9ab1")}
    }
    Panel {
-    title:app.trx("مكتبة الشركات والعائلات","Brands and device families");Layout.fillWidth:true;Layout.preferredHeight:205
+    iconName:"phone";title:app.trx("مكتبة الشركات والعائلات","Brands and device families");Layout.fillWidth:true
     TextField {id:catalogSearch;placeholderText:app.trx("البحث عن شركة أو عائلة أجهزة","Search brand or device family");Layout.fillWidth:true}
     ListView {
-     Layout.fillWidth:true;Layout.fillHeight:true;clip:true;model:repairBridge.brands()
+     Layout.fillWidth:true;Layout.preferredHeight:160;clip:true;model:repairBridge.brands()
      delegate:Label {required property var modelData;width:ListView.view.width;visible:(modelData.brand+modelData.families.join(" ")).toLowerCase().indexOf(catalogSearch.text.toLowerCase())>=0;height:visible?32:0;text:modelData.brand+"   /   "+modelData.families.join(" · ");color:app.tone("#a8bed3");textFormat:Text.PlainText;elide:Text.ElideRight}
     }
    }

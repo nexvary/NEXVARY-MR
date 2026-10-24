@@ -1,0 +1,1024 @@
+Start testing: Oct 23 21:32 EEST
+----------------------------------------------------------
+1/29 Testing: mr_policy_tests
+1/29 Test: mr_policy_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_policy_tests"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_policy_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+production-read-only: policy passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_tests" end time: Oct 23 21:32 EEST
+"mr_policy_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/29 Testing: mr_core_tests
+2/29 Test: mr_core_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_core_tests"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_core_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_core_tests" end time: Oct 23 21:32 EEST
+"mr_core_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/29 Testing: mr_update_tests
+3/29 Test: mr_update_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_update_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/update-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_update_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of UpdateTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : UpdateTests::initTestCase()
+PASS   : UpdateTests::independentlySignedReference()
+PASS   : UpdateTests::validSignatureDoesNotAuthorizeInstallation()
+PASS   : UpdateTests::trustAndSignatureFailures()
+PASS   : UpdateTests::signedPolicyViolations(schema)
+PASS   : UpdateTests::signedPolicyViolations(product)
+PASS   : UpdateTests::signedPolicyViolations(platform)
+PASS   : UpdateTests::signedPolicyViolations(channel)
+PASS   : UpdateTests::signedPolicyViolations(profile)
+PASS   : UpdateTests::signedPolicyViolations(kind)
+PASS   : UpdateTests::signedPolicyViolations(extra-field)
+PASS   : UpdateTests::signedPolicyViolations(key-in-message)
+PASS   : UpdateTests::signedPolicyViolations(wrong-type)
+PASS   : UpdateTests::signedPolicyViolations(version-equal)
+PASS   : UpdateTests::signedPolicyViolations(version-downgrade)
+PASS   : UpdateTests::signedPolicyViolations(version-leading-zero)
+PASS   : UpdateTests::signedPolicyViolations(version-overflow)
+PASS   : UpdateTests::signedPolicyViolations(prerelease)
+PASS   : UpdateTests::signedPolicyViolations(sequence-equal)
+PASS   : UpdateTests::signedPolicyViolations(sequence-old)
+PASS   : UpdateTests::signedPolicyViolations(sequence-overflow)
+PASS   : UpdateTests::signedPolicyViolations(sequence-leading-zero)
+PASS   : UpdateTests::signedPolicyViolations(size-zero)
+PASS   : UpdateTests::signedPolicyViolations(size-big)
+PASS   : UpdateTests::signedPolicyViolations(hash-case)
+PASS   : UpdateTests::signedPolicyViolations(hash-short)
+PASS   : UpdateTests::signedPolicyViolations(future-issue)
+PASS   : UpdateTests::signedPolicyViolations(expired)
+PASS   : UpdateTests::signedPolicyViolations(expiry-before-issue)
+PASS   : UpdateTests::signedPolicyViolations(long-validity)
+PASS   : UpdateTests::signedPolicyViolations(no-timezone)
+PASS   : UpdateTests::signedPolicyViolations(fractional-time)
+PASS   : UpdateTests::canonicalEncodingAndState()
+PASS   : UpdateTests::localHashAndSourcePreservation()
+PASS   : UpdateTests::authenticationAndCancellationPrecedeFileOpen()
+PASS   : UpdateTests::stagingRetainsVerifiedBytesAndCleansUp()
+PASS   : UpdateTests::stagingRechecksCurrentTrustStateAndActualCopy()
+PASS   : UpdateTests::stagingFailuresLeaveNoCopy()
+PASS   : UpdateTests::cancelDuringStagingRemovesPartialCopy()
+PASS   : UpdateTests::cleanupTestCase()
+Totals: 40 passed, 0 failed, 0 skipped, 0 blacklisted, 446ms
+********* Finished testing of UpdateTests *********
+<end of output>
+Test time =   0.45 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_tests" end time: Oct 23 21:32 EEST
+"mr_update_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/29 Testing: mr_update_journal_tests
+4/29 Test: mr_update_journal_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_update_journal_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/update-journal-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_update_journal_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of JournalTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : JournalTests::initTestCase()
+PASS   : JournalTests::initializeReopenAndPrivacy()
+PASS   : JournalTests::invalidConfigurationAndDirectories()
+PASS   : JournalTests::transactionCommitRequiresSnapshotAndObservation()
+PASS   : JournalTests::interruptedStatesAndBaselineResolution()
+PASS   : JournalTests::trustExpiryAndSnapshotChangesRejectWithoutWrite()
+PASS   : JournalTests::authenticationScopeAndEncodingFailures()
+PASS   : JournalTests::malformedAuthenticatedState(unknown)
+PASS   : JournalTests::malformedAuthenticatedState(schema)
+PASS   : JournalTests::malformedAuthenticatedState(profile)
+PASS   : JournalTests::malformedAuthenticatedState(revision-type)
+PASS   : JournalTests::malformedAuthenticatedState(revision-zero)
+PASS   : JournalTests::malformedAuthenticatedState(revision-leading-zero)
+PASS   : JournalTests::malformedAuthenticatedState(revision-overflow)
+PASS   : JournalTests::malformedAuthenticatedState(version)
+PASS   : JournalTests::malformedAuthenticatedState(version-old)
+PASS   : JournalTests::malformedAuthenticatedState(floor-old)
+PASS   : JournalTests::malformedAuthenticatedState(floor-negative)
+PASS   : JournalTests::malformedAuthenticatedState(phase)
+PASS   : JournalTests::malformedAuthenticatedState(idle-transaction)
+PASS   : JournalTests::malformedAuthenticatedState(candidate-type)
+PASS   : JournalTests::malformedAuthenticatedState(candidate-idle)
+PASS   : JournalTests::memoryAndIndependentAnchorsDetectReplay()
+PASS   : JournalTests::malformedPendingCandidate(old-version)
+PASS   : JournalTests::malformedPendingCandidate(bad-version)
+PASS   : JournalTests::malformedPendingCandidate(old-sequence)
+PASS   : JournalTests::malformedPendingCandidate(sequence-type)
+PASS   : JournalTests::malformedPendingCandidate(missing-digest)
+PASS   : JournalTests::malformedPendingCandidate(uppercase-digest)
+PASS   : JournalTests::malformedPendingCandidate(manifest-digest)
+PASS   : JournalTests::malformedPendingCandidate(package-kind)
+PASS   : JournalTests::malformedPendingCandidate(empty-size)
+PASS   : JournalTests::malformedPendingCandidate(huge-size)
+PASS   : JournalTests::malformedPendingCandidate(leading-zero-size)
+PASS   : JournalTests::malformedPendingCandidate(unknown)
+PASS   : JournalTests::malformedPendingCandidate(transaction)
+PASS   : JournalTests::differentValidCandidateCannotReplacePreparedTransaction()
+PASS   : JournalTests::revisionExhaustionPreservesRecord()
+PASS   : JournalTests::liveLockAndCrashRecovery()
+PASS   : JournalTests::twoProcessesCannotBothCommitSameRevision()
+PASS   : JournalTests::unsafeStateAndLockPaths()
+PASS   : JournalTests::cleanupTestCase()
+Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 185ms
+********* Finished testing of JournalTests *********
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_journal_tests" end time: Oct 23 21:32 EEST
+"mr_update_journal_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/29 Testing: mr_update_key_tests
+5/29 Test: mr_update_key_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_update_key_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/update-key-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_update_key_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of UpdateKeyTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : UpdateKeyTests::initTestCase()
+PASS   : UpdateKeyTests::availabilityAndNoPlaintextFallback()
+PASS   : UpdateKeyTests::cleanupTestCase()
+Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 1ms
+********* Finished testing of UpdateKeyTests *********
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_key_tests" end time: Oct 23 21:32 EEST
+"mr_update_key_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/29 Testing: mr_workshop_tests
+6/29 Test: mr_workshop_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_workshop_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/workshop-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_workshop_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of WorkshopTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : WorkshopTests::initTestCase()
+PASS   : WorkshopTests::lifecycle()
+PASS   : WorkshopTests::inputAndExport()
+PASS   : WorkshopTests::restockKeepsHistoricalPrice()
+PASS   : WorkshopTests::optionalNullStrings()
+PASS   : WorkshopTests::diagnosticAudit()
+PASS   : WorkshopTests::diagnosisPersistenceAndReport()
+PASS   : WorkshopTests::diagnosisEntryLimit()
+PASS   : WorkshopTests::migratesAndRestoresLegacyDiagnosisSchema()
+PASS   : WorkshopTests::newerSchema()
+PASS   : WorkshopTests::rejectsExecutableBackupSchema()
+PASS   : WorkshopTests::rejectsRelaxedBackupSchema()
+PASS   : WorkshopTests::invoiceIntegerBoundary()
+PASS   : WorkshopTests::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1654ms
+********* Finished testing of WorkshopTests *********
+<end of output>
+Test time =   1.68 sec
+----------------------------------------------------------
+Test Passed.
+"mr_workshop_tests" end time: Oct 23 21:32 EEST
+"mr_workshop_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+7/29 Testing: mr_barcode_tests
+7/29 Test: mr_barcode_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_barcode_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/barcode-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_barcode_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of BarcodeTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : BarcodeTests::initTestCase()
+PASS   : BarcodeTests::knownBarcodeAndInvalidInput()
+SKIP   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar() Optional independent ZBar decoder not installed.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/barcode_tests.cpp(16)]
+PASS   : BarcodeTests::persistentMappingAndLookup()
+PASS   : BarcodeTests::differentOrdersEvenForSameDevice()
+PASS   : BarcodeTests::malformedUnknownAndMissingOrder()
+PASS   : BarcodeTests::scopedRepairHistoryAndCsv()
+PASS   : BarcodeTests::backupRestorePreservesLabels()
+PASS   : BarcodeTests::legacyV3MigrationAndRestore()
+PASS   : BarcodeTests::corruptLabelBackupRefused()
+PASS   : BarcodeTests::intakePdfConsentAndNoOverwrite()
+SKIP   : BarcodeTests::barcodeSurvivesPdfRendering() Independent PDF rasterizer and barcode decoder not installed.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/barcode_tests.cpp(34)]
+PASS   : BarcodeTests::cleanupTestCase()
+Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 196ms
+********* Finished testing of BarcodeTests *********
+<end of output>
+Test time =   0.21 sec
+----------------------------------------------------------
+Test Passed.
+"mr_barcode_tests" end time: Oct 23 21:32 EEST
+"mr_barcode_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/29 Testing: mr_center_tests
+8/29 Test: mr_center_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_center_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/center-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_center_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CenterTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CenterTests::initTestCase()
+PASS   : CenterTests::profilesPersistWithoutDuplicateOwnership()
+PASS   : CenterTests::trackingPrivacyRotationAndRestore()
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: CenterTests::realHttpPortal() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : CenterTests::realHttpPortal()
+PASS   : CenterTests::migrationV2AndExpiry()
+PASS   : CenterTests::cleanupTestCase()
+Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 58ms
+********* Finished testing of CenterTests *********
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"mr_center_tests" end time: Oct 23 21:32 EEST
+"mr_center_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/29 Testing: mr_cloud_tests
+9/29 Test: mr_cloud_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_cloud_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/cloud-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_cloud_tests" start time: Oct 23 21:32 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CloudTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CloudTests::initTestCase()
+PASS   : CloudTests::snapshotSyncAndRevocation()
+PASS   : CloudTests::rejectsPlainHttpAndRedirects()
+PASS   : CloudTests::rejectsWrongApiKey()
+SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/cloud_tests.cpp(67)]
+PASS   : CloudTests::identityAndPersistence()
+PASS   : CloudTests::cleanupTestCase()
+Totals: 6 passed, 0 failed, 1 skipped, 0 blacklisted, 6515ms
+********* Finished testing of CloudTests *********
+<end of output>
+Test time =   6.53 sec
+----------------------------------------------------------
+Test Passed.
+"mr_cloud_tests" end time: Oct 23 21:33 EEST
+"mr_cloud_tests" time elapsed: 00:00:06
+----------------------------------------------------------
+
+10/29 Testing: mr_security_tests
+10/29 Test: mr_security_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_security_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/security-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_security_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of SecurityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : SecurityTests::initTestCase()
+PASS   : SecurityTests::adapterAndIntegrity()
+PASS   : SecurityTests::cancellationAndBounds()
+PASS   : SecurityTests::versionDeadlineIsReported()
+PASS   : SecurityTests::bridgeConsentAndExport()
+PASS   : SecurityTests::databaseUpdaterOutcomes(success)
+PASS   : SecurityTests::databaseUpdaterOutcomes(network-failure)
+PASS   : SecurityTests::databaseUpdaterOutcomes(empty-result)
+PASS   : SecurityTests::databaseUpdaterOutcomes(timeout)
+PASS   : SecurityTests::databaseUpdaterOutcomes(output-bound)
+PASS   : SecurityTests::databaseLockAndPreCancellation()
+PASS   : SecurityTests::bridgeUpdateConsentAndScanExclusion()
+SKIP   : SecurityTests::realClamAvWithSyntheticSignature() Separately installed ClamAV not configured; required in Linux CI.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/security_tests.cpp(83)]
+PASS   : SecurityTests::cleanupTestCase()
+Totals: 13 passed, 0 failed, 1 skipped, 0 blacklisted, 1049ms
+********* Finished testing of SecurityTests *********
+<end of output>
+Test time =   1.07 sec
+----------------------------------------------------------
+Test Passed.
+"mr_security_tests" end time: Oct 23 21:33 EEST
+"mr_security_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+11/29 Testing: mr_catalog_tests
+11/29 Test: mr_catalog_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_catalog_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/catalog-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_catalog_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CatalogTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CatalogTests::initTestCase()
+PASS   : CatalogTests::dataCatalogUpdatesCannotGrantCapabilities()
+PASS   : CatalogTests::exactMatchAndValidation()
+PASS   : CatalogTests::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 6ms
+********* Finished testing of CatalogTests *********
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"mr_catalog_tests" end time: Oct 23 21:33 EEST
+"mr_catalog_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/29 Testing: mr_tool_tests
+12/29 Test: mr_tool_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_tool_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/tool-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_tool_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of ToolTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ToolTests::initTestCase()
+PASS   : ToolTests::usbSerialAndParentCorrelation()
+PASS   : ToolTests::usbAmbiguityAndMalformedInventory()
+PASS   : ToolTests::configureToolsAndPersistence()
+PASS   : ToolTests::rejectUnsafeToolConfiguration()
+PASS   : ToolTests::serialValidation()
+PASS   : ToolTests::parseDevicesAndPermissions()
+PASS   : ToolTests::duplicateBeyondDisplayLimitRemainsAmbiguous()
+PASS   : ToolTests::propertyPrivacyAndMalformedInput()
+PASS   : ToolTests::ambiguousSerialCannotReadPropertiesOrLogs()
+PASS   : ToolTests::missingToolAndNoSelection()
+PASS   : ToolTests::asynchronousReadOnlyFlowAndDisconnect()
+PASS   : ToolTests::cancellationAndOutputLimit()
+PASS   : ToolTests::failedStartDoesNotLeaveBusy()
+PASS   : ToolTests::timeoutStopsUnresponsiveChild()
+PASS   : ToolTests::completedCommandCannotTimeoutNextCommand()
+PASS   : ToolTests::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 24530ms
+********* Finished testing of ToolTests *********
+<end of output>
+Test time =  24.55 sec
+----------------------------------------------------------
+Test Passed.
+"mr_tool_tests" end time: Oct 23 21:33 EEST
+"mr_tool_tests" time elapsed: 00:00:24
+----------------------------------------------------------
+
+13/29 Testing: mr_service_tests
+13/29 Test: mr_service_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_service_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/service-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_service_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of ServiceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ServiceTests::initTestCase()
+PASS   : ServiceTests::modernProbeAndReport()
+PASS   : ServiceTests::unsupportedOptionalPageQuery()
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(userspace)
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(unknown)
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(duplicate)
+PASS   : ServiceTests::freshFastbootModeChangeBlocksExecution()
+PASS   : ServiceTests::approvalTypesFailClosedBeforeProcess()
+PASS   : ServiceTests::compiledPolicyCannotBeOverridden()
+PASS   : ServiceTests::exportPrivacyProjection()
+PASS   : ServiceTests::packageStructureRejectsCorruption()
+SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(157)]
+PASS   : ServiceTests::exactCommandPlanOnly()
+PASS   : ServiceTests::structuredDiagnostics()
+PASS   : ServiceTests::incompleteDiagnosticsDoNotClaimHealth()
+PASS   : ServiceTests::diagnosticsIncludedInProbeAndExport()
+PASS   : ServiceTests::adapterCommandAllowlist()
+PASS   : ServiceTests::capabilityIdentity(samsung)
+PASS   : ServiceTests::capabilityIdentity(LGE)
+PASS   : ServiceTests::capabilityIdentity(HUAWEI)
+PASS   : ServiceTests::capabilityIdentity(OPPO)
+PASS   : ServiceTests::capabilityIdentity(vivo)
+PASS   : ServiceTests::capabilityIdentity(ZTE)
+PASS   : ServiceTests::capabilityIdentity(GOOGLE)
+PASS   : ServiceTests::capabilityIdentity(OnePlus)
+PASS   : ServiceTests::capabilityIdentity(Nothing)
+PASS   : ServiceTests::capabilityIdentity(HONOR)
+PASS   : ServiceTests::capabilityIdentity(xiaomi)
+PASS   : ServiceTests::authorizationAndBlockedActions()
+SKIP   : ServiceTests::darkModeVerification() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(231)]
+SKIP   : ServiceTests::deniedAndUnconfirmedReadback(permission) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(233)]
+SKIP   : ServiceTests::deniedAndUnconfirmedReadback(readback) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(233)]
+PASS   : ServiceTests::missingSettingsAndOldAndroid(missing-activity)
+PASS   : ServiceTests::missingSettingsAndOldAndroid(old-sdk)
+SKIP   : ServiceTests::disconnectAndIdentityChange(usb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(237)]
+SKIP   : ServiceTests::disconnectAndIdentityChange(identity) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(237)]
+SKIP   : ServiceTests::apkPrivateCopyIntegrity() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(238)]
+SKIP   : ServiceTests::invalidPackageNeverReachesDevice() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(239)]
+SKIP   : ServiceTests::explicitApkReplace() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(242)]
+PASS   : ServiceTests::ambiguousTransportAndRescanInvalidate()
+SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(adb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(245)]
+SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(fastboot) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(245)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(hash) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(247)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(manager) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(247)]
+SKIP   : ServiceTests::apkHashAndManagerFailure(no-confirmation) Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(247)]
+SKIP   : ServiceTests::sideloadConsentAndMode() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(248)]
+SKIP   : ServiceTests::fastbootFreshEraseGuard() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(249)]
+PASS   : ServiceTests::fastbootCrLfQueries()
+SKIP   : ServiceTests::syntheticErase() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(251)]
+PASS   : ServiceTests::noPartitionNoErase()
+SKIP   : ServiceTests::rebootInvalidatesDiscovery() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(253)]
+SKIP   : ServiceTests::cancellation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(254)]
+SKIP   : ServiceTests::historyRetainsTargetAndFailureAfterAnotherOperation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(255)]
+SKIP   : ServiceTests::rebootHistoryKeepsTargetAfterDiscoveryCleared() Write fixture runs only in the separate Laboratory build; production denial is tested independently.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/service_tests.cpp(279)]
+PASS   : ServiceTests::reportConsentAndNoOverwrite()
+PASS   : ServiceTests::cleanupTestCase()
+Totals: 35 passed, 0 failed, 21 skipped, 0 blacklisted, 4620ms
+********* Finished testing of ServiceTests *********
+<end of output>
+Test time =   4.64 sec
+----------------------------------------------------------
+Test Passed.
+"mr_service_tests" end time: Oct 23 21:33 EEST
+"mr_service_tests" time elapsed: 00:00:04
+----------------------------------------------------------
+
+14/29 Testing: mr_mirror_tests
+14/29 Test: mr_mirror_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_mirror_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mirror-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_mirror_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of MirrorTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : MirrorTests::initTestCase()
+PASS   : MirrorTests::versionBoundary()
+PASS   : MirrorTests::productionAndConsentRefuseBeforeProcess()
+SKIP   : MirrorTests::ownedProcessAndPinnedEnvironment() Screen-view lifecycle runs in Laboratory; production denial is tested separately.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(79)]
+SKIP   : MirrorTests::cancelDuringVersionStartsNoViewer() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(89)]
+SKIP   : MirrorTests::cleanWindowClose() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(90)]
+SKIP   : MirrorTests::preflightFailure(bad-version) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(version-timeout) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(duplicate) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(offline) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(disconnected) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::preflightFailure(identity-changed) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(92)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(disconnected) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(identity-changed) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::disconnectAndIdentityDuringView(duplicate) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(94)]
+SKIP   : MirrorTests::viewerErrorAndOutputLimit(error) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(96)]
+SKIP   : MirrorTests::viewerErrorAndOutputLimit(bounded-output) Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(96)]
+SKIP   : MirrorTests::selectionChangeStopsSession() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(97)]
+SKIP   : MirrorTests::cancelAndEscalatedTermination() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(98)]
+SKIP   : MirrorTests::destructorStopsChild() Laboratory-only lifecycle.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/mirror_tests.cpp(99)]
+PASS   : MirrorTests::cleanupTestCase()
+Totals: 4 passed, 0 failed, 17 skipped, 0 blacklisted, 40ms
+********* Finished testing of MirrorTests *********
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"mr_mirror_tests" end time: Oct 23 21:33 EEST
+"mr_mirror_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/29 Testing: mr_compatibility_tests
+15/29 Test: mr_compatibility_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_compatibility_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/compatibility-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_compatibility_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of CompatibilityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CompatibilityTests::initTestCase()
+PASS   : CompatibilityTests::modernApiFamilies(Android15)
+PASS   : CompatibilityTests::modernApiFamilies(Android16)
+PASS   : CompatibilityTests::modernApiFamilies(Android17)
+PASS   : CompatibilityTests::layoutAndEncryptionAreOnlyReported()
+PASS   : CompatibilityTests::futureApiAndPreviewStayUnapproved()
+PASS   : CompatibilityTests::missingDoesNotMeanDisabled()
+PASS   : CompatibilityTests::invalidValuesAreNotInferred()
+PASS   : CompatibilityTests::inconsistentFirstApi()
+PASS   : CompatibilityTests::fastbootModes(bootloader)
+PASS   : CompatibilityTests::fastbootModes(fastbootd)
+PASS   : CompatibilityTests::fastbootModes(missing)
+PASS   : CompatibilityTests::fastbootModes(malformed)
+PASS   : CompatibilityTests::exportProjection()
+PASS   : CompatibilityTests::duplicatePropertiesAreUnknown()
+PASS   : CompatibilityTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of CompatibilityTests *********
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"mr_compatibility_tests" end time: Oct 23 21:33 EEST
+"mr_compatibility_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/29 Testing: mr_board_tests
+16/29 Test: mr_board_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_board_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/board-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_board_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of BoardTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : BoardTests::initTestCase()
+PASS   : BoardTests::importAndSearch()
+PASS   : BoardTests::malformedImportKeepsCurrentBoard()
+PASS   : BoardTests::measurementsAndAnnotations()
+PASS   : BoardTests::sessionRoundTripAndTamper()
+PASS   : BoardTests::rejectsLargeFiles()
+PASS   : BoardTests::photoAttachmentAndSessionValidation()
+PASS   : BoardTests::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 10ms
+********* Finished testing of BoardTests *********
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"mr_board_tests" end time: Oct 23 21:33 EEST
+"mr_board_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/29 Testing: mr_firmware_tests
+17/29 Test: mr_firmware_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_firmware_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/firmware-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_firmware_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of FirmwareTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : FirmwareTests::initTestCase()
+PASS   : FirmwareTests::packageListingLimitsAndPayloadDisclaimer()
+PASS   : FirmwareTests::packageSnapshotMetadataAndTrust()
+PASS   : FirmwareTests::packageMalformedAndUnsupportedInputs()
+PASS   : FirmwareTests::packageListingPublishesOnlyAfterValidation()
+PASS   : FirmwareTests::packageCancellationAndPrivateExport()
+PASS   : FirmwareTests::sharedLocalPathPolicy()
+PASS   : FirmwareTests::descriptorPolicyRejectsSpecialFiles()
+PASS   : FirmwareTests::firmwareEntriesRejectUnsafeInputPaths()
+PASS   : FirmwareTests::exactIdentityAndSchema()
+PASS   : FirmwareTests::unsafeAndIncompleteMetadata()
+PASS   : FirmwareTests::localHashAndTampering()
+PASS   : FirmwareTests::identityInvalidationClosesSuccessfulGate()
+PASS   : FirmwareTests::cancelKeepsGateClosed()
+PASS   : FirmwareTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 9ms
+********* Finished testing of FirmwareTests *********
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"mr_firmware_tests" end time: Oct 23 21:33 EEST
+"mr_firmware_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/29 Testing: mr_avb_tests
+18/29 Test: mr_avb_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_avb_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/avb-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_avb_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of AvbTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : AvbTests::initTestCase()
+PASS   : AvbTests::officialToolReferenceImages()
+PASS   : AvbTests::declarationsNeverBecomeTrust()
+PASS   : AvbTests::rejectsHostileLengths(auth-overflow)
+PASS   : AvbTests::rejectsHostileLengths(aux-overflow)
+PASS   : AvbTests::rejectsHostileLengths(unaligned)
+PASS   : AvbTests::rejectsHostileLengths(hash-offset)
+PASS   : AvbTests::rejectsHostileLengths(signature-size)
+PASS   : AvbTests::rejectsHostileLengths(key-size)
+PASS   : AvbTests::rejectsHostileLengths(keymeta-offset)
+PASS   : AvbTests::rejectsHostileLengths(descriptors-offset)
+PASS   : AvbTests::rejectsHostileLengths(partial-descriptor)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-overflow)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-unaligned)
+PASS   : AvbTests::rejectsHostileLengths(descriptor-outside)
+PASS   : AvbTests::truncationAndUnsupportedFormats()
+PASS   : AvbTests::flagsAndUntrustedText()
+PASS   : AvbTests::overlapsAndCountBound()
+PASS   : AvbTests::exportRequiresApprovalAndNeverOverwrites()
+PASS   : AvbTests::invalidationRevokesAvbReports()
+PASS   : AvbTests::asyncBridgeAndSourcePreservation()
+PASS   : AvbTests::cleanupTestCase()
+Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 16ms
+********* Finished testing of AvbTests *********
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"mr_avb_tests" end time: Oct 23 21:33 EEST
+"mr_avb_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/29 Testing: mr_pcap_tests
+19/29 Test: mr_pcap_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_pcap_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/pcap-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_pcap_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of PcapTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PcapTests::initTestCase()
+PASS   : PcapTests::endianAndResolution(LE-us)
+PASS   : PcapTests::endianAndResolution(BE-us)
+PASS   : PcapTests::endianAndResolution(LE-ns)
+PASS   : PcapTests::endianAndResolution(BE-ns)
+PASS   : PcapTests::hostileRecords(snap-zero)
+PASS   : PcapTests::hostileRecords(snap-huge)
+PASS   : PcapTests::hostileRecords(fraction)
+PASS   : PcapTests::hostileRecords(cap-overflow)
+PASS   : PcapTests::hostileRecords(wire-smaller)
+PASS   : PcapTests::truncationAndFormats()
+PASS   : PcapTests::clocksAndPartialCapture()
+PASS   : PcapTests::networkScope()
+PASS   : PcapTests::cancellationAndRecordBound()
+PASS   : PcapTests::caseConsentPersistenceAndSourcePreservation()
+PASS   : PcapTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 272ms
+********* Finished testing of PcapTests *********
+<end of output>
+Test time =   0.29 sec
+----------------------------------------------------------
+Test Passed.
+"mr_pcap_tests" end time: Oct 23 21:33 EEST
+"mr_pcap_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/29 Testing: mr_exif_tests
+20/29 Test: mr_exif_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_exif_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/exif-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_exif_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of ExifTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ExifTests::initTestCase()
+PASS   : ExifTests::byteOrder(little)
+PASS   : ExifTests::byteOrder(big)
+PASS   : ExifTests::independentPillowReference()
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-overflow)
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-header)
+PASS   : ExifTests::invalidOffsetsAndTypes(entry-count)
+PASS   : ExifTests::invalidOffsetsAndTypes(string-offset)
+PASS   : ExifTests::invalidOffsetsAndTypes(string-count)
+PASS   : ExifTests::invalidOffsetsAndTypes(wrong-type)
+PASS   : ExifTests::invalidOffsetsAndTypes(invalid-orientation)
+PASS   : ExifTests::invalidOffsetsAndTypes(ifd-cycle)
+PASS   : ExifTests::invalidOffsetsAndTypes(invalid-pointer-type)
+PASS   : ExifTests::invalidOffsetsAndTypes(duplicate-tag)
+PASS   : ExifTests::stringsAndExcludedMetadata()
+PASS   : ExifTests::markerBoundsAndNoExif()
+PASS   : ExifTests::caseWorkflow()
+PASS   : ExifTests::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 263ms
+********* Finished testing of ExifTests *********
+<end of output>
+Test time =   0.28 sec
+----------------------------------------------------------
+Test Passed.
+"mr_exif_tests" end time: Oct 23 21:33 EEST
+"mr_exif_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/29 Testing: mr_recovery_tests
+21/29 Test: mr_recovery_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_recovery_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/recovery-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_recovery_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of RecoveryTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : RecoveryTests::initTestCase()
+PASS   : RecoveryTests::vaultRoundtripAndTamperResistance()
+PASS   : RecoveryTests::consentValidationAndProductionPlatformBoundary()
+PASS   : RecoveryTests::visibleFilePersistenceExportAndDeletion()
+PASS   : RecoveryTests::failedCaseOpenCannotRetargetActiveVaultOrOverwriteInput()
+PASS   : RecoveryTests::agentValidStates(unavailable)
+PASS   : RecoveryTests::agentValidStates(permission-required)
+PASS   : RecoveryTests::agentValidStates(denied)
+PASS   : RecoveryTests::agentValidStates(shell)
+PASS   : RecoveryTests::agentValidStates(root-refused-with-no-exported-root-uid)
+PASS   : RecoveryTests::agentInvalidProtocol(wrong-schema)
+PASS   : RecoveryTests::agentInvalidProtocol(missing-consent)
+PASS   : RecoveryTests::agentInvalidProtocol(wrong-consent-scope)
+PASS   : RecoveryTests::agentInvalidProtocol(old-sdk)
+PASS   : RecoveryTests::agentInvalidProtocol(invalid-sdk)
+PASS   : RecoveryTests::agentInvalidProtocol(empty-identity)
+PASS   : RecoveryTests::agentInvalidProtocol(invented-state)
+PASS   : RecoveryTests::agentInvalidProtocol(shell-is-not-root)
+PASS   : RecoveryTests::agentInvalidProtocol(shell-needs-uid)
+PASS   : RecoveryTests::agentInvalidProtocol(untrusted-uid)
+PASS   : RecoveryTests::agentInvalidProtocol(root-refusal-cannot-be-shell)
+PASS   : RecoveryTests::agentInvalidProtocol(root-uid-not-exported)
+PASS   : RecoveryTests::agentInvalidProtocol(unavailable-cannot-have-root-uid)
+PASS   : RecoveryTests::agentInvalidProtocol(denied-needs-shell-identity)
+PASS   : RecoveryTests::agentInvalidProtocol(invalid-json)
+PASS   : RecoveryTests::agentInvalidProtocol(over-report-bound)
+PASS   : RecoveryTests::missingInputFailureIsPersistedInAudit()
+PASS   : RecoveryTests::auditPersistenceFailureNeverClaimsCommittedImportOrExport()
+PASS   : RecoveryTests::fileLimitAndCaseEvidenceCount()
+PASS   : RecoveryTests::aggregateCaseSizeBoundaryAndEmbeddedHashValidation()
+PASS   : RecoveryTests::nativeImageCandidatesReachVaultWithProvenance()
+PASS   : RecoveryTests::cleanupTestCase()
+Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 8324ms
+********* Finished testing of RecoveryTests *********
+<end of output>
+Test time =   8.34 sec
+----------------------------------------------------------
+Test Passed.
+"mr_recovery_tests" end time: Oct 23 21:33 EEST
+"mr_recovery_tests" time elapsed: 00:00:08
+----------------------------------------------------------
+
+22/29 Testing: mr_recovery_image_tests
+22/29 Test: mr_recovery_image_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_recovery_image_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/recovery_image-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_recovery_image_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of RecoveryImageTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : RecoveryImageTests::initTestCase()
+PASS   : RecoveryImageTests::exactOffsetsHashesAndChunkBoundaries()
+PASS   : RecoveryImageTests::invalidAndTruncatedCandidates()
+PASS   : RecoveryImageTests::jpegExifWithoutJfifIsDecodedByteExactly()
+PASS   : RecoveryImageTests::rejectsContainersAndDevicePaths()
+PASS   : RecoveryImageTests::resourceLimits()
+PASS   : RecoveryImageTests::openedDescriptorMustBeRegular()
+PASS   : RecoveryImageTests::cancellationAndSourceMutationDiscardEverything()
+PASS   : RecoveryImageTests::oversizedDimensionsAreNotDecoded()
+PASS   : RecoveryImageTests::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 7ms
+********* Finished testing of RecoveryImageTests *********
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"mr_recovery_image_tests" end time: Oct 23 21:33 EEST
+"mr_recovery_image_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/29 Testing: mr_forensic_tests
+23/29 Test: mr_forensic_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_forensic_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/forensic-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_forensic_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of ForensicTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ForensicTests::initTestCase()
+PASS   : ForensicTests::auditDetectsEditsAndReordering()
+PASS   : ForensicTests::oldCasesUpgradeWithoutInventingIdentity()
+PASS   : ForensicTests::caseAcquisitionCustodyTimelineAndReports()
+PASS   : ForensicTests::reopeningNeverAttributesLegacyEvidenceToAnotherCaseOperator()
+PASS   : ForensicTests::modifiedSealedAuditIsRefusedWithoutReplacingOpenCase()
+PASS   : ForensicTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 513ms
+********* Finished testing of ForensicTests *********
+<end of output>
+Test time =   0.53 sec
+----------------------------------------------------------
+Test Passed.
+"mr_forensic_tests" end time: Oct 23 21:33 EEST
+"mr_forensic_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/29 Testing: mr_tsk_tests
+24/29 Test: mr_tsk_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_tsk_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/tsk-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_tsk_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+********* Start testing of TskTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : TskTests::initTestCase()
+PASS   : TskTests::privateCopyHashAndProvenance()
+PASS   : TskTests::failureCancellationBoundsAndChanges()
+PASS   : TskTests::toolSelectionDoesNotExecuteAndPersists()
+PASS   : TskTests::inputPolicy()
+PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/tsk_tests.cpp(85)]
+PASS   : TskTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 1369ms
+********* Finished testing of TskTests *********
+<end of output>
+Test time =   1.39 sec
+----------------------------------------------------------
+Test Passed.
+"mr_tsk_tests" end time: Oct 23 21:33 EEST
+"mr_tsk_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+25/29 Testing: mr_avb_mutation_tests
+25/29 Test: mr_avb_mutation_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_avb_mutation_tests"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_avb_mutation_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+30000 deterministic AVB mutations passed; no trust assertion permitted.
+<end of output>
+Test time =   0.12 sec
+----------------------------------------------------------
+Test Passed.
+"mr_avb_mutation_tests" end time: Oct 23 21:33 EEST
+"mr_avb_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/29 Testing: mr_pcap_mutation_tests
+26/29 Test: mr_pcap_mutation_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_pcap_mutation_tests"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_pcap_mutation_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+30000 deterministic PCAP mutations passed; no partial reports or payload/address output.
+<end of output>
+Test time =   0.18 sec
+----------------------------------------------------------
+Test Passed.
+"mr_pcap_mutation_tests" end time: Oct 23 21:33 EEST
+"mr_pcap_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/29 Testing: mr_exif_mutation_tests
+27/29 Test: mr_exif_mutation_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_exif_mutation_tests"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_exif_mutation_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+12000 deterministic bounded Exif mutations completed
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"mr_exif_mutation_tests" end time: Oct 23 21:33 EEST
+"mr_exif_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/29 Testing: mr_ui_tests
+28/29 Test: mr_ui_tests
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/mr_ui_tests" "-o" "-,txt" "-o" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/ui-results.txt,txt"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_ui_tests" start time: Oct 23 21:33 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+PASS   : mr_ui::WorkstationNavigation::test_cloudTrackingConsent()
+PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+PASS   : mr_ui::WorkstationNavigation::test_createOrder()
+PASS   : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent()
+PASS   : mr_ui::WorkstationNavigation::test_diagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_exitCancel()
+PASS   : mr_ui::WorkstationNavigation::test_firmwarePackageStructure()
+PASS   : mr_ui::WorkstationNavigation::test_fontGlyphCoverage()
+PASS   : mr_ui::WorkstationNavigation::test_forensicCaptureWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicExifWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicLabNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_forensicWorkspace()
+PASS   : mr_ui::WorkstationNavigation::test_language()
+PASS   : mr_ui::WorkstationNavigation::test_minimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_mirrorConsentAndNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_modernCompatibilityPanel()
+PASS   : mr_ui::WorkstationNavigation::test_navigation()
+PASS   : mr_ui::WorkstationNavigation::test_newWorkspaceMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryConsent()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryWizard()
+PASS   : mr_ui::WorkstationNavigation::test_savedDiagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_securityAndFaultTree()
+PASS   : mr_ui::WorkstationNavigation::test_serviceHistoryDetailsArePlainText()
+PASS   : mr_ui::WorkstationNavigation::test_serviceMinimumSizeOutputAndHistory()
+PASS   : mr_ui::WorkstationNavigation::test_themeAndNarrowForensicTabs()
+PASS   : mr_ui::WorkstationNavigation::test_workshopBarcodeCard()
+PASS   : mr_ui::WorkstationNavigation::test_z_exitAccept()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 34 passed, 0 failed, 0 skipped, 0 blacklisted, 16500ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  16.93 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_tests" end time: Oct 23 21:34 EEST
+"mr_ui_tests" time elapsed: 00:00:16
+----------------------------------------------------------
+
+29/29 Testing: mr_gui_smoke
+29/29 Test: mr_gui_smoke
+Command: "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/nexvary_mr" "--smoke-test" "--data-dir" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/smoke-data" "--screenshot" "/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build/smoke.png"
+Directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build
+"mr_gui_smoke" start time: Oct 23 21:34 EEST
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+<end of output>
+Test time =  14.46 sec
+----------------------------------------------------------
+Test Passed.
+"mr_gui_smoke" end time: Oct 23 21:34 EEST
+"mr_gui_smoke" time elapsed: 00:00:14
+----------------------------------------------------------
+
+End testing: Oct 23 21:34 EEST

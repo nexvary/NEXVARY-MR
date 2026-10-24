@@ -1,0 +1,19 @@
+********* Start testing of BarcodeTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : BarcodeTests::initTestCase()
+PASS   : BarcodeTests::knownBarcodeAndInvalidInput()
+SKIP   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar() Optional independent ZBar decoder not installed.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/barcode_tests.cpp(16)]
+PASS   : BarcodeTests::persistentMappingAndLookup()
+PASS   : BarcodeTests::differentOrdersEvenForSameDevice()
+PASS   : BarcodeTests::malformedUnknownAndMissingOrder()
+PASS   : BarcodeTests::scopedRepairHistoryAndCsv()
+PASS   : BarcodeTests::backupRestorePreservesLabels()
+PASS   : BarcodeTests::legacyV3MigrationAndRestore()
+PASS   : BarcodeTests::corruptLabelBackupRefused()
+PASS   : BarcodeTests::intakePdfConsentAndNoOverwrite()
+SKIP   : BarcodeTests::barcodeSurvivesPdfRendering() Independent PDF rasterizer and barcode decoder not installed.
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/cpp/tests/barcode_tests.cpp(34)]
+PASS   : BarcodeTests::cleanupTestCase()
+Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 185ms
+********* Finished testing of BarcodeTests *********

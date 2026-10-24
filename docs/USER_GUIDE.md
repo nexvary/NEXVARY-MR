@@ -33,7 +33,7 @@
 
 ## الإغلاق وحدود التحقق
 
-زر إغلاق النافذة يغلق التطبيق؛ العمليات الخارجية المستقلة مثل scrcpy قد تستمر وتُغلق من نافذتها. احفظ جلسة المخطط قبل الخروج؛ لا تعتبر الملاحظات غير المحفوظة محفوظة تلقائيًا. أعمال الورشة تُحفظ عند نجاح العملية وتظهر أخطاء الحفظ للمستخدم.
+عند قبول الإغلاق يوقف البرنامج عملية scrcpy التي يديرها في نسخة Laboratory؛ يمكن إيقافها أيضًا من زر الإيقاف أو نافذتها. نسخة production لا تسمح بتشغيل العرض. ما يزال التحقق من توقف مكون الهاتف نفسه بحاجة لاختبار فعلي. احفظ جلسة المخطط قبل الخروج؛ لا تعتبر الملاحظات غير المحفوظة محفوظة تلقائيًا. أعمال الورشة تُحفظ عند نجاح العملية وتظهر أخطاء الحفظ للمستخدم.
 
 نجاح اختبارات المحاكاة أو فحص بدء التشغيل لا يثبت عمل كل هاتف أو تعريف USB أو مخطط. قبل الاعتماد الإنتاجي يلزم اختبار جهاز Android فعلي، واجهة Windows العربية والإنجليزية على أحجام شاشات مختلفة، استعادة نسخة على حاسوب مستقل، تشغيل portable على Windows نظيف، والتحقق من حقوق ملفات المخططات المستخدمة.
 
@@ -42,6 +42,14 @@
 Extract the entire portable ZIP and double-click `NEXVARY-MR.exe`, or use the per-user installer. Install optional ADB/Fastboot/scrcpy from their official sources. Authorize USB debugging on your own or an explicitly authorized Android device, select the intended serial, and start read-only diagnostics. No firmware flashing or security bypass is implemented.
 
 Use the workshop for local repair records, stock and operational invoices. Export invoices as PDF and print them from your PDF viewer. Back up the SQLite database before a confirmed restore; files are not encrypted automatically. The embedded boardview uses documented NEXVARY JSON with synthetic training data, not proprietary production board formats. Save board sessions before closing. Consult `THIRD_PARTY.md` and `INTEGRATIONS.md` for licensing and integration boundaries.
+
+## تحليل بيانات الصور / Photo metadata
+
+من مختبر الأدلة افتح قضية مصرحًا بها، وسجّل اسم المشغّل ومرجع التفويض في مستعرض الأدلة. افتح تبويب «مدير الأدوات»، واختر JPEG من بطاقة EXIF، ثم وافق على تحليل بيانات هذه الصورة واضغط «تحليل EXIF». زر «عرض الملخص» يفتح النتيجة في مستعرض الأدلة؛ اختر التصدير ووافق على إخراج نسخة غير مشفرة إذا احتجت مشاركتها.
+
+الحد 8 MiB للصورة. التواريخ والموديل بيانات مكتوبة داخل الملف ويمكن تعديلها؛ لا تثبت وقت التصوير أو هوية الجهاز. لا تُعرض قيم GPS أو الأرقام التسلسلية أو تعليقات المالك. عدم وجود EXIF نتيجة ممكنة، ولا يعني أن الملف غير أصلي. البرنامج لا يغيّر الصورة ولا يثبت سلامة محتواها الكامل.
+
+Open an authorized case, record its operator and authorization, then select a JPEG in Forensic Lab → Tools → Photo EXIF. Authorize metadata analysis and click Analyze EXIF. View summary opens the result in Evidence; exporting requires explicit plaintext approval. The 8 MiB reader preserves raw dates and omits GPS values, serials and comments. Editable metadata does not establish capture time, device identity or image authenticity. An absent-Exif result is not proof of tampering.
 
 
 ### اختيار أدوات Android دون تعديل PATH

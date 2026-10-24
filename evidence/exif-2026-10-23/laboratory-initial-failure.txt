@@ -1,0 +1,97 @@
+Internal ctest changing into directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-lab
+Test project /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-lab
+      Start  1: mr_policy_tests
+ 1/29 Test  #1: mr_policy_tests ..................   Passed    0.00 sec
+      Start  2: mr_core_tests
+ 2/29 Test  #2: mr_core_tests ....................   Passed    0.00 sec
+      Start  3: mr_update_tests
+ 3/29 Test  #3: mr_update_tests ..................   Passed    0.45 sec
+      Start  4: mr_update_journal_tests
+ 4/29 Test  #4: mr_update_journal_tests ..........   Passed    0.22 sec
+      Start  5: mr_update_key_tests
+ 5/29 Test  #5: mr_update_key_tests ..............   Passed    0.01 sec
+      Start  6: mr_workshop_tests
+ 6/29 Test  #6: mr_workshop_tests ................   Passed    1.67 sec
+      Start  7: mr_barcode_tests
+ 7/29 Test  #7: mr_barcode_tests .................   Passed    0.31 sec
+      Start  8: mr_center_tests
+ 8/29 Test  #8: mr_center_tests ..................   Passed    0.11 sec
+      Start  9: mr_cloud_tests
+ 9/29 Test  #9: mr_cloud_tests ...................   Passed    6.71 sec
+      Start 10: mr_security_tests
+10/29 Test #10: mr_security_tests ................   Passed    1.11 sec
+      Start 11: mr_catalog_tests
+11/29 Test #11: mr_catalog_tests .................   Passed    0.03 sec
+      Start 12: mr_tool_tests
+12/29 Test #12: mr_tool_tests ....................   Passed   24.55 sec
+      Start 13: mr_service_tests
+13/29 Test #13: mr_service_tests .................   Passed    9.75 sec
+      Start 14: mr_mirror_tests
+14/29 Test #14: mr_mirror_tests ..................   Passed   12.15 sec
+      Start 15: mr_compatibility_tests
+15/29 Test #15: mr_compatibility_tests ...........   Passed    0.02 sec
+      Start 16: mr_board_tests
+16/29 Test #16: mr_board_tests ...................   Passed    0.03 sec
+      Start 17: mr_firmware_tests
+17/29 Test #17: mr_firmware_tests ................   Passed    0.02 sec
+      Start 18: mr_avb_tests
+18/29 Test #18: mr_avb_tests .....................   Passed    0.03 sec
+      Start 19: mr_pcap_tests
+19/29 Test #19: mr_pcap_tests ....................   Passed    0.29 sec
+      Start 20: mr_exif_tests
+20/29 Test #20: mr_exif_tests ....................   Passed    0.28 sec
+      Start 21: mr_recovery_tests
+21/29 Test #21: mr_recovery_tests ................   Passed    8.37 sec
+      Start 22: mr_recovery_image_tests
+22/29 Test #22: mr_recovery_image_tests ..........   Passed    0.01 sec
+      Start 23: mr_forensic_tests
+23/29 Test #23: mr_forensic_tests ................   Passed    0.53 sec
+      Start 24: mr_tsk_tests
+24/29 Test #24: mr_tsk_tests .....................   Passed    1.46 sec
+      Start 25: mr_avb_mutation_tests
+25/29 Test #25: mr_avb_mutation_tests ............   Passed    0.18 sec
+      Start 26: mr_pcap_mutation_tests
+26/29 Test #26: mr_pcap_mutation_tests ...........   Passed    0.17 sec
+      Start 27: mr_exif_mutation_tests
+27/29 Test #27: mr_exif_mutation_tests ...........   Passed    0.06 sec
+      Start 28: mr_ui_tests
+28/29 Test #28: mr_ui_tests ......................***Failed    0.08 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/tests/tst_navigation.qml produced 4 error(s):
+    /workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/tests/tst_navigation.qml:11,2: Type MR.Main unavailable
+    /workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/Main.qml:161,6: Type ForensicLabPage unavailable
+    /workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/ForensicLabPage.qml:41,4: Type ForensicToolsPage unavailable
+    /workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/ForensicToolsPage.qml:52,53: Invalid property assignment: "implicitHeight" is a read-only property
+  Working directory: /workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-lab
+  Import paths:
+    '/workspace/scratch/c86a5e8e9286/NEXVARY-MR/build-lab'
+    'qrc:/qt-project.org/imports'
+    '/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() Type MR.Main unavailable
+   Loc: [/workspace/scratch/c86a5e8e9286/NEXVARY-MR/qml/tests/tst_navigation.qml(11)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 3ms
+********* Finished testing of mr_ui *********
+
+      Start 29: mr_gui_smoke
+29/29 Test #29: mr_gui_smoke .....................***Failed    0.09 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+QQmlApplicationEngine failed to load component
+qrc:/NexvaryMR/qml/Main.qml:161:6: Type ForensicLabPage unavailable
+qrc:/NexvaryMR/qml/ForensicLabPage.qml:41:4: Type ForensicToolsPage unavailable
+qrc:/NexvaryMR/qml/ForensicToolsPage.qml:52:53: Invalid property assignment: "implicitHeight" is a read-only property
+
+
+93% tests passed, 2 tests failed out of 29
+
+Total Test time (real) =  68.70 sec
+
+The following tests FAILED:
+	 28 - mr_ui_tests (Failed)
+	 29 - mr_gui_smoke (Failed)
+Errors while running CTest

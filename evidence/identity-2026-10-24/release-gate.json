@@ -1,0 +1,14 @@
+{
+  "candidateAllowed": false,
+  "blockers": [
+    "android_physical_read_only: missing accepted evidence for this commit",
+    "windows_10_acceptance: missing accepted evidence for this commit",
+    "windows_11_acceptance: missing accepted evidence for this commit",
+    "signing: missing accepted evidence for this commit",
+    "sbom_review: missing accepted evidence for this commit",
+    "upgrade_rollback: missing accepted evidence for this commit",
+    "privacy_review: missing accepted evidence for this commit",
+    "reviewer_signoff: missing accepted evidence for this commit",
+    "Critical-risk review is missing or still has unresolved items"
+  ]
+}

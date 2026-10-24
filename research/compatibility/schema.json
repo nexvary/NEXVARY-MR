@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NEXVARY Research Center compatibility intake record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manufacturer",
+    "model",
+    "chipset",
+    "osBuild",
+    "firmware",
+    "securityPatch",
+    "connectionMode",
+    "capability",
+    "unsupported",
+    "sourceId",
+    "lastTestUtc",
+    "result",
+    "confidence",
+    "status"
+  ],
+  "properties": {
+    "manufacturer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "chipset": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "osBuild": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "firmware": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "securityPatch": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "connectionMode": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "unsupported": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "sourceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "lastTestUtc": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "result": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "confidence": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "status": {
+      "enum": [
+        "Vendor Claimed",
+        "Publicly Documented",
+        "Research Hypothesis",
+        "Unsupported"
+      ]
+    }
+  },
+  "description": "Canonical intake schema for ResearchBridge. Lab Verified promotion requires an independent reviewed experiment workflow and is not an intake state."
+}

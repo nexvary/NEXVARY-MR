@@ -1,0 +1,731 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-24",
+  "sources": [
+    {
+      "id": "aosp.security",
+      "publisher": "AOSP",
+      "url": "https://source.android.com/docs/security/overview",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.fbe",
+      "publisher": "AOSP",
+      "url": "https://source.android.com/docs/security/features/encryption/file-based",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.avb",
+      "publisher": "AOSP",
+      "url": "https://source.android.com/docs/security/features/verifiedboot",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.boot",
+      "publisher": "AOSP",
+      "url": "https://source.android.com/docs/core/architecture/bootloader",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.partitions",
+      "publisher": "AOSP",
+      "url": "https://source.android.com/docs/core/architecture/partitions",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.keymint",
+      "publisher": "AOSP",
+      "url": "https://android.googlesource.com/platform/hardware/interfaces/+/master/security/",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "android.adb",
+      "publisher": "Android Developers",
+      "url": "https://developer.android.com/tools/adb",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "apple.security",
+      "publisher": "Apple",
+      "url": "https://support.apple.com/guide/security/welcome/web",
+      "publishedOn": "2026-08",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "apple.sep",
+      "publisher": "Apple",
+      "url": "https://support.apple.com/en-au/guide/security/sec59b0b31ff/web",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "arm.trustzone",
+      "publisher": "Arm",
+      "url": "https://www.arm.com/technologies/trustzone-for-cortex-a",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "samsung.knox",
+      "publisher": "Samsung Knox",
+      "url": "https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/system-security/hw-backed-security/",
+      "publishedOn": "2025-03-07",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed hardware-backed security components and model-specific Knox Vault availability.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "qualcomm.soc",
+      "publisher": "Qualcomm",
+      "url": "https://www.qualcomm.com/products/features/mobile-security-solutions/secure-foundation",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed public Secure Boot/TEE overview; generic product-family architecture, no model acceptance.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "mediatek.soc",
+      "publisher": "MediaTek",
+      "url": "https://www.mediatek.com/product-security-bulletin/October-2026",
+      "publishedOn": "2026-10-05",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed bulletin scope and affected-chipset/version fields; no inference of OEM patch installation.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "citizenlab.rcs",
+      "publisher": "Citizen Lab",
+      "url": "https://citizenlab.ca/research/mapping-hacking-teams-untraceable-spyware/",
+      "publishedOn": "2014-02-17",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "amnesty.serbia",
+      "publisher": "Amnesty International Security Lab",
+      "url": "https://securitylab.amnesty.org/latest/2024/12/a-digital-prison-surveillance-and-the-suppression-of-civil-society-in-serbia/",
+      "publishedOn": "2024-12",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "cellebrite.ufed",
+      "publisher": "Cellebrite",
+      "url": "https://cellebrite.com/en/products/ufed/",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "cellebrite.pa",
+      "publisher": "Cellebrite",
+      "url": "https://cellebrite.com/en/enterprise/physical-analyzer/",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "oxygen.detective",
+      "publisher": "Oxygen Forensics",
+      "url": "https://www.oxygenforensics.com/products/oxygen-forensic-detective/",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "msab.xry",
+      "publisher": "MSAB",
+      "url": "https://www.msab.com/product/xry-extract",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "magnet.integration",
+      "publisher": "Magnet Forensics",
+      "url": "https://www.magnetforensics.com/blog/automatically-import-and-process-mobile-images-in-magnet-axiom-from-a-graykey-verakey/",
+      "publishedOn": "2023-08-14",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "magnet.graykey",
+      "publisher": "Magnet Forensics",
+      "url": "https://www.magnetforensics.com/products/magnet-graykey/",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "belkasoft.x",
+      "publisher": "Belkasoft",
+      "url": "https://belkasoft.com/what_is_belkasoft_x",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "elcomsoft.bundle",
+      "publisher": "Elcomsoft",
+      "url": "https://us.elcomsoft.com/emfb.html",
+      "publishedOn": "not stated",
+      "reviewedOn": "2026-10-24",
+      "review": "reviewed",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "kernel.qtee",
+      "publisher": "Linux kernel maintainers",
+      "url": "https://www.kernel.org/doc/html/latest/tee/qtee.html",
+      "publishedOn": "rolling latest documentation; no fixed date stated",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed driver transport architecture; latest kernel documentation is not proof an OEM phone contains this driver.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "mediatek.genio",
+      "publisher": "MediaTek Genio documentation",
+      "url": "https://genio.mediatek.com/doc/iot-yocto/latest/sw/yocto/app-dev/security.html",
+      "publishedOn": "IoT Yocto v26.0 documentation; no fixed page date stated",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed Genio/IoT scope, secure DRAM, OP-TEE storage and irreversible provisioning caveats. Not generalized to Dimensity/Helio phones.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    },
+    {
+      "id": "aosp.bulletins",
+      "publisher": "Android Open Source Project",
+      "url": "https://source.android.com/docs/security/bulletin/asb-overview",
+      "publishedOn": "rolling bulletin index reviewed 2026-10-24",
+      "reviewedOn": "2026-10-24",
+      "review": "Reviewed split provenance of AOSP, upstream kernel, SoC and OEM security fixes. No automated patch verification inferred.",
+      "rights": "Reference and original summary only; no code/content redistribution license inferred."
+    }
+  ],
+  "atlas": [
+    {
+      "id": "atlas.android",
+      "title": "Android Security Architecture",
+      "titleAr": "بنية أمان Android",
+      "sourceIds": [
+        "aosp.security"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Layered platform security constrains diagnostic and evidence-access paths.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.ios",
+      "title": "iOS Security Architecture",
+      "titleAr": "بنية أمان iOS",
+      "sourceIds": [
+        "apple.security"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Apple documents hardware, system and data security as distinct layers.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.qualcomm",
+      "title": "Qualcomm SoC Architecture",
+      "titleAr": "بنية Qualcomm",
+      "sourceIds": [
+        "qualcomm.soc",
+        "kernel.qtee"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Qualcomm describes secure boot and a TEE separated from the high-level OS. Linux QTEE documentation describes SCM/SMCCC transport and object-based service communication.",
+      "versions": "Qualcomm generic security overview and rolling latest Linux QTEE documentation reviewed 2026-10-24; no exact Snapdragon/OEM build accepted.",
+      "limitations": "Published architecture does not establish USB mode access, debug authorization, attestation, key access or acquisition support. Determine the exact SoC and OEM kernel first; no phone was tested.",
+      "engine": "USB Diagnostics"
+    },
+    {
+      "id": "atlas.mediatek",
+      "title": "MediaTek SoC Architecture",
+      "titleAr": "بنية MediaTek",
+      "sourceIds": [
+        "mediatek.soc",
+        "mediatek.genio"
+      ],
+      "status": "Research Hypothesis",
+      "claim": "MediaTek publishes chipset-scoped security bulletins. Its Genio IoT documentation separately describes secure DRAM and OP-TEE storage; the architecture of an untested Dimensity/Helio phone remains a research hypothesis.",
+      "versions": "October 2026 chipset bulletin and IoT Yocto v26.0/Genio documentation only; smartphone implementation unverified.",
+      "limitations": "Genio IoT descriptions are not evidence about all MediaTek smartphones. OEM firmware patch adoption, exact TEE, USB interfaces and device compatibility require separate documentation and owned-device tests. No fuse/RPMB provisioning procedure is implemented.",
+      "engine": "USB Diagnostics"
+    },
+    {
+      "id": "atlas.knox",
+      "title": "Samsung Knox",
+      "titleAr": "Samsung Knox",
+      "sourceIds": [
+        "samsung.knox"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Samsung documents a ROM-rooted boot chain, TrustZone secure-world separation and Knox Vault on selected devices. Hardware-bound keys and rollback state constrain repair and integrity interpretation.",
+      "versions": "Samsung Hardware-Backed Security page dated 2025-03-07, reviewed 2026-10-24; exact device/Knox generation must be checked.",
+      "limitations": "Knox Vault is not universal across Samsung models. No device attestation, fuse measurement, protected-key access or phone acquisition was tested. A reported boot property cannot certify Knox integrity.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.trustzone",
+      "title": "ARM TrustZone",
+      "titleAr": "ARM TrustZone",
+      "sourceIds": [
+        "arm.trustzone"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Arm documents separation of secure and non-secure execution environments.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.tee",
+      "title": "Trusted Execution Environment",
+      "titleAr": "بيئة التنفيذ الموثوقة",
+      "sourceIds": [
+        "aosp.keymint"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Android security HALs distinguish isolated execution and optional dedicated secure processors.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.sep",
+      "title": "Secure Enclave",
+      "titleAr": "Secure Enclave",
+      "sourceIds": [
+        "apple.sep"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Apple documents an isolated secure subsystem integrated into the SoC.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.keymint",
+      "title": "KeyMint / Android Keystore",
+      "titleAr": "KeyMint ومخزن المفاتيح",
+      "sourceIds": [
+        "aosp.keymint"
+      ],
+      "status": "Publicly Documented",
+      "claim": "KeyMint exposes cryptographic operations while restricting key material to a secure environment.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.avb",
+      "title": "Verified Boot / AVB",
+      "titleAr": "الإقلاع المتحقق منه AVB",
+      "sourceIds": [
+        "aosp.avb"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Verified Boot establishes a chain of trust; parsing vbmeta alone does not verify OEM authenticity.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Firmware Intelligence"
+    },
+    {
+      "id": "atlas.fbe",
+      "title": "File-Based Encryption",
+      "titleAr": "تشفير الملفات FBE",
+      "sourceIds": [
+        "aosp.fbe"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Android separates credential-encrypted and device-encrypted storage classes.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Device Intelligence"
+    },
+    {
+      "id": "atlas.bootloader",
+      "title": "Bootloader Architecture",
+      "titleAr": "بنية Bootloader",
+      "sourceIds": [
+        "aosp.boot"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Bootloader responsibilities include boot image verification and selecting boot partitions.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Firmware Intelligence"
+    },
+    {
+      "id": "atlas.usb",
+      "title": "USB Protocols",
+      "titleAr": "بروتوكولات USB",
+      "sourceIds": [
+        "android.adb"
+      ],
+      "status": "Publicly Documented",
+      "claim": "ADB supports communication with an authorized device over supported transports; this is not a complete USB descriptor specification.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "USB Diagnostics"
+    },
+    {
+      "id": "atlas.adb",
+      "title": "ADB / Fastboot / Recovery",
+      "titleAr": "ADB وFastboot وRecovery",
+      "sourceIds": [
+        "android.adb"
+      ],
+      "status": "Publicly Documented",
+      "claim": "ADB client/server/device components differ from bootloader/recovery interfaces; validate each mode separately.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "USB Diagnostics"
+    },
+    {
+      "id": "atlas.partitions",
+      "title": "Firmware Partitions",
+      "titleAr": "أقسام ملفات النظام",
+      "sourceIds": [
+        "aosp.partitions"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Android documents partition roles and update architecture.",
+      "versions": "Reference as reviewed 2026-10-24; exact OS/SoC/firmware applicability requires a scoped experiment.",
+      "limitations": "No physical-device validation, attestation, extraction or bypass capability is established. Public documentation is not a NEXVARY lab result.",
+      "engine": "Firmware Intelligence"
+    },
+    {
+      "id": "atlas.updates",
+      "title": "OEM Security Updates",
+      "titleAr": "تحديثات أمان الشركات",
+      "sourceIds": [
+        "aosp.bulletins",
+        "mediatek.soc"
+      ],
+      "status": "Publicly Documented",
+      "claim": "Android bulletin fixes originate in AOSP, upstream Linux and SoC suppliers; OEMs distribute device-specific firmware. Preserve OEM build identifiers and distinguish reported patch levels from independently verified patch application.",
+      "versions": "Bulletin indexes and MediaTek October 2026 bulletin reviewed 2026-10-24; no specific handset build accepted.",
+      "limitations": "A bulletin entry or Android security-patch property does not prove all affected components were updated. Exact model, firmware, kernel and OEM advisory mapping remain required; no physical patch audit was performed.",
+      "engine": "Device Intelligence"
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool.ufed",
+      "title": "Cellebrite UFED",
+      "company": "Cellebrite",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "cellebrite.ufed",
+        "amnesty.serbia"
+      ],
+      "advertised": "Acquisition workflows",
+      "independentEvidence": "Amnesty documents specific 2024 cases; no general present-day device support follows.",
+      "architecture": "Published workflow: Acquisition workflows. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Acquisition workflows",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.physical-analyzer",
+      "title": "Cellebrite Physical Analyzer",
+      "company": "Cellebrite",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "cellebrite.pa"
+      ],
+      "advertised": "Decode/import, event review and reports",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Decode/import, event review and reports. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Decode/import, event review and reports",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.oxygen",
+      "title": "Oxygen Forensic Detective",
+      "company": "Oxygen Forensics",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "oxygen.detective"
+      ],
+      "advertised": "Collection, import, analysis and report stages",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Collection, import, analysis and report stages. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Collection, import, analysis and report stages",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.xry",
+      "title": "MSAB XRY",
+      "company": "MSAB",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "msab.xry"
+      ],
+      "advertised": "Acquisition and pre-indexing for analysis",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Acquisition and pre-indexing for analysis. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Acquisition and pre-indexing for analysis",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.xamn",
+      "title": "MSAB XAMN",
+      "company": "MSAB",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "msab.xry"
+      ],
+      "advertised": "Analysis downstream of XRY acquisition",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Analysis downstream of XRY acquisition. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Analysis downstream of XRY acquisition",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.axiom",
+      "title": "Magnet AXIOM",
+      "company": "Magnet Forensics",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "magnet.integration"
+      ],
+      "advertised": "Processing and analysis of acquired mobile images",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Processing and analysis of acquired mobile images. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Processing and analysis of acquired mobile images",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.belkasoft",
+      "title": "Belkasoft X",
+      "company": "Belkasoft",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "belkasoft.x"
+      ],
+      "advertised": "Evidence acquisition, artifact review and reporting",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Evidence acquisition, artifact review and reporting. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Evidence acquisition, artifact review and reporting",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.graykey",
+      "title": "Magnet Graykey",
+      "company": "Magnet Forensics",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "magnet.graykey"
+      ],
+      "advertised": "Mobile acquisition and downstream analysis integration",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Mobile acquisition and downstream analysis integration. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Mobile acquisition and downstream analysis integration",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.elcomsoft",
+      "title": "Elcomsoft Mobile Forensic Bundle",
+      "company": "Elcomsoft",
+      "status": "Vendor Claimed",
+      "sourceIds": [
+        "elcomsoft.bundle"
+      ],
+      "advertised": "Separate mobile acquisition and analysis utilities",
+      "independentEvidence": "Not established in this catalog; vendor descriptions remain vendor claims.",
+      "architecture": "Published workflow: Separate mobile acquisition and analysis utilities. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Separate mobile acquisition and analysis utilities",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    },
+    {
+      "id": "tool.rcs",
+      "title": "Hacking Team RCS Galileo / DaVinci",
+      "company": "Hacking Team (historical)",
+      "status": "Historical",
+      "sourceIds": [
+        "citizenlab.rcs"
+      ],
+      "advertised": "Historical remote surveillance infrastructure",
+      "independentEvidence": "Historical infrastructure observations in the 2014 Citizen Lab study; version-name mapping is not established by this entry.",
+      "architecture": "Published workflow: Historical remote surveillance infrastructure. Internal proprietary implementation is unknown.",
+      "interfaces": "Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.",
+      "processing": "Historical remote surveillance infrastructure",
+      "reporting": "Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.",
+      "strengths": "Documented workflow provides a comparison target; performance superiority is not independently established.",
+      "limitations": "Historical observations cannot establish present-day functionality. No leaked code, spyware payload or proprietary binary imported.",
+      "originalDevelopment": "Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.",
+      "requiredExperiment": "Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions."
+    }
+  ],
+  "experiments": [
+    {
+      "id": "EXP-001",
+      "title": "Read-only USB identity collection",
+      "status": "Research Hypothesis",
+      "sourceIds": [
+        "android.adb"
+      ],
+      "question": "Can USB Diagnostics preserve provenance without overclaiming?",
+      "hypothesis": "Only bounded source-backed observations will be displayed.",
+      "deviceModel": "Synthetic fixtures first; owned physical lab device is a separate gate.",
+      "osFirmware": "Exact test fixture or owned-device build required per result.",
+      "environment": "Isolated local workstation; no production personal data.",
+      "equipment": "Workstation and synthetic fixture; owned lab phone/cable only for separately authorized physical trial.",
+      "authorizedScope": "Synthetic/public evidence and expressly owned/authorized lab devices only.",
+      "methodology": "Record lab inventory and consent; collect existing read-only descriptors/properties; compare with reference; disconnect and record unchanged state.",
+      "expected": "No device writes; deterministic bounded output with evidence hash.",
+      "actualResults": "No physical experiment recorded.",
+      "artifacts": [],
+      "reproducibility": "Planned",
+      "researcher": "Unassigned",
+      "reviewStatus": "Pending",
+      "limitations": "A successful synthetic test cannot certify a physical phone or commercial service.",
+      "engine": "USB Diagnostics"
+    },
+    {
+      "id": "EXP-002",
+      "title": "AVB metadata envelope validation",
+      "status": "Research Hypothesis",
+      "sourceIds": [
+        "aosp.avb"
+      ],
+      "question": "Can Firmware Intelligence preserve provenance without overclaiming?",
+      "hypothesis": "Only bounded source-backed observations will be displayed.",
+      "deviceModel": "Synthetic fixtures first; owned physical lab device is a separate gate.",
+      "osFirmware": "Exact test fixture or owned-device build required per result.",
+      "environment": "Isolated local workstation; no production personal data.",
+      "equipment": "Workstation and synthetic fixture; owned lab phone/cable only for separately authorized physical trial.",
+      "authorizedScope": "Synthetic/public evidence and expressly owned/authorized lab devices only.",
+      "methodology": "Use synthetic vbmeta fixtures and independent official-tool expectations; compare parsed envelope fields and malformed-input rejection.",
+      "expected": "No device writes; deterministic bounded output with evidence hash.",
+      "actualResults": "No physical experiment recorded.",
+      "artifacts": [],
+      "reproducibility": "Planned",
+      "researcher": "Unassigned",
+      "reviewStatus": "Pending",
+      "limitations": "A successful synthetic test cannot certify a physical phone or commercial service.",
+      "engine": "Firmware Intelligence"
+    },
+    {
+      "id": "EXP-003",
+      "title": "Device observation provenance",
+      "status": "Research Hypothesis",
+      "sourceIds": [
+        "aosp.security"
+      ],
+      "question": "Can Device Intelligence preserve provenance without overclaiming?",
+      "hypothesis": "Only bounded source-backed observations will be displayed.",
+      "deviceModel": "Synthetic fixtures first; owned physical lab device is a separate gate.",
+      "osFirmware": "Exact test fixture or owned-device build required per result.",
+      "environment": "Isolated local workstation; no production personal data.",
+      "equipment": "Workstation and synthetic fixture; owned lab phone/cable only for separately authorized physical trial.",
+      "authorizedScope": "Synthetic/public evidence and expressly owned/authorized lab devices only.",
+      "methodology": "Use synthetic device states; verify missing, stale, conflicting and current property handling without granting model acceptance.",
+      "expected": "No device writes; deterministic bounded output with evidence hash.",
+      "actualResults": "No physical experiment recorded.",
+      "artifacts": [],
+      "reproducibility": "Planned",
+      "researcher": "Unassigned",
+      "reviewStatus": "Pending",
+      "limitations": "A successful synthetic test cannot certify a physical phone or commercial service.",
+      "engine": "Device Intelligence"
+    }
+  ],
+  "compatibility": [],
+  "evidenceClasses": [
+    "Vendor Claimed",
+    "Publicly Documented",
+    "Lab Verified",
+    "Research Hypothesis",
+    "Unsupported",
+    "Historical",
+    "Not Reproduced"
+  ],
+  "capabilityRule": "No record can override native service policy. Independent review and exact-device validation are required for commercial support."
+}

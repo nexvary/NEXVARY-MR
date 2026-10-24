@@ -12,6 +12,33 @@ TestCase {
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
+ function test_lawCaseAndResearchWorkspaces(){
+  verify(lawCaseBridge.ready,lawCaseBridge.error);verify(researchBridge.ready,researchBridge.error)
+  app.navigateSection(12);compare(app.currentPage,12);verify(renderedFrame())
+  mouseClick(findChild(app,"lawNewCase"));const form=findChild(app,"lawCaseForm");compare(form.step,0)
+  form.form={caseNumber:"SYNTHETIC-UI-CASE",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic fixture",authorityReference:"Lab-owned synthetic data",issuingAuthority:"Lab owner",scope:"Synthetic fixture review only"}
+  form.step=3;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));verify(!!lawCaseBridge.activeCase.id,lawCaseBridge.error)
+  const id=lawCaseBridge.activeCase.id
+  const device=lawCaseBridge.addDevice({model:"Synthetic UI phone",custodian:"Synthetic custodian"});verify(device!=="",lawCaseBridge.error)
+  verify(lawCaseBridge.addEvidence(device,syntheticEvidencePath,"Synthetic UI artifact","Synthetic custodian",true)!=="",lawCaseBridge.error)
+  const law=findChild(app,"lawEnforcementWorkspace")
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1180;app.height=760;law.section=0;verify(renderedFrame())
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"law-"+(arabic?"ar":"en")+".png"))
+   for(let section=0;section<10;section++){law.section=section;verify(renderedFrame())}
+  }
+  lawCaseBridge.closeWorkspace();verify(lawCaseBridge.openCase(id));verify(lawCaseBridge.verifyAudit())
+  app.navigateSection(9);compare(app.currentPage,13)
+  const research=findChild(app,"researchCenter")
+  for(const arabic of [true,false]){
+   app.ar=arabic
+   for(let section=0;section<9;section++){research.section=section;verify(renderedFrame())}
+   research.section=2;verify(renderedFrame());verify(research.rows.length>=10)
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"research-"+(arabic?"ar":"en")+".png"))
+  }
+  const query=findChild(app,"researchQuery");query.text="FBE";research.section=1;mouseClick(findChild(app,"researchSearch"));verify(research.rows.length>0);query.text="";research.refresh()
+  law.section=0;research.section=0;app.navigateSection(0)
+ }
  function test_avbReportExportConsent(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=1
   const path=findChild(app,"avbPath"),privacy=findChild(app,"avbExportPrivacy"),exportButton=findChild(app,"exportAvb")
@@ -217,7 +244,7 @@ TestCase {
  }
  function test_minimumSize(){
   app.width=1180;app.height=760;app.currentPage=7;app.showDevicePanel=true;wait(80);let scroll=findChild(app,"settingsScroll");verify(scroll!==null);verify(scroll.contentHeight>scroll.availableHeight,"Settings must scroll at minimum height");
-  for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>60);let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
+  for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b.width>=40,"Collapsed navigation keeps a usable hit target");let p=b.mapToItem(app.contentItem,0,0);verify(p.x>=0);verify(p.x+b.width<=app.width+1)}
   let deviceScroll=findChild(app,"deviceScroll");verify(deviceScroll!==null);verify(deviceScroll.availableHeight>0);
   deviceScroll.contentItem.contentY=Math.max(0,deviceScroll.contentHeight-deviceScroll.availableHeight);
   // Content can fit without scrolling, so no new render frame is required.
@@ -225,7 +252,103 @@ TestCase {
   tryVerify(function(){let point=backup.mapToItem(deviceScroll,backup.width/2,backup.height/2);return point.x>=0&&point.x<deviceScroll.width&&point.y>=0&&point.y<deviceScroll.height},5000,"Quick backup action remains reachable");deviceScroll.contentItem.contentY=0;
   app.showDevicePanel=false;app.width=1536;app.height=980;
  }
- function test_navigation(){for(let i=0;i<10;i++){let b=app.navigationButton(i);verify(b!==null,"Missing navigation button nav"+i);wait(50);let point=b.mapToItem(app.contentItem,b.width/2,b.height/2);verify(point.y>=0&&point.y<app.height,"Navigation remains reachable: "+i);mouseClick(b);tryCompare(app,"currentPage",i)}}
+ function reveal(scroll,target){
+  const point=target.mapToItem(scroll.contentItem,0,0)
+  scroll.contentItem.contentY=Math.max(0,Math.min(scroll.contentHeight-scroll.availableHeight,scroll.contentItem.contentY+point.y-target.height))
+  wait(30)
+ }
+ function test_deviceIntelligenceProvenance(){
+  app.navigateSection(1);app.ar=false
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42")
+  compare(toolBridge.deviceIntelligence.reportedFieldCount,0)
+  const scroll=findChild(app,"deviceManagerScroll"),read=findChild(app,"readDeviceInfo")
+  reveal(scroll,read);verify(read.enabled);mouseClick(read);tryCompare(toolBridge,"busy",false,5000)
+  const panel=findChild(app,"deviceIdentitySummary")
+  tryVerify(function(){return panel.field("model")!==null&&panel.field("model").modelData.value==="Synthetic Phone"})
+  compare(findChild(panel.field("model"),"intelligenceValue-model").text,"Synthetic Phone")
+  compare(panel.field("model").modelData.source,"adb:shell getprop")
+  verify(panel.field("model").modelData.observedAtUtc.length>0)
+  compare(toolBridge.deviceIntelligence.attestationVerified,false)
+  compare(toolBridge.deviceIntelligence.health.battery.state,"unavailable")
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768;scroll.contentItem.contentY=panel.y
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-intelligence-"+(arabic?"ar":"en")+".png"))
+  }
+  const review=findChild(app,"intelligenceReviewCapabilities");reveal(scroll,review);verify(review.enabled);mouseClick(review)
+  compare(app.currentPage,1);compare(findChild(app,"deviceTabs").currentIndex,1)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+  compare(toolBridge.deviceIntelligence.reportedFieldCount,0);findChild(app,"deviceTabs").currentIndex=0;scroll.contentItem.contentY=0
+ }
+ function test_usbDoctorInterpretation(){
+  app.navigateSection(4);app.ar=false
+  const doctor=findChild(app,"usbDoctorPanel");verify(doctor!==null);verify(doctor.visible)
+  verify(findChild(app,"doctorReadUsb").enabled)
+  verify(uiEvidence.setSyntheticDeviceMode("unauthorized"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42")
+  tryVerify(function(){return doctor.finding("adb-unauthorized")!==null},5000,JSON.stringify(doctor.report))
+  verify(findChild(app,"doctorScope").text.indexOf("not USB descriptor reads")>=0)
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768;findChild(app,"driverCatalogPage").contentItem.contentY=0
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"usb-doctor-"+(arabic?"ar":"en")+".png"))
+  }
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000)
+  verify(uiEvidence.clearSyntheticTool());app.ar=false
+  mouseClick(findChild(app,"doctorReadUsb"));tryCompare(toolBridge,"busy",false,35000)
+  const source=toolBridge.connectionDiagnosis.sources.filter(function(s){return s.source==="windows-pnp"})[0]
+  verify(source.state==="ok"||source.state==="windows-only","Read-only inventory: "+toolBridge.status)
+  compare(toolBridge.connectionDiagnosis.physicalCauseVerified,false)
+  compare(toolBridge.connectionDiagnosis.interfaceBindingVerified,false)
+ }
+ function test_navigation(){
+  for(let i=0;i<app.sections.length;i++){
+   const button=app.sectionButton(i);verify(button!==null)
+   reveal(findChild(app,"sidebarScroll"),button);mouseClick(button)
+   tryCompare(app,"activeSection",i);compare(app.currentPage,app.sections[i].page)
+  }
+ }
+ function test_shellResponsive(){
+  for(const size of [[1366,768],[1920,1080],[2560,1440]])for(const arabic of [true,false]){
+   app.width=size[0];app.height=size[1];app.ar=arabic
+   for(let i=0;i<app.sections.length;i++){
+    const button=app.sectionButton(i);reveal(findChild(app,"sidebarScroll"),button);mouseClick(button)
+    tryCompare(app,"activeSection",i);compare(app.currentPage,app.sections[i].page);verify(renderedFrame())
+    for(const name of ["workstationSidebar","workstationWorkspace","languageButton","topSettings","topHelp"]){
+     const item=findChild(app,name),top=item.mapToItem(app.contentItem,0,0)
+     verify(item.visible&&item.width>0&&item.height>0,name+" visible")
+     verify(top.x>=-1&&top.y>=-1&&top.x+item.width<=app.width+1&&top.y+item.height<=app.height+1,name+" within viewport at "+size)
+    }
+    verify(uiEvidence.captureWindow(app,uiScreenshotBase+uiScaleTag+"-"+size[0]+"-"+(arabic?"ar":"en")+"-"+i+".png"))
+   }
+  }
+ }
+ function test_shellRoutesAndCollapse(){
+  app.navigateSection(0);verify(renderedFrame());mouseClick(findChild(app,"dashboardDevices"));compare(app.currentPage,1)
+  app.navigateSection(8);verify(renderedFrame());mouseClick(findChild(app,"reportEvidence"));compare(app.currentPage,9);compare(findChild(app,"forensicTabs").currentIndex,1)
+  app.goBack();compare(app.activeSection,8)
+  const side=findChild(app,"workstationSidebar"),before=side.collapsed
+  mouseClick(findChild(app,"collapseSidebar"));compare(side.collapsed,!before)
+  app.navigateSection(1);compare(app.currentPage,1);mouseClick(findChild(app,"collapseSidebar"));compare(side.collapsed,before)
+ }
+ function test_shellDeviceStates(){
+  app.navigateSection(1);app.width=1366;app.height=768;app.ar=false
+  const page=findChild(app,"deviceManagerPage"),scroll=findChild(app,"deviceManagerScroll"),read=findChild(app,"readDeviceInfo")
+  tryCompare(toolBridge,"busy",false);verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.devices.length,1)
+  const list=findChild(app,"deviceSelectionList");verify(renderedFrame());mouseClick(list.itemAtIndex(0));compare(toolBridge.selectedSerial,"SYNTHETIC42");compare(page.adbReady,true);compare(findChild(app,"connectionBadge").text,"ADB authorized")
+  reveal(scroll,read);verify(read.enabled);mouseClick(read);tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.deviceInfo["ro.product.model"],"Synthetic Phone")
+  scroll.contentItem.contentY=0;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-connected-en.png"))
+  for(const mode of ["unauthorized","offline"]){
+   verify(uiEvidence.setSyntheticDeviceMode(mode));tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.devices[0].state,mode)
+   toolBridge.selectDevice("SYNTHETIC42");compare(page.adbReady,false);compare(findChild(app,"connectionBadge").text,"ADB "+mode);compare(read.enabled,false);verify(page.selectionReason.length>0)
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-"+mode+"-en.png"))
+  }
+  verify(uiEvidence.setSyntheticDeviceMode("progress"));compare(toolBridge.busy,true);verify(renderedFrame());verify(findChild(app,"cancelActiveOperation").visible)
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-progress-en.png"));mouseClick(findChild(app,"cancelActiveOperation"));tryCompare(toolBridge,"busy",false,5000)
+  verify(uiEvidence.setSyntheticDeviceMode("error"));tryCompare(toolBridge,"busy",false,5000);verify(findChild(app,"operationOutcome").text.indexOf("FAILURE")>=0)
+  verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"device-error-en.png"))
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);compare(toolBridge.devices.length,0);compare(toolBridge.selectedSerial,"");verify(uiEvidence.clearSyntheticTool());scroll.contentItem.contentY=0
+ }
+
  function test_forensicLabNavigation(){
   app.currentPage=0;
   let nav=app.navigationButton(9);
@@ -234,8 +357,8 @@ TestCase {
   compare(app.currentPage,9);
   let lab=findChild(app,"forensicLabWorkspace");
   verify(lab!==null,"Forensic Lab workspace missing");
-  compare(lab.modules.length,13);
-  compare(lab.modules.filter(function(m){return m.ready}).length,10);
+  compare(lab.modules.length,14);
+  compare(lab.modules.filter(function(m){return m.ready}).length,11);
   verify(renderedFrame());
   app.ar=false;
   verify(renderedFrame());
@@ -272,6 +395,29 @@ TestCase {
   tabs.currentIndex=1;const kind=findChild(app,"forensicKind");kind.currentIndex=kind.count-1;tryCompare(findChild(app,"forensicEvidenceList"),"count",1);kind.currentIndex=0;tabs.currentIndex=3
   page.capturePath="";compare(consent.checked,false);compare(run.enabled,false)
   verify(recoveryBridge.closeCase());tabs.currentIndex=0
+ }
+ function test_forensicExifWorkflow(){
+  app.currentPage=9;const tabs=findChild(app,"forensicTabs");tabs.currentIndex=3
+  const page=findChild(app,"forensicToolsPage"),run=findChild(app,"runExifAnalysis"),consent=findChild(app,"exifConsent"),scroll=findChild(app,"forensicToolsScroll")
+  page.exifPath="";consent.checked=false;compare(run.enabled,false)
+  verify(recoveryBridge.createCase("Synthetic EXIF UI","Fixture consent","Synthetic","No phone","","backup","none",true))
+  page.exifPath=syntheticExifPath;consent.checked=true;compare(run.enabled,false)
+  verify(recoveryBridge.recordOperator("UI operator","Synthetic photo authorization",true));tryCompare(run,"enabled",true)
+  for(const arabic of [true,false])for(const dark of [true,false]){
+   app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(50)
+   scroll.contentItem.contentY=0
+   const panel=findChild(app,"exifPanel");scroll.contentItem.contentY=panel.y;wait(50);verify(renderedFrame())
+   const scope=findChild(app,"exifScope");verify(scope.visible);verify(scope.height+0.01>=scope.implicitHeight,"EXIF scope height "+scope.height+" implicit "+scope.implicitHeight);verify(scope.text.indexOf("8 MiB")>=0)
+   const top=run.mapToItem(app.contentItem,0,0),bottom=run.mapToItem(app.contentItem,run.width,run.height)
+   verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<app.height,"EXIF action remains reachable")
+   if(dark)verify(uiEvidence.captureWindow(app,exifScreenshotBase+(arabic?"ar":"en")+".png"))
+  }
+  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-exif-summary/v1")>=0)
+  const show=findChild(app,"showExifResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
+  verify(findChild(app,"forensicPreview").text.indexOf("nexvary-exif-summary/v1")>=0)
+  tabs.currentIndex=3;page.exifPath="";compare(consent.checked,false);compare(run.enabled,false)
+  verify(recoveryBridge.closeCase());scroll.contentItem.contentY=0;tabs.currentIndex=0
  }
  function test_forensicWorkspace(){
   app.currentPage=9;
@@ -378,5 +524,12 @@ TestCase {
   compare(findChild(app,"runRecovery").enabled,false);page.step=4;verify(renderedFrame());mouseClick(findChild(app,"closeRecoveryCase"));tryCompare(recoveryBridge,"active",false);findChild(app,"recoveryTabs").currentIndex=0;
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
+ function test_yLocalIdentity(){
+  app.navigateSection(12);const law=findChild(app,"lawEnforcementWorkspace");law.section=10;verify(renderedFrame());identityBridge.logout();verify(!identityBridge.needsSetup)
+  findChild(app,"identityUsername").text="ui-admin";verify(lawCaseBridge.activeCase.id===undefined);compare(lawCaseBridge.cases.length,0)
+  findChild(app,"identityPassword").text="Synthetic-only UI password 2026!";mouseClick(findChild(app,"identitySignIn"));verify(identityBridge.authenticated,identityBridge.error);compare(identityBridge.session.role,"administrator");compare(lawCaseBridge.role,"unknown");compare(lawCaseBridge.cases.length,0);verify(renderedFrame())
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-ar.png"));app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-en.png"))
+  mouseClick(findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
+ }
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

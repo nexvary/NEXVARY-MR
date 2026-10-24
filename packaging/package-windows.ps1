@@ -54,6 +54,8 @@ $crtEvidence = foreach ($file in $crtDlls) {
   method = 'VS2022 official release x64 CRT app-local deployment'
   files = @($crtEvidence)
 } | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $bundle 'CRT_DEPLOYMENT.json') -Encoding utf8
+if (-not $env:MR_SODIUM_ROOT) { throw 'MR_SODIUM_ROOT must identify the pinned libsodium runtime' }
+Copy-Item (Join-Path $env:MR_SODIUM_ROOT 'bin/libsodium.dll') (Join-Path $bundle 'libsodium.dll')
 # SQL plug-ins are runtime-loaded, so require the SQLite driver explicitly.
 New-Item -ItemType Directory -Force (Join-Path $bundle 'sqldrivers') | Out-Null
 Copy-Item "$qtRoot/plugins/sqldrivers/qsqlite.dll" (Join-Path $bundle 'sqldrivers/qsqlite.dll')
@@ -70,7 +72,7 @@ Copy-Item "$qtRoot/bin/Qt6Svg.dll" (Join-Path $bundle 'Qt6Svg.dll')
 New-Item -ItemType Directory -Force (Join-Path $bundle 'tls') | Out-Null
 Copy-Item "$qtRoot/plugins/tls/qschannelbackend.dll" (Join-Path $bundle 'tls/qschannelbackend.dll')
 $requiredRuntime = @(
-  'NEXVARY-MR.exe', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
+  'NEXVARY-MR.exe', 'libsodium.dll', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
   'Qt6Quick.dll', 'Qt6Sql.dll', 'Qt6Network.dll',
   'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll',
@@ -90,6 +92,7 @@ Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }
 New-Item -ItemType Directory -Force (Join-Path $bundle 'licenses') | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'licenses/*') (Join-Path $bundle 'licenses') -Recurse -Force
+if (-not (Test-Path (Join-Path $bundle 'licenses/LIBSODIUM-ISC.txt') -PathType Leaf)) { throw 'Packaged libsodium ISC notice is missing' }
 # File-level SPDX inventory for the actual deployed runtime; review NOASSERTION
 # entries before release. This is not a complete transitive dependency audit.
 $qtVersion = (& "$qtRoot/bin/qmake.exe" -query QT_VERSION).Trim()
