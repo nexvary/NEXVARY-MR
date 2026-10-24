@@ -1,0 +1,77 @@
+{
+  "status": "ALPHA_VALIDATED_IN_EMULATORS",
+  "engineValidatedCommit": "514afe8684504ce681b74d4722d5c275cc5ca9c5",
+  "sharedBinarySourceCommit": "0908a3363401b2ccba4292fa82a27062ab6c908f",
+  "guardianValidatedCommit": "7f324204e2f60ab1aa42136668856676157e45b6",
+  "noManager": {
+    "run": 40126853530,
+    "apis": [
+      33,
+      34,
+      35,
+      36
+    ],
+    "perApi": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 1
+    },
+    "skipReason": "Opt-in live-manager case; executed separately with managers"
+  },
+  "liveManagers": {
+    "run": 40126853544,
+    "api": 35,
+    "official": {
+      "version": "13.6.0",
+      "tests": 1,
+      "passed": 1
+    },
+    "next": {
+      "version": "14.0.29-next",
+      "tests": 1,
+      "passed": 1
+    },
+    "scope": [
+      "explicit manager consent",
+      "per-action consent",
+      "UID 2000 observation",
+      "actual service/Binder death",
+      "privileged-cache invalidation",
+      "Standard fallback"
+    ]
+  },
+  "guardian": {
+    "run": 40126176694,
+    "apis": [
+      33,
+      34,
+      35
+    ],
+    "perApi": {
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0
+    },
+    "buildLintUnitSignature": "PASS",
+    "backendAwsSqliteMysql": "PASS",
+    "npseCases": [
+      "internal merged activity + Standard mode without manager",
+      "configured PIN required at More entry"
+    ]
+  },
+  "coreAssertions": 47,
+  "engineJUnitTests": 12,
+  "physical": {
+    "oppoColorOs": "PENDING — no connected device",
+    "wirelessPairing": "PENDING",
+    "rebootRecovery": "PENDING",
+    "physicalPermissionRevocation": "PENDING",
+    "oemBatteryPolicies": "PENDING"
+  },
+  "desktopConsumers": {
+    "USB": "NOT_APPLICABLE in current Python/Windows product; no Android host/OTG benefit demonstrated",
+    "NetScan": "NOT_APPLICABLE in current Windows WPF product; no proven privileged network diagnostic requested"
+  },
+  "productionRelease": false,
+  "mainMerged": false
+}

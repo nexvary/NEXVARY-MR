@@ -33,3 +33,11 @@ No cross-product source copy of desktop engines; no dependency on an unreviewed
 moving branch; no new repository; no extra server. NPSE Maven local publication
 preserves its core/API dependencies. Publishing a stable shared artifact and
 Guardian consumption are separate tracked gates, not implied by an AAR build.
+
+## Completion decision
+
+Guardian now consumes the reviewed NPSE binary as a pinned exclusive Maven
+dependency (PR #13, source 7f32420), with checksum/license checks and successful
+host build/lint/unit/API33–35 UI suites. This supersedes the earlier adoption
+pending state. USB/NetScan remain Windows-only; no Android adapter is justified
+in this alpha. Those study decisions are complete, not implemented integrations.

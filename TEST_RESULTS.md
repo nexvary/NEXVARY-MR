@@ -1,3 +1,22 @@
+# Current NPSE validation — 2026-10-24
+
+**The earlier pending CI/runtime statements below are historical.** Final verified
+results: engine source 514afe8, no-manager run 40126853530 and live-manager run
+40126853544 passed. API33–36 each 4 runtime passes plus 1 intentional opt-in skip;
+official/Next each 1 live Binder pass on API35. Guardian source 7f32420 and run
+40126176694 passed build/lint/unit/signature/backend and 80 runtime cases on each
+API33/34/35. Core remains 47 assertions and 12 JUnit cases.
+
+Read `docs/npse/COMPLETION_EVIDENCE.md` and `docs/npse/ACCEPTANCE_STATUS.json` for
+exact evidence scopes, skip accounting, inspected artifacts and physical-device
+limits. Actual AR/EN and live-manager screenshots now exist. Physical OPPO,
+wireless pairing, permission revocation, reboot and OEM battery checks remain
+pending. Both product PRs remain reviewable; no production/main promotion.
+
+---
+
+## Historical checkpoints (retained, superseded where noted above)
+
 # NPSE test evidence
 
 This file is updated with actual run results before delivery. A workflow definition

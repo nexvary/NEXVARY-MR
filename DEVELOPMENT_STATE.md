@@ -1,35 +1,33 @@
-# NPSE checkpoint — 2026-10-24
+# NPSE alpha checkpoint — 2026-10-24
 
-Branch: `feature/npse-shared-services`; review PR #14.
-Last published implementation commit: `7386d23da7424470b3f9d2143d0b87e2813fb13c`.
-The commit containing this checkpoint is the documentation/source continuation;
-use `git log -1` and current Actions for its final exact SHA/results.
-Base: `feature/usb-doctor-intelligence` at 9a4392a37b85186032ded8cdbe254b2064d8ed9b.
+Branch: feature/npse-shared-services; MR PR #14. Last tested engine source:
+`514afe8684504ce681b74d4722d5c275cc5ca9c5`. Library binary consumed by Guardian:
+`0908a3363401b2ccba4292fa82a27062ab6c908f` (production module code unchanged).
+Guardian PR #13, source `7f324204e2f60ab1aa42136668856676157e45b6`.
+The commit containing this documentation is a later documentation checkpoint;
+inspect git log -1 for its SHA. Fetch remote heads before trusting a cached workspace.
 
-Implemented: reusable Java core + Android AAR; optional shell-only provider;
-fixed caller-checked UserService; bounded/cancelable execution shared by the
-original MR metadata helper; Standard Android diagnostics/visible-app settings;
-AR/EN RTL non-exported control center and wizard; explicit local JSON export.
-No desktop engine, new companion or new repository was duplicated.
+Implemented: shared Java core + Android AAR; fixed caller-checked, shell-only
+Binder helper; bounded/cancelable probes; standard diagnostics, scoped app settings,
+AR/EN RTL control center/wizard, local JSON and audit. Both MR and Guardian consume
+this engine. Guardian reuses backend/readiness policy and disables Sui initialization.
 
-Read `ARCHITECTURE.md`, `CAPABILITY_MATRIX.md`, `SHIZUKU_INTEGRATION.md`,
-`SECURITY_MODEL.md`, `TEST_RESULTS.md`, `ROADMAP.md`, and
-`docs/npse/REPOSITORY_AUDIT.md` before continuing. Current core test passed 47 assertions. Android CI build/unit/lint passed at 353f767.
-Initial API 34/35 emulator failures were a JSON display-string assertion; the test
-now parses the schema. Seven historical Gitleaks matches were public header
-hashes; exact historical exceptions and local 0-findings reruns are documented.
-Local packaged-source build/lint, 12 JUnit tests, 47 core assertions and Maven
-publication passed at 7386d23. Final Android job 120927615683 remained in_progress with empty steps at handoff;
-API readbacks intermittently timed out/returned 502. Local API-35 software emulator
-boot timed out and was stopped; instrumentation/screenshots are pending. See the
-runtime blocker in TEST_RESULTS.md. Source, APK and reusable libraries are alpha
-artifacts, not a passed device-release gate.
-No OPPO/ColorOS hardware is connected, so device/Shizuku/reboot acceptance is pending.
+VERIFIED: no-manager API33–36 run 40126853530; official/Next real UID-2000 Binder,
+consent, death and Standard fallback run 40126853544; Guardian run 40126176694
+(80 UI cases on each API33/34/35 plus build/lint/unit/signature/backend).
+Core 47 assertions, app/library 12 JUnit tests. Real AR/EN/live-manager screenshots
+and CI APKs are available. Read TEST_RESULTS.md and docs/npse/COMPLETION_EVIDENCE.md.
 
-Next: run the current source checks, inspect exact CI errors, preserve actual
-emulator screenshots/APK if available, classify redacted history findings,
-review Maven local publication, then plan Guardian adoption. Do not claim 60/60,
-production readiness or physical device success. Main was not merged.
+PENDING EXTERNAL: actual OPPO/ColorOS, wireless pairing, physical permission
+revocation, reboot/restart and OEM battery behavior; no authorized device is
+connected. No automatic persistence, root, final release or 60/60 claim. Main
+is unchanged. USB/NetScan Android integration is not applicable to their current
+Windows products; do not create unsupported adapters or duplicate companions.
+
+Next: use SHIZUKU_INTEGRATION.md's owner-device checklist when a device is
+available; record results without replacing emulator evidence. Avoid redoing
+completed engine/Guardian implementation. Other candidates need a concrete
+benefit and separate adoption scope.
 
 ---
 
