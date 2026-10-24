@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+  "buildProfile": "production-read-only",
+  "unresolvedCriticalRisks": [
+    "Physical phone and independent clean Windows acceptance lack evidence",
+    "Trusted publisher signing and independent security/privacy/license/release reviews are pending",
+    "Local identity/clock/key custody does not establish institutional identity or external time"
+  ],
+  "gates": {
+    "exact_head_ci": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Native CI 40096699282 is still running; final evidence must be verified before accepting."
+    },
+    "production_policy": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Native policy tests passed locally; awaiting exact-source hosted results and review."
+    },
+    "android_physical_read_only": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "No owned physical phone connected; synthetic data is not physical acceptance."
+    },
+    "windows_10_acceptance": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "No independently configured clean Windows 10 host connected."
+    },
+    "windows_11_acceptance": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "No independently configured clean Windows 11 host connected."
+    },
+    "installer_portable_uninstall": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Awaiting exact-source Windows packaging/isolation/installer lifecycle CI."
+    },
+    "signing": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "No trusted publisher certificate/private-key provider supplied; no trusted Authenticode claim."
+    },
+    "sbom_review": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Packaged inventory is generated, but independent dependency/license sign-off remains required."
+    },
+    "upgrade_rollback": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Local signed-anchor rollback tests passed; full supported upgrade/restore and OS-account backup validation remain."
+    },
+    "privacy_review": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "No independent privacy/security reviewer sign-off supplied."
+    },
+    "reviewer_signoff": {
+      "passed": false,
+      "commit": "8034c4d6e41a120de38f353465687cc62689765a",
+      "reference": "",
+      "reviewer": "",
+      "reason": "Local account signatures do not establish independent people or institutional release approval."
+    }
+  }
+}

@@ -39,7 +39,8 @@ python3 scripts/validate_research_catalog.py
 python3 -m unittest discover -s tests -v
 python3 research/program/tools/validate_research.py
 (cd research/program && python3 -m unittest discover -s tests -v)
-cmake -S . -B build -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
+python scripts/prepare_sodium.py --destination build/sodium
+cmake -S . -B build -DMR_SODIUM_ROOT=build/sodium -DMR_BUILD_GUI=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
 cmake --build build --config Release --parallel 2
 ctest --test-dir build -C Release --output-on-failure
 ```

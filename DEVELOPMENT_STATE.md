@@ -1,9 +1,14 @@
 # Local identity and independent-review increment — 2026-10-24
 
 Active branch: `feature/law-enforcement-case-foundation`; PR #11.
-Parent/last previously published commit: `e1b284e6a1af94ac018f7fe6f2e0679d6683c38d`.
-This source increment is being validated; the exact published source SHA and hosted
-CI/artifact evidence will be recorded in the following documentation checkpoint.
+Last published source: `8034c4d6e41a120de38f353465687cc62689765a`.
+Native CI 40096699282 passed both Linux profiles (38/38 each, production sanitizers
+7/7), both OS core jobs and tracking-server. Windows production CTest passed 38/38,
+but portable packaging failed because this increment added a redundant copy from
+the wrong license source path. The notice already resides in packaging/licenses
+and is copied by the existing wildcard. The following packaging fix checks that
+the resulting notice exists instead; no C++/QML behavior is changed. New exact-source
+CI and artifact evidence must pass before a Windows binary is presented.
 
 ## Implemented in this increment
 

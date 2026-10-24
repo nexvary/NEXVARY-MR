@@ -92,7 +92,7 @@ Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }
 New-Item -ItemType Directory -Force (Join-Path $bundle 'licenses') | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'licenses/*') (Join-Path $bundle 'licenses') -Recurse -Force
-Copy-Item (Join-Path $repo 'licenses/LIBSODIUM-ISC.txt') (Join-Path $bundle 'licenses/LIBSODIUM-ISC.txt')
+if (-not (Test-Path (Join-Path $bundle 'licenses/LIBSODIUM-ISC.txt') -PathType Leaf)) { throw 'Packaged libsodium ISC notice is missing' }
 # File-level SPDX inventory for the actual deployed runtime; review NOASSERTION
 # entries before release. This is not a complete transitive dependency audit.
 $qtVersion = (& "$qtRoot/bin/qmake.exe" -query QT_VERSION).Trim()
