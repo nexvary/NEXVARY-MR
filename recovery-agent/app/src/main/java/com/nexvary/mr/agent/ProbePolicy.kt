@@ -15,13 +15,9 @@ object ProbePolicy {
         "reported-crypto-type" to "ro.crypto.type"
     )
     val probeNames = properties.keys + setOf("shell-identity", "filesystem-capacity")
-    fun commandFor(name: String): List<String>? = when (name) {
-        "shell-identity" -> listOf("/system/bin/id")
-        in properties -> listOf("/system/bin/getprop", properties.getValue(name))
-        else -> null
-    }
+    fun commandFor(name: String): List<String>? = com.nexvary.npse.core.Probe.find(name)?.arguments()
     fun permitsHelper(uid: Int, granted: Boolean, alive: Boolean): Boolean =
-        alive && granted && uid == 2000
+        com.nexvary.npse.core.AccessPolicy.evaluate(alive, granted, uid, false) == com.nexvary.npse.core.AccessPolicy.State.SHELL
 }
 
 data class AccessState(val state: String, val uid: Int?)

@@ -1,0 +1,36 @@
+<resources>
+    <string name="npse_title">مركز التحكم بالخدمات المتقدمة</string>
+    <string name="npse_scope">وظائف Android العادية أولًا، وتشخيص Shell اختياري عبر Shizuku. لكل عملية نتيجة مستقلة.</string>
+    <string name="npse_back">رجوع</string>
+    <string name="npse_standard">جمع التشخيص العادي</string>
+    <string name="npse_apps">التطبيقات الظاهرة · فتح الإعدادات</string>
+    <string name="npse_opt_in">تفعيل تشخيص Shizuku الاختياري</string>
+    <string name="npse_setup">معالج الإعداد</string>
+    <string name="npse_grant">طلب إذن Shizuku</string>
+    <string name="npse_permission_help">شغّل Shizuku بوضع Shell. إذا رفضت الإذن نهائيًا، راجع التطبيقات المصرح بها داخل مدير Shizuku.</string>
+    <string name="npse_advanced">جمع تشخيص Shell المحدد</string>
+    <string name="npse_confirm">قراءة هوية Shell وحالة الإقلاع الموثق وقفل محمل الإقلاع وإجمالي الذاكرة فقط؟ لن تتغير الإعدادات أو بيانات التطبيقات.</string>
+    <string name="npse_continue">متابعة</string>
+    <string name="npse_cancel">إلغاء العملية الحالية</string>
+    <string name="npse_refresh">تحديث حالة الخدمة</string>
+    <string name="npse_export">تصدير تقرير JSON العادي</string>
+    <string name="npse_export_consent">حفظ التشخيص العادي المعروض في ملف محلي تختاره؟ تُمسح قراءات Shell عند مغادرة الشاشة. لا تُرسل البيانات عبر الشبكة.</string>
+    <string name="npse_audit">سجل عمليات الجلسة</string>
+    <string name="npse_privacy">لا Root ولا طرفية أوامر عامة أو خدمة خلفية أو إرسال شبكي أو تعديل تطبيقات أو تجاوز أذونات USB والتسجيل. اتصال ADB غير مهيأ. اختبار OPPO/ColorOS وAndroid 13–16 الفعلي ما زال معلقًا.</string>
+    <string name="npse_failed">العملية غير متاحة أو رُفضت</string>
+    <string name="npse_step">الخطوة %1$d من %2$d</string>
+    <string name="npse_next">التالي</string>
+    <string name="npse_step1">استخدم الوضع العادي للتشخيص الأساسي. Shizuku اختياري. ثبّت Shizuku أو Shizuku Next من مشروعه الرسمي وراجع شهادة توقيعه.</string>
+    <string name="npse_step2">من خيارات المطور فعّل تصحيح الأخطاء اللاسلكي على شبكة موثوقة، ثم اقترن وشغّل الخدمة داخل Shizuku. لا تشارك رموز الاقتران. NPSE لا يقترن تلقائيًا.</string>
+    <string name="npse_step3">ارجع إلى هنا وفعّل التشخيص الاختياري واطلب الإذن، ثم وافق إذا أردت تنفيذ الفحوص المحددة للقراءة فقط. تُرفض الخدمة المشغّلة عبر Root.</string>
+    <string name="npse_step4">بعد إعادة التشغيل أو توقف الخدمة أو سحب الإذن، حدّث الحالة وشغّل Shizuku مجددًا عند الحاجة. قد تؤثر قيود البطارية في ColorOS. التشغيل التلقائي غير مضمون. أغلق المفتاح الاختياري للعودة للوضع العادي.</string>
+    <string name="npse_state_disabled">الوضع العادي · Shizuku معطل</string>
+    <string name="npse_state_shell">خدمة Shell مصرح بها · نجاح الفحوص يتطلب التنفيذ</string>
+    <string name="npse_state_permission">الخدمة متصلة · الإذن مطلوب</string>
+    <string name="npse_state_denied">الإذن مرفوض · الوضع العادي متاح</string>
+    <string name="npse_state_root">رُفض وضع Root · استخدم وضع Shell</string>
+    <string name="npse_state_unavailable">الخدمة غير متاحة · الوضع العادي متاح</string>
+    <string name="npse_no_report">اجمع التشخيص العادي لمعاينة التقرير.</string>
+    <string name="npse_local_only">اختر مزود ملفات محليًا مدعومًا.</string>
+    <string name="npse_exported">تم حفظ تقرير JSON محليًا</string>
+</resources>

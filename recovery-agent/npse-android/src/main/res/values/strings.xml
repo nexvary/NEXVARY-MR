@@ -1,0 +1,36 @@
+<resources>
+    <string name="npse_title">Privileged Services Control Center</string>
+    <string name="npse_scope">Standard Android first. Optional Shizuku shell metadata. Each operation reports its own result.</string>
+    <string name="npse_back">Back</string>
+    <string name="npse_standard">Collect standard diagnostics</string>
+    <string name="npse_apps">Visible launcher apps · open settings</string>
+    <string name="npse_opt_in">Enable optional Shizuku diagnostics</string>
+    <string name="npse_setup">Setup wizard</string>
+    <string name="npse_grant">Request Shizuku permission</string>
+    <string name="npse_permission_help">Start Shizuku in shell mode. If permission was denied permanently, review authorized apps in the manager.</string>
+    <string name="npse_advanced">Collect fixed shell diagnostics</string>
+    <string name="npse_confirm">Read shell identity, verified boot state, bootloader lock state and aggregate memory only? No settings or app data will be changed.</string>
+    <string name="npse_continue">Continue</string>
+    <string name="npse_cancel">Cancel active operation</string>
+    <string name="npse_refresh">Refresh service state</string>
+    <string name="npse_export">Export standard JSON report</string>
+    <string name="npse_export_consent">Save the previewed standard diagnostics to a local document you select? Optional shell observations are cleared when leaving this screen. No network upload is performed.</string>
+    <string name="npse_audit">Session operation log</string>
+    <string name="npse_privacy">No root, unrestricted terminal, background service, network upload, app mutation, USB bypass or recording permission bypass. ADB transport is not configured. OPPO/ColorOS and Android 13–16 field validation remains pending.</string>
+    <string name="npse_failed">Operation unavailable or denied</string>
+    <string name="npse_step">Step %1$d of %2$d</string>
+    <string name="npse_next">Next</string>
+    <string name="npse_step1">Keep standard mode for normal diagnostics. Shizuku is optional. Install Shizuku or Shizuku Next from its official project and review its signing certificate.</string>
+    <string name="npse_step2">In Developer options, enable Wireless debugging on a trusted network. Pair and start the service inside Shizuku. Never share pairing codes. NPSE does not pair automatically.</string>
+    <string name="npse_step3">Return here, enable optional diagnostics and request permission. Accept only if you intend to run the fixed read-only checks. Root-started service is refused.</string>
+    <string name="npse_step4">After reboot, service death or permission revocation, refresh and start Shizuku again if necessary. ColorOS battery restrictions can affect it. Automatic restart is not guaranteed. Turn off the optional switch to return to standard mode.</string>
+    <string name="npse_state_disabled">Standard mode · Shizuku disabled</string>
+    <string name="npse_state_shell">Shell service authorized · probe success still requires execution</string>
+    <string name="npse_state_permission">Service alive · permission required</string>
+    <string name="npse_state_denied">Permission denied · standard mode remains available</string>
+    <string name="npse_state_root">Root backend refused · use shell mode</string>
+    <string name="npse_state_unavailable">Service unavailable · standard mode remains available</string>
+    <string name="npse_no_report">Collect standard diagnostics to preview a report.</string>
+    <string name="npse_local_only">Select a supported local document provider.</string>
+    <string name="npse_exported">Local JSON report saved</string>
+</resources>
