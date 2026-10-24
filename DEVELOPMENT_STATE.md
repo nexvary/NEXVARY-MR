@@ -8,6 +8,7 @@ Active local branch: `feature/unified-law-research`.
 Publication target: existing PR #11, `feature/law-enforcement-case-foundation`.
 Last published implementation: `4beff9ee8d1e4cac335d008c447f94ef5418fd06`.
 Last published Windows UTF-8 fix: `ff2196a7aa08038d120dea6274549cbb7b4712de`.
+Last published layout/source checkpoint: `db373b7b8a09652b3c07cd65f33982a429daa4bb`.
 Research foundation: `372b9636fce50a66e64360eb315f12ecdfff8c45` (PR #12).
 Shared USB/Device Intelligence source matches `9a4392a37b85186032ded8cdbe254b2064d8ed9b`.
 The implementation commit containing this checkpoint is resolved with `git rev-parse HEAD`;
@@ -34,8 +35,16 @@ Read `docs/UNIFIED_WORKSPACES.md` for trust boundaries and acceptance gaps.
   Fixed viewport/content sizing; standalone application smoke now exits 0 without
   QML warnings. Initial failure and final focused evidence are retained.
 - Root Python: 29 passed; recovery Python: 19; portal: 6; original package: 2.
-- Root/public-history CI at ff2196a passed. Expanded local final CTest and
-  exact-source Windows/Linux production/Laboratory CI remain pending.
+- Final local Release/warnings-as-errors CTest: 37/37 passed, including signed
+  updater suites and GUI smoke. Qt Quick: 40 passed. Optional external ClamAV/TSK
+  fixture subcases were skipped locally; their configured hosted integration gates
+  remain required. At db373b7 both Linux Qt profiles and external gates passed. Windows Qt
+  compilation failed on C4702 in generated Qt 6.8.3 templates; a pinned-SDK
+  bytecode compiler workaround is included in the next source checkpoint.
+  Exact-source Windows packaging after the workaround is still required.
+- Laboratory local role/case/research focused CTest: 3/3 passed. One malformed
+  zero-header generated ToolBridge object was recompiled; no source fix was needed.
+- Root/public-history CI at db373b7 and Windows/Linux core jobs passed.
 - Qt SDK was transient between turns; dependencies are now reconstructed outside
   the repository. Keep source/evidence checkpoints in Git, not `/tmp`.
 

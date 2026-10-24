@@ -126,6 +126,13 @@ if(MR_BUILD_GUI)
   target_sources(nexvary_mr PRIVATE packaging/app.rc)
   target_include_directories(nexvary_mr PRIVATE packaging)
  endif()
+ # MSVC /WX rejects C4702 in Qt 6.8.3 conversion templates instantiated by
+ # generated QML C++. Keep precompiled bytecode and native /WX; avoid that AOT
+ # code-generation path only for the pinned Windows SDK. Qt documents this mode:
+ # https://doc.qt.io/qt-6.8/qt-add-qml-module.html
+ if(MSVC AND Qt6_VERSION VERSION_EQUAL "6.8.3")
+  set_target_properties(nexvary_mr PROPERTIES QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode")
+ endif()
  qt_add_qml_module(nexvary_mr URI NexvaryMR VERSION 1.0 RESOURCE_PREFIX "/" QML_FILES qml/LawCaseBrowser.qml qml/LawCaseDevices.qml qml/LawCaseForm.qml qml/LawEnforcementPage.qml qml/LawTrainingPage.qml qml/LawEvidencePage.qml qml/ResearchCenter.qml qml/DesignTokens.qml qml/LegacyPalette.qml qml/StateBadge.qml qml/ActionCard.qml qml/EmptyState.qml qml/NavigationItem.qml qml/Sidebar.qml qml/TopBar.qml qml/OperationProgress.qml qml/DeviceInspector.qml qml/AppShell.qml qml/WorkflowStrip.qml qml/DashboardPage.qml qml/ReportsPage.qml qml/HelpPage.qml qml/NeonCheckBox.qml qml/NeonComboBox.qml qml/GlossSurface.qml qml/NavIcon.qml qml/Main.qml qml/Panel.qml qml/ActionButton.qml qml/BoardWorkspace.qml qml/WorkshopPage.qml qml/WorkshopHub.qml qml/InventoryPage.qml qml/DeviceIntelligencePanel.qml qml/DevicesPage.qml qml/DeviceHub.qml qml/DeviceServicesPage.qml qml/DeviceCompatibilityPanel.qml qml/SupportedDevicesPage.qml qml/DiagnosisPage.qml qml/DiagnosticHub.qml qml/SecurityPage.qml qml/UsbDoctorPanel.qml qml/DriverCatalogPage.qml qml/FaultTreePage.qml qml/FirmwarePage.qml qml/SettingsPage.qml qml/RecoveryPage.qml qml/RecoveryAssessment.qml qml/ForensicLabPage.qml qml/ForensicEvidencePage.qml qml/ForensicTimelinePage.qml qml/ForensicToolsPage.qml)
  file(GLOB MR_ICON_ASSETS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CONFIGURE_DEPENDS assets/icons/*.svg)
  qt_add_resources(nexvary_mr samples PREFIX "/" FILES samples/training-board.json assets/nexvary-mr.png assets/codec-check.jpg ${MR_ICON_ASSETS})

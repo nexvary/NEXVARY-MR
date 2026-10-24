@@ -47,3 +47,17 @@ ctest --test-dir build -C Release --output-on-failure
 `mr_law_workspace_tests`, `mr_research_tests`, the existing 432-check case suite, the core research data gate and the expanded Qt Quick navigation test are included in existing Windows/Linux CI. The Quick test creates/reopens a synthetic case, registers evidence, visits every new section and captures real AR/EN runtime PNGs. Existing repair, firmware, workshop and security regression suites remain in CTest.
 
 Final acceptance still requires exact-source hosted Windows/Linux results, a successful packaged Windows run, authenticated institution roles/review, independent custody anchoring and owned-device/clean-host validation. See the current `DEVELOPMENT_STATE.md` and retained test output for actual results; no physical-device or final-release claim follows from synthetic tests.
+
+## Windows Qt 6.8.3 compiler compatibility
+
+Run 40090972966 at db373b7 passed both Linux profiles, both OS core jobs and
+tracking-server. Windows stopped during generated QML C++ compilation: MSVC C4702
+in Qt qmetatype/qvariant/qjsengine headers became C2220 under /WX. No native
+case/research source diagnostic was reported in that failure.
+
+For the pinned MSVC + Qt 6.8.3 combination, the application uses Qt's documented
+`QT_QMLCACHEGEN_ARGUMENTS=--only-bytecode` mode. QML bytecode remains precompiled;
+project native warnings-as-errors and all runtime/packaging tests remain enabled.
+Other platforms/SDK versions retain their existing compiler path. Exact-source
+Windows packaging must pass after this change before a binary is presented.
+Reference: https://doc.qt.io/qt-6.8/qt-add-qml-module.html#caching-compiled-qml-sources

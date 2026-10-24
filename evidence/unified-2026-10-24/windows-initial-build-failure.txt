@@ -1,0 +1,18 @@
+2026-10-24T11:45:39.1511407Z   LawCaseStore.cpp
+2026-10-24T11:45:41.8168057Z   LawCaseBridge.cpp
+2026-10-24T11:46:13.7553976Z   Compiling...
+2026-10-24T11:47:18.3228637Z   Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp, .rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp.aotstats
+2026-10-24T11:47:18.6544092Z   Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp, .rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp.aotstats
+2026-10-24T11:47:18.8477754Z   Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp, .rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp.aotstats
+2026-10-24T11:47:19.8070217Z   Generating .rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp, .rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp.aotstats
+2026-10-24T11:47:38.3766524Z   LawCaseBrowser_qml.cpp
+2026-10-24T11:47:40.8717557Z   LawCaseDevices_qml.cpp
+2026-10-24T11:47:43.2776650Z   LawCaseForm_qml.cpp
+2026-10-24T11:47:53.1418280Z   ResearchCenter_qml.cpp
+2026-10-24T11:48:26.1217132Z D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\include\QtCore\qmetatype.h(462,1): error C2220: the following warning is treated as an error [D:\a\NEXVARY-MR\NEXVARY-MR\build\nexvary_mr.vcxproj]
+2026-10-24T11:48:26.1613432Z D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\include\QtCore\qmetatype.h(462,1): warning C4702: unreachable code [D:\a\NEXVARY-MR\NEXVARY-MR\build\nexvary_mr.vcxproj]
+2026-10-24T11:48:26.1922821Z D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\include\QtCore\qvariant.h(553,1): warning C4702: unreachable code [D:\a\NEXVARY-MR\NEXVARY-MR\build\nexvary_mr.vcxproj]
+2026-10-24T11:48:26.2797535Z D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\include\QtCore\qvariant.h(558,1): warning C4702: unreachable code [D:\a\NEXVARY-MR\NEXVARY-MR\build\nexvary_mr.vcxproj]
+2026-10-24T11:48:26.2805933Z D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\include\QtQml\qjsengine.h(111,1): warning C4702: unreachable code [D:\a\NEXVARY-MR\NEXVARY-MR\build\nexvary_mr.vcxproj]
+2026-10-24T11:48:28.0231780Z   Compiling...
+2026-10-24T11:49:18.6612869Z   Compiling...
