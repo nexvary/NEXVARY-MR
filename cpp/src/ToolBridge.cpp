@@ -1,6 +1,7 @@
 #include "ToolBridge.hpp"
 #include "ServiceCommandPolicy.hpp"
 #include "UsbDriver.hpp"
+#include "ConnectionDiagnosis.hpp"
 #include <QDateTime>
 
 #include <QDir>
@@ -68,6 +69,11 @@ ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
   timeoutTimer_.setTimerType(Qt::PreciseTimer);
   timeoutTimer_.setInterval(12000);
   pollTimer_.setInterval(5000);
+  diagnosisClock_.setInterval(5000);
+  connect(&diagnosisClock_,&QTimer::timeout,this,&ToolBridge::connectionDiagnosisChanged);
+  for(const auto signal:{&ToolBridge::devicesChanged,&ToolBridge::selectedSerialChanged,&ToolBridge::serviceChanged})
+    connect(this,signal,this,&ToolBridge::connectionDiagnosisChanged);
+  diagnosisClock_.start();
   connect(&timeoutTimer_, &QTimer::timeout, this, [this] {
     if (!active_) return;
     terminalReason_ = QStringLiteral("انتهت مهلة الفحص؛ تحقق من اتصال USB واستجابة الأداة");
@@ -91,6 +97,7 @@ ToolBridge::~ToolBridge() {
   mirror_.shutdown();
   shutdownServices();
   pollTimer_.stop();
+  diagnosisClock_.stop();
   timeoutTimer_.stop();
   if (process_.state() != QProcess::NotRunning) {
     process_.kill();
@@ -276,6 +283,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
     setStatus(QStringLiteral("Device command rejected by centralized allowlist."));return false;
   }
   if (mirror_.active() || active_ || (serviceRunning_ && operation != Operation::Service)) { setStatus(QStringLiteral("هناك عملية جارية بالفعل")); return false; }
+  recordConnectionObservation(operation,"running");
   if (operation == Operation::Properties) { deviceInfo_.clear(); emit deviceInfoChanged(); }
   if (operation == Operation::Logcat) { logcat_.clear(); emit logcatChanged(); }
   if (operation == Operation::Drivers) { driverInfo_.clear(); emit driverInfoChanged(); }
@@ -284,6 +292,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   if (path.isEmpty()) {
     if (operation == Operation::AdbScan) replaceDevices({}, adbTransport);
     if (operation == Operation::FastbootScan) replaceDevices({}, fastbootTransport);
+    recordConnectionObservation(operation,"unavailable");
     setStatus(QStringLiteral("الأداة غير مثبتة أو غير موجودة في PATH: ") + program);
     if(operation!=Operation::Service)emit operationFinished(false);
     return false;
@@ -296,7 +305,7 @@ bool ToolBridge::runReadOnly(const QString &program, const QStringList &argument
   setStatus(operation==Operation::Service?QStringLiteral("جار تنفيذ خدمة الجهاز المحددة؛ راقب الهاتف…"):QStringLiteral("جار تنفيذ فحص قراءة فقط…"));
   process_.setProgram(path);
   process_.setArguments(arguments);
-  timeoutTimer_.start(operation==Operation::DriverBinding?30000:12000);
+  timeoutTimer_.start(operation==Operation::DriverBinding||operation==Operation::UsbInventory?30000:12000);
   process_.start();
   return true;
 }
@@ -320,13 +329,20 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
   if (!active_) return;
   collectOutput();
   timeoutTimer_.stop();
-  const bool success = terminalReason_.isEmpty() && exitStatus == QProcess::NormalExit && exitCode == 0;
+  bool success = terminalReason_.isEmpty() && exitStatus == QProcess::NormalExit && exitCode == 0;
   const QString output = QString::fromUtf8(output_).trimmed();
   if (operation_ == Operation::Service) {
     active_=false;
     operation_=Operation::None;
     serviceStepFinished(success,output,QString::fromUtf8(errors_).trimmed());
     return;
+  }
+  QVariantMap inventory;
+  if(success&&(operation_==Operation::UsbInventory||operation_==Operation::DriverBinding)) {
+    inventory=mr::usb::inventory(output_);
+    if(inventory.isEmpty()&&operation_==Operation::UsbInventory) {
+      success=false;terminalReason_=QStringLiteral("USB inventory rejected: invalid or oversized schema / جرد USB غير صالح");
+    }
   }
   if (success) {
     switch (operation_) {
@@ -346,6 +362,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
         emit driverInfoChanged();
       }
       break;
+    case Operation::UsbInventory: break;
     case Operation::None: break;
     case Operation::Service: break;
     }
@@ -357,14 +374,21 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
     if (operation_ == Operation::FastbootScan) replaceDevices({}, fastbootTransport);
     setStatus(!terminalReason_.isEmpty() ? terminalReason_ : QStringLiteral("فشل الفحص (رمز ") + QString::number(exitCode) + QStringLiteral("): ") + QString::fromUtf8(errors_).trimmed().left(2048));
   }
+  recordConnectionObservation(operation_,success?"ok":"failed");
+  if(success&&(operation_==Operation::UsbInventory||operation_==Operation::DriverBinding)) {
+    if(inventory.isEmpty())usbObservation_.insert("state","failed");
+    else usbObservation_.insert("inventory",inventory);
+    emit connectionDiagnosisChanged();
+  }
   const QStringList operationNames{QStringLiteral("none"),QStringLiteral("adb-scan"),QStringLiteral("fastboot-scan"),QStringLiteral("properties"),QStringLiteral("logcat"),QStringLiteral("drivers")};
-  emit diagnosticCompleted(operation_==Operation::DriverBinding?QStringLiteral("usb-correlation"):operationNames.value(static_cast<int>(operation_)), success);
+  emit diagnosticCompleted(operation_==Operation::UsbInventory?QStringLiteral("usb-inventory"):operation_==Operation::DriverBinding?QStringLiteral("usb-correlation"):operationNames.value(static_cast<int>(operation_)), success);
   active_ = false;
   operation_ = Operation::None;
   emit busyChanged();
   emit operationFinished(success);
 }
 void ToolBridge::replaceDevices(const QVariantList &found, const QString &transport) {
+  discoveryObservations_.remove(transport);emit connectionDiagnosisChanged();
   driverBinding_.clear();emit driverInfoChanged();
   if (!serviceRunning_) serviceInvalidate();
   QVariantList combined;
@@ -426,14 +450,32 @@ void ToolBridge::inspectSelectedDriver() {
   driverBinding_.clear();emit driverInfoChanged();
   int matches=0;for(const auto &entry:devices_)if(entry.toMap().value("serial").toString()==selectedSerial_)++matches;
   if(selectedSerial_.isEmpty()||matches!=1){setStatus(QStringLiteral("اختر جهازًا واحدًا غير ملتبس قبل مطابقة USB / Select one unambiguous device first."));return;}
+  runUsbInventory(Operation::DriverBinding);
+}
+void ToolBridge::inspectUsbInventory() {
+  if(!busy())runUsbInventory(Operation::UsbInventory);
+}
+void ToolBridge::runUsbInventory(Operation operation) {
 #ifdef Q_OS_WIN
   QFile script(QStringLiteral(":/packaging/inspect-usb.ps1"));
-  if(!script.open(QIODevice::ReadOnly)){setStatus(QStringLiteral("USB inventory resource unavailable."));return;}
-  runReadOnly(QStringLiteral("powershell"),{QStringLiteral("-NoLogo"),QStringLiteral("-NoProfile"),QStringLiteral("-NonInteractive"),QStringLiteral("-Command"),QString::fromUtf8(script.readAll())},Operation::DriverBinding);
+  if(!script.open(QIODevice::ReadOnly)){recordConnectionObservation(operation,"unavailable");setStatus(QStringLiteral("USB inventory resource unavailable."));return;}
+  runReadOnly(QStringLiteral("powershell"),{QStringLiteral("-NoLogo"),QStringLiteral("-NoProfile"),QStringLiteral("-NonInteractive"),QStringLiteral("-Command"),QString::fromUtf8(script.readAll())},operation);
 #else
+  recordConnectionObservation(operation,"windows-only");
   driverBinding_={{"state","windows-only"}};emit driverInfoChanged();
   setStatus(QStringLiteral("مطابقة تعريف USB متاحة على Windows فقط / USB driver correlation requires Windows."));
 #endif
+}
+void ToolBridge::recordConnectionObservation(Operation operation,const QString &state) {
+  const QVariantMap observation{{"state",state},{"observedAtUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)}};
+  if(operation==Operation::AdbScan||operation==Operation::FastbootScan)
+    discoveryObservations_.insert(operation==Operation::AdbScan?"adb":"fastboot",observation);
+  else if(operation==Operation::UsbInventory||operation==Operation::DriverBinding)usbObservation_=observation;
+  else return;
+  emit connectionDiagnosisChanged();
+}
+QVariantMap ToolBridge::connectionDiagnosis() const {
+  return mr::diagnostics::connectionDiagnosis({selectedSerial_,devices_,discoveryObservations_,usbObservation_,serviceProfile_});
 }
 void ToolBridge::cancel() {
   if(mirror_.active()){stopMirror();return;}

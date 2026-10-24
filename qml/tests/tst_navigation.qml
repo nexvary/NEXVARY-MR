@@ -230,6 +230,26 @@ TestCase {
   scroll.contentItem.contentY=Math.max(0,Math.min(scroll.contentHeight-scroll.availableHeight,scroll.contentItem.contentY+point.y-target.height))
   wait(30)
  }
+ function test_usbDoctorInterpretation(){
+  app.navigateSection(4);app.ar=false
+  const doctor=findChild(app,"usbDoctorPanel");verify(doctor!==null);verify(doctor.visible)
+  verify(findChild(app,"doctorReadUsb").enabled)
+  verify(uiEvidence.setSyntheticDeviceMode("unauthorized"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42")
+  tryVerify(function(){return doctor.finding("adb-unauthorized")!==null},5000,JSON.stringify(doctor.report))
+  verify(findChild(app,"doctorScope").text.indexOf("not USB descriptor reads")>=0)
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768;findChild(app,"driverCatalogPage").contentItem.contentY=0
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"usb-doctor-"+(arabic?"ar":"en")+".png"))
+  }
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000)
+  verify(uiEvidence.clearSyntheticTool());app.ar=false
+  mouseClick(findChild(app,"doctorReadUsb"));tryCompare(toolBridge,"busy",false,35000)
+  const source=toolBridge.connectionDiagnosis.sources.filter(function(s){return s.source==="windows-pnp"})[0]
+  verify(source.state==="ok"||source.state==="windows-only","Read-only inventory: "+toolBridge.status)
+  compare(toolBridge.connectionDiagnosis.physicalCauseVerified,false)
+  compare(toolBridge.connectionDiagnosis.interfaceBindingVerified,false)
+ }
  function test_navigation(){
   for(let i=0;i<12;i++){
    const button=app.sectionButton(i);verify(button!==null)

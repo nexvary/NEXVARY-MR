@@ -1,3 +1,26 @@
+# Current repair/USB priority — 2026-10-24
+
+New forensic features are paused by the current user directive. Preserve existing
+forensic code and critical regression/security coverage. Resume the active
+`feature/usb-doctor-intelligence` slice from PR #9 head
+`2b0a83a28c1ca6b11db85c6753da935a150e9fd0` (all seven native CI jobs green in
+40017343409; Python/public-history also green; Windows portable/installer exist).
+
+USB Doctor adds a pure interpretation engine, timestamped discovery outcomes,
+strict PnP inventory validation, target-scoped problem-code explanations and a
+real AR/EN panel. Windows inventory no longer requires a detected phone. No
+physical-cause, interface binding or commercial model acceptance is inferred.
+See docs/device-services/USB_DOCTOR.md and ELITE_LAB_SCOPE.md.
+
+Local connection tests 42 passed; UI 38 per profile without QML warnings.
+Both profiles completed all 32 CTest suites after relinking one empty local
+executable per profile (initial failures and reruns preserved in evidence).
+Hosted exact-commit Windows/Linux CI is the next gate before promotion. Next: device field provenance, firmware risk analysis, OEM adapter
+contracts, then an isolated training simulator. Do not resume the older forensic
+feature backlog below while the strategic freeze remains active.
+
+---
+
 # Current UI rebuild checkpoint — 2026-10-23
 
 Resume `feature/professional-workstation-ui`. The new 12-section Qt/QML shell,
