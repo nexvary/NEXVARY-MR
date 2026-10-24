@@ -72,9 +72,10 @@ bool LawCaseStore::save(QVariantMap r,qint64 expected) {
  if(!q.exec()||q.numRowsAffected()!=1)return fail("Case changed in another session or write failed. Reopen before editing.");
  return true;
 }
-QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor) {
+QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor,const QString &ownerId) {
  error_.clear();if(!ready_||!text(actor,256)||metadata.isEmpty())return {};
  const auto id=uuid();QVariantMap r{{"schema",1},{"synthetic",synthetic_},{"id",id},{"revision",1},{"metadata",metadata},{"status","draft"},{"deviceCount",0},{"devices",QVariantList()},{"evidence",QVariantList()},{"custody",QVariantList()},{"createdAtUtc",now()}};
+ if(!ownerId.isEmpty())r.insert("ownerUserId",ownerId);
  append(r,"case-created",actor);return save(r,0)?id:QString();
 }
 bool LawCaseStore::mutate(const QString &id,qint64 revision,const QString &event,const QString &actor,const std::function<bool(QVariantMap&)> &change) {

@@ -26,6 +26,7 @@
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
 #include "LawCaseBridge.hpp"
+#include "IdentityService.hpp"
 #include "ResearchBridge.hpp"
 class Setup:public QObject {
  Q_OBJECT
@@ -41,6 +42,7 @@ class Setup:public QObject {
  std::unique_ptr<FirmwareBridge> firmware;
  std::unique_ptr<RecoveryBridge> recovery;
  std::unique_ptr<LawCaseBridge> law;
+ std::unique_ptr<IdentityService> identity;
  std::unique_ptr<ResearchBridge> research;
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
@@ -83,8 +85,12 @@ public slots:
   portal=std::make_unique<TrackingPortal>(workshop.get());
   recovery=std::make_unique<RecoveryBridge>(temp.filePath(QStringLiteral("cases")),true);
   board=std::make_unique<BoardBridge>();firmware=std::make_unique<FirmwareBridge>();
-  law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true);
-  research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get());
+  identity=std::make_unique<IdentityService>(temp.filePath("identity.dat"),true);
+  // Explicit synthetic credentials only; production never provisions defaults.
+  const QString fixturePassword=QStringLiteral("Synthetic-only UI password 2026!");
+  if(!identity->bootstrap("ui-admin","Synthetic UI administrator",fixturePassword)||!identity->login("ui-admin",fixturePassword)||identity->createUser("ui-investigator","Synthetic UI investigator","investigator",fixturePassword).isEmpty()||!identity->login("ui-investigator",fixturePassword))qFatal("Synthetic identity fixture failed");
+  law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true,nexvary::law::Role::Investigator,nullptr,identity.get());
+  research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get(),nullptr,identity.get());
  }
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
@@ -118,6 +124,7 @@ public slots:
   engine->rootContext()->setContextProperty("exifScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-exif-ui-"));
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
+  engine->rootContext()->setContextProperty("identityBridge",identity.get());
   engine->rootContext()->setContextProperty("researchBridge",research.get());
   engine->rootContext()->setContextProperty("toolBridge",tools.get());
   engine->rootContext()->setContextProperty("repairBridge",repair.get());
@@ -132,7 +139,7 @@ public slots:
  }
  void cleanupTestCase() {
   // Release runtime-dependent objects before QuickTest destroys its application.
-  research.reset();law.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  research.reset();law.reset();identity.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
   if(syntheticModeEnvChanged) {
    if(originalSyntheticModeEnv.isNull())qunsetenv("MR_UI_DEVICE_MODE");else qputenv("MR_UI_DEVICE_MODE",originalSyntheticModeEnv);
   }

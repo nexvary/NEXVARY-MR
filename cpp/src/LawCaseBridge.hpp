@@ -6,25 +6,25 @@
 #include "nexvary/LawPermissions.hpp"
 class LawCaseStore;
 class ToolBridge;
-// A role is injected by native composition, never selected by a QML role picker.
-// Authenticated agency-role provisioning is a separate deployment requirement.
+class IdentityService;
+// Production authorization comes from authenticated local identities and case grants.
 class LawCaseBridge final:public QObject {
  Q_OBJECT
  Q_PROPERTY(bool ready READ ready NOTIFY changed)
  Q_PROPERTY(QString error READ error NOTIFY changed)
  Q_PROPERTY(QString protection READ protection CONSTANT)
- Q_PROPERTY(QString role READ role CONSTANT)
- Q_PROPERTY(QVariantMap permissions READ permissions CONSTANT)
+ Q_PROPERTY(QString role READ role NOTIFY changed)
+ Q_PROPERTY(QVariantMap permissions READ permissions NOTIFY changed)
  Q_PROPERTY(QVariantList cases READ cases NOTIFY changed)
  Q_PROPERTY(QVariantMap activeCase READ activeCase NOTIFY changed)
  Q_PROPERTY(QVariantList devices READ devices NOTIFY changed)
  Q_PROPERTY(QVariantList audit READ audit NOTIFY changed)
- Q_PROPERTY(QVariantList scenarios READ scenarios CONSTANT)
+ Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
 public:
  explicit LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile=false,
-  nexvary::law::Role role=nexvary::law::Role::Investigator,QObject *parent=nullptr);
+  nexvary::law::Role role=nexvary::law::Role::Investigator,QObject *parent=nullptr,IdentityService *identity=nullptr);
  ~LawCaseBridge() override;
  bool ready()const;
  QString error()const{return error_;}
@@ -50,6 +50,8 @@ public:
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE bool verifyEvidence(const QString &evidence);
  Q_INVOKABLE bool verifyAudit();
+ Q_INVOKABLE bool exportAuditAnchor(const QString &path,bool consent);
+ Q_INVOKABLE bool verifyAuditAnchor(const QString &path);
  Q_INVOKABLE QVariantMap evaluateTraining(const QString &scenarioId,const QString &choiceId);
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
@@ -58,13 +60,16 @@ signals:
  void trainingChanged();
  void accessChanged();
 private:
- bool permit(nexvary::law::Action action);
+ bool permit(nexvary::law::Action action,bool caseBound=true);
+ bool caseAllowed(const QVariantMap &record)const;
+ nexvary::law::Role currentRole()const;
  bool fail(const QString &message);
  bool validateMetadata(const QVariantMap &metadata);
  bool refresh(const QString &id=QString());
  QString actor()const;
  std::unique_ptr<LawCaseStore> store_;
  ToolBridge *tools_=nullptr;
+ IdentityService *identity_=nullptr;
  bool synthetic_=false;
  nexvary::law::Role role_;
  QString error_;

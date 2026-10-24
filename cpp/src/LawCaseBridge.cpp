@@ -1,5 +1,6 @@
 #include "LawCaseBridge.hpp"
 #include "LawCaseStore.hpp"
+#include "IdentityService.hpp"
 #include "LawTraining.hpp"
 #include "ToolBridge.hpp"
 #include "CaseVault.hpp"
@@ -23,29 +24,34 @@ bool newOutput(const QString &input,QFile &file) {
  file.close();file.remove();return false;
 }
 }
-LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent)
- :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),synthetic_(syntheticTestProfile),role_(role) {
+LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
+ :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
+ if(identity_)connect(identity_,&IdentityService::changed,this,[this]{active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
- else if(nexvary::law::allows(role_,nexvary::law::Action::ReadCase))refresh();
+ else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
 }
 LawCaseBridge::~LawCaseBridge()=default;
-bool LawCaseBridge::ready()const{return store_->ready();}
+bool LawCaseBridge::ready()const{return store_->ready()&&(identity_?identity_->authenticated():synthetic_);}
+nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
+bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}
 QString LawCaseBridge::protection()const {
  return mr::recovery::vaultAvailable()?QStringLiteral("Windows current-account DPAPI; SQLite payloads protected"):
   synthetic_?QStringLiteral("SYNTHETIC TEST DATA ONLY — NOT ENCRYPTED"):QStringLiteral("Windows protected storage required; real cases disabled");
 }
-QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId(role_).data(),static_cast<qsizetype>(nexvary::law::roleId(role_).size()));}
+QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId(currentRole()).data(),static_cast<qsizetype>(nexvary::law::roleId(currentRole()).size()));}
 QVariantMap LawCaseBridge::permissions()const {
  using A=nexvary::law::Action;QVariantMap p;
  for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
-  p.insert(entry.first,nexvary::law::allows(role_,entry.second));
+  p.insert(entry.first,nexvary::law::allows(currentRole(),entry.second));
  p.insert("executeDevice",false);p.insert("enterpriseRoleProvisioningReady",false);return p;
 }
-QString LawCaseBridge::actor()const{return synthetic_?QStringLiteral("SYNTHETIC operator"):QStringLiteral("Current OS account — local operator declaration");}
+QString LawCaseBridge::actor()const{if(identity_)return identity_->actor();return synthetic_?QStringLiteral("SYNTHETIC operator"):QStringLiteral("Current OS account — local operator declaration");}
 bool LawCaseBridge::fail(const QString &message){error_=message;emit changed();return false;}
-bool LawCaseBridge::permit(nexvary::law::Action action) {
- if(!nexvary::law::allows(role_,action))return fail(QStringLiteral("This session role does not permit this action."));
+bool LawCaseBridge::permit(nexvary::law::Action action,bool caseBound) {
+ if(identity_&&!identity_->checkSession())return fail(QStringLiteral("Sign in with a permitted local account."));
+ if(caseBound&&!active_.isEmpty()&&!caseAllowed(active_))return fail(QStringLiteral("This account has no grant for the active case."));
+ if(!nexvary::law::allows(currentRole(),action))return fail(QStringLiteral("This session role does not permit this action."));
  if(!ready())return fail(QStringLiteral("Protected case storage is unavailable on this host."));
  return true;
 }
@@ -65,20 +71,20 @@ bool LawCaseBridge::validateMetadata(const QVariantMap &m) {
 }
 bool LawCaseBridge::refresh(const QString &id) {
  if(!id.isEmpty()) {
-  auto found=store_->get(id);if(found.isEmpty())return fail(store_->error());active_=found;
+  auto found=store_->get(id);if(found.isEmpty())return fail(store_->error());if(!caseAllowed(found))return fail(QStringLiteral("No case grant for this account."));active_=found;
  }
- if(nexvary::law::allows(role_,nexvary::law::Action::ReadCase))cases_=store_->list();else cases_.clear();
+ if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase)){cases_.clear();for(const auto &row:store_->list())if(caseAllowed(row.toMap()))cases_.append(row);}else cases_.clear();
  if(!store_->error().isEmpty())return fail(store_->error());
  if(!active_.isEmpty()) {
-  const auto currentId=active_.value("id").toString();devices_=nexvary::law::allows(role_,nexvary::law::Action::ReadDevice)?store_->devices(currentId):QVariantList();
-  audit_=nexvary::law::allows(role_,nexvary::law::Action::ReadAudit)?store_->audit(currentId):QVariantList();
+  const auto currentId=active_.value("id").toString();devices_=nexvary::law::allows(currentRole(),nexvary::law::Action::ReadDevice)?store_->devices(currentId):QVariantList();
+  audit_=nexvary::law::allows(currentRole(),nexvary::law::Action::ReadAudit)?store_->audit(currentId):QVariantList();
   if(!store_->error().isEmpty())return fail(store_->error());
  }
  error_.clear();emit changed();return true;
 }
 QString LawCaseBridge::createCase(const QVariantMap &metadata) {
- if(!permit(nexvary::law::Action::CreateCase)||!validateMetadata(metadata))return {};
- const auto id=store_->create(metadata,actor());if(id.isEmpty()){fail(store_->error());return {};}
+ if(!permit(nexvary::law::Action::CreateCase,false)||!validateMetadata(metadata))return {};
+ const auto id=store_->create(metadata,actor(),identity_?identity_->userId():QString());if(id.isEmpty()){fail(store_->error());return {};}
  return refresh(id)?id:QString();
 }
 bool LawCaseBridge::updateCase(const QVariantMap &metadata) {
@@ -87,12 +93,12 @@ bool LawCaseBridge::updateCase(const QVariantMap &metadata) {
  if(!store_->update(id,active_.value("revision").toLongLong(),metadata,actor()))return fail(store_->error());
  return refresh(id);
 }
-bool LawCaseBridge::openCase(const QString &id) {return permit(nexvary::law::Action::ReadCase)&&refresh(id);}
+bool LawCaseBridge::openCase(const QString &id) {return permit(nexvary::law::Action::ReadCase,false)&&refresh(id);}
 void LawCaseBridge::closeWorkspace(){active_.clear();devices_.clear();audit_.clear();error_.clear();emit changed();}
 bool LawCaseBridge::searchCases(const QString &query) {
- if(!permit(nexvary::law::Action::ReadCase))return false;
+ if(!permit(nexvary::law::Action::ReadCase,false))return false;
  if(query.size()>256)return fail(QStringLiteral("Search query exceeds limit."));
- cases_=store_->list(query);if(!store_->error().isEmpty())return fail(store_->error());
+ cases_.clear();for(const auto &row:store_->list(query))if(caseAllowed(row.toMap()))cases_.append(row);if(!store_->error().isEmpty())return fail(store_->error());
  error_.clear();emit changed();return true;
 }
 bool LawCaseBridge::transitionCase(const QString &status) {
@@ -112,7 +118,7 @@ QString LawCaseBridge::addDevice(const QVariantMap &metadata) {
  return refresh(id)?device:QString();
 }
 QVariantMap LawCaseBridge::currentDeviceObservation()const {
- if(!tools_||!nexvary::law::allows(role_,nexvary::law::Action::AddDevice))return {};
+ if(!tools_||!nexvary::law::allows(currentRole(),nexvary::law::Action::AddDevice))return {};
  const auto report=tools_->deviceIntelligence();QVariantMap result;
  for(const auto &entry:report.value("fields").toList()) {
   const auto f=entry.toMap();if(f.value("state").toString()!="reported")continue;
@@ -123,7 +129,7 @@ QVariantMap LawCaseBridge::currentDeviceObservation()const {
 }
 QVariantList LawCaseBridge::assessDeviceAccess()const {
  QVariantList rows;
- if(!nexvary::law::allows(role_,nexvary::law::Action::ReadDevice))return rows;
+ if(!nexvary::law::allows(currentRole(),nexvary::law::Action::ReadDevice))return rows;
  const auto report=tools_?tools_->deviceIntelligence():QVariantMap();
  auto add=[&](const QString &id,const QString &ar,const QString &en,const QString &state,const QString &fact){rows.append(QVariantMap{{"id",id},{"ar",ar},{"en",en},{"state",state},{"fact",fact},{"confidence","device-reported-or-unknown"},{"executionApproved",false}});};
  add("frp","حالة FRP","FRP state","Research Required","Not established by the allowlisted property read; no account bypass offered.");
@@ -155,15 +161,27 @@ bool LawCaseBridge::verifyAudit() {
  if(!store_->verifyAudit(active_.value("id").toString()))return fail(store_->error());
  error_.clear();emit changed();return true;
 }
-QVariantList LawCaseBridge::scenarios()const{return nexvary::law::allows(role_,nexvary::law::Action::AccessTraining)?nexvary::law::trainingScenarios():QVariantList();}
+bool LawCaseBridge::exportAuditAnchor(const QString &path,bool consent){
+ if(!consent||!identity_||!permit(nexvary::law::Action::ReadAudit)||active_.isEmpty()||!refresh(active_.value("id").toString())||!verifyAudit())return fail("A signed-in case reader, valid audit and explicit anchor export consent are required.");
+ QVariantList evidence;for(const auto &value:active_.value("evidence").toList()){const auto item=value.toMap();if(!store_->verifyEvidence(active_.value("id").toString(),item.value("id").toString()))return fail(store_->error());evidence.append(QVariantMap{{"id",item.value("id")},{"sha256",item.value("sha256")},{"size",item.value("size")}});}
+ const auto signature=identity_->attest("case-audit-anchor",{{"caseId",active_.value("id")},{"revision",active_.value("revision")},{"auditHead",active_.value("audit").toList().last().toMap().value("hash")},{"evidence",evidence}});if(signature.isEmpty())return fail("Anchor signing failed.");
+ QFile file;if(!newOutput(path,file))return fail("Choose a new local anchor file.");const auto bytes=QJsonDocument::fromVariant(signature).toJson();if(file.write(bytes)!=bytes.size()||!file.flush()){file.close();file.remove();return fail("Anchor export failed.");}error_.clear();emit changed();return true;
+}
+bool LawCaseBridge::verifyAuditAnchor(const QString &path){
+ if(!identity_||!permit(nexvary::law::Action::ReadAudit)||active_.isEmpty()||!refresh(active_.value("id").toString())||!verifyAudit())return false;
+ const auto local=mr::recovery::localFilePath(path);QFile file(local);if(local.isEmpty()||QFileInfo(local).isSymLink()||!mr::recovery::openRegularInput(file)||file.size()>128*1024)return fail("Choose a bounded regular local anchor file.");QJsonParseError parse;const auto doc=QJsonDocument::fromJson(file.readAll(),&parse);const auto envelope=doc.object().toVariantMap(),payload=envelope.value("payload").toMap();
+ if(parse.error!=QJsonParseError::NoError||!doc.isObject()||!identity_->verify(envelope,"case-audit-anchor",payload)||payload.value("caseId")!=active_.value("id"))return fail("Anchor signature, pinned local signer or case identifier did not verify.");
+ const auto revision=payload.value("revision").toLongLong();const auto events=active_.value("audit").toList();if(revision<1||revision>events.size())return fail("Current case is older than the retained anchor: possible rollback.");if(events[static_cast<qsizetype>(revision-1)].toMap().value("hash")!=payload.value("auditHead"))return fail("Case history diverges from the retained signed anchor.");error_.clear();emit changed();return true;
+}
+QVariantList LawCaseBridge::scenarios()const{return nexvary::law::allows(currentRole(),nexvary::law::Action::AccessTraining)?nexvary::law::trainingScenarios():QVariantList();}
 QVariantMap LawCaseBridge::evaluateTraining(const QString &scenarioId,const QString &choiceId) {
- if(!nexvary::law::allows(role_,nexvary::law::Action::AccessTraining))return {{"valid",false}};
+ if(!nexvary::law::allows(currentRole(),nexvary::law::Action::AccessTraining))return {{"valid",false}};
  auto result=nexvary::law::evaluateTraining(scenarioId,choiceId);if(!result.value("valid").toBool())return result;
  result.insert("scenarioId",scenarioId);result.insert("choiceId",choiceId);result.insert("atUtc",utc());result.insert("synthetic",true);
  attempts_.append(result);if(attempts_.size()>200)attempts_.removeFirst();emit trainingChanged();return result;
 }
 bool LawCaseBridge::exportTrainingReport(const QString &path,bool consent) {
- if(!consent||!nexvary::law::allows(role_,nexvary::law::Action::AccessTraining))return fail(QStringLiteral("Explicit synthetic-report export approval is required."));
+ if(!consent||!nexvary::law::allows(currentRole(),nexvary::law::Action::AccessTraining))return fail(QStringLiteral("Explicit synthetic-report export approval is required."));
  QFile output;if(!newOutput(path,output))return fail(QStringLiteral("Choose a new local report file."));
  const auto bytes=QJsonDocument(QJsonObject{{"schemaVersion",1},{"synthetic",true},{"generatedAtUtc",utc()},{"attempts",QJsonArray::fromVariantList(attempts_)},{"notice","Training decisions only; no real case or device operation."}}).toJson();
  if(output.write(bytes)!=bytes.size()||!output.flush()){output.close();output.remove();return fail(QStringLiteral("Training report could not be saved."));}return true;

@@ -1,0 +1,50 @@
+[0/2] Re-checking globbed directories...
+[1/45] Automatic MOC and UIC for target mr_desktop_resources_1
+[2/45] Automatic MOC and UIC for target mr_desktop_resources_2
+[3/45] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/mr_desktop_resources_1_autogen/mocs_compilation.cpp.o
+[4/45] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/build/.rcc/qrc_research_catalog.cpp.o
+[5/45] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/mr_desktop_resources_2_autogen/mocs_compilation.cpp.o
+[6/45] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/build/.rcc/qrc_device_catalog.cpp.o
+[7/45] Automatic MOC and UIC for target mr_desktop
+[8/45] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[9/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+[10/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RepairBridge.cpp.o
+[11/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+[12/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/WorkshopBridge.cpp.o
+[13/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+[14/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ServiceCatalog.cpp.o
+[15/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+[16/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/BoardBridge.cpp.o
+[17/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/FirmwareBridge.cpp.o
+[18/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryImage.cpp.o
+[19/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+[20/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicRecord.cpp.o
+[21/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+[22/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[23/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+FAILED: CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+/usr/bin/c++ -DMR_ENABLE_LAB_OPERATIONS=0 -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -I/workspace/scratch/4e45fba54133/NEXVARY-MR/build/mr_desktop_autogen/include -I/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src -I/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/include -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6 -isystem /tmp/mr-qt/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /workspace/scratch/4e45fba54133/sodium/include -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /tmp/mr-qt/usr/include -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /tmp/mr-qt/usr/include/x86_64-linux-gnu/qt6/QtNetwork -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o -MF CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o.d -o CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o -c /workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp: In member function ‘bool IdentityService::save(QVariantMap)’:
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:49:2: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   49 |  if(!QDir().mkpath(QFileInfo(path_).absolutePath()))return fail("Cannot create identity directory.");QLockFile lock(path_+".lock");if(!lock.tryLock(0))return fail("Identity registry busy; retry.");
+      |  ^~
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:49:102: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   49 |  if(!QDir().mkpath(QFileInfo(path_).absolutePath()))return fail("Cannot create identity directory.");QLockFile lock(path_+".lock");if(!lock.tryLock(0))return fail("Identity registry busy; retry.");
+      |                                                                                                      ^~~~~~~~~
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp: In member function ‘bool IdentityService::login(const QString&, const QString&)’:
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:72:2: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   72 |  if(index<0)return fail("Sign-in failed.");auto a=rows[index].toMap();const auto now=QDateTime::currentSecsSinceEpoch();if(!a.value("enabled").toBool()||a.value("blockedUntil").toLongLong()>now)return fail("Sign-in failed or account temporarily locked.");
+      |  ^~
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:72:44: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   72 |  if(index<0)return fail("Sign-in failed.");auto a=rows[index].toMap();const auto now=QDateTime::currentSecsSinceEpoch();if(!a.value("enabled").toBool()||a.value("blockedUntil").toLongLong()>now)return fail("Sign-in failed or account temporarily locked.");
+      |                                            ^~~~
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp: In member function ‘bool IdentityService::checkSession()’:
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:81:2: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   81 |  if(!authenticated())return false;const auto before=account(userId_);const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>15*60*1000||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();return true;
+      |  ^~
+/workspace/scratch/4e45fba54133/NEXVARY-MR/cpp/src/IdentityService.cpp:81:35: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   81 |  if(!authenticated())return false;const auto before=account(userId_);const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>15*60*1000||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();return true;
+      |                                   ^~~~~
+cc1plus: all warnings being treated as errors
+[24/45] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+ninja: build stopped: subcommand failed.

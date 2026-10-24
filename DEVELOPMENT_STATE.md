@@ -1,3 +1,57 @@
+# Local identity and independent-review increment — 2026-10-24
+
+Active branch: `feature/law-enforcement-case-foundation`; PR #11.
+Parent/last previously published commit: `e1b284e6a1af94ac018f7fe6f2e0679d6683c38d`.
+This source increment is being validated; the exact published source SHA and hosted
+CI/artifact evidence will be recorded in the following documentation checkpoint.
+
+## Implemented in this increment
+
+- Windows DPAPI local identity registry, user-chosen administrator setup, Argon2id
+  credentials, per-user password-wrapped Ed25519 keys, roles/account enable/disable,
+  persisted lockout, monotonic session expiry and password rotation/session revocation.
+- Case ownership is atomic in the protected case payload; other users need explicit
+  grants plus the existing native role policy. Default production investigator access
+  was removed. Sign-out/revocation clears cached case views. Legacy cases need grants.
+- Authenticated author signatures and a different local reviewer signing the original
+  public/synthetic artifact hash. No self-review, mutable signed review or automatic
+  Lab Verified/commercial capability promotion.
+- Signed case audit anchors exported with consent. A separately retained newer anchor
+  detects an older restored database; tests also cover matching newer history.
+- Real Qt account administration/sign-in/password/grant UI, signed research review UI
+  and retained-anchor comparison. Native and QML test fixtures use synthetic credentials.
+- Scoped primary-source review for Qualcomm/QTEE, Knox, OEM/SoC bulletins and MediaTek
+  Genio. Smartphone MediaTek architecture stays unverified; no IoT-to-phone inference.
+- Windows packaging includes the pinned official sodium DLL and ISC notice; Linux CI
+  includes identity tests in the address/undefined-behavior sanitizer run.
+
+## Validation and limitations
+
+Local Release validation: 37/38 groups passed in the full run; GUI smoke could not
+start because its generated executable had become empty. Regeneration plus the
+separate smoke retry passed (same source). Identity suite: 10/10; QuickTest: 41/41;
+Python root: 29/29. Exact-source hosted Windows validation remains pending below. An initial generated executable was empty/lost its execute bit in this workspace;
+regenerating that build artifact is required before treating a BAD_COMMAND as source
+failure. Initial compiler diagnostics and test failures are retained in evidence.
+
+Local accounts are not agency-verified identities/SSO. Separate local accounts are not
+proof of independent people, local signatures are not trusted external timestamps,
+and restoring the identity registry plus every retained anchor can evade rollback
+comparison. No phone or independent Windows machine is connected; no physical-device,
+trusted Authenticode or final commercial/institutional acceptance claim is made.
+
+Next: finish exact-source native CI/package validation, then obtain real owned-device,
+clean Windows 10/11 and independently reviewed release evidence. External identity,
+key/time custody, trusted publisher certificate and institutional review require their
+actual providers/materials. See docs/LOCAL_IDENTITIES.md for operating instructions.
+
+Resume: `git fetch origin && git switch feature/law-enforcement-case-foundation`;
+prepare libsodium with `python scripts/prepare_sodium.py --destination <prefix>`, set
+`MR_SODIUM_ROOT`, configure GUI/update verifier/tests with CMake, build and run CTest.
+The detailed historical checkpoints below remain evidence of earlier source revisions.
+
+---
+
 # Verified source checkpoint — 2026-10-24
 
 Active branch: `feature/law-enforcement-case-foundation`; PR #11.

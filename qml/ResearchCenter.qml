@@ -76,6 +76,13 @@ Item {
     }
     Panel {visible:page.section===6;Layout.fillWidth:true;title:app.trx("بوابة التحقق","Validation gate");iconName:"shield_checkmark"
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("الموثق علنًا ليس نتيجة مختبرية. نجاح تجربة يحتاج دليلًا قابلًا للتكرار ومراجعة مستقلة وإصدار جهاز محدد قبل أي اعتماد تجاري. الترقية المباشرة إلى Lab Verified مرفوضة.","Public documentation is not a lab result. Successful observations need reproducible evidence, independent review and an exact device build before commercial acceptance. Direct promotion to Lab Verified is rejected.")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("سجّل الدخول من مساحة إنفاذ القانون بحساب مراجع مختلف عن صاحب النتيجة. التوقيع محلي والتوقيت من ساعة الجهاز. لا تتحول الموافقة إلى دعم تجاري أو اختبار هاتف فعلي.","Sign in through Law Enforcement with a reviewer account distinct from the author. Signatures are local credentials and time comes from this computer. Approval does not establish commercial support or physical phone testing.")}
+     ComboBox {id:reviewResult;Layout.fillWidth:true;model:researchBridge.results;textRole:"id";valueRole:"id"}
+     ActionButton {text:app.trx("اختيار ملف الدليل للمراجعة","Choose review evidence file");onClicked:reviewEvidence.open()}
+     Label {Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText;color:app.design.muted;text:page.evidencePath}
+     ComboBox {id:reviewDecision;Layout.fillWidth:true;model:["Approved","Rejected"]}
+     TextArea {id:reviewNotes;Layout.fillWidth:true;wrapMode:TextEdit.Wrap;placeholderText:app.trx("ملاحظات المراجعة المستقلة","Independent review notes");onTextChanged:if(text.length>4096)text=text.slice(0,4096)}
+     ActionButton {objectName:"researchSignReview";text:app.trx("توقيع المراجعة المستقلة","Sign independent review");enabled:identityBridge.authenticated&&identityBridge.session.role==="reviewer"&&reviewResult.currentIndex>=0;onClicked:if(researchBridge.reviewResult(reviewResult.currentValue,page.evidencePath,reviewDecision.currentText,reviewNotes.text)){reviewNotes.clear();page.evidencePath=""}}
      Repeater {model:researchBridge.results;delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(researchBridge.validation(modelData.id),null,2)}}
     }
     Panel {visible:page.section===7;Layout.fillWidth:true;title:app.trx("تصدير تقرير أبحاث محلي","Export local research report");iconName:"document_text"
@@ -87,5 +94,6 @@ Item {
   }
  }
  FileDialog {id:evidence;fileMode:FileDialog.OpenFile;onAccepted:page.evidencePath=selectedFile.toString()}
+ FileDialog {id:reviewEvidence;fileMode:FileDialog.OpenFile;onAccepted:page.evidencePath=selectedFile.toString()}
  FileDialog {id:report;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:researchBridge.exportReport(selectedFile.toString(),exportConsent.checked)}
 }

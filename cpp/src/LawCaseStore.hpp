@@ -14,7 +14,7 @@ public:
  QString error()const{return error_;}
  QVariantMap get(const QString &id);
  QVariantList list(const QString &query={});
- QString create(const QVariantMap &metadata,const QString &actor);
+ QString create(const QVariantMap &metadata,const QString &actor,const QString &ownerId=QString());
  bool update(const QString &id,qint64 revision,const QVariantMap &metadata,const QString &actor);
  bool transition(const QString &id,qint64 revision,const QString &status,const QString &actor);
  QString addDevice(const QString &id,qint64 revision,const QVariantMap &metadata,const QString &actor);

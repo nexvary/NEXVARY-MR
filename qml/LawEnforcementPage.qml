@@ -8,11 +8,12 @@ Item {
  property var app
  property int section:0
  property bool auditVerified:false
- readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory"]
- readonly property int viewIndex:[0,1,2,2,3,4,5,6,7,8][section]
+ property bool anchorVerified:false
+ readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب","الحسابات والصلاحيات"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory","Accounts and permissions"]
+ readonly property int viewIndex:[0,1,2,2,3,4,5,6,7,8,9][section]
  function newCase(){intake.startNew();section=1}
  function editCase(){intake.edit(lawCaseBridge.activeCase.metadata||{});section=1}
- Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;caseExportConsent.checked=false}}
+ Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;page.anchorVerified=false;caseExportConsent.checked=false}}
  Column {anchors.fill:parent;spacing:10
   // The viewport owns height; wrapped content cannot resize its parent.
   RowLayout {width:parent.width
@@ -20,6 +21,7 @@ Item {
     Label {text:app.trx("مساحة إنفاذ القانون","Law Enforcement");color:app.design.text;font.bold:true;font.pixelSize:23;Layout.fillWidth:true}
     Label {text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber+" · "+lawCaseBridge.activeCase.status):app.trx("اختر قضية أو ابدأ سيناريو تدريب اصطناعي","Choose a case or a synthetic training scenario");Layout.fillWidth:true;elide:Text.ElideRight;color:app.design.muted;textFormat:Text.PlainText}
    }
+   ActionButton {text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
    StateBadge {text:lawCaseBridge.role;tint:app.design.silver}
   }
   Label {text:lawCaseBridge.protection;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:lawCaseBridge.ready?app.design.muted:app.design.danger;font.pixelSize:11}
@@ -50,7 +52,7 @@ Item {
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("التقارير","Reports");iconName:"document_text";description:app.trx("ملخص PDF قابل للمراجعة؛ تصدير غير مشفر بموافقة صريحة.","Reviewable PDF summary; plaintext export requires explicit approval.");statusText:app.trx("موافقة مطلوبة","Consent required");actionText:app.trx("فتح التقارير","Open reports");onTriggered:page.section=8}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("المختبر التدريبي","Training laboratory");iconName:"book_open_lightbulb";description:app.trx("قرارات وتشخيصات افتراضية مع تقييم وتفسير؛ دون أجهزة حقيقية.","Virtual decisions with scoring and explanations; no real devices.");statusText:app.trx("اصطناعي فقط","Synthetic only");actionText:app.trx("بدء التدريب","Start training");onTriggered:page.section=9}
      }
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;font.pixelSize:11;text:app.trx("نموذج محلي تجريبي للحساب الحالي؛ تطبيق الصلاحيات في API لا يستبدل تهيئة هويات وأدوار الجهة المؤسسية. بوابة الهوية المؤسسية لم تكتمل.","Experimental current-account prototype. API role policy does not replace authenticated agency identities and provisioning; that deployment gate remains incomplete.")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;font.pixelSize:11;text:app.trx("حسابات محلية مصادق عليها ومنح منفصلة للقضايا. يبقى التحقق من الهوية المؤسسية وربط SSO ضمن متطلبات النشر.","Local authenticated accounts and case grants. Agency identity verification and SSO remain deployment requirements.")}
     }
    }
    LawCaseForm {id:intake;objectName:"lawCaseForm";app:page.app;onSaved:page.section=0}
@@ -70,6 +72,12 @@ Item {
      Panel {Layout.fillWidth:true;title:app.trx("سلامة سجل القضية","Case audit integrity");iconName:"history"
       ActionButton {objectName:"lawVerifyAudit";text:app.trx("التحقق من ترابط السجل","Verify linked audit");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.audit;onClicked:page.auditVerified=lawCaseBridge.verifyAudit()}
       Label {objectName:"lawAuditResult";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:page.auditVerified?app.trx("نجح تحقق السجل المحلي. لا يثبت تسليمًا ماديًا أو مقاومة استرجاع نسخة قاعدة قديمة.","Local linked-record verification passed. It does not prove physical handover or resistance to whole-database rollback."):app.trx("لم يتم التحقق في هذا العرض بعد.","Not verified in this view yet.")}
+      CheckBox {id:anchorConsent;text:app.trx("أوافق على تصدير مرجع توقيع محلي للاحتفاظ به منفصلًا","Approve local signed anchor export for separate retention")}
+      RowLayout {Layout.fillWidth:true
+       ActionButton {text:app.trx("تصدير مرجع موقّع","Export signed anchor");enabled:identityBridge.authenticated&&!!lawCaseBridge.activeCase.id&&anchorConsent.checked;onClicked:anchorExport.open()}
+       ActionButton {text:app.trx("مقارنة مرجع محفوظ","Compare retained anchor");enabled:identityBridge.authenticated&&!!lawCaseBridge.activeCase.id;onClicked:anchorInput.open()}
+      }
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:page.anchorVerified?app.trx("تطابق السجل مع المرجع المحلي المحفوظ. لا يثبت توقيتًا خارجيًا أو تسليمًا ماديًا.","History matches the retained local anchor. This does not establish external time or physical handover."):app.trx("لم يُتحقق من مرجع منفصل بعد. احتفظ به خارج قاعدة القضية؛ المرجع الأقدم لا يكشف حذف أحداث أحدث منه.","No separate anchor verified. Retain anchors outside the case database; an older anchor cannot detect removal of events newer than itself.")}
       Repeater {model:lawCaseBridge.audit;delegate:Label {required property var modelData;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(modelData)}}
      }
      LawEvidencePage {Layout.fillWidth:true;Layout.preferredHeight:900;app:page.app}
@@ -97,8 +105,11 @@ Item {
     }
    }
    LawTrainingPage {objectName:"lawTrainingPage";app:page.app}
+   IdentityPanel {app:page.app}
   }
  }
+ FileDialog {id:anchorExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";onAccepted:lawCaseBridge.exportAuditAnchor(selectedFile.toString(),anchorConsent.checked)}
+ FileDialog {id:anchorInput;fileMode:FileDialog.OpenFile;onAccepted:page.anchorVerified=lawCaseBridge.verifyAuditAnchor(selectedFile.toString())}
  FileDialog {id:casePdf;fileMode:FileDialog.SaveFile;defaultSuffix:"pdf";nameFilters:["PDF (*.pdf)"];onAccepted:lawCaseBridge.exportCasePdf(selectedFile.toString(),page.app.ar,caseExportConsent.checked)}
  FileDialog {id:trainingReport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";nameFilters:["JSON (*.json)"];onAccepted:lawCaseBridge.exportTrainingReport(selectedFile.toString(),trainingExportConsent.checked)}
 }

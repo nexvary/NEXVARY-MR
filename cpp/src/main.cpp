@@ -32,6 +32,7 @@
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
 #include "LawCaseBridge.hpp"
+#include "IdentityService.hpp"
 #include "ResearchBridge.hpp"
 int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
@@ -65,13 +66,15 @@ int main(int argc,char *argv[]) {
  ServiceCatalog catalog(QDir(dir).filePath(QStringLiteral("model-guides.json")));
  BoardBridge board;
  FirmwareBridge firmware;
- LawCaseBridge law(QDir(dir).filePath(QStringLiteral("law-cases.db")),&tools,smoke);
- ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware);
+ IdentityService identity(QDir(dir).filePath(QStringLiteral("local-identities.dat")),smoke);
+ LawCaseBridge law(QDir(dir).filePath(QStringLiteral("law-cases.db")),&tools,smoke,nexvary::law::Role::Investigator,nullptr,smoke?nullptr:&identity);
+ ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware,nullptr,smoke?nullptr:&identity);
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
  engine.rootContext()->setContextProperty(QStringLiteral("lawCaseBridge"),&law);
+ engine.rootContext()->setContextProperty(QStringLiteral("identityBridge"),&identity);
  engine.rootContext()->setContextProperty(QStringLiteral("researchBridge"),&research);
  engine.rootContext()->setContextProperty(QStringLiteral("repairBridge"),&repair);
  engine.rootContext()->setContextProperty(QStringLiteral("workshopBridge"),&workshop);

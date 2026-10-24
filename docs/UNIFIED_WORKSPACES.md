@@ -18,11 +18,11 @@ Date: 2026-10-24. Development increment, not an institutional or commercial rele
 
 ## Trust and deployment limits
 
-This increment enforces native API role differences, but does **not** provide authenticated agency-role provisioning, multi-user case grants, independent reviewer signatures or a court accreditation process. The desktop currently composes a local investigator role in the current OS account. Separate Windows accounts and DPAPI are the at-rest isolation boundary; this prototype must not be marketed as a fully provisioned enterprise RBAC deployment.
+The desktop now requires an authenticated local identity and a case ownership/grant for case access. Administrators provision local accounts and grants without automatic case-content access. Password rotation preserves signing identity and invalidates sessions. Institution identity verification/SSO, independent human review and court accreditation remain deployment gates. See [LOCAL_IDENTITIES.md](LOCAL_IDENTITIES.md) for the exact credential, recovery and threat boundaries.
 
-The audit detects local record alteration; it is not an independent trusted timestamp, external signature or protection from restoring an entire old database. Custody records are operator declarations, not proof of physical handover. DPAPI recovery depends on the original Windows account and its supported backup/recovery process; no plaintext fallback is introduced.
+A separately authenticated reviewer can hash the original public/synthetic artifact and sign an immutable review. Author/reviewer signatures are checked on reload against pinned local public keys; self-review and forged promotion are rejected. This does not promote a synthetic experiment into commercial/device compatibility. Qualcomm, Knox and OEM-update topics now have scoped reviewed primary references; MediaTek smartphone architecture remains a hypothesis with Genio/IoT documentation explicitly separated.
 
-Research checksums detect corruption, not malicious authorized editors. A successful recorded observation remains pending independent review and is never automatically promoted into a supported product capability. There is no completed independent-review/promotion workflow in this increment. Qualcomm, MediaTek, Knox and OEM-update Atlas research slots explicitly retain pending technical review. Proprietary internals and device support are unknown unless the specific public source establishes them.
+A consented signed audit anchor can be retained outside the case database and compared against its audit prefix. Tests detect a database restored to a revision older than the retained anchor. This is local credential signing, not an independent trusted timestamp or evidence of physical handover; restoring all identity/anchor/database copies together is outside this check. DPAPI recovery depends on the original Windows account and its supported backup/recovery process; no plaintext fallback is introduced.
 
 No malware sample, leaked source, proprietary binary or exploit implementation is imported. The historical Hacking Team record concerns the cited 2014 study; Galileo/DaVinci version mapping and present-day support are not inferred. Current vendor pages describe vendor claims, not independent NEXVARY experiments.
 
@@ -44,9 +44,9 @@ cmake --build build --config Release --parallel 2
 ctest --test-dir build -C Release --output-on-failure
 ```
 
-`mr_law_workspace_tests`, `mr_research_tests`, the existing 432-check case suite, the core research data gate and the expanded Qt Quick navigation test are included in existing Windows/Linux CI. The Quick test creates/reopens a synthetic case, registers evidence, visits every new section and captures real AR/EN runtime PNGs. Existing repair, firmware, workshop and security regression suites remain in CTest.
+`mr_identity_tests`, `mr_law_workspace_tests`, `mr_research_tests`, the existing 432-check case suite, the core research data gate and the expanded Qt Quick navigation test are included in existing Windows/Linux CI. The Quick test creates/reopens a synthetic case, registers evidence, visits every new section and captures real AR/EN runtime PNGs. Existing repair, firmware, workshop and security regression suites remain in CTest.
 
-Final acceptance still requires exact-source hosted Windows/Linux results, a successful packaged Windows run, authenticated institution roles/review, independent custody anchoring and owned-device/clean-host validation. See the current `DEVELOPMENT_STATE.md` and retained test output for actual results; no physical-device or final-release claim follows from synthetic tests.
+Final acceptance still requires exact-source hosted Windows/Linux results, a successful packaged Windows run, institution-verified identities/independent review, external key/time custody and owned-device/clean-host validation. See the current `DEVELOPMENT_STATE.md` and retained test output for actual results; no physical-device or final-release claim follows from synthetic tests.
 
 ## Windows Qt 6.8.3 compiler compatibility
 
