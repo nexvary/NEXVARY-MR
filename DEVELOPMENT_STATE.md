@@ -6,7 +6,8 @@ inside one product. No main merge or final-release acceptance is claimed.
 
 Active local branch: `feature/unified-law-research`.
 Publication target: existing PR #11, `feature/law-enforcement-case-foundation`.
-Last inspected remote foundation: `15a851500269183d6b422d7ff9b1e444a5f6f095`.
+Last published implementation: `4beff9ee8d1e4cac335d008c447f94ef5418fd06`.
+Last published Windows UTF-8 fix: `ff2196a7aa08038d120dea6274549cbb7b4712de`.
 Research foundation: `372b9636fce50a66e64360eb315f12ecdfff8c45` (PR #12).
 Shared USB/Device Intelligence source matches `9a4392a37b85186032ded8cdbe254b2064d8ed9b`.
 The implementation commit containing this checkpoint is resolved with `git rev-parse HEAD`;
@@ -27,10 +28,14 @@ Read `docs/UNIFIED_WORKSPACES.md` for trust boundaries and acceptance gaps.
 
 - Native Law workspace: 9 passed; Research: 9 passed (includes forged promotion
   with a recomputed checksum), warnings-as-errors Release build.
-- New Qt navigation slice previously passed with actual AR/EN captures; final
-  expanded suite rerun is pending after the latest source changes.
+- Full Qt Quick suite: 40 passed. Final Law/Research + responsive layout slice:
+  4 passed, with genuine AR/EN captures.
+- Initial full CTest: 33/34; only GUI smoke failed on a Law page polish loop.
+  Fixed viewport/content sizing; standalone application smoke now exits 0 without
+  QML warnings. Initial failure and final focused evidence are retained.
 - Root Python: 29 passed; recovery Python: 19; portal: 6; original package: 2.
-- Full local CTest, both profiles and exact-source Windows CI remain pending.
+- Root/public-history CI at ff2196a passed. Expanded local final CTest and
+  exact-source Windows/Linux production/Laboratory CI remain pending.
 - Qt SDK was transient between turns; dependencies are now reconstructed outside
   the repository. Keep source/evidence checkpoints in Git, not `/tmp`.
 

@@ -1,0 +1,7 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+qrc:/NexvaryMR/qml/LawEnforcementPage.qml:16:2: QML ColumnLayout: Qt Quick Layouts: Polish loop detected. Aborting after two iterations.
+Could not create AF_NETLINK socket (Operation not permitted)

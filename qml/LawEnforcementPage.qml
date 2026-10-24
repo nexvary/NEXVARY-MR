@@ -13,23 +13,24 @@ Item {
  function newCase(){intake.startNew();section=1}
  function editCase(){intake.edit(lawCaseBridge.activeCase.metadata||{});section=1}
  Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;caseExportConsent.checked=false}}
- ColumnLayout {anchors.fill:parent;spacing:10
-  RowLayout {Layout.fillWidth:true
+ Column {anchors.fill:parent;spacing:10
+  // The viewport owns height; wrapped content cannot resize its parent.
+  RowLayout {width:parent.width
    ColumnLayout {Layout.fillWidth:true;spacing:3
     Label {text:app.trx("مساحة إنفاذ القانون","Law Enforcement");color:app.design.text;font.bold:true;font.pixelSize:23;Layout.fillWidth:true}
     Label {text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber+" · "+lawCaseBridge.activeCase.status):app.trx("اختر قضية أو ابدأ سيناريو تدريب اصطناعي","Choose a case or a synthetic training scenario");Layout.fillWidth:true;elide:Text.ElideRight;color:app.design.muted;textFormat:Text.PlainText}
    }
    StateBadge {text:lawCaseBridge.role;tint:app.design.silver}
   }
-  Label {text:lawCaseBridge.protection;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:lawCaseBridge.ready?app.design.muted:app.design.danger;font.pixelSize:11}
-  Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:lawCaseBridge.error;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
-  RowLayout {Layout.fillWidth:true
+  Label {text:lawCaseBridge.protection;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:lawCaseBridge.ready?app.design.muted:app.design.danger;font.pixelSize:11}
+  Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:lawCaseBridge.error;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
+  RowLayout {width:parent.width
    ComboBox {objectName:"lawSectionSelector";Layout.preferredWidth:Math.min(330,page.width*0.45);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
    ActionButton {objectName:"lawNewCase";text:app.trx("قضية جديدة","New case");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.create;onClicked:page.newCase()}
    ActionButton {objectName:"lawOpenCases";text:app.trx("فتح / بحث","Open / search");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.read;onClicked:{lawCaseBridge.searchCases("");page.section=2}}
    Item {Layout.fillWidth:true}
   }
-  StackLayout {Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;currentIndex:page.viewIndex
+  StackLayout {width:parent.width;height:Math.max(0,page.height-y);implicitWidth:0;implicitHeight:0;currentIndex:page.viewIndex
    ScrollView {id:dashboardScroll;contentWidth:availableWidth;clip:true
     ColumnLayout {width:dashboardScroll.availableWidth;spacing:12
      Panel {Layout.fillWidth:true;title:app.trx("القضية الحالية","Current case");iconName:"document_lock"
