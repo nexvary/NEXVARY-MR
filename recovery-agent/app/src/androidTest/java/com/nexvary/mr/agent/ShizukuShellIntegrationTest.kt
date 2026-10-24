@@ -49,6 +49,10 @@ class ShizukuShellIntegrationTest {
     }
     @Test fun consentedShellCollectionAndRealServiceDeathFallBackToStandard() {
         assumeTrue(InstrumentationRegistry.getArguments().getString("npseManagerIntegration") == "true")
+        val automation = instrumentation.uiAutomation
+        automation.serviceInfo = automation.serviceInfo.apply {
+            flags = flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+        }
         await("manager Binder delivery") { Shizuku.pingBinder() }
         assertEquals("Root must not be used", 2000, Shizuku.getUid())
         assertEquals(AccessPolicy.State.PERMISSION_REQUIRED, ShizukuAccess.state())
