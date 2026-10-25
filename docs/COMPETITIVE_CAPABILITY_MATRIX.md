@@ -53,7 +53,7 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Evidence Integrity | Tested | Protected copies, SHA-256 and independent package verification; no external authenticity/time proof. |
 | Chain of Custody | Tested | Linked declared transfers/audit; physical handover remains external. |
 | SQLite / Media / Log Analysis | Tested (bounded) | Standalone SQLite samples, JPEG EXIF, classic PCAP and exported threadtime; no full application decoding. |
-| Timeline Analysis | Implemented; verification in progress | Async timestamp-literal projection; actual status in DEVELOPMENT_STATE.md. No complete event semantics. |
+| Timeline Analysis | Tested (bounded) | Async timestamp-literal projection, source 3bf0485 / CI 40223653000; timeline 26/26. No complete event semantics or comparative superiority. |
 | Relationship Analysis | Pending | Source/provenance IDs only; no person/entity/social inference. |
 | Search and Indexing | Tested / Pending | Existing case search; timeline literal search in this increment; full artifact index pending. |
 | Reporting | Tested / Pending | Existing AR/EN case PDFs; timeline exports/signed timeline review pending. |

@@ -1,3 +1,36 @@
+# Government Operations — verified timestamp timeline checkpoint (2026-10-25)
+
+- Current Branch: `feature/government-operations`; PR #15 remains open/draft on PR #11's unmerged foundation.
+- Latest Verified Source/Test SHA: `3bf0485e9b45174a4a6ae2ade8322aebba3166d1`. Runtime/native/packaging inputs are unchanged from `b60d20fdca871b7fd169d3c17023977e4e9e7ed7`; the follow-up fixed test interaction timing. The later commit containing this receipt changes documentation/evidence only; resolve its current HEAD separately.
+- CI Status: https://github.com/nexvary/NEXVARY-MR/actions/runs/40223653000 — **all seven jobs passed**. Windows/Linux production/laboratory each passed **42/42 CTest**. Production ASan/UBSan passed **13/13**. Python 40223653112 and public-history 40223652991 passed. Actual Windows raw reports confirm timeline **26/26**, imports **32/32**, Qt Quick **47/47**, and complete 125%/150% DPI subsets. Intentional unrelated platform/profile subcase exclusions remain visible in raw reports.
+- Implemented/Tested: original asynchronous case timestamp-literal projection from existing protected authorized-import reports, strict explicit-offset UTC normalization, preserved unresolved values/reasons, stable source/report/evidence/device/run references, literal search, bounded pagination, cooperative cancellation and completion-time identity/role/grant/revision checks. AR/EN explanations, isolated display direction for technical IDs, wrapped-text geometry/header invariance and global cancel/exit are integrated. Existing cases, retention/holds/archive/disposal review, protected recovery, native identities/RBAC/signatures/anchors, imports/PCAP/EXIF, research, USB/device/mirror functions remain covered.
+- Competitive work: 14-product/tool-family x 20-axis primary-source registry; scoped source classes/Unknown cells; measurable comparison and maintenance roadmap; 20 government acceptance gates. NIST v3.3 requirements mapped to actual timeline/SQLite gaps. No licensed competitor was exercised and no comparative superiority is established.
+- Windows delivery: production portable isolation, installed-in-place launch, native parser child, installer install/run/uninstall and checksums passed. All three downloaded provider ZIP digests matched; inner portable ZIP/setup EXE also matched SHA256SUMS. Actual final Windows AR/EN 100% captures were visually reviewed and retained, alongside earlier labelled local Linux captures. Source/artifact/expiry/raw results/deployed receipts: `evidence/timeline-2026-10-25/`.
+- Local boundary: final full local JUnit passed 41/42; generated zero-byte application prevented smoke launch. Relinked smoke passed 1/1. Native 26/26, imports 32/32, Python 38/38 and corrected full UI/DPI passed across staged runs. This is not a claimed single final-source local 42/42 invocation. Each hosted clean profile passed 42/42.
+- Known limits: 4 MiB per import, 128 findings/import, 100 retained analyses and 2,048 matching projected observations. Source/report hashes do not establish source-time authenticity. No epoch/timezone guessing, full application activity reconstruction, person/social graph, current source-byte reread, timeline export or signed institutional timeline review. SQLite remains a bounded standalone sample without WAL. Temporary cleanup is not secure erasure; child process isolation is not OS/network containment. Local clocks/identities/current-account DPAPI retain their documented boundaries.
+- Remaining Government Capabilities: documented lawful backup/container/PDF/DOCX adapters; typed artifact/index/provenance relationships; enforced offline networking; timeline reporting/institutional review; full research promotion/training/deployment/identity/recovery acceptance. Physical disposal execution remains Unsupported.
+- External Acceptance Gates: exact authorized phones/firmware (including actual OPPO screen view/flicker), independent clean Windows 10/11, agency identities/reviewers, trusted publisher signing, independent security/privacy/license/records/recovery review and external key/time custody. Hosted Windows Server 2022 is not field or institutional acceptance.
+- Next Executable Task: inspect current branches/worktrees for unpublished backup prototypes before repeating implementation; integrate one documented owner-authorized unencrypted format with independent populated fixtures, preservation/hash/isolation/cancel/revocation gates. Then typed provenance relationships and actual offline policy tests. No Guardian work or main merge.
+
+Unsigned Windows evaluation packages from that verified source:
+- Portable: https://github.com/nexvary/NEXVARY-MR/actions/runs/40223653000/artifacts/12610642695
+- Installer + SHA256SUMS: https://github.com/nexvary/NEXVARY-MR/actions/runs/40223653000/artifacts/12610717511
+- Production deployment/screenshots/raw evidence: https://github.com/nexvary/NEXVARY-MR/actions/runs/40223653000/artifacts/12610637728
+
+Resume:
+```sh
+git fetch --all --prune
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+python3 -m unittest discover -s tests -v
+```
+
+The receipt is for a controlled development evaluation, not a final governmental release.
+Historical results below remain attached only to their stated source/checkpoints.
+
 # Government timeline Windows pagination-test correction — 2026-10-25
 
 - Executable source `b60d20fdca871b7fd169d3c17023977e4e9e7ed7`: CI 40222114350 passed both Linux profiles (42/42 each), production ASan/UBSan (13/13), Windows laboratory (42/42), both core jobs and tracking server. Windows production passed 41/42; its full UI test failed the new pagination enabled-state assertion (46/47). Both production DPI subsets passed. Native timeline 26/26 and imports 32/32 passed on Windows.
