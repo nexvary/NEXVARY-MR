@@ -8,6 +8,7 @@
 #include <QCoreApplication>
 #include <QQuickWindow>
 #include <QImage>
+#include <QCryptographicHash>
 #include <QQuickStyle>
 #include <QtEndian>
 #include <memory>
@@ -52,6 +53,14 @@ public:
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
   auto *window=qobject_cast<QQuickWindow *>(object);
   return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+ }
+ Q_INVOKABLE QString headerFingerprint(QObject *object) {
+  auto *window=qobject_cast<QQuickWindow *>(object);
+  if(!window||window->width()<=0)return {};
+  const auto frame=window->grabWindow();if(frame.isNull())return {};
+  const auto header=frame.copy(0,0,frame.width(),qRound(72.0*frame.width()/window->width()));
+  const QByteArray pixels(reinterpret_cast<const char *>(header.constBits()),header.sizeInBytes());
+  return QString::fromLatin1(QCryptographicHash::hash(pixels,QCryptographicHash::Sha256).toHex());
  }
  Q_INVOKABLE bool setSyntheticDeviceMode(const QString &mode) {
   if(!tools||tools->busy()||!QStringList{"connected","device","unauthorized","offline","disconnected","none","error","progress"}.contains(mode))return false;
