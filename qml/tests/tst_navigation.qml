@@ -40,6 +40,18 @@ TestCase {
   for(const arabic of [true,false]){app.ar=arabic;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-analysis-"+(arabic?"ar":"en")+".png"))}
   app.setWorkspace(false);compare(app.currentPage,0)
  }
+ function test_governmentProtectedBackupControls(){
+  app.setWorkspace(true);const law=findChild(app,"lawEnforcementWorkspace")
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-BACKUP-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic device",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic backup review only"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic fixture",custodian:"Synthetic custodian"});verify(dev!=="");verify(lawCaseBridge.addEvidence(dev,syntheticEvidencePath,"Synthetic backup fixture","Synthetic custodian",true)!=="")
+  app.navigateSection(9);compare(law.section,8);verify(renderedFrame())
+  const consent=findChild(app,"lawBackupConsent"),save=findChild(app,"lawSaveProtectedBackup"),restore=findChild(app,"lawRestoreProtectedBackup")
+  compare(save.enabled,false);compare(restore.enabled,false);consent.checked=true;compare(save.enabled,true);law.saveProtectedBackup(syntheticProtectedBackupPath);verify(!!law.lastBackup.sha256,lawCaseBridge.error);compare(findChild(app,"lawBackupDigest").text.length,64);compare(consent.checked,false)
+  findChild(app,"lawRestoreDigest").text=law.lastBackup.sha256;findChild(app,"lawRestoreConsent").checked=true;compare(restore.enabled,true)
+  compare(law.restoreProtectedBackup(syntheticProtectedBackupPath),"");verify(lawCaseBridge.error.indexOf("already exists")>=0);compare(lawCaseBridge.activeCase.id,id);verify(lawCaseBridge.verifyAudit())
+  for(const arabic of [true,false]){app.ar=arabic;app.width=1536;app.height=980;const panel=findChild(app,"lawProtectedBackupPanel");const scroll=findChild(app,"lawReportsScroll");verify(renderedFrame());reveal(scroll,panel);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-backup-"+(arabic?"ar":"en")+".png"))}
+  app.setWorkspace(false)
+ }
  function test_lawCaseAndResearchWorkspaces(){
   verify(lawCaseBridge.ready,lawCaseBridge.error);verify(researchBridge.ready,researchBridge.error)
   app.navigateSection(12);compare(app.currentPage,12);verify(renderedFrame())

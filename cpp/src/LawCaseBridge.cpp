@@ -15,6 +15,8 @@
 #include <QFile>
 #include <QPdfWriter>
 #include <QTextDocument>
+#include <QTextCursor>
+#include <QFontDatabase>
 #include <QDateTime>
 #include <utility>
 namespace {
@@ -45,7 +47,7 @@ QString LawCaseBridge::protection()const {
 QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId(currentRole()).data(),static_cast<qsizetype>(nexvary::law::roleId(currentRole()).size()));}
 QVariantMap LawCaseBridge::permissions()const {
  using A=nexvary::law::Action;QVariantMap p;
- for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
+ for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"backup",A::BackupCase},{"restore",A::RestoreCase},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
   p.insert(entry.first,nexvary::law::allows(currentRole(),entry.second));
  p.insert("executeDevice",false);p.insert("enterpriseRoleProvisioningReady",false);return p;
 }
@@ -168,6 +170,23 @@ QVariantMap LawCaseBridge::analyzeEvidence(const QString &evidence,const QString
  if(result.isEmpty()){fail(store_->error());return {};}
  return refresh(id)?result:QVariantMap();
 }
+QVariantMap LawCaseBridge::exportProtectedBackup(const QString &path,bool consent) {
+ if(!consent){fail("Confirm protected case backup and its current-account recovery boundary.");return {};}
+ if(!permit(nexvary::law::Action::BackupCase)||active_.isEmpty())return {};
+ const auto id=active_.value("id").toString();const auto result=store_->exportProtectedBackup(id,active_.value("revision").toLongLong(),path,actor());
+ if(result.isEmpty()){fail(store_->error());return {};}
+ return refresh(id)?result:QVariantMap();
+}
+QString LawCaseBridge::restoreProtectedBackup(const QString &path,const QString &expectedSha256,bool consent) {
+ if(!consent){fail("Confirm restoration to a database without this case; originals are never overwritten.");return {};}
+ if(!permit(nexvary::law::Action::RestoreCase,false))return {};
+ const auto id=store_->restoreProtectedBackup(path,expectedSha256,actor(),[this](const QVariantMap &record){
+  if(identity_&&!identity_->checkSession())return false;
+  return nexvary::law::allows(currentRole(),nexvary::law::Action::RestoreCase)&&caseAllowed(record)&&validateMetadata(record.value("metadata").toMap());
+ });
+ if(id.isEmpty()){fail(store_->error());return {};}
+ return refresh(id)?id:QString();
+}
 bool LawCaseBridge::verifyEvidence(const QString &evidence) {
  if(!permit(nexvary::law::Action::ReadDevice)||active_.isEmpty())return false;
  if(!store_->verifyEvidence(active_.value("id").toString(),evidence))return fail(store_->error());
@@ -232,6 +251,7 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
   {"description",QStringLiteral("وصف الدليل")},{"size",QStringLiteral("الحجم بالبايت")},{"sha256","SHA-256"},
   {"from",QStringLiteral("من المسؤول")},{"to",QStringLiteral("إلى المسؤول")},{"reason",QStringLiteral("سبب النقل")},{"atUtc",QStringLiteral("وقت الحدث UTC")},
   {"actor",QStringLiteral("هوية المنفّذ المسجلة")},{"event",QStringLiteral("الإجراء")},{"sequence",QStringLiteral("رقم الحدث")},
+  {"backupId",QStringLiteral("معرّف النسخة المحمية")},{"backupSha256",QStringLiteral("بصمة النسخة المحمية SHA-256")},{"sourceAuditHead",QStringLiteral("مرجع تدقيق المصدر")},{"provider",QStringLiteral("مزود الحماية")},
   {"exportedAtUtc",QStringLiteral("وقت التصدير UTC")},{"manifestSha256",QStringLiteral("بصمة Manifest SHA-256")},
   {"packageId",QStringLiteral("معرّف حزمة نسخة العمل")},{"purpose",QStringLiteral("الغرض المسجل")},{"sourceRevision",QStringLiteral("مراجعة القضية المصدر")},
   {"implementationVersion",QStringLiteral("إصدار المحرك")},{"parser",QStringLiteral("محلل الأدلة")},{"reportJson",QStringLiteral("النتيجة التقنية JSON")},
@@ -239,7 +259,7 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
   {"status",QStringLiteral("الحالة")},{"sourceSize",QStringLiteral("حجم المصدر بالبايت")},{"synthetic",QStringLiteral("بيانات اصطناعية")},
   {"hash",QStringLiteral("بصمة الحدث SHA-256")},{"previous",QStringLiteral("بصمة الحدث السابق")},{"stateSha256",QStringLiteral("بصمة حالة القضية")},{"caseId",QStringLiteral("معرّف القضية")}
  };
- const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc","manifestSha256","sourceSha256","reportSha256","packageId","exportedAtUtc","reportJson","implementationVersion","parser"};
+ const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc","manifestSha256","sourceSha256","reportSha256","packageId","exportedAtUtc","reportJson","implementationVersion","parser","backupId","backupSha256","sourceAuditHead","provider"};
  const auto table=[&](const QVariantMap &record,const QString &caption){
   QString out=QStringLiteral("<table border='1' cellspacing='0' cellpadding='4' width='100%'><thead><tr><th colspan='2' bgcolor='#e0e7ef'>%1</th></tr></thead>").arg(caption.toHtmlEscaped());
   for(auto it=record.cbegin();it!=record.cend();++it){
@@ -267,9 +287,18 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
  html+=section("evidence",tr(QStringLiteral("الأدلة وسلامة النسخ المحفوظة"),"Evidence and stored-copy integrity"));
  html+=section("custody",tr(QStringLiteral("إقرارات سلسلة الحيازة"),"Declared chain of custody"));
  html+=section("workingCopies",tr(QStringLiteral("نسخ العمل المصدرة"),"Exported working copies"));
+ if(!active_.value("backups").toList().isEmpty())html+=section("backups",tr(QStringLiteral("النسخ المحمية المسجلة"),"Protected case backups"));
+ if(!active_.value("restorations").toList().isEmpty())html+=section("restorations",tr(QStringLiteral("سجل استعادة النسخ"),"Protected backup restorations"));
  html+=section("analyses",tr(QStringLiteral("تحليلات الأدلة"),"Evidence analyses"));
  html+=section("audit",tr(QStringLiteral("سجل التدقيق المترابط"),"Linked audit trail"));
  html+=QStringLiteral("</body></html>");
- {QPdfWriter writer(&output);writer.setTitle(QStringLiteral("NEXVARY case review"));writer.setCreator(QStringLiteral("NEXVARY-MR"));QTextDocument document;document.setDefaultFont(QFont(QStringLiteral("Segoe UI"),10));document.setHtml(html);document.print(&writer);}
+ {QPdfWriter writer(&output);writer.setTitle(QStringLiteral("NEXVARY case review"));writer.setCreator(QStringLiteral("NEXVARY-MR"));QTextDocument document;document.setDefaultFont(QFont(QStringLiteral("Segoe UI"),10));document.setHtml(html);
+  // Preserve exact ASCII when copying hashes/UUIDs from a PDF. Default fonts can
+  // encode an ff ligature as U+FB00 in ToUnicode instead of two ASCII characters.
+  QFont fixed=QFontDatabase::systemFont(QFontDatabase::FixedFont);fixed.setPointSize(9);fixed.setStyleStrategy(QFont::PreferNoShaping);
+  QTextCharFormat identifierFormat;identifierFormat.setFont(fixed);
+  const QRegularExpression identifiers(QStringLiteral("\\b(?:[0-9a-f]{64}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\\b"),QRegularExpression::CaseInsensitiveOption);
+  for(auto cursor=document.find(identifiers);!cursor.isNull();cursor=document.find(identifiers,cursor))cursor.mergeCharFormat(identifierFormat);
+  document.print(&writer);}
  if(!output.flush()||output.size()==0){output.close();output.remove();return fail(QStringLiteral("PDF report could not be finalized."));}return true;
 }

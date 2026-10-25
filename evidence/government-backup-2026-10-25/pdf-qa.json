@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "sha256": "ed530620af199ccc7e0d03839a6cc86bbf3f0228860e9d47e4b02d970617ae61",
+  "backupSha256": "f0c03b90834668ec19ac6cf221853e457e404e05d9d2cf0938efaa91ea6c88d8",
+  "exactAsciiBackupHashExtracted": true,
+  "ligatureFix": "Fixed font and PreferNoShaping applied only to digest/UUID matches",
+  "pages": 5,
+  "nativeLog": "pdf-native-final.txt",
+  "exactAsciiDigestContainingFF": "fa0166fa38234fa2f8078552822ce359adcb369c6ffb1a25f532acf77b9c9464",
+  "asciiFFVerified": true,
+  "allPagesVisuallyReviewed": true
+}

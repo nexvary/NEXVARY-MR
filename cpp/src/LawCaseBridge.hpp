@@ -49,6 +49,8 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ Q_INVOKABLE QVariantMap exportProtectedBackup(const QString &path,bool consent);
+ Q_INVOKABLE QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,bool consent);
  Q_INVOKABLE bool verifyEvidence(const QString &evidence);
  Q_INVOKABLE QVariantMap exportWorkingCopy(const QString &evidence,const QString &directory,const QString &purpose,bool consent);
  Q_INVOKABLE bool verifyAudit();

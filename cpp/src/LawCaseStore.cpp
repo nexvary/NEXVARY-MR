@@ -81,7 +81,7 @@ QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor,co
 bool LawCaseStore::mutate(const QString &id,qint64 revision,const QString &event,const QString &actor,const std::function<bool(QVariantMap&)> &change) {
  error_.clear();if(!ready_||!text(actor,256)||!db_.transaction())return fail("Cannot start case transaction.");
  auto r=get(id);if(r.isEmpty()||r.value("revision").toLongLong()!=revision||r.value("audit").toList().size()>=10000){db_.rollback();return fail("Invalid case, stale revision or event limit reached.");}
- if((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed")||(r.value("status")=="suspended"&&!event.startsWith("case-status:"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
+ if((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported")){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
  if(!change(r)){db_.rollback();return false;}
  r.insert("revision",revision+1);r.insert("deviceCount",r.value("devices").toList().size());append(r,event,actor);
  if(!save(r,revision)||!db_.commit()){db_.rollback();if(error_.isEmpty())fail("Case transaction failed.");return false;}return true;

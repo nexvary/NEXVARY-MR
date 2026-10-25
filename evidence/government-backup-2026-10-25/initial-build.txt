@@ -1,0 +1,23 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build
+[0/2] Re-checking globbed directories...
+[1/20] Automatic MOC and UIC for target mr_desktop_resources_1
+[2/19] Automatic MOC and UIC for target mr_desktop_resources_2
+[3/18] Automatic MOC and UIC for target mr_desktop
+[4/18] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[5/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+[6/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[7/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[8/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ResearchBridge.cpp.o
+[9/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[10/18] Linking CXX static library libmr_desktop.a
+[11/18] Automatic MOC and UIC for target mr_law_workspace_tests
+[12/17] Automatic MOC and UIC for target mr_identity_tests
+[13/16] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+[14/16] Building CXX object CMakeFiles/mr_identity_tests.dir/cpp/tests/identity_tests.cpp.o
+[15/16] Linking CXX executable mr_law_workspace_tests
+[16/16] Linking CXX executable mr_identity_tests

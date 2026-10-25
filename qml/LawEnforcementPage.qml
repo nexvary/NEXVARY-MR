@@ -10,11 +10,14 @@ Item {
  property int evidenceView:1
  property bool auditVerified:false
  property bool anchorVerified:false
+ property var lastBackup:({})
+ function saveProtectedBackup(path){lastBackup=lawCaseBridge.exportProtectedBackup(path,backupConsent.checked)}
+ function restoreProtectedBackup(path){const id=lawCaseBridge.restoreProtectedBackup(path,restoreDigest.text,restoreConsent.checked);if(id!==""){restoreDigest.text="";page.section=0}return id}
  readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب","الحسابات والصلاحيات"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory","Accounts and permissions"]
  readonly property int viewIndex:[0,1,2,2,3,4,5,6,7,8,9][section]
  function newCase(){intake.startNew();section=1}
  function editCase(){intake.edit(lawCaseBridge.activeCase.metadata||{});section=1}
- Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;page.anchorVerified=false;caseExportConsent.checked=false}}
+ Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;page.anchorVerified=false;caseExportConsent.checked=false;backupConsent.checked=false;restoreConsent.checked=false;page.lastBackup=({})}}
  Column {anchors.fill:parent;spacing:10
   // The viewport owns height; wrapped content cannot resize its parent.
   RowLayout {width:parent.width
@@ -96,13 +99,24 @@ Item {
      }}
     }
    }
-   ScrollView {id:reportsScroll;contentWidth:availableWidth;clip:true
+   ScrollView {id:reportsScroll;objectName:"lawReportsScroll";contentWidth:availableWidth;clip:true
     ColumnLayout {width:reportsScroll.availableWidth;spacing:12
      ActionButton {text:app.trx("فتح سجل التدقيق","Open audit trail");onClicked:{page.evidenceView=3;page.section=6}}
      Panel {title:app.trx("تقرير مراجعة القضية PDF","Case review PDF");iconName:"document_text";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("يتضمن الإقرار القانوني والأجهزة المسجلة وسجل التدقيق وحدود النموذج. لا يمثل تقرير استخلاص كاملًا أو اعتمادًا قضائيًا.","Contains recorded authority, registered devices, audit and prototype limits. Not a complete acquisition report or judicial accreditation.")}
       CheckBox {id:caseExportConsent;objectName:"lawReportConsent";text:app.trx("أوافق على تصدير بيانات القضية غير مشفرة","Approve plaintext case-data export")}
       ActionButton {objectName:"lawExportPdf";text:app.trx("حفظ PDF جديد","Save new PDF");primary:true;enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.report&&caseExportConsent.checked;onClicked:casePdf.open()}
+     }
+     Panel {objectName:"lawProtectedBackupPanel";title:app.trx("نسخة قضية محمية واستعادة","Protected case backup & restore");iconName:"document_lock";Layout.fillWidth:true
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحفظ نسخة الأدلة المحمية دون مفاتيح حسابات البرنامج. تعتمد الاستعادة على سياق حماية Windows الأصلي وسجل الهوية ومنح القضية. الحد 32 MiB للمحتوى المحمي و64 MiB للحاوية. احتفظ بالبصمة ومرجع التدقيق منفصلين.","Preserves protected case/evidence blobs without account signing keys. Recovery requires the original Windows protection context, identity registry and case grants. Limits: 32 MiB protected payloads, 64 MiB container. Retain the digest and audit anchor separately.")}
+      CheckBox {id:backupConsent;objectName:"lawBackupConsent";text:app.trx("أوافق على حفظ نسخة محمية لهذه القضية","Approve a protected backup of this case")}
+      ActionButton {objectName:"lawSaveProtectedBackup";text:app.trx("حفظ نسخة محمية جديدة","Save new protected backup");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.backup&&backupConsent.checked;onClicked:protectedBackupOutput.open()}
+      TextArea {objectName:"lawBackupDigest";visible:!!page.lastBackup.sha256;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.design.success;text:page.lastBackup.sha256||""}
+      Repeater {model:lawCaseBridge.activeCase.backups||[];delegate:TextArea {required property var modelData;readOnly:true;selectByMouse:true;Layout.fillWidth:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:page.app.design.muted;text:modelData.atUtc+" · "+modelData.sourceRevision+"\nSHA-256: "+modelData.sha256}}
+      TextField {id:restoreDigest;objectName:"lawRestoreDigest";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("بصمة النسخة المحفوظة SHA-256: 64 حرفًا","Separately retained backup SHA-256: 64 characters")}
+      CheckBox {id:restoreConsent;objectName:"lawRestoreConsent";text:app.trx("أوافق على الاستعادة دون استبدال أي قضية","Approve restoration without replacing an existing case")}
+      ActionButton {objectName:"lawRestoreProtectedBackup";text:app.trx("اختيار نسخة محمية للاستعادة","Choose protected backup to restore");enabled:lawCaseBridge.permissions.restore&&/^[0-9a-fA-F]{64}$/.test(restoreDigest.text)&&restoreConsent.checked;onClicked:protectedBackupInput.open()}
+      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحتفظ الاستعادة بمعرّف القضية والمالك والأصول، وتضيف حدث استعادة جديدًا. قارن بمرجع التدقيق المحفوظ لكشف تاريخ أحدث أو متعارض. هذه ليست استعادة شاملة لمفاتيح الحساب أو النظام.","Restoration retains case ID, owner and originals and appends a recovery event. Compare a retained audit anchor to detect newer/divergent history. This is not full account-key or operating-system disaster recovery.")}
      }
      Panel {title:app.trx("تقرير التدريب الاصطناعي","Synthetic training report");iconName:"book_open_lightbulb";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:lawCaseBridge.trainingAttempts.length+app.trx(" محاولة؛ لا يتضمن بيانات قضايا حقيقية."," attempts; contains no real case data.")}
@@ -115,6 +129,8 @@ Item {
    IdentityPanel {app:page.app}
   }
  }
+ FileDialog {id:protectedBackupOutput;fileMode:FileDialog.SaveFile;defaultSuffix:"nmrbackup";nameFilters:["Protected case backup (*.nmrbackup)"];onAccepted:page.saveProtectedBackup(selectedFile.toString())}
+ FileDialog {id:protectedBackupInput;fileMode:FileDialog.OpenFile;nameFilters:["Protected case backup (*.nmrbackup)"];onAccepted:page.restoreProtectedBackup(selectedFile.toString())}
  FileDialog {id:anchorExport;fileMode:FileDialog.SaveFile;defaultSuffix:"json";onAccepted:lawCaseBridge.exportAuditAnchor(selectedFile.toString(),anchorConsent.checked)}
  FileDialog {id:anchorInput;fileMode:FileDialog.OpenFile;onAccepted:page.anchorVerified=lawCaseBridge.verifyAuditAnchor(selectedFile.toString())}
  FileDialog {id:casePdf;fileMode:FileDialog.SaveFile;defaultSuffix:"pdf";nameFilters:["PDF (*.pdf)"];onAccepted:lawCaseBridge.exportCasePdf(selectedFile.toString(),page.app.ar,caseExportConsent.checked)}

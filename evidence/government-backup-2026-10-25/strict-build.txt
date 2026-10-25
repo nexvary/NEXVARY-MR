@@ -1,0 +1,4 @@
+[0/2] Re-checking globbed directories...
+[1/4] Automatic MOC and UIC for target mr_law_workspace_tests
+[2/3] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+[3/3] Linking CXX executable mr_law_workspace_tests

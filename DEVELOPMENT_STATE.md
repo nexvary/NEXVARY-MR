@@ -1,3 +1,55 @@
+# Protected case backup/restore increment — 2026-10-25
+
+Branch: `feature/government-operations`; review PR #15. Last hosted-verified source:
+`cb1f03a0282c3fee7cc12164d56acc2a0eddd975`; CI 40146396789 passed all seven jobs,
+including four 39/39 native profiles and the 8/8 production sanitizer gate. Both
+Python and public-history events passed. This implementation is the next source
+increment and must receive its own exact-source CI before new Windows delivery.
+
+Implemented: bounded protected case/evidence snapshot via the existing Windows
+DPAPI provider; independently supplied SHA-256 on restore; original ownership/grant
+checks; full audit/device/evidence validation; no overwrite; atomic case+blob SQL
+restore; recovery audit records; AR/EN reports controls and retained backup digests.
+Backup is permitted on suspended/closed/archived cases without enabling case edits.
+The snapshot predates its source backup-export audit event. A recovery appends its
+own event and can diverge from a newer retained source anchor; no silent acceptance.
+
+Source files: `cpp/src/LawCaseBackup.cpp`, LawCaseStore/Bridge interfaces,
+LawPermissions, native case/identity tests, `qml/LawEnforcementPage.qml`, UI fixtures,
+CMake DPI regression and Windows guide packaging. No Guardian/Android agent change.
+Limits: 32 MiB combined protected payloads, 64 MiB container, 100 recorded exports.
+The identity registry/signing keys and OS recovery provider are not bundled. This is
+case recovery under a supported original protection context, not generic cross-host
+or full account/OS disaster recovery. Read `docs/PROTECTED_CASE_BACKUP.md` first.
+
+Native case tests: 17 passed; identity: 12 passed; full Qt UI: 43 passed. Build is
+Release with warnings treated as errors. Real AR/EN screens were inspected. Native
+Qt generated a five-page synthetic Arabic PDF: all pages were visually reviewed,
+and independent pdftotext extraction confirmed exact ASCII digests, including `ff`.
+The PDF fix applies a fixed font without shaping only to hashes/UUIDs; Arabic text
+keeps shaping. Python: 35 passed; pinned Gitleaks current tree and the real-scanner
+allowlist regression passed. Full final CTest/DPI results are retained alongside
+raw failures under `evidence/government-backup-2026-10-25/`.
+
+Earlier full regression reached 35/39 with four BAD_COMMAND results because two
+valid generated ELF binaries had lost execute permission. Restoring execute bits
+on those build outputs yielded 4/4 affected groups passed; no source workaround.
+An intermediate strict-test build failed misleading-indentation and was corrected;
+tests that ran against stale outputs before its rebuild are explicitly preserved
+as before-rebuild evidence, not accepted final validation. Final source rebuilt
+successfully and case/identity tests passed again. The final full run passed
+39/39 CTest groups, including both DPI scales and native launch. Hosted exact-source
+CI pending.
+
+Next: finish/publish this increment and exact-source CI; then native retention and
+archive policy enforcement, document/authorized-backup/SQLite case adapters,
+searchable timelines/relationships and policy-enforced offline mode. External
+Windows 10/11/phone acceptance, institutional identity/key/time custody, independent
+privacy/license/recovery review and release sign-off remain unpassed. No main merge
+or final institutional release is claimed.
+
+---
+
 # Report and history-check follow-up — 2026-10-25
 
 Branch: `feature/government-operations`; PR #15.

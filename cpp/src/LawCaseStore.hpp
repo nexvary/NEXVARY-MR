@@ -25,9 +25,13 @@ public:
  bool transfer(const QString &id,qint64 revision,const QString &evidence,const QString &from,const QString &to,const QString &reason,const QString &actor);
  QByteArray readEvidence(const QString &id,const QString &evidence);
  QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor);
+ QVariantMap exportProtectedBackup(const QString &id,qint64 revision,const QString &path,const QString &actor);
+ QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,const QString &actor,const std::function<bool(const QVariantMap&)> &authorize);
  bool verifyEvidence(const QString &id,const QString &evidence);
  QVariantMap exportWorkingCopy(const QString &id,qint64 revision,const QString &evidence,const QString &directory,const QString &purpose,const QString &actor);
 private:
+ struct BackupData {QVariantMap record;QVariantList blobs;QString sha256;};
+ bool readProtectedBackup(const QString &path,const QString &expectedSha256,BackupData &result);
  bool fail(const QString &message);
  QByteArray evidenceBytes(const QString &id,const QVariantMap &item);
  bool save(QVariantMap record,qint64 expected);

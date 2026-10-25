@@ -1,0 +1,8 @@
+[0/2] Re-checking globbed directories...
+[1/8] Automatic MOC and UIC for target mr_desktop
+[2/7] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[3/7] Linking CXX static library libmr_desktop.a
+[4/7] Linking CXX executable mr_identity_tests
+[5/7] Linking CXX executable nexvary_mr
+[6/7] Linking CXX executable mr_law_workspace_tests
+[7/7] Linking CXX executable mr_ui_tests
