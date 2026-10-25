@@ -1,13 +1,13 @@
-# Device refresh and consented screen view — implementation checkpoint (2026-10-25)
+# Government operations — verified device stability checkpoint (2026-10-25)
 
-- Current Branch: `feature/government-operations`; open draft PR #15. Current HEAD SHA: resolve `git rev-parse HEAD`; implementation parent `b7fee16c0262aa02da7e7a0df41f556a993cd0ce`.
-- Latest Verified Executable SHA: `8d32b4589cca586a659c5df32dc555faea060740` until the new exact-source hosted run completes.
-- CI Status: new source validation pending publication. Previous verified run and retained historical receipts follow below.
-- Completed Government Capabilities: protected cases, identity/RBAC, evidence/custody/hash, signatures/anchors, backup/restore, reports, retention/holds/archive/disposal review remain intact. This increment addresses the reported device UI: quiet bounded background discovery, stable identity cells and dated refresh snapshots, per-operation progress, dedicated consented screen view in both profiles and pinned official Windows screen tools. Generic service writes retain Laboratory gating.
-- Remaining Government Capabilities: authorized import adapters, timeline, provenance relationships, enforced offline network policy and subsequent institutional/research/training/deployment work remain. Physical disposal execution is still unimplemented.
-- Known Limitations: separate scrcpy window, explicit device-component consent, no control/audio/clipboard or frame-delivery claim. No phone was connected to this environment. The reported OPPO/firmware and user-machine blue flicker still require field acceptance. Exact version/hash pinning is not Authenticode or independent licensing accreditation. Existing protected-case trust/bounds remain unchanged.
-- External Acceptance Gates: physical exact-firmware devices, clean Windows 10/11, agency acceptance, external key/time custody, trusted publisher signing, independent privacy/license/records/recovery review.
-- Next Executable Task: finish exact-source Windows/Linux/package validation of these fixes, then implement bounded authorized document imports on hash-verified separate working copies before timeline/relationships/offline enforcement.
+- Current Branch: `feature/government-operations`; PR #15 open/draft, based on the unmerged PR #11 foundation. Current HEAD SHA at executable validation: `bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da`. Resolve the later documentation/evidence receipt HEAD with `git rev-parse HEAD`; it changes no compiler/QML/build/packaging input.
+- Latest Verified Executable SHA: `bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da` (implementation `f5481fe825b0c20a64159941251875dbb0891018`, then Arabic UTC direction fix).
+- CI Status: https://github.com/nexvary/NEXVARY-MR/actions/runs/40190246495 — all seven jobs passed. Windows production/laboratory and Linux production/laboratory each passed 40/40 CTest; production ASan/UBSan 11/11. Python 40190246502 and public-history 40190246577 passed. Native ADB 24/24, mirror 21/21 and Qt Quick 45/45 passed in both Windows profiles; intentional unrelated profile/platform skips remain labelled in raw logs. Portable and installed-in-place tool resolution, official scrcpy startup/file hashes, installer install/run/uninstall and checksums passed.
+- Completed Government Capabilities: protected cases, native identity/RBAC/ownership/grants, rotation/revocation, evidence/custody/hash, signed reviews/anchors, protected backup/restore, reports, retention/holds/archive/disposal review remain intact. This increment fixes foreground activity pulses during background discovery, stale/cancelled polling races, per-card progress, stable identity cells and dated refresh snapshots. Dedicated exact-serial/owner/component-consented screen view is available in both profiles, with pinned official Windows tools. Generic service writes retain Laboratory gating. Arabic UTC timestamps stay ordered.
+- Remaining Government Capabilities: bounded authorized import adapters on verified separate working copies, unified timeline, provenance relationships and enforced offline networking; then institutional review/search/report/audit, further training/research integration, deployment/enterprise identity/recovery and Windows RC. Physical disposal execution remains unimplemented.
+- Known Limitations: screen view opens a separate scrcpy window; no control/audio/clipboard synchronization and no passive acquisition claim. No physical phone was connected. Actual frame delivery/cleanup on the reported OPPO firmware and user-machine graphics/flicker require field acceptance. Exact version/hash pinning is not publisher signing or independent licensing accreditation. Existing bounded protected-case/local-clock/local-account limitations remain.
+- External Acceptance Gates: exact-firmware phones, independent clean Windows 10/11, agency identities/independent reviewers, external key/time custody, trusted publisher signing, independent privacy/license/records/recovery review and release authorization. Hosted Windows Server 2022 does not satisfy these gates.
+- Next Executable Task: implement bounded authorized document import using hash-before-processing, separate verified working copies, provenance, parser isolation and structured findings; preserve existing PCAP/EXIF/backup/research/USB/NPSE engines. Then timeline, relationships and enforced offline policy. No Guardian work or main merge.
 - Resume Commands:
 
 ```sh
@@ -20,7 +20,12 @@ ctest --test-dir build -C Release --output-on-failure
 python3 -m unittest discover -s tests -v
 ```
 
-Implementation and user steps: `docs/SCREEN_VIEW.md`. Historical evidence below remains valid for its stated SHA only.
+Windows development packages from that verified source (unsigned):
+- Portable: https://github.com/nexvary/NEXVARY-MR/actions/runs/40190246495/artifacts/12597977041
+- Installer + SHA256SUMS: https://github.com/nexvary/NEXVARY-MR/actions/runs/40190246495/artifacts/12597992089
+- Production deployment/screenshots/evidence: https://github.com/nexvary/NEXVARY-MR/actions/runs/40190246495/artifacts/12597977051
+
+The production evidence artifact was downloaded, its provider archive digest matched, actual AR/EN Windows captures reviewed, and bundled tool-resolution/version/installer receipts inspected. Full metadata, expiry/digests, local raw failures and genuine synthetic captures: `evidence/device-stability-2026-10-25/`. Local strict Release build, Python 38/38, ASan/UBSan tool/mirror 2/2 (leak inspection disabled) and all 40 CTest groups across runs passed: 39/40 plus GUI smoke 1/1 after repairing a damaged generated ELF output, not a claimed single local 40/40 invocation. Hosted clean builds each passed 40/40. User steps and consent/provenance limits: `docs/SCREEN_VIEW.md`. Historical checkpoints below apply only to their stated SHAs.
 
 # Government Operations Phase 2 — verified retention increment (2026-10-25)
 

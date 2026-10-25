@@ -1,0 +1,2 @@
+1:02PM INF scanned ~30298374 bytes (30.30 MB) in 728ms
+1:02PM INF no leaks found
