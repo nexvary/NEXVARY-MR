@@ -1,0 +1,294 @@
+[0/2] Re-checking globbed directories...
+[1/290] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/mr_avb_mutation_tests_autogen/mocs_compilation.cpp.o
+[2/290] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/tests/avb_mutation_tests.cpp.o
+[3/290] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/mr_pcap_mutation_tests_autogen/mocs_compilation.cpp.o
+[4/290] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/src/AvbMetadata.cpp.o
+[5/290] Linking CXX executable mr_avb_mutation_tests
+[6/290] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/tests/pcap_mutation_tests.cpp.o
+[7/290] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/mr_exif_mutation_tests_autogen/mocs_compilation.cpp.o
+[8/290] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/src/PcapSummary.cpp.o
+[9/290] Linking CXX executable mr_pcap_mutation_tests
+[10/290] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/tests/exif_mutation_tests.cpp.o
+[11/290] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/mr_ui_device_fixture_autogen/mocs_compilation.cpp.o
+[12/290] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/src/ExifSummary.cpp.o
+[13/290] Linking CXX executable mr_exif_mutation_tests
+[14/290] Automatic MOC for target mr_update_tests
+[15/290] Automatic MOC for target mr_update_journal_tests
+[16/290] Automatic MOC for target mr_update_key_tests
+[17/290] Automatic MOC and UIC for target mr_desktop
+[18/290] Running rcc for resource research_catalog
+[19/290] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/mr_desktop_resources_1_autogen/mocs_compilation.cpp.o
+[20/290] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/build/.rcc/qrc_research_catalog.cpp.o
+[21/290] Running rcc for resource device_catalog
+[22/290] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/mr_desktop_resources_2_autogen/mocs_compilation.cpp.o
+[23/290] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/build/.rcc/qrc_device_catalog.cpp.o
+[24/290] Generating NexvaryMR/qml/LawEvidencePage.qml
+[25/290] Generating NexvaryMR/qml/Sidebar.qml
+[26/290] Generating NexvaryMR/qml/TopBar.qml
+[27/290] Generating NexvaryMR/qml/Main.qml
+[28/290] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[29/290] Building CXX object CMakeFiles/mr_update_tests.dir/mr_update_tests_autogen/mocs_compilation.cpp.o
+[30/290] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/cpp/tests/ui_device_fixture.cpp.o
+[31/290] Linking CXX executable mr_ui_device_fixture
+[32/290] Building CXX object CMakeFiles/mr_update_journal_tests.dir/mr_update_journal_tests_autogen/mocs_compilation.cpp.o
+[33/290] Building CXX object CMakeFiles/mr_update_tests.dir/cpp/tests/update_tests.cpp.o
+[34/290] Linking CXX executable mr_update_tests
+[35/290] Building CXX object CMakeFiles/mr_update_key_tests.dir/mr_update_key_tests_autogen/mocs_compilation.cpp.o
+[36/290] Building CXX object CMakeFiles/mr_update_journal_tests.dir/cpp/tests/update_journal_tests.cpp.o
+[37/290] Linking CXX executable mr_update_journal_tests
+[38/290] Building CXX object CMakeFiles/mr_update_key_tests.dir/cpp/tests/update_key_tests.cpp.o
+[39/290] Linking CXX executable mr_update_key_tests
+[40/290] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[41/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RepairBridge.cpp.o
+[42/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+[43/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+[44/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/WorkshopBridge.cpp.o
+[45/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+[46/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ServiceCatalog.cpp.o
+[47/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+[48/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/BoardBridge.cpp.o
+[49/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/FirmwareBridge.cpp.o
+[50/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryImage.cpp.o
+[51/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+[52/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicRecord.cpp.o
+[53/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+[54/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+[55/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[56/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ResearchBridge.cpp.o
+[57/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[58/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+[59/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/AvbMetadata.cpp.o
+[60/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PcapSummary.cpp.o
+[61/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+[62/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ExifSummary.cpp.o
+[63/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ConnectionDiagnosis.cpp.o
+[64/290] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceIntelligence.cpp.o
+[65/290] Linking CXX static library libmr_desktop.a
+[66/290] Generating .rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp
+[67/290] Running rcc for resource samples
+[68/290] Automatic MOC and UIC for target nexvary_mr
+[69/290] Running AUTOMOC file extraction for target nexvary_mr
+[70/290] Automatic MOC and UIC for target mr_identity_tests
+[71/290] Running moc --collect-json for target nexvary_mr
+[72/290] Running rcc for resource qmake_NexvaryMR
+[73/290] Automatic QML type registration for target nexvary_mr
+[74/290] Running rcc for resource nexvary_mr_raw_qml_0
+[75/290] Generating .rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp
+[76/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp
+[77/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp
+[78/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp
+[79/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp
+[80/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp
+[81/290] Generating .rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp
+[82/290] Generating .rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp
+[83/290] Generating .rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp
+[84/290] Generating .rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp
+[85/290] Generating .rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp
+[86/290] Generating .rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp
+[87/290] Generating .rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp
+[88/290] Generating .rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp
+[89/290] Generating .rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp
+[90/290] Generating .rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp
+[91/290] Generating .rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp
+[92/290] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp
+[93/290] Generating .rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp
+[94/290] Generating .rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp
+[95/290] Generating .rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp
+[96/290] Generating .rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp
+[97/290] Generating .rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp
+[98/290] Generating .rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp
+[99/290] Generating .rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp
+[100/290] Generating .rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp
+[101/290] Generating .rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp
+[102/290] Generating .rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp
+[103/290] Generating .rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp
+[104/290] Generating .rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp
+[105/290] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp
+[106/290] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp
+[107/290] Generating .rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp
+[108/290] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp
+[109/290] Generating .rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp
+[110/290] Generating .rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp
+[111/290] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp
+[112/290] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp
+[113/290] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp
+[114/290] Generating .rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp
+[115/290] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp
+[116/290] Generating .rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp
+[117/290] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp
+[118/290] Generating .rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp
+[119/290] Generating .rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp
+[120/290] Generating .rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp
+[121/290] Generating .rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp
+[122/290] Generating .rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp
+[123/290] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp
+[124/290] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp
+[125/290] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp
+[126/290] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp
+[127/290] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp
+[128/290] Building CXX object CMakeFiles/mr_identity_tests.dir/mr_identity_tests_autogen/mocs_compilation.cpp.o
+[129/290] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp
+[130/290] Building CXX object CMakeFiles/nexvary_mr.dir/nexvary_mr_autogen/mocs_compilation.cpp.o
+[131/290] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+[132/290] Building CXX object CMakeFiles/mr_identity_tests.dir/cpp/tests/identity_tests.cpp.o
+[133/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_qmake_NexvaryMR.cpp.o
+[134/290] Building CXX object CMakeFiles/nexvary_mr.dir/nexvary_mr_qmltyperegistrations.cpp.o
+[135/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp.o
+[136/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp.o
+[137/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp.o
+[138/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp.o
+[139/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp.o
+[140/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp.o
+[141/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp.o
+[142/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp.o
+[143/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp.o
+[144/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp.o
+[145/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp.o
+[146/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp.o
+[147/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp.o
+[148/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp.o
+[149/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp.o
+[150/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp.o
+[151/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp.o
+[152/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp.o
+[153/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp.o
+[154/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp.o
+[155/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp.o
+[156/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp.o
+[157/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp.o
+[158/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp.o
+[159/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp.o
+[160/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp.o
+[161/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp.o
+[162/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp.o
+[163/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp.o
+[164/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp.o
+[165/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp.o
+[166/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp.o
+[167/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp.o
+[168/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp.o
+[169/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp.o
+[170/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp.o
+[171/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp.o
+[172/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp.o
+[173/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp.o
+[174/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp.o
+[175/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp.o
+[176/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp.o
+[177/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp.o
+[178/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp.o
+[179/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp.o
+[180/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp.o
+[181/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp.o
+[182/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp.o
+[183/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp.o
+[184/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp.o
+[185/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp.o
+[186/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp.o
+[187/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp.o
+[188/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp.o
+[189/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[190/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_samples.cpp.o
+[191/290] Linking CXX executable mr_identity_tests
+[192/290] Automatic MOC and UIC for target mr_law_workspace_tests
+[193/290] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/mr_law_workspace_tests_autogen/mocs_compilation.cpp.o
+[194/290] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp.o
+[195/290] Linking CXX executable nexvary_mr
+[196/290] Automatic MOC and UIC for target mr_research_tests
+[197/290] Building CXX object CMakeFiles/mr_research_tests.dir/mr_research_tests_autogen/mocs_compilation.cpp.o
+[198/290] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+[199/290] Linking CXX executable mr_law_workspace_tests
+[200/290] Automatic MOC and UIC for target mr_intelligence_tests
+[201/290] Building CXX object CMakeFiles/mr_intelligence_tests.dir/mr_intelligence_tests_autogen/mocs_compilation.cpp.o
+[202/290] Building CXX object CMakeFiles/mr_research_tests.dir/cpp/tests/research_tests.cpp.o
+[203/290] Linking CXX executable mr_research_tests
+[204/290] Automatic MOC and UIC for target mr_connection_tests
+[205/290] Building CXX object CMakeFiles/mr_connection_tests.dir/mr_connection_tests_autogen/mocs_compilation.cpp.o
+[206/290] Building CXX object CMakeFiles/mr_intelligence_tests.dir/cpp/tests/intelligence_tests.cpp.o
+[207/290] Linking CXX executable mr_intelligence_tests
+[208/290] Automatic MOC and UIC for target mr_workshop_tests
+[209/290] Building CXX object CMakeFiles/mr_workshop_tests.dir/mr_workshop_tests_autogen/mocs_compilation.cpp.o
+[210/290] Building CXX object CMakeFiles/mr_connection_tests.dir/cpp/tests/connection_tests.cpp.o
+[211/290] Linking CXX executable mr_connection_tests
+[212/290] Automatic MOC and UIC for target mr_barcode_tests
+[213/290] Building CXX object CMakeFiles/mr_barcode_tests.dir/mr_barcode_tests_autogen/mocs_compilation.cpp.o
+[214/290] Building CXX object CMakeFiles/mr_workshop_tests.dir/cpp/tests/workshop_tests.cpp.o
+[215/290] Linking CXX executable mr_workshop_tests
+[216/290] Automatic MOC and UIC for target mr_center_tests
+[217/290] Building CXX object CMakeFiles/mr_center_tests.dir/mr_center_tests_autogen/mocs_compilation.cpp.o
+[218/290] Building CXX object CMakeFiles/mr_barcode_tests.dir/cpp/tests/barcode_tests.cpp.o
+[219/290] Linking CXX executable mr_barcode_tests
+[220/290] Automatic MOC and UIC for target mr_cloud_tests
+[221/290] Building CXX object CMakeFiles/mr_cloud_tests.dir/mr_cloud_tests_autogen/mocs_compilation.cpp.o
+[222/290] Building CXX object CMakeFiles/mr_center_tests.dir/cpp/tests/center_tests.cpp.o
+[223/290] Linking CXX executable mr_center_tests
+[224/290] Automatic MOC and UIC for target mr_security_tests
+[225/290] Building CXX object CMakeFiles/mr_security_tests.dir/mr_security_tests_autogen/mocs_compilation.cpp.o
+[226/290] Building CXX object CMakeFiles/mr_cloud_tests.dir/cpp/tests/cloud_tests.cpp.o
+[227/290] Linking CXX executable mr_cloud_tests
+[228/290] Automatic MOC and UIC for target mr_catalog_tests
+[229/290] Building CXX object CMakeFiles/mr_catalog_tests.dir/mr_catalog_tests_autogen/mocs_compilation.cpp.o
+[230/290] Building CXX object CMakeFiles/mr_security_tests.dir/cpp/tests/security_tests.cpp.o
+[231/290] Linking CXX executable mr_security_tests
+[232/290] Automatic MOC and UIC for target mr_tool_tests
+[233/290] Building CXX object CMakeFiles/mr_tool_tests.dir/mr_tool_tests_autogen/mocs_compilation.cpp.o
+[234/290] Building CXX object CMakeFiles/mr_catalog_tests.dir/cpp/tests/catalog_tests.cpp.o
+[235/290] Linking CXX executable mr_catalog_tests
+[236/290] Automatic MOC and UIC for target mr_service_tests
+[237/290] Building CXX object CMakeFiles/mr_service_tests.dir/mr_service_tests_autogen/mocs_compilation.cpp.o
+[238/290] Building CXX object CMakeFiles/mr_tool_tests.dir/cpp/tests/tool_tests.cpp.o
+[239/290] Linking CXX executable mr_tool_tests
+[240/290] Automatic MOC and UIC for target mr_mirror_tests
+[241/290] Building CXX object CMakeFiles/mr_mirror_tests.dir/mr_mirror_tests_autogen/mocs_compilation.cpp.o
+[242/290] Building CXX object CMakeFiles/mr_service_tests.dir/cpp/tests/service_tests.cpp.o
+[243/290] Linking CXX executable mr_service_tests
+[244/290] Automatic MOC and UIC for target mr_compatibility_tests
+[245/290] Building CXX object CMakeFiles/mr_compatibility_tests.dir/mr_compatibility_tests_autogen/mocs_compilation.cpp.o
+[246/290] Building CXX object CMakeFiles/mr_mirror_tests.dir/cpp/tests/mirror_tests.cpp.o
+[247/290] Linking CXX executable mr_mirror_tests
+[248/290] Automatic MOC and UIC for target mr_board_tests
+[249/290] Building CXX object CMakeFiles/mr_board_tests.dir/mr_board_tests_autogen/mocs_compilation.cpp.o
+[250/290] Building CXX object CMakeFiles/mr_board_tests.dir/cpp/tests/board_tests.cpp.o
+[251/290] Building CXX object CMakeFiles/mr_compatibility_tests.dir/cpp/tests/compatibility_tests.cpp.o
+[252/290] Linking CXX executable mr_board_tests
+[253/290] Automatic MOC and UIC for target mr_firmware_tests
+[254/290] Building CXX object CMakeFiles/mr_firmware_tests.dir/mr_firmware_tests_autogen/mocs_compilation.cpp.o
+[255/290] Linking CXX executable mr_compatibility_tests
+[256/290] Automatic MOC and UIC for target mr_avb_tests
+[257/290] Building CXX object CMakeFiles/mr_avb_tests.dir/mr_avb_tests_autogen/mocs_compilation.cpp.o
+[258/290] Building CXX object CMakeFiles/mr_avb_tests.dir/cpp/tests/avb_tests.cpp.o
+[259/290] Linking CXX executable mr_avb_tests
+[260/290] Automatic MOC and UIC for target mr_pcap_tests
+[261/290] Building CXX object CMakeFiles/mr_pcap_tests.dir/mr_pcap_tests_autogen/mocs_compilation.cpp.o
+[262/290] Building CXX object CMakeFiles/mr_firmware_tests.dir/cpp/tests/firmware_tests.cpp.o
+[263/290] Linking CXX executable mr_firmware_tests
+[264/290] Automatic MOC and UIC for target mr_exif_tests
+[265/290] Building CXX object CMakeFiles/mr_exif_tests.dir/mr_exif_tests_autogen/mocs_compilation.cpp.o
+[266/290] Building CXX object CMakeFiles/mr_pcap_tests.dir/cpp/tests/pcap_tests.cpp.o
+[267/290] Linking CXX executable mr_pcap_tests
+[268/290] Automatic MOC and UIC for target mr_recovery_tests
+[269/290] Building CXX object CMakeFiles/mr_recovery_tests.dir/mr_recovery_tests_autogen/mocs_compilation.cpp.o
+[270/290] Building CXX object CMakeFiles/mr_exif_tests.dir/cpp/tests/exif_tests.cpp.o
+[271/290] Linking CXX executable mr_exif_tests
+[272/290] Automatic MOC and UIC for target mr_recovery_image_tests
+[273/290] Building CXX object CMakeFiles/mr_recovery_image_tests.dir/mr_recovery_image_tests_autogen/mocs_compilation.cpp.o
+[274/290] Building CXX object CMakeFiles/mr_recovery_image_tests.dir/cpp/tests/recovery_image_tests.cpp.o
+[275/290] Linking CXX executable mr_recovery_image_tests
+[276/290] Automatic MOC and UIC for target mr_forensic_tests
+[277/290] Building CXX object CMakeFiles/mr_forensic_tests.dir/mr_forensic_tests_autogen/mocs_compilation.cpp.o
+[278/290] Building CXX object CMakeFiles/mr_recovery_tests.dir/cpp/tests/recovery_tests.cpp.o
+[279/290] Linking CXX executable mr_recovery_tests
+[280/290] Automatic MOC and UIC for target mr_tsk_tests
+[281/290] Building CXX object CMakeFiles/mr_tsk_tests.dir/mr_tsk_tests_autogen/mocs_compilation.cpp.o
+[282/290] Building CXX object CMakeFiles/mr_forensic_tests.dir/cpp/tests/forensic_tests.cpp.o
+[283/290] Linking CXX executable mr_forensic_tests
+[284/290] Automatic MOC and UIC for target mr_ui_tests
+[285/290] Building CXX object CMakeFiles/mr_tsk_tests.dir/cpp/tests/tsk_tests.cpp.o
+[286/290] Building CXX object CMakeFiles/mr_ui_tests.dir/mr_ui_tests_autogen/mocs_compilation.cpp.o
+[287/290] Linking CXX executable mr_tsk_tests
+[288/290] Building CXX object CMakeFiles/mr_ui_tests.dir/build/.rcc/qrc_samples.cpp.o
+[289/290] Building CXX object CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o
+[290/290] Linking CXX executable mr_ui_tests

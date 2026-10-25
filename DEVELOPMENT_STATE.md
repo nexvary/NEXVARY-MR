@@ -1,3 +1,77 @@
+# Government operations checkpoint — 2026-10-25
+
+Active branch: `feature/government-operations`.
+Base: PR #11 / `8fb9b38f771da91c60f3b85a2084868b16fe95d4`.
+This directive makes Government/Law Enforcement the primary workspace, Research
+second and repair a preserved shared-engine workspace. Guardian is independent;
+no Guardian code or repository is changed. Main is unchanged.
+
+## Implemented this batch
+
+- Default government AR/EN navigation with twelve sections, repair workspace switch,
+  distinct evidence/custody/audit views, stable legacy page APIs and history/back.
+- Native independent ExportEvidence/AnalyzeEvidence permissions plus existing
+  authenticated local identities and case grants; revoked grants fail before export.
+- Hash-verified, bounded working-copy packages with manifest SHA-256 retained in
+  protected case history/audit. No original mutation, overwrite or file execution.
+- Offline standard-library verifier, native/Python interoperability gate, corruption,
+  path/schema, stale-writer, closed/archive and permission regression coverage.
+- Case-bound PCAP/EXIF analysis through existing parsers, deterministic report hashes,
+  protected retained provenance and PDF inclusion. The government analysis route no
+  longer opens the old repair/recovery case collection. No legacy parser expansion.
+- Device assessment provenance fields and unknown/reported/risk boundaries; no
+  inferred key availability or physical-device extraction claims.
+- Windows packages include the verifier and government operating guide. Native CI
+  extends sanitizer coverage to the case workspace and government UI to DPI checks.
+
+Main changed paths: `cpp/src/LawCaseBridge.*`, `LawCaseStore.*`,
+`DeviceAssessment.hpp`, `cpp/include/nexvary/LawPermissions.hpp`,
+`qml/Main.qml`, `AppShell.qml`, `GovernmentAnalysisPage.qml`, Law evidence/custody
+views, native identity/case/UI tests, independent verifier/interop/Python tests,
+CMake, Windows packaging and native CI sanitizer/DPI gates.
+
+Changed paths and limitations are documented in `docs/GOVERNMENT_OPERATIONS.md`;
+remote branch/PR audit and raw test evidence are under
+`evidence/government-2026-10-25/`. The implementation commit containing this top
+record is the source checkpoint; exact hosted SHA/results follow after publication.
+
+## Current validation
+
+Native Release warnings-as-errors build. Case suite 13 passed; identity 11 passed;
+Qt Quick 42 passed; root Python 35 passed; research catalog validation passed.
+Initial full CTest: 38/39 passed; packaged GUI smoke found an omitted resource entry
+for the new analysis page. CMake now includes that page. The corrected build passed all five focused interop/UI/DPI/smoke groups.
+Presentation polish passed four UI/DPI/smoke groups again, and the final government
+workflow passed its focused runtime check. Initial XML is retained, never reported
+as a successful complete run. Native/Python package interoperability passed.
+The final idle-government-shell visibility change passed its focused government UI
+test and a fresh compiled application smoke (1/1). Local optional external-tool and
+production-disabled laboratory subcases are listed in `local-skips.txt`; they are
+not represented as executed hardware/integration tests.
+Hosted exact-source Windows production/laboratory, Linux both profiles and sanitizer
+checks must pass before presenting new Windows packages. Earlier baseline Windows
+artifacts do not contain this batch.
+
+## Remaining implementation and acceptance
+
+Next: protected bounded case backup/restore; retention/archive/deletion policy;
+document-specific attachments; authorized Android backup/SQLite analysis adapters;
+case indexing/searchable analysis timelines and relationship views. Existing synthetic
+training/research remain present; no exact-device support is promoted by synthetic data.
+
+External acceptance: independent Windows 10/11 clean hosts, owned exact-firmware
+phones, institution-verified identities/SSO/people, external key/time custody,
+trusted-publisher signing, deployment recovery/privacy review and release sign-off.
+Local account signatures and hosted Windows Server tests do not satisfy those gates.
+This remains a development evaluation increment, not a final field-certified release.
+
+Resume: fetch this branch, inspect actual HEAD/PR/CI and this evidence, then follow
+`docs/GOVERNMENT_OPERATIONS.md`. Configure the existing pinned Qt/libsodium build;
+run CTest and root Python. Preserve original protected cases and the separate identity
+registry; exported unencrypted working copies require an approved destination ACL.
+
+---
+
 # Current validation checkpoint — local identities and signed reviews
 
 Active branch: `feature/law-enforcement-case-foundation`; PR #11.

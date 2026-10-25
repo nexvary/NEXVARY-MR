@@ -9,6 +9,7 @@ Rectangle {
  color:app.design.surface;radius:12;border.color:app.design.border
  ColumnLayout {
   anchors.fill:parent;anchors.margins:8;spacing:8
+  ActionButton {objectName:"workspaceMode";text:side.app.governmentMode?side.app.trx("الصيانة","Repair"):side.app.trx("الحكومة","Government");Layout.fillWidth:true;implicitWidth:48;implicitHeight:32;onClicked:side.app.setWorkspace(!side.app.governmentMode)}
   ActionButton {objectName:"collapseSidebar";text:side.collapsed?side.app.trx("فتح","Expand"):side.app.trx("طي القائمة","Collapse navigation");Layout.fillWidth:true;implicitWidth:48;implicitHeight:32;onClicked:side.collapsed=!side.collapsed}
   ScrollView {
    id:scroll;objectName:"sidebarScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true

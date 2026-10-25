@@ -23,9 +23,13 @@ public:
  bool verifyAudit(const QString &id);
  QString addEvidence(const QString &id,qint64 revision,const QString &device,const QString &path,const QString &description,const QString &custodian,const QString &actor);
  bool transfer(const QString &id,qint64 revision,const QString &evidence,const QString &from,const QString &to,const QString &reason,const QString &actor);
+ QByteArray readEvidence(const QString &id,const QString &evidence);
+ QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor);
  bool verifyEvidence(const QString &id,const QString &evidence);
+ QVariantMap exportWorkingCopy(const QString &id,qint64 revision,const QString &evidence,const QString &directory,const QString &purpose,const QString &actor);
 private:
  bool fail(const QString &message);
+ QByteArray evidenceBytes(const QString &id,const QVariantMap &item);
  bool save(QVariantMap record,qint64 expected);
  bool mutate(const QString &id,qint64 revision,const QString &event,const QString &actor,const std::function<bool(QVariantMap&)> &change);
  void append(QVariantMap &record,const QString &event,const QString &actor);

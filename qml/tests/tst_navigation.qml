@@ -10,8 +10,36 @@ TestCase {
  width:1536;height:980
  MR.Main {id:app}
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
- function init(){findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
+ function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
+ function test_governmentNavigationAndWorkingCopies(){
+  app.setWorkspace(true);compare(app.currentPage,12);compare(app.sections.length,12)
+  const law=findChild(app,"lawEnforcementWorkspace")
+  for(const arabic of [true,false]){
+   app.ar=arabic;app.width=1366;app.height=768
+   for(let i=0;i<app.sections.length;i++){
+    const button=app.sectionButton(i);reveal(findChild(app,"sidebarScroll"),button);mouseClick(button);compare(app.activeSection,i);compare(app.currentPage,app.sections[i].page)
+    if(app.sections[i].law!==undefined)compare(law.section,app.sections[i].law)
+    if(app.sections[i].evidence!==undefined)compare(law.evidenceView,app.sections[i].evidence)
+    verify(renderedFrame())
+   }
+   app.navigateSection(0);app.width=1536;app.height=980;reveal(findChild(app,"sidebarScroll"),app.sectionButton(0));verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-"+(arabic?"ar":"en")+".png"))
+  }
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-EXPORT-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic fixture",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic evidence only"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic fixture",custodian:"Synthetic custodian"});verify(dev!=="")
+  verify(lawCaseBridge.addEvidence(dev,syntheticEvidencePath,"Synthetic copy UI","Synthetic custodian",true)!=="")
+  app.navigateSection(4);verify(renderedFrame());const evidencePage=findChild(app,"lawEvidenceWorkspace");verify(evidencePage!==null)
+  findChild(app,"lawCopyPurpose").text="Independent synthetic analysis";findChild(app,"lawCopyDirectory").text=syntheticWorkingCopyPath
+  const consent=findChild(app,"lawCopyConsent"),button=findChild(app,"lawExportWorkingCopy");compare(button.enabled,false);consent.checked=true;compare(button.enabled,true)
+  reveal(evidencePage,button);reveal(findChild(app,"lawAuditScroll"),button);verify(renderedFrame());mouseClick(button)
+  verify(!!evidencePage.lastExport.manifestSha256,lawCaseBridge.error);compare(findChild(app,"lawCopyManifestDigest").text.length,64);compare(consent.checked,false)
+  app.navigateSection(8);compare(law.section,9);app.goBack();compare(law.section,6)
+  const capture=lawCaseBridge.addEvidence(dev,syntheticCapturePath,"Synthetic PCAP UI","Synthetic custodian",true);verify(capture!=="",lawCaseBridge.error)
+  app.navigateSection(6);compare(app.currentPage,14);const selector=findChild(app,"governmentAnalysisEvidence");selector.currentIndex=lawCaseBridge.activeCase.evidence.length-1
+  verify(renderedFrame());mouseClick(findChild(app,"governmentAnalyzeEvidence"));verify(lawCaseBridge.activeCase.analyses.length>0,lawCaseBridge.error);verify(findChild(app,"governmentAnalysisResult").text.length>0)
+  for(const arabic of [true,false]){app.ar=arabic;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-analysis-"+(arabic?"ar":"en")+".png"))}
+  app.setWorkspace(false);compare(app.currentPage,0)
+ }
  function test_lawCaseAndResearchWorkspaces(){
   verify(lawCaseBridge.ready,lawCaseBridge.error);verify(researchBridge.ready,researchBridge.error)
   app.navigateSection(12);compare(app.currentPage,12);verify(renderedFrame())

@@ -2,6 +2,9 @@
 #include "LawCaseStore.hpp"
 #include "IdentityService.hpp"
 #include "LawTraining.hpp"
+#include "DeviceAssessment.hpp"
+#include "PcapSummary.hpp"
+#include "ExifSummary.hpp"
 #include "ToolBridge.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryFile.hpp"
@@ -42,7 +45,7 @@ QString LawCaseBridge::protection()const {
 QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId(currentRole()).data(),static_cast<qsizetype>(nexvary::law::roleId(currentRole()).size()));}
 QVariantMap LawCaseBridge::permissions()const {
  using A=nexvary::law::Action;QVariantMap p;
- for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
+ for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
   p.insert(entry.first,nexvary::law::allows(currentRole(),entry.second));
  p.insert("executeDevice",false);p.insert("enterpriseRoleProvisioningReady",false);return p;
 }
@@ -131,6 +134,7 @@ QVariantList LawCaseBridge::assessDeviceAccess()const {
  QVariantList rows;
  if(!nexvary::law::allows(currentRole(),nexvary::law::Action::ReadDevice))return rows;
  const auto report=tools_?tools_->deviceIntelligence():QVariantMap();
+ rows=nexvary::law::assessmentFields(report);
  auto add=[&](const QString &id,const QString &ar,const QString &en,const QString &state,const QString &fact){rows.append(QVariantMap{{"id",id},{"ar",ar},{"en",en},{"state",state},{"fact",fact},{"confidence","device-reported-or-unknown"},{"executionApproved",false}});};
  add("frp","حالة FRP","FRP state","Research Required","Not established by the allowlisted property read; no account bypass offered.");
  add("screen-lock","قفل الشاشة وPIN","Screen lock and PIN","Unsupported","No PIN removal, password recovery or protected-device extraction operation is implemented.");
@@ -151,10 +155,31 @@ bool LawCaseBridge::transferCustody(const QString &evidence,const QString &from,
  if(!permit(nexvary::law::Action::TransferCustody)||active_.isEmpty())return false;
  const auto id=active_.value("id").toString();if(!store_->transfer(id,active_.value("revision").toLongLong(),evidence,from,to,reason,actor()))return fail(store_->error());return refresh(id);
 }
+QVariantMap LawCaseBridge::analyzeEvidence(const QString &evidence,const QString &parser) {
+ if(!permit(nexvary::law::Action::AnalyzeEvidence)||active_.isEmpty())return {};
+ if(parser!="classic-pcap"&&parser!="jpeg-exif"){fail("Choose an implemented classic-PCAP or JPEG-EXIF summary parser.");return {};}
+ const auto id=active_.value("id").toString();const auto source=store_->readEvidence(id,evidence);if(source.isEmpty()){fail(store_->error());return {};}
+ if(source.size()>8*1024*1024){fail("Case analysis accepts sources up to 8 MiB.");return {};}
+ QVariantMap report;QString parseError;
+ if(parser=="classic-pcap"){const auto result=mr::forensic::summarizeCapture(source);report=result.report.toVariantMap();parseError=result.error;}
+ else {const auto result=mr::forensic::summarizeExif(source);report=result.report.toVariantMap();parseError=result.error;}
+ if(!parseError.isEmpty()||report.isEmpty()){fail(QStringLiteral("Analysis rejected source: ")+parseError);return {};}
+ const auto result=store_->recordAnalysis(id,active_.value("revision").toLongLong(),evidence,parser,report,actor());
+ if(result.isEmpty()){fail(store_->error());return {};}
+ return refresh(id)?result:QVariantMap();
+}
 bool LawCaseBridge::verifyEvidence(const QString &evidence) {
  if(!permit(nexvary::law::Action::ReadDevice)||active_.isEmpty())return false;
  if(!store_->verifyEvidence(active_.value("id").toString(),evidence))return fail(store_->error());
  error_.clear();emit changed();return true;
+}
+QVariantMap LawCaseBridge::exportWorkingCopy(const QString &evidence,const QString &directory,const QString &purpose,bool consent) {
+ if(!consent){fail("Explicit consent is required to export unencrypted evidence.");return {};}
+ if(!permit(nexvary::law::Action::ExportEvidence)||active_.isEmpty())return {};
+ const auto id=active_.value("id").toString();
+ const auto result=store_->exportWorkingCopy(id,active_.value("revision").toLongLong(),evidence,directory,purpose,actor());
+ if(result.isEmpty()){fail(store_->error());return {};}
+ return refresh(id)?result:QVariantMap();
 }
 bool LawCaseBridge::verifyAudit() {
  if(!permit(nexvary::law::Action::ReadAudit)||active_.isEmpty())return false;
@@ -231,6 +256,8 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
  html+=section("devices",tr(QStringLiteral("الأجهزة المسجلة"),"Registered devices"));
  html+=section("evidence",tr(QStringLiteral("الأدلة وسلامة النسخ المحفوظة"),"Evidence and stored-copy integrity"));
  html+=section("custody",tr(QStringLiteral("إقرارات سلسلة الحيازة"),"Declared chain of custody"));
+ html+=section("workingCopies",tr(QStringLiteral("نسخ العمل المصدرة"),"Exported working copies"));
+ html+=section("analyses",tr(QStringLiteral("تحليلات الأدلة"),"Evidence analyses"));
  html+=section("audit",tr(QStringLiteral("سجل التدقيق المترابط"),"Linked audit trail"));
  html+=QStringLiteral("<p>%1</p></body></html>").arg(tr(QStringLiteral("ترابط السجل وحماية البيانات لا يثبتان التسليم المادي، أو توقيعًا مستقلًا، أو مقاومة استعادة نسخة قديمة من قاعدة البيانات. هذا التقرير لا يثبت استخلاص محتوى هاتف محمي."),"Linked protected records do not prove physical handover, independent signatures or resistance to whole-database rollback. This report does not establish acquisition of protected-phone content."));
  {QPdfWriter writer(&output);writer.setTitle(QStringLiteral("NEXVARY case review"));writer.setCreator(QStringLiteral("NEXVARY-MR"));QTextDocument document;document.setDefaultFont(QFont(QStringLiteral("Segoe UI"),10));document.setHtml(html);document.print(&writer);}

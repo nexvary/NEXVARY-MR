@@ -22,7 +22,7 @@ Item {
      Label {text:"0.4.0 · "+shell.app.trx("تطوير","DEVELOPMENT");color:shell.app.design.muted;font.pixelSize:10}
     }
     Item {id:workspace;objectName:"workstationWorkspace";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;clip:true}
-    OperationProgress {app:shell.app;Layout.fillWidth:true}
+    OperationProgress {visible:!shell.app.governmentMode||toolBridge.busy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy;app:shell.app;Layout.fillWidth:true}
    }
   }
   Label {text:shell.app.trx("NEXVARY  •  محلي  •  أجهزة مصرح بها فقط","NEXVARY  •  LOCAL WORKSTATION  •  AUTHORIZED DEVICES ONLY");Layout.fillWidth:true;Layout.preferredHeight:24;horizontalAlignment:Text.AlignHCenter;color:shell.app.design.muted;font.pixelSize:10}

@@ -1,0 +1,58 @@
+[
+  {
+    "branch": "feature/law-enforcement-case-foundation",
+    "sha": "8fb9b38f771da91c60f3b85a2084868b16fe95d4",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 0,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": true
+  },
+  {
+    "branch": "feature/advanced-mobile-research-program",
+    "sha": "372b9636fce50a66e64360eb315f12ecdfff8c45",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 18,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": false
+  },
+  {
+    "branch": "feature/npse-shared-services",
+    "sha": "a7eb9f8bce0656a4101dd6907d72452537490053",
+    "alreadyAncestorOfBase": false,
+    "baseOnlyCommits": 20,
+    "branchOnlyCommits": 9,
+    "developmentStatePresent": true
+  },
+  {
+    "branch": "feature/usb-doctor-intelligence",
+    "sha": "9a4392a37b85186032ded8cdbe254b2064d8ed9b",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 20,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": true
+  },
+  {
+    "branch": "feature/professional-workstation-ui",
+    "sha": "2b0a83a28c1ca6b11db85c6753da935a150e9fd0",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 22,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": true
+  },
+  {
+    "branch": "integration/gate-1-stages-08-60",
+    "sha": "7c928b0d5cc3842964dcbe9f207971c09af588b5",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 24,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": false
+  },
+  {
+    "branch": "main",
+    "sha": "7446b17d0d83d4e7d9da3c8d4bbdd7dae6d4de17",
+    "alreadyAncestorOfBase": true,
+    "baseOnlyCommits": 147,
+    "branchOnlyCommits": 0,
+    "developmentStatePresent": false
+  }
+]

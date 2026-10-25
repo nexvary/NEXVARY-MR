@@ -7,6 +7,7 @@ Item {
  objectName:"lawEnforcementWorkspace"
  property var app
  property int section:0
+ property int evidenceView:1
  property bool auditVerified:false
  property bool anchorVerified:false
  readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب","الحسابات والصلاحيات"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory","Accounts and permissions"]
@@ -47,7 +48,7 @@ Item {
      GridLayout {Layout.fillWidth:true;columns:width>950?3:2;columnSpacing:12;rowSpacing:12
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("الأجهزة المرتبطة","Case devices");iconName:"phone";statusText:lawCaseBridge.devices.length+app.trx(" جهاز"," device(s)");description:app.trx("سجّل المشاهدات والمسؤول والاستلام دون تغيير الهاتف.","Record observations, custodian and receipt without changing the phone.");actionText:app.trx("إدارة الأجهزة","Manage devices");onTriggered:page.section=4}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("السند والنطاق","Authority & scope");iconName:"document_lock";statusText:app.trx("إقرار للمراجعة","Declaration for review");description:app.trx("بيانات الإذن والجهة والمدة؛ لا تصادق المنصة على الصلاحية القانونية.","Authority, issuer and dates; the platform does not authenticate legal entitlement.");actionText:app.trx("مراجعة البيانات","Review declaration");onTriggered:page.section=5}
-      ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("سجل التدقيق","Audit trail");iconName:"history";statusText:lawCaseBridge.audit.length+app.trx(" حدث"," event(s)");description:app.trx("راجع الأحداث المحمية وترابطها؛ لا يعني ذلك توقيعًا مستقلًا أو تسليمًا ماديًا.","Inspect protected linked events; not independent signatures or physical handover proof.");actionText:app.trx("عرض التدقيق","Review audit");onTriggered:page.section=6}
+      ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("سجل التدقيق","Audit trail");iconName:"history";statusText:lawCaseBridge.audit.length+app.trx(" حدث"," event(s)");description:app.trx("راجع الأحداث المحمية وترابطها؛ لا يعني ذلك توقيعًا مستقلًا أو تسليمًا ماديًا.","Inspect protected linked events; not independent signatures or physical handover proof.");actionText:app.trx("عرض التدقيق","Review audit");onTriggered:{page.evidenceView=3;page.section=6}}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("تقييم الوصول","Access assessment");iconName:"shield_checkmark";description:app.trx("حدود الواجهات والتشفير والقفل، دون استغلال الحماية.","Interface, encryption and lock limits without protection exploitation.");statusText:app.trx("تقييم فقط","Assessment only");actionText:app.trx("عرض القيود والمسارات","Review scope & constraints");onTriggered:page.section=7}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("التقارير","Reports");iconName:"document_text";description:app.trx("ملخص PDF قابل للمراجعة؛ تصدير غير مشفر بموافقة صريحة.","Reviewable PDF summary; plaintext export requires explicit approval.");statusText:app.trx("موافقة مطلوبة","Consent required");actionText:app.trx("فتح التقارير","Open reports");onTriggered:page.section=8}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("المختبر التدريبي","Training laboratory");iconName:"book_open_lightbulb";description:app.trx("قرارات وتشخيصات افتراضية مع تقييم وتفسير؛ دون أجهزة حقيقية.","Virtual decisions with scoring and explanations; no real devices.");statusText:app.trx("اصطناعي فقط","Synthetic only");actionText:app.trx("بدء التدريب","Start training");onTriggered:page.section=9}
@@ -67,9 +68,14 @@ Item {
      ActionButton {text:app.trx("تحرير الإقرار","Edit declaration");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.edit;onClicked:page.editCase()}
     }
    }
-   ScrollView {id:auditScroll;contentWidth:availableWidth;clip:true
+   ScrollView {id:auditScroll;objectName:"lawAuditScroll";contentWidth:availableWidth;clip:true
     ColumnLayout {width:auditScroll.availableWidth;spacing:12
-     Panel {Layout.fillWidth:true;title:app.trx("سلامة سجل القضية","Case audit integrity");iconName:"history"
+     RowLayout {Layout.fillWidth:true
+      ActionButton {text:app.trx("الأدلة","Evidence");onClicked:page.evidenceView=1}
+      ActionButton {text:app.trx("سلسلة الحيازة","Chain of custody");onClicked:page.evidenceView=2}
+      ActionButton {text:app.trx("سجل التدقيق","Audit trail");onClicked:page.evidenceView=3}
+     }
+     Panel {visible:page.evidenceView===3;Layout.fillWidth:true;title:app.trx("سلامة سجل القضية","Case audit integrity");iconName:"history"
       ActionButton {objectName:"lawVerifyAudit";text:app.trx("التحقق من ترابط السجل","Verify linked audit");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.audit;onClicked:page.auditVerified=lawCaseBridge.verifyAudit()}
       Label {objectName:"lawAuditResult";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:page.auditVerified?app.trx("نجح تحقق السجل المحلي. لا يثبت تسليمًا ماديًا أو مقاومة استرجاع نسخة قاعدة قديمة.","Local linked-record verification passed. It does not prove physical handover or resistance to whole-database rollback."):app.trx("لم يتم التحقق في هذا العرض بعد.","Not verified in this view yet.")}
       CheckBox {id:anchorConsent;text:app.trx("أوافق على تصدير مرجع توقيع محلي للاحتفاظ به منفصلًا","Approve local signed anchor export for separate retention")}
@@ -80,7 +86,7 @@ Item {
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:page.anchorVerified?app.trx("تطابق السجل مع المرجع المحلي المحفوظ. لا يثبت توقيتًا خارجيًا أو تسليمًا ماديًا.","History matches the retained local anchor. This does not establish external time or physical handover."):app.trx("لم يُتحقق من مرجع منفصل بعد. احتفظ به خارج قاعدة القضية؛ المرجع الأقدم لا يكشف حذف أحداث أحدث منه.","No separate anchor verified. Retain anchors outside the case database; an older anchor cannot detect removal of events newer than itself.")}
       Repeater {model:lawCaseBridge.audit;delegate:Label {required property var modelData;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(modelData)}}
      }
-     LawEvidencePage {Layout.fillWidth:true;Layout.preferredHeight:900;app:page.app}
+     LawEvidencePage {visible:page.evidenceView!==3;custodyOnly:page.evidenceView===2;Layout.fillWidth:true;Layout.preferredHeight:900;app:page.app}
     }
    }
    ScrollView {id:accessScroll;contentWidth:availableWidth;clip:true
@@ -92,6 +98,7 @@ Item {
    }
    ScrollView {id:reportsScroll;contentWidth:availableWidth;clip:true
     ColumnLayout {width:reportsScroll.availableWidth;spacing:12
+     ActionButton {text:app.trx("فتح سجل التدقيق","Open audit trail");onClicked:{page.evidenceView=3;page.section=6}}
      Panel {title:app.trx("تقرير مراجعة القضية PDF","Case review PDF");iconName:"document_text";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("يتضمن الإقرار القانوني والأجهزة المسجلة وسجل التدقيق وحدود النموذج. لا يمثل تقرير استخلاص كاملًا أو اعتمادًا قضائيًا.","Contains recorded authority, registered devices, audit and prototype limits. Not a complete acquisition report or judicial accreditation.")}
       CheckBox {id:caseExportConsent;objectName:"lawReportConsent";text:app.trx("أوافق على تصدير بيانات القضية غير مشفرة","Approve plaintext case-data export")}

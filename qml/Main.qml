@@ -5,7 +5,7 @@ ApplicationWindow {
  id:window
  objectName:"mainWindow"
  width:1536;height:980;minimumWidth:840;minimumHeight:480;visible:true
- title:toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Read-only device workstation"
+ title:toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition"
  property bool ar:true
  property bool darkTheme:true
  readonly property QtObject design:tokens
@@ -15,7 +15,8 @@ ApplicationWindow {
  color:design.background
  background:Rectangle {color:window.design.background;gradient:Gradient {GradientStop {position:0;color:window.darkTheme?"#171D25":"#F7FAFF"}GradientStop {position:0.4;color:window.design.background}GradientStop {position:1;color:window.darkTheme?"#10141A":"#E5ECF5"}}}
  property bool showDevicePanel:false
- property int currentPage:0
+ property bool governmentMode:true
+ property int currentPage:12
  property int activeSection:0
  property var pageHistory:[]
  property int previousPage:0
@@ -27,7 +28,7 @@ ApplicationWindow {
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
  // Legacy page numbers stay stable for native smoke consumers and page APIs.
  property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة الورشة","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Workshop CRM","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
- readonly property var sections:[
+ readonly property var professionalSections:[
   {ar:"لوحة المتابعة",en:"Dashboard",icon:"home",page:0},
   {ar:"مدير الأجهزة",en:"Device Manager",icon:"phone",page:1},
   {ar:"استوديو الصيانة",en:"Repair Studio",icon:"toolbox",page:2},
@@ -42,12 +43,28 @@ ApplicationWindow {
   {ar:"المساعدة وعن البرنامج",en:"Help & About",icon:"question_circle",page:11},
   {ar:"إنفاذ القانون",en:"Law Enforcement",icon:"document_lock",page:12}
  ]
+ readonly property var governmentSections:[
+  {ar:"لوحة التحكم الحكومية",en:"Government Dashboard",icon:"home",page:12,law:0},
+  {ar:"فتح قضية",en:"Open Case",icon:"document_lock",page:12,law:2},
+  {ar:"إدارة القضايا",en:"Case Management",icon:"clipboard_task",page:12,law:3},
+  {ar:"تقييم الأجهزة",en:"Device Assessment",icon:"phone",page:12,law:7},
+  {ar:"إدارة الأدلة",en:"Evidence Management",icon:"document_lock",page:12,law:6,evidence:1},
+  {ar:"سلسلة الحيازة",en:"Chain of Custody",icon:"history",page:12,law:6,evidence:2},
+  {ar:"التحليل الجنائي",en:"Forensic Analysis",icon:"shield_checkmark",page:14},
+  {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
+  {ar:"مختبر التدريب",en:"Training Laboratory",icon:"book_open_lightbulb",page:12,law:9},
+  {ar:"التقارير والتدقيق",en:"Reports & Audit",icon:"document_text",page:12,law:8},
+  {ar:"الإدارة",en:"Administration",icon:"settings",page:12,law:10},
+  {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
+ ]
+ readonly property var sections:governmentMode?governmentSections:professionalSections
+ function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
  readonly property string pageTitle:currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
- function sectionForPage(page){return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0}
- function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab}}
+ function sectionForPage(page){if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
+ function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{
   if(!goingBack&&currentPage!==previousPage){let history=pageHistory.slice();history.push(snapshot(previousPage));pageHistory=history.slice(-50)}
   previousPage=currentPage;activeSection=sectionForPage(currentPage)
@@ -57,6 +74,8 @@ ApplicationWindow {
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
   currentPage=entry.page
+  if(entry.law!==undefined)lawWorkspace.section=entry.law
+  if(entry.evidence!==undefined)lawWorkspace.evidenceView=entry.evidence
   if(entry.page===1)deviceHub.currentTab=entry.tab===undefined?0:entry.tab
   if(entry.page===2)diagnosticHub.currentTab=entry.tab===undefined?0:entry.tab
   activeSection=index
@@ -65,7 +84,7 @@ ApplicationWindow {
   if(pageHistory.length===0)return
   let history=pageHistory.slice();const target=history.pop();pageHistory=history;goingBack=true
   currentPage=typeof target==="number"?target:target.page
-  if(typeof target!=="number"){deviceHub.currentTab=target.deviceTab;diagnosticHub.currentTab=target.diagnosticTab;forensicHub.currentTab=target.forensicTab||0;workshopHub.currentTab=target.workshopTab||0;activeSection=target.section}
+  if(typeof target!=="number"){deviceHub.currentTab=target.deviceTab;diagnosticHub.currentTab=target.diagnosticTab;forensicHub.currentTab=target.forensicTab||0;workshopHub.currentTab=target.workshopTab||0;lawWorkspace.section=target.lawSection||0;lawWorkspace.evidenceView=target.evidenceView||1;activeSection=target.section}
   goingBack=false
  }
  function navigateServices(){currentPage=1;deviceHub.currentTab=1;activeSection=2}
@@ -121,8 +140,9 @@ ApplicationWindow {
     ForensicLabPage {id:forensicHub;app:window}
     ReportsPage {app:window}
     HelpPage {app:window}
-    LawEnforcementPage {app:window}
+    LawEnforcementPage {id:lawWorkspace;app:window}
     ResearchCenter {app:window}
+    GovernmentAnalysisPage {app:window}
    }
   }
  }
