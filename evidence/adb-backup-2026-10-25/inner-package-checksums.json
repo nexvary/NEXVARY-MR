@@ -1,0 +1,10 @@
+{
+  "NEXVARY-MR-Windows-x64-portable-unsigned.zip": {
+    "sha256": "7ee75f085e1f84cbe0c24d430b33edb0ec4195f61e5d39efa4f3d9390c2eb979",
+    "bytes": 49487205
+  },
+  "NEXVARY-MR-Windows-x64-setup-unsigned.exe": {
+    "sha256": "30ff42930238ecb20ea8f81611b36f5a613c34624aba1b6c88081e46e1ef82ce",
+    "bytes": 33598163
+  }
+}

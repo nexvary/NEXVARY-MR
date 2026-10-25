@@ -1,0 +1,23 @@
+[
+  {
+    "id": 12612693896,
+    "sha256": "1ae525928cd651db77294c776575b110962ae4c49d3d809f8c20d102c137ce84",
+    "name": "NEXVARY-MR-Windows-production-validation-evidence",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-adb-build/12612693896.zip",
+    "bytes": 58303435
+  },
+  {
+    "id": 12612599276,
+    "sha256": "798dc1112d5659381a7bb9843f50d7de1a2d0e20fb59aa81ed6296cf380283a5",
+    "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-adb-build/12612599276.zip",
+    "bytes": 48868260
+  },
+  {
+    "id": 12612419887,
+    "sha256": "68b2efa7c8c032d76b46bcb090d0f384895f122c2fbf346242309cb4a70216c7",
+    "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-adb-build/12612419887.zip",
+    "bytes": 33055107
+  }
+]

@@ -1,0 +1,305 @@
+{
+  "schema": "nexvary-adb-backup-hosted-validation/v1",
+  "sourceCommit": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e",
+  "runId": 40229014198,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40229014198",
+  "jobs": [
+    {
+      "id": 121276525916,
+      "name": "tracking-server",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526025,
+      "name": "qt (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526127,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526189,
+      "name": "linux-forensic-integration (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526190,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526197,
+      "name": "qt (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121276526222,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "tests": {
+    "nativeProfiles": {
+      "linuxProduction": "43/43",
+      "linuxLaboratory": "43/43",
+      "windowsProduction": "43/43",
+      "windowsLaboratory": "43/43"
+    },
+    "productionSanitizers": "14/14 including ADB interoperability; leak checks not disabled",
+    "imports": "36/36",
+    "qtQuick": "48/48",
+    "adbIndependentInterop": "52/52",
+    "python": "38/38; workflow 40229014210 passed",
+    "publicHistory": "40229014172 passed",
+    "subcaseBoundary": "Unrelated intentional platform/profile subcase skips remain in raw reports; no institutional acceptance implied."
+  },
+  "summaries": {
+    "linuxProduction": [
+      "2026-10-25T20:12:32.3552937Z 100% tests passed, 0 tests failed out of 43",
+      "2026-10-25T20:12:32.3553748Z Total Test time (real) = 205.85 sec",
+      "2026-10-25T20:15:37.0135412Z 100% tests passed, 0 tests failed out of 14",
+      "2026-10-25T20:15:37.0136045Z Total Test time (real) =  73.08 sec"
+    ],
+    "linuxLaboratory": [
+      "2026-10-25T20:11:58.6761555Z 100% tests passed, 0 tests failed out of 43",
+      "2026-10-25T20:11:58.6762291Z Total Test time (real) = 197.80 sec"
+    ],
+    "windowsProduction": [
+      "2026-10-25T20:18:17.1431238Z 100% tests passed, 0 tests failed out of 43",
+      "2026-10-25T20:18:17.1431953Z Total Test time (real) = 290.02 sec",
+      "2026-10-25T20:18:50.4317436Z portable GUI smoke passed: mode=isolated-copy; exit=0",
+      "2026-10-25T20:19:38.3205483Z installed GUI smoke passed: mode=installed-in-place; exit=0"
+    ],
+    "windowsLaboratory": [
+      "2026-10-25T20:18:17.5838632Z 100% tests passed, 0 tests failed out of 43",
+      "2026-10-25T20:18:17.7190306Z Total Test time (real) = 318.68 sec",
+      "2026-10-25T20:18:17.7233040Z Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 69ms",
+      "2026-10-25T20:18:17.7279595Z Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 1749ms",
+      "2026-10-25T20:18:17.7310001Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 100ms",
+      "2026-10-25T20:18:17.7330530Z Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 27ms",
+      "2026-10-25T20:18:17.7354281Z Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 948ms",
+      "2026-10-25T20:18:17.7379820Z Totals: 6 passed, 0 failed, 1 skipped, 0 blacklisted, 7516ms",
+      "2026-10-25T20:18:17.7420840Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 5ms",
+      "2026-10-25T20:18:17.7502631Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 7ms",
+      "2026-10-25T20:18:17.7544799Z Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 368ms",
+      "2026-10-25T20:18:17.7589551Z Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 34ms",
+      "2026-10-25T20:18:17.7612480Z Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 693ms",
+      "2026-10-25T20:18:17.7642634Z Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 7010ms",
+      "2026-10-25T20:18:17.7719951Z Totals: 36 passed, 0 failed, 0 skipped, 0 blacklisted, 11247ms",
+      "2026-10-25T20:18:17.7763357Z Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms",
+      "2026-10-25T20:18:17.7801445Z Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 9187ms",
+      "2026-10-25T20:18:17.7849104Z Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 23870ms",
+      "2026-10-25T20:18:17.7889555Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 371ms",
+      "2026-10-25T20:18:17.7919357Z Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 21ms",
+      "2026-10-25T20:18:17.7982618Z Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 19593ms",
+      "2026-10-25T20:18:17.8011714Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 137ms",
+      "2026-10-25T20:18:17.8039386Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 2886ms",
+      "2026-10-25T20:18:17.8075405Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 2053ms",
+      "2026-10-25T20:18:17.8193013Z Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 26969ms",
+      "2026-10-25T20:18:17.8257708Z Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 1952ms",
+      "2026-10-25T20:18:17.8318771Z Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 29118ms",
+      "2026-10-25T20:18:17.8350231Z Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2382ms",
+      "2026-10-25T20:18:17.8449805Z Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 71215ms",
+      "2026-10-25T20:18:17.8531168Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 2103ms",
+      "2026-10-25T20:18:17.8558376Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 238ms",
+      "2026-10-25T20:18:17.8636961Z Totals: 40 passed, 0 failed, 0 skipped, 0 blacklisted, 589ms",
+      "2026-10-25T20:18:17.8679743Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 6730ms"
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 12612693896,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 58303435,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612693896",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612693896/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:19:48Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:19:48Z",
+      "digest": "sha256:1ae525928cd651db77294c776575b110962ae4c49d3d809f8c20d102c137ce84",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12612599276,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 48868260,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612599276",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612599276/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:19:42Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:19:42Z",
+      "digest": "sha256:798dc1112d5659381a7bb9843f50d7de1a2d0e20fb59aa81ed6296cf380283a5",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12612577425,
+      "name": "core-test-results-windows-2022",
+      "size_in_bytes": 653,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612577425",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612577425/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:05:04Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:05:04Z",
+      "digest": "sha256:5f5e2c91e760248e9008ee71231f3b2889e130f4dc2aa9d4b46cc1cb7a6c3c82",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12612522459,
+      "name": "core-test-results-ubuntu-latest",
+      "size_in_bytes": 648,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612522459",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612522459/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:04:34Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:04:34Z",
+      "digest": "sha256:a73a74ba6d23aa674b843936d2994b39013c1652fbc42a790c36889de7317190",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12612419887,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33055107,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612419887",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612419887/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:19:44Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:19:44Z",
+      "digest": "sha256:68b2efa7c8c032d76b46bcb090d0f384895f122c2fbf346242309cb4a70216c7",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12612284452,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size_in_bytes": 69580680,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612284452",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12612284452/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:15:49Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:15:49Z",
+      "digest": "sha256:677bcc0379cbbc70838d6c0636cc6e5c30593cce7b4fe948ea86246f0d07a93e",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12611743089,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size_in_bytes": 18562,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611743089",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611743089/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:05:30Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:05:30Z",
+      "digest": "sha256:f49ae476ea7f3ab40c52679f77550316d855998ea7798ff9f2781b8739997cbf",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12611644448,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size_in_bytes": 53278562,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611644448",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611644448/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:18:23Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:18:23Z",
+      "digest": "sha256:6062695f5e2dd7a2a7bdcacd4f153d88820fa1a4dd4fdc35d1f5da711c015f28",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    },
+    {
+      "id": 12611569486,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size_in_bytes": 69643303,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611569486",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12611569486/zip",
+      "expired": false,
+      "created_at": "2026-10-25T20:12:02Z",
+      "expires_at": "2027-01-23T20:04:14Z",
+      "updated_at": "2026-10-25T20:12:02Z",
+      "digest": "sha256:04c12dfb8dbd74e4f11202a1529fa85f0c1f33957f705e603e4762c01ffc12e2",
+      "workflow_run": {
+        "id": 40229014198,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e"
+      }
+    }
+  ],
+  "downloadVerification": "All three Windows provider ZIP digests verified; both inner package hashes matched SHA256SUMS.txt. Deployed portable/installed inventories matched independent fixture paths/content hashes/sizes/offsets.",
+  "shippedGuide": {
+    "path": "NEXVARY-MR/LEGACY_ADB_BACKUP_IMPORT.md",
+    "sha256": "5c9fb456befdd5c745d57bc94bb3fe4d4c18805d22a7e7f2fd4bfaae9b94499c",
+    "comparison": "Exact byte comparison differs because Windows checkout uses 85 CRLF line endings; canonical LF text matches source exactly. Raw shipped bytes were not changed."
+  },
+  "screenshots": {
+    "environment": "Hosted Windows Server 2022, Qt 6.8.3, actual Main.qml/native-bridge functional test with synthetic data",
+    "arabic": "windows-adb-backup-ar.png (1536x980, 100%)",
+    "english": "windows-adb-backup-en.png (1366x768, 100%)",
+    "otherViews": "AR/EN at 840/1366/1536 and 100/125/150% retained in production artifact",
+    "boundary": "Not a physical phone or clean Windows 10/11 field test"
+  },
+  "releaseBoundary": "Unsigned development evaluation only; no independent competitor run, superiority, field/institutional verification or accreditation. Guardian unchanged; main unmerged."
+}
