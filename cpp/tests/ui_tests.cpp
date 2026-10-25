@@ -9,6 +9,7 @@
 #include <QQuickWindow>
 #include <QImage>
 #include <QCryptographicHash>
+#include <QJsonDocument>
 #include <QQuickStyle>
 #include <QtEndian>
 #include <memory>
@@ -104,6 +105,12 @@ public slots:
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  const auto timeline=temp.filePath("synthetic-timeline.json");
+  QVariantMap times;for(int i=0;i<15;++i)times.insert(QString("observed-%1").arg(i),QString("2026-10-25T12:00:00+03:00"));
+  times.insert("unresolved",QString("2026-10-25T12:00:00"));
+  QFile timelineFile(timeline);const auto timelineBytes=QJsonDocument::fromVariant(times).toJson(QJsonDocument::Compact);
+  if(!timelineFile.open(QIODevice::WriteOnly)||timelineFile.write(timelineBytes)!=timelineBytes.size())qFatal("Cannot create synthetic timeline fixture");timelineFile.close();
+  engine->rootContext()->setContextProperty("syntheticTimelinePath",timeline);
   const auto avb=temp.filePath(QStringLiteral("synthetic-vbmeta.img"));
   QByteArray avbBytes(320, '\0'); avbBytes.replace(0,4,"AVB0");
   qToBigEndian<quint32>(1,avbBytes.data()+4); qToBigEndian<quint64>(64,avbBytes.data()+20);

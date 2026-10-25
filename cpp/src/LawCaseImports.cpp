@@ -5,7 +5,7 @@
 #include "nexvary/LawEnforcementCase.hpp"
 
 bool LawCaseBridge::importBusy()const{return importer_&&importer_->busy();}
-void LawCaseBridge::resetImport(){if(importer_)importer_->cancel();importContext_.clear();importResult_.clear();emit importChanged();}
+void LawCaseBridge::resetImport(){cancelTimeline();if(importer_)importer_->cancel();importContext_.clear();importResult_.clear();emit importChanged();}
 void LawCaseBridge::cancelImport(){if(importer_)importer_->cancel();}
 void LawCaseBridge::initImports(){
  importer_=std::make_unique<EvidenceImportRunner>();

@@ -21,6 +21,7 @@
 #include <QFontDatabase>
 #include <QDateTime>
 #include <utility>
+#include <QFutureWatcher>
 namespace {
 QString utc(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);}
 std::string bytes(const QVariantMap &m,const char *key){return m.value(key).toString().toUtf8().toStdString();}
@@ -33,13 +34,13 @@ bool newOutput(const QString &input,QFile &file) {
 }
 LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
  :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
- initImports();
+ initImports();initTimeline();
  if(identity_)connect(identity_,&IdentityService::changed,this,[this]{resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
 }
-LawCaseBridge::~LawCaseBridge()=default;
+LawCaseBridge::~LawCaseBridge(){if(timelineCancel_)timelineCancel_->store(true);}
 bool LawCaseBridge::ready()const{return store_->ready()&&(identity_?identity_->authenticated():synthetic_);}
 nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
 bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}

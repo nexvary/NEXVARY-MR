@@ -1,3 +1,12 @@
+# Government Technology Superiority — timeline implementation checkpoint (2026-10-25)
+
+- Branch: `feature/government-operations`; existing draft PR #15. Inspected starting HEAD: `e76d20a3a9f610dd2f3ee991b9705d7cd0845fae`; verified earlier executable: `feed968f905cbc3d2960e94cfa208139b7642b53`.
+- Implemented in the commit containing this entry: original bounded asynchronous timestamp projection from existing protected authorized-import records, report/source provenance, strict explicit-offset UTC normalization, unresolved time states, deterministic ordering, literal search, cancellation, case revision/identity/grant rechecks, AR/EN paging and global cancellation. No schema migration or duplicate case/evidence database.
+- New verification: pending hosted CI for this source. No local build/test was executed: the execution environment is unavailable and Remote Desktop Commander reports no connected devices. Added native timeline tests, 12,800-observation synthetic benchmark, protected-backup reconstruction, cancellation/revocation/stale-case checks, AR/EN multi-size/DPI UI tests/capture hooks and sanitizer inclusion.
+- Timeline scope: imported timestamp literals only, not full activity reconstruction, packet/EXIF timelines, semantic application decoders, human/social links, current evidence-byte verification or authenticated source time. Projection is read-only/recomputed, bounded to 2,048 retained matching observations, with omissions/truncated-import counts. See docs/CASE_TIMELINE.md.
+- Next: inspect exact-source CI and fix failures; retain hosted raw results/package metadata and genuine captures. Then authorized backup/container/document adapters, typed artifact correlation, provenance relationships, enforced offline policy and timeline reporting/review. Institutional review, research promotion and training/deployment remain open.
+- No competitive superiority or governmental readiness claim. Main is unmerged; Guardian is untouched. Earlier checkpoint results below belong only to their pinned SHAs.
+
 # Government Operations Phase 2 — verified authorized import checkpoint (2026-10-25)
 
 - Current Branch: `feature/government-operations`; PR #15 stays open/draft on PR #11's foundation. Current HEAD SHA at executable validation: `feed968f905cbc3d2960e94cfa208139b7642b53`. Resolve the later documentation/evidence receipt HEAD with `git rev-parse HEAD`; this receipt changes no compiler/QML/build/packaging input.

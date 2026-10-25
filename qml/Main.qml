@@ -111,7 +111,7 @@ ApplicationWindow {
  Dialog {
   id:exitDialog;width:Math.min(480,window.width-32);objectName:"exitDialog";anchors.centerIn:parent;modal:true;title:window.trx("إغلاق NEXVARY MR","Close NEXVARY MR");standardButtons:Dialog.Yes|Dialog.No
   Label {width:exitDialog.availableWidth;wrapMode:Text.WordWrap;color:window.design.text;text:window.trx("هل تريد الإغلاق؟ ستُلغى الفحوص الجارية. احفظ جلسات المخططات والنماذج المفتوحة أولًا.","Close the application? Running checks will be cancelled. Save board sessions and open forms first.")}
-  onAccepted:{lawCaseBridge.cancelImport();toolBridge.cancel();firmwareBridge.cancel();recoveryBridge.cancel();securityBridge.cancel();window.allowClose=true;window.close()}
+  onAccepted:{lawCaseBridge.cancelTimeline();lawCaseBridge.cancelImport();toolBridge.cancel();firmwareBridge.cancel();recoveryBridge.cancel();securityBridge.cancel();window.allowClose=true;window.close()}
  }
  AppShell {
   id:shell;anchors.fill:parent;app:window

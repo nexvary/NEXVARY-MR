@@ -3,6 +3,8 @@
 #include <QVariantMap>
 #include <QVariantList>
 #include <memory>
+#include <atomic>
+template <typename T> class QFutureWatcher;
 #include "nexvary/LawPermissions.hpp"
 class LawCaseStore;
 class ToolBridge;
@@ -23,6 +25,8 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
+ Q_PROPERTY(bool timelineBusy READ timelineBusy NOTIFY timelineChanged)
+ Q_PROPERTY(QVariantMap timelineResult READ timelineResult NOTIFY timelineChanged)
  Q_PROPERTY(bool importBusy READ importBusy NOTIFY importChanged)
  Q_PROPERTY(QVariantMap importResult READ importResult NOTIFY importChanged)
 public:
@@ -52,6 +56,10 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ bool timelineBusy()const;
+ QVariantMap timelineResult()const{return timelineResult_;}
+ Q_INVOKABLE bool buildTimeline(const QString &query=QString());
+ Q_INVOKABLE void cancelTimeline();
  bool importBusy()const;
  QVariantMap importResult()const{return importResult_;}
  Q_INVOKABLE bool importEvidence(const QString &evidence,const QString &adapter,const QString &purpose,bool consent);
@@ -70,6 +78,8 @@ public:
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
 signals:
+ void timelineChanged();
+ void timelineCompleted(bool success);
  void importChanged();
  void importCompleted(bool success);
  void changed();
@@ -85,6 +95,11 @@ private:
  QString actor()const;
  std::unique_ptr<LawCaseStore> store_;
  std::unique_ptr<EvidenceImportRunner> importer_;
+ void initTimeline();
+ std::unique_ptr<QFutureWatcher<QVariantMap>> timeline_;
+ std::shared_ptr<std::atomic_bool> timelineCancel_;
+ QVariantMap timelineContext_,timelineResult_;
+ bool timelineActive_=false;
  void initImports();
  void resetImport();
  QVariantMap importContext_,importResult_;

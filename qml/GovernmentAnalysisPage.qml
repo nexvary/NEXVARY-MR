@@ -8,12 +8,16 @@ ScrollView {
  property var result:({})
  readonly property var summary:result.reportJson?JSON.parse(result.reportJson):({})
  property bool showTechnical:false
+ property int timelinePage:0
+ readonly property var timeline:lawCaseBridge.timelineResult
+ readonly property var timelineRows:timeline.events||[]
+ Connections {target:lawCaseBridge;function onTimelineChanged(){page.timelinePage=0}}
  property var savedImport:({})
  property string lastCaseId:""
  readonly property var imported:page.savedImport.reportJson?page.savedImport:lawCaseBridge.importResult
  readonly property var importReport:page.imported.reportJson?JSON.parse(page.imported.reportJson):({})
  contentWidth:availableWidth;clip:true
- Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
+ Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";timelineQuery.text="";page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("تحليل أدلة القضية","Case evidence analysis");iconName:"shield_checkmark"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحليل محلي لنسخة القضية المحمية بعد التحقق من SHA-256. الحد 8 MiB. يدعم إحصاءات classic PCAP وحقول JPEG EXIF المحدودة دون فك تشفير أو تشغيل الملف.","Local analysis of hash-verified protected case evidence, up to 8 MiB. Supports classic-PCAP statistics and bounded JPEG-EXIF fields without decryption or file execution.")}
@@ -54,6 +58,24 @@ ScrollView {
    }}
    ActionButton {visible:!!page.imported.reportJson;text:app.trx("عرض جميع النتائج والمصدر","Show all findings and provenance");onClicked:page.showTechnical=!page.showTechnical}
    TextArea {objectName:"governmentImportResult";visible:page.showTechnical&&!!page.imported.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.imported.reportJson?JSON.stringify(page.importReport,null,2):""}
+  }
+  Panel {objectName:"governmentTimelinePanel";Layout.fillWidth:true;title:app.trx("الخط الزمني للقيم المرصودة","Observed timestamp timeline");iconName:"history"
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("يجمع القيم الزمنية من تقارير الاستيراد المحفوظة. يحوّل المناطق الزمنية الصريحة إلى UTC ويحتفظ بالأوقات الناقصة دون تخمين. لا يثبت صحة وقت المصدر أو حدوث واقعة أو علاقة بين أشخاص.","Combines timestamp literals from retained import reports. Explicit offsets become UTC; incomplete times remain unresolved. Source time authenticity, real-world events and relationships between people are not established.")}
+   TextField {id:timelineQuery;objectName:"governmentTimelineQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث حرفي في الوقت أو المصدر أو المرجع","Literal search in time, source or reference");enabled:!lawCaseBridge.timelineBusy}
+   Flow {Layout.fillWidth:true;spacing:8
+    ActionButton {objectName:"governmentTimelineBuild";text:app.trx("بناء الخط الزمني","Build timeline");primary:true;enabled:lawCaseBridge.permissions.analyze&&!!lawCaseBridge.activeCase.id&&!lawCaseBridge.timelineBusy;onClicked:lawCaseBridge.buildTimeline(timelineQuery.text)}
+    ActionButton {objectName:"governmentTimelineCancel";text:app.trx("إلغاء","Cancel");enabled:lawCaseBridge.timelineBusy;onClicked:lawCaseBridge.cancelTimeline()}
+   }
+   BusyIndicator {running:lawCaseBridge.timelineBusy;visible:running;Layout.alignment:Qt.AlignHCenter}
+   Label {objectName:"governmentTimelineSummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;text:page.timeline.schema?app.trx("أوقات UTC: ","UTC times: ")+page.timeline.normalizedCount+app.trx(" | أوقات غير محسومة: "," | Unresolved: ")+page.timeline.unresolvedCount+app.trx(" | قيم إضافية لم تُعرض: "," | Additional matching values omitted: ")+page.timeline.omittedMatchingCandidates+app.trx(" | تقارير استيراد مختصرة: "," | Truncated import reports: ")+page.timeline.truncatedImportReports:app.trx("ابنِ العرض بعد استيراد دليل. لا توجد نتائج معروضة.","Build the view after importing evidence. No results displayed.")}
+   Repeater {model:page.timelineRows.slice(page.timelinePage*12,(page.timelinePage+1)*12);delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.utc||page.app.trx("وقت غير محسوم","Unresolved time");iconName:"document_text"
+    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.originalTime;LayoutMirroring.enabled:false}
+    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.muted;text:modelData.reason+"\n"+modelData.sourceName+" | "+modelData.reference+"\n"+page.app.trx("الدليل: ","Evidence: ")+modelData.evidenceId+"\n"+page.app.trx("التحليل: ","Analysis: ")+modelData.analysisId+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256;LayoutMirroring.enabled:false}
+   }}
+   Flow {Layout.fillWidth:true;spacing:8;visible:page.timelineRows.length>12
+    ActionButton {objectName:"governmentTimelinePrevious";text:app.trx("السابق","Previous");enabled:page.timelinePage>0;onClicked:page.timelinePage--}
+    ActionButton {objectName:"governmentTimelineNext";text:app.trx("التالي","Next");enabled:(page.timelinePage+1)*12<page.timelineRows.length;onClicked:page.timelinePage++}
+   }
   }
   Repeater {model:lawCaseBridge.activeCase.analyses||[];delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.parser;iconName:"document_text"
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.atUtc+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256}
