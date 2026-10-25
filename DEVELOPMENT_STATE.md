@@ -1,3 +1,9 @@
+# Government timeline Windows pagination-test correction — 2026-10-25
+
+- Executable source `b60d20fdca871b7fd169d3c17023977e4e9e7ed7`: CI 40222114350 passed both Linux profiles (42/42 each), production ASan/UBSan (13/13), Windows laboratory (42/42), both core jobs and tracking server. Windows production passed 41/42; its full UI test failed the new pagination enabled-state assertion (46/47). Both production DPI subsets passed. Native timeline 26/26 and imports 32/32 passed on Windows.
+- Follow-up changes only the QML test interaction: render after revealing Next, wait for page 1 and disabled Next, reveal/render Previous at its newly laid-out position, then wait for page 0 and disabled Previous. It retains all page and enabled-state checks. No application/native/packaging input changes. New exact-source CI is required before claiming a complete passing pipeline or producing new packages.
+- Actual Windows production reports and 125% AR/EN captures were downloaded; the provider ZIP SHA-256 matched. Initial failure and boundary are retained in evidence/timeline-2026-10-25/windows-pagination-failure.json. Windows native timeline/import and all earlier source bounds remain unchanged.
+
 # Government timeline visual acceptance correction — 2026-10-25
 
 - Source parent: `a123da537ef4ee14ed9d5506ba5c23325645461d`; previous CI 40221662336 is superseded by the commit containing this correction. Native executable inputs remain those corrected at `02324429`; this correction changes only timeline QML/display tests and retained evidence.

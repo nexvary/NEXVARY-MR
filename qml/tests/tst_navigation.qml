@@ -60,7 +60,10 @@ TestCase {
   verify(lawCaseBridge.importEvidence(source,"json","Synthetic timeline UI",true));tryCompare(lawCaseBridge,"importBusy",false,8000);verify(!!lawCaseBridge.importResult.reportJson,lawCaseBridge.error)
   app.navigateSection(6);verify(renderedFrame());const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentTimelinePanel"),button=findChild(app,"governmentTimelineBuild")
   reveal(page,button);mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.normalizedCount,15);compare(lawCaseBridge.timelineResult.unresolvedCount,1)
-  const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious");verify(next.enabled);reveal(page,next);mouseClick(next);compare(next.enabled,false);verify(previous.enabled);mouseClick(previous);compare(previous.enabled,false)
+  const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious")
+  tryCompare(page,"timelinePage",0);verify(next.enabled);verify(renderedFrame())
+  reveal(page,next);verify(renderedFrame());mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)
+  verify(previous.enabled);reveal(page,previous);verify(renderedFrame());mouseClick(previous);tryCompare(page,"timelinePage",0);tryCompare(previous,"enabled",false)
   for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
    app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(80);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
    verify(page.timelineExplanationAt(0).indexOf(arabic?"صحة":"authenticity")>=0,"Timeline uncertainty is explained in the selected language")
