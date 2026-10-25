@@ -54,7 +54,7 @@ private slots:
   const auto report=QJsonDocument::fromJson(first.value("reportJson").toString().toUtf8()).object();QCOMPARE(report.value("packetCount").toString(),QString("1"));QVERIFY(!report.value("decryptionPerformed").toBool());QVERIFY(b.verifyEvidence(e));QVERIFY(b.verifyAudit());
   QVERIFY(b.analyzeEvidence(e,"invented").isEmpty());QVERIFY(b.analyzeEvidence("different-case-evidence","classic-pcap").isEmpty());
   QFile jpeg(t.filePath("photo.jpg"));QVERIFY(jpeg.open(QIODevice::WriteOnly));jpeg.write(syntheticExifJpeg());jpeg.close();const auto image=b.addEvidence(dev,jpeg.fileName(),"Synthetic JPEG","A",true);QVERIFY(!image.isEmpty());QVERIFY(!b.analyzeEvidence(image,"jpeg-exif").isEmpty());QVERIFY(b.analyzeEvidence(image,"classic-pcap").isEmpty());
-  QCOMPARE(b.activeCase().value("analyses").toList().size(),3);LawCaseBridge auditor(t.filePath("cases.db"),nullptr,true,nexvary::law::Role::Auditor);QVERIFY(auditor.openCase(id));QVERIFY(auditor.analyzeEvidence(e,"classic-pcap").isEmpty());
+  QCOMPARE(b.activeCase().value("analyses").toList().size(),3);QVERIFY(b.exportCasePdf(t.filePath("analysis-review.pdf"),true,true));LawCaseBridge auditor(t.filePath("cases.db"),nullptr,true,nexvary::law::Role::Auditor);QVERIFY(auditor.openCase(id));QVERIFY(auditor.analyzeEvidence(e,"classic-pcap").isEmpty());
  }
  void assessmentDistinguishesReportsFromValidatedCapabilities() {
   QVariantMap report{{"propertiesCurrent",true},{"fields",QVariantList{QVariantMap{{"id","model"},{"state","reported"},{"value","Synthetic model"},{"source","adb:shell getprop"},{"observedAtUtc","2026-10-25T00:00:00Z"},{"physicalDeviceTested",true}}}}};

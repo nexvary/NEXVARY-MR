@@ -232,25 +232,35 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
   {"description",QStringLiteral("وصف الدليل")},{"size",QStringLiteral("الحجم بالبايت")},{"sha256","SHA-256"},
   {"from",QStringLiteral("من المسؤول")},{"to",QStringLiteral("إلى المسؤول")},{"reason",QStringLiteral("سبب النقل")},{"atUtc",QStringLiteral("وقت الحدث UTC")},
   {"actor",QStringLiteral("هوية المنفّذ المسجلة")},{"event",QStringLiteral("الإجراء")},{"sequence",QStringLiteral("رقم الحدث")},
+  {"exportedAtUtc",QStringLiteral("وقت التصدير UTC")},{"manifestSha256",QStringLiteral("بصمة Manifest SHA-256")},
+  {"packageId",QStringLiteral("معرّف حزمة نسخة العمل")},{"purpose",QStringLiteral("الغرض المسجل")},{"sourceRevision",QStringLiteral("مراجعة القضية المصدر")},
+  {"implementationVersion",QStringLiteral("إصدار المحرك")},{"parser",QStringLiteral("محلل الأدلة")},{"reportJson",QStringLiteral("النتيجة التقنية JSON")},
+  {"reportSha256",QStringLiteral("بصمة نتيجة التحليل SHA-256")},{"sourceSha256",QStringLiteral("بصمة ملف المصدر SHA-256")},
+  {"status",QStringLiteral("الحالة")},{"sourceSize",QStringLiteral("حجم المصدر بالبايت")},{"synthetic",QStringLiteral("بيانات اصطناعية")},
   {"hash",QStringLiteral("بصمة الحدث SHA-256")},{"previous",QStringLiteral("بصمة الحدث السابق")},{"stateSha256",QStringLiteral("بصمة حالة القضية")},{"caseId",QStringLiteral("معرّف القضية")}
  };
- const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc"};
+ const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc","manifestSha256","sourceSha256","reportSha256","packageId","exportedAtUtc","reportJson","implementationVersion","parser"};
  const auto table=[&](const QVariantMap &record,const QString &caption){
-  QString out=QStringLiteral("<table border='1' cellspacing='0' cellpadding='5' width='100%'><thead><tr><th colspan='2' bgcolor='#e0e7ef'>%1</th></tr></thead>").arg(caption.toHtmlEscaped());
+  QString out=QStringLiteral("<table border='1' cellspacing='0' cellpadding='4' width='100%'><thead><tr><th colspan='2' bgcolor='#e0e7ef'>%1</th></tr></thead>").arg(caption.toHtmlEscaped());
   for(auto it=record.cbegin();it!=record.cend();++it){
    if(it.value().toString().isEmpty())continue;
    const auto key=arabic?labels.value(it.key(),it.key()):it.key();
-   const auto value=it.value().toString().toHtmlEscaped().replace('\n',"<br>");
+   auto displayed=it.value().toString();
+   if(it.key()=="reportJson"){
+    const auto report=QJsonDocument::fromJson(displayed.toUtf8());
+    if(report.isObject())displayed=QString::fromUtf8(report.toJson(QJsonDocument::Indented)).trimmed();
+   }
+   const auto value=displayed.toHtmlEscaped().replace('\n',"<br>");
    out+=QStringLiteral("<tr><td width='29%' bgcolor='#edf1f7'>%1</td><td><p dir='%2' style='font-size:9pt'>%3</p></td></tr>").arg(key.toHtmlEscaped(),technical.contains(it.key())?"ltr":arabic?"rtl":"ltr",value);
   }
   return out+"</table>";
  };
  QString html=QStringLiteral("<html dir='%1'><head><meta charset='UTF-8'></head><body><h1>NEXVARY</h1><h2>%2</h2>").arg(arabic?"rtl":"ltr",tr(QStringLiteral("تقرير مراجعة قضية"),"Case review report"));
- html+=QStringLiteral("<p dir='ltr'>%1<br>%2</p><p>%3</p>").arg(active_.value("id").toString().toHtmlEscaped(),utc(),tr(QStringLiteral("إصدار تطوير محلي: يعرض إقرارات ومشاهدات مسجلة. لا يمثل مصادقة قانونية أو اعتمادًا قضائيًا أو شهادة استخلاص. تهيئة هويات وأدوار الجهة المؤسسية لم تكتمل."),"Local development prototype: recorded declarations and observations. Not legal approval, judicial accreditation or extraction certification. Authenticated agency-role provisioning remains incomplete."));
+ html+=QStringLiteral("<p dir='ltr'>%1<br>%2</p><p>%3</p>").arg(active_.value("id").toString().toHtmlEscaped(),utc(),tr(QStringLiteral("إصدار تطوير: إقرارات ومشاهدات محلية؛ لا يثبت تفويضًا قانونيًا أو تسليمًا ماديًا أو اعتمادًا قضائيًا أو استخلاص هاتف محمي. التوقيعات والأوقات محلية، ولا تمنع استعادة قاعدة قديمة دون مرجع مستقل. التحقق المؤسسي غير مكتمل."),"Development prototype: local declarations and observations, not legal approval, physical handover proof, judicial accreditation or protected-phone acquisition. Signatures and times are local; rollback detection needs a separately retained anchor. Institutional identity provisioning remains incomplete."));
  html+=QStringLiteral("<h2>%1</h2>").arg(tr(QStringLiteral("القضية والسند القانوني"),"Case and recorded authority"))+table(active_.value("metadata").toMap(),tr(QStringLiteral("بيانات القضية"),"Case metadata"));
  const auto section=[&](const QString &key,const QString &title){
-  QString out=QStringLiteral("<h2>%1</h2>").arg(title);const auto rows=active_.value(key).toList();
-  if(rows.isEmpty())return out+QStringLiteral("<p>%1</p>").arg(tr(QStringLiteral("لا توجد سجلات."),"No records."));
+  QString out;const auto rows=active_.value(key).toList();
+  if(rows.isEmpty())return table({{"status",tr(QStringLiteral("لا توجد سجلات."),"No records.")}},title);
   int index=0;for(const auto &row:rows)out+=table(row.toMap(),title+QStringLiteral(" - %1 %2").arg(tr(QStringLiteral("سجل"),"Record")).arg(++index));return out;
  };
  html+=section("devices",tr(QStringLiteral("الأجهزة المسجلة"),"Registered devices"));
@@ -259,7 +269,7 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
  html+=section("workingCopies",tr(QStringLiteral("نسخ العمل المصدرة"),"Exported working copies"));
  html+=section("analyses",tr(QStringLiteral("تحليلات الأدلة"),"Evidence analyses"));
  html+=section("audit",tr(QStringLiteral("سجل التدقيق المترابط"),"Linked audit trail"));
- html+=QStringLiteral("<p>%1</p></body></html>").arg(tr(QStringLiteral("ترابط السجل وحماية البيانات لا يثبتان التسليم المادي، أو توقيعًا مستقلًا، أو مقاومة استعادة نسخة قديمة من قاعدة البيانات. هذا التقرير لا يثبت استخلاص محتوى هاتف محمي."),"Linked protected records do not prove physical handover, independent signatures or resistance to whole-database rollback. This report does not establish acquisition of protected-phone content."));
+ html+=QStringLiteral("</body></html>");
  {QPdfWriter writer(&output);writer.setTitle(QStringLiteral("NEXVARY case review"));writer.setCreator(QStringLiteral("NEXVARY-MR"));QTextDocument document;document.setDefaultFont(QFont(QStringLiteral("Segoe UI"),10));document.setHtml(html);document.print(&writer);}
  if(!output.flush()||output.size()==0){output.close();output.remove();return fail(QStringLiteral("PDF report could not be finalized."));}return true;
 }

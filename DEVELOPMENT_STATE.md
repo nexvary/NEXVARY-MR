@@ -1,3 +1,46 @@
+# Report and history-check follow-up — 2026-10-25
+
+Branch: `feature/government-operations`; PR #15.
+Published first implementation: `0b9bc08d1ac70a81f94c4305eefffdefd63ca793`.
+All seven native jobs passed in CI 40145064984: Windows production/laboratory and
+Linux production/laboratory passed 39/39 CTest groups each. Linux sanitizer gate
+passed 8/8, including the case workspace. Windows portable isolation, installer
+install/run/uninstall and Python passed. Artifact hashes/expiry are recorded in
+`evidence/government-2026-10-25/first-native-ci.json`.
+
+This follow-up fixes PDF presentation: Arabic labels for analysis/export records,
+LTR pretty-printed technical JSON/digests, table captions across page breaks and
+compact padding. The application itself generated a synthetic four-page Arabic
+report containing analysis and working-copy history; all four pages were rendered
+and visually inspected. Complete source/report/manifest hashes were verified in
+extracted text. `pdf-visual-qa.json` records the check, and native case tests now
+exercise PDF export after PCAP and EXIF analysis. No parser/acquisition capability
+or protected-store schema is changed by this follow-up.
+
+Public-history 40145065000 reported seven existing generic-key findings in the base
+commit's Windows sodium header-digest receipt. They were independently matched to
+public prepared headers with CRLF. Exact historical fingerprints plus exact public
+values AND the single receipt path preserve all default detectors. The real pinned
+scanner accepted the receipt, rejected seven changed values and rejected copied
+values at an unreviewed path. Full history/current-tree scans passed locally. The
+history workflow now runs that regression before scanning. See
+`docs/GOVERNMENT_HISTORY_SCAN_REVIEW.md`; no secret is removed or scanner disabled.
+
+Local follow-up: seven focused case/identity/interop/UI/DPI/smoke groups passed;
+final case 13/13 and root Python 35/35 passed. Final PDF source has a separate native
+case rerun and visual/text check. Exact-source hosted CI and replacement Windows
+artifacts for the commit containing this checkpoint are pending publication.
+
+Next implementation remains protected bounded case backup/restore, then retention
+and document/backup/SQLite adapters. Restore must retain original case ownership,
+require a current grant/identity registry, reject duplicate/overwriting cases,
+validate every protected evidence blob, and commit atomically. Test malformed,
+wrong-account, absent-blob and rollback-anchor scenarios before exposing controls.
+Keep policy-enforced air-gap mode, independent Windows 10/11/owned phones,
+institution identity/time/key custody and final release acceptance as separate gates.
+
+---
+
 # Government operations checkpoint — 2026-10-25
 
 Active branch: `feature/government-operations`.
