@@ -1,5 +1,6 @@
 #include "LawCaseBridge.hpp"
 #include "LawCaseStore.hpp"
+#include "EvidenceImportRunner.hpp"
 #include "LawRetention.hpp"
 #include "IdentityService.hpp"
 #include "LawTraining.hpp"
@@ -32,7 +33,8 @@ bool newOutput(const QString &input,QFile &file) {
 }
 LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
  :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
- if(identity_)connect(identity_,&IdentityService::changed,this,[this]{active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
+ initImports();
+ if(identity_)connect(identity_,&IdentityService::changed,this,[this]{resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
@@ -99,8 +101,8 @@ bool LawCaseBridge::updateCase(const QVariantMap &metadata) {
  if(!store_->update(id,active_.value("revision").toLongLong(),metadata,actor()))return fail(store_->error());
  return refresh(id);
 }
-bool LawCaseBridge::openCase(const QString &id) {return permit(nexvary::law::Action::ReadCase,false)&&refresh(id);}
-void LawCaseBridge::closeWorkspace(){active_.clear();devices_.clear();audit_.clear();error_.clear();emit changed();}
+bool LawCaseBridge::openCase(const QString &id) {if(id!=active_.value("id"))resetImport();return permit(nexvary::law::Action::ReadCase,false)&&refresh(id);}
+void LawCaseBridge::closeWorkspace(){resetImport();active_.clear();devices_.clear();audit_.clear();error_.clear();emit changed();}
 bool LawCaseBridge::searchCases(const QString &query) {
  if(!permit(nexvary::law::Action::ReadCase,false))return false;
  if(query.size()>256)return fail(QStringLiteral("Search query exceeds limit."));

@@ -84,7 +84,8 @@ bool LawCaseStore::mutate(const QString &id,qint64 revision,const QString &event
  error_.clear();if(!ready_||!text(actor,256)||!db_.transaction())return fail("Cannot start case transaction.");
  auto r=get(id);if(r.isEmpty()||r.value("revision").toLongLong()!=revision||r.value("audit").toList().size()>=10000){db_.rollback();return fail("Invalid case, stale revision or event limit reached.");}
  const bool retention=event.startsWith("retention:");
- if(!retention&&((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
+ const bool derived=(event=="evidence-imported"||event=="evidence-import-rejected")&&(r.value("status")=="closed"||r.value("status")=="archived");
+ if(!retention&&!derived&&((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
  if(!change(r)){db_.rollback();return false;}
  r.insert("revision",revision+1);r.insert("deviceCount",r.value("devices").toList().size());append(r,event,actor);
  if(!save(r,revision)||!db_.commit()){db_.rollback();if(error_.isEmpty())fail("Case transaction failed.");return false;}return true;
@@ -137,7 +138,9 @@ bool LawCaseStore::verifyEvidence(const QString &id,const QString &evidence) {re
 QVariantMap LawCaseStore::recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor) {
  QVariantMap result;const auto json=encode(report);
  if(json.size()>64*1024||report.value("sourceSha256").toString().size()!=64){fail("Invalid or oversized analysis report.");return {};}
- const bool ok=mutate(id,revision,"evidence-analyzed",actor,[&](QVariantMap &r){
+ const bool imported=parser.startsWith("authorized-import/");
+ const auto event=imported?(report.value("status")=="imported"?QString("evidence-imported"):QString("evidence-import-rejected")):QString("evidence-analyzed");
+ const bool ok=mutate(id,revision,event,actor,[&](QVariantMap &r){
   QVariantMap item;for(const auto &value:r.value("evidence").toList())if(value.toMap().value("id")==evidence)item=value.toMap();
   if(item.isEmpty()||item.value("sha256")!=report.value("sourceSha256"))return fail("Analysis source does not match this case evidence.");
   auto runs=r.value("analyses").toList();if(runs.size()>=100)return fail("Case analysis limit reached.");

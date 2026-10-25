@@ -1,3 +1,27 @@
+# Government Operations Phase 2 — authorized import implementation (2026-10-25)
+
+- Current Branch: `feature/government-operations`; open draft PR #15 on PR #11 foundation. Current HEAD SHA before this increment: `3d4610bd26127ac81166b6693c7988fa188042d1`; resolve published source with `git rev-parse HEAD`.
+- Latest Verified Executable SHA: `bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da` until exact-source import CI completes.
+- CI Status: local Release build and full CTest 41/41 passed; native import 32/32, Qt Quick 46/46 plus both DPI profiles, Python 38/38 and ASan/UBSan import 1/1 (32 cases; local leak inspection disabled). Hosted exact-source import validation pending. Historical device stability run 40190246495 passed all seven jobs; it does not validate these new sources.
+- Completed Government Capabilities: existing protected case/identity/RBAC/custody/hash/signature/anchor/backup/retention/report engines are preserved. New native six-format adapters (UTF-8, JSON, XML, CSV, standalone SQLite and exported Android threadtime) use a hash-verified private working copy and a bounded isolated child. Success/rejection reports retain provenance and immutable case audit events, survive backups, and appear in existing PDFs. Native API is implemented; AR/EN UI and deployed smoke integration follow in the next commit. Verification is still in progress.
+- Remaining Government Capabilities: full vendor unencrypted-backup/container and PDF/DOCX adapters, unified UTC timeline, provenance relationships and enforced offline networking; subsequent institutional review/search/report/audit/training/research/deployment/identity/recovery/Windows RC acceptance. Physical disposal execution remains unimplemented. Existing PCAP/EXIF paths are retained.
+- Known Limitations: import 4 MiB, 128 findings, shortened values and bounded SQLite row samples; no encrypted-backup decryption, WAL collection, archive extraction or locked-phone acquisition. Child isolation is not an OS/network sandbox. Temporary plaintext removal is not secure erasure and a system crash can leave traces. Local clock/accounts/protected-store limitations remain. See docs/AUTHORIZED_IMPORT.md.
+- External Acceptance Gates: exact-firmware phones, clean independent Windows 10/11, agency authorization/identities/reviewers, publisher signing, external key/time custody and independent privacy/license/records/recovery review. No final institutional release is claimed.
+- Next Executable Task: finish import Release/CTest/UI/sanitizer/migration/backup/deployed Windows/Linux validation, then implement the unified timeline using explicitly sourced events and declared timezones; extend remaining backup/document formats without duplicating existing engines.
+- Resume Commands:
+
+```sh
+git fetch --all --prune
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+python3 -m unittest discover -s tests -v
+```
+
+Historical checkpoints below apply only to their stated SHAs. No Guardian modification or main merge.
+
 # Government operations — verified device stability checkpoint (2026-10-25)
 
 - Current Branch: `feature/government-operations`; PR #15 open/draft, based on the unmerged PR #11 foundation. Current HEAD SHA at executable validation: `bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da`. Resolve the later documentation/evidence receipt HEAD with `git rev-parse HEAD`; it changes no compiler/QML/build/packaging input.
