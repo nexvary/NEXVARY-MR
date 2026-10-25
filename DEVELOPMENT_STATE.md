@@ -1,3 +1,11 @@
+# Government timeline visual acceptance correction — 2026-10-25
+
+- Source parent: `a123da537ef4ee14ed9d5506ba5c23325645461d`; previous CI 40221662336 is superseded by the commit containing this correction. Native executable inputs remain those corrected at `02324429`; this correction changes only timeline QML/display tests and retained evidence.
+- Actual local image inspection found visually reordered UUID digits next to Arabic labels and insufficient allocation for wrapped explanatory text. Display-only direction isolation preserves UUID order; wrapped scope/summary/reason minimum heights and geometry checks prevent scope/search overlap. Captures now include the timeline panel title/scope and preserve header pixels.
+- Local verification: native timeline 26/26 and Python 38/38 passed. All 42 CTest groups passed across staged runs after relinking damaged generated outputs and correcting the delegate lookup assertion; no single final-source local 42/42 invocation is claimed. Qt Quick 47/47 and both complete DPI subsets passed after delegate correction. Final visual controls passed in AR/EN at three window sizes and DPI 1/1.25/1.5. Original failures and stage distinctions are retained in evidence/timeline-2026-10-25/. Exact-source hosted Windows/Linux, sanitizers and packaging remain required.
+- Two reviewed screenshots retained in this commit are genuine local Linux Qt frames with synthetic data. They are not Windows/hardware captures. Earlier Windows artifacts remain historical until current exact-source CI produces new ones.
+- Current slice implements bounded timestamp-literal projection plus source/acceptance/benchmark matrices. Broader backup/container/document parsing, typed relationships/indexing, enforced offline networking, timeline export/institutional review and external acceptance remain pending. Main and Guardian are unchanged.
+
 # Government timeline UI verification follow-up — 2026-10-25
 
 - Published source before follow-up: `02324429ffd0c33f5838d076556966a6a2b7ea5a`, hosted CI 40221370260 in progress. Native timeline 26/26, import 32/32 and Python 38/38 passed locally. Re-linking repaired generated identity/security/application outputs.

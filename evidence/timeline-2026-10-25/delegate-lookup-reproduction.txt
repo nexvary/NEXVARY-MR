@@ -1,0 +1,10 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentTimelineControls() Uncaught exception: Cannot read property 'text' of null
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(66)]
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 448ms
+********* Finished testing of mr_ui *********

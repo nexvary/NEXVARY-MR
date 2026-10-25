@@ -66,6 +66,10 @@ TestCase {
    verify(page.timelineExplanationAt(0).indexOf(arabic?"صحة":"authenticity")>=0,"Timeline uncertainty is explained in the selected language")
    reveal(page,button);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header,"Timeline scrolling must not overpaint the header")
    const top=button.mapToItem(app.contentItem,0,0),bottom=button.mapToItem(app.contentItem,button.width,button.height);verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<=app.height,"Timeline controls remain reachable")
+   page.contentItem.contentY=panel.y;wait(100);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header,"Timeline panel capture preserves the header")
+   const scope=findChild(app,"governmentTimelineScope"),queryField=findChild(app,"governmentTimelineQuery")
+   verify(scope.height>=scope.contentHeight,"Wrapped scope text remains fully allocated")
+   verify(scope.mapToItem(page,0,scope.height).y<=queryField.mapToItem(page,0,0).y,"Wrapped scope does not overlap search")
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-timeline-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
   }
   const query=findChild(app,"governmentTimelineQuery");query.text="no-synthetic-match";reveal(page,button);mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.events.length,0)
