@@ -11,11 +11,11 @@ Read the current DEVELOPMENT_STATE.md and CI evidence before treating a gate as 
 | Area | Implemented and tested | Practical boundary / remaining work |
 |---|---|---|
 | Government interface | Default 12-section AR/EN workspace; separate repair navigation; internal Back; real licensed icons; responsive/DPI regression | Real Qt captures are development fixtures, not real case data. |
-| Cases | Create/search/reopen/edit, authority/agency/court/prosecutor fields, devices, closure/archive | Document-specific attachment classification and retention workflows remain. |
+| Cases | Create/search/reopen/edit, authority/agency/court/prosecutor fields, devices, closure/archive | Native retention/hold/archive/disposal-review governance added; document-specific attachment classification remains. |
 | Evidence | Protected imported copy, SHA-256, case/device association, manifest, verified working-copy export | 16 MiB per source, bounded case/export count; explicit exports are unencrypted and inherit destination security context. |
 | Custody and audit | Matching-custodian transfer, hash-linked protected audit, local signed anchors and rollback-prefix comparison | Recorded handovers are declarations. External time/key custody and physical handover proof are not established. |
 | Identity and RBAC | Local Argon2id credentials, password-wrapped signing keys, native role/action checks, ownership/grants, revocation, lockout and session expiry | Local accounts are not institutional identity/SSO or proof of independent people. |
-| Protected storage | Windows current-user DPAPI payloads, bounded SQLite transactions, stale-writer rejection | Bounded protected case backup/restore now validates original ownership, every evidence blob and a separately supplied digest; retention/deletion policy remains. Linux real-case storage fails closed. |
+| Protected storage | Windows current-user DPAPI payloads, bounded SQLite transactions, stale-writer rejection | Bounded protected case backup/restore now validates original ownership, every evidence blob and a separately supplied digest; native retention governance now persists within snapshots; physical disposal execution remains. Linux real-case storage fails closed. |
 | Device assessment | Selected-target manufacturer/model, SoC/hardware, firmware, OS/patch, boot/encryption observations with source/time and unknown states | Live USB observations are not automatically attributed to a seized case device. No protected-phone acquisition, key extraction or iOS capability inferred. |
 | Case analysis | Existing classic-PCAP and JPEG-EXIF parsers on hash-verified case bytes; repeatable report hashes; protected run provenance | 8 MiB sources. Android backup/SQLite adapters, searchable artifact indexing, timeline and relationship integration remain. |
 | Research | Existing Atlas/tool catalog, experiment intake, public/synthetic author/reviewer signatures and evidence verification | Research approval does not grant commercial/device support; exact model/OS/firmware repeatability remains required. |
@@ -30,7 +30,8 @@ The protected case snapshot/restore slice is implemented; see PROTECTED_CASE_BAC
 for bounds, current-account recovery and retained-anchor semantics. It is not full
 OS/identity-registry disaster recovery.
 
-Next enforce retention/archive/deletion policy and integrate one bounded authorized
+Retention/archive/disposal-review governance is implemented with no byte deletion; see
+EVIDENCE_RETENTION.md. Next integrate one bounded authorized
 backup format and SQLite artifact path through the existing engines. Preserve the
 legacy forensic feature freeze: case integration is not authorization to duplicate
 or expand its unrelated parser backlog.

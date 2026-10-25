@@ -88,6 +88,7 @@ foreach ($relative in $requiredRuntime) {
 Copy-Item (Join-Path $repo 'docs/USER_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OPERATIONS.md') $bundle
 Copy-Item (Join-Path $repo 'docs/PROTECTED_CASE_BACKUP.md') $bundle
+Copy-Item (Join-Path $repo 'docs/EVIDENCE_RETENTION.md') $bundle
 New-Item -ItemType Directory -Force (Join-Path $bundle 'verification') | Out-Null
 Copy-Item (Join-Path $repo 'scripts/verify_evidence_package.py') (Join-Path $bundle 'verification/verify_evidence_package.py')
 Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle

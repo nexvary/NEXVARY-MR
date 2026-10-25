@@ -1,4 +1,5 @@
 #include "LawCaseStore.hpp"
+#include "LawRetention.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryFile.hpp"
 #include <QSqlQuery>
@@ -34,6 +35,7 @@ LawCaseStore::~LawCaseStore(){const auto name=connection_;if(db_.isValid())db_.c
 bool LawCaseStore::fail(const QString &m){error_=m;return false;}
 bool LawCaseStore::valid(const QVariantMap &r) {
  if(r.value("schema").toInt()!=1||r.value("synthetic").toBool()!=synthetic_||r.value("revision").toLongLong()<1)return fail("Case schema/profile mismatch.");
+ if(!nexvary::law::validRetention(r))return fail("Invalid retention schema.");
  const auto events=r.value("audit").toList();if(events.isEmpty()||events.size()>10000)return fail("Invalid case audit size.");
  QString previous;int sequence=0;
  for(const auto &value:events){auto e=value.toMap();const auto hash=e.take("hash").toString();if(e.value("caseId")!=r.value("id")||e.value("sequence").toInt()!=++sequence||e.value("previous").toString()!=previous||hash!=digest(encode(e)))return fail("Case audit chain verification failed.");previous=hash;}
@@ -81,7 +83,8 @@ QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor,co
 bool LawCaseStore::mutate(const QString &id,qint64 revision,const QString &event,const QString &actor,const std::function<bool(QVariantMap&)> &change) {
  error_.clear();if(!ready_||!text(actor,256)||!db_.transaction())return fail("Cannot start case transaction.");
  auto r=get(id);if(r.isEmpty()||r.value("revision").toLongLong()!=revision||r.value("audit").toList().size()>=10000){db_.rollback();return fail("Invalid case, stale revision or event limit reached.");}
- if((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported")){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
+ const bool retention=event.startsWith("retention:");
+ if(!retention&&((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
  if(!change(r)){db_.rollback();return false;}
  r.insert("revision",revision+1);r.insert("deviceCount",r.value("devices").toList().size());append(r,event,actor);
  if(!save(r,revision)||!db_.commit()){db_.rollback();if(error_.isEmpty())fail("Case transaction failed.");return false;}return true;

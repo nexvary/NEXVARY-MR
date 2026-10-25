@@ -1,3 +1,61 @@
+# Government Operations Phase 2 — retention increment (2026-10-25)
+
+- Current Branch: `feature/government-operations` (PR #15, still draft).
+- Current HEAD SHA at verified resume: `c9b385840d4f9b40e14ff981caaf1e7aa51130a5`.
+  The commit containing this implementation record is resolved with `git rev-parse HEAD`.
+- Latest Verified Executable SHA (hosted): `6d9e4c9a540b156b592dc3d10831deabad19877e`.
+- CI Status: reference run 40160538371 rechecked through GitHub; seven jobs successful.
+  Local full run: 38/40, then the two generated-output permission failures passed
+  2/2 after restoring execute bits. All 40 groups are covered across these runs;
+  retention 9/9, identity 12/12, case 17/17, Qt Quick 44/44, both DPI profiles,
+  ASan/UBSan 3/3 (no local leak inspection), Python 35/35 and history/tree checks
+  passed. Raw failures and reruns: `evidence/retention-2026-10-25/`.
+  New exact-source Windows/Linux/package CI is pending publication and verification.
+- Completed Government Capabilities: existing cases/devices/protected evidence,
+  RBAC/ownership/grants, local identities/rotation/revocation, signed research
+  reviews/anchors, SHA-256/custody, protected backup/restore, reports and AR/EN UI
+  remain. New native retention policy/assignment, legal hold/preservation exception,
+  reviewer release, UTC expiry assessment, verified protected-in-place archive and
+  separate authenticated disposal request/review routes are implemented.
+- Remaining Government Capabilities: authorized document/unencrypted-backup/SQLite/
+  JSON/XML/CSV/log adapters, unified searchable timeline and provenance relationships,
+  enforced offline network policy, further device/research/training integration,
+  institutional review/search/report/deployment/identity/recovery/Windows RC backlog.
+- Known Limitations: no evidence deletion or automated disposal; in-place protected
+  archive only (no cold repository/WORM). Local OS clock and local accounts do not
+  establish trusted external time or two independently verified human reviewers.
+  Existing DPAPI/account/backup/size/anchor limitations remain. Retention collection
+  and payload limits are documented in `docs/EVIDENCE_RETENTION.md`.
+- External Acceptance Gates: owned exact-firmware phones, independent Windows 10/11,
+  agency identity/people/SSO, trusted publisher certificate, external key/time custody,
+  independent privacy/licensing/records/recovery review and release authorization.
+- Next Executable Task: finish retention regression and exact-source hosted CI, then
+  add the first bounded authorized artifact adapter through hash-verified working
+  copies and isolated parsing, without duplicating existing PCAP/EXIF engines.
+- Resume Commands:
+
+```sh
+git fetch --all --prune
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+git diff --stat origin/integration/gate-1-stages-08-60...HEAD
+# Prepare Qt and pinned libsodium using scripts/prepare_sodium.py, then:
+cmake -S . -B build -DMR_SODIUM_ROOT=/path/to/prepared/sodium -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+python3 -m unittest discover -s tests -v
+```
+
+Branch review: PR #11 remains draft/open against integration at `8fb9b38`; PR #15
+remains draft/open against that reviewed case foundation. The Research Program,
+USB Doctor and professional UI branches are ancestors of this government HEAD.
+NPSE has separate Android/shared-service changes; no blanket merge is performed.
+Only NEXVARY-MR files are changed, and main is not merged. Historical records below
+are evidence of earlier checkpoints and do not override this current summary.
+
+---
+
 # Protected case backup/restore increment — 2026-10-25
 
 Branch: `feature/government-operations`; review PR #15. Hosted-verified executable

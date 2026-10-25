@@ -75,7 +75,7 @@ Windows file permission bits are not an independently managed NTFS ACL policy.
 Choose an institution-approved destination and preserve the Windows protection
 context and identity registry with supported OS-level backup procedures. Filenames
 and filesystem metadata are outside the encrypted container. Local-account/process
-compromise, agency SSO, external signing/time custody, policy-enforced retention and
+compromise, agency SSO, external signing/time custody, physical disposal execution and
 full operating-system/account recovery remain separate deployment requirements.
 
 Native tests cover round-trip preservation, wrong digest/consent/role/grant,

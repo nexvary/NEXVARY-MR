@@ -98,8 +98,9 @@ PDF case reports include analysis and working-copy history.
 
 Generic Android backup parsing, SQLite case analysis, parser-to-case indexing/timeline
 integration, document-specific attachments,
-retention/deletion policy enforcement and a dedicated protected backup/restore
-workflow remain implementation gaps. Existing evidence import can preserve an
+actual disposal execution, searchable case artifact integration and a full document-management
+subsystem remain implementation gaps. Protected backup/restore and retention governance
+are implemented; see PROTECTED_CASE_BACKUP.md and EVIDENCE_RETENTION.md. Existing evidence import can preserve an
 explicitly selected document but is not a document-management subsystem.
 
 Institution SSO, independently verified personnel, external key/time custody,

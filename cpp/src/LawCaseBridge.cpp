@@ -1,5 +1,6 @@
 #include "LawCaseBridge.hpp"
 #include "LawCaseStore.hpp"
+#include "LawRetention.hpp"
 #include "IdentityService.hpp"
 #include "LawTraining.hpp"
 #include "DeviceAssessment.hpp"
@@ -47,7 +48,7 @@ QString LawCaseBridge::protection()const {
 QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId(currentRole()).data(),static_cast<qsizetype>(nexvary::law::roleId(currentRole()).size()));}
 QVariantMap LawCaseBridge::permissions()const {
  using A=nexvary::law::Action;QVariantMap p;
- for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"backup",A::BackupCase},{"restore",A::RestoreCase},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
+ for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"retention",A::ManageRetention},{"preserve",A::PreserveEvidence},{"releasePreservation",A::ReleasePreservation},{"archiveEvidence",A::ArchiveEvidence},{"requestDisposal",A::RequestDisposal},{"reviewDisposal",A::ReviewDisposal},{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"backup",A::BackupCase},{"restore",A::RestoreCase},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
   p.insert(entry.first,nexvary::law::allows(currentRole(),entry.second));
  p.insert("executeDevice",false);p.insert("enterpriseRoleProvisioningReady",false);return p;
 }
@@ -237,6 +238,7 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
  QFile output;if(!newOutput(path,output))return fail(QStringLiteral("Choose a new local PDF file."));
  const auto tr=[arabic](const QString &ar,const QString &en){return arabic?ar:en;};
  const QMap<QString,QString> labels{
+  {"label",QStringLiteral("اسم السياسة")},{"days",QStringLiteral("مدة الاحتفاظ بالأيام")},{"archiveAfterDays",QStringLiteral("الأرشفة بعد أيام")},{"policyId",QStringLiteral("معرّف السياسة")},{"kind",QStringLiteral("نوع قيد الحفظ")},{"releasedAtUtc",QStringLiteral("وقت رفع القيد UTC")},{"releasedBy",QStringLiteral("هوية رافع القيد")},{"releaseReason",QStringLiteral("سبب رفع القيد")},{"reviewedAtUtc",QStringLiteral("وقت المراجعة UTC")},{"reviewedBy",QStringLiteral("هوية المراجع")},{"reviewReason",QStringLiteral("سبب قرار المراجعة")},{"reviewAuthorityReference",QStringLiteral("مرجع سند المراجعة")},{"operation",QStringLiteral("إجراء الاحتفاظ")},{"fields",QStringLiteral("مدخلات الإجراء")},{"storage",QStringLiteral("موضع الأرشيف")},
   {"caseNumber",QStringLiteral("رقم القضية")},{"investigatingAgency",QStringLiteral("جهة الضبط")},{"investigatorName",QStringLiteral("المحقق المسؤول")},
   {"seizedDeviceDescription",QStringLiteral("وصف المضبوطات")},{"authorityReference",QStringLiteral("مرجع الإذن أو السند")},{"issuingAuthority",QStringLiteral("الجهة المصدرة")},
   {"prosecutorName",QStringLiteral("اسم وكيل النيابة")},{"prosecutorOffice",QStringLiteral("النيابة المختصة")},{"courtName",QStringLiteral("المحكمة")},
@@ -259,13 +261,13 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
   {"status",QStringLiteral("الحالة")},{"sourceSize",QStringLiteral("حجم المصدر بالبايت")},{"synthetic",QStringLiteral("بيانات اصطناعية")},
   {"hash",QStringLiteral("بصمة الحدث SHA-256")},{"previous",QStringLiteral("بصمة الحدث السابق")},{"stateSha256",QStringLiteral("بصمة حالة القضية")},{"caseId",QStringLiteral("معرّف القضية")}
  };
- const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc","manifestSha256","sourceSha256","reportSha256","packageId","exportedAtUtc","reportJson","implementationVersion","parser","backupId","backupSha256","sourceAuditHead","provider"};
+ const QStringList technical{"id","deviceId","evidenceId","caseId","serial","imei","sha256","hash","previous","stateSha256","atUtc","registeredAtUtc","receivedAtUtc","validFromUtc","validUntilUtc","seizureAtUtc","manifestSha256","sourceSha256","reportSha256","packageId","exportedAtUtc","reportJson","implementationVersion","parser","backupId","backupSha256","sourceAuditHead","provider","policyId","fields","releasedAtUtc","reviewedAtUtc"};
  const auto table=[&](const QVariantMap &record,const QString &caption){
   QString out=QStringLiteral("<table border='1' cellspacing='0' cellpadding='4' width='100%'><thead><tr><th colspan='2' bgcolor='#e0e7ef'>%1</th></tr></thead>").arg(caption.toHtmlEscaped());
   for(auto it=record.cbegin();it!=record.cend();++it){
-   if(it.value().toString().isEmpty())continue;
+   if(it.value().toString().isEmpty()&&it.value().metaType().id()!=QMetaType::QVariantMap)continue;
    const auto key=arabic?labels.value(it.key(),it.key()):it.key();
-   auto displayed=it.value().toString();
+   auto displayed=it.value().metaType().id()==QMetaType::QVariantMap?QString::fromUtf8(QJsonDocument::fromVariant(it.value()).toJson(QJsonDocument::Indented)):it.value().toString();
    if(it.key()=="reportJson"){
     const auto report=QJsonDocument::fromJson(displayed.toUtf8());
     if(report.isObject())displayed=QString::fromUtf8(report.toJson(QJsonDocument::Indented)).trimmed();
@@ -290,6 +292,7 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
  if(!active_.value("backups").toList().isEmpty())html+=section("backups",tr(QStringLiteral("النسخ المحمية المسجلة"),"Protected case backups"));
  if(!active_.value("restorations").toList().isEmpty())html+=section("restorations",tr(QStringLiteral("سجل استعادة النسخ"),"Protected backup restorations"));
  html+=section("analyses",tr(QStringLiteral("تحليلات الأدلة"),"Evidence analyses"));
+ if(active_.contains("retention")){const auto g=active_.value("retention").toMap();for(const auto &key:{"policies","assignments","holds","archives","disposals","events"}){for(const auto &v:g.value(key).toList())html+=table(v.toMap(),tr(QStringLiteral("الاحتفاظ والأرشفة"),"Retention & archiving")+" / "+QString::fromLatin1(key));}}
  html+=section("audit",tr(QStringLiteral("سجل التدقيق المترابط"),"Linked audit trail"));
  html+=QStringLiteral("</body></html>");
  {QPdfWriter writer(&output);writer.setTitle(QStringLiteral("NEXVARY case review"));writer.setCreator(QStringLiteral("NEXVARY-MR"));QTextDocument document;document.setDefaultFont(QFont(QStringLiteral("Segoe UI"),10));document.setHtml(html);
@@ -301,4 +304,26 @@ bool LawCaseBridge::exportCasePdf(const QString &path,bool arabic,bool consent) 
   for(auto cursor=document.find(identifiers);!cursor.isNull();cursor=document.find(identifiers,cursor))cursor.mergeCharFormat(identifierFormat);
   document.print(&writer);}
  if(!output.flush()||output.size()==0){output.close();output.remove();return fail(QStringLiteral("PDF report could not be finalized."));}return true;
+}
+
+bool LawCaseBridge::retentionOperation(const QString &operation,const QVariantMap &fields) {
+ using A=nexvary::law::Action;
+ const QMap<QString,A> actions{{"policy",A::ManageRetention},{"assign",A::ManageRetention},{"hold",A::PreserveEvidence},{"release",A::ReleasePreservation},{"archive",A::ArchiveEvidence},{"request-disposal",A::RequestDisposal},{"review-disposal",A::ReviewDisposal}};
+ if(!actions.contains(operation))return fail("Unknown retention action.");
+ if(!permit(actions.value(operation))||active_.isEmpty())return false;
+ if(operation=="review-disposal"&&!identity_)return fail("Disposal review requires independently authenticated local accounts.");
+ const auto id=active_.value("id").toString();
+ if(!store_->retentionOperation(id,active_.value("revision").toLongLong(),operation,fields,actor()))return fail(store_->error());
+ return refresh(id);
+}
+QVariantMap LawCaseBridge::retentionAssessment(const QString &evidence) {
+ if(!permit(nexvary::law::Action::ReadCase)||active_.isEmpty())return {};
+ const auto r=store_->get(active_.value("id").toString());if(r.isEmpty()){fail(store_->error());return {};}
+ return nexvary::law::assessRetention(r,evidence,QDateTime::currentDateTimeUtc());
+}
+QVariantMap LawCaseBridge::verifyArchive(const QString &archiveId) {
+ if(!permit(nexvary::law::Action::ReadAudit)||active_.isEmpty())return {};
+ const auto result=store_->verifyArchive(active_.value("id").toString(),archiveId);
+ if(result.isEmpty())fail(store_->error());
+ return result;
 }

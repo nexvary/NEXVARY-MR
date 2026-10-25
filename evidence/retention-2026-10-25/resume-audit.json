@@ -1,0 +1,45 @@
+{
+  "governmentHeadAtResume": "c9b385840d4f9b40e14ff981caaf1e7aa51130a5",
+  "referenceExecutable": "6d9e4c9a540b156b592dc3d10831deabad19877e",
+  "referenceCI": 40160538371,
+  "referenceJobs": "7 successful, independently checked through GitHub connector",
+  "prs": {
+    "11": {
+      "open": true,
+      "draft": true,
+      "merged": false,
+      "base": "integration/gate-1-stages-08-60"
+    },
+    "15": {
+      "open": true,
+      "draft": true,
+      "merged": false,
+      "base": "feature/law-enforcement-case-foundation"
+    }
+  },
+  "branches": {
+    "feature/law-enforcement-case-foundation": {
+      "sha": "8fb9b38f771da91c60f3b85a2084868b16fe95d4",
+      "ancestorOfGovernment": true
+    },
+    "feature/advanced-mobile-research-program": {
+      "sha": "372b9636fce50a66e64360eb315f12ecdfff8c45",
+      "ancestorOfGovernment": true
+    },
+    "feature/usb-doctor-intelligence": {
+      "sha": "9a4392a37b85186032ded8cdbe254b2064d8ed9b",
+      "ancestorOfGovernment": true
+    },
+    "feature/professional-workstation-ui": {
+      "sha": "2b0a83a28c1ca6b11db85c6753da935a150e9fd0",
+      "ancestorOfGovernment": true
+    },
+    "feature/npse-shared-services": {
+      "sha": "a7eb9f8bce0656a4101dd6907d72452537490053",
+      "ancestorOfGovernment": false
+    }
+  },
+  "mainMerged": false,
+  "npseBlanketMerged": false,
+  "otherRepositoriesModified": false
+}

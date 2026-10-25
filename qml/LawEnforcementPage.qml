@@ -13,8 +13,8 @@ Item {
  property var lastBackup:({})
  function saveProtectedBackup(path){lastBackup=lawCaseBridge.exportProtectedBackup(path,backupConsent.checked)}
  function restoreProtectedBackup(path){const id=lawCaseBridge.restoreProtectedBackup(path,restoreDigest.text,restoreConsent.checked);if(id!==""){restoreDigest.text="";page.section=0}return id}
- readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب","الحسابات والصلاحيات"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory","Accounts and permissions"]
- readonly property int viewIndex:[0,1,2,2,3,4,5,6,7,8,9][section]
+ readonly property var titles:app.ar?["لوحة القضية","قضية جديدة","فتح قضية","بحث القضايا","أجهزة القضية","السند القانوني","الأدلة والحيازة","تقييم الوصول","التقارير","مختبر التدريب","الحسابات والصلاحيات","الاحتفاظ والأرشفة"]:["Case dashboard","New case","Open case","Case search","Case devices","Legal authorization","Evidence & custody","Device access assessment","Reports","Training laboratory","Accounts and permissions","Retention & archiving"]
+ readonly property int viewIndex:[0,1,2,2,3,4,5,6,7,8,9,10][section]
  function newCase(){intake.startNew();section=1}
  function editCase(){intake.edit(lawCaseBridge.activeCase.metadata||{});section=1}
  Connections {target:lawCaseBridge;function onChanged(){page.auditVerified=false;page.anchorVerified=false;caseExportConsent.checked=false;backupConsent.checked=false;restoreConsent.checked=false;page.lastBackup=({})}}
@@ -48,6 +48,7 @@ Item {
        ActionButton {objectName:"lawArchiveCase";text:app.trx("أرشفة","Archive");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.archive;onClicked:lawCaseBridge.transitionCase("archived")}
       }
      }
+     ActionButton {objectName:"lawRetention";text:app.trx("الاحتفاظ والأرشفة","Retention & archiving");enabled:!!lawCaseBridge.activeCase.id;onClicked:page.section=11}
      GridLayout {Layout.fillWidth:true;columns:width>950?3:2;columnSpacing:12;rowSpacing:12
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("الأجهزة المرتبطة","Case devices");iconName:"phone";statusText:lawCaseBridge.devices.length+app.trx(" جهاز"," device(s)");description:app.trx("سجّل المشاهدات والمسؤول والاستلام دون تغيير الهاتف.","Record observations, custodian and receipt without changing the phone.");actionText:app.trx("إدارة الأجهزة","Manage devices");onTriggered:page.section=4}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("السند والنطاق","Authority & scope");iconName:"document_lock";statusText:app.trx("إقرار للمراجعة","Declaration for review");description:app.trx("بيانات الإذن والجهة والمدة؛ لا تصادق المنصة على الصلاحية القانونية.","Authority, issuer and dates; the platform does not authenticate legal entitlement.");actionText:app.trx("مراجعة البيانات","Review declaration");onTriggered:page.section=5}
@@ -127,6 +128,7 @@ Item {
    }
    LawTrainingPage {objectName:"lawTrainingPage";app:page.app}
    IdentityPanel {app:page.app}
+   LawRetentionPage {app:page.app;onBackRequested:page.section=0}
   }
  }
  FileDialog {id:protectedBackupOutput;fileMode:FileDialog.SaveFile;defaultSuffix:"nmrbackup";nameFilters:["Protected case backup (*.nmrbackup)"];onAccepted:page.saveProtectedBackup(selectedFile.toString())}

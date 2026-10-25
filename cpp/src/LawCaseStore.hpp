@@ -27,6 +27,8 @@ public:
  QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor);
  QVariantMap exportProtectedBackup(const QString &id,qint64 revision,const QString &path,const QString &actor);
  QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,const QString &actor,const std::function<bool(const QVariantMap&)> &authorize);
+ bool retentionOperation(const QString &id,qint64 revision,const QString &operation,const QVariantMap &fields,const QString &actor);
+ QVariantMap verifyArchive(const QString &id,const QString &archiveId);
  bool verifyEvidence(const QString &id,const QString &evidence);
  QVariantMap exportWorkingCopy(const QString &id,qint64 revision,const QString &evidence,const QString &directory,const QString &purpose,const QString &actor);
 private:

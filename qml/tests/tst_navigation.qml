@@ -52,6 +52,21 @@ TestCase {
   for(const arabic of [true,false]){app.ar=arabic;app.width=1536;app.height=980;const panel=findChild(app,"lawProtectedBackupPanel");const scroll=findChild(app,"lawReportsScroll");verify(renderedFrame());reveal(scroll,panel);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-backup-"+(arabic?"ar":"en")+".png"))}
   app.setWorkspace(false)
  }
+ function test_governmentRetentionControls(){
+  app.setWorkspace(true);const law=findChild(app,"lawEnforcementWorkspace")
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-RETENTION-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic device",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic retention only"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic fixture",custodian:"Synthetic custodian"});const e=lawCaseBridge.addEvidence(dev,syntheticEvidencePath,"Synthetic retention fixture","Synthetic custodian",true);verify(e!=="")
+  law.section=11;verify(renderedFrame());compare(findChild(app,"retentionCreatePolicy").enabled,false)
+  const password="Synthetic-only UI password 2026!";verify(identityBridge.login("ui-admin",password));const reviewer=identityBridge.createUser("retention-reviewer","Synthetic retention reviewer","reviewer",password);verify(reviewer!=="",identityBridge.error);verify(identityBridge.setCaseGrant(id,reviewer,true));verify(identityBridge.login("retention-reviewer",password));verify(lawCaseBridge.openCase(id));law.section=11
+  findChild(app,"retentionPolicyLabel").text="Synthetic evaluation retention";findChild(app,"retentionAuthority").text="SYNTHETIC-POLICY-001"
+  const create=findChild(app,"retentionCreatePolicy"),scroll=findChild(app,"lawRetentionPage");verify(create.enabled);reveal(scroll,create);mouseClick(create);compare(lawCaseBridge.activeCase.retention.policies.length,1)
+  const assign=findChild(app,"retentionAssignPolicy");verify(assign.enabled);reveal(scroll,assign);mouseClick(assign);compare(lawCaseBridge.activeCase.retention.assignments.length,1)
+  const archive=findChild(app,"retentionArchive");reveal(scroll,archive);mouseClick(archive);compare(lawCaseBridge.activeCase.retention.archives.length,1);verify(lawCaseBridge.verifyArchive(lawCaseBridge.activeCase.retention.archives[0].id).verified)
+  findChild(app,"retentionReason").text="Synthetic court preservation exercise";findChild(app,"retentionHoldAuthority").text="SYNTHETIC-HOLD-001";const hold=findChild(app,"retentionPlaceHold");reveal(scroll,hold);mouseClick(hold);compare(lawCaseBridge.activeCase.retention.holds.length,1)
+  verify(!lawCaseBridge.retentionAssessment(e).disposalEligible);compare(findChild(app,"retentionRequestDisposal").enabled,false)
+  for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=768;reveal(scroll,findChild(app,"retentionAssess"));mouseClick(findChild(app,"retentionAssess"));scroll.contentItem.contentY=0;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-retention-"+(arabic?"ar":"en")+".png"))}
+  const back=findChild(app,"retentionBack");reveal(scroll,back);mouseClick(back);compare(law.section,0);verify(lawCaseBridge.verifyAudit());verify(identityBridge.login("ui-investigator",password));app.setWorkspace(false)
+ }
  function test_lawCaseAndResearchWorkspaces(){
   verify(lawCaseBridge.ready,lawCaseBridge.error);verify(researchBridge.ready,researchBridge.error)
   app.navigateSection(12);compare(app.currentPage,12);verify(renderedFrame())

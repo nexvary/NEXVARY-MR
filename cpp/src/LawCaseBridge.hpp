@@ -51,6 +51,9 @@ public:
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
  Q_INVOKABLE QVariantMap exportProtectedBackup(const QString &path,bool consent);
  Q_INVOKABLE QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,bool consent);
+ Q_INVOKABLE bool retentionOperation(const QString &operation,const QVariantMap &fields);
+ Q_INVOKABLE QVariantMap retentionAssessment(const QString &evidence);
+ Q_INVOKABLE QVariantMap verifyArchive(const QString &archiveId);
  Q_INVOKABLE bool verifyEvidence(const QString &evidence);
  Q_INVOKABLE QVariantMap exportWorkingCopy(const QString &evidence,const QString &directory,const QString &purpose,bool consent);
  Q_INVOKABLE bool verifyAudit();
