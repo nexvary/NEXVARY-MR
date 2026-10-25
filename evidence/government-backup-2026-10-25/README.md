@@ -1,9 +1,10 @@
 # Protected-backup increment validation
 
 Synthetic data only. The source revision is the commit containing this folder;
-GitHub source/CI pairing is recorded in PR #15. Previous source cb1f03a passed
-all seven hosted native jobs in run 40146396789; its packages do not contain this
-new protected-backup feature.
+GitHub source/CI pairing is recorded in PR #15 and hosted-ci.json. Executable source
+6d9e4c9 passed all seven jobs in run 40160538371: four profiles each 39/39 and
+production sanitizers 8/8. Portable isolation and installer lifecycle passed.
+The later documentation/evidence checkpoint does not change executable sources.
 
 Final local checks: final-ctest.txt/XML, hash-font-build.txt, hash-font-native.txt,
 final-ui-complete.txt, python.txt, gitleaks-dir.txt and gitleaks-regression.txt.

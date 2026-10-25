@@ -1,10 +1,11 @@
 # Protected case backup/restore increment — 2026-10-25
 
-Branch: `feature/government-operations`; review PR #15. Last hosted-verified source:
-`cb1f03a0282c3fee7cc12164d56acc2a0eddd975`; CI 40146396789 passed all seven jobs,
-including four 39/39 native profiles and the 8/8 production sanitizer gate. Both
-Python and public-history events passed. This implementation is the next source
-increment and must receive its own exact-source CI before new Windows delivery.
+Branch: `feature/government-operations`; review PR #15. Hosted-verified executable
+source: `6d9e4c9a540b156b592dc3d10831deabad19877e`; CI 40160538371 passed all seven
+jobs: Windows production/laboratory and Linux production/laboratory each 39/39,
+plus 8/8 production sanitizer tests. Python and public-history checks passed on
+both push and PR. This checkpoint changes only documentation/evidence after that
+source; the packages below are explicitly built from the verified executable SHA.
 
 Implemented: bounded protected case/evidence snapshot via the existing Windows
 DPAPI provider; independently supplied SHA-256 on restore; original ownership/grant
@@ -39,9 +40,17 @@ tests that ran against stale outputs before its rebuild are explicitly preserved
 as before-rebuild evidence, not accepted final validation. Final source rebuilt
 successfully and case/identity tests passed again. The final full run passed
 39/39 CTest groups, including both DPI scales and native launch. Hosted exact-source
-CI pending.
+CI also passed as recorded above and in `hosted-ci.json`.
 
-Next: finish/publish this increment and exact-source CI; then native retention and
+Windows delivery from that source (unsigned development builds):
+- Portable: https://github.com/nexvary/NEXVARY-MR/actions/runs/40160538371/artifacts/12586018810
+- Installer and inner-package SHA256SUMS.txt: https://github.com/nexvary/NEXVARY-MR/actions/runs/40160538371/artifacts/12586558227
+- Native/installer validation: https://github.com/nexvary/NEXVARY-MR/actions/runs/40160538371/artifacts/12586723040
+Hosted isolation, installed-in-place launch and install/uninstall checks passed.
+Artifact archive digests and expiry (2027-01-23) are in `hosted-ci.json`; those are
+not claimed to be the inner ZIP/EXE digests. No physical Windows 10/11 result inferred.
+
+Next: native retention and
 archive policy enforcement, document/authorized-backup/SQLite case adapters,
 searchable timelines/relationships and policy-enforced offline mode. External
 Windows 10/11/phone acceptance, institutional identity/key/time custody, independent
