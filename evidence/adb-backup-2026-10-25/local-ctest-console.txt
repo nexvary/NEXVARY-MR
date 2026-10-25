@@ -1,0 +1,18 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start  9: mr_import_tests
+1/6 Test  #9: mr_import_tests ..................   Passed    7.23 sec
+    Start 36: mr_adb_backup_interop
+2/6 Test #36: mr_adb_backup_interop ............   Passed    0.46 sec
+    Start 40: mr_ui_tests
+3/6 Test #40: mr_ui_tests ......................   Passed   50.52 sec
+    Start 41: mr_ui_scale_1.25
+4/6 Test #41: mr_ui_scale_1.25 .................   Passed   25.24 sec
+    Start 42: mr_ui_scale_1.5
+5/6 Test #42: mr_ui_scale_1.5 ..................   Passed   29.90 sec
+    Start 43: mr_gui_smoke
+6/6 Test #43: mr_gui_smoke .....................   Passed   16.48 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) = 129.83 sec

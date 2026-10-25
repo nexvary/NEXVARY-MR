@@ -52,6 +52,26 @@ TestCase {
   for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=980;page.contentItem.contentY=0;wait(120);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app);compare(header.length,64);page.contentItem.contentY=panel.y;wait(120);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header,"Scrolling evidence must not paint over the application header");verify(uiEvidence.captureWindow(app,uiScreenshotBase+"authorized-import-"+(arabic?"ar":"en")+"-"+uiScaleTag+".png"))}
   findChild(app,"governmentImportAdapter").currentIndex=1;consent.checked=true;reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"importBusy",false,8000);compare(JSON.parse(lawCaseBridge.importResult.reportJson).status,"rejected");verify(lawCaseBridge.verifyEvidence(source));verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();compare(findChild(app,"governmentImportPurpose").text,"");app.setWorkspace(false)
  }
+ function test_governmentAdbBackupControls(){
+  app.setWorkspace(true)
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-ADB-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic ADB fixture",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic inventory only"});verify(id!=="",lawCaseBridge.error)
+  const device=lawCaseBridge.addDevice({model:"Synthetic backup",custodian:"Synthetic custodian"});verify(device!=="")
+  const source=lawCaseBridge.addEvidence(device,syntheticAdbBackupPath,"Synthetic ADB v5 backup","Synthetic custodian",true);verify(source!=="")
+  app.navigateSection(6);verify(renderedFrame())
+  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentImportPanel"),button=findChild(app,"governmentImportStart"),selector=findChild(app,"governmentImportAdapter"),consent=findChild(app,"governmentImportConsent")
+  findChild(app,"governmentImportEvidence").currentIndex=0;selector.currentIndex=6;compare(selector.model[6].id,"adb-backup-v5")
+  findChild(app,"governmentImportPurpose").text="Synthetic authorized backup inventory";compare(button.enabled,false);consent.checked=true
+  reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"importBusy",false,8000)
+  const report=JSON.parse(lawCaseBridge.importResult.reportJson);compare(report.status,"imported");compare(report.backup.membersScanned,4);compare(report.backup.inventoryOnly,true);compare(report.findings.length,4);compare(report.findings[2].memberSha256.length,64);compare(consent.checked,false)
+  for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
+   app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(100);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
+   const scope=findChild(app,"governmentBackupScope");verify(scope.visible);verify(scope.text.indexOf(arabic?"غير موثّق":"untrusted")>=0);verify(scope.height>=scope.contentHeight)
+   reveal(page,scope);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
+   page.contentItem.contentY=panel.y;wait(100);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-adb-backup-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
+  }
+  verify(lawCaseBridge.verifyEvidence(source));verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();compare(button.enabled,false);app.setWorkspace(false)
+ }
  function test_governmentTimelineControls(){
   app.setWorkspace(true)
   const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-TIMELINE-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic timestamp file",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic timeline only"});verify(id!=="",lawCaseBridge.error)

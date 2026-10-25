@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="6"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="6d349920fa01"
+	time="129"
+	timestamp="2026-10-25T20:00:45"
+	>
+	<testcase name="mr_import_tests" classname="mr_import_tests" time="7.23178" status="run">
+		<properties/>
+		<system-out>********* Start testing of ImportTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ImportTests::initTestCase()
+PASS   : ImportTests::supportedFormats(text-arabic)
+PASS   : ImportTests::supportedFormats(json)
+PASS   : ImportTests::supportedFormats(xml)
+PASS   : ImportTests::supportedFormats(csv)
+PASS   : ImportTests::supportedFormats(android)
+PASS   : ImportTests::supportedFormats(adb-v5)
+PASS   : ImportTests::malformed(json-syntax)
+PASS   : ImportTests::malformed(duplicate-key)
+PASS   : ImportTests::malformed(json-depth)
+PASS   : ImportTests::malformed(xml-dtd)
+PASS   : ImportTests::malformed(xml-depth)
+PASS   : ImportTests::malformed(xml-broken)
+PASS   : ImportTests::malformed(xml-other-encoding)
+PASS   : ImportTests::malformed(csv-open-quote)
+PASS   : ImportTests::malformed(csv-trailing)
+PASS   : ImportTests::malformed(csv-columns)
+PASS   : ImportTests::malformed(binary-document)
+PASS   : ImportTests:...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_adb_backup_interop" classname="mr_adb_backup_interop" time="0.455429" status="run">
+		<properties/>
+		<system-out>ADB backup interoperability: 52 checks passed
+</system-out>
+	</testcase>
+	<testcase name="mr_ui_tests" classname="mr_ui_tests" time="50.5174" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not pe...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.25" classname="mr_ui_scale_1.25" time="25.2379" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 24247ms
+********* Fi...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.5" classname="mr_ui_scale_1.5" time="29.9026" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 28826ms
+********* Fi...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_gui_smoke" classname="mr_gui_smoke" time="16.4796" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+</system-out>
+	</testcase>
+</testsuite>

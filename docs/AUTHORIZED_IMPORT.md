@@ -14,13 +14,14 @@ establish legal authorization. Existing classic-PCAP/JPEG-EXIF summaries are kep
 | CSV | Numbered records/cells, quoted commas/newlines/escaped quotes | Strict quotes, LF or CRLF, 128 columns and bounded records; no formula execution |
 | SQLite | Sorted table inventory and first 32 rowid-ordered rows/table, first 8 columns | Standalone rollback-mode database, 32 tables; views/virtual/shadow/WITHOUT ROWID tables skipped; BLOB SHA-256 only |
 | Android exported log | Numbered raw threadtime lines and section markers | No inferred year, timezone, event meaning or timestamp normalization |
+| Legacy ADB v5 backup | USTAR app-member inventory: path/type/size/content SHA-256/source offset/raw mtime | Unencrypted and uncompressed only; no extraction/app decoding, PAX/GNU/links/shared storage; 4,096 members, 128 retained; see LEGACY_ADB_BACKUP_IMPORT.md |
 
 Sources are capped at 4 MiB. Reports retain up to 128 findings, references up to
 512 and values up to 256 UTF-16 code units, with explicit truncation flags; the
 parser report is capped at 60 KiB and protected record at the existing 64-KiB
 analysis limit. Large/unsupported input remains registered and unchanged. These
 are bounded observations, not a complete device/file acquisition. Encrypted
-backups, vendor backup containers, recursive directories/archives, WAL sidecar
+backups, compressed ADB backups, other vendor backup containers, recursive directory/archival extraction, WAL sidecar
 collection, arbitrary log formats and PDF/DOCX extraction are not implemented.
 Supply a lawfully prepared checkpointed standalone SQLite copy; the application
 never checkpoints, unlocks or modifies the original database.

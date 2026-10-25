@@ -13,7 +13,7 @@ Review PR: https://github.com/nexvary/NEXVARY-MR/pull/15. The [acceptance matrix
 | Identity and RBAC | Local Argon2id credentials, password-wrapped signing keys, native role/action checks, ownership/grants, revocation, lockout and session expiry | Local accounts are not institutional identity/SSO or proof of independent people. |
 | Protected storage | Windows current-user DPAPI payloads, bounded SQLite transactions, stale-writer rejection | Bounded protected case backup/restore now validates original ownership, every evidence blob and a separately supplied digest; native retention governance now persists within snapshots; physical disposal execution remains. Linux real-case storage fails closed. |
 | Device assessment | Selected-target manufacturer/model, SoC/hardware, firmware, OS/patch, boot/encryption observations with source/time and unknown states | Live USB observations are not automatically attributed to a seized case device. No protected-phone acquisition, key extraction or iOS capability inferred. |
-| Case analysis | Existing classic-PCAP and JPEG-EXIF parsers on hash-verified case bytes; repeatable report hashes; protected run provenance | 8 MiB sources. Six bounded authorized-import adapters now include standalone SQLite samples and exported logs; vendor backup/container parsing, full artifact indexing and entity relationships remain. New timestamp projection status is tracked separately in CASE_TIMELINE.md and DEVELOPMENT_STATE.md. |
+| Case analysis | Existing classic-PCAP and JPEG-EXIF parsers on hash-verified case bytes; repeatable report hashes; protected run provenance | 8 MiB sources. Seven bounded authorized-import adapters include standalone SQLite samples, exported logs and the new unencrypted/uncompressed ADB v5 member inventory (verification tracked in DEVELOPMENT_STATE.md); broader vendor backup/container/app decoding, full artifact indexing and entity relationships remain. New timestamp projection status is tracked separately in CASE_TIMELINE.md and DEVELOPMENT_STATE.md. |
 | Case timestamp timeline | Original asynchronous projection of retained import timestamp literals; explicit UTC offsets, unresolved states, source/report provenance, literal search and pagination | Tested at the checkpoint above; independent laboratory/field acceptance remains pending. No full activity semantics, numeric epoch inference, social graph or timeline export is claimed. |
 | Research | Existing Atlas/tool catalog, experiment intake, public/synthetic author/reviewer signatures and evidence verification | Research approval does not grant commercial/device support; exact model/OS/firmware repeatability remains required. |
 | Training | Existing three synthetic scored decision scenarios and separate training reports | Not a complete VM/device-simulation/data-set laboratory or accredited training course. |
@@ -28,8 +28,7 @@ for bounds, current-account recovery and retained-anchor semantics. It is not fu
 OS/identity-registry disaster recovery.
 
 Retention/archive/disposal-review governance is implemented with no byte deletion; see
-EVIDENCE_RETENTION.md. Next verify the new timeline projection, integrate one bounded authorized
-backup format and typed artifact/provenance paths through the existing engines. Preserve the
+EVIDENCE_RETENTION.md. Timeline projection is tested at the pinned checkpoint above. Verify the new bounded ADB inventory, then integrate typed artifact/provenance paths through the existing engines. Preserve the
 legacy forensic feature freeze: case integration is not authorization to duplicate
 or expand its unrelated parser backlog.
 

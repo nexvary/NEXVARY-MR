@@ -1,4 +1,5 @@
 #include "ImportAdapters.hpp"
+#include "AdbBackupImport.hpp"
 #include <QCryptographicHash>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -145,11 +146,12 @@ bool sqliteImport(const QByteArray &bytes,const QString &path,Findings &findings
  QSqlDatabase::removeDatabase("isolated-import");return ok;
 }
 }
-bool importAdapterSupported(const QString &adapter){return QStringList{"utf8-document","json","xml","csv","sqlite","android-log"}.contains(adapter);}
+bool importAdapterSupported(const QString &adapter){return QStringList{"utf8-document","json","xml","csv","sqlite","android-log","adb-backup-v5"}.contains(adapter);}
 QVariantMap parseAuthorizedImport(const QByteArray &bytes,const QString &adapter,const QString &workingPath,QString &error){
  error.clear();if(!importAdapterSupported(adapter)||bytes.isEmpty()||bytes.size()>importInputLimit){error="unsupported-adapter-or-input-limit";return {};}
- Findings findings;QString text;bool ok=false;
- if(adapter=="sqlite")ok=sqliteImport(bytes,workingPath,findings);
+ Findings findings;QString text;bool ok=false;QVariantMap backup;
+ if(adapter=="adb-backup-v5")ok=inventoryAdbBackup(bytes,findings.rows,findings.count,backup);
+ else if(adapter=="sqlite")ok=sqliteImport(bytes,workingPath,findings);
  else if(!textInput(bytes,text)){error="invalid-utf8-or-binary-document";return {};}
  else if(adapter=="json")ok=jsonImport(text.toUtf8(),findings);
  else if(adapter=="xml")ok=xmlImport(text.toUtf8(),findings);
@@ -167,6 +169,10 @@ QVariantMap parseAuthorizedImport(const QByteArray &bytes,const QString &adapter
   {"findings",findings.rows},{"observedCount",findings.count},{"findingsTruncated",findings.count>importFindingLimit},
   {"limits",QVariantMap{{"inputBytes",importInputLimit},{"findings",importFindingLimit},{"valueCharacters",256},{"depth",32}}},
   {"scope","Observed file content only; source authenticity, timestamps, timezone and legal authority are not established. SQLite is a bounded standalone row sample; no encrypted backups, archive extraction or device acquisition."}};
+ if(adapter=="adb-backup-v5"){
+  report.insert("backup",backup);
+  report.insert("scope","Inventory only of version-5 unencrypted, uncompressed ADB backup USTAR app members. All members validated; at most 128 retained. No extraction, execution, app decoding, signature authentication, source-time verification, decompression, decryption, PAX/GNU/link/shared-storage support or device acquisition.");
+ }
  if(QJsonDocument::fromVariant(report).toJson(QJsonDocument::Compact).size()>importReportLimit){error="report-limit";return {};}
  return report;
 }

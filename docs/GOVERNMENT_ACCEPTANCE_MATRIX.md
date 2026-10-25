@@ -32,3 +32,7 @@ Record gate ID, exact source/package SHA-256, OS/device/firmware, tools/settings
 ## Present evaluation decision
 
 Controlled development evaluation only. No governmental accreditation, SSO, universal protected-phone extraction, secure erasure, full network containment or final production readiness is claimed. Prioritize functional verification of the current source, lawful import coverage, typed timeline/provenance analysis and enforced offline policy before expanding visible UI scope.
+
+## Legacy ADB inventory increment
+
+G02/G03/G07/G09 require the new `adb-backup-v5` adapter to pass populated independent Python/native fixtures, exact source/member hashes and byte offsets, no archive extraction, full validation beyond the 128-result cap, malformed/unsupported paths/types, limits, cancellation, stale revision, logout/revoked grants and protected restore. UI gates require real AR/EN size/DPI captures. Windows delivery gates additionally require portable and installed workers to verify the populated fixture without Qt SDK dependencies. See LEGACY_ADB_BACKUP_IMPORT.md; exact-source outcomes belong in DEVELOPMENT_STATE.md. This does not close an institutional gate or establish semantic backup/application coverage.

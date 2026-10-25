@@ -49,7 +49,7 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Device Coverage | Implemented / Pending | Existing USB/device assessment; exact model/OS/firmware acceptance pending. |
 | Android / iOS Support | Implemented / Unsupported | Existing authorized Android metadata; no native iOS acquisition capability inferred. |
 | Authorized Data Acquisition | Tested (local-file intake) | Existing bounded authorized file registration/copy; no protected-phone physical extraction. |
-| Backup Analysis | Pending | Protected NEXVARY case recovery exists; vendor backup/container parsing is different work. |
+| Backup Analysis | Implemented / Pending | New unencrypted/uncompressed ADB v5 app-member inventory with hashes/offsets; exact-source results in DEVELOPMENT_STATE.md. No app decoding or generic vendor coverage. Protected case recovery is separate. |
 | Evidence Integrity | Tested | Protected copies, SHA-256 and independent package verification; no external authenticity/time proof. |
 | Chain of Custody | Tested | Linked declared transfers/audit; physical handover remains external. |
 | SQLite / Media / Log Analysis | Tested (bounded) | Standalone SQLite samples, JPEG EXIF, classic PCAP and exported threadtime; no full application decoding. |

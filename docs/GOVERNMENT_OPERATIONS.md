@@ -96,7 +96,7 @@ features were added to the frozen legacy forensic lab. The government navigation
 uses this case-bound page rather than opening old repair/recovery case collections.
 PDF case reports include analysis and working-copy history.
 
-Six bounded authorized-import adapters are integrated; see AUTHORIZED_IMPORT.md.
+Seven bounded authorized-import adapters are implemented; the new legacy ADB v5 inventory accepts only unencrypted/uncompressed USTAR app members, without extraction or app decoding. Exact-source testing is tracked in DEVELOPMENT_STATE.md; see AUTHORIZED_IMPORT.md and LEGACY_ADB_BACKUP_IMPORT.md.
 The new asynchronous timestamp-literal projection is described in CASE_TIMELINE.md,
 with exact-source verification in DEVELOPMENT_STATE.md. Generic vendor backup/container
 parsing, full artifact indexing/typed timeline semantics, document-specific attachments,

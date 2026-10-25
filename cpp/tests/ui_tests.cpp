@@ -112,6 +112,12 @@ public slots:
   if(!timelineFile.open(QIODevice::WriteOnly)||timelineFile.write(timelineBytes)!=timelineBytes.size())qFatal("Cannot create synthetic timeline fixture");
   timelineFile.close();
   engine->rootContext()->setContextProperty("syntheticTimelinePath",timeline);
+  QFile adbReference(MR_ADB_REFERENCE_PATH);
+  if(!adbReference.open(QIODevice::ReadOnly))qFatal("Cannot read synthetic ADB reference");
+  const auto adbBytes=QByteArray::fromBase64(QJsonDocument::fromJson(adbReference.readAll()).toVariant().toMap().value("backupBase64").toString().toLatin1());
+  const auto adbPath=temp.filePath("synthetic-adb-v5.ab");QFile adbFile(adbPath);
+  if(adbBytes.isEmpty()||!adbFile.open(QIODevice::WriteOnly)||adbFile.write(adbBytes)!=adbBytes.size())qFatal("Cannot create synthetic ADB UI fixture");
+  adbFile.close();engine->rootContext()->setContextProperty("syntheticAdbBackupPath",adbPath);
   const auto avb=temp.filePath(QStringLiteral("synthetic-vbmeta.img"));
   QByteArray avbBytes(320, '\0'); avbBytes.replace(0,4,"AVB0");
   qToBigEndian<quint32>(1,avbBytes.data()+4); qToBigEndian<quint64>(64,avbBytes.data()+20);

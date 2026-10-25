@@ -47,6 +47,24 @@ try {
   $importReport = Get-Content -LiteralPath $importOutput -Raw | ConvertFrom-Json
   if ($importReport.schema -ne 'nexvary-authorized-import/v1' -or $importReport.status -ne 'imported' -or $importReport.sourceSha256 -ne $importHash -or $importReport.findings[0].value -ne 'deployed import worker') { throw 'Deployed import worker report did not verify' }
   if ((Get-FileHash -LiteralPath $importInput -Algorithm SHA256).Hash.ToLower() -ne $importHash) { throw 'Deployed importer changed its input' }
+  $adbReference = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../samples/authorized-import/adb-v5-reference.json') -Raw | ConvertFrom-Json
+  $adbInput = Join-Path $isolated 'synthetic backup.ab'
+  [IO.File]::WriteAllBytes($adbInput, [Convert]::FromBase64String($adbReference.backupBase64))
+  $adbHash = (Get-FileHash -LiteralPath $adbInput -Algorithm SHA256).Hash.ToLower()
+  if ($adbHash -ne $adbReference.sourceSha256) { throw 'Synthetic ADB reference hash changed' }
+  $adbOutput = Join-Path $evidence "$Label.adb-backup.json"
+  $adbError = Join-Path $evidence "$Label.adb-backup.stderr.txt"
+  $adbArguments = @('--input', ('"' + $adbInput + '"'), '--sha256', $adbHash, '--adapter', 'adb-backup-v5')
+  $adb = Start-Process -FilePath (Join-Path $runtimeDirectory 'mr_evidence_import_worker.exe') -ArgumentList $adbArguments -WorkingDirectory $runtimeDirectory -PassThru -RedirectStandardOutput $adbOutput -RedirectStandardError $adbError
+  if (-not $adb.WaitForExit(10000)) { $adb.Kill($true); throw 'Deployed ADB inventory timed out' }
+  if ($adb.ExitCode -ne 0) { throw 'Deployed ADB inventory failed' }
+  $adbReport = Get-Content -LiteralPath $adbOutput -Raw | ConvertFrom-Json
+  if ($adbReport.status -ne 'imported' -or $adbReport.sourceSha256 -ne $adbHash -or -not $adbReport.backup.inventoryOnly -or $adbReport.backup.membersScanned -ne 4 -or $adbReport.findings.Count -ne 4) { throw 'Deployed ADB inventory report did not verify' }
+  for ($i = 0; $i -lt 4; $i++) {
+    $actual = $adbReport.findings[$i]; $expected = $adbReference.expected[$i]
+    if ($actual.reference -ne $expected.reference -or $actual.memberSha256 -ne $expected.memberSha256 -or $actual.memberSize -ne $expected.memberSize -or $actual.sourceByteOffset -ne $expected.sourceByteOffset) { throw 'Deployed ADB member provenance differs from independent fixture' }
+  }
+  if ((Get-FileHash -LiteralPath $adbInput -Algorithm SHA256).Hash.ToLower() -ne $adbHash) { throw 'Deployed ADB inventory changed its source' }
   # Exercise the deployed app's real resolution with SDK/PATH tools excluded.
   $probeOutput = Join-Path $evidence "$Label.screen-tools.json"
   $probeError = Join-Path $evidence "$Label.screen-tools.stderr.txt"
