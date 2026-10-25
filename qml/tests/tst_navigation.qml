@@ -164,6 +164,13 @@ TestCase {
   dialog.close();tryCompare(dialog,"visible",false);input.text="INVALID";mouseClick(lookup);verify(findChild(app,"barcodeLookupError").visible);compare(dialog.opened,false);input.clear()
   verify(renderedFrame());mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
  }
+ function test_deviceBackgroundRefreshIsQuiet(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);toolBridge.selectDevice("SYNTHETIC42");toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000);verify(renderedFrame())
+  const panel=findChild(app,"deviceIdentitySummary");tryVerify(function(){return panel.field("model")!==null&&panel.field("model").modelData.value==="Synthetic Phone"});const field=panel.field("model");
+  const text=field.modelData.value;toolBridge.autoRefresh=true;tryCompare(toolBridge,"backgroundRefreshing",false,5000);verify(!toolBridge.foregroundBusy);verify(toolBridge.screenViewAvailable);compare(field.modelData.value,text);compare(panel.field("model"),field);verify(findChild(app,"reviewMirror").enabled);toolBridge.autoRefresh=false;toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000);verify(renderedFrame());compare(panel.field("model"),field)
+  for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=768;findChild(app,"deviceManagerScroll").contentItem.contentY=150;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"screen-view-ready-"+(arabic?"ar":"en")+".png"))}
+  toolBridge.autoRefresh=false;verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+ }
  function test_mirrorConsentAndNavigation(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(renderedFrame())
   verify(findChild(app,"mirrorScope").visible);compare(findChild(app,"reviewMirror").enabled,false);compare(findChild(app,"stopMirror").enabled,false)

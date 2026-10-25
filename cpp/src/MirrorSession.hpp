@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <QVariantMap>
 
-// Owned, fixed-argument Laboratory screen-view process. No detached launch,
+// Owned, fixed-argument consented screen-view process. No detached launch,
 // recording, control, arbitrary flags or automatic reconnection to another phone.
 class MirrorSession final:public QObject {
  Q_OBJECT

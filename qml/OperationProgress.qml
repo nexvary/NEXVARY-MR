@@ -6,8 +6,8 @@ Rectangle {
  property var app
  property bool failed:false
  property string lastSource:"device"
- readonly property bool working:toolBridge.busy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy
- Connections {target:toolBridge;function onBusyChanged(){if(toolBridge.busy){status.lastSource="device";status.failed=false}}function onOperationFinished(ok){status.failed=!ok}}
+ readonly property bool working:toolBridge.foregroundBusy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy
+ Connections {target:toolBridge;function onBusyChanged(){if(toolBridge.foregroundBusy){status.lastSource="device";status.failed=false}}function onOperationFinished(ok){status.lastSource="device";status.failed=!ok}}
  Connections {target:firmwareBridge;function onBusyChanged(){if(firmwareBridge.busy){status.lastSource="firmware";status.failed=false}}function onInspectionFinished(matched){status.lastSource="firmware";status.failed=!matched&&firmwareBridge.avbReport.status!=="metadata-only"&&firmwareBridge.packageReport.status!=="structure-only"}}
  Connections {target:recoveryBridge;function onChanged(){if(recoveryBridge.busy){status.lastSource="case";status.failed=false}else if(status.lastSource==="case")status.failed=recoveryBridge.error!==""}}
  Connections {target:securityBridge;function onChanged(){if(securityBridge.busy){status.lastSource="security";status.failed=false}else if(status.lastSource==="security")status.failed=securityBridge.error!==""}}

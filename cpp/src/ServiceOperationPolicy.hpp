@@ -11,6 +11,8 @@ inline constexpr bool laboratoryBuild() {
     return false;
 #endif
 }
+// Separate consented component execution, never a blanket device-write grant.
+inline constexpr bool screenViewAllowed() { return true; }
 inline constexpr bool operationAllowed(std::string_view operation) {
     if (operation == "probe" || operation == "unlock_ability") return true;
     if (!laboratoryBuild()) return false;

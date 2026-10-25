@@ -4,7 +4,7 @@ Review date: 2026-10-16. Repository identities, default-branch commits and licen
 
 | Project | Official/candidate source | License observed | Technical fit | Decision |
 |---|---|---|---|---|
-| scrcpy | [Genymobile/scrcpy](https://github.com/Genymobile/scrcpy/tree/a60891aea193d92e7e5c3942700eca63f9d19a5f) | Apache-2.0 (`LICENSE`) | C client/server; official Windows binaries | External process on explicit user action; no code or binaries bundled. |
+| scrcpy | [Genymobile/scrcpy](https://github.com/Genymobile/scrcpy/tree/a60891aea193d92e7e5c3942700eca63f9d19a5f) | Apache-2.0 (`LICENSE`) | C client/server; official Windows binaries | External process on explicit user consent; Windows evaluation package includes the pinned official runtime and its license/provenance receipt. |
 | OpenBoardView | [OpenBoardView/OpenBoardView](https://github.com/OpenBoardView/OpenBoardView/tree/cc76e697c85efd2285134dfe2df0b7809e4a49d0) | MIT (`LICENSE`; dependency licenses still separate) | C++ / SDL / ImGui desktop viewer | Optional separately installed viewer; native JSON boardview remains the embedded path. |
 | TRACE Boardviewer | [trace-boardviewer/trace-boardviewer](https://github.com/trace-boardviewer/trace-boardviewer/tree/4082c45bf2ab58f6ff3edbcfc1272bcf189c2be7) | MIT (`LICENSE`); dependencies carry their own terms | Electron / React / TypeScript; Windows desktop | Reference only; no Electron runtime, parser or assets copied. |
 | PixelFlasher | [badabing2005/PixelFlasher](https://github.com/badabing2005/PixelFlasher/tree/081286d6baf8ac969df29e8b0ab3a5b6ae4cfb54) | Conflicting: root `LICENSE` GPLv3; `phone.py` SPDX AGPL-3.0-or-later | Python / wxPython; platform-tools orchestration | No source reuse. Native read-only commands and compatibility validation developed independently; flashing deferred. |
@@ -28,8 +28,8 @@ ERPNext was observed on an actively changing development branch; the pinned SHA 
 
 ## Implemented adapters
 
-- Android platform-tools: discover ADB/Fastboot; structured read-only device enumeration, properties and bounded logs. No bundled Google binaries, firmware, driver installer, shell console, unlocking or flashing.
-- scrcpy: Laboratory-only owned process lifecycle with strict owner/component consent, reviewed serial, exact 5.0.1 CLI version, pinned ADB executable, fresh identity checks, bounded output/deadlines, periodic disconnect checks and terminate/kill cleanup. Control, audio and clipboard synchronization are disabled. No detached launch or automatic target fallback. Production refuses before any child process. Host process startup is not frame delivery or physical-phone acceptance.
+- Android platform-tools: discover ADB/Fastboot; structured read-only device enumeration, properties and bounded logs. The official scrcpy distribution supplies bundled ADB in Windows evaluation packages. No firmware, driver installer, shell console, unlocking or flashing is added by that bundle.
+- scrcpy: dedicated consented screen-view policy in both profiles; exact 5.0.1 CLI, pinned target/ADB, identity/disconnect checks, bounded output/deadlines and owned stop/kill lifecycle. No control, audio or clipboard synchronization. Other generic write operations remain Laboratory-only. Bundled Windows runtime resolution/version/digests are checked during portable and installer smoke. See SCREEN_VIEW.md; actual phone frame delivery/cleanup remains an external gate.
 - Boardview: native C++ importer and QML renderer for the documented NEXVARY JSON format; original synthetic training data. This does not import OpenBoardView or TRACE file parsers and does not imply compatibility with their proprietary board formats.
 - Workshop: independently implemented local Qt SQL / SQLite workflows; no FixTrack/ERPNext source or data copied.
 

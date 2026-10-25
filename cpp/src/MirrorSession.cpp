@@ -51,8 +51,8 @@ bool MirrorSession::supportedVersion(const QString &output){
 }
 bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString &serial,const QVariantMap &identity,bool owner,bool component){
  if(active_)return false;
- if(!mr::service::operationAllowed("mirror")||!owner||!component||!ToolBridge::isValidSerial(serial)){
-  message("Screen view requires Laboratory build, explicit owner authorization and device-component consent.");return false;
+ if(!mr::service::screenViewAllowed()||!owner||!component||!ToolBridge::isValidSerial(serial)){
+  message("Screen view requires explicit owner authorization and device-component consent.");return false;
  }
  for(const auto &field:{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"})if(identity.value(field).toString().isEmpty()){
   message("Read complete manufacturer, model and build fingerprint before screen view.");return false;
@@ -103,9 +103,9 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
  launchView();
 }
 void MirrorSession::launchView(){
- if(!active_||!mr::service::operationAllowed("mirror")){end("Screen view denied by compiled operation policy.",true);return;}
+ if(!active_||!mr::service::screenViewAllowed()){end("Screen view denied by compiled operation policy.",true);return;}
  state_="starting";viewer_.setProgram(scrcpy_);
- viewer_.setArguments({"--serial",serial_,"--no-control","--no-audio","--no-clipboard-autosync","--no-power-on","--max-size=1600","--max-fps=30","--verbosity=warn","--window-title=NEXVARY MR Laboratory"});
+ viewer_.setArguments({"--serial",serial_,"--no-control","--no-audio","--no-clipboard-autosync","--no-power-on","--max-size=1600","--max-fps=30","--verbosity=warn","--window-title=NEXVARY MR Screen View"});
  deadline_.start();emit changed();viewer_.start();
 }
 void MirrorSession::collectView(){

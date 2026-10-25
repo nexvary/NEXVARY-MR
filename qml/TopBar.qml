@@ -4,7 +4,7 @@ import QtQuick.Layouts
 Rectangle {
  id:bar
  property var app
- readonly property bool working:toolBridge.busy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy
+ readonly property bool working:toolBridge.foregroundBusy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy
  readonly property var targetConnections:toolBridge.devices.filter(function(device){return device.serial===toolBridge.selectedSerial})
  readonly property string connectionState:!toolBridge.selectedSerial?"none":targetConnections.length!==1?"missing":targetConnections[0].transport==="fastboot"?"fastboot":targetConnections[0].state
  readonly property string connectionTitle:connectionState==="device"?app.trx("ADB مفوض","ADB authorized"):connectionState==="fastboot"?"Fastboot":connectionState==="unauthorized"?app.trx("ADB غير مفوض","ADB unauthorized"):connectionState==="offline"?app.trx("ADB غير متاح","ADB offline"):connectionState==="none"?app.trx("لم يحدد هدف","No target"):app.trx("اتصال غائب أو ملتبس","Missing / ambiguous")

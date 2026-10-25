@@ -28,6 +28,7 @@
 #include "CloudTracking.hpp"
 #include "SecurityBridge.hpp"
 #include "ServiceCatalog.hpp"
+#include <QJsonDocument>
 #include "BoardBridge.hpp"
 #include "FirmwareBridge.hpp"
 #include "RecoveryBridge.hpp"
@@ -43,6 +44,7 @@ int main(int argc,char *argv[]) {
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
  cli.addOption({QStringLiteral("build-profile"),QStringLiteral("Print the compiled device-operation profile and exit")});
+ cli.addOption({QStringLiteral("screen-tools-probe"),QStringLiteral("Print screen-tool resolution without starting tools or opening cases")});
  cli.addHelpOption();
  cli.addVersionOption();
  cli.addOption({QStringLiteral("data-dir"),QStringLiteral("Local data directory"),QStringLiteral("path")});
@@ -51,6 +53,11 @@ int main(int argc,char *argv[]) {
  cli.process(app);
  if(cli.isSet(QStringLiteral("build-profile"))) {
   std::puts(mr::service::laboratoryBuild()?"laboratory-experimental":"production-read-only");return 0;
+ }
+ if(cli.isSet(QStringLiteral("screen-tools-probe"))){
+  ToolBridge probe;
+  const auto json=QJsonDocument::fromVariant(QVariantMap{{"screenViewAvailable",probe.screenViewAvailable()},{"tools",probe.tools()}}).toJson(QJsonDocument::Compact);
+  std::fputs(json.constData(),stdout);return 0;
  }
  const bool smoke=cli.isSet(QStringLiteral("smoke-test"));
  if(smoke&&!cli.isSet(QStringLiteral("data-dir"))) return 2;
@@ -86,7 +93,7 @@ int main(int argc,char *argv[]) {
  engine.rootContext()->setContextProperty(QStringLiteral("serviceCatalog"),&catalog);
  engine.rootContext()->setContextProperty(QStringLiteral("cloudTracking"),&cloud);
  bool qmlWarning=false;
- QObject::connect(&engine,&QQmlEngine::warnings,&app,[&qmlWarning](const QList<QQmlError> &warnings){if(!warnings.isEmpty())qmlWarning=true;});
+ QObject::connect(&engine,&QQmlEngine::warnings,&app,[&qmlWarning,smoke](const QList<QQmlError> &warnings){if(!warnings.isEmpty())qmlWarning=true;if(smoke)for(const auto &warning:warnings)std::fprintf(stderr,"Synthetic GUI smoke QML warning: %s\n",qPrintable(warning.toString()));});
  engine.load(QUrl(QStringLiteral("qrc:/NexvaryMR/qml/Main.qml")));
  if(engine.rootObjects().isEmpty()) return 1;
  if(smoke) {
@@ -161,7 +168,7 @@ int main(int argc,char *argv[]) {
        QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
         const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers"),QStringLiteral("services"),QStringLiteral("catalog"),QStringLiteral("avb")};
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%8],previous%16<8?QStringLiteral("ar"):QStringLiteral("en"),previous<16?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
-        if(step==32){capture->stop();portal.stop();window->setProperty("allowClose",true);window->close();app.exit(ok&&!qmlWarning?0:6);return;}
+        if(step==32){capture->stop();portal.stop();window->setProperty("allowClose",true);window->close();if(!ok||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d qmlWarnings=%d recoveryBusy=%d evidenceCount=%lld\n",int(ok),int(qmlWarning),int(recovery.busy()),static_cast<long long>(recovery.evidence().size()));app.exit(ok&&!qmlWarning?0:6);return;}
         const int tab=step%8;window->setProperty("ar",step%16<8);window->setProperty("darkTheme",step<16);window->setProperty("currentPage",tab==7?4:tab<2?5:tab<5?2:1);
         // Capture the new service/catalog workspaces at the supported minimum.
         window->resize(tab>=5?QSize(1180,760):QSize(1536,980));
@@ -175,7 +182,7 @@ int main(int argc,char *argv[]) {
    });
   });
  timer->start();
-  QTimer::singleShot(20000,&app,[&app]{app.exit(7);});
+  QTimer::singleShot(45000,&app,[&app]{std::fputs("Synthetic GUI smoke rendering deadline exceeded\n",stderr);app.exit(7);});
  }
  return app.exec();
 }

@@ -85,6 +85,12 @@ foreach ($relative in $requiredRuntime) {
   }
 }
 @('[Paths]', 'Prefix=.', 'Plugins=.', 'QmlImports=qml') | Set-Content (Join-Path $bundle 'qt.conf') -Encoding utf8
+# Build-time pinned official tools; application startup never downloads them.
+$screenTools = Join-Path $bundle 'tools/scrcpy'
+$screenCacheRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { [IO.Path]::GetTempPath() }
+python scripts/prepare_screen_tools.py --destination $screenTools --cache (Join-Path $screenCacheRoot 'nexvary-screen-tools-cache')
+if ($LASTEXITCODE -ne 0) { throw 'Pinned scrcpy runtime preparation failed' }
+Copy-Item (Join-Path $repo 'docs/SCREEN_VIEW.md') $bundle
 Copy-Item (Join-Path $repo 'docs/USER_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OPERATIONS.md') $bundle
 Copy-Item (Join-Path $repo 'docs/PROTECTED_CASE_BACKUP.md') $bundle

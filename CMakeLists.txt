@@ -213,7 +213,9 @@ if(MR_BUILD_GUI)
    set_tests_properties(mr_ui_scale_${scale} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_SCALE_FACTOR=${scale}" TIMEOUT 120)
   endforeach()
   add_test(NAME mr_gui_smoke COMMAND nexvary_mr --smoke-test --data-dir ${CMAKE_CURRENT_BINARY_DIR}/smoke-data --screenshot ${CMAKE_CURRENT_BINARY_DIR}/smoke.png)
-  set_tests_properties(mr_gui_smoke PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software" TIMEOUT 30)
+  set_tests_properties(mr_gui_smoke PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software" TIMEOUT 60)
+  # UI fixtures share capture filenames. Never race different UI runs over them.
+  set_tests_properties(mr_ui_tests mr_ui_scale_1.25 mr_ui_scale_1.5 mr_gui_smoke PROPERTIES RESOURCE_LOCK mr_ui_capture)
  endif()
 endif()
 

@@ -1,3 +1,27 @@
+# Device refresh and consented screen view — implementation checkpoint (2026-10-25)
+
+- Current Branch: `feature/government-operations`; open draft PR #15. Current HEAD SHA: resolve `git rev-parse HEAD`; implementation parent `b7fee16c0262aa02da7e7a0df41f556a993cd0ce`.
+- Latest Verified Executable SHA: `8d32b4589cca586a659c5df32dc555faea060740` until the new exact-source hosted run completes.
+- CI Status: new source validation pending publication. Previous verified run and retained historical receipts follow below.
+- Completed Government Capabilities: protected cases, identity/RBAC, evidence/custody/hash, signatures/anchors, backup/restore, reports, retention/holds/archive/disposal review remain intact. This increment addresses the reported device UI: quiet bounded background discovery, stable identity cells and dated refresh snapshots, per-operation progress, dedicated consented screen view in both profiles and pinned official Windows screen tools. Generic service writes retain Laboratory gating.
+- Remaining Government Capabilities: authorized import adapters, timeline, provenance relationships, enforced offline network policy and subsequent institutional/research/training/deployment work remain. Physical disposal execution is still unimplemented.
+- Known Limitations: separate scrcpy window, explicit device-component consent, no control/audio/clipboard or frame-delivery claim. No phone was connected to this environment. The reported OPPO/firmware and user-machine blue flicker still require field acceptance. Exact version/hash pinning is not Authenticode or independent licensing accreditation. Existing protected-case trust/bounds remain unchanged.
+- External Acceptance Gates: physical exact-firmware devices, clean Windows 10/11, agency acceptance, external key/time custody, trusted publisher signing, independent privacy/license/records/recovery review.
+- Next Executable Task: finish exact-source Windows/Linux/package validation of these fixes, then implement bounded authorized document imports on hash-verified separate working copies before timeline/relationships/offline enforcement.
+- Resume Commands:
+
+```sh
+git fetch --all --prune
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+cmake --build build --config Release --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+python3 -m unittest discover -s tests -v
+```
+
+Implementation and user steps: `docs/SCREEN_VIEW.md`. Historical evidence below remains valid for its stated SHA only.
+
 # Government Operations Phase 2 — verified retention increment (2026-10-25)
 
 - Current Branch: `feature/government-operations`; draft/open PR #15.

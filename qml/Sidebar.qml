@@ -29,7 +29,7 @@ Rectangle {
   }
   ColumnLayout {
    visible:!side.collapsed;Layout.fillWidth:true;spacing:4
-   StateBadge {text:toolBridge.laboratoryBuild?"LABORATORY":"READ-ONLY";tint:toolBridge.laboratoryBuild?side.app.design.danger:side.app.design.success}
+   StateBadge {text:toolBridge.laboratoryBuild?"LABORATORY":side.app.trx("تشخيص","DIAGNOSTICS");tint:toolBridge.laboratoryBuild?side.app.design.danger:side.app.design.success}
    Label {text:side.app.trx("محطة محلية • إصدار تطوير","Local workstation • Development");color:side.app.design.muted;font.pixelSize:10;Layout.fillWidth:true;wrapMode:Text.WordWrap}
   }
  }
