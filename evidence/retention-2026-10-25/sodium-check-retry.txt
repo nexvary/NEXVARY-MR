@@ -1,0 +1,261 @@
+Making check in builds
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/builds'
+make[1]: Nothing to be done for 'check'.
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/builds'
+Making check in contrib
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/contrib'
+make[1]: Nothing to be done for 'check'.
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/contrib'
+Making check in dist-build
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/dist-build'
+make[1]: Nothing to be done for 'check'.
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/dist-build'
+Making check in src
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src'
+Making check in libsodium
+make[2]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium'
+Making check in include
+make[3]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium/include'
+make[3]: Nothing to be done for 'check'.
+make[3]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium/include'
+make[3]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium'
+make[3]: Nothing to be done for 'check-am'.
+make[3]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium'
+make[2]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src/libsodium'
+make[2]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src'
+make[2]: Nothing to be done for 'check-am'.
+make[2]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src'
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/src'
+Making check in test
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test'
+Making check in default
+make[2]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make  aead_aegis128l aead_aegis256 aead_aes256gcm aead_aes256gcm2 aead_chacha20poly1305 aead_chacha20poly13052 aead_xchacha20poly1305 auth auth2 auth3 auth5 auth6 auth7 box box2 box7 box8 box_easy box_easy2 box_seal box_seed chacha20 codecs codecs2 codecs3 core_keccak1600 core1 core2 core3 core4 core5 core6 ed25519_convert generichash generichash2 generichash3 hash hash3 hash_sha3256 hash_sha3512 ipcrypt kdf kem kem_mlkem768 kem_xwing keygen kx metamorphic misuse onetimeauth onetimeauth2 onetimeauth7 pwhash_argon2i pwhash_argon2id pwhash_argon2id2 randombytes scalarmult scalarmult2 scalarmult5 scalarmult6 scalarmult7 scalarmult8 secretbox secretbox2 secretbox7 secretbox8 secretbox_easy secretbox_easy2 secretstream_xchacha20poly1305 shorthash sign sodium_core sodium_utils sodium_version stream stream2 stream3 stream4 verify1 xof_shake128 xof_shake256 xof_turboshake128 xof_turboshake256 xof2 sodium_utils2 sodium_utils3 sodium_utils4 core_ed25519 core_ristretto255 kdf_hkdf kdf_hkdf2 kdf_hkdf3 kdf_hkdf4 pwhash_scrypt stream5 stream6 pwhash_scrypt_ll scalarmult_ed25519 scalarmult_ristretto255 siphashx24 xchacha20
+make[3]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make[3]: 'aead_aegis128l' is up to date.
+make[3]: 'aead_aegis256' is up to date.
+make[3]: 'aead_aes256gcm' is up to date.
+make[3]: 'aead_aes256gcm2' is up to date.
+make[3]: 'aead_chacha20poly1305' is up to date.
+make[3]: 'aead_chacha20poly13052' is up to date.
+make[3]: 'aead_xchacha20poly1305' is up to date.
+make[3]: 'auth' is up to date.
+make[3]: 'auth2' is up to date.
+make[3]: 'auth3' is up to date.
+make[3]: 'auth5' is up to date.
+make[3]: 'auth6' is up to date.
+make[3]: 'auth7' is up to date.
+make[3]: 'box' is up to date.
+make[3]: 'box2' is up to date.
+make[3]: 'box7' is up to date.
+make[3]: 'box8' is up to date.
+make[3]: 'box_easy' is up to date.
+make[3]: 'box_easy2' is up to date.
+make[3]: 'box_seal' is up to date.
+make[3]: 'box_seed' is up to date.
+make[3]: 'chacha20' is up to date.
+make[3]: 'codecs' is up to date.
+make[3]: 'codecs2' is up to date.
+make[3]: 'codecs3' is up to date.
+make[3]: 'core_keccak1600' is up to date.
+make[3]: 'core1' is up to date.
+make[3]: 'core2' is up to date.
+make[3]: 'core3' is up to date.
+make[3]: 'core4' is up to date.
+make[3]: 'core5' is up to date.
+make[3]: 'core6' is up to date.
+make[3]: 'ed25519_convert' is up to date.
+make[3]: 'generichash' is up to date.
+make[3]: 'generichash2' is up to date.
+make[3]: 'generichash3' is up to date.
+make[3]: 'hash' is up to date.
+make[3]: 'hash3' is up to date.
+make[3]: 'hash_sha3256' is up to date.
+make[3]: 'hash_sha3512' is up to date.
+make[3]: 'ipcrypt' is up to date.
+make[3]: 'kdf' is up to date.
+make[3]: 'kem' is up to date.
+make[3]: 'kem_mlkem768' is up to date.
+make[3]: 'kem_xwing' is up to date.
+make[3]: 'keygen' is up to date.
+make[3]: 'kx' is up to date.
+make[3]: 'metamorphic' is up to date.
+make[3]: 'misuse' is up to date.
+make[3]: 'onetimeauth' is up to date.
+make[3]: 'onetimeauth2' is up to date.
+make[3]: 'onetimeauth7' is up to date.
+make[3]: 'pwhash_argon2i' is up to date.
+make[3]: 'pwhash_argon2id' is up to date.
+make[3]: 'pwhash_argon2id2' is up to date.
+make[3]: 'randombytes' is up to date.
+make[3]: 'scalarmult' is up to date.
+make[3]: 'scalarmult2' is up to date.
+make[3]: 'scalarmult5' is up to date.
+make[3]: 'scalarmult6' is up to date.
+make[3]: 'scalarmult7' is up to date.
+make[3]: 'scalarmult8' is up to date.
+make[3]: 'secretbox' is up to date.
+make[3]: 'secretbox2' is up to date.
+make[3]: 'secretbox7' is up to date.
+make[3]: 'secretbox8' is up to date.
+make[3]: 'secretbox_easy' is up to date.
+make[3]: 'secretbox_easy2' is up to date.
+make[3]: 'secretstream_xchacha20poly1305' is up to date.
+make[3]: 'shorthash' is up to date.
+make[3]: 'sign' is up to date.
+make[3]: 'sodium_core' is up to date.
+make[3]: 'sodium_utils' is up to date.
+make[3]: 'sodium_version' is up to date.
+make[3]: 'stream' is up to date.
+make[3]: 'stream2' is up to date.
+make[3]: 'stream3' is up to date.
+make[3]: 'stream4' is up to date.
+make[3]: 'verify1' is up to date.
+make[3]: 'xof_shake128' is up to date.
+make[3]: 'xof_shake256' is up to date.
+make[3]: 'xof_turboshake128' is up to date.
+make[3]: 'xof_turboshake256' is up to date.
+make[3]: 'xof2' is up to date.
+make[3]: 'sodium_utils2' is up to date.
+make[3]: 'sodium_utils3' is up to date.
+make[3]: 'sodium_utils4' is up to date.
+make[3]: 'core_ed25519' is up to date.
+make[3]: 'core_ristretto255' is up to date.
+make[3]: 'kdf_hkdf' is up to date.
+make[3]: 'kdf_hkdf2' is up to date.
+make[3]: 'kdf_hkdf3' is up to date.
+make[3]: 'kdf_hkdf4' is up to date.
+make[3]: 'pwhash_scrypt' is up to date.
+make[3]: 'stream5' is up to date.
+make[3]: 'stream6' is up to date.
+make[3]: 'pwhash_scrypt_ll' is up to date.
+make[3]: 'scalarmult_ed25519' is up to date.
+make[3]: 'scalarmult_ristretto255' is up to date.
+make[3]: 'siphashx24' is up to date.
+make[3]: 'xchacha20' is up to date.
+make[3]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make  check-TESTS
+make[3]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make[4]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+PASS: aead_aegis128l
+PASS: aead_aegis256
+PASS: aead_aes256gcm2
+PASS: aead_chacha20poly1305
+PASS: aead_chacha20poly13052
+PASS: aead_xchacha20poly1305
+PASS: auth
+PASS: auth2
+PASS: aead_aes256gcm
+PASS: auth3
+PASS: auth6
+PASS: auth5
+PASS: box
+PASS: auth7
+PASS: box2
+PASS: box7
+PASS: box_easy
+PASS: box_easy2
+PASS: box_seal
+PASS: box_seed
+PASS: chacha20
+PASS: codecs
+PASS: codecs2
+PASS: box8
+PASS: codecs3
+PASS: core_keccak1600
+PASS: core1
+PASS: core2
+PASS: core4
+PASS: core5
+PASS: core6
+PASS: core3
+PASS: ed25519_convert
+PASS: generichash
+PASS: generichash2
+PASS: generichash3
+PASS: hash
+PASS: hash3
+PASS: hash_sha3256
+PASS: hash_sha3512
+PASS: kdf
+PASS: kem
+PASS: kem_mlkem768
+PASS: kem_xwing
+PASS: keygen
+PASS: kx
+PASS: ipcrypt
+PASS: misuse
+PASS: onetimeauth
+PASS: onetimeauth2
+PASS: onetimeauth7
+PASS: metamorphic
+PASS: pwhash_argon2i
+PASS: pwhash_argon2id2
+PASS: randombytes
+PASS: scalarmult
+PASS: pwhash_argon2id
+PASS: scalarmult2
+PASS: scalarmult5
+PASS: scalarmult6
+PASS: scalarmult7
+PASS: secretbox
+PASS: scalarmult8
+PASS: secretbox2
+PASS: secretbox7
+PASS: secretbox_easy
+PASS: secretbox8
+PASS: secretbox_easy2
+PASS: secretstream_xchacha20poly1305
+PASS: shorthash
+PASS: sodium_core
+PASS: sodium_utils
+PASS: sodium_version
+PASS: sign
+PASS: stream
+PASS: stream3
+PASS: stream4
+PASS: stream2
+PASS: xof_shake128
+PASS: xof_shake256
+PASS: xof_turboshake128
+PASS: xof_turboshake256
+PASS: xof2
+PASS: verify1
+PASS: sodium_utils3
+PASS: sodium_utils4
+PASS: sodium_utils2
+PASS: core_ed25519
+PASS: kdf_hkdf
+PASS: kdf_hkdf2
+PASS: kdf_hkdf3
+PASS: kdf_hkdf4
+PASS: core_ristretto255
+PASS: stream5
+PASS: stream6
+PASS: pwhash_scrypt_ll
+PASS: scalarmult_ed25519
+PASS: scalarmult_ristretto255
+PASS: siphashx24
+PASS: xchacha20
+PASS: pwhash_scrypt
+============================================================================
+Testsuite summary for libsodium 1.0.22
+============================================================================
+# TOTAL: 101
+# PASS:  101
+# SKIP:  0
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+============================================================================
+make[4]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make[3]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make[2]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test/default'
+make[2]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test'
+make[2]: Nothing to be done for 'check-am'.
+make[2]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test'
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22/test'
+make[1]: Entering directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22'
+make[1]: Nothing to be done for 'check-am'.
+make[1]: Leaving directory '/workspace/scratch/b91b82a596d9/nexvary-sodium-bawx0d1h/libsodium-1.0.22'

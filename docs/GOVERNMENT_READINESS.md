@@ -2,8 +2,8 @@
 
 This is a tested development increment for controlled evaluation, not a completed
 institutional deployment. Last hosted-verified executable checkpoint:
-`6d9e4c9a540b156b592dc3d10831deabad19877e`, CI 40160538371 (all seven jobs passed).
-Four native profiles passed 39/39; production sanitizers passed 8/8. This later
+`8d32b4589cca586a659c5df32dc555faea060740`, CI 40181030127 (all seven jobs passed).
+Four native profiles passed 40/40; production sanitizers passed 9/9. This later
 checkpoint updates documentation/evidence only. See PR #15 for source/build links.
 Review PR: https://github.com/nexvary/NEXVARY-MR/pull/15.
 Read the current DEVELOPMENT_STATE.md and CI evidence before treating a gate as passed.

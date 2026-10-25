@@ -1,37 +1,42 @@
-# Government Operations Phase 2 — retention increment (2026-10-25)
+# Government Operations Phase 2 — verified retention increment (2026-10-25)
 
-- Current Branch: `feature/government-operations` (PR #15, still draft).
-- Current HEAD SHA at verified resume: `c9b385840d4f9b40e14ff981caaf1e7aa51130a5`.
-  The commit containing this implementation record is resolved with `git rev-parse HEAD`.
-- Latest Verified Executable SHA (hosted): `6d9e4c9a540b156b592dc3d10831deabad19877e`.
-- CI Status: reference run 40160538371 rechecked through GitHub; seven jobs successful.
-  Local full run: 38/40, then the two generated-output permission failures passed
-  2/2 after restoring execute bits. All 40 groups are covered across these runs;
-  retention 9/9, identity 12/12, case 17/17, Qt Quick 44/44, both DPI profiles,
-  ASan/UBSan 3/3 (no local leak inspection), Python 35/35 and history/tree checks
-  passed. Raw failures and reruns: `evidence/retention-2026-10-25/`.
-  New exact-source Windows/Linux/package CI is pending publication and verification.
+- Current Branch: `feature/government-operations`; draft/open PR #15.
+- Current HEAD SHA at hosted executable validation: `8d32b4589cca586a659c5df32dc555faea060740`.
+  This later checkpoint changes only documentation/test evidence; resolve its actual
+  receipt HEAD with `git rev-parse HEAD`. No compiler/QML/build/packaging input changes.
+- Latest Verified Executable SHA: `8d32b4589cca586a659c5df32dc555faea060740`.
+- CI Status: https://github.com/nexvary/NEXVARY-MR/actions/runs/40181030127
+  All seven native jobs passed. Windows production/laboratory and Linux
+  production/laboratory each passed 40/40 CTest; production ASan/UBSan 9/9.
+  Python 40181030140 and public-history 40181030130 passed. Portable isolation,
+  installed-in-place launch and installer install/uninstall passed. Intentional
+  production-disabled laboratory subcases are not counted as executed lab tests.
 - Completed Government Capabilities: existing cases/devices/protected evidence,
-  RBAC/ownership/grants, local identities/rotation/revocation, signed research
-  reviews/anchors, SHA-256/custody, protected backup/restore, reports and AR/EN UI
-  remain. New native retention policy/assignment, legal hold/preservation exception,
-  reviewer release, UTC expiry assessment, verified protected-in-place archive and
-  separate authenticated disposal request/review routes are implemented.
-- Remaining Government Capabilities: authorized document/unencrypted-backup/SQLite/
-  JSON/XML/CSV/log adapters, unified searchable timeline and provenance relationships,
-  enforced offline network policy, further device/research/training integration,
-  institutional review/search/report/deployment/identity/recovery/Windows RC backlog.
-- Known Limitations: no evidence deletion or automated disposal; in-place protected
-  archive only (no cold repository/WORM). Local OS clock and local accounts do not
-  establish trusted external time or two independently verified human reviewers.
-  Existing DPAPI/account/backup/size/anchor limitations remain. Retention collection
-  and payload limits are documented in `docs/EVIDENCE_RETENTION.md`.
-- External Acceptance Gates: owned exact-firmware phones, independent Windows 10/11,
-  agency identity/people/SSO, trusted publisher certificate, external key/time custody,
-  independent privacy/licensing/records/recovery review and release authorization.
-- Next Executable Task: finish retention regression and exact-source hosted CI, then
-  add the first bounded authorized artifact adapter through hash-verified working
-  copies and isolated parsing, without duplicating existing PCAP/EXIF engines.
+  native RBAC/ownership/grants, local identities/password rotation/revocation,
+  signed research reviews/audit anchors, SHA-256/custody, protected backup/restore,
+  PDF reporting and AR/EN UI are preserved. New native immutable policies,
+  assignments, legal holds/preservation exceptions, reviewer restriction release,
+  UTC expiry assessment, protected-in-place archive receipts/integrity checks and
+  separate-account disposal request/review workflows are implemented and tested.
+  Retention data survives backup/restore and appears in reports. No bytes are deleted.
+- Remaining Government Capabilities: physical disposal execution remains a separate
+  reviewed implementation; authorized document/unencrypted-backup/SQLite/JSON/XML/
+  CSV/log adapters, unified searchable timeline, provenance relationships and
+  enforced offline network policy are next. Further device/research/training
+  integration, institutional review/search/report/deployment/identity/recovery and
+  Windows RC acceptance remain. Existing PCAP/EXIF/research/training are preserved.
+- Known Limitations: protected-in-place archive only, no cold repository/WORM;
+  local OS clock and local accounts are not externally trusted time or proof of
+  independent people. Existing DPAPI/identity-registry/backup/anchor/size limitations
+  remain. Bounds and disposal distinctions: `docs/EVIDENCE_RETENTION.md`.
+- External Acceptance Gates: owned exact-firmware phones, independent clean Windows
+  10/11, agency identities/SSO/independent reviewers, trusted publisher signing,
+  external key/time custody, independent records/privacy/licensing/recovery review
+  and release authorization. Hosted Windows Server tests do not satisfy these gates.
+- Next Executable Task: implement the first bounded authorized artifact adapter on
+  hash-verified separate working copies with parser isolation; then timeline,
+  relationships and policy-enforced offline networking. Do not duplicate existing
+  parsers, research, identity, custody or backup engines.
 - Resume Commands:
 
 ```sh
@@ -40,19 +45,35 @@ git switch feature/government-operations
 git status --short --branch
 git log -1 --format=fuller
 git diff --stat origin/integration/gate-1-stages-08-60...HEAD
-# Prepare Qt and pinned libsodium using scripts/prepare_sodium.py, then:
+# Prepare Qt and pinned libsodium with scripts/prepare_sodium.py, then:
 cmake -S . -B build -DMR_SODIUM_ROOT=/path/to/prepared/sodium -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release --parallel 2
 ctest --test-dir build -C Release --output-on-failure
 python3 -m unittest discover -s tests -v
 ```
 
-Branch review: PR #11 remains draft/open against integration at `8fb9b38`; PR #15
-remains draft/open against that reviewed case foundation. The Research Program,
-USB Doctor and professional UI branches are ancestors of this government HEAD.
-NPSE has separate Android/shared-service changes; no blanket merge is performed.
-Only NEXVARY-MR files are changed, and main is not merged. Historical records below
-are evidence of earlier checkpoints and do not override this current summary.
+Windows development packages from that verified source (unsigned):
+- Portable: https://github.com/nexvary/NEXVARY-MR/actions/runs/40181030127/artifacts/12593958595
+- Installer + SHA256SUMS: https://github.com/nexvary/NEXVARY-MR/actions/runs/40181030127/artifacts/12593653834
+- Production runtime/installer evidence: https://github.com/nexvary/NEXVARY-MR/actions/runs/40181030127/artifacts/12594008536
+Provider artifact digests/expiry and actual job steps: `evidence/retention-2026-10-25/hosted-ci.json`.
+These archive digests are not claimed as inner ZIP/EXE checksums.
+
+Local evidence: strict Release build; retention 9/9, identity 12/12, case 17/17,
+Qt Quick 44/44, both DPI profiles, Python 35/35, ASan/UBSan 3/3 (no local leak
+inspection), pinned Gitleaks history/tree/exception regression. Local full CTest
+was 38/40 due to two generated ELF outputs losing execute permission; fixing
+only those output modes and rerunning those two groups passed 2/2. Raw failed
+runs and retries are retained, never relabelled as a single passing full run.
+The independent hosted source passed all four 40/40 profiles without that failure.
+Real AR/EN Qt captures were inspected. Separate 1180/1366 viewport QA passed 3/3.
+See `evidence/retention-2026-10-25/VALIDATION.md` for reproduction and diagnostics.
+
+Branch review: PR #11 remains draft/open at `8fb9b38`, based on integration;
+PR #15 remains draft/open against that case foundation. Research Program, USB
+Doctor and professional UI are ancestors of the government base. NPSE remains
+separate; no blanket merge, Guardian/Android-agent modification or main merge.
+Historical checkpoints below do not override this verified current summary.
 
 ---
 

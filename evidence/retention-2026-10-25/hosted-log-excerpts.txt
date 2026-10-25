@@ -1,0 +1,16 @@
+JOB 121131938942
+2026-10-25T09:45:02.9293848Z 40/40 Test #40: mr_gui_smoke .....................   Passed   19.86 sec
+2026-10-25T09:45:02.9301807Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T09:45:02.9302297Z Total Test time (real) = 270.57 sec
+JOB 121131938943
+2026-10-25T09:44:34.0709034Z 40/40 Test #40: mr_gui_smoke .....................   Passed   20.29 sec
+2026-10-25T09:44:34.0718022Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T09:44:34.0718714Z Total Test time (real) = 232.26 sec
+2026-10-25T09:45:08.3041896Z portable GUI smoke passed: mode=isolated-copy; exit=0
+2026-10-25T09:45:55.2380650Z installed GUI smoke passed: mode=installed-in-place; exit=0
+LINUX PRODUCTION
+2026-10-25T09:39:04.9103388Z 40/40 Test #40: mr_gui_smoke .....................   Passed   16.00 sec
+2026-10-25T09:39:04.9107394Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T09:39:04.9107932Z Total Test time (real) = 155.61 sec
+2026-10-25T09:40:40.5449310Z 100% tests passed, 0 tests failed out of 9
+2026-10-25T09:40:40.5449736Z Total Test time (real) =  12.45 sec
