@@ -21,7 +21,9 @@ EvidenceImportRunner::EvidenceImportRunner(QObject *parent,const QString &testWo
 EvidenceImportRunner::~EvidenceImportRunner(){process_.disconnect(this);deadline_.stop();if(process_.state()!=QProcess::NotRunning){process_.kill();process_.waitForFinished(1000);}if(directory_)QFile::setPermissions(directory_->filePath("working.bin"),QFileDevice::ReadOwner|QFileDevice::WriteOwner);}
 bool EvidenceImportRunner::start(const QByteArray &bytes,const QString &expectedSha256,const QString &adapter){
  if(active_||bytes.isEmpty()||bytes.size()>mr::forensic::importInputLimit||hash(bytes)!=expectedSha256||!mr::forensic::importAdapterSupported(adapter))return false;
- directory_=std::make_unique<QTemporaryDir>(QDir::tempPath()+"/nexvary-import-XXXXXX");
+ const auto temporaryRoot=mr::recovery::localFilePath(QDir::tempPath());
+ if(temporaryRoot.isEmpty())return false;
+ directory_=std::make_unique<QTemporaryDir>(temporaryRoot+"/nexvary-import-XXXXXX");
  if(!directory_->isValid()||!QFile::setPermissions(directory_->path(),QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner)){directory_.reset();return false;}
  const auto path=directory_->filePath("working.bin");QFile copy(path);
  if(!copy.open(QIODevice::WriteOnly|QIODevice::NewOnly)||!copy.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||copy.write(bytes)!=bytes.size()||!copy.flush()){copy.close();directory_.reset();return false;}
