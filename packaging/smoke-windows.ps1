@@ -34,6 +34,19 @@ try {
   $env:QML2_IMPORT_PATH = ''
   $env:QT_QPA_FONTDIR = ''
   $env:QT_QUICK_BACKEND = 'software'
+  # Exercise the actual deployed child and Qt runtime using synthetic bytes only.
+  $importInput = Join-Path $isolated 'synthetic import.json'
+  [IO.File]::WriteAllText($importInput, '{"synthetic":"deployed import worker"}', [Text.UTF8Encoding]::new($false))
+  $importHash = (Get-FileHash -LiteralPath $importInput -Algorithm SHA256).Hash.ToLower()
+  $importOutput = Join-Path $evidence "$Label.authorized-import.json"
+  $importError = Join-Path $evidence "$Label.authorized-import.stderr.txt"
+  $importArguments = @('--input', ('"' + $importInput + '"'), '--sha256', $importHash, '--adapter', 'json')
+  $import = Start-Process -FilePath (Join-Path $runtimeDirectory 'mr_evidence_import_worker.exe') -ArgumentList $importArguments -WorkingDirectory $runtimeDirectory -PassThru -RedirectStandardOutput $importOutput -RedirectStandardError $importError
+  if (-not $import.WaitForExit(10000)) { $import.Kill($true); throw 'Deployed import worker timed out' }
+  if ($import.ExitCode -ne 0) { throw 'Deployed import worker failed' }
+  $importReport = Get-Content -LiteralPath $importOutput -Raw | ConvertFrom-Json
+  if ($importReport.schema -ne 'nexvary-authorized-import/v1' -or $importReport.status -ne 'imported' -or $importReport.sourceSha256 -ne $importHash -or $importReport.findings[0].value -ne 'deployed import worker') { throw 'Deployed import worker report did not verify' }
+  if ((Get-FileHash -LiteralPath $importInput -Algorithm SHA256).Hash.ToLower() -ne $importHash) { throw 'Deployed importer changed its input' }
   # Exercise the deployed app's real resolution with SDK/PATH tools excluded.
   $probeOutput = Join-Path $evidence "$Label.screen-tools.json"
   $probeError = Join-Path $evidence "$Label.screen-tools.stderr.txt"

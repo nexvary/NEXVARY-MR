@@ -40,6 +40,18 @@ TestCase {
   for(const arabic of [true,false]){app.ar=arabic;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-analysis-"+(arabic?"ar":"en")+".png"))}
   app.setWorkspace(false);compare(app.currentPage,0)
  }
+ function test_governmentAuthorizedImportControls(){
+  app.setWorkspace(true)
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-IMPORT-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic document",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic document only"});verify(id!=="",lawCaseBridge.error)
+  const device=lawCaseBridge.addDevice({model:"Synthetic source",custodian:"Synthetic custodian"});verify(device!=="")
+  const source=lawCaseBridge.addEvidence(device,syntheticEvidencePath,"Synthetic text import","Synthetic custodian",true);verify(source!=="")
+  app.navigateSection(6);verify(renderedFrame());const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentImportPanel"),button=findChild(app,"governmentImportStart"),consent=findChild(app,"governmentImportConsent")
+  findChild(app,"governmentImportEvidence").currentIndex=0;findChild(app,"governmentImportAdapter").currentIndex=0
+  compare(button.enabled,false);findChild(app,"governmentImportPurpose").text="Synthetic authorized UI import";compare(button.enabled,false);consent.checked=true;compare(button.enabled,true)
+  reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"importBusy",false,8000);verify(!!lawCaseBridge.importResult.reportJson,lawCaseBridge.error);compare(JSON.parse(lawCaseBridge.importResult.reportJson).status,"imported");compare(consent.checked,false)
+  for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=980;page.contentItem.contentY=panel.y;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"authorized-import-"+(arabic?"ar":"en")+"-"+uiScaleTag+".png"))}
+  findChild(app,"governmentImportAdapter").currentIndex=1;consent.checked=true;reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"importBusy",false,8000);compare(JSON.parse(lawCaseBridge.importResult.reportJson).status,"rejected");verify(lawCaseBridge.verifyEvidence(source));verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();compare(findChild(app,"governmentImportPurpose").text,"");app.setWorkspace(false)
+ }
  function test_governmentProtectedBackupControls(){
   app.setWorkspace(true);const law=findChild(app,"lawEnforcementWorkspace")
   const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-BACKUP-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic device",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic backup review only"});verify(id!=="",lawCaseBridge.error)

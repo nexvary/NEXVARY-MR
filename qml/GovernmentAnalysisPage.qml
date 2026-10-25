@@ -8,8 +8,12 @@ ScrollView {
  property var result:({})
  readonly property var summary:result.reportJson?JSON.parse(result.reportJson):({})
  property bool showTechnical:false
+ property var savedImport:({})
+ property string lastCaseId:""
+ readonly property var imported:page.savedImport.reportJson?page.savedImport:lawCaseBridge.importResult
+ readonly property var importReport:page.imported.reportJson?JSON.parse(page.imported.reportJson):({})
  contentWidth:availableWidth;clip:true
- Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false}}
+ Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("تحليل أدلة القضية","Case evidence analysis");iconName:"shield_checkmark"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحليل محلي لنسخة القضية المحمية بعد التحقق من SHA-256. الحد 8 MiB. يدعم إحصاءات classic PCAP وحقول JPEG EXIF المحدودة دون فك تشفير أو تشغيل الملف.","Local analysis of hash-verified protected case evidence, up to 8 MiB. Supports classic-PCAP statistics and bounded JPEG-EXIF fields without decryption or file execution.")}
@@ -30,8 +34,30 @@ ScrollView {
    ActionButton {visible:!!page.result.reportJson;text:page.showTechnical?app.trx("إخفاء التفاصيل التقنية","Hide technical details"):app.trx("عرض التفاصيل التقنية","Show technical details");onClicked:page.showTechnical=!page.showTechnical}
    TextArea {objectName:"governmentAnalysisResult";visible:page.showTechnical;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.result.reportJson?JSON.stringify(JSON.parse(page.result.reportJson),null,2):""}
   }
+  Panel {objectName:"governmentImportPanel";Layout.fillWidth:true;title:app.trx("استيراد أدلة مصرح بها","Authorized evidence import");iconName:"document_lock"
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("استورد المحتوى من دليل مسجل في القضية: نسخة مؤقتة منفصلة، فحص SHA-256 قبل المعالجة وبعدها، ومحلل معزول بحد 4 MiB. يدعم نص UTF-8 وJSON وXML وCSV وSQLite المستقل وسجل Android بصيغة threadtime. لا يفك تشفير النسخ أو يستخلص هاتفًا مقفلًا.","Import from registered case evidence: a separate temporary copy, SHA-256 before/after processing and an isolated parser, limited to 4 MiB. Supports UTF-8 text, JSON, XML, CSV, standalone SQLite and Android threadtime logs. No encrypted-backup decryption or locked-device acquisition.")}
+   ComboBox {id:importEvidence;objectName:"governmentImportEvidence";Layout.fillWidth:true;model:lawCaseBridge.activeCase.evidence||[];textRole:"name";enabled:!lawCaseBridge.importBusy}
+   ComboBox {id:importAdapter;objectName:"governmentImportAdapter";Layout.fillWidth:true;enabled:!lawCaseBridge.importBusy;textRole:app.ar?"ar":"en";model:[{id:"utf8-document",ar:"مستند نصي UTF-8",en:"UTF-8 text document"},{id:"json",ar:"JSON — حقول وقيم",en:"JSON — fields and values"},{id:"xml",ar:"XML — دون DTD أو كيانات خارجية",en:"XML — no DTD or external entities"},{id:"csv",ar:"CSV — خلايا مرقمة",en:"CSV — numbered cells"},{id:"sqlite",ar:"SQLite مستقل — عينة صفوف محدودة",en:"Standalone SQLite — bounded row sample"},{id:"android-log",ar:"سجل Android مصدّر — threadtime",en:"Exported Android log — threadtime"}]}
+   TextField {id:importPurpose;objectName:"governmentImportPurpose";Layout.fillWidth:true;maximumLength:512;enabled:!lawCaseBridge.importBusy;placeholderText:app.trx("غرض الاستيراد ضمن نطاق القضية","Import purpose within the recorded case scope")}
+   CheckBox {id:importConsent;objectName:"governmentImportConsent";Layout.fillWidth:true;enabled:!lawCaseBridge.importBusy;text:app.trx("أقر بالتفويض وإنشاء نسخة عمل مؤقتة غير مشفرة","Confirm authority and creation of a temporary plaintext working copy");contentItem:Label {text:importConsent.text;wrapMode:Text.WordWrap;color:app.design.text;leftPadding:importConsent.mirrored?0:importConsent.indicator.width+importConsent.spacing;rightPadding:importConsent.mirrored?importConsent.indicator.width+importConsent.spacing:0;verticalAlignment:Text.AlignVCenter}}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تُزال النسخة بعد انتهاء العملية؛ الإزالة ليست محوًا جنائيًا مضمونًا، وقد تبقى آثار بعد تعطل النظام. لا تُحوّل الطوابع الزمنية أو تُستنتج وقائع غير مثبتة. تُحفظ النتائج والإخفاقات ضمن سجل القضية المحمي.","The copy is removed on completion; removal is not guaranteed forensic erasure and a system crash may leave traces. Timestamps are not inferred or normalized. Results and parser rejections are retained in the protected case audit.")}
+   Flow {Layout.fillWidth:true;spacing:8
+    ActionButton {objectName:"governmentImportStart";text:app.trx("استيراد وتوثيق النتائج","Import and retain findings");primary:true;enabled:!lawCaseBridge.importBusy&&lawCaseBridge.permissions.analyze&&!!lawCaseBridge.activeCase.id&&importEvidence.currentIndex>=0&&importPurpose.text.trim()!==""&&importConsent.checked;onClicked:{page.savedImport=({});lawCaseBridge.importEvidence(importEvidence.model[importEvidence.currentIndex].id,importAdapter.model[importAdapter.currentIndex].id,importPurpose.text,importConsent.checked);importConsent.checked=false}}
+    ActionButton {objectName:"governmentImportCancel";text:app.trx("إلغاء الاستيراد","Cancel import");enabled:lawCaseBridge.importBusy;onClicked:lawCaseBridge.cancelImport()}
+   }
+   BusyIndicator {objectName:"governmentImportBusy";visible:lawCaseBridge.importBusy;running:visible;Layout.alignment:Qt.AlignHCenter}
+   Label {objectName:"governmentImportStatus";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.importReport.status==="rejected"?app.design.danger:app.design.success;text:lawCaseBridge.importBusy?app.trx("يجري تحليل نسخة العمل في عملية منفصلة…","Parsing the working copy in a separate process…"):page.importReport.status==="imported"?app.trx("حُفظت نتيجة الاستيراد وبصمتها","Import result and digest retained"):page.importReport.status==="rejected"?app.trx("رُفض الإدخال بأمان وسُجل الإخفاق: ","Input safely rejected and failure recorded: ")+(page.importReport.errorCode||""):""}
+   Label {visible:!!page.imported.reportJson;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:"SHA-256: "+(page.imported.sourceSha256||"")+"\n"+app.trx("بصمة التقرير: ","Report SHA-256: ")+(page.imported.reportSha256||"")+"\n"+app.trx("ملاحظات محفوظة: ","Retained findings: ")+(page.importReport.findings||[]).length+(page.importReport.findingsTruncated?app.trx(" — عينة محدودة؛ راجع الحدود"," — bounded sample; review limits"):"")}
+   Repeater {model:(page.importReport.findings||[]).slice(0,12);delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.kind;iconName:"document_text"
+    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:modelData.reference}
+    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.text;text:modelData.value+(modelData.valueTruncated?page.app.trx(" [قيمة مختصرة]"," [value shortened]"):"")}
+   }}
+   ActionButton {visible:!!page.imported.reportJson;text:app.trx("عرض جميع النتائج والمصدر","Show all findings and provenance");onClicked:page.showTechnical=!page.showTechnical}
+   TextArea {objectName:"governmentImportResult";visible:page.showTechnical&&!!page.imported.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.imported.reportJson?JSON.stringify(page.importReport,null,2):""}
+  }
   Repeater {model:lawCaseBridge.activeCase.analyses||[];delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.parser;iconName:"document_text"
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.atUtc+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256}
+   ActionButton {visible:modelData.parser.indexOf("authorized-import/")===0;text:page.app.trx("فتح نتيجة الاستيراد المحفوظة","Open retained import result");onClicked:{page.savedImport=modelData;page.showTechnical=true}}
   }}
  }
 }

@@ -17,6 +17,10 @@ $compiledProfile = Assert-NexvaryProductionBinary -FilePath $exe
 $bundle = Join-Path $OutputDirectory 'NEXVARY-MR'
 New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item $exe (Join-Path $bundle 'NEXVARY-MR.exe')
+$importWorker = Join-Path $BuildDirectory "$Configuration/mr_evidence_import_worker.exe"
+if (-not (Test-Path $importWorker)) { $importWorker = Join-Path $BuildDirectory 'mr_evidence_import_worker.exe' }
+if (-not (Test-Path $importWorker -PathType Leaf)) { throw 'Isolated evidence import worker is missing' }
+Copy-Item $importWorker (Join-Path $bundle 'mr_evidence_import_worker.exe')
 & "$qtRoot/bin/windeployqt.exe" --release --qmldir (Join-Path $repo 'qml') --no-translations --no-compiler-runtime (Join-Path $bundle 'NEXVARY-MR.exe')
 if ($LASTEXITCODE -ne 0) { throw "windeployqt failed: $LASTEXITCODE" }
 # Official release CRT files only: preserve portable/per-user operation without
@@ -72,7 +76,7 @@ Copy-Item "$qtRoot/bin/Qt6Svg.dll" (Join-Path $bundle 'Qt6Svg.dll')
 New-Item -ItemType Directory -Force (Join-Path $bundle 'tls') | Out-Null
 Copy-Item "$qtRoot/plugins/tls/qschannelbackend.dll" (Join-Path $bundle 'tls/qschannelbackend.dll')
 $requiredRuntime = @(
-  'NEXVARY-MR.exe', 'libsodium.dll', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
+  'NEXVARY-MR.exe', 'mr_evidence_import_worker.exe', 'libsodium.dll', 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll',
   'Qt6Core.dll', 'Qt6Gui.dll', 'Qt6Qml.dll',
   'Qt6Quick.dll', 'Qt6Sql.dll', 'Qt6Network.dll',
   'platforms/qwindows.dll', 'sqldrivers/qsqlite.dll', 'imageformats/qjpeg.dll',
@@ -95,6 +99,7 @@ Copy-Item (Join-Path $repo 'docs/USER_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OPERATIONS.md') $bundle
 Copy-Item (Join-Path $repo 'docs/PROTECTED_CASE_BACKUP.md') $bundle
 Copy-Item (Join-Path $repo 'docs/EVIDENCE_RETENTION.md') $bundle
+Copy-Item (Join-Path $repo 'docs/AUTHORIZED_IMPORT.md') $bundle
 New-Item -ItemType Directory -Force (Join-Path $bundle 'verification') | Out-Null
 Copy-Item (Join-Path $repo 'scripts/verify_evidence_package.py') (Join-Path $bundle 'verification/verify_evidence_package.py')
 Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle
