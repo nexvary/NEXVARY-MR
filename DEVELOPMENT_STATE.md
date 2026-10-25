@@ -1,3 +1,9 @@
+# Government timeline UI verification follow-up — 2026-10-25
+
+- Published source before follow-up: `02324429ffd0c33f5838d076556966a6a2b7ea5a`, hosted CI 40221370260 in progress. Native timeline 26/26, import 32/32 and Python 38/38 passed locally. Re-linking repaired generated identity/security/application outputs.
+- The UI translation assertion failed because object-name traversal returned null for a generated Repeater label. The follow-up reads the rendered delegate's actual text through Repeater.itemAt and an alias, preserving the language/uncertainty assertion rather than removing it. Focused AR/EN/multi-size timeline controls passed after the correction; final UI/DPI regression and new exact-source CI remain required.
+- Public-source review now explicitly maps NIST v3.3 timeline/SQLite requirements to current scope/gaps. Requested independent report PDFs for AXIOM/Inseyets returned HTTP 403; no unreviewed results are credited.
+
 # Government timeline build repair — 2026-10-25
 
 - Latest published source before this correction: `3c23960bc0ed22aac1796fa20f3e9a056da7899d`, CI 40203548197. Both core jobs, tracking server, Python and public-history passed. All four GUI profiles failed compilation: Linux rejected misleading indentation in the new UI fixture; Windows Qt 6.8.3 rejected the deprecated QDateTime TimeSpec constructor under /WX.

@@ -128,7 +128,7 @@
       "id": "NIST",
       "url": "https://www.nist.gov/itl/csd/secure-systems-and-applications/computer-forensics-tool-testing-program-cftt/cftt-7",
       "evidenceClass": "Publicly Documented",
-      "scope": "Mobile testing index located; individual report result tables not reviewed. No certification or general pass inferred.",
+      "scope": "Mobile testing index located; individual report result tables not reviewed. No certification or general pass inferred. AXIOM 8.1.0.42087 and Inseyets 10.3 report PDF requests returned HTTP 403 on this review; results remain unverified.",
       "retrievedOn": "2026-10-25"
     },
     {
@@ -136,6 +136,13 @@
       "url": "https://citizenlab.ca/research/mapping-hacking-teams-untraceable-spyware/",
       "evidenceClass": "Publicly Documented",
       "scope": "Original 2014 defensive infrastructure research; no leaked code/materials or implant reuse.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "NIST-SPEC-3.3",
+      "url": "https://www.nist.gov/document/mobile-device-forensic-tool-test-specification-v33",
+      "evidenceClass": "Publicly Documented",
+      "scope": "January 2025 specification, sections 6.2.4 and 6.2.7 inspected; requirements are not a product test result.",
       "retrievedOn": "2026-10-25"
     }
   ],

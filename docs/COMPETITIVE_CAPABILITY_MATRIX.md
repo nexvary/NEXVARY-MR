@@ -66,3 +66,9 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Deployment and Maintenance | Tested / Pending | Earlier hosted portable/install lifecycle; current source needs exact-source CI; clean Windows 10/11 and publisher signing pending. |
 | Cost of Ownership | Pending | No measured agency support/TCO or equivalent competitor contract comparison. |
 | Training and Localization | Tested / Pending | Existing synthetic scenarios and AR/EN; full training curriculum/independent assessment pending. |
+
+## Scoped requirement review
+
+[NIST Mobile Device Forensic Tool Specification v3.3 (January 2025)](https://www.nist.gov/document/mobile-device-forensic-tool-test-specification-v33), sections 6.2.4 and 6.2.7, was inspected. MDT-RO-15 concerns temporal ordering and MDT-AO-34 presentation of supported timestamps. The bounded NEXVARY projection requires cap/unsupported disclosure and further validation; no conformance is claimed. MDT-RO-11 concerns active-table coverage; NEXVARY's first-32-row sample is incomplete for that purpose. WAL coverage in MDT-AO-28 is unsupported by the current adapter. This review exposes gaps rather than converting internal tests into accreditation.
+
+The index's AXIOM 8.1 and Inseyets 10.3 report PDFs returned HTTP 403, so their result tables remain unreviewed. No Independently Verified product cell is inferred. URLs/access outcomes are retained in evidence/timeline-2026-10-25/research-source-review.json.
