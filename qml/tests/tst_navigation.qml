@@ -63,6 +63,7 @@ TestCase {
   const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious");verify(next.enabled);reveal(page,next);mouseClick(next);compare(next.enabled,false);verify(previous.enabled);mouseClick(previous);compare(previous.enabled,false)
   for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
    app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(80);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
+   verify(findChild(app,"governmentTimelineReason").text.indexOf(arabic?"صحة":"authenticity")>=0,"Timeline uncertainty is explained in the selected language")
    reveal(page,button);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header,"Timeline scrolling must not overpaint the header")
    const top=button.mapToItem(app.contentItem,0,0),bottom=button.mapToItem(app.contentItem,button.width,button.height);verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<=app.height,"Timeline controls remain reachable")
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-timeline-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))

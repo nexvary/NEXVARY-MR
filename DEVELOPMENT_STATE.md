@@ -1,3 +1,10 @@
+# Government timeline build repair — 2026-10-25
+
+- Latest published source before this correction: `3c23960bc0ed22aac1796fa20f3e9a056da7899d`, CI 40203548197. Both core jobs, tracking server, Python and public-history passed. All four GUI profiles failed compilation: Linux rejected misleading indentation in the new UI fixture; Windows Qt 6.8.3 rejected the deprecated QDateTime TimeSpec constructor under /WX.
+- This source correction retains warnings-as-errors, separates the fixture close statement and constructs UTC through the Qt 6.4-compatible QTimeZone(0) API with explicit toUTC(). It also clears a retained projection when a new build request discovers an externally changed case, and translates time uncertainty into AR/EN instead of exposing reason codes.
+- Local execution is now available again in an isolated checkout; unrelated uncommitted ADB backup/Firmware work in other checkouts is preserved. Initial local checks after the two compile repairs passed timeline 26/26, import 32/32, Qt Quick 47/47 and five targeted CTest groups including 1.25/1.5 DPI. Later stale-view/localization corrections passed the final native timeline suite; full CTest is running. Local generated outputs for identity/UI/application unexpectedly became zero-byte non-executables, so affected tests cannot start until relinked. No full local 42/42 pass is claimed. New exact-source hosted CI remains required. These initial local results are not attributed to the failed published source.
+- No new Windows package or final-source passing test is claimed until results are recorded below. Competitive capability registry (14 products x 20 dimensions), source classification, maintenance/benchmark roadmap and 20 institutional acceptance gates are added. Unknown competitor cells remain explicit; no superiority is established.
+
 # Government Technology Superiority — timeline implementation checkpoint (2026-10-25)
 
 - Branch: `feature/government-operations`; existing draft PR #15. Inspected starting HEAD: `e76d20a3a9f610dd2f3ee991b9705d7cd0845fae`; verified earlier executable: `feed968f905cbc3d2960e94cfa208139b7642b53`.

@@ -96,8 +96,10 @@ features were added to the frozen legacy forensic lab. The government navigation
 uses this case-bound page rather than opening old repair/recovery case collections.
 PDF case reports include analysis and working-copy history.
 
-Generic Android backup parsing, SQLite case analysis, parser-to-case indexing/timeline
-integration, document-specific attachments,
+Six bounded authorized-import adapters are integrated; see AUTHORIZED_IMPORT.md.
+The new asynchronous timestamp-literal projection is described in CASE_TIMELINE.md,
+with exact-source verification in DEVELOPMENT_STATE.md. Generic vendor backup/container
+parsing, full artifact indexing/typed timeline semantics, document-specific attachments,
 actual disposal execution, searchable case artifact integration and a full document-management
 subsystem remain implementation gaps. Protected backup/restore and retention governance
 are implemented; see PROTECTED_CASE_BACKUP.md and EVIDENCE_RETENTION.md. Existing evidence import can preserve an

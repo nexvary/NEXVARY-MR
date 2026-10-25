@@ -28,6 +28,7 @@ void LawCaseBridge::initTimeline(){
 bool LawCaseBridge::buildTimeline(const QString &query){
  if(!permit(nexvary::law::Action::AnalyzeEvidence)||active_.isEmpty()){cancelTimeline();return false;}
  if(timelineBusy())return fail("A timeline projection is already running.");
+ timelineResult_.clear();emit timelineChanged();
  if(query.size()>256)return fail("Timeline search exceeds 256 characters.");
  const auto record=store_->get(active_.value("id").toString());
  if(record.isEmpty()||!caseAllowed(record)||record.value("revision")!=active_.value("revision"))return fail("Reopen the current authorized case before building its timeline.");

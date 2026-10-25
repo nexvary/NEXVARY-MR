@@ -1,6 +1,7 @@
 #include "CaseTimeline.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
+#include <QTimeZone>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QRegularExpression>
@@ -32,7 +33,7 @@ QVariantMap timeValue(const QString &raw,bool shortened,const QString &kind){
   if(h>14||n>59||(h==14&&n!=0))return reason("offset-out-of-range");
   minutes=(h*60+n)*(zone.startsWith('-')?-1:1);
  }
- const auto utc=QDateTime(date,time,Qt::UTC).addSecs(-minutes*60);
+ const auto utc=QDateTime(date,time,QTimeZone(0)).addSecs(-minutes*60).toUTC();
  if(!utc.isValid()||utc.date().year()<1||utc.date().year()>9999)return reason("utc-out-of-range");
  value.insert("utc",utc.toString(Qt::ISODateWithMs));value.insert("timeState","normalized");
  value.insert("reason","explicit-offset-literal-only");return value;

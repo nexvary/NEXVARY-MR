@@ -1,12 +1,8 @@
 # Government Edition evaluation readiness
 
-This is a tested development increment for controlled evaluation, not a completed
-institutional deployment. Last hosted-verified executable checkpoint:
-`8d32b4589cca586a659c5df32dc555faea060740`, CI 40181030127 (all seven jobs passed).
-Four native profiles passed 40/40; production sanitizers passed 9/9. This later
-checkpoint updates documentation/evidence only. See PR #15 for source/build links.
-Review PR: https://github.com/nexvary/NEXVARY-MR/pull/15.
-Read the current DEVELOPMENT_STATE.md and CI evidence before treating a gate as passed.
+This is a development increment for controlled evaluation, not a completed institutional deployment. Latest successful full hosted executable baseline: `feed968f905cbc3d2960e94cfa208139b7642b53`, CI 40197393089. The new asynchronous case timestamp projection is implemented after that baseline; its initial source `3c23960` failed GUI compilation in CI 40203548197. Correction and exact-source validation are tracked in DEVELOPMENT_STATE.md. Earlier test results must not be credited to new code before those checks pass.
+
+Review PR: https://github.com/nexvary/NEXVARY-MR/pull/15. The [acceptance matrix](GOVERNMENT_ACCEPTANCE_MATRIX.md), [competitive matrix](COMPETITIVE_CAPABILITY_MATRIX.md) and [superiority roadmap](COMPETITIVE_SUPERIORITY_ROADMAP.md) define remaining institutional and comparison gates. No competitive superiority is established.
 
 | Area | Implemented and tested | Practical boundary / remaining work |
 |---|---|---|
@@ -17,7 +13,8 @@ Read the current DEVELOPMENT_STATE.md and CI evidence before treating a gate as 
 | Identity and RBAC | Local Argon2id credentials, password-wrapped signing keys, native role/action checks, ownership/grants, revocation, lockout and session expiry | Local accounts are not institutional identity/SSO or proof of independent people. |
 | Protected storage | Windows current-user DPAPI payloads, bounded SQLite transactions, stale-writer rejection | Bounded protected case backup/restore now validates original ownership, every evidence blob and a separately supplied digest; native retention governance now persists within snapshots; physical disposal execution remains. Linux real-case storage fails closed. |
 | Device assessment | Selected-target manufacturer/model, SoC/hardware, firmware, OS/patch, boot/encryption observations with source/time and unknown states | Live USB observations are not automatically attributed to a seized case device. No protected-phone acquisition, key extraction or iOS capability inferred. |
-| Case analysis | Existing classic-PCAP and JPEG-EXIF parsers on hash-verified case bytes; repeatable report hashes; protected run provenance | 8 MiB sources. Android backup/SQLite adapters, searchable artifact indexing, timeline and relationship integration remain. |
+| Case analysis | Existing classic-PCAP and JPEG-EXIF parsers on hash-verified case bytes; repeatable report hashes; protected run provenance | 8 MiB sources. Six bounded authorized-import adapters now include standalone SQLite samples and exported logs; vendor backup/container parsing, full artifact indexing and entity relationships remain. New timestamp projection status is tracked separately in CASE_TIMELINE.md and DEVELOPMENT_STATE.md. |
+| Case timestamp timeline | Original asynchronous projection of retained import timestamp literals; explicit UTC offsets, unresolved states, source/report provenance, literal search and pagination | Current verification status is in DEVELOPMENT_STATE.md. No full activity semantics, numeric epoch inference, social graph or timeline export is claimed. |
 | Research | Existing Atlas/tool catalog, experiment intake, public/synthetic author/reviewer signatures and evidence verification | Research approval does not grant commercial/device support; exact model/OS/firmware repeatability remains required. |
 | Training | Existing three synthetic scored decision scenarios and separate training reports | Not a complete VM/device-simulation/data-set laboratory or accredited training course. |
 | PDF reports | Case/evidence/custody/analysis/export/backup/recovery/audit tables, Arabic labels, LTR technical results/digests, repeated table captions | Native synthetic five-page Linux report visually/textually checked, including exact ASCII `ff` in a digest; independent Windows 10/11 field review remains. |
@@ -31,8 +28,8 @@ for bounds, current-account recovery and retained-anchor semantics. It is not fu
 OS/identity-registry disaster recovery.
 
 Retention/archive/disposal-review governance is implemented with no byte deletion; see
-EVIDENCE_RETENTION.md. Next integrate one bounded authorized
-backup format and SQLite artifact path through the existing engines. Preserve the
+EVIDENCE_RETENTION.md. Next verify the new timeline projection, integrate one bounded authorized
+backup format and typed artifact/provenance paths through the existing engines. Preserve the
 legacy forensic feature freeze: case integration is not authorization to duplicate
 or expand its unrelated parser backlog.
 

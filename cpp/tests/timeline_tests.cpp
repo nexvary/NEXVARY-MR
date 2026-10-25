@@ -90,6 +90,7 @@ private slots:
   QVERIFY(b.buildTimeline());b.cancelTimeline();QTRY_VERIFY_WITH_TIMEOUT(!b.timelineBusy(),8000);QVERIFY(b.timelineResult().isEmpty());
   QVERIFY(b.buildTimeline());b.closeWorkspace();QTRY_VERIFY_WITH_TIMEOUT(!b.timelineBusy(),8000);QVERIFY(b.timelineResult().isEmpty());
   QVERIFY(b.openCase(id));LawCaseBridge other(path,nullptr,true);QVERIFY(other.openCase(id));QSignalSpy done(&b,&LawCaseBridge::timelineCompleted);QVERIFY(b.buildTimeline());auto meta=metadata();meta.insert("notes","Synthetic parallel update");QVERIFY(other.updateCase(meta));QVERIFY(done.wait(8000));QVERIFY(!done.last()[0].toBool());QVERIFY(b.timelineResult().isEmpty());
+  QVERIFY(b.openCase(id));QVERIFY(build(b));QVERIFY(!b.timelineResult().isEmpty());meta.insert("notes","Synthetic update after projection");QVERIFY(other.updateCase(meta));QVERIFY(!b.buildTimeline());QVERIFY(b.timelineResult().isEmpty());
  }
  void nativeGrantRevocation(){
   QTemporaryDir t;const auto registry=t.filePath("identities");const QString password="Synthetic timeline password 2026!";

@@ -11,6 +11,21 @@ ScrollView {
  property int timelinePage:0
  readonly property var timeline:lawCaseBridge.timelineResult
  readonly property var timelineRows:timeline.events||[]
+ function timeReason(code){
+  const reasons={
+   "explicit-offset-literal-only":["حُوّل إلى UTC وفق المنطقة الزمنية المذكورة؛ صحة وقت المصدر غير مثبتة","Converted using the stated offset; source time authenticity is unverified"],
+   "shortened-source-value":["القيمة مختصرة؛ لا يمكن تحديد الوقت بدقة","The observed value was shortened; time cannot be resolved"],
+   "missing-year-and-timezone":["السجل لا يحدد السنة والمنطقة الزمنية","The log omits the year and timezone"],
+   "unsupported-format-or-missing-timezone":["صيغة غير مدعومة أو منطقة زمنية غير مذكورة","Unsupported format or missing timezone"],
+   "invalid-calendar-date":["التاريخ غير صالح","Invalid calendar date"],
+   "unsupported-submillisecond-precision":["دقة أعلى من مللي ثانية؛ احتُفظ بالقيمة دون تقريب","Submillisecond precision retained without rounding"],
+   "invalid-time-or-leap-second":["وقت غير صالح أو ثانية كبيسة غير مدعومة","Invalid time or unsupported leap second"],
+   "unknown-offset":["إزاحة المنطقة الزمنية غير معروفة","The timezone offset is unknown"],
+   "offset-out-of-range":["إزاحة المنطقة الزمنية خارج النطاق المدعوم","Timezone offset outside the supported range"],
+   "utc-out-of-range":["التحويل إلى UTC خارج نطاق التواريخ المدعوم","UTC conversion outside the supported calendar range"]
+  }
+  const reason=reasons[code];return reason?app.trx(reason[0],reason[1]):app.trx("وقت غير محسوم؛ راجع المصدر","Unresolved time; review the source")
+ }
  Connections {target:lawCaseBridge;function onTimelineChanged(){page.timelinePage=0}}
  property var savedImport:({})
  property string lastCaseId:""
@@ -70,7 +85,8 @@ ScrollView {
    Label {objectName:"governmentTimelineSummary";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;text:page.timeline.schema?app.trx("أوقات UTC: ","UTC times: ")+page.timeline.normalizedCount+app.trx(" | أوقات غير محسومة: "," | Unresolved: ")+page.timeline.unresolvedCount+app.trx(" | قيم إضافية لم تُعرض: "," | Additional matching values omitted: ")+page.timeline.omittedMatchingCandidates+app.trx(" | تقارير استيراد مختصرة: "," | Truncated import reports: ")+page.timeline.truncatedImportReports:app.trx("ابنِ العرض بعد استيراد دليل. لا توجد نتائج معروضة.","Build the view after importing evidence. No results displayed.")}
    Repeater {model:page.timelineRows.slice(page.timelinePage*12,(page.timelinePage+1)*12);delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.utc||page.app.trx("وقت غير محسوم","Unresolved time");iconName:"document_text"
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.originalTime;LayoutMirroring.enabled:false}
-    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.muted;text:modelData.reason+"\n"+modelData.sourceName+" | "+modelData.reference+"\n"+page.app.trx("الدليل: ","Evidence: ")+modelData.evidenceId+"\n"+page.app.trx("التحليل: ","Analysis: ")+modelData.analysisId+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256;LayoutMirroring.enabled:false}
+    Label {objectName:"governmentTimelineReason";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.muted;text:page.timeReason(modelData.reason)}
+    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.muted;text:modelData.sourceName+" | "+modelData.reference+"\n"+page.app.trx("الدليل: ","Evidence: ")+modelData.evidenceId+"\n"+page.app.trx("التحليل: ","Analysis: ")+modelData.analysisId+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256;LayoutMirroring.enabled:false}
    }}
    Flow {Layout.fillWidth:true;spacing:8;visible:page.timelineRows.length>12
     ActionButton {objectName:"governmentTimelinePrevious";text:app.trx("السابق","Previous");enabled:page.timelinePage>0;onClicked:page.timelinePage--}
