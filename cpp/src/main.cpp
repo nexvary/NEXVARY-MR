@@ -53,7 +53,7 @@ int smokeFailure(const char *stage,int code){
 }
 // Actual deployed EXE receipt. This exports public synthetic history only;
 // the retained anchor is independently verified by the packaging Python tool.
-bool deployedPolicyAudit(GovernmentOperationPolicy &policy,const QString &screenshot){
+bool deployedPolicyAudit(GovernmentOperationPolicy &policy,IdentityService &identity,const QString &screenshot){
  if(screenshot.isEmpty())return true;
  const QFileInfo file(screenshot);const auto base=QDir(file.absolutePath()).filePath(file.completeBaseName()+"-government-policy");
  auto anchor=policy.auditStatus();anchor.remove("healthy");anchor.remove("verification");
@@ -61,7 +61,14 @@ bool deployedPolicyAudit(GovernmentOperationPolicy &policy,const QString &screen
  QTemporaryDir temporary(QDir(file.absolutePath()).filePath("policy-smoke-XXXXXX"));
  if(!smokeCheck(temporary.isValid(),"policy-audit-temporary-directory"))return false;
  const auto exported=temporary.filePath("audit.json");
- if(!smokeCheck(policy.exportAudit(exported,true),"policy-audit-export")||!smokeCheck(policy.verifyAudit(exported,QString::fromUtf8(retained)),"policy-audit-retained-anchor-verification"))return false;
+ if(!smokeCheck(policy.exportAudit(exported,true),"policy-audit-export")){
+  const auto status=policy.auditStatus();const auto role=identity.session().value("role").toString();
+  const auto allowedRole=QStringList{"administrator","reviewer","auditor","investigator","repair-technician","trainer"}.contains(role)?role:QStringLiteral("none");
+  const char *classification=policy.error().startsWith("Audit export needs")?"export-authority":policy.error().startsWith("Choose a new")?"export-path":policy.error().startsWith("Cannot create audit export")?"export-write":policy.error().isEmpty()?"session-check":"audit-store";
+  std::fprintf(stderr,"Synthetic audit export context: healthy=%d authenticated=%d role=%s sequence=%lld class=%s\n",int(status.value("healthy").toBool()),int(identity.authenticated()),qPrintable(allowedRole),static_cast<long long>(status.value("sequence").toLongLong()),classification);
+  return false;
+ }
+ if(!smokeCheck(policy.verifyAudit(exported,QString::fromUtf8(retained)),"policy-audit-retained-anchor-verification"))return false;
  QFile input(exported);if(!smokeCheck(input.open(QIODevice::ReadOnly),"policy-audit-export-read"))return false;
  const auto publicHistory=input.readAll();
  const auto artifact=[](const QString &path,const QByteArray &bytes){
@@ -109,7 +116,10 @@ void governmentArtifactSmoke(QQuickWindow *window, LawCaseBridge &law, const QSt
  const auto device=law.addDevice({{"model","Synthetic source"},{"custodian","Synthetic custodian"}});
  const auto path=QDir(directory).filePath(QUuid::createUuid().toString(QUuid::WithoutBraces)+"-synthetic-findings.json");
  QFile source(path);const auto bytes=QStringLiteral("{\"name\":\"أحمد\",\"note\":\"SYNTHETIC deployed index only\"}").toUtf8();
- if(!smokeCheck(!id.isEmpty()&&!device.isEmpty()&&source.open(QIODevice::WriteOnly|QIODevice::NewOnly)&&source.write(bytes)==bytes.size(),"artifact-synthetic-source-setup")){finish(false);return;}source.close();
+ if(!smokeCheck(!id.isEmpty(),"artifact-synthetic-case-create")){finish(false);return;}
+ if(!smokeCheck(!device.isEmpty(),"artifact-synthetic-device-create")){finish(false);return;}
+ if(!smokeCheck(source.open(QIODevice::WriteOnly|QIODevice::NewOnly),"artifact-synthetic-source-open")){std::fprintf(stderr,"Synthetic fixture file error: code=%d\n",int(source.error()));finish(false);return;}
+ if(!smokeCheck(source.write(bytes)==bytes.size(),"artifact-synthetic-source-write")){std::fprintf(stderr,"Synthetic fixture file error: code=%d\n",int(source.error()));finish(false);return;}source.close();
  const auto evidence=law.addEvidence(device,path,"Synthetic deployed index","Synthetic custodian",true);
  if(!smokeCheck(!evidence.isEmpty(),"artifact-protected-evidence-registration")){finish(false);return;}
  QObject::connect(&law,&LawCaseBridge::artifactsCompleted,window,[window,&law,screenshot,finish](bool ok){
@@ -288,7 +298,7 @@ int main(int argc,char *argv[]) {
        QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
         const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers"),QStringLiteral("services"),QStringLiteral("catalog"),QStringLiteral("avb")};
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%8],previous%16<8?QStringLiteral("ar"):QStringLiteral("en"),previous<16?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
-        if(step==32){capture->stop();operationPolicy.revokeAll();if(!deployedPolicyAudit(operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString())){app.exit(smokeFailure("policy-audit-deployed-verification",16));return;}identity.logout();if(!smokeCheck(operationPolicy.offline(),"policy-offline-after-revoke")||!smokeCheck(!portal.running(),"portal-stopped-after-revoke")){app.exit(smokeFailure("policy-revocation-boundary",15));return;}governmentPolicySmoke(window,operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool policyOk){governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok,policyOk](bool indexOk){indexOk=indexOk&&policyOk;window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});});return;}
+        if(step==32){capture->stop();operationPolicy.revokeAll();if(!deployedPolicyAudit(operationPolicy,identity,cli.isSet("screenshot")?cli.value("screenshot"):QString())){app.exit(smokeFailure("policy-audit-deployed-verification",16));return;}identity.logout();if(!smokeCheck(operationPolicy.offline(),"policy-offline-after-revoke")||!smokeCheck(!portal.running(),"portal-stopped-after-revoke")){app.exit(smokeFailure("policy-revocation-boundary",15));return;}governmentPolicySmoke(window,operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool policyOk){governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok,policyOk](bool indexOk){indexOk=indexOk&&policyOk;window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});});return;}
         const int tab=step%8;window->setProperty("ar",step%16<8);window->setProperty("darkTheme",step<16);window->setProperty("currentPage",tab==7?4:tab<2?5:tab<5?2:1);
         // Capture the new service/catalog workspaces at the supported minimum.
         window->resize(tab>=5?QSize(1180,760):QSize(1536,980));

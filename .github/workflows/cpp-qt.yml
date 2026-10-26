@@ -45,6 +45,15 @@ jobs:
       - name: Install Qt and separately packaged TSK for synthetic integration
         timeout-minutes: 10
         run: |
+          # Prefer the signed official archive over the Azure mirror that timed
+          # out while transferring packages. Keep normal APT authentication,
+          # retries, IO timeouts and the existing bounded step deadline.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf 'https://archive.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          fi
+          if [ -f /etc/apt/apt-mirrors-security.txt ]; then
+            printf 'https://security.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors-security.txt >/dev/null
+          fi
           sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
           sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv python3-cryptography curl
       - name: Prepare pinned signed-manifest verification dependency
