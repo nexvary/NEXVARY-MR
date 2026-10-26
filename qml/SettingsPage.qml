@@ -12,6 +12,7 @@ Item {
    width:settingsScroll.availableWidth;spacing:16
    Label {text:app.trx("تهيئة محطة العمل","WORKSTATION CONFIGURATION");Layout.fillWidth:true;color:app.tone("#e0ecfa");font.pixelSize:20;font.bold:true}
    Label {text:app.trx("حدد أدواتك المحلية، راجع جاهزيتها، واحفظ نسخة من بيانات الورشة قبل الاستعادة.","Select local tools, review readiness, and protect workshop data before restoring a backup.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3")}
+   GovernmentNetworkPanel {app:page.app;Layout.fillWidth:true}
    GridLayout {
     Layout.fillWidth:true;columns:settingsScroll.availableWidth>=1020?3:settingsScroll.availableWidth>=640?2:1;columnSpacing:16;rowSpacing:16
     Repeater {
@@ -37,8 +38,8 @@ Item {
     Flow {
      Layout.fillWidth:true;spacing:8
      ActionButton {text:app.trx("إعادة فحص الأدوات","Refresh tools");enabled:!toolBridge.busy;onClicked:toolBridge.refreshTools()}
-     ActionButton {text:app.trx("مصدر Platform Tools","Platform Tools source");onClicked:Qt.openUrlExternally("https://developer.android.com/tools/releases/platform-tools")}
-     ActionButton {text:app.trx("مصدر scrcpy","scrcpy source");onClicked:Qt.openUrlExternally("https://github.com/Genymobile/scrcpy")}
+     ActionButton {text:app.trx("مصدر Platform Tools","Platform Tools source");onClicked:app.openExternal("https://developer.android.com/tools/releases/platform-tools")}
+     ActionButton {text:app.trx("مصدر scrcpy","scrcpy source");onClicked:app.openExternal("https://github.com/Genymobile/scrcpy")}
     }
     Label {text:app.trx("اختيار الملف يحفظ مساره. لا يتم تنزيل أو تثبيت التعريفات تلقائيًا؛ فحص Windows يعرض أجهزة PnP دون تعديلها.","Selecting an executable saves its path. Drivers are not downloaded or installed automatically; Windows inspection lists PnP devices without changing them.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:12}
    }

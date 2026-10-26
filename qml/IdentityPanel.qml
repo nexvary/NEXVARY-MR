@@ -26,6 +26,7 @@ ScrollView {
    ActionButton {visible:identityBridge.authenticated;objectName:"identityLogout";text:app.trx("تسجيل الخروج ومسح عرض القضية","Sign out and clear case view");onClicked:identityBridge.logout()}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تنتهي الجلسة بعد 15 دقيقة. يُقفل الحساب لخمس دقائق بعد خمس محاولات خاطئة. الحساب الإداري يدير المنح ولا يقرأ القضايا تلقائيًا.","Sessions expire after 15 minutes. Five failed attempts lock the account for five minutes. Administrators manage grants and do not automatically read cases.")}
   }
+  GovernmentNetworkPanel {app:page.app;Layout.fillWidth:true}
   Panel {visible:identityBridge.session.role==="administrator";Layout.fillWidth:true;title:app.trx("إدارة الحسابات والمنح","Accounts and case grants");iconName:"clipboard_task"
    TextField {id:newUsername;Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم الجديد","New username")}
    TextField {id:newDisplay;Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم العرض","Display name")}

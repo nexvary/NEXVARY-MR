@@ -111,3 +111,7 @@ Windows 10/11 validation require their actual environments/materials. Existing
 hosted Windows Server packaging is not a Windows 10/11 field acceptance test.
 
 The new bounded finding index/provenance slice is described in CASE_ARTIFACT_INDEX.md. It rebuilds retained import observations in a worker, validates report hashes and explicit case/device/evidence references, supports literal Arabic/English search and shows a typed recorded-source path plus equal-recorded-digest groups. Same labels do not infer people/relationships. Current bytes are not reread. Exact-source status and bounds are in DEVELOPMENT_STATE.md.
+
+## Default-deny application operations
+
+The application now starts with six network/external-operation categories blocked, even with saved cloud credentials and after navigating to Professional Repair. Administration and Settings expose explicit, expiring local-administrator exceptions. Per-operation authorization remains required. Local case/import/index/timeline engines remain available. See [Government operation policy](GOVERNMENT_OFFLINE_POLICY.md) for exact categories, revocation semantics and limitations. This is not OS air-gap containment, a durable signed policy audit, or institutional acceptance. Exact-source verification is recorded in DEVELOPMENT_STATE.md.

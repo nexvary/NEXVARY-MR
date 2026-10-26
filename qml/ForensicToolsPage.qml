@@ -60,7 +60,7 @@ Item {
     title:app.trx("تحليل الأقسام — The Sleuth Kit","PARTITION ANALYSIS — THE SLEUTH KIT");Layout.fillWidth:true
     Label {text:app.trx("يحلل mmls جدول الأقسام على نسخة مؤقتة تُتحقق بصمتها. لا يُكتب على المصدر. التشغيل عملية مستقلة بصلاحيات حسابك؛ ليس صندوق عزل أمنيًا. اختر نسخة موثوقة من الأداة.","mmls lists partitions on a hash-verified temporary copy. The source is not written. It runs separately with your account permissions, without an OS sandbox. Select a trusted installed tool.");Layout.fillWidth:true;wrapMode:Text.WordWrap;Layout.minimumHeight:implicitHeight;color:app.tone("#9bbbd3")}
     Label {text:page.mmlsPath||app.trx("لم تختَر mmls. لا يتم تشغيل أدوات PATH تلقائيًا.","No mmls selected. PATH candidates are never launched automatically.");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#8ac7f5")}
-    RowLayout {Layout.fillWidth:true;ActionButton {objectName:"chooseMmls";text:app.trx("اختيار mmls","Choose mmls");enabled:!toolBridge.busy&&!recoveryBridge.busy;onClicked:tool.open()}ActionButton {text:app.trx("المصدر الرسمي","Official source");onClicked:Qt.openUrlExternally("https://github.com/sleuthkit/sleuthkit")}ActionButton {text:app.trx("اختيار الصورة الخام","Choose raw image");enabled:!recoveryBridge.busy;onClicked:input.open()}Item {Layout.fillWidth:true}}
+    RowLayout {Layout.fillWidth:true;ActionButton {objectName:"chooseMmls";text:app.trx("اختيار mmls","Choose mmls");enabled:!toolBridge.busy&&!recoveryBridge.busy;onClicked:tool.open()}ActionButton {text:app.trx("المصدر الرسمي","Official source");onClicked:app.openExternal("https://github.com/sleuthkit/sleuthkit")}ActionButton {text:app.trx("اختيار الصورة الخام","Choose raw image");enabled:!recoveryBridge.busy;onClicked:input.open()}Item {Layout.fillWidth:true}}
     Label {text:page.imagePath||app.trx("لم تُحدد صورة؛ الحد 2 GiB","No image selected; maximum 2 GiB");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#9bbbd3")}
     NeonCheckBox {id:consent;objectName:"tskConsent";text:app.trx("أُصرّح بتحليل هذه الصورة وتشغيل الأداة المختارة","Authorize this image analysis and selected executable")}
     Label {visible:recoveryBridge.caseOperator==="";text:app.trx("افتح قضية وسجّل هوية المشغّل في مستعرض الأدلة أولًا.","Open a case and record its operator in the Evidence tab first.");Layout.fillWidth:true;wrapMode:Text.WordWrap;Layout.minimumHeight:implicitHeight;color:app.tone("#ecb774")}
@@ -76,7 +76,7 @@ Item {
      title:modelData.name;Layout.fillWidth:true
      Label {text:modelData.adapter?app.trx("محول تحليل أقسام mmls؛ توفر الأداة مطلوب","mmls partition adapter; installed tool required"):app.trx("غير مدمج — لا يوجد زر تشغيل","Not integrated — no execution action");Layout.fillWidth:true;wrapMode:Text.WordWrap;Layout.minimumHeight:implicitHeight;color:app.tone("#9bbbd3")}
      Label {text:modelData.license+"\n"+(modelData.available?modelData.path:app.trx("غير موجود في المسارات المفحوصة","Not found in checked paths"));Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#9bbbd3");font.pixelSize:12}
-     ActionButton {text:app.trx("عرض المصدر الرسمي","View official source");onClicked:Qt.openUrlExternally(modelData.source)}
+     ActionButton {text:app.trx("عرض المصدر الرسمي","View official source");onClicked:app.openExternal(modelData.source)}
     }
    }
   }

@@ -1,4 +1,5 @@
 #include "RecoveryBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryImage.hpp"
 #include "RecoveryFile.hpp"
@@ -74,7 +75,7 @@ QJsonObject evidenceRecord(const QByteArray &bytes,const QString &name,const QSt
 RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfile,QObject *parent):QObject(parent),directory_(local(directory)),synthetic_(syntheticTestProfile){
  status_=QStringLiteral("No recovery case is open. Assess write impact before installing any phone agent.");
  connect(&watcher_,&QFutureWatcher<JobResult>::finished,this,[this]{
-  const auto result=watcher_.result();running_=false;
+  const auto result=watcher_.result();running_=false;externalAnalysis_=false;
   if(result.error.isEmpty()){document_=result.document;if(!pendingPath_.isEmpty())path_=pendingPath_;error_.clear();progress_=1;status_=QStringLiteral("Completed. Review the evidence and limitations before exporting.");}
   else {if(pendingPath_.isEmpty()&&!result.document.isEmpty())document_=result.document;error_=result.error;status_=result.error;}
   pendingPath_.clear();
@@ -422,8 +423,11 @@ bool RecoveryBridge::exportTimeline(const QString &value,bool confirmed){
 }
 
 bool RecoveryBridge::analyzePartitions(const QString &image,const QString &executable,bool consent){
+ if(policy_&&!policy_->permit("external-analysis"))return fail(policy_->error());
+ if(busy())return fail(QStringLiteral("A recovery operation is already running."));
  if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record the operator, and authorize the raw image and trusted mmls executable."));
  const auto path=local(image),tool=local(executable);if(path.isEmpty()||tool.isEmpty()||path==path_)return fail(QStringLiteral("Choose separate local raw-image and tool files."));
+ externalAnalysis_=true;
  return start([this,path,tool](const QJsonObject &snapshot,const auto &cancelled){
   JobResult result{snapshot,{}};double last=-1;
   const auto scan=mr::forensic::analyzePartitions(path,tool,cancelled,[this,&last](qint64 done,qint64 total){
@@ -492,5 +496,12 @@ bool RecoveryBridge::analyzeExif(const QString &value,bool consent){
   result.document.insert("sources",sources);
   addAudit(result.document,"exif-summary-analysis","Selected-file consent; source SHA256 checked twice; allowlisted raw declarations only; GPS values and identity-sensitive tags omitted; no inferred capture timeline.");
   return result;
+ });
+}
+
+void RecoveryBridge::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;
+ connect(policy,&GovernmentOperationPolicy::changed,this,[this]{
+  if(externalAnalysis_&&!policy_->granted("external-analysis"))cancel();
  });
 }

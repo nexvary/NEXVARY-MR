@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+class GovernmentOperationPolicy;
 #include <QJsonObject>
 #include <QFutureWatcher>
 #include <QVariantList>
@@ -27,6 +28,7 @@ class RecoveryBridge final:public QObject {
  Q_PROPERTY(QString lossKind READ lossKind NOTIFY changed)
  Q_PROPERTY(QString encryptionKind READ encryptionKind NOTIFY changed)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  explicit RecoveryBridge(const QString &directory,bool syntheticTestProfile=false,QObject *parent=nullptr);
  ~RecoveryBridge() override;
  bool active() const{return !document_.isEmpty();}
@@ -71,6 +73,7 @@ public:
 signals:
  void changed();
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  struct JobResult {QJsonObject document;QString error;};
  using Job=std::function<JobResult(const QJsonObject &,const std::shared_ptr<std::atomic_bool> &)>;
  bool start(Job job,const QString &destination=QString());
@@ -81,7 +84,7 @@ private:
  static void addAudit(QJsonObject &document,const QString &operation,const QString &outcome);
  QString directory_,path_,pendingPath_,error_,status_;
  QJsonObject document_;
- bool synthetic_=false,running_=false;
+ bool synthetic_=false,running_=false,externalAnalysis_=false;
  double progress_=0;
  std::shared_ptr<std::atomic_bool> cancelled_;
  QFutureWatcher<JobResult> watcher_;

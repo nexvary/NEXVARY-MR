@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="9"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="6d349920fa01"
+	time="67"
+	timestamp="2026-10-25T21:11:20"
+	>
+	<testcase name="mr_offline_tests" classname="mr_offline_tests" time="3.06764" status="run">
+		<properties/>
+		<system-out>********* Start testing of OfflineTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : OfflineTests::initTestCase()
+PASS   : OfflineTests::defaultDenyAndExplicitAdministrator()
+PASS   : OfflineTests::expiryAndExternalAccountRevocation()
+PASS   : OfflineTests::restartDoesNotRestoreExceptions()
+QCRITICAL: OfflineTests::portalDefaultDenyAndClientAbort() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: OfflineTests::portalDefaultDenyAndClientAbort() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : OfflineTests::portalDefaultDenyAndClientAbort()
+PASS   : OfflineTests::deviceChildDeniedPermittedAndRevoked()
+PASS   : OfflineTests::externalAnalyzersAndUpdaterAreSeparatePermissions()
+PASS   : OfflineTests::browserHandoffBlockedAndProtocolsRestricted()
+PASS   : OfflineTests::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 3052ms
+********* Finished t...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_artifact_tests" classname="mr_artifact_tests" time="1.24455" status="run">
+		<properties/>
+		<system-out>********* Start testing of ArtifactTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ArtifactTests::initTestCase()
+QINFO  : ArtifactTests::independentTruthAndDeterminism() Structural truth corpus: 20 true edges, 0 false links, 0 missed links; excludes people/events
+PASS   : ArtifactTests::independentTruthAndDeterminism()
+PASS   : ArtifactTests::literalArabicSearchAndScope()
+PASS   : ArtifactTests::corruption(hash)
+PASS   : ArtifactTests::corruption(wrong-evidence)
+PASS   : ArtifactTests::corruption(wrong-source)
+PASS   : ArtifactTests::corruption(size)
+PASS   : ArtifactTests::corruption(duplicate-run)
+PASS   : ArtifactTests::corruption(device)
+PASS   : ArtifactTests::corruption(duplicate-device)
+PASS   : ArtifactTests::corruption(duplicate-evidence)
+PASS   : ArtifactTests::corruption(provenance-case)
+PASS   : ArtifactTests::corruption(provenance-device)
+PASS   : ArtifactTests::corruption(provenance-evid...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_import_tests" classname="mr_import_tests" time="7.06865" status="run">
+		<properties/>
+		<system-out>********* Start testing of ImportTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ImportTests::initTestCase()
+PASS   : ImportTests::supportedFormats(text-arabic)
+PASS   : ImportTests::supportedFormats(json)
+PASS   : ImportTests::supportedFormats(xml)
+PASS   : ImportTests::supportedFormats(csv)
+PASS   : ImportTests::supportedFormats(android)
+PASS   : ImportTests::supportedFormats(adb-v5)
+PASS   : ImportTests::malformed(json-syntax)
+PASS   : ImportTests::malformed(duplicate-key)
+PASS   : ImportTests::malformed(json-depth)
+PASS   : ImportTests::malformed(xml-dtd)
+PASS   : ImportTests::malformed(xml-depth)
+PASS   : ImportTests::malformed(xml-broken)
+PASS   : ImportTests::malformed(xml-other-encoding)
+PASS   : ImportTests::malformed(csv-open-quote)
+PASS   : ImportTests::malformed(csv-trailing)
+PASS   : ImportTests::malformed(csv-columns)
+PASS   : ImportTests::malformed(binary-document)
+PASS   : ImportTests:...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_cloud_tests" classname="mr_cloud_tests" time="9.86402" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CloudTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CloudTests::initTestCase()
+PASS   : CloudTests::governmentGateBlocksSavedCredentialsAndRevokesSync()
+PASS   : CloudTests::snapshotSyncAndRevocation()
+PASS   : CloudTests::rejectsPlainHttpAndRedirects()
+PASS   : CloudTests::rejectsWrongApiKey()
+SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/cloud_tests.cpp(86)]
+PASS   : CloudTests::identityAndPersistence()
+PASS   : CloudTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 9842ms
+********* Finished testing of CloudTests *********
+</system-out>
+	</testcase>
+	<testcase name="mr_security_tests" classname="mr_security_tests" time="1.25559" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of SecurityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : SecurityTests::initTestCase()
+PASS   : SecurityTests::adapterAndIntegrity()
+PASS   : SecurityTests::cancellationAndBounds()
+PASS   : SecurityTests::versionDeadlineIsReported()
+PASS   : SecurityTests::bridgeConsentAndExport()
+PASS   : SecurityTests::databaseUpdaterOutcomes(success)
+PASS   : SecurityTests::databaseUpdaterOutcomes(network-failure)
+PASS   : SecurityTests::databaseUpdaterOutcomes(empty-result)
+PASS   : SecurityTests::databaseUpdaterOutcomes(timeout)
+PASS   : SecurityTests::databaseUpdaterOutcomes(output-bound)
+PASS   : SecurityTests::databaseLockAndPreCancellation()
+PASS   : SecurityTests::bridgeUpdateConsentAndScanExclusion()
+SKIP   : SecurityTests::realClamAvWithSyntheticSignature() Separately installed ClamAV not configured; requir...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_tool_tests" classname="mr_tool_tests" time="28.0879" status="run">
+		<properties/>
+		<system-out>********* Start testing of ToolTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ToolTests::initTestCase()
+PASS   : ToolTests::diagnosisUsesCompletedDiscoveryAndInvalidatesFailures()
+PASS   : ToolTests::usbSerialAndParentCorrelation()
+PASS   : ToolTests::usbAmbiguityAndMalformedInventory()
+PASS   : ToolTests::configureToolsAndPersistence()
+PASS   : ToolTests::rejectUnsafeToolConfiguration()
+PASS   : ToolTests::serialValidation()
+PASS   : ToolTests::parseDevicesAndPermissions()
+PASS   : ToolTests::duplicateBeyondDisplayLimitRemainsAmbiguous()
+PASS   : ToolTests::propertyPrivacyAndMalformedInput()
+PASS   : ToolTests::ambiguousSerialCannotReadPropertiesOrLogs()
+PASS   : ToolTests::manualRefreshRetainsDatedSnapshotUntilSuccessOrFailure()
+PASS   : ToolTests::backgroundRefreshDoesNotPulseForegroundOrRebuildIdentity()
+PASS   : ToolTests::explicitReadSupersedesSlowBackgroundWithoutFailure()
+PASS   : ToolTests::...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_service_tests" classname="mr_service_tests" time="3.79827" status="run">
+		<properties/>
+		<system-out>********* Start testing of ServiceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ServiceTests::initTestCase()
+PASS   : ServiceTests::modernProbeAndReport()
+PASS   : ServiceTests::unsupportedOptionalPageQuery()
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(userspace)
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(unknown)
+PASS   : ServiceTests::fastbootdAndUnknownDoNotGrantOperations(duplicate)
+PASS   : ServiceTests::freshFastbootModeChangeBlocksExecution()
+PASS   : ServiceTests::approvalTypesFailClosedBeforeProcess()
+PASS   : ServiceTests::compiledPolicyCannotBeOverridden()
+PASS   : ServiceTests::exportPrivacyProjection()
+PASS   : ServiceTests::packageStructureRejectsCorruption()
+SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only.
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/service_tests.cpp(157)...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_mirror_tests" classname="mr_mirror_tests" time="11.8264" status="run">
+		<properties/>
+		<system-out>********* Start testing of MirrorTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : MirrorTests::initTestCase()
+PASS   : MirrorTests::versionBoundary()
+PASS   : MirrorTests::consentRefusesBeforeProcess()
+PASS   : MirrorTests::ownedProcessAndPinnedEnvironment()
+PASS   : MirrorTests::cancelDuringVersionStartsNoViewer()
+PASS   : MirrorTests::cleanWindowClose()
+PASS   : MirrorTests::preflightFailure(bad-version)
+PASS   : MirrorTests::preflightFailure(version-timeout)
+PASS   : MirrorTests::preflightFailure(duplicate)
+PASS   : MirrorTests::preflightFailure(offline)
+PASS   : MirrorTests::preflightFailure(disconnected)
+PASS   : MirrorTests::preflightFailure(identity-changed)
+PASS   : MirrorTests::disconnectAndIdentityDuringView(disconnected)
+PASS   : MirrorTests::disconnectAndIdentityDuringView(identity-changed)
+PASS   : MirrorTests::disconnectAndIdentityDuringView(duplicate)
+PASS   : MirrorTests::viewerErrorAnd...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_tsk_tests" classname="mr_tsk_tests" time="1.44649" status="run">
+		<properties/>
+		<system-out>********* Start testing of TskTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : TskTests::initTestCase()
+PASS   : TskTests::privateCopyHashAndProvenance()
+PASS   : TskTests::failureCancellationBoundsAndChanges()
+PASS   : TskTests::toolSelectionDoesNotExecuteAndPersists()
+PASS   : TskTests::inputPolicy()
+PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary.
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/tsk_tests.cpp(85)]
+PASS   : TskTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 1427ms
+********* Finished testing of TskTests *********
+</system-out>
+	</testcase>
+</testsuite>

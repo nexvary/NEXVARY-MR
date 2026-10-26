@@ -57,7 +57,7 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Relationship Analysis | Tested (bounded provenance) / Pending | Typed case/device/evidence/report/finding graph and recorded-digest groups; exact-source verification in DEVELOPMENT_STATE.md. No person/entity/social or causal inference. |
 | Search and Indexing | Tested (bounded) / Pending | Original case-scoped retained-finding index with literal Arabic/English search, provenance paths and explicit caps; exact-source results in DEVELOPMENT_STATE.md. Persistent/full-text/semantic and complete source coverage pending. |
 | Reporting | Tested / Pending | Existing AR/EN case PDFs; timeline exports/signed timeline review pending. |
-| Offline / Air-Gapped Operations | Implemented / Pending | Local case workflows; actual enforced egress/child/share containment and air-gap acceptance pending. |
+| Offline / Air-Gapped Operations | Implemented / Pending | Local case workflows plus native application category gates (current verification in DEVELOPMENT_STATE.md); OS egress/descendant/share containment and air-gap acceptance pending. |
 | Enterprise Security | Tested / Pending | Existing native local identities/DPAPI; enterprise identity and independent audit pending. |
 | Role-Based Access Control | Tested | Existing roles/grants; no SSO/personnel verification claim. |
 | Auditability | Tested / Pending | Existing hash-linked audit/local signed anchors; external key/time custody pending. |

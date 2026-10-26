@@ -1,4 +1,5 @@
 #include "ToolBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "DeviceProtocol.hpp"
 #include "ServiceOperationPolicy.hpp"
 #include "DeviceHealth.hpp"
@@ -175,6 +176,7 @@ QVariantList ToolBridge::requestedModels() {
  QVariantList result;for(const auto &name:oppo)result.append(QVariantMap{{"brand","Oppo"},{"model",name},{"validated",false}});for(const auto &name:vivo)result.append(QVariantMap{{"brand","Vivo"},{"model",name},{"validated",false}});return result;
 }
 bool ToolBridge::startService(const QString &action,const QString &expectedSerial,const QVariantMap &approval) {
+ if(policy_&&!policy_->permit("device-tools")){setStatus(policy_->error());return false;}
  if(!mr::service::operationAllowed(action.toStdString())){setStatus("Operation denied by compiled build policy; no device command was started.");return false;}
  QString reason;if(expectedSerial!=selectedSerial_||!serviceAvailable(action,&reason)){setStatus(reason.isEmpty()?QStringLiteral("Device selection changed; review the target again."):reason);return false;}
  const QSet<QString> allowed{"authorized","destructive","challenge","file","sha256","compatible","replace"};

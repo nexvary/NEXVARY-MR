@@ -5,7 +5,7 @@ ApplicationWindow {
  id:window
  objectName:"mainWindow"
  width:1536;height:980;minimumWidth:840;minimumHeight:480;visible:true
- title:toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition"
+ title:(operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
  property bool ar:true
  property bool darkTheme:true
  readonly property QtObject design:tokens
@@ -58,6 +58,7 @@ ApplicationWindow {
   {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
  ]
  readonly property var sections:governmentMode?governmentSections:professionalSections
+ function openExternal(url){const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
  readonly property string pageTitle:currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
  function trx(a,e){return ar?a:e}

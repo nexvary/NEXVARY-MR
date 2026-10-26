@@ -12,6 +12,8 @@
 #include <QEventLoop>
 #include "WorkshopBridge.hpp"
 #include "CloudTracking.hpp"
+#include "GovernmentOperationPolicy.hpp"
+#include "IdentityService.hpp"
 class CloudTests:public QObject {
  Q_OBJECT
  QTcpServer server;
@@ -31,6 +33,7 @@ private slots:
     for(const auto &line:bytes.left(boundary).split('\n')){const int colon=line.indexOf(':');if(colon<0)continue;const auto name=line.left(colon).trimmed().toLower(),value=line.mid(colon+1).trimmed();if(name=="content-length")length=value.toInt();if(name=="authorization")authorization=value;}
     if(bytes.size()<boundary+4+length){return;}
     ++calls;
+    if(mode=="hold")return; // Keep a real received request pending for revocation tests.
     int status=200;QJsonObject out;QByteArray extra;
     if(authorization!="Bearer "+key.toLatin1())status=401;
     else if(mode=="redirect"){status=302;extra="Location: http://127.0.0.1:1/leak\r\n";}
@@ -43,6 +46,24 @@ private slots:
  }
  void cleanup(){server.close();server.disconnect(this);}
  QString credentials(const QTemporaryDir &t){const auto path=t.filePath("credentials.json");QFile f(path);if(!f.open(QIODevice::WriteOnly))return {};f.write(QJsonDocument(QJsonObject{{"schemaVersion",1},{"serverUrl",QStringLiteral("http://127.0.0.1:%1").arg(server.serverPort())},{"sourceId",source},{"apiKey",key}}).toJson());return path;}
+ void governmentGateBlocksSavedCredentialsAndRevokesSync(){
+  QTemporaryDir t;WorkshopBridge w(t.filePath("w.db"));const auto config=t.filePath("saved.dat"),path=credentials(t);
+  // Seed the pre-existing protected settings with the component fixture, without
+  // entering the event loop or permitting an initial network request.
+  {CloudTracking seed(&w,config,true);QVERIFY(seed.importCredentials(path,true));}
+  IdentityService identity(t.filePath("identity"),true);const QString pass="Synthetic cloud policy 2026!";
+  QVERIFY(identity.bootstrap("policy-admin","Synthetic administrator",pass));QVERIFY(identity.login("policy-admin",pass));GovernmentOperationPolicy policy(&identity);
+  CloudTracking cloud(&w,config,true);cloud.setOperationPolicy(&policy);QVERIFY(cloud.configured());
+  QVERIFY(!cloud.syncNow());QVERIFY(cloud.issueLink(1,1,true).isEmpty());QVERIFY(!cloud.importCredentials(path,true));QTest::qWait(900);QCOMPARE(calls,0);
+  QVERIFY(policy.grant("cloud-publish","synthetic loopback publishing fixture",true));QCOMPARE(calls,0);QVERIFY(cloud.syncNow());QTRY_VERIFY_WITH_TIMEOUT(cloud.inSync(),5000);QCOMPARE(calls,2);
+  const auto before=calls;policy.revoke("cloud-publish");QVERIFY(!cloud.inSync());QVERIFY(!cloud.syncNow());QTest::qWait(900);QCOMPARE(calls,before);
+  QVERIFY(w.createOrder("Synthetic offline customer","TEST","Lab","Fixture","synthetic","Synthetic intake","Synthetic operator","")>0);
+  QVERIFY(policy.grant("cloud-publish","synthetic pending request cancellation",true));QTest::qWait(900);QCOMPARE(calls,before); // A change made while denied must not leave a debounce that publishes on regrant.
+  mode="hold";QVERIFY(cloud.syncNow());QTRY_VERIFY_WITH_TIMEOUT(calls>before,3000);QVERIFY(cloud.busy());identity.logout();QVERIFY(!cloud.busy());QVERIFY(!cloud.inSync());
+  // Aborted GET may already have reached the server; no POST is allowed after
+  // revocation and a new grant never automatically resumes the old request.
+  QTest::qWait(100);const auto cancelledCalls=calls;QVERIFY(identity.login("policy-admin",pass));QVERIFY(policy.grant("cloud-publish","synthetic regrant",true));QTest::qWait(900);QCOMPARE(calls,cancelledCalls);QVERIFY(!cloud.inSync());
+ }
  void snapshotSyncAndRevocation(){
   QTemporaryDir t;WorkshopBridge w(t.filePath("workshop.db"));const int order=w.createOrder("PRIVATE-NAME","PRIVATE-PHONE","Samsung","TEST-MODEL","PRIVATE-SERIAL","PRIVATE-FAULT","PRIVATE-TECH","PRIVATE-NOTES");QVERIFY(order>0);
   CloudTracking c(&w,t.filePath("remote.dat"),true);const auto file=credentials(t);QVERIFY(!c.importCredentials(file,false));QVERIFY(c.importCredentials(file,true));QTRY_VERIFY2_WITH_TIMEOUT(c.inSync(),qPrintable(c.error()),5000);

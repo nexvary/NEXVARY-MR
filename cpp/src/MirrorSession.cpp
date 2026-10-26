@@ -1,4 +1,5 @@
 #include "MirrorSession.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "ToolBridge.hpp"
 #include "ServiceOperationPolicy.hpp"
 #include <QFileInfo>
@@ -50,6 +51,7 @@ bool MirrorSession::supportedVersion(const QString &output){
  return QRegularExpression("^scrcpy 5\\.0\\.1(?: <https://github\\.com/Genymobile/scrcpy>)?$").match(first).hasMatch();
 }
 bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString &serial,const QVariantMap &identity,bool owner,bool component){
+ if(policy_&&!policy_->permit("device-tools")){message(policy_->error());return false;}
  if(active_)return false;
  if(!mr::service::screenViewAllowed()||!owner||!component||!ToolBridge::isValidSerial(serial)){
   message("Screen view requires explicit owner authorization and device-component consent.");return false;
@@ -68,6 +70,7 @@ bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString
  query({"--version"},"version");return true;
 }
 void MirrorSession::query(const QStringList &arguments,const QString &state){
+ if(policy_&&!policy_->permit("device-tools")){end(policy_->error(),true);return;}
  if(!active_||check_.state()!=QProcess::NotRunning)return;
  state_=state;checkOutput_.clear();check_.setProgram(state=="version"?scrcpy_:adb_);check_.setArguments(arguments);deadline_.start();emit changed();check_.start();
 }
@@ -103,6 +106,7 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
  launchView();
 }
 void MirrorSession::launchView(){
+ if(policy_&&!policy_->permit("device-tools")){end(policy_->error(),true);return;}
  if(!active_||!mr::service::screenViewAllowed()){end("Screen view denied by compiled operation policy.",true);return;}
  state_="starting";viewer_.setProgram(scrcpy_);
  viewer_.setArguments({"--serial",serial_,"--no-control","--no-audio","--no-clipboard-autosync","--no-power-on","--max-size=1600","--max-fps=30","--verbosity=warn","--window-title=NEXVARY MR Screen View"});

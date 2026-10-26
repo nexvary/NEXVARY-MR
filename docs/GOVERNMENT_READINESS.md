@@ -41,3 +41,5 @@ retains the first failing packaged resource check, its passing corrections, inte
 local external/Laboratory skips, public-digest false-positive review and actual Qt
 screenshots. A green build does not prove legal authority, device compatibility,
 physical custody, cryptographic bypass or final institutional readiness.
+
+Application offline gate increment: native default-deny and temporary local-administrator category exceptions implemented; verification tracked in DEVELOPMENT_STATE.md and scope in GOVERNMENT_OFFLINE_POLICY.md. Full air-gap/OS-child-share containment, signed durable policy audit, independent security and institutional Windows acceptance remain open. This does not change the development-evaluation readiness status.

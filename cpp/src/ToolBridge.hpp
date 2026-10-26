@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+class GovernmentOperationPolicy;
 #include "MirrorSession.hpp"
 #include <QProcess>
 #include <QTimer>
@@ -46,6 +47,7 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(QString servicePhase READ servicePhase NOTIFY serviceChanged)
   Q_PROPERTY(QVariantList requestedModels READ requestedModels CONSTANT)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
   explicit ToolBridge(QObject *parent = nullptr);
   ~ToolBridge() override;
   bool laboratoryBuild() const;
@@ -117,6 +119,7 @@ signals:
   void operationFinished(bool success);
   void diagnosticCompleted(const QString &operation, bool success);
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
   enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service, DriverBinding, UsbInventory };
   void recordConnectionObservation(Operation operation,const QString &state);
   void runUsbInventory(Operation operation);

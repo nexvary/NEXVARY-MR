@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+class GovernmentOperationPolicy;
 #include <QNetworkAccessManager>
 #include <QPointer>
 #include <QTimer>
@@ -14,6 +15,7 @@ class CloudTracking final:public QObject {
  Q_PROPERTY(QString error READ error NOTIFY changed)
  Q_PROPERTY(QString lastSync READ lastSync NOTIFY changed)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  CloudTracking(WorkshopBridge *workshop,const QString &storage,bool localTest=false,QObject *parent=nullptr);
  ~CloudTracking() override;
  bool configured() const {return !url_.isEmpty()&&!key_.isEmpty();}
@@ -28,6 +30,7 @@ public:
  Q_INVOKABLE bool copyLink(const QString &url);
  Q_INVOKABLE bool disconnectServer(bool confirmed);
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  bool applyCredentials(const QByteArray &bytes,bool save);
  void request(const QString &endpoint,const QByteArray &body={},qint64 revision=-1);
  void fail(const QString &message);

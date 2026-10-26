@@ -26,6 +26,7 @@ QByteArray hashFile(const QString &path,qint64 maximum,QString &error,const std:
  return hash.result();
 }
 QString run(const QString &exe,const QStringList &args,const QString &directory,const std::shared_ptr<std::atomic_bool> &token,const TskLimits &limits,QString &error){
+ if(token&&token->load()){error="Cancelled before external child launch.";return {};}
  QProcess process;process.setProgram(exe);process.setArguments(args);process.setWorkingDirectory(directory);process.setProcessChannelMode(QProcess::MergedChannels);process.start();
  if(!process.waitForStarted(3000)){error="Could not start the selected mmls executable.";return {};}
  process.closeWriteChannel();QElapsedTimer timer;timer.start();QByteArray output;

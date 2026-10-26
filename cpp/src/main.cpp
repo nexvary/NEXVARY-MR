@@ -24,6 +24,7 @@
 #include "ServiceOperationPolicy.hpp"
 #include "FontReadability.hpp"
 #include "ToolBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "RepairBridge.hpp"
 #include "WorkshopBridge.hpp"
 #include "TrackingPortal.hpp"
@@ -39,6 +40,35 @@
 #include "ResearchBridge.hpp"
 namespace {
 // Called only inside the existing explicit synthetic --smoke-test profile.
+void governmentPolicySmoke(QQuickWindow *window,GovernmentOperationPolicy &policy,const QString &screenshot,const std::function<void(bool)> &finish){
+ if(!policy.offline()){finish(false);return;}
+ window->setProperty("governmentMode",true);window->setProperty("currentPage",12);window->setProperty("ar",true);window->setProperty("darkTheme",true);window->resize(1536,980);
+ if(auto *workspace=window->findChild<QObject *>("lawEnforcementWorkspace"))workspace->setProperty("section",10);
+ window->setProperty("activeSection",10);
+ if(auto *panel=window->findChild<QObject *>("identityPanel"))if(auto *content=panel->property("contentItem").value<QObject *>())content->setProperty("contentY",0);
+ QTimer::singleShot(250,window,[window,&policy,screenshot,finish]{
+  if(auto *scroll=window->findChild<QObject *>("identityPanel")){
+   auto *panel=scroll->findChild<QQuickItem *>("governmentNetworkPanel");
+   auto *content=scroll->property("contentItem").value<QObject *>();
+   if(panel&&content)content->setProperty("contentY",panel->y());
+  }
+  QTimer::singleShot(250,window,[window,&policy,screenshot,finish]{
+  const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
+  const bool ar=screenshot.isEmpty()||window->grabWindow().save(destination("-government-offline-ar.png"));window->setProperty("ar",false);
+  QTimer::singleShot(250,window,[window,&policy,screenshot,finish,ar]{
+   const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
+   bool ok=ar&&policy.offline()&&(screenshot.isEmpty()||window->grabWindow().save(destination("-government-offline-en.png")));
+   if(!screenshot.isEmpty()){
+    const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",6},{"offlineAfterRevoke",policy.offline()},
+     {"startupBoundaryDenials",true},{"explicitSyntheticPortalGrant",true},{"portalStoppedAfterRevoke",true},{"permissions",policy.permissions()},
+     {"scope","Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance"}};
+    QFile out(destination("-government-offline.json"));const auto data=QJsonDocument::fromVariant(receipt).toJson(QJsonDocument::Indented);ok=out.open(QIODevice::WriteOnly|QIODevice::Truncate)&&out.write(data)==data.size()&&ok;
+   }
+   finish(ok);
+  });
+  });
+ });
+}
 void governmentArtifactSmoke(QQuickWindow *window, LawCaseBridge &law, const QString &directory,
  const QString &screenshot, const std::function<void(bool)> &finish) {
  const auto id=law.createCase({{"caseNumber","SYNTHETIC-DEPLOYED-INDEX"},{"investigatingAgency","Synthetic lab"},{"investigatorName","Synthetic operator"},
@@ -111,6 +141,8 @@ int main(int argc,char *argv[]) {
  if(smoke&&!cli.isSet(QStringLiteral("data-dir"))) return 2;
  const QString dir=cli.isSet(QStringLiteral("data-dir"))?cli.value(QStringLiteral("data-dir")):QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
  if(!QDir().mkpath(dir)) return 3;
+ IdentityService identity(QDir(dir).filePath(QStringLiteral("local-identities.dat")),smoke);
+ GovernmentOperationPolicy operationPolicy(&identity);
  RecoveryBridge recovery(QDir(dir).filePath(QStringLiteral("recovery-cases")),smoke);
  ToolBridge tools;
  RepairBridge repair;
@@ -121,12 +153,13 @@ int main(int argc,char *argv[]) {
  ServiceCatalog catalog(QDir(dir).filePath(QStringLiteral("model-guides.json")));
  BoardBridge board;
  FirmwareBridge firmware;
- IdentityService identity(QDir(dir).filePath(QStringLiteral("local-identities.dat")),smoke);
+ tools.setOperationPolicy(&operationPolicy);cloud.setOperationPolicy(&operationPolicy);portal.setOperationPolicy(&operationPolicy);security.setOperationPolicy(&operationPolicy);recovery.setOperationPolicy(&operationPolicy);
  LawCaseBridge law(QDir(dir).filePath(QStringLiteral("law-cases.db")),&tools,smoke,nexvary::law::Role::Investigator,nullptr,smoke?nullptr:&identity);
  ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware,nullptr,smoke?nullptr:&identity);
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  QQmlApplicationEngine engine;
+ engine.rootContext()->setContextProperty(QStringLiteral("operationPolicy"),&operationPolicy);
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
  engine.rootContext()->setContextProperty(QStringLiteral("lawCaseBridge"),&law);
  engine.rootContext()->setContextProperty(QStringLiteral("identityBridge"),&identity);
@@ -145,6 +178,12 @@ int main(int argc,char *argv[]) {
  engine.load(QUrl(QStringLiteral("qrc:/NexvaryMR/qml/Main.qml")));
  if(engine.rootObjects().isEmpty()) return 1;
  if(smoke) {
+  // Explicit synthetic smoke only: prove default denial, then temporarily allow
+  // the loopback portal test through the same administrator gate as the UI.
+  if(!operationPolicy.offline()||portal.start("127.0.0.1",0,true)||cloud.syncNow()||security.updateDatabase(true)||security.scan("synthetic-not-read",true)||recovery.analyzePartitions("synthetic-not-read","synthetic-not-started",true)||operationPolicy.openExternal("https://example.invalid/"))return 15;
+  tools.scanAdb();if(tools.busy())return 15;
+  const QString smokePassword="Synthetic-only deployed policy 2026!";
+  if((identity.needsSetup()&&!identity.bootstrap("smoke-admin","Synthetic smoke administrator",smokePassword))||!identity.login("smoke-admin",smokePassword)||!operationPolicy.grant("tracking-portal","Synthetic deployed loopback portal test only",true))return 15;
   // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
   if(!QSslSocket::supportsSsl())return 12;
   if(!mr::ui::textHasGlyphs(QString::fromUtf8("NEXVARYالعربية"),QFont(QStringLiteral("Segoe UI"))))return 14;
@@ -216,7 +255,7 @@ int main(int argc,char *argv[]) {
        QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
         const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers"),QStringLiteral("services"),QStringLiteral("catalog"),QStringLiteral("avb")};
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%8],previous%16<8?QStringLiteral("ar"):QStringLiteral("en"),previous<16?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
-        if(step==32){capture->stop();portal.stop();governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool indexOk){window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});return;}
+        if(step==32){capture->stop();operationPolicy.revokeAll();identity.logout();if(!operationPolicy.offline()||portal.running()){app.exit(15);return;}governmentPolicySmoke(window,operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool policyOk){governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok,policyOk](bool indexOk){indexOk=indexOk&&policyOk;window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});});return;}
         const int tab=step%8;window->setProperty("ar",step%16<8);window->setProperty("darkTheme",step<16);window->setProperty("currentPage",tab==7?4:tab<2?5:tab<5?2:1);
         // Capture the new service/catalog workspaces at the supported minimum.
         window->resize(tab>=5?QSize(1180,760):QSize(1536,980));

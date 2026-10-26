@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+class GovernmentOperationPolicy;
 #include <QProcess>
 #include <QTimer>
 #include <QVariantMap>
@@ -9,6 +10,7 @@
 class MirrorSession final:public QObject {
  Q_OBJECT
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy){policy_=policy;}
  explicit MirrorSession(QObject *parent=nullptr);
  ~MirrorSession() override;
  bool active()const{return active_;}
@@ -25,6 +27,7 @@ signals:
  void changed();
  void finished(bool processStoppedWithoutError);
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  void query(const QStringList &arguments,const QString &state);
  void collectCheck();
  void checkFinished(int code,QProcess::ExitStatus exit);

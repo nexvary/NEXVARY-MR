@@ -1,0 +1,10 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start  8: mr_offline_tests
+1/2 Test  #8: mr_offline_tests .................   Passed    3.32 sec
+    Start 26: mr_mirror_tests
+2/2 Test #26: mr_mirror_tests ..................   Passed   12.30 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =  15.62 sec

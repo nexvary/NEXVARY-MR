@@ -29,6 +29,7 @@
 #include "RecoveryBridge.hpp"
 #include "LawCaseBridge.hpp"
 #include "IdentityService.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "ResearchBridge.hpp"
 class Setup:public QObject {
  Q_OBJECT
@@ -46,6 +47,7 @@ class Setup:public QObject {
  std::unique_ptr<LawCaseBridge> law;
  std::unique_ptr<IdentityService> identity;
  std::unique_ptr<ResearchBridge> research;
+ std::unique_ptr<GovernmentOperationPolicy> operationPolicy;
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
 public:
@@ -99,6 +101,7 @@ public slots:
   // Explicit synthetic credentials only; production never provisions defaults.
   const QString fixturePassword=QStringLiteral("Synthetic-only UI password 2026!");
   if(!identity->bootstrap("ui-admin","Synthetic UI administrator",fixturePassword)||!identity->login("ui-admin",fixturePassword)||identity->createUser("ui-investigator","Synthetic UI investigator","investigator",fixturePassword).isEmpty()||!identity->login("ui-investigator",fixturePassword))qFatal("Synthetic identity fixture failed");
+  operationPolicy=std::make_unique<GovernmentOperationPolicy>(identity.get());
   law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true,nexvary::law::Role::Investigator,nullptr,identity.get());
   research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get(),nullptr,identity.get());
  }
@@ -153,6 +156,7 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));
+  engine->rootContext()->setContextProperty("operationPolicy",operationPolicy.get());
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
   engine->rootContext()->setContextProperty("identityBridge",identity.get());
   engine->rootContext()->setContextProperty("researchBridge",research.get());

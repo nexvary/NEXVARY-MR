@@ -1,0 +1,5 @@
+[0/2] Re-checking globbed directories...
+[1/124] Automatic MOC and UIC for target nexvary_mr
+[2/123] Running AUTOMOC file extraction for target nexvary_mr
+[3/4] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+[4/4] Linking CXX executable nexvary_mr

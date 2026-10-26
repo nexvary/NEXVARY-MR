@@ -1,4 +1,5 @@
 #include "ToolBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include <QCoreApplication>
 #include "ServiceCommandPolicy.hpp"
 #include "UsbDriver.hpp"
@@ -307,6 +308,7 @@ QVariantMap ToolBridge::parseDeviceProperties(const QString &output) {
   return result;
 }
 bool ToolBridge::runReadOnly(const QString &program, const QStringList &arguments, Operation operation) {
+  if(policy_&&!policy_->permit("device-tools")){setStatus(policy_->error());return false;}
   // Validate the complete service command plan before resolving or starting a process.
   if(operation == Operation::Service && (!serviceRunning_ || serviceTarget_ != selectedSerial_ ||
       !mr::service::serviceCommandAllowed(program, arguments, serviceAction_, serviceTarget_,
@@ -361,6 +363,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
   if (!active_) return;
   collectOutput();
   timeoutTimer_.stop();
+  if(policy_&&!policy_->permit("device-tools"))terminalReason_=policy_->error();
   bool success = terminalReason_.isEmpty() && exitStatus == QProcess::NormalExit && exitCode == 0;
   const QString output = QString::fromUtf8(output_).trimmed();
   if (operation_ == Operation::Service) {
@@ -527,6 +530,7 @@ void ToolBridge::cancel() {
   process_.kill();
 }
 void ToolBridge::setAutoRefresh(bool enabled) {
+  if(enabled&&policy_&&!policy_->permit("device-tools")){setStatus(policy_->error());return;}
   if (enabled == autoRefresh()) return;
   if (enabled) { pollTimer_.start(); pollDiscovery(); }
   else {pollTimer_.stop();cancelPoll();}
@@ -534,6 +538,7 @@ void ToolBridge::setAutoRefresh(bool enabled) {
 }
 bool ToolBridge::laboratoryBuild() const { return mr::service::laboratoryBuild(); }
 bool ToolBridge::startMirror(const QString &expectedSerial,const QVariantMap &approval) {
+  if(policy_&&!policy_->permit("device-tools")){setStatus(policy_->error());return false;}
   if(!screenViewAvailable())return false;
   if(busy()||expectedSerial!=selectedSerial_||!selectedAdbReady())return false;
   if(approval.size()!=3||approval.value("authorized").metaType().id()!=QMetaType::Bool||!approval.value("authorized").toBool()||
@@ -568,6 +573,7 @@ void ToolBridge::cancelPoll(){
  pollSuperseded_=true;pollDeadline_.stop();pollProcess_.kill();
 }
 void ToolBridge::pollDiscovery(){
+ if(policy_&&!policy_->permit("device-tools")){setAutoRefresh(false);setStatus(policy_->error());return;}
  if(busy()||polling_||!autoRefresh())return;
  const auto path=resolveExecutable("adb");
  if(path.isEmpty()){
@@ -580,6 +586,7 @@ void ToolBridge::pollDiscovery(){
  pollDeadline_.start();emit backgroundRefreshChanged();pollProcess_.start();
 }
 void ToolBridge::finishPoll(int code,QProcess::ExitStatus exit){
+ if(policy_&&!policy_->permit("device-tools"))pollSuperseded_=true;
  if(!polling_)return;
  pollDeadline_.stop();
  const auto tail=pollProcess_.readAllStandardOutput();
@@ -592,4 +599,12 @@ void ToolBridge::finishPoll(int code,QProcess::ExitStatus exit){
  recordConnectionObservation(Operation::AdbScan,ok?"ok":"failed");
  if(!ok){setStatus(QStringLiteral("Auto refresh failed; verify USB/ADB and retry / فشل تحديث الاتصال؛ راجع USB وADB"));emit operationFinished(false);}
  emit backgroundRefreshFinished(ok);
+}
+
+void ToolBridge::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;mirror_.setOperationPolicy(policy);
+ auto apply=[this]{if(policy_&&!policy_->granted("device-tools")){
+  setAutoRefresh(false);cancel();setStatus(QStringLiteral("Government offline policy: external device tools blocked/stopped; device changes already started cannot be undone."));
+ }};
+ connect(policy,&GovernmentOperationPolicy::changed,this,apply);apply();
 }

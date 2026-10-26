@@ -1,4 +1,5 @@
 #include "SecurityBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "WorkshopBridge.hpp"
 #include "RecoveryFile.hpp"
 #include <QtConcurrent>
@@ -31,7 +32,7 @@ QByteArray digest(const QString &p,qint64 limit,const std::shared_ptr<std::atomi
 }
 struct ProcessResult {QByteArray out;int exit=-1;QString error;};
 ProcessResult run(const QString &engine,const QStringList &args,const QString &work,const std::shared_ptr<std::atomic_bool> &cancel,const SecurityLimits &limits){
- ProcessResult r;QProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);
+ ProcessResult r;if(cancel&&cancel->load()){r.error="Cancelled before child launch; no scan verdict.";return r;}QProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);
  const int budget=qMax(1,limits.timeoutMs);QElapsedTimer timer;timer.start();p.start();
  auto stop=[&]{if(p.state()!=QProcess::NotRunning){p.kill();p.waitForFinished(3000);}};
  if(!p.waitForStarted(qMin(3000,budget))){r.error=timer.elapsed()>=budget?QStringLiteral("Scanner timed out; no scan verdict."):QStringLiteral("Cannot start the selected ClamAV executable.");stop();return r;}
@@ -143,6 +144,7 @@ QString SecurityBridge::updater() const {
  return localFile(candidate)&&QFileInfo(candidate).isExecutable()?candidate:QString();
 }
 bool SecurityBridge::updateDatabase(bool networkConsent){
+ if(policy_&&!policy_->permit("signature-update")){error_=policy_->error();emit changed();return false;}
  if(busy())return false;
  if(!networkConsent||updater().isEmpty()||!localDirectory(database_)){error_="Approve official database downloads and install FreshClam beside the selected clamscan executable.";emit changed();return false;}
  updateResult_.clear();error_.clear();cancelled_=std::make_shared<std::atomic_bool>(false);
@@ -151,7 +153,7 @@ bool SecurityBridge::updateDatabase(bool networkConsent){
 }
 SecurityBridge::SecurityBridge(const QString &config,QObject *parent):QObject(parent),config_(config){
  QFile f(config);if(f.size()<16384&&f.open(QIODevice::ReadOnly)){const auto o=QJsonDocument::fromJson(f.readAll()).object();executable_=o.value("executable").toString();database_=o.value("database").toString();}
- connect(&watcher_,&QFutureWatcher<QVariantMap>::finished,this,[this]{const auto completed=watcher_.result();if(updating_)updateResult_=completed;else result_=completed;active_=false;updating_=false;error_=completed.value("error").toString();emit changed();});
+ connect(&watcher_,&QFutureWatcher<QVariantMap>::finished,this,[this]{auto completed=watcher_.result();if((cancelled_&&cancelled_->load())||(policy_&&!policy_->permit(updating_?"signature-update":"external-analysis"))){completed.remove("verdict");completed.insert("success",false);completed.insert("error","Cancelled or permission revoked; result refused. Already started external effects cannot be undone.");}if(updating_)updateResult_=completed;else result_=completed;active_=false;updating_=false;error_=completed.value("error").toString();emit changed();});
 }
 SecurityBridge::~SecurityBridge(){cancel();watcher_.waitForFinished();}
 bool SecurityBridge::configure(const QString &executable,const QString &database){
@@ -161,6 +163,7 @@ bool SecurityBridge::configure(const QString &executable,const QString &database
  QSaveFile f(config_);const auto b=QJsonDocument(QJsonObject{{"executable",e},{"database",d}}).toJson();if(!f.open(QIODevice::WriteOnly)||f.write(b)!=b.size()||!f.commit()){error_="Cannot save scanner configuration.";emit changed();return false;}executable_=e;database_=d;updateResult_.clear();error_.clear();emit changed();return true;
 }
 bool SecurityBridge::scan(const QString &source,bool authorized){
+ if(policy_&&!policy_->permit("external-analysis")){error_=policy_->error();emit changed();return false;}
  if(busy()){return false;}
  if(!authorized){error_="Explicit authorization is required to scan the selected file.";emit changed();return false;}result_.clear();error_.clear();cancelled_=std::make_shared<std::atomic_bool>(false);
  const auto path=WorkshopBridge::localPath(source),e=executable_,d=database_;const auto token=cancelled_;active_=true;watcher_.setFuture(QtConcurrent::run([=]{return scanSecurityFile(path,e,d,token);}));emit changed();return true;
@@ -169,4 +172,11 @@ void SecurityBridge::cancel(){if(cancelled_)cancelled_->store(true);}
 bool SecurityBridge::exportReport(const QString &path,bool consent){
  const auto target=WorkshopBridge::localPath(path);if(busy()||!consent||result_.isEmpty()||target.isEmpty()||QFileInfo::exists(target)){error_="Choose a new report filename and approve exporting source paths/results.";emit changed();return false;}
  QFile f(target);const auto b=QJsonDocument::fromVariant(result_).toJson();if(!f.open(QIODevice::WriteOnly|QIODevice::NewOnly)||f.write(b)!=b.size()){error_="Could not save security report.";emit changed();return false;}f.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner);error_.clear();emit changed();return true;
+}
+
+void SecurityBridge::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;
+ connect(policy,&GovernmentOperationPolicy::changed,this,[this]{
+  if(active_&&!policy_->granted(updating_?"signature-update":"external-analysis"))cancel();
+ });
 }

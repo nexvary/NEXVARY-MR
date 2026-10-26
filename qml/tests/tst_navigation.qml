@@ -12,6 +12,28 @@ TestCase {
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
+ function test_governmentNetworkPolicyControls(){
+  operationPolicy.revokeAll();compare(operationPolicy.offline,true)
+  app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
+  const scroll=findChild(app,"identityPanel"),panel=findChild(scroll,"governmentNetworkPanel")
+  const reason=findChild(panel,"governmentNetworkReason"),approval=findChild(panel,"governmentNetworkApproval")
+  let grant=findChild(panel,"governmentNetworkGrant-device-tools")
+  compare(grant.enabled,false);verify(!operationPolicy.grant("device-tools","Non-admin synthetic negative",true));compare(operationPolicy.offline,true)
+  verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));verify(renderedFrame())
+  reason.text="Synthetic UI exception only";approval.checked=true
+  grant=findChild(panel,"governmentNetworkGrant-device-tools");compare(grant.enabled,true)
+  artifactClick(scroll,grant);compare(operationPolicy.offline,false);compare(approval.checked,false);verify(findChild(app,"governmentPolicyState").text.indexOf("استثناء")>=0)
+  for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
+   app.ar=arabic;app.width=size[0];app.height=size[1];scroll.contentItem.contentY=0;wait(100);verify(renderedFrame())
+   const header=uiEvidence.headerFingerprint(app),scope=findChild(panel,"governmentNetworkScope")
+   verify(scope.height>=scope.contentHeight);reveal(scroll,scope);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-network-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
+  }
+  const revoke=findChild(panel,"governmentNetworkRevokeAll");artifactClick(scroll,revoke);compare(operationPolicy.offline,true)
+  reason.text="Synthetic logout revocation";approval.checked=true;grant=findChild(panel,"governmentNetworkGrant-device-tools");artifactClick(scroll,grant);compare(operationPolicy.offline,false)
+  identityBridge.logout();compare(operationPolicy.offline,true);compare(reason.text,"");compare(approval.checked,false)
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));app.setWorkspace(false)
+ }
  function test_governmentNavigationAndWorkingCopies(){
   app.setWorkspace(true);compare(app.currentPage,12);compare(app.sections.length,12)
   const law=findChild(app,"lawEnforcementWorkspace")
@@ -683,9 +705,9 @@ TestCase {
  function test_yLocalIdentity(){
   app.navigateSection(12);const law=findChild(app,"lawEnforcementWorkspace");law.section=10;verify(renderedFrame());identityBridge.logout();verify(!identityBridge.needsSetup)
   findChild(app,"identityUsername").text="ui-admin";verify(lawCaseBridge.activeCase.id===undefined);compare(lawCaseBridge.cases.length,0)
-  findChild(app,"identityPassword").text="Synthetic-only UI password 2026!";mouseClick(findChild(app,"identitySignIn"));verify(identityBridge.authenticated,identityBridge.error);compare(identityBridge.session.role,"administrator");compare(lawCaseBridge.role,"unknown");compare(lawCaseBridge.cases.length,0);verify(renderedFrame())
+  findChild(app,"identityPassword").text="Synthetic-only UI password 2026!";artifactClick(findChild(app,"identityPanel"),findChild(app,"identitySignIn"));verify(identityBridge.authenticated,identityBridge.error);compare(identityBridge.session.role,"administrator");compare(lawCaseBridge.role,"unknown");compare(lawCaseBridge.cases.length,0);verify(renderedFrame())
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-ar.png"));app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-en.png"))
-  mouseClick(findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
+  artifactClick(findChild(app,"identityPanel"),findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
  }
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

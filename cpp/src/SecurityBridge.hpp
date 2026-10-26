@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+class GovernmentOperationPolicy;
 #include <QVariantMap>
 #include <QFutureWatcher>
 #include <atomic>
@@ -18,6 +19,7 @@ class SecurityBridge final:public QObject {
  Q_PROPERTY(QString updater READ updater NOTIFY changed)
  Q_PROPERTY(QVariantMap updateResult READ updateResult NOTIFY changed)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  explicit SecurityBridge(const QString &config,QObject *parent=nullptr);
  ~SecurityBridge() override;
  bool busy() const {return active_;}
@@ -36,6 +38,7 @@ public:
 signals:
  void changed();
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  QString config_,executable_,database_,error_;
  QVariantMap result_,updateResult_;
  bool updating_=false;
