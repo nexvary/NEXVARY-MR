@@ -1,0 +1,36 @@
+{
+  "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+  "providerDigestVerified": true,
+  "selected": [
+    {
+      "name": "smoke-professional-ui-operation-receipts-ar.png",
+      "sha256": "bae0d00e8ace263ae4118161e567b21b7bd19232080c39e8c14719e4ef0d0696",
+      "bytes": 255854
+    },
+    {
+      "name": "smoke-professional-ui-operation-receipts-en.png",
+      "sha256": "f81a10363bbf66a73bab311aeb994fd2358cf47640080e21163970ba2e972b7d",
+      "bytes": 249092
+    },
+    {
+      "name": "qt-results.xml",
+      "sha256": "8513a76ccece927692829cc7bfc606772a4565f84b24950f5159cbf0b21c6e50",
+      "bytes": 9816
+    },
+    {
+      "name": "gui-repeat-results.xml",
+      "sha256": "2409c5821ebbd410af0ef3839c823f2249b9c813ed23187a1df541199b400765",
+      "bytes": 411
+    },
+    {
+      "name": "gui-repeat-console.txt",
+      "sha256": "a508535ee9088f9888e3bcfa5eb8be209481710b301da9b7a2a386dba56be124",
+      "bytes": 537
+    },
+    {
+      "name": "policy-audit-interop-results.json",
+      "sha256": "c5f146aea8b8cdd42ec6538b1354bc62c949422219ff8c45811441129e7acbee",
+      "bytes": 3570
+    }
+  ]
+}

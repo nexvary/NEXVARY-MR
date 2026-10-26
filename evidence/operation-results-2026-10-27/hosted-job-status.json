@@ -1,0 +1,62 @@
+{
+  "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+  "run": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542",
+  "attempt": 1,
+  "jobs": [
+    {
+      "id": 121893511398,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893511543,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893511627,
+      "name": "linux-forensic-integration (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893511639,
+      "name": "qt (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893511695,
+      "name": "tracking-server",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893511787,
+      "name": "qt (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121893512012,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "counts": {
+    "windowsProduction": 48,
+    "windowsLaboratory": 48,
+    "linuxProduction": 48,
+    "linuxLaboratory": 48,
+    "asanUbsan": 17,
+    "qtQuick": 51,
+    "policy": 13,
+    "offline": 11,
+    "independentInterop": 35,
+    "guiRepeatPerProfile": 3
+  },
+  "scope": "Passing CTest groups; intentional native subcase platform/profile exclusions remain visible in linked raw artifacts. GUI repeat passes do not establish the cause of local intermittent failures."
+}
