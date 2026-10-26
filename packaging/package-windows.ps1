@@ -104,6 +104,7 @@ Copy-Item (Join-Path $repo 'docs/LEGACY_ADB_BACKUP_IMPORT.md') $bundle
 Copy-Item (Join-Path $repo 'docs/CASE_ARTIFACT_INDEX.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OFFLINE_POLICY.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_POLICY_AUDIT.md') $bundle
+Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OPERATION_RESULTS.md') $bundle
 New-Item -ItemType Directory -Force (Join-Path $bundle 'verification') | Out-Null
 Copy-Item (Join-Path $repo 'scripts/verify_evidence_package.py') (Join-Path $bundle 'verification/verify_evidence_package.py')
 Copy-Item (Join-Path $repo 'scripts/verify_policy_audit.py') (Join-Path $bundle 'verification/verify_policy_audit.py')

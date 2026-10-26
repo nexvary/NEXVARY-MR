@@ -25,6 +25,15 @@ TestCase {
   artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
   return id
  }
+ function test_governmentOperationReceipts(){
+  operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
+  const id=uiEvidence.recordSyntheticOperation();verify(id.length>0)
+  const scroll=findChild(app,"identityPanel"),panel=findChild(scroll,"governmentNetworkPanel")
+  const row=findChild(panel,"governmentOperationReceipt-"+id);verify(row!==null);compare(operationPolicy.operationReceipts[0].status,"completed");verify(row.text.indexOf("aaaaaaaa")>=0)
+  for(const ar of [true,false]){app.ar=ar;reveal(scroll,row);verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"operation-receipts-"+(ar?"ar":"en")+".png"))}
+  identityBridge.logout();verify(renderedFrame());compare(operationPolicy.operationReceipts.length,0)
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));operationPolicy.revokeAll()
+ }
  function test_governmentNetworkPolicyControls(){
   operationPolicy.revokeAll();compare(operationPolicy.offline,true)
   app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())

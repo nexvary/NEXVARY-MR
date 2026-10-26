@@ -25,8 +25,8 @@ def independent_history(change=None):
     stamp = "2026-10-26T06:00:00.000Z"
     record = {"id": "00000000-0000-4000-8000-000000000009", "requester": ids[0],
               "requesterActor": ids[0] + " / independent-synthetic", "requesterRole": "administrator",
-              "capability": "device-tools", "scope": "category-and-requester; not destination containment",
-              "caseRef": "", "reason": "Independent synthetic known-answer corpus", "durationMs": 5000,
+              "capability": "external-analysis", "scope": "category-and-requester; not destination containment",
+              "caseRef": "00000000-0000-4000-8000-000000000079", "reason": "Independent synthetic known-answer corpus", "durationMs": 5000,
               "requestedUtc": stamp, "requestDeadlineUtc": "2026-10-26T06:10:00.000Z", "status": "requested"}
     operations = [("request", copy.deepcopy(record), 0, "administrator")]
     record.update(status="in-review", reviewer=ids[1], reviewReason="Independent review")
@@ -36,6 +36,13 @@ def independent_history(change=None):
     record.update(status="active", activatedUtc=stamp, expiresUtc="2026-10-26T06:00:05.000Z")
     operations.append(("activate", copy.deepcopy(record), 0, "administrator"))
     operations.append(("operation-allowed", copy.deepcopy(record), None, "system-observation"))
+    receipt = {"schema":"nexvary-operation-result/v1", "operationId":"00000000-0000-4000-8000-000000000042",
+               "requestId":record["id"], "requester":ids[0], "requesterRole":"administrator", "caseRef":record["caseRef"],
+               "capability":"external-analysis", "kind":"security-scan", "decisionSequence":3, "decisionHash":"__decision__",
+               "startedUtc":stamp, "completedUtc":"", "status":"started", "failureClass":"", "sourceSha256":"", "outputSha256":""}
+    operations.append(("operation-start",copy.deepcopy(receipt),0,"administrator"))
+    receipt.update(status="completed", completedUtc=stamp, failureClass="none", sourceSha256="b"*64, outputSha256="a"*64)
+    operations.append(("operation-result",copy.deepcopy(receipt),None,"system-observation"))
     record.update(status="revoked", closedUtc="2026-10-26T06:00:01.000Z")
     operations.append(("emergency-stop", copy.deepcopy(record), None, "system-observation"))
     if change:
@@ -43,6 +50,8 @@ def independent_history(change=None):
     events, previous = [], "0" * 64
     journal_id = "00000000-0000-4000-8000-000000000010"
     for sequence, (action, r, actor, role) in enumerate(operations, 1):
+        if action in {"operation-start","operation-result"} and r["decisionHash"] == "__decision__":
+            r = {**r, "decisionHash": events[2]["hash"]}
         body = {"action": action, "record": r, "result": r["status"], "timeUtc": stamp,
                 "principalId": ids[actor] if actor is not None else "", "principalRole": role}
         proof = {}
@@ -153,6 +162,39 @@ def main():
             rows[-1] = ("emergency-stop", rows[-1][1], 0, "administrator")
             return rows
         protocol("fully signed false system attribution is rejected", false_system)
+        def wrong_decision(rows, ids):
+            rows[5][1]["decisionHash"] = "f"*64
+            return rows
+        protocol("signed operation cannot cite a different approval digest", wrong_decision)
+        def wrong_sequence(rows, ids):
+            rows[5][1]["decisionSequence"] = 4
+            return rows
+        protocol("signed operation cannot cite activation as approval", wrong_sequence)
+        def wrong_identity(rows, ids):
+            rows[5][1]["requester"] = ids[1]
+            return rows
+        protocol("signed operation requester must match approval", wrong_identity)
+        def leak_path(rows, ids):
+            rows[5][1]["sourcePath"] = "synthetic-sensitive-path"
+            return rows
+        protocol("operation receipts reject unapproved content fields", leak_path)
+        def premature_result(rows, ids):
+            return rows[:5] + rows[6:]
+        protocol("operation result without a start is rejected", premature_result)
+        def duplicate_result(rows, ids):
+            return rows[:7] + [copy.deepcopy(rows[6])] + rows[7:]
+        protocol("duplicate terminal operation result is rejected", duplicate_result)
+        def completed_after_revoke(rows, ids):
+            return rows[:6]+[rows[-1],rows[6]]
+        protocol("success after authorization revocation is rejected", completed_after_revoke)
+        def wrong_case(rows, ids):
+            rows[6][1]["caseRef"]="00000000-0000-4000-8000-000000000080"
+            return rows
+        protocol("operation result cannot change the declared case reference", wrong_case)
+        def bad_digest(rows, ids):
+            rows[6][1]["sourceSha256"]="not-a-digest"
+            return rows
+        protocol("completed scan requires a well-formed source digest", bad_digest)
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))

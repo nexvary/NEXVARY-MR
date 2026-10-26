@@ -75,6 +75,8 @@ activation/expiry/closure times. The verifier rejects changed immutable scope,
 self-review, wrong reviewer, invalid signatures, changed actor binding,
 reordering, interior deletion/duplication and mismatched retained history.
 
+The existing journal now also supports strict operation-start/result records for the two integrated SecurityBridge worker kinds. See [operation-result receipts](GOVERNMENT_OPERATION_RESULTS.md) for their separate lifecycle, digest/export contract and remaining coverage. Older gate records keep their original meaning.
+
 `operation-allowed` and `operation-denied` record the **native gate decision**.
 They do not assert external-tool success, the absence of network packets or a
 completed forensic acquisition. Browser results additionally record rejected URL,

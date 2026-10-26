@@ -1,6 +1,7 @@
 #include "PolicyAudit.hpp"
 #include "CaseVault.hpp"
 #include "IdentityService.hpp"
+#include "OperationReceipt.hpp"
 #include "RecoveryFile.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -237,7 +238,11 @@ bool PolicyAudit::append(const QString &action, const QVariantMap &record,
       {"action", action},
       {"record", record},
       {"result", result},
-      {"timeUtc", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+      {"timeUtc", action == "operation-start" ? record.value("startedUtc")
+                  : action == "operation-result"
+                      ? record.value("completedUtc")
+                      : QVariant(QDateTime::currentDateTimeUtc().toString(
+                            Qt::ISODateWithMs))},
       {"principalId", actor ? actor->userId() : QString()},
       {"principalRole", actor ? actor->session().value("role")
                               : QVariant("system-observation")}};
@@ -337,6 +342,8 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
   int sequence = 0;
   QMap<QString, QVariantMap> states;
   QMap<QString, QString> principalKeys;
+  QMap<QString, QVariantMap> decisions, operations;
+  QMap<QString, QString> closures;
 
   if (!retained.isEmpty() &&
       (retained.value("journalId") != doc.value("journalId") ||
@@ -484,6 +491,24 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
         return reject("Revocation authority rejected.");
       states.insert(id, r);
 
+      if (action == "approve")
+        decisions.insert(id,
+                         {{"sequence", sequence}, {"hash", e.value("hash")}});
+      if (QStringList{"expire", "session-close", "restart-close",
+                      "emergency-stop", "revoke"}
+              .contains(action))
+        closures.insert(id, action);
+    } else if (action == "operation-start" || action == "operation-result") {
+      const auto requestId = r.value("requestId").toString();
+      const auto opId = r.value("operationId").toString();
+      if (!mr::policy::operationRecord(
+              r, states.value(requestId), decisions.value(requestId),
+              operations.value(opId), closures.value(requestId), actor, role,
+              p.value("timeUtc").toString(), p.value("result").toString(),
+              action == "operation-start"))
+        return reject("Operation authorization, lifecycle, digest or "
+                      "attribution rejected.");
+      operations.insert(opId, r);
     } else if (action != "operation-allowed" && action != "operation-denied" &&
                action != "browser-result" && action != "audit-verification" &&
                action != "policy-rejection")

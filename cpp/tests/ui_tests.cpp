@@ -51,6 +51,15 @@ class Setup:public QObject {
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
 public:
+ Q_INVOKABLE QString recordSyntheticOperation() {
+  const QString pass="Synthetic-only UI password 2026!";
+  if(!identity->syntheticProfile()||!identity->login("ui-investigator",pass))return {};
+  const auto request=operationPolicy->requestException("external-analysis","Synthetic operation UI",{},600,true);
+  if(request.isEmpty()||!identity->login("ui-admin",pass)||!operationPolicy->reviewException(request,"Synthetic separate account")||!operationPolicy->decideException(request,true,"Synthetic decision")||!identity->login("ui-investigator",pass)||!operationPolicy->activateException(request))return {};
+  const auto id=operationPolicy->beginOperation("external-analysis","security-scan");
+  if(id.isEmpty()||operationPolicy->finishOperation(id,"completed",QString(64,'b'),QString(64,'a')).isEmpty())return {};
+  return id;
+ }
  Q_INVOKABLE bool requestFrame(QObject *object) { auto *window=qobject_cast<QQuickWindow *>(object); if(!window||!window->isVisible())return false; window->update();return true; }
  Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {

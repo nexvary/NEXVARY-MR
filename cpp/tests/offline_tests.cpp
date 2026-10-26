@@ -15,6 +15,7 @@
 #include <QFile>
 #include <QDir>
 #include <QThread>
+#include <QCryptographicHash>
 #include <QDesktopServices>
 #include <QUrl>
 #include <cstdio>
@@ -97,10 +98,35 @@ private slots:
   const auto marker=t.filePath("started");qputenv("MR_OFFLINE_MARKER",marker.toUtf8());
   QVERIFY(!security.scan(t.filePath("source"),true));QVERIFY(!security.updateDatabase(true));QVERIFY(!QFileInfo::exists(marker));
   QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","synthetic scan fixture",password));QVERIFY(!security.updateDatabase(true));QVERIFY(security.scan(t.filePath("source"),true));QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);QVERIFY2(security.error().isEmpty(),qPrintable(security.error()));QVERIFY(security.result().contains("verdict"));
+  QCOMPARE(security.operationReceipt().value("status").toString(),QString("completed"));
+  const auto report=t.filePath("scan-report.json");QVERIFY(security.exportReport(report,true));QFile exported(report);QVERIFY(exported.open(QIODevice::ReadOnly));
+  QCOMPARE(QString::fromLatin1(QCryptographicHash::hash(exported.readAll(),QCryptographicHash::Sha256).toHex()),security.operationReceipt().value("outputSha256").toString());
+  QVERIFY(security.scan(t.filePath("missing"),true));QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);QCOMPARE(security.operationReceipt().value("status").toString(),QString("failed"));
   QVERIFY(QFile::remove(marker));qputenv("MR_OFFLINE_MODE","hang");QVERIFY(security.scan(t.filePath("source"),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);policy.revoke("external-analysis");QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);QVERIFY(!security.result().contains("verdict"));QVERIFY(!security.error().isEmpty());
+  QCOMPARE(security.operationReceipt().value("status").toString(),QString("revoked"));
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic operator cancellation",password));
+  QVERIFY(QFile::remove(marker));QVERIFY(security.scan(t.filePath("source"),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);security.cancel();QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);
+  QCOMPARE(security.operationReceipt().value("failureClass").toString(),QString("operator-cancelled"));
   qunsetenv("MR_OFFLINE_MODE");QVERIFY(performSyntheticReviewedException(identity,policy,"signature-update","synthetic updater fixture",password));QVERIFY(security.updateDatabase(true));QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);QVERIFY2(security.updateResult().value("success").toBool(),qPrintable(security.error()));
+  QCOMPARE(security.operationReceipt().value("status").toString(),QString("completed"));
   QVERIFY(QFile::remove(marker));qputenv("MR_OFFLINE_MODE","hang");QVERIFY(security.updateDatabase(true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);identity.logout();QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),5000);QVERIFY(!security.updateResult().value("success").toBool());
+  QCOMPARE(security.operationReceipt().value("failureClass").toString(),QString("session-ended"));
   RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);QVERIFY(!recovery.analyzePartitions(t.filePath("source"),engine,true));QVERIFY(recovery.error().contains("offline policy"));
+ }
+ void scannerExpiryResult(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity,nullptr,2000);
+  const auto db=t.filePath("db");QVERIFY(QDir().mkpath(db));QVERIFY(write(db+"/synthetic.ndb","N:0:*:41414141\n"));QVERIFY(write(t.filePath("source"),"synthetic only"));
+#ifdef Q_OS_WIN
+  const auto engine=t.filePath("clamscan.exe");
+#else
+  const auto engine=t.filePath("clamscan");
+#endif
+  QVERIFY(QFile::copy(QCoreApplication::applicationFilePath(),engine));QVERIFY(QFile::setPermissions(engine,QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner));
+  SecurityBridge security(t.filePath("scanner.json"));security.setOperationPolicy(&policy);QVERIFY(security.configure(engine,db));
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic running-worker expiry",password));
+  const auto marker=t.filePath("started");qputenv("MR_OFFLINE_MARKER",marker.toUtf8());qputenv("MR_OFFLINE_MODE","hang");
+  QVERIFY(security.scan(t.filePath("source"),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);QTRY_VERIFY_WITH_TIMEOUT(!security.busy(),8000);
+  QCOMPARE(security.operationReceipt().value("status").toString(),QString("expired"));QVERIFY(!security.result().contains("verdict"));
  }
  void externalPartitionChildPermissionAndRevoke(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);

@@ -70,6 +70,46 @@ def uuid(value):
     return isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}", value) and value != "00000000-0000-0000-0000-000000000000"
 
 
+
+def operation_record(r, request, decision, old, closure, actor, role, time, result, start):
+    keys = {"capability", "caseRef", "completedUtc", "decisionHash", "decisionSequence", "failureClass", "kind", "operationId", "outputSha256", "requestId", "requester", "requesterRole", "schema", "sourceSha256", "startedUtc", "status"}
+    digest = lambda x: isinstance(x, str) and (x == "" or re.fullmatch(r"[0-9a-f]{64}", x))
+    if (set(r) != keys or r["schema"] != "nexvary-operation-result/v1" or not uuid(r["operationId"])
+            or not request or r["requestId"] != request["id"] or r["requester"] != request["requester"]
+            or r["requesterRole"] != request["requesterRole"] or r["caseRef"] != request["caseRef"]
+            or r["capability"] != request["capability"] or not decision or type(r["decisionSequence"]) not in {int, float}
+            or r["decisionSequence"] != decision["sequence"] or r["decisionHash"] != decision["hash"]
+            or not digest(r["sourceSha256"]) or not digest(r["outputSha256"]) or result != r["status"]
+            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("signature-update", "signature-update")}):
+        raise ValueError("Operation schema/approval/scope/digest rejected")
+    from datetime import datetime
+    def utc(value):
+        return isinstance(value, str) and value.endswith("Z") and datetime.fromisoformat(value).utcoffset().total_seconds() == 0
+    if not utc(r["startedUtc"]):
+        raise ValueError("Invalid operation start time")
+    if start:
+        valid = (not old and request["status"] == "active" and actor == r["requester"] and role == r["requesterRole"]
+                 and r["status"] == "started" and r["startedUtc"] == time and r["completedUtc"] == r["failureClass"] == r["outputSha256"] == "")
+    else:
+        mutable = {"status", "completedUtc", "failureClass", "sourceSha256", "outputSha256"}
+        valid = (old.get("status") == "started" and role == "system-observation" and not actor
+                 and r["completedUtc"] == time and utc(time)
+                 and {k:v for k,v in old.items() if k not in mutable} == {k:v for k,v in r.items() if k not in mutable}
+                 and (not old["sourceSha256"] or old["sourceSha256"] == r["sourceSha256"]))
+        expected = ("failed", "process-interrupted") if r["failureClass"] == "process-interrupted" else None
+        expected = expected or {"expire": ("expired", "permission-expired"), "session-close": ("cancelled", "session-ended")}.get(closure)
+        if not expected and (closure == "restart-close" or r["failureClass"] == "process-interrupted"):
+            expected = ("failed", "process-interrupted")
+        if not expected and closure:
+            expected = ("revoked", "permission-revoked")
+        if expected:
+            valid = valid and (r["status"], r["failureClass"]) == expected
+        else:
+            valid = valid and request["status"] == "active" and ((r["status"],r["failureClass"]) in {("failed","engine-failure"),("cancelled","operator-cancelled")} or (r["status"] == "completed" and r["failureClass"] == "none" and r["outputSha256"] and (r["kind"] != "security-scan" or r["sourceSha256"])))
+    if not valid:
+        raise ValueError("Operation lifecycle/attribution rejected")
+
+
 def verify(data, anchor):
     if len(data) > 16 * 1024 * 1024:
         raise ValueError("Audit size limit")
@@ -87,6 +127,7 @@ def verify(data, anchor):
     if floor == 0 and anchor["hash"] != previous:
         raise ValueError("Empty history anchor mismatch")
     states, actions, principals = {}, {}, {}
+    decisions, operations, closures = {}, {}, {}
     for sequence, event in enumerate(rows, 1):
         raw, sig = un64(event["payload"]), un64(event["signature"])
         if not 0 < len(raw) <= 32 * 1024:
@@ -151,6 +192,14 @@ def verify(data, anchor):
             if action == "revoke" and role not in {"system-observation", "administrator"} and actor not in {old["requester"], old.get("reviewer")}:
                 raise ValueError("Revocation authority rejected")
             states[request_id] = r
+            if action == "approve":
+                decisions[request_id] = {"sequence": sequence, "hash": digest}
+            if action in {"expire", "session-close", "restart-close", "emergency-stop", "revoke"}:
+                closures[request_id] = action
+        elif action in {"operation-start", "operation-result"}:
+            request_id = r.get("requestId")
+            operation_record(r, states.get(request_id, {}), decisions.get(request_id, {}), operations.get(r.get("operationId"), {}), closures.get(request_id, ""), actor, role, p["timeUtc"], p["result"], action == "operation-start")
+            operations[r["operationId"]] = r
         elif action not in {"operation-allowed", "operation-denied", "browser-result", "audit-verification", "policy-rejection"}:
             raise ValueError("Unknown event action")
         if action in {"operation-allowed", "browser-result"} and (not old or r != old or status != "active" or role != "system-observation"):
@@ -167,7 +216,8 @@ def verify(data, anchor):
             "head": previous, "retainedPrefixVerified": floor,
             "identityScope": "local keys/declared roles; not agency identity or independent people",
             "timeScope": "recorded local UTC; no external trusted time",
-            "operationScope": "gate decisions; operation completion only where explicitly recorded"}
+            "operations": {k: sum(v["status"] == k for v in operations.values()) for k in {v["status"] for v in operations.values()}},
+            "operationScope": "signed native worker receipts for integrated kinds; no external OS/tool truth or universal completion proof"}
 
 
 def main():

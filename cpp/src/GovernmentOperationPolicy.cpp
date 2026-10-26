@@ -1,11 +1,13 @@
 #include "GovernmentOperationPolicy.hpp"
 #include "IdentityService.hpp"
+#include "OperationReceipt.hpp"
 #include "PolicyAudit.hpp"
 #include "RecoveryFile.hpp"
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QSet>
 #include <QUrl>
 #include <QUuid>
 #include <algorithm>
@@ -50,6 +52,15 @@ GovernmentOperationPolicy::GovernmentOperationPolicy(IdentityService *identity,
           QByteArray::fromBase64(e.value("payload").toString().toLatin1());
       const auto p = QJsonDocument::fromJson(bytes).object();
       const auto r = p.value("record").toObject().toVariantMap();
+      const auto action = p.value("action").toString();
+      if (action == "operation-start")
+        operations_.insert(r.value("operationId").toString(), r);
+      if (action == "operation-result")
+        operations_.remove(r.value("operationId").toString());
+      if (QStringList{"expire", "session-close", "restart-close",
+                      "emergency-stop", "revoke"}
+              .contains(action))
+        operationClosures_.insert(r.value("id").toString(), action);
 
       if (r.contains("id") &&
           !p.value("action").toString().startsWith("operation-") &&
@@ -61,6 +72,12 @@ GovernmentOperationPolicy::GovernmentOperationPolicy(IdentityService *identity,
     for (auto it = snapshot.cbegin(); it != snapshot.cend(); ++it)
       if (it->value("status") == "active")
         transition(it.key(), "restart-close", "revoked");
+    for (auto it = snapshot.cbegin(); it != snapshot.cend(); ++it)
+      if (it->value("status") == "active")
+        operationClosures_.insert(it.key(), "restart-close");
+    const auto unfinished = operations_.keys();
+    for (const auto &id : unfinished)
+      finishOperation(id, "interrupted");
 
   } else
     error_ = audit_->error();
@@ -83,6 +100,7 @@ GovernmentOperationPolicy::GovernmentOperationPolicy(IdentityService *identity,
         }
       if (changedState || grants_.isEmpty())
         emit changed();
+      emit auditChanged();
     });
 
   monitor_.start();
@@ -445,7 +463,7 @@ void GovernmentOperationPolicy::closeGrant(const QString &capability,
   const auto g = grants_.take(capability);
   if (g.id.isEmpty())
     return;
-
+  operationClosures_.insert(g.id, action);
   transition(g.id, action, action == "expire" ? "expired" : "revoked");
   emit changed();
 }
@@ -463,6 +481,7 @@ bool GovernmentOperationPolicy::revokeException(const QString &id) {
 
   const auto cap = r.value("capability").toString();
   if (grants_.value(cap).id == id) {
+    operationClosures_.insert(id, "revoke");
     grants_.remove(cap);
     emit changed();
   }
@@ -572,4 +591,133 @@ bool GovernmentOperationPolicy::openExternal(const QString &text) {
   error_.clear();
   emit errorChanged();
   return true;
+}
+
+QString GovernmentOperationPolicy::beginOperation(const QString &capability,
+                                                  const QString &kind) {
+  if (!permit(capability) || operations_.size() >= 64)
+    return {};
+  const auto request = requests_.value(grants_.value(capability).id);
+  QVariantMap decision;
+  for (const auto &v : audit_->events()) {
+    const auto e = v.toMap();
+    const auto p =
+        QJsonDocument::fromJson(
+            QByteArray::fromBase64(e.value("payload").toString().toLatin1()))
+            .object();
+    if (p.value("action") == "approve" &&
+        p.value("record").toObject().value("id").toString() ==
+            request.value("id"))
+      decision = {{"sequence", p.value("sequence").toVariant()},
+                  {"hash", e.value("hash")}};
+  }
+  const auto now = utc(),
+             id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+  const QVariantMap r{{"schema", "nexvary-operation-result/v1"},
+                      {"operationId", id},
+                      {"requestId", request.value("id")},
+                      {"requester", request.value("requester")},
+                      {"requesterRole", request.value("requesterRole")},
+                      {"caseRef", request.value("caseRef")},
+                      {"capability", capability},
+                      {"kind", kind},
+                      {"decisionSequence", decision.value("sequence")},
+                      {"decisionHash", decision.value("hash")},
+                      {"startedUtc", now},
+                      {"completedUtc", QString()},
+                      {"status", "started"},
+                      {"failureClass", QString()},
+                      {"sourceSha256", QString()},
+                      {"outputSha256", QString()}};
+  if (!mr::policy::operationRecord(
+          r, request, decision, {}, {}, identity_->userId(),
+          identity_->session().value("role").toString(), now, "started", true))
+    return {};
+  if (!audit("operation-start", r, "started", true))
+    return {};
+  operations_.insert(id, r);
+  emit auditChanged();
+  return id;
+}
+QVariantMap GovernmentOperationPolicy::finishOperation(
+    const QString &id, const QString &status, const QString &sourceDigest,
+    const QString &outputDigest) {
+  refresh();
+  auto r = operations_.value(id);
+  if (r.isEmpty() || !available())
+    return {};
+  QString terminalStatus = status, failure;
+  const auto closure =
+      operationClosures_.value(r.value("requestId").toString());
+  if (status == "interrupted") {
+    terminalStatus = "failed";
+    failure = "process-interrupted";
+  } else if (closure == "expire") {
+    terminalStatus = "expired";
+    failure = "permission-expired";
+  } else if (closure == "session-close") {
+    terminalStatus = "cancelled";
+    failure = "session-ended";
+  } else if (closure == "restart-close" || status == "interrupted") {
+    terminalStatus = "failed";
+    failure = "process-interrupted";
+  } else if (!closure.isEmpty()) {
+    terminalStatus = "revoked";
+    failure = "permission-revoked";
+  } else if (status == "completed")
+    failure = "none";
+  else if (status == "failed")
+    failure = "engine-failure";
+  else if (status == "cancelled")
+    failure = "operator-cancelled";
+  else
+    return {};
+  const auto old = r;
+  const auto now = utc();
+  r.insert("status", terminalStatus);
+  r.insert("failureClass", failure);
+  r.insert("completedUtc", now);
+  r.insert("sourceSha256", sourceDigest);
+  r.insert("outputSha256", outputDigest);
+  const QVariantMap decision{{"sequence", r.value("decisionSequence")},
+                             {"hash", r.value("decisionHash")}};
+  if (!mr::policy::operationRecord(
+          r, requests_.value(r.value("requestId").toString()), decision, old,
+          closure, {}, "system-observation", now, terminalStatus, false) ||
+      !audit("operation-result", r, terminalStatus, false))
+    return {};
+  operations_.remove(id);
+  emit auditChanged();
+  return r;
+}
+QVariantList GovernmentOperationPolicy::operationReceipts() const {
+  QVariantList result;
+  if (!identity_ || !identity_->authenticated())
+    return result;
+  const auto role = identity_->session().value("role").toString();
+  const bool review =
+      role == "administrator" || role == "reviewer" || role == "auditor";
+  QSet<QString> seen;
+  const auto events = audit_->events();
+  for (auto it = events.crbegin(); it != events.crend() && result.size() < 32;
+       ++it) {
+    const auto e = it->toMap();
+    const auto p =
+        QJsonDocument::fromJson(
+            QByteArray::fromBase64(e.value("payload").toString().toLatin1()))
+            .object();
+    if (p.value("action") != "operation-start" &&
+        p.value("action") != "operation-result")
+      continue;
+    auto r = p.value("record").toObject().toVariantMap();
+    const auto id = r.value("operationId").toString();
+    if (seen.contains(id) ||
+        (!review && r.value("requester") != identity_->userId()))
+      continue;
+    seen.insert(id);
+    r.insert("eventSequence", p.value("sequence").toVariant());
+    r.insert("eventHash", e.value("hash"));
+    result.append(r);
+  }
+  return result;
 }

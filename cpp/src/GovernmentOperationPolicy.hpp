@@ -18,6 +18,8 @@ class GovernmentOperationPolicy final : public QObject {
   Q_PROPERTY(QString error READ error NOTIFY errorChanged)
   Q_PROPERTY(QVariantList requests READ requests NOTIFY changed)
   Q_PROPERTY(QVariantMap auditStatus READ auditStatus NOTIFY auditChanged)
+  Q_PROPERTY(
+      QVariantList operationReceipts READ operationReceipts NOTIFY auditChanged)
 public:
   explicit GovernmentOperationPolicy(IdentityService *identity,
                                      QObject *parent = nullptr,
@@ -50,6 +52,12 @@ public:
   Q_INVOKABLE bool verifyAudit(const QString &path,
                                const QString &retainedAnchorJson);
   Q_INVOKABLE void refreshAudit();
+  // Native consumers only. No caller-controlled labels, paths or case content.
+  QString beginOperation(const QString &capability, const QString &kind);
+  QVariantMap finishOperation(const QString &id, const QString &status,
+                              const QString &sourceDigest = {},
+                              const QString &outputDigest = {});
+  QVariantList operationReceipts() const;
 signals:
   void changed();
   void errorChanged();
@@ -79,4 +87,6 @@ private:
   std::unique_ptr<PolicyAudit> audit_;
   QMap<QString, QVariantMap> requests_;
   QVariantMap verification_;
+  QMap<QString, QVariantMap> operations_;
+  QMap<QString, QString> operationClosures_;
 };

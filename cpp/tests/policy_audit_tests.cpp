@@ -62,8 +62,19 @@ int fixture(const QString &root, bool crash) {
   setup(i);
   GovernmentOperationPolicy p(&i);
   const auto id = approve(i, p);
-  if (id.isEmpty() || !p.activateException(id) || !p.permit("device-tools") ||
-      !p.exportAudit(root + "/audit.json", true) ||
+  if (id.isEmpty() || !p.activateException(id) || !p.permit("device-tools"))
+    return 9;
+  if (!crash) {
+    if (!performSyntheticReviewedException(i, p, "external-analysis",
+                                           "Synthetic worker", pass))
+      return 9;
+    const auto op = p.beginOperation("external-analysis", "security-scan");
+    if (op.isEmpty() ||
+        p.finishOperation(op, "completed", QString(64, 'b'), QString(64, 'a'))
+            .isEmpty())
+      return 9;
+  }
+  if (!p.exportAudit(root + "/audit.json", true) ||
       !write(root + "/anchor.json", json(anchor(p))))
     return 9;
   if (crash)
@@ -75,6 +86,94 @@ int fixture(const QString &root, bool crash) {
 class PolicyAuditTests final : public QObject {
   Q_OBJECT
 private slots:
+  void operationResultLifecycle() {
+    QTemporaryDir t;
+    IdentityService i(t.filePath("identity"), true);
+    setup(i);
+    GovernmentOperationPolicy p(&i);
+    QVERIFY(p.beginOperation("external-analysis", "security-scan").isEmpty());
+    QVERIFY(performSyntheticReviewedException(
+        i, p, "external-analysis", "Synthetic operation receipts", pass));
+    QVERIFY(p.beginOperation("external-analysis", "not-a-registered-kind")
+                .isEmpty());
+    const auto op = p.beginOperation("external-analysis", "security-scan");
+    QVERIFY(!op.isEmpty());
+    QVERIFY(p.finishOperation(op, "completed", {}, QString(64, 'a')).isEmpty());
+    const auto r =
+        p.finishOperation(op, "completed", QString(64, 'b'), QString(64, 'a'));
+    QCOMPARE(r.value("status").toString(), QString("completed"));
+    QVERIFY(p.finishOperation(op, "failed").isEmpty());
+    const auto cancelled =
+        p.beginOperation("external-analysis", "security-scan");
+    QCOMPARE(p.finishOperation(cancelled, "cancelled")
+                 .value("failureClass")
+                 .toString(),
+             QString("operator-cancelled"));
+    const auto revoked = p.beginOperation("external-analysis", "security-scan");
+    p.revoke("external-analysis");
+    QCOMPARE(p.finishOperation(revoked, "completed", QString(64, 'b'),
+                               QString(64, 'a'))
+                 .value("status")
+                 .toString(),
+             QString("revoked"));
+    QVERIFY(performSyntheticReviewedException(i, p, "external-analysis",
+                                              "Synthetic logout", pass));
+    const auto logout = p.beginOperation("external-analysis", "security-scan");
+    i.logout();
+    QCOMPARE(p.finishOperation(logout, "completed", QString(64, 'b'),
+                               QString(64, 'a'))
+                 .value("failureClass")
+                 .toString(),
+             QString("session-ended"));
+    QVERIFY(p.operationReceipts().isEmpty());
+    QVERIFY(i.login("request-admin", pass));
+    const auto file = t.filePath("audit.json");
+    QVERIFY(p.exportAudit(file, true));
+    QString why;
+    QVERIFY2(PolicyAudit::verifyExport(bytes(file),
+                                       anchor(p).value("publicKey").toString(),
+                                       anchor(p), why),
+             qPrintable(why));
+  }
+  void operationExpiryAndRestart() {
+    QTemporaryDir t;
+    IdentityService i(t.filePath("identity"), true);
+    setup(i);
+    {
+      GovernmentOperationPolicy p(&i, nullptr, 100);
+      QVERIFY(performSyntheticReviewedException(i, p, "external-analysis",
+                                                "Synthetic expiry", pass));
+      const auto id = p.beginOperation("external-analysis", "security-scan");
+      QVERIFY(!id.isEmpty());
+      QTest::qWait(150);
+      QCOMPARE(
+          p.finishOperation(id, "completed", QString(64, 'b'), QString(64, 'a'))
+              .value("status")
+              .toString(),
+          QString("expired"));
+    }
+    {
+      GovernmentOperationPolicy p(&i);
+      QVERIFY(performSyntheticReviewedException(
+          i, p, "external-analysis", "Synthetic interrupted worker", pass));
+      QVERIFY(
+          !p.beginOperation("external-analysis", "security-scan").isEmpty());
+    }
+    GovernmentOperationPolicy reopened(&i);
+    QCOMPARE(reopened.operationReceipts()
+                 .first()
+                 .toMap()
+                 .value("failureClass")
+                 .toString(),
+             QString("process-interrupted"));
+    const auto file = t.filePath("audit.json");
+    QVERIFY(reopened.exportAudit(file, true));
+    QString why;
+    QVERIFY2(PolicyAudit::verifyExport(
+                 bytes(file), anchor(reopened).value("publicKey").toString(),
+                 anchor(reopened), why),
+             qPrintable(why));
+  }
   void requestInputsAndRoles() {
     QTemporaryDir t;
     IdentityService i(t.filePath("identity"), true);

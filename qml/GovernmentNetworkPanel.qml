@@ -21,11 +21,25 @@ Panel {
   return (app.ar?ar:en)[name]||name
  }
  function statusCaption(status){
-  const ar={"requested":"بانتظار المراجعة","in-review":"قيد المراجعة","approved":"موافق عليه — يحتاج تفعيل الطالب","rejected":"مرفوض","active":"نشط","revoked":"مسحوب","expired":"منتهي الصلاحية"}
+  const ar={"requested":"بانتظار المراجعة","in-review":"قيد المراجعة","approved":"موافق عليه — يحتاج تفعيل الطالب","rejected":"مرفوض","active":"نشط","revoked":"مسحوب","expired":"منتهي الصلاحية","started":"بدأ التنفيذ","completed":"مكتمل","failed":"فشل","cancelled":"ملغى"}
   return app.ar?(ar[status]||status):status
  }
  Label {objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.accent:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("سجل السياسات متاح — تحقق محلي","Policy journal available — local verification"):app.trx("تعذر التحقق من سجل السياسات — الاستثناءات مغلقة","Policy journal unavailable — exceptions denied")}
+ ColumnLayout {
+  Layout.fillWidth:true
+  visible:operationPolicy.operationReceipts.length>0
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:panel.app.trx("أحدث إيصالات تشغيل الفحص والتواقيع — قرار الموافقة وحده لا يعني اكتمال العملية. أوقات محلية؛ مرجع القضية ليس تصريح وصول.","Recent scan/signature operation receipts — approval alone is not completion. Local times; case references grant no access.");color:panel.app.design.muted}
+  Repeater {
+   model:operationPolicy.operationReceipts
+   delegate:Label {
+    required property var modelData
+    objectName:"governmentOperationReceipt-"+modelData.operationId
+    Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:panel.app.design.text
+    text:(panel.app.ar?(modelData.kind==="security-scan"?"فحص ملف":"تحديث تواقيع"):modelData.kind)+" · "+panel.statusCaption(modelData.status)+" · "+modelData.failureClass+"\n"+modelData.operationId+"\n"+modelData.startedUtc+" → "+modelData.completedUtc+"\nSHA-256: "+(modelData.outputSha256||"—")
+   }
+  }
+ }
  TextField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
  TextField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
  RowLayout {Layout.fillWidth:true
