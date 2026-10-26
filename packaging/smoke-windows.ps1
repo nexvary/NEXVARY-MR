@@ -19,7 +19,10 @@ $data = Join-Path $isolated 'test data'
 $picture = Join-Path $evidence "$Label.png"
 $stdout = Join-Path $evidence "$Label.stdout.txt"
 $stderr = Join-Path $evidence "$Label.stderr.txt"
-$verifierPython = (Get-Command python -CommandType Application -ErrorAction Stop).Source
+# Application lookup can return multiple PATH matches. Capture the first resolved
+# executable, rather than passing an array (joined into one invalid command path).
+$verifierPython = (Get-Command python -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+if (-not (Test-Path -LiteralPath $verifierPython -PathType Leaf)) { throw 'Policy audit verifier Python executable was not found' }
 $savedPath = $env:PATH
 $savedQtPlugin = $env:QT_PLUGIN_PATH
 $savedQml = $env:QML_IMPORT_PATH
