@@ -57,7 +57,7 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Relationship Analysis | Tested (bounded provenance) / Pending | Typed case/device/evidence/report/finding graph and recorded-digest groups; exact-source verification in DEVELOPMENT_STATE.md. No person/entity/social or causal inference. |
 | Search and Indexing | Tested (bounded) / Pending | Original case-scoped retained-finding index with literal Arabic/English search, provenance paths and explicit caps; exact-source results in DEVELOPMENT_STATE.md. Persistent/full-text/semantic and complete source coverage pending. |
 | Reporting | Tested / Pending | Existing AR/EN case PDFs; timeline exports/signed timeline review pending. |
-| Offline / Air-Gapped Operations | Implemented / Pending | Local case workflows plus native application category gates (current verification in DEVELOPMENT_STATE.md); OS egress/descendant/share containment and air-gap acceptance pending. |
+| Offline / Air-Gapped Operations | Tested (application gates) / Pending | Local case workflows plus native application category gates (current verification in DEVELOPMENT_STATE.md); OS egress/descendant/share containment and air-gap acceptance pending. |
 | Enterprise Security | Tested / Pending | Existing native local identities/DPAPI; enterprise identity and independent audit pending. |
 | Role-Based Access Control | Tested | Existing roles/grants; no SSO/personnel verification claim. |
 | Auditability | Tested / Pending | Existing hash-linked audit/local signed anchors; external key/time custody pending. |
@@ -74,3 +74,18 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 The index's AXIOM 8.1 and Inseyets 10.3 report PDFs returned HTTP 403, so their result tables remain unreviewed. No Independently Verified product cell is inferred. URLs/access outcomes are retained in evidence/timeline-2026-10-25/research-source-review.json.
 
 Finding-index/provenance verification: da857f9 / CI 40261921553, four 45/45 profiles, artifact 32/32, UI 49/49, production sanitizers 15/15. Known-answer structural corpus: 6 findings/19 nodes/20 correct edges/two digest groups, zero false/missed edges on that corpus only. Actual portable/installed EXE index receipts and real Windows frames retained. No semantic/person relationship, general population accuracy or competitive superiority claim.
+
+
+### Offline feature review — official sources inspected 2026-10-26
+
+These are **Officially Claimed**, dated/version-scoped vendor statements, not Independently Verified packet captures, licensing tests or air-gap acceptance. They do not establish current whole-suite behavior.
+
+| Source / scope | Documented vendor statement | NEXVARY comparison / remaining gap |
+|---|---|---|
+| [Inseyets FAQ, October 2024, page 3](https://media.cellebrite.com/wp-content/uploads/2024/10/Cellebrite-Inseyets-FAQ.pdf) | Historical offline configuration option, with network connectivity described for full functionality | Application gating is not a unique offline capability. Direct access to the current product page returned 403; current licensing/egress details remain Unknown here. |
+| [XAMN Viewer 8.1 release, 20 March 2025](https://www.msab.com/updates/xry-11-0-xamn-8-1-unify-25-3-xec-7-13-and-kte-11-0/) | Offline maps in that named Viewer release | Offline geographic-map analysis is Unsupported in NEXVARY; no whole-suite isolation inference. |
+| [AXIOM 8.6/Copilot early-access feature, 24 October 2024](https://www.magnetforensics.com/blog/making-magnet-copilots-ai-capabilities-available-offline/) | Offline Q&A/image deepfake classification; the described Medex video analysis uses online metadata | Semantic Q&A/deepfake classification is Unsupported in NEXVARY. Individual feature network requirements must be evaluated separately. |
+
+Source/access/limit records: evidence/offline-policy-2026-10-26/research-source-review.json. No licensed competing product was executed or superiority established.
+
+Application gate verification: 7cfa1a6 / CI 40268766117, all seven jobs, four 46/46 profiles, policy 10/10, mirror 22/22, UI 50/50 and 16/16 production sanitizers. Actual deployed default-deny/grant/revoke receipts and frames retained. Complete OS air-gap containment remains Pending; no competitive superiority is inferred.

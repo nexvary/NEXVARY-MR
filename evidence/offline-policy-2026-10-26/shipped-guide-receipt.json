@@ -1,0 +1,18 @@
+[
+  {
+    "guide": "GOVERNMENT_OFFLINE_POLICY.md",
+    "archivePath": "NEXVARY-MR/GOVERNMENT_OFFLINE_POLICY.md",
+    "rawBytes": 8372,
+    "rawSha256": "2cecd404138a8a370cfb5f58d599c9afd855c2b31d0aad9f0135c1b97056fe42",
+    "canonicalLfMatchesSource": true,
+    "sourceCommit": "7cfa1a65bd4aba84664c791f1feb17f0e344918b"
+  },
+  {
+    "guide": "GOVERNMENT_OPERATIONS.md",
+    "archivePath": "NEXVARY-MR/GOVERNMENT_OPERATIONS.md",
+    "rawBytes": 8887,
+    "rawSha256": "6f764eb5edd893fdb779dc082b2323e44fd8051a237b1befac23acbb955fbcd3",
+    "canonicalLfMatchesSource": true,
+    "sourceCommit": "7cfa1a65bd4aba84664c791f1feb17f0e344918b"
+  }
+]
