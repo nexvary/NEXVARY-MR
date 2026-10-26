@@ -1,0 +1,78 @@
+{
+  "portable": {
+    "id": 12666447327,
+    "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+    "size_in_bytes": 49024339,
+    "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12666447327",
+    "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12666447327/zip",
+    "expired": false,
+    "created_at": "2026-10-26T16:25:17Z",
+    "expires_at": "2027-01-24T16:08:46Z",
+    "updated_at": "2026-10-26T16:25:17Z",
+    "digest": "sha256:ac9bafd34eb835845729b8a18eca20d69254dea591cbe2336780cb336c3a7ec0",
+    "workflow_run": {
+      "id": 40356252239,
+      "repository_id": 1421842070,
+      "head_repository_id": 1421842070,
+      "head_branch": "feature/government-operations",
+      "head_sha": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e"
+    }
+  },
+  "installer": {
+    "id": 12667027083,
+    "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+    "size_in_bytes": 33154229,
+    "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12667027083",
+    "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12667027083/zip",
+    "expired": false,
+    "created_at": "2026-10-26T16:25:19Z",
+    "expires_at": "2027-01-24T16:08:46Z",
+    "updated_at": "2026-10-26T16:25:19Z",
+    "digest": "sha256:7df503220ee6bb9c1d71ed40229a37b228458303cb58d76d8ec9cd74c8f17812",
+    "workflow_run": {
+      "id": 40356252239,
+      "repository_id": 1421842070,
+      "head_repository_id": 1421842070,
+      "head_branch": "feature/government-operations",
+      "head_sha": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e"
+    }
+  },
+  "evidence": {
+    "id": 12667847127,
+    "name": "NEXVARY-MR-Windows-production-validation-evidence",
+    "size_in_bytes": 66502001,
+    "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12667847127",
+    "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12667847127/zip",
+    "expired": false,
+    "created_at": "2026-10-26T16:25:23Z",
+    "expires_at": "2027-01-24T16:08:46Z",
+    "updated_at": "2026-10-26T16:25:23Z",
+    "digest": "sha256:96426bbc0a4a11aeb001e5cf6ed9de46423d03ec9ebd092905df277a1b03c78f",
+    "workflow_run": {
+      "id": 40356252239,
+      "repository_id": 1421842070,
+      "head_repository_id": 1421842070,
+      "head_branch": "feature/government-operations",
+      "head_sha": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e"
+    }
+  },
+  "linux-production": {
+    "id": 12666732305,
+    "name": "NEXVARY-MR-Linux-production-integration-evidence",
+    "size_in_bytes": 80312909,
+    "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12666732305",
+    "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12666732305/zip",
+    "expired": false,
+    "created_at": "2026-10-26T16:23:52Z",
+    "expires_at": "2027-01-24T16:08:46Z",
+    "updated_at": "2026-10-26T16:23:52Z",
+    "digest": "sha256:0a2341db3d21edc7ab716cbbcc03c7dff93e28ea8ba4eae40fdfd80e0a6c7b10",
+    "workflow_run": {
+      "id": 40356252239,
+      "repository_id": 1421842070,
+      "head_repository_id": 1421842070,
+      "head_branch": "feature/government-operations",
+      "head_sha": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e"
+    }
+  }
+}

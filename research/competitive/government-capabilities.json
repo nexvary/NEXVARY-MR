@@ -144,6 +144,20 @@
       "evidenceClass": "Publicly Documented",
       "scope": "January 2025 specification, sections 6.2.4 and 6.2.7 inspected; requirements are not a product test result.",
       "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "MSAB-XAMN-AUDIT-7.3",
+      "url": "https://www.msab.com/updates/new-release-xry-10-3-xamn-7-3-and-xec-7-3/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "XAMN 7.3 release (2022-10-06) describes detailed evidence-review access/activity logging. Historical version statement, not current-version test or signed-history verification.",
+      "retrievedOn": "2026-10-26"
+    },
+    {
+      "id": "OXYGEN-REVIEW-ROLES",
+      "url": "https://enterprise.oxygenforensics.com/blog/how-oxygen-review-center-provides-real-time-collaboration-anytime-you-need-it/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Review Center describes user logs and distinct case administrator/reviewer/uploader roles. Separate enterprise component; no standalone Detective audit or cryptographic guarantee inherited. Publication date not confirmed.",
+      "retrievedOn": "2026-10-26"
     }
   ],
   "products": [
@@ -643,10 +657,12 @@
           "confidence": "unknown"
         },
         "Auditability": {
-          "evidenceClass": "Unknown",
-          "sourceIds": [],
-          "scope": "No capability determination in this slice. Unknown does not mean absent.",
-          "confidence": "unknown"
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "MSAB-XAMN-AUDIT-7.3"
+          ],
+          "scope": "Detailed review/access logging stated for XAMN 7.3. No licensed execution, independent audit-integrity test, current-version conformance or equivalence to NEXVARY signed exception history.",
+          "confidence": "medium"
         },
         "Reproducibility": {
           "evidenceClass": "Unknown",

@@ -92,3 +92,11 @@ These are **Officially Claimed**, dated/version-scoped vendor statements, not In
 Source/access/limit records: evidence/offline-policy-2026-10-26/research-source-review.json. No licensed competing product was executed or superiority established.
 
 Application gate verification: 7cfa1a6 / CI 40268766117, all seven jobs, four 46/46 profiles, policy 10/10, mirror 22/22, UI 50/50 and 16/16 production sanitizers. Actual deployed default-deny/grant/revoke receipts and frames retained. Complete OS air-gap containment remains Pending; no competitive superiority is inferred.
+
+## Signed-policy increment source review — 2026-10-26
+
+- [MSAB XAMN 7.3 release, 2022-10-06](https://www.msab.com/updates/new-release-xry-10-3-xamn-7-3-and-xec-7-3/): the vendor describes detailed evidence-review/access logging. The audit cell is now Officially Claimed for that historical version, not independently tested or assumed to describe the latest release.
+- [Oxygen Review Center enterprise documentation](https://enterprise.oxygenforensics.com/blog/how-oxygen-review-center-provides-real-time-collaboration-anytime-you-need-it/): describes user logs and case-administrator/reviewer/uploader roles. Publication date was not confirmed. These belong to a separate enterprise component; no standalone Detective or cryptographic-history guarantee is inherited.
+- Current official Inseyets and Autumn 2026 release URLs returned 403 on direct retrieval; an Oxygen public-sector URL returned 502. Official search excerpts were available but were not treated as full-page inspection, exact-device validation or executable verification. Access outcomes: `evidence/policy-trust-2026-10-26/competitive-source-review.json`.
+
+NEXVARY's new independently verifiable **local operational-policy** history and reviewed activation reduce an implementation gap. They are not equivalent workloads to vendor evidence-access logs, enterprise identity or collaboration. Missing public cryptographic details remain Unknown, not absent. No competitor was executed and no superiority/parity is established. Full source/CI/deployed status and bounds: DEVELOPMENT_STATE.md / GOVERNMENT_POLICY_AUDIT.md.

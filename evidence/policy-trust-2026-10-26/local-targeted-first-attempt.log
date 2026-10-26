@@ -1,0 +1,39 @@
+Internal ctest changing into directory: /workspace/scratch/48432bb85957/NEXVARY-MR/build
+Test project /workspace/scratch/48432bb85957/NEXVARY-MR/build
+    Start  8: mr_policy_audit_tests
+1/6 Test  #8: mr_policy_audit_tests ............***Failed    9.48 sec
+********* Start testing of PolicyAuditTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PolicyAuditTests::initTestCase()
+PASS   : PolicyAuditTests::requestInputsAndRoles()
+PASS   : PolicyAuditTests::separatedReviewAndOneTimeActivation()
+PASS   : PolicyAuditTests::rejectionAndPendingRevocation()
+PASS   : PolicyAuditTests::monotonicExpiryAndLogout()
+PASS   : PolicyAuditTests::reviewerDisableInvalidatesApprovalAndActiveUse()
+FAIL!  : PolicyAuditTests::exportVerificationAndMutation() '!PolicyAudit::verifyExport(QJsonDocument(doc).toJson(), a.value("publicKey").toString(), a, error)' returned FALSE. ()
+   Loc: [/workspace/scratch/48432bb85957/NEXVARY-MR/cpp/tests/policy_audit_tests.cpp(227)]
+PASS   : PolicyAuditTests::outsideWriterChangeFailsClosed()
+PASS   : PolicyAuditTests::competingWriterNeverOverwrites()
+PASS   : PolicyAuditTests::crashRestartRetainsSignedClosure()
+PASS   : PolicyAuditTests::cleanupTestCase()
+Totals: 10 passed, 1 failed, 0 skipped, 0 blacklisted, 9444ms
+********* Finished testing of PolicyAuditTests *********
+
+    Start  9: mr_offline_tests
+2/6 Test  #9: mr_offline_tests .................   Passed    8.10 sec
+    Start 22: mr_cloud_tests
+3/6 Test #22: mr_cloud_tests ...................   Passed   11.63 sec
+    Start 27: mr_mirror_tests
+4/6 Test #27: mr_mirror_tests ..................   Passed   14.36 sec
+    Start 38: mr_policy_audit_interop
+5/6 Test #38: mr_policy_audit_interop ..........   Passed    1.46 sec
+    Start 48: mr_gui_smoke
+6/6 Test #48: mr_gui_smoke .....................   Passed   21.75 sec
+
+83% tests passed, 1 tests failed out of 6
+
+Total Test time (real) =  66.78 sec
+
+The following tests FAILED:
+	  8 - mr_policy_audit_tests (Failed)
+Errors while running CTest

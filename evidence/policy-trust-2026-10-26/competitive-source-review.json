@@ -1,0 +1,39 @@
+{
+  "reviewedOn": "2026-10-26",
+  "method": "Official web source retrieval; vendor executables not run",
+  "sources": [
+    {
+      "url": "https://www.msab.com/updates/new-release-xry-10-3-xamn-7-3-and-xec-7-3/",
+      "publicationDate": "2022-10-06",
+      "access": "Full official page inspected",
+      "status": "Officially Claimed",
+      "scope": "XAMN 7.3 release (2022-10-06) describes detailed evidence-review access/activity logging. Historical version statement, not current-version test or signed-history verification."
+    },
+    {
+      "url": "https://enterprise.oxygenforensics.com/blog/how-oxygen-review-center-provides-real-time-collaboration-anytime-you-need-it/",
+      "publicationDate": null,
+      "access": "Full official enterprise page inspected",
+      "status": "Officially Claimed",
+      "scope": "Review Center describes user logs and distinct case administrator/reviewer/uploader roles. Separate enterprise component; no standalone Detective audit or cryptographic guarantee inherited. Publication date not confirmed."
+    },
+    {
+      "url": "https://cellebrite.com/en/products/cellebrite-inseyets/",
+      "access": "Official-domain search excerpt available; direct page returned HTTP 403",
+      "status": "No new tested credit",
+      "scope": "Search excerpt describes offline configurations and organisational permission management; no full-page or executable verification."
+    },
+    {
+      "url": "https://cellebrite.com/en/products/launches-releases/autumn-release-2026/",
+      "access": "Official-domain search excerpt available; direct page returned HTTP 403",
+      "status": "No new tested credit",
+      "scope": "No acquisition or device support claim adopted."
+    },
+    {
+      "url": "https://www.oxygenforensics.com/technical-resources/oxygen-ecosystem-real-time-collaboration-law-enforcement/",
+      "access": "Direct retrieval returned HTTP 502; separate official enterprise page above was accessible",
+      "status": "Blocked source not treated as full-page inspection"
+    }
+  ],
+  "independentComparisonPerformed": false,
+  "superiorityEstablished": false
+}

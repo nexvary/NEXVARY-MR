@@ -1,0 +1,73 @@
+{
+    "defaultDeniedCategories": 6,
+    "explicitSyntheticPortalGrant": true,
+    "offlineAfterRevoke": true,
+    "permissions": [
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "cloud-publish",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "tracking-portal",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "signature-update",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "device-tools",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "external-analysis",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "external-links",
+            "expiresUtc": "",
+            "reason": "",
+            "requestId": ""
+        }
+    ],
+    "policyVerification": {
+        "anchor": {
+            "hash": "751ce46af1b7a400100ed982a9f3e8f6e691e984209a9d6afde2aa1690cc44c3",
+            "journalId": "1350befe-548c-417a-9fa4-ff04eff3fd31",
+            "publicKey": "DgGFotqnOkqoNJFvY5ec/mpHgyB5PQNuPcNGWTuc0Vs=",
+            "sequence": 23
+        },
+        "reason": "Signatures, order and retained prefix verified; local identity/time only",
+        "timeUtc": "2026-10-26T16:24:22.483Z",
+        "valid": true
+    },
+    "portalStoppedAfterRevoke": true,
+    "reviewedExceptionProtocol": true,
+    "schema": "nexvary-deployed-operation-policy/v1",
+    "scope": "Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance",
+    "signedPolicyAudit": true,
+    "startupBoundaryDenials": true,
+    "synthetic": true
+}

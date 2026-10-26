@@ -43,3 +43,9 @@ Application offline-control increment: six default-deny native categories, expli
 
 
 S06 source review (2026-10-26): dated official Inseyets FAQ, XAMN Viewer 8.1 release and AXIOM 8.6/Copilot early-access page demonstrate that vendors already describe offline configurations/features. These remain Officially Claimed, not independent egress verification. NEXVARY's new gate cannot establish offline uniqueness or superiority; offline mapping and semantic Q&A/deepfake analysis remain explicit gaps. See the competitive matrix and research-source-review.json for exact dates, scopes and access outcomes. Fair acceptance still requires pinned licensed versions, the same enabled features/corpus and measured network/process behavior on independent hosts.
+
+### S06a — reviewed policy decisions / testable trust boundary
+
+Priority P0: NEXVARY now implements protected signed request/review/decision/activation/closure history, retained-prefix checks and a separate Python verifier. Maintenance estimate: medium/high for journal rotation, OS integration and institutional custody; actual engineering cost/TCO is not measured. Acceptance requires signed positive/negative corpora across both verifiers, wrong/self-review and scope-mutation refusal, disabled-account/session expiry, no-overwrite exports and deployed portable/installer receipts. Exact results: DEVELOPMENT_STATE.md.
+
+MSAB's historical XAMN 7.3 logging and Oxygen Review Center's role/log documentation establish existing vendor statements, not matching signed exception semantics. Compare only a specified shared workload in licensed pinned editions with an independent reviewer. Current comparison result: not established; confidence is limited to the exact synthetic NEXVARY checks and official vendor statements. OS egress/descendant/share/proxy/DNS testing, scalable durable event rotation, full completion receipts and agency identity/key/time/recovery remain gaps.
