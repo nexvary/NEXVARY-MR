@@ -18,3 +18,19 @@ regexes = [
   '''^fc318e0310f44e96be61f07e95fd06d468f8f40e9098fe69ddb16b2ae789705f$''',
   '''^e26d14d4ccca52de15be8666a8858d89c5481bc18d1e75a3a8f8f4a7b4d8a196$''',
 ]
+
+[[rules.allowlists]]
+description = "Four verified public source SHA-256 values in three exact policy input manifests"
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''(^|/)evidence/policy-trust-2026-10-26/source-inputs\.json$''',
+  '''(^|/)evidence/policy-trust-2026-10-26/verified-source-inputs-6597367\.json$''',
+  '''(^|/)evidence/policy-trust-2026-10-26/verified-source-inputs-8e7e174\.json$''',
+]
+regexes = [
+  '''^6dc5ef0e1c238f9635cbbc4dfbeffd8fad7071dfc755012dd3f6c485f384a098$''',
+  '''^e86fd3e1262226d13806d200f5769441f7df376694d886da37ae1ae5184d2ed9$''',
+  '''^0a0711aea54f68584360988e83e24a818c4641a4a61f8d67c971c917e77e788f$''',
+  '''^b8fd40b818cc4c1adb4e7339b07770f7315f042b7b0dba0b08484a7f11359b85$''',
+]

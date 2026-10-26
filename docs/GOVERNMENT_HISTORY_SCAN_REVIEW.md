@@ -32,3 +32,36 @@ review, but independently verified here. No NPSE Android or Guardian source is m
 
 Primary syntax reference (pinned upstream README):
 https://github.com/gitleaks/gitleaks/blob/v8.30.1/README.md#configuration
+
+## Policy input-manifest digest review — 2026-10-26
+
+Public-history runs 40364749537 and 40365166282 failed on twelve generic-api-key
+matches introduced in evidence checkpoint 29ead97442f35c9f18ebc454b02d32cb235784b5.
+The operational-history guard reported zero findings. Safe scanner metadata
+identified four source-file SHA-256 values at lines 126, 127, 176 and 213 in each of:
+
+- evidence/policy-trust-2026-10-26/source-inputs.json
+- evidence/policy-trust-2026-10-26/verified-source-inputs-6597367.json
+- evidence/policy-trust-2026-10-26/verified-source-inputs-8e7e174.json
+
+The entries correspond to cpp/src/UpdateKeyStore.cpp, cpp/src/UpdateKeyStore.hpp,
+cpp/tests/update_key_tests.cpp and qml/DesignTokens.qml. Their names contain key
+or token vocabulary; the values are public source digests. All four were
+independently recomputed from fetched UTF-8 Git source (SHA-256 implementation
+checked against the empty-string and abc known vectors) and matched all three
+manifests. The CI check now independently recomputes them with Python hashlib
+from each manifest's exact pinned Git commit before invoking the actual pinned
+Gitleaks runtime.
+
+The new generic-api-key exception requires AND semantics: one of these three
+exact manifest paths AND one of the four exact recomputed digests. No directory,
+other rule, changed value or unreviewed path is exempted; historical commits and
+existing seven header checks remain intact. The scanner test requires twelve
+changed-value mutations and three unreviewed-path copies to be detected, in
+addition to the existing seven-value/one-path negative corpus. It runs before
+full-history and current-tree scanning; any failure still fails the workflow.
+
+Scanner logs expose only report name, rule, file, line and commit. Match, Secret,
+Line, author and messages are omitted. Both scans run even if the first rejects
+input; nonzero scanner status still fails the gate. No history rewrite or raw
+signed operational-history publication is part of this correction.
