@@ -1,14 +1,14 @@
-# Government GUI smoke diagnostics — implementation checkpoint (2026-10-26)
+# Government GUI smoke diagnostics — hosted verified checkpoint (2026-10-26)
 
-- Current Branch: `feature/government-operations`; inspected parent HEAD `29ead97442f35c9f18ebc454b02d32cb235784b5`. Resolve this implementation commit with `git rev-parse HEAD`. PR #15 remains open/draft on unmerged PR #11. No main merge or Guardian change.
-- Latest Verified Executable SHA: `8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e`; preceding exact-source CI 40356252239 passed seven jobs, 48/48 CTest per Qt platform/profile and 17/17 production sanitizer groups. Those results do not validate this diagnostic increment.
-- Implemented: fixed-literal synthetic smoke failure stages and event-loop exit codes, including startup policy denials, reviewed synthetic setup, deployed audit export/retained-anchor verification/receipt writes, final revocation and artifact provenance. No credentials, case contents, reasons or raw audit history are added to the diagnostic output. Conditions, authorization protocol and success requirements remain intact.
-- CI Status: new source pending. Python passed for diagnostic source ac70ecda1824596e78653d8023d96ae51005590b; history scan identified twelve public source-digest matches from the preceding 29ead974 receipt. Four hashes were independently recomputed and matched; narrowly scoped exact-value/exact-path exceptions plus real-scanner mutation tests are added. Full new-source history/native checks remain pending. Windows/Linux full CTest now precedes three consecutive GUI-smoke runs using `--repeat until-fail:3`; a repeat failure fails the same test step and blocks Windows packaging. Full-suite logs are copied before the repeat overwrites LastTest.log; repeat XML/console/full-suite logs are uploaded separately. This increases observation without automatic retries that turn a failure into a pass.
-- Completed Government Capabilities: latest protected cases/identities/retention/imports/timeline/provenance search/relationships and reviewed signed operational policy remain as recorded below; none are reimplemented here.
-- Remaining Government Capabilities: diagnose the documented local full-run-only smoke failure; independent controlled OS boundary observations and complete operation-result receipts; remaining artifact/device/research/training/deployment and institutional release gates.
-- Known Limitations: diagnostic instrumentation does not establish a root cause or fix for the prior local failure. The current execution environment cannot start a shell (`exec-server ... No such file or directory`); no new local build/CTest pass is claimed. Hosted testing and source review continue through GitHub. No connected Desktop Commander host is available. Application gates are not an OS air gap.
-- External Acceptance Gates: actual authorized phones/exact firmware/OPPO display, clean physical Windows 10/11, institutional identities/reviewers/key/time custody, publisher signing and independent security/privacy/license/records/recovery/agency acceptance remain open.
-- Next Executable Task: inspect exact-source CI stage/exit output and full-plus-repeated smoke reports. If no hosted reproduction occurs, use these diagnostics on the original failing local runner when available; do not label the historical local problem resolved. Continue independent operation-result receipt coverage after this check.
+- Current Branch: `feature/government-operations`; PR #15 open/draft on unmerged PR #11. Current HEAD SHA at executable validation: **`1fb519de373ad9324e5ad690155685fdbcf7ddb8`**. Resolve the later documentation/evidence receipt HEAD with `git rev-parse HEAD`; the receipt changes no compiler/QML/build/workflow/packaging/shipped-guide input.
+- Latest Verified Executable SHA: **`1fb519de373ad9324e5ad690155685fdbcf7ddb8`**. Smoke diagnostics ac70ecda1824596e78653d8023d96ae51005590b; safe scanner location metadata 351dd877fb0854ec4c00e04e93dad0fe7dbba95c; independently checked exact source-digest exceptions 1fb519de373ad9324e5ad690155685fdbcf7ddb8.
+- CI Status: https://github.com/nexvary/NEXVARY-MR/actions/runs/40365707609 — **all seven jobs succeeded**. Windows/Linux production/laboratory each passed **48/48 CTest**, followed by **three consecutive GUI-smoke passes per profile**. Production ASan/UBSan **17/17**, Windows Qt Quick **50/50** per profile plus existing DPI subsets. Intentional unrelated native platform/profile subcase exclusions remain labelled in raw reports. Python 40365707727 passed groups 38/2/19; public-history 40365707481 passed full-history/current-tree scans and the independent real-scanner mutation corpus.
+- Completed Government Capabilities: existing protected cases, identities/permissions, retention/archiving/review, authorized imports, timeline/provenance finding search/relationships, research/training and reviewed signed operation-policy workflow remain intact. This batch adds fixed-literal smoke failure stages and event-loop exit codes, including policy-audit export/retained-anchor verification/receipt writing and final revocation. Diagnostics do not print credentials, case content, reasons or raw policy histories. CI preserves separate full-suite and repeat logs; any repeat failure fails the existing test gate and blocks Windows packaging.
+- Completed scanner correction: safe locations traced twelve matches to four public source SHA-256 values repeated in three preceding 29ead974 input manifests. Each value matched independently fetched source and all three pinned Git versions via Python/hashlib in CI. The exception requires exact path AND exact digest. Seven existing changed-value/one-path negatives and twelve new changed-value/three-path negatives all remained detectable. No broad file/directory/rule exclusion or history rewrite.
+- Remaining Government Capabilities: reproduce/diagnose the historical original-runner full-suite-only GUI smoke failure; independent controlled OS boundary observations and complete operation-result receipts; remaining artifact/device/research/training/deployment and institutional release work. These hosted passes do not establish that the original local failure is fixed.
+- Known Limitations: local execution currently cannot start a shell; **no new local build/CTest pass is claimed**. No current artifact ZIP was independently downloaded/digest-checked and no current screenshot was visually inspected in this unavailable environment. CI generated actual application captures and passed deployed application/import-worker/source/profile/independent-audit/portable/installer checks. GitHub-reported provider ZIP digests are recorded as metadata, not independently verified inner package/executable hashes.
+- External Acceptance Gates: actual authorized exact phones/firmware/OPPO display and flicker, clean physical Windows 10/11, agency identities/reviewers/key/time custody, publisher signing and independent security/privacy/license/records/recovery acceptance. No OS-air-gap or final government release is claimed; Guardian untouched and main unmerged.
+- Next Executable Task: run the new stage/exit diagnostics on the original failing local runner when available. Continue independent operation-result receipt coverage and controlled OS-child/DNS/proxy/share observations on an authorized trace-capable host; do not repeat completed import/timeline/index engines.
 - Resume Commands:
 
 ```sh
@@ -16,10 +16,19 @@ git fetch --all --prune
 git switch feature/government-operations
 git status --short --branch
 git log -1 --format=fuller
+gh run view 40365707609 --repo nexvary/NEXVARY-MR
 cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure --output-junit full-results.xml
 ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml
 ```
+
+Unsigned evaluation packages and actual hosted captures from this source:
+
+- Portable: https://github.com/nexvary/NEXVARY-MR/actions/runs/40365707609/artifacts/12672015696
+- Installer + SHA256SUMS: https://github.com/nexvary/NEXVARY-MR/actions/runs/40365707609/artifacts/12670363454
+- Windows production raw reports/captures/deployment receipts: https://github.com/nexvary/NEXVARY-MR/actions/runs/40365707609/artifacts/12670538265
+
+The production job passed actual isolated portable and installed-in-place GUI smoke, independent policy verification and installer install/run/uninstall/cleanup gates. Evidence metadata, exact seven-file source delta and selected log excerpts: `evidence/gui-smoke-diagnostics-2026-10-26/`. Full raw reports/captures stay in the linked artifacts until their recorded expiry. The earlier ac70ecda/351dd877 native runs were superseded; their history failures are retained as provenance of the reviewed public-digest correction.
 
 Historical checkpoints below apply only to their stated source SHAs.
 

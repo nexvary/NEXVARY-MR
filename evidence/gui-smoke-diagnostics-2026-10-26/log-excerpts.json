@@ -1,0 +1,47 @@
+{
+  "121723185725": [
+    "2026-10-26T17:17:46.1286386Z 48/48 Test #48: mr_gui_smoke .......................   Passed   19.04 sec",
+    "2026-10-26T17:17:46.1290133Z 100% tests passed, 0 tests failed out of 48",
+    "2026-10-26T17:18:05.0955193Z     Test #48: mr_gui_smoke .....................   Passed   18.91 sec",
+    "2026-10-26T17:18:24.1834125Z     Test #48: mr_gui_smoke .....................   Passed   19.09 sec",
+    "2026-10-26T17:18:43.1625198Z 1/1 Test #48: mr_gui_smoke .....................   Passed   18.98 sec",
+    "2026-10-26T17:18:43.1629335Z 100% tests passed, 0 tests failed out of 1",
+    "2026-10-26T17:22:35.6732540Z 100% tests passed, 0 tests failed out of 17",
+    "2026-10-26T17:22:43.5139435Z Native Qt -> verified TLS -> real Python service -> status/revocation passed"
+  ],
+  "121723186255": [
+    "2026-10-26T17:18:15.9984388Z 48/48 Test #48: mr_gui_smoke .......................   Passed   19.03 sec",
+    "2026-10-26T17:18:15.9990824Z 100% tests passed, 0 tests failed out of 48",
+    "2026-10-26T17:18:35.1369073Z     Test #48: mr_gui_smoke .....................   Passed   19.08 sec",
+    "2026-10-26T17:18:54.8568071Z     Test #48: mr_gui_smoke .....................   Passed   19.72 sec",
+    "2026-10-26T17:19:14.8938292Z 1/1 Test #48: mr_gui_smoke .....................   Passed   20.04 sec",
+    "2026-10-26T17:19:14.8945670Z 100% tests passed, 0 tests failed out of 1"
+  ],
+  "121723186140": [
+    "2026-10-26T17:22:36.9553071Z 48/48 Test #48: mr_gui_smoke .......................   Passed   22.84 sec",
+    "2026-10-26T17:22:36.9560893Z 100% tests passed, 0 tests failed out of 48",
+    "2026-10-26T17:22:37.1706470Z Totals: 50 passed, 0 failed, 0 skipped, 0 blacklisted, 73454ms",
+    "2026-10-26T17:22:59.6918573Z     Test #48: mr_gui_smoke .....................   Passed   22.48 sec",
+    "2026-10-26T17:23:22.4853346Z     Test #48: mr_gui_smoke .....................   Passed   22.79 sec",
+    "2026-10-26T17:23:45.0258312Z 1/1 Test #48: mr_gui_smoke .....................   Passed   22.54 sec",
+    "2026-10-26T17:23:45.0267981Z 100% tests passed, 0 tests failed out of 1",
+    "2026-10-26T17:24:20.2343564Z portable GUI smoke passed: mode=isolated-copy; exit=0",
+    "2026-10-26T17:25:11.8247228Z installed GUI smoke passed: mode=installed-in-place; exit=0"
+  ],
+  "121723186304": [
+    "2026-10-26T17:23:28.9164915Z 48/48 Test #48: mr_gui_smoke .......................   Passed   23.10 sec",
+    "2026-10-26T17:23:28.9172362Z 100% tests passed, 0 tests failed out of 48",
+    "2026-10-26T17:23:29.1503681Z Totals: 50 passed, 0 failed, 0 skipped, 0 blacklisted, 68479ms",
+    "2026-10-26T17:23:50.7006155Z     Test #48: mr_gui_smoke .....................   Passed   21.51 sec",
+    "2026-10-26T17:24:12.1634210Z     Test #48: mr_gui_smoke .....................   Passed   21.46 sec",
+    "2026-10-26T17:24:33.9555609Z 1/1 Test #48: mr_gui_smoke .....................   Passed   21.79 sec",
+    "2026-10-26T17:24:33.9564043Z 100% tests passed, 0 tests failed out of 1"
+  ],
+  "history": [
+    "2026-10-26T17:07:53.6706516Z Public-history guard: 238 reachable commits; 2054 blobs; 0 findings",
+    "2026-10-26T17:08:06.6825215Z Real scanner: reviewed receipt accepted; seven changed values and an unreviewed path detected.",
+    "2026-10-26T17:08:06.6826324Z Real scanner: three source manifests verified against pinned Git bytes; twelve changed values and three unreviewed paths detected.",
+    "2026-10-26T17:08:07.6061489Z 5:08PM INF no leaks found",
+    "2026-10-26T17:08:08.4653889Z 5:08PM INF no leaks found"
+  ]
+}
