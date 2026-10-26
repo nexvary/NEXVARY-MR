@@ -19,6 +19,7 @@ $data = Join-Path $isolated 'test data'
 $picture = Join-Path $evidence "$Label.png"
 $stdout = Join-Path $evidence "$Label.stdout.txt"
 $stderr = Join-Path $evidence "$Label.stderr.txt"
+$verifierPython = (Get-Command python -CommandType Application -ErrorAction Stop).Source
 $savedPath = $env:PATH
 $savedQtPlugin = $env:QT_PLUGIN_PATH
 $savedQml = $env:QML_IMPORT_PATH
@@ -100,7 +101,7 @@ try {
   $auditFile = Join-Path $evidence "$Label-government-policy-audit.json"
   $auditAnchor = Join-Path $evidence "$Label-government-policy-anchor.json"
   $auditVerifier = Join-Path $PSScriptRoot '../scripts/verify_policy_audit.py'
-  python $auditVerifier $auditFile --anchor $auditAnchor | Set-Content (Join-Path $evidence "$Label-government-policy-independent-verification.json")
+  & $verifierPython $auditVerifier $auditFile --anchor $auditAnchor | Set-Content (Join-Path $evidence "$Label-government-policy-independent-verification.json")
   if ($LASTEXITCODE -ne 0) { throw 'Independent deployed policy audit verification failed' }
   foreach ($language in @('ar', 'en')) {
     if ((Get-Item -LiteralPath (Join-Path $evidence "$Label-government-offline-$language.png")).Length -lt 1000) { throw 'Deployed Government policy capture is missing' }
