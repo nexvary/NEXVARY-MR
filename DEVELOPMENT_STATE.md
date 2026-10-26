@@ -1,3 +1,8 @@
+# Finding-index feedback verification follow-up (2026-10-26)
+
+- Implementation source `40ed778a6104def4ca5aaa6e1fbe1cb1b7d18b59`, CI 40261659517, is superseded by this small UI follow-up. It adds a plain-text native error message beside the artifact build controls so rejected builds do not require scrolling to another panel. The actual UI test now asserts native query-limit rejection, visible feedback and cleared results; focused flow passed 3/3 locally. No native index/graph, executable-smoke or packaging code changed.
+- The new exact-source CI must finish before current-source packages or full hosted verification are claimed. Earlier local/native/UI checks and explicit bounds remain in the implementation checkpoint below.
+
 # Government continuation — finding index and typed provenance (2026-10-26)
 
 - Inspected starting remote HEAD `30d0991f53763b64e2ed910e7fa9c3551d37ced4`; prior executable ef86c995 / CI 40229014198 remains successful. PR #15 stays draft on the unmerged PR #11 foundation. No Guardian or main merge.

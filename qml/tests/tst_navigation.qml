@@ -105,6 +105,7 @@ TestCase {
   app.width=1536;app.height=980;const select=panel.selectAt(0);reveal(page,select);verify(renderedFrame());mouseClick(select);compare(panel.selected.provenancePath.length,5)
   for(const arabic of [true,false]){app.ar=arabic;const path=findChild(app,"governmentArtifactPath");page.contentItem.contentY+=path.mapToItem(page.contentItem,0,0).y;wait(100);verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-artifact-path-"+(arabic?"ar":"en")+"-"+uiScaleTag+".png"))}
   query.text=".*";reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,0);compare(lawCaseBridge.artifactsResult.nodes.length,1)
+  compare(lawCaseBridge.buildArtifacts("x".repeat(257)),false);const error=findChild(app,"governmentArtifactError");verify(error.visible);verify(error.text.indexOf("256")>=0);verify(!lawCaseBridge.artifactsResult.schema)
   verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();verify(!lawCaseBridge.artifactsResult.schema);compare(!!panel.selected.id,false);compare(query.text,"");compare(button.enabled,false);app.setWorkspace(false)
  }
  function test_governmentTimelineControls(){
