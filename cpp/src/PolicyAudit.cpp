@@ -96,7 +96,8 @@ bool uniqueKeys(const QByteArray &bytes) {
 }
 QVariantMap decode(const QByteArray &bytes) {
   QStringDecoder utf8(QStringDecoder::Utf8);
-  const auto decoded = utf8(bytes);
+  // QString forces the converter to run before hasError(); auto is lazy in Qt.
+  const QString decoded = utf8(bytes);
   Q_UNUSED(decoded);
   if (utf8.hasError())
     return {};
