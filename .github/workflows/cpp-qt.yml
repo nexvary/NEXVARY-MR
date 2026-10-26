@@ -64,7 +64,10 @@ jobs:
           cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
           cmake --build build --parallel 2
       - name: Run Qt, recovery and real mmls synthetic-image integration
-        run: ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
+        run: |
+          ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
+          cp build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
+          ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
       - name: Instrument parser, identity and signed-update regressions
         if: matrix.profile == 'production'
         run: |
@@ -82,6 +85,9 @@ jobs:
           name: NEXVARY-MR-Linux-${{ matrix.profile }}-integration-evidence
           path: |
             build/linux-qt-results.xml
+            build/gui-repeat-results.xml
+            build/gui-repeat-console.txt
+            build/full-suite-last-test.log
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json
@@ -215,6 +221,9 @@ jobs:
           $testResult = $LASTEXITCODE
           Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
+          Copy-Item build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
+          ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify read-only Windows USB inventory
         id: usb_inventory
         shell: pwsh
@@ -302,6 +311,9 @@ jobs:
           name: NEXVARY-MR-Windows-${{ matrix.profile }}-validation-evidence
           path: |
             build/qt-results.xml
+            build/gui-repeat-results.xml
+            build/gui-repeat-console.txt
+            build/full-suite-last-test.log
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json

@@ -1,3 +1,28 @@
+# Government GUI smoke diagnostics — implementation checkpoint (2026-10-26)
+
+- Current Branch: `feature/government-operations`; inspected parent HEAD `29ead97442f35c9f18ebc454b02d32cb235784b5`. Resolve this implementation commit with `git rev-parse HEAD`. PR #15 remains open/draft on unmerged PR #11. No main merge or Guardian change.
+- Latest Verified Executable SHA: `8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e`; preceding exact-source CI 40356252239 passed seven jobs, 48/48 CTest per Qt platform/profile and 17/17 production sanitizer groups. Those results do not validate this diagnostic increment.
+- Implemented: fixed-literal synthetic smoke failure stages and event-loop exit codes, including startup policy denials, reviewed synthetic setup, deployed audit export/retained-anchor verification/receipt writes, final revocation and artifact provenance. No credentials, case contents, reasons or raw audit history are added to the diagnostic output. Conditions, authorization protocol and success requirements remain intact.
+- CI Status: new source pending. Windows/Linux full CTest now precedes three consecutive GUI-smoke runs using `--repeat until-fail:3`; a repeat failure fails the same test step and blocks Windows packaging. Full-suite logs are copied before the repeat overwrites LastTest.log; repeat XML/console/full-suite logs are uploaded separately. This increases observation without automatic retries that turn a failure into a pass.
+- Completed Government Capabilities: latest protected cases/identities/retention/imports/timeline/provenance search/relationships and reviewed signed operational policy remain as recorded below; none are reimplemented here.
+- Remaining Government Capabilities: diagnose the documented local full-run-only smoke failure; independent controlled OS boundary observations and complete operation-result receipts; remaining artifact/device/research/training/deployment and institutional release gates.
+- Known Limitations: diagnostic instrumentation does not establish a root cause or fix for the prior local failure. The current execution environment cannot start a shell (`exec-server ... No such file or directory`); no new local build/CTest pass is claimed. Hosted testing and source review continue through GitHub. No connected Desktop Commander host is available. Application gates are not an OS air gap.
+- External Acceptance Gates: actual authorized phones/exact firmware/OPPO display, clean physical Windows 10/11, institutional identities/reviewers/key/time custody, publisher signing and independent security/privacy/license/records/recovery/agency acceptance remain open.
+- Next Executable Task: inspect exact-source CI stage/exit output and full-plus-repeated smoke reports. If no hosted reproduction occurs, use these diagnostics on the original failing local runner when available; do not label the historical local problem resolved. Continue independent operation-result receipt coverage after this check.
+- Resume Commands:
+
+```sh
+git fetch --all --prune
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+cmake --build build --parallel 2
+ctest --test-dir build --output-on-failure --output-junit full-results.xml
+ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml
+```
+
+Historical checkpoints below apply only to their stated source SHAs.
+
 # Government policy trust — hosted/deployed verified; local GUI follow-up (2026-10-26)
 
 - Active Branch: `feature/government-operations`. Current published source HEAD: **`8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e`**; later evidence-only checkpoint HEAD is resolved with `git rev-parse HEAD`. PR #15 remains open/draft on PR #11's unmerged `feature/law-enforcement-case-foundation` (`8fb9b38`). No main merge, other-branch deletion, new Government product or Guardian change.
