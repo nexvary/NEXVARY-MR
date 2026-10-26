@@ -1,0 +1,29 @@
+[
+  {
+    "file": "windows-portable-index-ar.png",
+    "width": 1028,
+    "height": 749,
+    "bytes": 68492,
+    "sha256": "01b15980021154e59511d27aca2f60f373eb2555314f9c889f5adcbafdf2fef5",
+    "scope": "Actual Windows Server 2022 Qt rendering, synthetic data; portable/installed EXE captures or labelled Qt Quick provenance test frame",
+    "captureSource": "actual portable EXE"
+  },
+  {
+    "file": "windows-installed-index-en.png",
+    "width": 1028,
+    "height": 749,
+    "bytes": 69503,
+    "sha256": "74d64a436c3079513f7962ee1eb3cef582069a4dffa88a636888d45153215132",
+    "scope": "Actual Windows Server 2022 Qt rendering, synthetic data; portable/installed EXE captures or labelled Qt Quick provenance test frame",
+    "captureSource": "actual installed EXE"
+  },
+  {
+    "file": "windows-provenance-path-ar.png",
+    "width": 1536,
+    "height": 980,
+    "bytes": 130953,
+    "sha256": "769c949ded9acc70cfee3ab82292583af3e2f8562404da6a7ec4837da06010ad",
+    "scope": "Actual Windows Server 2022 Qt rendering, synthetic data; portable/installed EXE captures or labelled Qt Quick provenance test frame",
+    "captureSource": "actual Qt Quick Main.qml/native-bridge selected-path functional test"
+  }
+]

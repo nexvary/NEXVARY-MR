@@ -1,0 +1,2 @@
+234ea883ee546dc1438bbb2b1e7bf82121c1f95f7a8409c758bbb5dc5721b5f1  NEXVARY-MR-Windows-x64-portable-unsigned.zip
+dd387bc58cbae6964436847dc681d6c3ea710ef3cf6ff3f0f6dda580bf19376a  NEXVARY-MR-Windows-x64-setup-unsigned.exe
