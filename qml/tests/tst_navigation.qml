@@ -72,6 +72,41 @@ TestCase {
   }
   verify(lawCaseBridge.verifyEvidence(source));verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();compare(button.enabled,false);app.setWorkspace(false)
  }
+ function artifactClick(scroll,target){
+  verify(renderedFrame());reveal(scroll,target);verify(renderedFrame());reveal(scroll,target);verify(renderedFrame())
+  const point=target.mapToItem(app.contentItem,target.width/2,target.height/2)
+  verify(point.x>=0&&point.x<app.width&&point.y>=120&&point.y<app.height-30,"Artifact control is rendered inside the viewport")
+  mouseClick(target)
+ }
+ function test_governmentArtifactControls(){
+  app.setWorkspace(true)
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-ARTIFACT-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic findings",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic provenance only"});verify(id!=="",lawCaseBridge.error)
+  const device=lawCaseBridge.addDevice({model:"Synthetic source",custodian:"Synthetic custodian"});verify(device!=="")
+  for(let i=0;i<2;i++){
+   const source=lawCaseBridge.addEvidence(device,syntheticArtifactPath,"Synthetic duplicate bytes "+i,"Synthetic custodian",true);verify(source!=="")
+   verify(lawCaseBridge.importEvidence(source,"json","Synthetic artifact UI",true));tryCompare(lawCaseBridge,"importBusy",false,8000);verify(!!lawCaseBridge.importResult.reportJson,lawCaseBridge.error)
+  }
+  app.navigateSection(6);verify(renderedFrame());const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentArtifactPanel"),button=findChild(app,"governmentArtifactBuild"),query=findChild(app,"governmentArtifactQuery")
+  reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,30);compare(lawCaseBridge.artifactsResult.digestGroups.length,1);compare(lawCaseBridge.artifactsResult.digestGroups[0].memberCount,2)
+  const first=panel.selectAt(0);verify(first!==null);reveal(page,first);verify(renderedFrame());mouseClick(first);compare(panel.selected.provenancePath.length,5);verify(findChild(app,"governmentArtifactPath").visible)
+  const next=findChild(app,"governmentArtifactNext"),previous=findChild(app,"governmentArtifactPrevious")
+  artifactClick(page,next);tryCompare(panel,"resultPage",1);compare(!!panel.selected.id,false)
+  artifactClick(page,next);tryCompare(panel,"resultPage",2);tryCompare(next,"enabled",false)
+  artifactClick(page,previous);tryCompare(panel,"resultPage",1)
+  artifactClick(page,previous);tryCompare(panel,"resultPage",0);tryCompare(previous,"enabled",false)
+  query.text="أحمد";reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,2);compare(panel.valueAt(0),"أحمد")
+  for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
+   app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(100);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
+   const scope=findChild(app,"governmentArtifactScope");verify(scope.height>=scope.contentHeight);verify(scope.mapToItem(page,0,scope.height).y<=query.mapToItem(page,0,0).y)
+   reveal(page,button);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
+   page.contentItem.contentY=panel.y;wait(100);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-artifacts-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
+  }
+  app.width=1536;app.height=980;const select=panel.selectAt(0);reveal(page,select);verify(renderedFrame());mouseClick(select);compare(panel.selected.provenancePath.length,5)
+  for(const arabic of [true,false]){app.ar=arabic;const path=findChild(app,"governmentArtifactPath");page.contentItem.contentY+=path.mapToItem(page.contentItem,0,0).y;wait(100);verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-artifact-path-"+(arabic?"ar":"en")+"-"+uiScaleTag+".png"))}
+  query.text=".*";reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,0);compare(lawCaseBridge.artifactsResult.nodes.length,1)
+  verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();verify(!lawCaseBridge.artifactsResult.schema);compare(!!panel.selected.id,false);compare(query.text,"");compare(button.enabled,false);app.setWorkspace(false)
+ }
  function test_governmentTimelineControls(){
   app.setWorkspace(true)
   const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-TIMELINE-UI",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic timestamp file",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic timeline only"});verify(id!=="",lawCaseBridge.error)

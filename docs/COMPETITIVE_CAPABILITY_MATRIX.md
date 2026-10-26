@@ -54,8 +54,8 @@ Every status is scoped. Earlier tests belong to executable feed968f and CI 40197
 | Chain of Custody | Tested | Linked declared transfers/audit; physical handover remains external. |
 | SQLite / Media / Log Analysis | Tested (bounded) | Standalone SQLite samples, JPEG EXIF, classic PCAP and exported threadtime; no full application decoding. |
 | Timeline Analysis | Tested (bounded) | Async timestamp-literal projection, source 3bf0485 / CI 40223653000; timeline 26/26. No complete event semantics or comparative superiority. |
-| Relationship Analysis | Pending | Source/provenance IDs only; no person/entity/social inference. |
-| Search and Indexing | Tested / Pending | Existing case search; timeline literal search in this increment; full artifact index pending. |
+| Relationship Analysis | Implemented (bounded provenance) / Pending | Typed case/device/evidence/report/finding graph and recorded-digest groups; exact-source verification in DEVELOPMENT_STATE.md. No person/entity/social or causal inference. |
+| Search and Indexing | Implemented (bounded) / Pending | Original case-scoped retained-finding index with literal Arabic/English search, provenance paths and explicit caps; exact-source results in DEVELOPMENT_STATE.md. Persistent/full-text/semantic and complete source coverage pending. |
 | Reporting | Tested / Pending | Existing AR/EN case PDFs; timeline exports/signed timeline review pending. |
 | Offline / Air-Gapped Operations | Implemented / Pending | Local case workflows; actual enforced egress/child/share containment and air-gap acceptance pending. |
 | Enterprise Security | Tested / Pending | Existing native local identities/DPAPI; enterprise identity and independent audit pending. |

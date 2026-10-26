@@ -99,7 +99,7 @@ PDF case reports include analysis and working-copy history.
 Seven bounded authorized-import adapters are implemented; the new legacy ADB v5 inventory accepts only unencrypted/uncompressed USTAR app members, without extraction or app decoding. Exact-source testing is tracked in DEVELOPMENT_STATE.md; see AUTHORIZED_IMPORT.md and LEGACY_ADB_BACKUP_IMPORT.md.
 The new asynchronous timestamp-literal projection is described in CASE_TIMELINE.md,
 with exact-source verification in DEVELOPMENT_STATE.md. Generic vendor backup/container
-parsing, full artifact indexing/typed timeline semantics, document-specific attachments,
+parsing, full/persistent artifact indexing/typed timeline semantics, document-specific attachments,
 actual disposal execution, searchable case artifact integration and a full document-management
 subsystem remain implementation gaps. Protected backup/restore and retention governance
 are implemented; see PROTECTED_CASE_BACKUP.md and EVIDENCE_RETENTION.md. Existing evidence import can preserve an
@@ -109,3 +109,5 @@ Institution SSO, independently verified personnel, external key/time custody,
 trusted-publisher signing, actual owned-phone/exact-firmware acceptance and clean
 Windows 10/11 validation require their actual environments/materials. Existing
 hosted Windows Server packaging is not a Windows 10/11 field acceptance test.
+
+The new bounded finding index/provenance slice is described in CASE_ARTIFACT_INDEX.md. It rebuilds retained import observations in a worker, validates report hashes and explicit case/device/evidence references, supports literal Arabic/English search and shows a typed recorded-source path plus equal-recorded-digest groups. Same labels do not infer people/relationships. Current bytes are not reread. Exact-source status and bounds are in DEVELOPMENT_STATE.md.

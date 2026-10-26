@@ -25,6 +25,8 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
+ Q_PROPERTY(bool artifactsBusy READ artifactsBusy NOTIFY artifactsChanged)
+ Q_PROPERTY(QVariantMap artifactsResult READ artifactsResult NOTIFY artifactsChanged)
  Q_PROPERTY(bool timelineBusy READ timelineBusy NOTIFY timelineChanged)
  Q_PROPERTY(QVariantMap timelineResult READ timelineResult NOTIFY timelineChanged)
  Q_PROPERTY(bool importBusy READ importBusy NOTIFY importChanged)
@@ -56,6 +58,10 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ bool artifactsBusy()const;
+ QVariantMap artifactsResult()const{return artifactsResult_;}
+ Q_INVOKABLE bool buildArtifacts(const QString &query=QString());
+ Q_INVOKABLE void cancelArtifacts();
  bool timelineBusy()const;
  QVariantMap timelineResult()const{return timelineResult_;}
  Q_INVOKABLE bool buildTimeline(const QString &query=QString());
@@ -78,6 +84,8 @@ public:
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
 signals:
+ void artifactsChanged();
+ void artifactsCompleted(bool success);
  void timelineChanged();
  void timelineCompleted(bool success);
  void importChanged();
@@ -95,6 +103,11 @@ private:
  QString actor()const;
  std::unique_ptr<LawCaseStore> store_;
  std::unique_ptr<EvidenceImportRunner> importer_;
+ void initArtifacts();
+ std::unique_ptr<QFutureWatcher<QVariantMap>> artifacts_;
+ std::shared_ptr<std::atomic_bool> artifactsCancel_;
+ QVariantMap artifactsContext_,artifactsResult_;
+ bool artifactsActive_=false;
  void initTimeline();
  std::unique_ptr<QFutureWatcher<QVariantMap>> timeline_;
  std::shared_ptr<std::atomic_bool> timelineCancel_;

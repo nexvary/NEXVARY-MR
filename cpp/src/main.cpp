@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QQuickItem>
 #include <QQuickStyle>
 #include <QStandardPaths>
 #include <QDir>
@@ -19,6 +20,7 @@
 #include <QtEndian>
 #include <memory>
 #include <cstdio>
+#include <functional>
 #include "ServiceOperationPolicy.hpp"
 #include "FontReadability.hpp"
 #include "ToolBridge.hpp"
@@ -35,6 +37,52 @@
 #include "LawCaseBridge.hpp"
 #include "IdentityService.hpp"
 #include "ResearchBridge.hpp"
+namespace {
+// Called only inside the existing explicit synthetic --smoke-test profile.
+void governmentArtifactSmoke(QQuickWindow *window, LawCaseBridge &law, const QString &directory,
+ const QString &screenshot, const std::function<void(bool)> &finish) {
+ const auto id=law.createCase({{"caseNumber","SYNTHETIC-DEPLOYED-INDEX"},{"investigatingAgency","Synthetic lab"},{"investigatorName","Synthetic operator"},
+  {"seizedDeviceDescription","Synthetic JSON file"},{"authorityReference","Synthetic smoke authorization"},{"issuingAuthority","Lab owner"},{"scope","Synthetic provenance only"}});
+ const auto device=law.addDevice({{"model","Synthetic source"},{"custodian","Synthetic custodian"}});
+ const auto path=QDir(directory).filePath(QUuid::createUuid().toString(QUuid::WithoutBraces)+"-synthetic-findings.json");
+ QFile source(path);const auto bytes=QStringLiteral("{\"name\":\"أحمد\",\"note\":\"SYNTHETIC deployed index only\"}").toUtf8();
+ if(id.isEmpty()||device.isEmpty()||!source.open(QIODevice::WriteOnly|QIODevice::NewOnly)||source.write(bytes)!=bytes.size()){finish(false);return;}source.close();
+ const auto evidence=law.addEvidence(device,path,"Synthetic deployed index","Synthetic custodian",true);
+ if(evidence.isEmpty()){finish(false);return;}
+ QObject::connect(&law,&LawCaseBridge::artifactsCompleted,window,[window,&law,screenshot,finish](bool ok){
+  const auto result=law.artifactsResult();const auto rows=result.value("rows").toList();
+  if(!ok||rows.size()!=1||rows[0].toMap().value("value")!=QStringLiteral("أحمد")||rows[0].toMap().value("provenancePath").toList().size()!=5){finish(false);return;}
+  window->setProperty("governmentMode",true);window->setProperty("currentPage",14);window->setProperty("ar",true);window->setProperty("darkTheme",true);window->resize(1536,980);
+  QTimer::singleShot(250,window,[window,result,screenshot,finish]{
+   auto *page=window->findChild<QObject *>("governmentAnalysisWorkspace");auto *panel=window->findChild<QQuickItem *>("governmentArtifactPanel");
+   auto *scroll=page?page->property("contentItem").value<QObject *>():nullptr;
+   if(!panel||!scroll){finish(false);return;}
+   if(auto *query=window->findChild<QObject *>("governmentArtifactQuery"))query->setProperty("text",QStringLiteral("أحمد"));
+   scroll->setProperty("contentY",panel->y());
+   QTimer::singleShot(250,window,[window,result,screenshot,finish]{
+    const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
+    const bool arabic=screenshot.isEmpty()||window->grabWindow().save(destination("-government-artifacts-ar.png"));
+    window->setProperty("ar",false);
+    QTimer::singleShot(250,window,[window,result,screenshot,finish,arabic]{
+     const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
+     bool valid=arabic&&(screenshot.isEmpty()||window->grabWindow().save(destination("-government-artifacts-en.png")));
+     if(!screenshot.isEmpty()){
+      const auto row=result.value("rows").toList().first().toMap();
+      const QVariantMap receipt{{"schema","nexvary-deployed-artifact-index/v1"},{"synthetic",true},{"findingCount",1},{"provenancePathNodes",5},
+       {"sourceSha256",row.value("sourceSha256")},{"reportSha256",row.value("reportSha256")},{"query",result.value("query")},
+       {"nodes",result.value("nodes").toList().size()},{"edges",result.value("edges").toList().size()},{"scope","Actual deployed synthetic Government UI and native index; no field/institutional verification"}};
+      QFile output(destination("-government-artifacts.json"));const auto data=QJsonDocument::fromVariant(receipt).toJson(QJsonDocument::Indented);
+      valid=output.open(QIODevice::WriteOnly|QIODevice::Truncate)&&output.write(data)==data.size()&&valid;
+     }
+     finish(valid);
+    });
+   });
+  });
+ },Qt::SingleShotConnection);
+ QObject::connect(&law,&LawCaseBridge::importCompleted,window,[&law,finish](bool ok){if(!ok||!law.buildArtifacts(QStringLiteral("أحمد")))finish(false);},Qt::SingleShotConnection);
+ if(!law.importEvidence(evidence,"json","Synthetic deployed provenance smoke",true))finish(false);
+}
+}
 int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
@@ -168,7 +216,7 @@ int main(int argc,char *argv[]) {
        QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
         const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers"),QStringLiteral("services"),QStringLiteral("catalog"),QStringLiteral("avb")};
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%8],previous%16<8?QStringLiteral("ar"):QStringLiteral("en"),previous<16?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
-        if(step==32){capture->stop();portal.stop();window->setProperty("allowClose",true);window->close();if(!ok||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d qmlWarnings=%d recoveryBusy=%d evidenceCount=%lld\n",int(ok),int(qmlWarning),int(recovery.busy()),static_cast<long long>(recovery.evidence().size()));app.exit(ok&&!qmlWarning?0:6);return;}
+        if(step==32){capture->stop();portal.stop();governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool indexOk){window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});return;}
         const int tab=step%8;window->setProperty("ar",step%16<8);window->setProperty("darkTheme",step<16);window->setProperty("currentPage",tab==7?4:tab<2?5:tab<5?2:1);
         // Capture the new service/catalog workspaces at the supported minimum.
         window->resize(tab>=5?QSize(1180,760):QSize(1536,980));

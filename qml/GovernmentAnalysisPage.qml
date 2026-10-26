@@ -34,7 +34,7 @@ ScrollView {
  readonly property var imported:page.savedImport.reportJson?page.savedImport:lawCaseBridge.importResult
  readonly property var importReport:page.imported.reportJson?JSON.parse(page.imported.reportJson):({})
  contentWidth:availableWidth;clip:true
- Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";timelineQuery.text="";page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
+ Connections {target:lawCaseBridge;function onChanged(){page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";timelineQuery.text="";if(page.contentItem)page.contentItem.contentY=0;page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("تحليل أدلة القضية","Case evidence analysis");iconName:"shield_checkmark"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحليل محلي لنسخة القضية المحمية بعد التحقق من SHA-256. الحد 8 MiB. يدعم إحصاءات classic PCAP وحقول JPEG EXIF المحدودة دون فك تشفير أو تشغيل الملف.","Local analysis of hash-verified protected case evidence, up to 8 MiB. Supports classic-PCAP statistics and bounded JPEG-EXIF fields without decryption or file execution.")}
@@ -81,7 +81,7 @@ ScrollView {
    Label {objectName:"governmentTimelineScope";Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;topPadding:2;bottomPadding:4;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("عرض للقيم الزمنية من النتائج المحفوظة. تُحوّل المناطق الزمنية المذكورة إلى UTC، وتبقى الأوقات الناقصة غير محسومة. لا يثبت هذا العرض صحة الوقت أو وقوع الحدث.","Combines timestamp literals from retained import reports. Explicit offsets become UTC; incomplete times remain unresolved. Source time authenticity, real-world events and relationships between people are not established.")}
    TextField {id:timelineQuery;objectName:"governmentTimelineQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث حرفي في الوقت أو المصدر أو المرجع","Literal search in time, source or reference");enabled:!lawCaseBridge.timelineBusy}
    Flow {Layout.fillWidth:true;spacing:8
-    ActionButton {objectName:"governmentTimelineBuild";text:app.trx("بناء الخط الزمني","Build timeline");primary:true;enabled:lawCaseBridge.permissions.analyze&&!!lawCaseBridge.activeCase.id&&!lawCaseBridge.timelineBusy;onClicked:lawCaseBridge.buildTimeline(timelineQuery.text)}
+    ActionButton {objectName:"governmentTimelineBuild";text:app.trx("بناء الخط الزمني","Build timeline");primary:true;enabled:lawCaseBridge.permissions.analyze&&!!lawCaseBridge.activeCase.id&&!lawCaseBridge.timelineBusy&&!lawCaseBridge.artifactsBusy;onClicked:lawCaseBridge.buildTimeline(timelineQuery.text)}
     ActionButton {objectName:"governmentTimelineCancel";text:app.trx("إلغاء","Cancel");enabled:lawCaseBridge.timelineBusy;onClicked:lawCaseBridge.cancelTimeline()}
    }
    BusyIndicator {running:lawCaseBridge.timelineBusy;visible:running;Layout.alignment:Qt.AlignHCenter}
@@ -96,6 +96,7 @@ ScrollView {
     ActionButton {objectName:"governmentTimelineNext";text:app.trx("التالي","Next");enabled:(page.timelinePage+1)*12<page.timelineRows.length;onClicked:page.timelinePage++}
    }
   }
+  GovernmentArtifactPanel {app:page.app;Layout.fillWidth:true}
   Repeater {model:lawCaseBridge.activeCase.analyses||[];delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.parser;iconName:"document_text"
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.atUtc+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256}
    ActionButton {visible:modelData.parser.indexOf("authorized-import/")===0;text:page.app.trx("فتح نتيجة الاستيراد المحفوظة","Open retained import result");onClicked:{page.savedImport=modelData;page.showTechnical=true}}

@@ -112,6 +112,11 @@ public slots:
   if(!timelineFile.open(QIODevice::WriteOnly)||timelineFile.write(timelineBytes)!=timelineBytes.size())qFatal("Cannot create synthetic timeline fixture");
   timelineFile.close();
   engine->rootContext()->setContextProperty("syntheticTimelinePath",timeline);
+  const auto artifactPath=temp.filePath("synthetic-artifacts.json");
+  QVariantMap artifacts;for(int i=0;i<15;++i)artifacts.insert(QString("finding-%1").arg(i,2,10,QChar('0')),i==0?QString("أحمد"):QString("SYNTHETIC observation %1").arg(i));
+  const auto artifactBytes=QJsonDocument::fromVariant(artifacts).toJson(QJsonDocument::Compact);QFile artifactFile(artifactPath);
+  if(!artifactFile.open(QIODevice::WriteOnly)||artifactFile.write(artifactBytes)!=artifactBytes.size())qFatal("Cannot create synthetic artifact UI fixture");
+  artifactFile.close();engine->rootContext()->setContextProperty("syntheticArtifactPath",artifactPath);
   QFile adbReference(MR_ADB_REFERENCE_PATH);
   if(!adbReference.open(QIODevice::ReadOnly))qFatal("Cannot read synthetic ADB reference");
   const auto adbBytes=QByteArray::fromBase64(QJsonDocument::fromJson(adbReference.readAll()).toVariant().toMap().value("backupBase64").toString().toLatin1());

@@ -94,6 +94,12 @@ try {
   if ($process.ExitCode -ne 0) { throw "$Label smoke test exited $($process.ExitCode); see $stderr" }
   if (-not (Test-Path $picture)) { throw "$Label screenshot was not produced" }
   if ((Get-Item $picture).Length -lt 1000) { throw "$Label screenshot is empty or invalid" }
+  $indexReceipt = Join-Path $evidence "$Label-government-artifacts.json"
+  $index = Get-Content -LiteralPath $indexReceipt -Raw | ConvertFrom-Json
+  if ($index.schema -ne 'nexvary-deployed-artifact-index/v1' -or -not $index.synthetic -or $index.findingCount -ne 1 -or $index.provenancePathNodes -ne 5 -or $index.sourceSha256 -ne '38593cb1d8a2a40cd2efa222256edfad201f615fdba4c65770bd8d130fc2e851' -or $index.nodes -ne 6 -or $index.edges -ne 5 -or $index.reportSha256 -notmatch '^[0-9a-f]{64}$') { throw 'Deployed Government finding index did not verify' }
+  foreach ($language in @('ar', 'en')) {
+    if ((Get-Item -LiteralPath (Join-Path $evidence "$Label-government-artifacts-$language.png")).Length -lt 1000) { throw 'Deployed Government index capture is missing' }
+  }
   $mode = if ($RunInPlace) { 'installed-in-place' } else { 'isolated-copy' }
   [ordered]@{
     schemaVersion=1; label=$Label; mode=$mode; executable=$exe

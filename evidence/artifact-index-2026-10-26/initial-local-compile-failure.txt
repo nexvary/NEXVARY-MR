@@ -1,0 +1,35 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+[0/2] Re-checking globbed directories...
+[1/26] Automatic MOC and UIC for target mr_import_adapters
+[2/24] Automatic MOC and UIC for target mr_desktop_resources_1
+[3/23] Automatic MOC and UIC for target mr_desktop_resources_2
+[4/22] Automatic MOC and UIC for target mr_ui_device_fixture
+[5/20] Automatic MOC and UIC for target mr_evidence_import_worker
+[6/18] Automatic MOC and UIC for target mr_desktop
+[7/17] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+[8/17] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseArtifacts.cpp.o
+[9/17] Linking CXX static library libmr_desktop.a
+[10/17] Automatic MOC and UIC for target mr_ui_tests
+[11/16] Automatic MOC and UIC for target mr_artifact_tests
+[12/15] Building CXX object CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o
+FAILED: CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o 
+/usr/bin/c++ -DMR_ARTIFACT_REFERENCE_PATH=\"/workspace/scratch/1df17bb48a7d/NEXVARY-MR/samples/artifact-index/reference.json\" -DMR_ENABLE_LAB_OPERATIONS=0 -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/1df17bb48a7d/NEXVARY-MR\" -DQT_TESTLIB_LIB -I/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_artifact_tests_autogen/include -I/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/src -I/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/include -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6 -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /workspace/scratch/1df17bb48a7d/sodium/include -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtNetwork -isystem /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtTest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o -MF CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o.d -o CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o -c /workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/artifact_tests.cpp
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/artifact_tests.cpp: In member function ‘void ArtifactTests::independentTruthAndDeterminism()’:
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/artifact_tests.cpp:45:4: error: this ‘for’ clause does not guard... [-Werror=misleading-indentation]
+   45 |    for(const auto &v:groupTruth.value(group.value("sha256").toString()).toList())want.insert(v.toString());QCOMPARE(actual,want);}
+      |    ^~~
+In file included from /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtTest/qtesteventloop.h:8,
+                 from /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtTest/qsignalspy.h:11,
+                 from /workspace/scratch/1df17bb48a7d/runtime/usr/include/x86_64-linux-gnu/qt6/QtTest/QSignalSpy:1,
+                 from /workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/artifact_tests.cpp:8:
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/artifact_tests.cpp:45:108: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+   45 |    for(const auto &v:groupTruth.value(group.value("sha256").toString()).toList())want.insert(v.toString());QCOMPARE(actual,want);}
+      |                                                                                                            ^~~~~~~~
+cc1plus: all warnings being treated as errors
+[13/15] Building CXX object CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o
+ninja: build stopped: subcommand failed.
