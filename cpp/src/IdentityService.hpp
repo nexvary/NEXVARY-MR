@@ -35,6 +35,10 @@ public:
  nexvary::law::Role lawRole()const;
  QString userId()const{return userId_;}
  QString actor()const;
+ // Native composition only. A policy journal shares the protected identity
+ // directory; callers cannot select a plaintext production fallback from QML.
+ QString policyJournalPath()const{return path_+".policy-audit";}
+ bool syntheticProfile()const{return synthetic_;}
  // These methods are native-only, never arbitrary signing endpoints in QML.
  QVariantMap attest(const QString &purpose,const QVariantMap &payload);
  bool verify(const QVariantMap &envelope,const QString &purpose,const QVariantMap &payload);

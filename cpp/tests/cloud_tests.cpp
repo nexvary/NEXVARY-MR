@@ -1,3 +1,4 @@
+#include "SyntheticPolicyExercise.hpp"
 #include <QtTest>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -55,14 +56,14 @@ private slots:
   QVERIFY(identity.bootstrap("policy-admin","Synthetic administrator",pass));QVERIFY(identity.login("policy-admin",pass));GovernmentOperationPolicy policy(&identity);
   CloudTracking cloud(&w,config,true);cloud.setOperationPolicy(&policy);QVERIFY(cloud.configured());
   QVERIFY(!cloud.syncNow());QVERIFY(cloud.issueLink(1,1,true).isEmpty());QVERIFY(!cloud.importCredentials(path,true));QTest::qWait(900);QCOMPARE(calls,0);
-  QVERIFY(policy.grant("cloud-publish","synthetic loopback publishing fixture",true));QCOMPARE(calls,0);QVERIFY(cloud.syncNow());QTRY_VERIFY_WITH_TIMEOUT(cloud.inSync(),5000);QCOMPARE(calls,2);
+  QVERIFY(performSyntheticReviewedException(identity,policy,"cloud-publish","synthetic loopback publishing fixture",pass));QCOMPARE(calls,0);QVERIFY(cloud.syncNow());QTRY_VERIFY_WITH_TIMEOUT(cloud.inSync(),5000);QCOMPARE(calls,2);
   const auto before=calls;policy.revoke("cloud-publish");QVERIFY(!cloud.inSync());QVERIFY(!cloud.syncNow());QTest::qWait(900);QCOMPARE(calls,before);
   QVERIFY(w.createOrder("Synthetic offline customer","TEST","Lab","Fixture","synthetic","Synthetic intake","Synthetic operator","")>0);
-  QVERIFY(policy.grant("cloud-publish","synthetic pending request cancellation",true));QTest::qWait(900);QCOMPARE(calls,before); // A change made while denied must not leave a debounce that publishes on regrant.
+  QVERIFY(performSyntheticReviewedException(identity,policy,"cloud-publish","synthetic pending request cancellation",pass));QTest::qWait(900);QCOMPARE(calls,before); // A change made while denied must not leave a debounce that publishes on regrant.
   mode="hold";QVERIFY(cloud.syncNow());QTRY_VERIFY_WITH_TIMEOUT(calls>before,3000);QVERIFY(cloud.busy());identity.logout();QVERIFY(!cloud.busy());QVERIFY(!cloud.inSync());
   // Aborted GET may already have reached the server; no POST is allowed after
   // revocation and a new grant never automatically resumes the old request.
-  QTest::qWait(100);const auto cancelledCalls=calls;QVERIFY(identity.login("policy-admin",pass));QVERIFY(policy.grant("cloud-publish","synthetic regrant",true));QTest::qWait(900);QCOMPARE(calls,cancelledCalls);QVERIFY(!cloud.inSync());
+  QTest::qWait(100);const auto cancelledCalls=calls;QVERIFY(identity.login("policy-admin",pass));QVERIFY(performSyntheticReviewedException(identity,policy,"cloud-publish","synthetic regrant",pass));QTest::qWait(900);QCOMPARE(calls,cancelledCalls);QVERIFY(!cloud.inSync());
  }
  void snapshotSyncAndRevocation(){
   QTemporaryDir t;WorkshopBridge w(t.filePath("workshop.db"));const int order=w.createOrder("PRIVATE-NAME","PRIVATE-PHONE","Samsung","TEST-MODEL","PRIVATE-SERIAL","PRIVATE-FAULT","PRIVATE-TECH","PRIVATE-NOTES");QVERIFY(order>0);

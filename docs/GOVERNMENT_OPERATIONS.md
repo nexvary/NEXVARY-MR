@@ -1,5 +1,8 @@
 # Government operations increment — 2026-10-25
 
+Current trust increment (implementation; exact CI status in DEVELOPMENT_STATE.md): protected signed policy history, separate-account request/review/decision, one-time requester activation, revocation/expiry, public audit export and independent Python verifier are integrated. Direct grants are disabled. See GOVERNMENT_POLICY_AUDIT.md for tested scope and remaining institutional/OS/key/time/rotation/completion-receipt gaps. Earlier checkpoint rows below remain historical where they say durable policy audit/delegation is unimplemented. No competitor executable or comparative superiority result is introduced.
+
+
 ## Product direction and branch review
 
 Government/Law Enforcement is the first workspace, Research second, and Professional

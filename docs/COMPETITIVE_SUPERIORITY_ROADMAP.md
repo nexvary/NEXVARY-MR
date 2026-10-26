@@ -1,5 +1,8 @@
 # Competitive superiority roadmap — Government Edition
 
+Current trust increment (implementation; exact CI status in DEVELOPMENT_STATE.md): protected signed policy history, separate-account request/review/decision, one-time requester activation, revocation/expiry, public audit export and independent Python verifier are integrated. Direct grants are disabled. See GOVERNMENT_POLICY_AUDIT.md for tested scope and remaining institutional/OS/key/time/rotation/completion-receipt gaps. Earlier checkpoint rows below remain historical where they say durable policy audit/delegation is unimplemented. No competitor executable or comparative superiority result is introduced.
+
+
 Government/Law Enforcement is the first product workspace, advanced research the second, professional repair/device intelligence the third. Shared engines remain within one NEXVARY-MR executable/policy boundary. Guardian is outside this repository/task. This roadmap is a delivery and comparison protocol; it is not proof of superiority or institutional acceptance.
 
 Source classifications and per-product coverage are in [the capability matrix](COMPETITIVE_CAPABILITY_MATRIX.md) and [its registry](../research/competitive/government-capabilities.json). Vendor statements describe what was published. No licensed competing executable, independent comparison dataset or current equivalent contract was available. Every superiority result is therefore **not established**.

@@ -1,5 +1,8 @@
 # Government acceptance matrix — evaluation gates
 
+Current trust increment (implementation; exact CI status in DEVELOPMENT_STATE.md): protected signed policy history, separate-account request/review/decision, one-time requester activation, revocation/expiry, public audit export and independent Python verifier are integrated. Direct grants are disabled. See GOVERNMENT_POLICY_AUDIT.md for tested scope and remaining institutional/OS/key/time/rotation/completion-receipt gaps. Earlier checkpoint rows below remain historical where they say durable policy audit/delegation is unimplemented. No competitor executable or comparative superiority result is introduced.
+
+
 This development increment can be reviewed in a controlled environment. It is not an accredited governmental release. **No final acceptance gate below is closed solely by a document, synthetic CI, a role label or a vendor comparison.** Current source/test receipts are in DEVELOPMENT_STATE.md. Definitions: Implemented = source exists; Tested = named executable tests passed at the pinned SHA; Lab Verified = independently reviewed laboratory reproduction; Field Verified = actual authorized target environment acceptance; Pending = work/evidence required; Unsupported = no capability offered.
 
 | Gate / requirement | Acceptance test and retained proof | Current scope / remaining blocker | Status / accepting party |

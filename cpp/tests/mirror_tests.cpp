@@ -1,3 +1,4 @@
+#include "SyntheticPolicyExercise.hpp"
 #include "ToolBridge.hpp"
 #include "MirrorSession.hpp"
 #include "GovernmentOperationPolicy.hpp"
@@ -80,9 +81,9 @@ private slots:
   QVERIFY(identity.bootstrap("policy-admin","Synthetic administrator",pass));QVERIFY(identity.login("policy-admin",pass));GovernmentOperationPolicy policy(&identity);
   ToolBridge b;b.setOperationPolicy(&policy);QVERIFY(b.configureTool("adb",adb_));QVERIFY(b.configureTool("scrcpy",scrcpy_));
   b.scanAdb();QVERIFY(!b.busy());QVERIFY(journal().isEmpty());QVERIFY(!b.startMirror("MIRROR42",approval()));
-  QVERIFY(policy.grant("device-tools","Synthetic owned mirror fixture",true));QVERIFY(ready(b));QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(viewerStarted(),5000);QVERIFY(b.mirrorActive());
+  QVERIFY(performSyntheticReviewedException(identity,policy,"device-tools","Synthetic owned mirror fixture",pass));QVERIFY(ready(b));QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(viewerStarted(),5000);QVERIFY(b.mirrorActive());
   policy.revoke("device-tools");QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),5000);QVERIFY(!b.busy());const auto before=journal();
-  QVERIFY(policy.grant("device-tools","Synthetic regrant does not reconnect",true));QTest::qWait(100);QCOMPARE(journal(),before);QVERIFY(!b.mirrorActive());identity.logout();QVERIFY(!b.startMirror("MIRROR42",approval()));QCOMPARE(journal(),before);
+  QVERIFY(performSyntheticReviewedException(identity,policy,"device-tools","Synthetic regrant does not reconnect",pass));QTest::qWait(100);QCOMPARE(journal(),before);QVERIFY(!b.mirrorActive());identity.logout();QVERIFY(!b.startMirror("MIRROR42",approval()));QCOMPARE(journal(),before);
  }
  void versionBoundary(){QVERIFY(MirrorSession::supportedVersion("scrcpy 5.0.1 <https://github.com/Genymobile/scrcpy>\n"));for(const auto &s:{"scrcpy 5.0.10","scrcpy 999.0","scrcpy 5.0.1; reboot","junk\nscrcpy 5.0.1"})QVERIFY(!MirrorSession::supportedVersion(s));}
  void consentRefusesBeforeProcess(){ToolBridge b;QVERIFY(ready(b));const auto before=journal();QVERIFY(!b.startMirror());QVERIFY(!b.startMirror("OTHER",approval()));auto a=approval();a["authorized"]="true";QVERIFY(!b.startMirror("MIRROR42",a));a=approval();a["component"]=false;QVERIFY(!b.startMirror("MIRROR42",a));QCOMPARE(journal(),before);QVERIFY(!b.mirrorActive());}

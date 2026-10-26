@@ -1,3 +1,6 @@
+#include <QTemporaryDir>
+#include <QSaveFile>
+#include "SyntheticPolicyExercise.hpp"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -39,6 +42,27 @@
 #include "IdentityService.hpp"
 #include "ResearchBridge.hpp"
 namespace {
+// Actual deployed EXE receipt. This exports public synthetic history only;
+// the retained anchor is independently verified by the packaging Python tool.
+bool deployedPolicyAudit(GovernmentOperationPolicy &policy,const QString &screenshot){
+ if(screenshot.isEmpty())return true;
+ const QFileInfo file(screenshot);const auto base=QDir(file.absolutePath()).filePath(file.completeBaseName()+"-government-policy");
+ auto anchor=policy.auditStatus();anchor.remove("healthy");anchor.remove("verification");
+ const auto retained=QJsonDocument::fromVariant(anchor).toJson(QJsonDocument::Compact);
+ QTemporaryDir temporary(QDir(file.absolutePath()).filePath("policy-smoke-XXXXXX"));
+ if(!temporary.isValid())return false;
+ const auto exported=temporary.filePath("audit.json");
+ if(!policy.exportAudit(exported,true)||!policy.verifyAudit(exported,QString::fromUtf8(retained)))return false;
+ QFile input(exported);if(!input.open(QIODevice::ReadOnly))return false;
+ const auto publicHistory=input.readAll();
+ const auto artifact=[](const QString &path,const QByteArray &bytes){
+  QSaveFile out(path);out.setDirectWriteFallback(false);
+  return out.open(QIODevice::WriteOnly)&&out.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)&&out.write(bytes)==bytes.size()&&out.commit();
+ };
+ // Only explicit --smoke-test screenshot artifacts are replaceable; the normal
+ // export API remains new-file-only. Repeat CI never reuses an older receipt.
+ return artifact(base+"-audit.json",publicHistory)&&artifact(base+"-anchor.json",retained);
+}
 // Called only inside the existing explicit synthetic --smoke-test profile.
 void governmentPolicySmoke(QQuickWindow *window,GovernmentOperationPolicy &policy,const QString &screenshot,const std::function<void(bool)> &finish){
  if(!policy.offline()){finish(false);return;}
@@ -60,7 +84,7 @@ void governmentPolicySmoke(QQuickWindow *window,GovernmentOperationPolicy &polic
    bool ok=ar&&policy.offline()&&(screenshot.isEmpty()||window->grabWindow().save(destination("-government-offline-en.png")));
    if(!screenshot.isEmpty()){
     const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",6},{"offlineAfterRevoke",policy.offline()},
-     {"startupBoundaryDenials",true},{"explicitSyntheticPortalGrant",true},{"portalStoppedAfterRevoke",true},{"permissions",policy.permissions()},
+     {"startupBoundaryDenials",true},{"explicitSyntheticPortalGrant",true},{"reviewedExceptionProtocol",true},{"signedPolicyAudit",policy.auditStatus().value("healthy")},{"policyVerification",policy.auditStatus().value("verification")},{"portalStoppedAfterRevoke",true},{"permissions",policy.permissions()},
      {"scope","Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance"}};
     QFile out(destination("-government-offline.json"));const auto data=QJsonDocument::fromVariant(receipt).toJson(QJsonDocument::Indented);ok=out.open(QIODevice::WriteOnly|QIODevice::Truncate)&&out.write(data)==data.size()&&ok;
    }
@@ -179,11 +203,11 @@ int main(int argc,char *argv[]) {
  if(engine.rootObjects().isEmpty()) return 1;
  if(smoke) {
   // Explicit synthetic smoke only: prove default denial, then temporarily allow
-  // the loopback portal test through the same administrator gate as the UI.
+  // the loopback portal test through the same request/review/decision/activation APIs as the UI.
   if(!operationPolicy.offline()||portal.start("127.0.0.1",0,true)||cloud.syncNow()||security.updateDatabase(true)||security.scan("synthetic-not-read",true)||recovery.analyzePartitions("synthetic-not-read","synthetic-not-started",true)||operationPolicy.openExternal("https://example.invalid/"))return 15;
   tools.scanAdb();if(tools.busy())return 15;
   const QString smokePassword="Synthetic-only deployed policy 2026!";
-  if((identity.needsSetup()&&!identity.bootstrap("smoke-admin","Synthetic smoke administrator",smokePassword))||!identity.login("smoke-admin",smokePassword)||!operationPolicy.grant("tracking-portal","Synthetic deployed loopback portal test only",true))return 15;
+  if((identity.needsSetup()&&!identity.bootstrap("smoke-admin","Synthetic smoke administrator",smokePassword))||!identity.login("smoke-admin",smokePassword)||!performSyntheticReviewedException(identity,operationPolicy,"tracking-portal","Synthetic deployed loopback portal test only",smokePassword))return 15;
   // Packaging smoke must fail if HTTPS cannot load outside the Qt SDK.
   if(!QSslSocket::supportsSsl())return 12;
   if(!mr::ui::textHasGlyphs(QString::fromUtf8("NEXVARYالعربية"),QFont(QStringLiteral("Segoe UI"))))return 14;
@@ -255,7 +279,7 @@ int main(int argc,char *argv[]) {
        QObject::connect(capture,&QTimer::timeout,&app,[&,window,capture,step,ok]() mutable {
         const QStringList names={QStringLiteral("profiles"),QStringLiteral("tracking"),QStringLiteral("tree"),QStringLiteral("security"),QStringLiteral("drivers"),QStringLiteral("services"),QStringLiteral("catalog"),QStringLiteral("avb")};
         if(step>0&&cli.isSet(QStringLiteral("screenshot"))){const int previous=step-1;const QFileInfo file(cli.value(QStringLiteral("screenshot")));const auto suffix=QStringLiteral("-%1-%2-%3.png").arg(names[previous%8],previous%16<8?QStringLiteral("ar"):QStringLiteral("en"),previous<16?QStringLiteral("dark"):QStringLiteral("light"));ok=window->grabWindow().save(QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix))&&ok;}
-        if(step==32){capture->stop();operationPolicy.revokeAll();identity.logout();if(!operationPolicy.offline()||portal.running()){app.exit(15);return;}governmentPolicySmoke(window,operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool policyOk){governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok,policyOk](bool indexOk){indexOk=indexOk&&policyOk;window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});});return;}
+        if(step==32){capture->stop();operationPolicy.revokeAll();if(!deployedPolicyAudit(operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString())){app.exit(16);return;}identity.logout();if(!operationPolicy.offline()||portal.running()){app.exit(15);return;}governmentPolicySmoke(window,operationPolicy,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok](bool policyOk){governmentArtifactSmoke(window,law,dir,cli.isSet("screenshot")?cli.value("screenshot"):QString(),[&,window,ok,policyOk](bool indexOk){indexOk=indexOk&&policyOk;window->setProperty("allowClose",true);window->close();if(!ok||!indexOk||qmlWarning)std::fprintf(stderr,"Synthetic GUI smoke failed: composite=%d governmentIndex=%d qmlWarnings=%d\n",int(ok),int(indexOk),int(qmlWarning));app.exit(ok&&indexOk&&!qmlWarning?0:6);});});return;}
         const int tab=step%8;window->setProperty("ar",step%16<8);window->setProperty("darkTheme",step<16);window->setProperty("currentPage",tab==7?4:tab<2?5:tab<5?2:1);
         // Capture the new service/catalog workspaces at the supported minimum.
         window->resize(tab>=5?QSize(1180,760):QSize(1536,980));

@@ -96,6 +96,12 @@ try {
   if ((Get-Item $picture).Length -lt 1000) { throw "$Label screenshot is empty or invalid" }
   $policyReceipt = Get-Content -LiteralPath (Join-Path $evidence "$Label-government-offline.json") -Raw | ConvertFrom-Json
   if ($policyReceipt.schema -ne 'nexvary-deployed-operation-policy/v1' -or -not $policyReceipt.synthetic -or $policyReceipt.defaultDeniedCategories -ne 6 -or -not $policyReceipt.offlineAfterRevoke -or -not $policyReceipt.startupBoundaryDenials -or -not $policyReceipt.explicitSyntheticPortalGrant -or -not $policyReceipt.portalStoppedAfterRevoke -or @($policyReceipt.permissions).Count -ne 6 -or @($policyReceipt.permissions | Where-Object { $_.allowed }).Count -ne 0) { throw 'Deployed Government operation policy receipt failed' }
+  if (-not $policyReceipt.reviewedExceptionProtocol -or -not $policyReceipt.signedPolicyAudit -or -not $policyReceipt.policyVerification.valid) { throw 'Deployed signed policy audit/review protocol receipt failed' }
+  $auditFile = Join-Path $evidence "$Label-government-policy-audit.json"
+  $auditAnchor = Join-Path $evidence "$Label-government-policy-anchor.json"
+  $auditVerifier = Join-Path $PSScriptRoot '../scripts/verify_policy_audit.py'
+  python $auditVerifier $auditFile --anchor $auditAnchor | Set-Content (Join-Path $evidence "$Label-government-policy-independent-verification.json")
+  if ($LASTEXITCODE -ne 0) { throw 'Independent deployed policy audit verification failed' }
   foreach ($language in @('ar', 'en')) {
     if ((Get-Item -LiteralPath (Join-Path $evidence "$Label-government-offline-$language.png")).Length -lt 1000) { throw 'Deployed Government policy capture is missing' }
   }

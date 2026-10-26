@@ -1,5 +1,8 @@
 # Government competitive capability matrix — 2026-10-25
 
+Current trust increment (implementation; exact CI status in DEVELOPMENT_STATE.md): protected signed policy history, separate-account request/review/decision, one-time requester activation, revocation/expiry, public audit export and independent Python verifier are integrated. Direct grants are disabled. See GOVERNMENT_POLICY_AUDIT.md for tested scope and remaining institutional/OS/key/time/rotation/completion-receipt gaps. Earlier checkpoint rows below remain historical where they say durable policy audit/delegation is unimplemented. No competitor executable or comparative superiority result is introduced.
+
+
 Scope: a bounded primary-source review, not a completed deep validation of every product. No commercial product was licensed, installed or exercised. No comparative superiority is established. The [machine-readable matrix](../research/competitive/government-capabilities.json) contains all 20 requested axes for all 14 products/tool families. Each cell records classification, sources, scope and confidence. Unknown means not determined, never absent. Acquisition tools do not inherit an analysis product's capabilities because they share a vendor.
 
 Competitor classes: Officially Claimed / Independently Verified / Publicly Documented / Unverified / Unknown. Vendor manuals can be Publicly Documented without being Independently Verified. No cell is promoted from a NIST index entry: individual version-specific report tables still need review.

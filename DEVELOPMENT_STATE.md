@@ -1,3 +1,28 @@
+# Government signed policy audit / reviewed exceptions — implementation checkpoint (2026-10-26)
+
+- Active branch: `feature/government-operations`; inspected remote parent `6afe552bbb0e395d8b4e602a4399d61a5ce4e180`. PR #15 remains draft on PR #11; no main merge or Guardian changes. Resolve the commit containing this checkpoint separately from its parent.
+- Implemented: protected atomic Ed25519/hash-linked policy history; credential-signed request/review/approve/reject/activate/revoke and verifier decisions; explicit system expiry/logout/restart/emergency-stop/gate/denial observations. Direct grants are disabled. A different administrator/reviewer must review and decide; only the original requester can activate once. Current requester role and reviewer key/enablement/role are rechecked. Existing case/source/device/compiled-policy gates remain independent.
+- Implemented: bounded public export without overwrite after explicit consent; retained `{journalId, publicKey, sequence, hash}` anchor and in-app verification receipt; separate Python/cryptography verifier requiring no Qt/database/private key. AR/EN request/review/activation/stop/audit controls are wired to native engines. Existing native offline/cloud/mirror integration fixtures now use the full reviewed protocol; actual Windows portable/installed smoke requires signed public history and separate verifier results.
+- Local initial implementation run: 48/48 CTest groups (252 s), Qt Quick 50/50 and both DPI subsets; Python 38/38. Initial native policy suite and 18-check cross-language verification passed. Exact raw outputs and real initial component screenshots: `evidence/policy-trust-2026-10-26/local-initial-*`. Later stronger lifecycle/key/JSON validation, independently signed producer negatives, rejection observations and deployed audit receipts require the final-source checks below; do not attribute the initial run to them.
+- Final targeted checks: offline/cloud/mirror, cross-language verification (26 cases) and actual deployed GUI smoke passed. The first final native audit fixture had an obsolete export-head expectation after denial recording was added; original failure and the corrected 11/11 native result are retained. Both corrected audit/interoperability CTest groups passed. Synthetic deployed output writing was made repeatable without weakening new-file-only operator exports. A final complete 48-group run and current-source hosted Windows/Linux/sanitizers/packaging remain Pending at this implementation checkpoint. Latest prior fully hosted-verified executable remains `7cfa1a65bd4aba84664c791f1feb17f0e344918b`, CI 40268766117. Its Windows packages do not contain the new reviewed audit protocol.
+- Scope/limits: local DPAPI/credential identities and clocks, category + requester only (not destination/tool/case confinement), 8,192 events/16 MiB/64 open requests/32 UI rows, snapshot writes per gate decision. Gate results do not establish every external operation's completion. Corruption/stale writer/write/capacity failure denies exceptions; failure may prevent its own final closure record. Whole-store/key reset or old valid snapshot after restart needs an independently retained anchor; current-account/process compromise is outside protection. No institutional identity/independent-person/external-time/HSM/OS-air-gap/rotation/recovery claim. See `docs/GOVERNMENT_POLICY_AUDIT.md`.
+- Competitive gap reduced: durable independently checkable operational decisions and reviewed activation within MR. No competitor executable or comparative superiority established. Existing official vendor claims retain their original source classifications; no vendor-source revalidation is implied by this implementation.
+- External gates: no connected Desktop Commander devices; actual Windows 10/11, exact authorized phones/firmware/OPPO display, agency identity/key/time/reviewer custody, publisher signing and independent security/privacy/license/records/recovery assessment remain Pending. Hosted Windows Server is not field acceptance.
+- Next executable task: finish current-source local/CI/deployed audit verification and package proof; then independent controlled OS-child/DNS/proxy/share boundary observations and comprehensive operation-result receipts, followed by broader authorized artifact coverage. Do not stop at an external gate or rebuild completed case/research engines.
+
+Resume (use your prepared reviewed libsodium prefix):
+```sh
+git fetch origin feature/government-operations
+git switch feature/government-operations
+git status --short --branch
+git log -1 --format=fuller
+cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_SODIUM_ROOT=/path/to/prepared-sodium
+cmake --build build --parallel 2
+ctest --test-dir build --output-on-failure --output-junit trust-results.xml
+```
+
+Historical verified checkpoints follow; they apply only to their pinned source and do not supersede this implementation's pending verification.
+
 # Government application operation policy — verified checkpoint (2026-10-26)
 
 - Latest verified executable/packaging/workflow source: **`7cfa1a65bd4aba84664c791f1feb17f0e344918b`**; native/QML implementation a9f160b. Starting HEAD was 17ef2fa. This later documentation/evidence receipt changes none of the **40 pinned runtime/QML/test/workflow/packaging/shipped-guide inputs** in evidence/offline-policy-2026-10-26/verified-source-inputs.json. Resolve receipt HEAD separately from executable source.

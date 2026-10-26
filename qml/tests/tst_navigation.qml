@@ -12,25 +12,37 @@ TestCase {
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
+ function reviewedUiException(scroll,panel){
+  const reason=findChild(panel,"governmentNetworkReason"),approval=findChild(panel,"governmentNetworkApproval")
+  reason.text="Synthetic reviewed UI category exception";approval.checked=true
+  artifactClick(scroll,findChild(panel,"governmentNetworkGrant-device-tools"));compare(operationPolicy.offline,true)
+  const id=panel.selectedRequest;verify(id.length>0);verify(!operationPolicy.reviewException(id,"Self review must fail"))
+  verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));verify(renderedFrame())
+  reason.text="Synthetic separate-account review";artifactClick(scroll,findChild(panel,"governmentPolicyReview-"+id))
+  reason.text="Synthetic separate-account approval";artifactClick(scroll,findChild(panel,"governmentPolicyApprove-"+id));compare(operationPolicy.offline,true)
+  verify(!operationPolicy.activateException(id))
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));verify(renderedFrame())
+  artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
+  return id
+ }
  function test_governmentNetworkPolicyControls(){
   operationPolicy.revokeAll();compare(operationPolicy.offline,true)
   app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
   const scroll=findChild(app,"identityPanel"),panel=findChild(scroll,"governmentNetworkPanel")
   const reason=findChild(panel,"governmentNetworkReason"),approval=findChild(panel,"governmentNetworkApproval")
-  let grant=findChild(panel,"governmentNetworkGrant-device-tools")
-  compare(grant.enabled,false);verify(!operationPolicy.grant("device-tools","Non-admin synthetic negative",true));compare(operationPolicy.offline,true)
-  verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));verify(renderedFrame())
-  reason.text="Synthetic UI exception only";approval.checked=true
-  grant=findChild(panel,"governmentNetworkGrant-device-tools");compare(grant.enabled,true)
-  artifactClick(scroll,grant);compare(operationPolicy.offline,false);compare(approval.checked,false);verify(findChild(app,"governmentPolicyState").text.indexOf("استثناء")>=0)
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));verify(renderedFrame())
+  compare(findChild(panel,"governmentNetworkGrant-device-tools").enabled,false)
+  verify(!operationPolicy.grant("device-tools","Direct grant disabled",true))
+  reviewedUiException(scroll,panel);compare(approval.checked,false);verify(operationPolicy.auditStatus.healthy)
+  verify(findChild(app,"governmentPolicyState").text.indexOf("استثناء")>=0)
   for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
    app.ar=arabic;app.width=size[0];app.height=size[1];scroll.contentItem.contentY=0;wait(100);verify(renderedFrame())
    const header=uiEvidence.headerFingerprint(app),scope=findChild(panel,"governmentNetworkScope")
    verify(scope.height>=scope.contentHeight);reveal(scroll,scope);verify(renderedFrame());compare(uiEvidence.headerFingerprint(app),header)
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-network-"+(arabic?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
   }
-  const revoke=findChild(panel,"governmentNetworkRevokeAll");artifactClick(scroll,revoke);compare(operationPolicy.offline,true)
-  reason.text="Synthetic logout revocation";approval.checked=true;grant=findChild(panel,"governmentNetworkGrant-device-tools");artifactClick(scroll,grant);compare(operationPolicy.offline,false)
+  artifactClick(scroll,findChild(panel,"governmentNetworkRevokeAll"));compare(operationPolicy.offline,true)
+  reviewedUiException(scroll,panel)
   identityBridge.logout();compare(operationPolicy.offline,true);compare(reason.text,"");compare(approval.checked,false)
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));app.setWorkspace(false)
  }
