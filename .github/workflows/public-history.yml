@@ -30,8 +30,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/gitleaks" git --log-opts='--all --full-history' --ignore-gitleaks-allow --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/history-redacted.json" .
-          "$RUNNER_TEMP/gitleaks" dir --ignore-gitleaks-allow --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/tree-redacted.json" .
+          history_status=0
+          tree_status=0
+          "$RUNNER_TEMP/gitleaks" git --log-opts='--all --full-history' --ignore-gitleaks-allow --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/history-redacted.json" . || history_status=$?
+          "$RUNNER_TEMP/gitleaks" dir --ignore-gitleaks-allow --redact=100 --no-banner --report-format json --report-path "$RUNNER_TEMP/tree-redacted.json" . || tree_status=$?
+          python3 - "$RUNNER_TEMP/history-redacted.json" "$RUNNER_TEMP/tree-redacted.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+          for name in sys.argv[1:]:
+              path = pathlib.Path(name)
+              if path.exists():
+                  for finding in json.loads(path.read_text()):
+                      # Never publish Match, Secret, Line, author or messages.
+                      print(json.dumps({"report": path.name, "rule": finding.get("RuleID"), "file": finding.get("File"), "line": finding.get("StartLine"), "commit": finding.get("Commit")}, ensure_ascii=True))
+          PY
+          if [ "$history_status" -ne 0 ] || [ "$tree_status" -ne 0 ]; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: NEXVARY-MR-public-history-evidence
