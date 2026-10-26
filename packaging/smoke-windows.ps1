@@ -15,6 +15,15 @@ New-Item -ItemType Directory $isolated | Out-Null
 if (-not $RunInPlace) { Copy-Item "$bundle/*" $isolated -Recurse -Force }
 $runtimeDirectory = if ($RunInPlace) { $bundle } else { $isolated }
 $exe = Join-Path $runtimeDirectory 'NEXVARY-MR.exe'
+$sourceProfile = Get-Content -LiteralPath (Join-Path $runtimeDirectory 'BUILD_PROFILE.json') -Raw | ConvertFrom-Json
+if ($sourceProfile.buildProfile -cne 'production-read-only' -or $sourceProfile.commit -cnotmatch '^[0-9a-f]{40}$') { throw 'Deployed build source/profile is missing or invalid' }
+if ($env:GITHUB_SHA -and $sourceProfile.commit -cne $env:GITHUB_SHA) { throw 'Deployed build source differs from the tested workflow commit' }
+$executableHash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+$bundleHash = (Get-FileHash -LiteralPath (Join-Path $bundle 'NEXVARY-MR.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($executableHash -cne $bundleHash) { throw 'Isolated executable differs from the supplied bundle' }
+$importWorker = Join-Path $runtimeDirectory 'mr_evidence_import_worker.exe'
+$importWorkerHash = (Get-FileHash -LiteralPath $importWorker -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($importWorkerHash -cne (Get-FileHash -LiteralPath (Join-Path $bundle 'mr_evidence_import_worker.exe') -Algorithm SHA256).Hash.ToLowerInvariant()) { throw 'Isolated import worker differs from the supplied bundle' }
 $data = Join-Path $isolated 'test data'
 $picture = Join-Path $evidence "$Label.png"
 $stdout = Join-Path $evidence "$Label.stdout.txt"
@@ -116,8 +125,12 @@ try {
     if ((Get-Item -LiteralPath (Join-Path $evidence "$Label-government-artifacts-$language.png")).Length -lt 1000) { throw 'Deployed Government index capture is missing' }
   }
   $mode = if ($RunInPlace) { 'installed-in-place' } else { 'isolated-copy' }
+  if ((Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant() -cne $executableHash) { throw 'Deployed executable changed during smoke verification' }
+  if ((Get-FileHash -LiteralPath $importWorker -Algorithm SHA256).Hash.ToLowerInvariant() -cne $importWorkerHash) { throw 'Deployed import worker changed during smoke verification' }
   [ordered]@{
     schemaVersion=1; label=$Label; mode=$mode; executable=$exe
+    executableSha256=$executableHash; sourceCommit=$sourceProfile.commit
+    importWorkerSha256=$importWorkerHash
     exitCode=$process.ExitCode; screenshot=$picture; dataDirectory=$data
     qtSdkExcludedFromPath=$true; testFontOverrideCleared=$true
   } | ConvertTo-Json | Set-Content (Join-Path $evidence "$Label.result.json")
