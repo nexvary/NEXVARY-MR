@@ -1,0 +1,72 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "rawLatestLocalFilesAvailableAfterCloudDisconnect": false,
+  "recordedCompletedResults": {
+    "targetedCtest": {
+      "passed": 4,
+      "total": 4,
+      "seconds": 32.08
+    },
+    "policy": 13,
+    "offline": 18,
+    "tskLinux": 8,
+    "independentInterop": 40,
+    "python": 38,
+    "finalFull": {
+      "passed": 48,
+      "total": 48,
+      "seconds": 290.61
+    },
+    "qtQuick": 51,
+    "dpiGroupsPassed": [
+      1.25,
+      1.5
+    ]
+  },
+  "guiComparison": {
+    "stopEachProfileAtFirstFailure": true,
+    "reused": [
+      {
+        "run": 1,
+        "exit": 0,
+        "seconds": 19.341
+      },
+      {
+        "run": 2,
+        "exit": 0,
+        "seconds": 19.516
+      },
+      {
+        "run": 3,
+        "exit": 0,
+        "seconds": 20.311
+      }
+    ],
+    "fresh": [
+      {
+        "run": 1,
+        "exit": 0,
+        "seconds": 19.093
+      },
+      {
+        "run": 2,
+        "exit": 0,
+        "seconds": 19.161
+      },
+      {
+        "run": 3,
+        "exit": 0,
+        "seconds": 19.564
+      }
+    ],
+    "noOtherLocalExecCallsDuringComparison": true,
+    "provesRootCauseOrFix": false
+  },
+  "initialFinalFullFailure": {
+    "passedGroups": 43,
+    "totalGroups": 48,
+    "notStartedGroups": 5,
+    "reason": "Three generated ELF test executables had 0644 mode after relink; only modes repaired, bytes unchanged."
+  },
+  "scope": "Aggregate transcribed from completed recorded tool outputs after local transport loss; not a replacement for unavailable raw local reports. Historical first-source logs already committed; hosted reports remain separately linked."
+}

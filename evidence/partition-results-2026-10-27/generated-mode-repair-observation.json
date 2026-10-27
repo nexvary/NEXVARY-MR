@@ -1,0 +1,25 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "files": [
+    {
+      "target": "mr_center_tests",
+      "bytes": 3347432,
+      "sha256": "7483c5ce8adea9dc84cb23218514cd8ea5401c51be1bcbd6d0c71bc49a71b784"
+    },
+    {
+      "target": "mr_cloud_tests",
+      "bytes": 3374352,
+      "sha256": "4bef4869fc6a63fa707f6e87e1923123c5896652e4e1cdc06863295cc15a7420"
+    },
+    {
+      "target": "mr_ui_tests",
+      "bytes": 3428144,
+      "sha256": "d7770ea11cb9af79aebcd5ac38a9320bd6b0fd863c1cb1ba3dbd8e87b5eb6943"
+    }
+  ],
+  "beforeMode": "0644",
+  "afterMode": "0755",
+  "bytesUnchanged": true,
+  "sourceOrTestChange": false,
+  "scope": "Observed generated-file repair only; no causal link to policy-audit export failure or PR DPI crash established."
+}

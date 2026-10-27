@@ -1,0 +1,7 @@
+Selected observed lines from the local diagnostic (full raw local file unavailable after disconnect):
+FAIL! mr_ui::WorkstationNavigation::test_governmentAdbBackupControls(): Actual rejected; Expected imported; tst_navigation.qml:113
+FAIL! mr_ui::WorkstationNavigation::test_governmentArtifactControls(): Actual 0; Expected 30; tst_navigation.qml:138
+Totals: 2 passed, 2 failed, 0 skipped
+LeakSanitizer has encountered a fatal error.
+HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc).
+No clean UI sanitizer result or original crash stack is claimed.
