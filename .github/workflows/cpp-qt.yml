@@ -55,7 +55,7 @@ jobs:
             printf 'https://security.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors-security.txt >/dev/null
           fi
           sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv python3-cryptography curl
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build gdb qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv python3-cryptography curl
       - name: Prepare pinned signed-manifest verification dependency
         timeout-minutes: 10
         run: |
@@ -70,12 +70,11 @@ jobs:
           done
       - name: Configure and build native GUI and fixtures
         run: |
-          cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
+          cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-g -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
           cmake --build build --parallel 2
       - name: Run Qt, recovery and real mmls synthetic-image integration
         run: |
-          ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
-          cp build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
+          python3 scripts/diagnose_ui_failure.py --build build
           ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
       - name: Instrument parser, identity and signed-update regressions
         if: matrix.profile == 'production'
@@ -97,6 +96,10 @@ jobs:
             build/gui-repeat-results.xml
             build/gui-repeat-console.txt
             build/full-suite-last-test.log
+            build/full-suite-failed-tests.log
+            build/*-gdb.txt
+            build/ui-crash-diagnostics.json
+            build/ui-crash-diagnostic-error.txt
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json

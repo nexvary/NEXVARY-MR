@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLockFile>
 #include <QProcess>
 #include <QTemporaryDir>
 #include <QtTest>
@@ -383,6 +384,60 @@ private slots:
             .isEmpty());
     QCOMPARE(bytes(i.policyJournalPath()), before);
     QVERIFY(!stale.auditStatus().value("healthy").toBool());
+  }
+  void lockedJournalRefusesAppendAndRequiresRestart() {
+    QTemporaryDir t;
+    const auto path = t.filePath("synthetic-audit");
+    PolicyAudit journal(path, true);
+    QVERIFY(journal.healthy());
+    QVERIFY(journal.append("policy-rejection", {{"reason", "synthetic-before-lock"}}, "denied"));
+    const auto before = bytes(path);
+    const auto retained = journal.anchor();
+    QLockFile competing(path + ".lock");
+    QVERIFY(competing.tryLock(0));
+    QVERIFY(!journal.append("policy-rejection", {{"reason", "synthetic-contended"}}, "denied"));
+    QVERIFY(!journal.healthy());
+    QCOMPARE(bytes(path), before);
+    QCOMPARE(journal.anchor(), retained);
+    competing.unlock();
+    // Releasing the competing lock must not silently heal a refused writer.
+    QVERIFY(!journal.append("policy-rejection", {{"reason", "synthetic-after-unlock"}}, "denied"));
+    QCOMPARE(bytes(path), before);
+    PolicyAudit restarted(path, true);
+    QVERIFY(restarted.healthy());
+    QCOMPARE(restarted.anchor(), retained);
+    QVERIFY(restarted.append("policy-rejection", {{"reason", "synthetic-after-restart"}}, "denied"));
+    QString error;
+    QVERIFY2(PolicyAudit::verifyExport(restarted.exportBytes(),
+                                       retained.value("publicKey").toString(),
+                                       retained, error), qPrintable(error));
+  }
+  void symlinkJournalNeverChangesTarget() {
+#ifdef Q_OS_WIN
+    QSKIP("POSIX symlink regression; QFile::link creates a Windows shortcut.");
+#else
+    QTemporaryDir t;
+    const auto target = t.filePath("target"), alias = t.filePath("alias");
+    PolicyAudit original(target, true);
+    QVERIFY(original.healthy());
+    QVERIFY(original.append("policy-rejection", {{"reason", "synthetic-symlink-target"}}, "denied"));
+    const auto before = bytes(target);
+    QVERIFY(QFile::link(target, alias));
+    QVERIFY(QFileInfo(alias).isSymLink());
+    PolicyAudit refused(alias, true);
+    QVERIFY(!refused.healthy());
+    QVERIFY(!refused.append("policy-rejection", {{"reason", "synthetic-refused"}}, "denied"));
+    QCOMPARE(bytes(target), before);
+    QVERIFY(QFile::remove(alias));
+    QVERIFY(QFile::remove(target));
+    QVERIFY(QFile::link(target, alias));
+    QVERIFY(QFileInfo(alias).isSymLink());
+    PolicyAudit dangling(alias, true);
+    QVERIFY(!dangling.healthy());
+    QVERIFY(!dangling.append("policy-rejection", {{"reason", "synthetic-dangling"}}, "denied"));
+    QVERIFY(!QFileInfo::exists(target));
+    QVERIFY(QFileInfo(alias).isSymLink());
+#endif
   }
   void crashRestartRetainsSignedClosure() {
     QTemporaryDir t;
