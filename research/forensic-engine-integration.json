@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "issue": 16,
+  "status": "audit-required",
+  "sources": [
+    {
+      "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
+      "module": "evidence-adapter",
+      "permission": "read-only",
+      "license_verified": false,
+      "source_sha": null,
+      "enabled": false
+    },
+    {
+      "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
+      "module": "browser-artifact-adapter",
+      "permission": "read-only",
+      "license_verified": false,
+      "source_sha": null,
+      "enabled": false
+    },
+    {
+      "repository": "nexvary/NEXVARY-DC",
+      "module": "disk-image-adapter",
+      "permission": "read-only",
+      "license_verified": false,
+      "source_sha": null,
+      "enabled": false
+    }
+  ],
+  "stages": [
+    {
+      "id": 1,
+      "name": "upstream inventory",
+      "state": "pending"
+    },
+    {
+      "id": 2,
+      "name": "license and dependency audit",
+      "state": "pending"
+    },
+    {
+      "id": 3,
+      "name": "capability overlap map",
+      "state": "pending"
+    },
+    {
+      "id": 4,
+      "name": "read-only trust boundaries",
+      "state": "pending"
+    },
+    {
+      "id": 5,
+      "name": "workbench adapter",
+      "state": "pending"
+    },
+    {
+      "id": 6,
+      "name": "browser artifact adapter",
+      "state": "pending"
+    },
+    {
+      "id": 7,
+      "name": "disk image adapter",
+      "state": "pending"
+    },
+    {
+      "id": 8,
+      "name": "case provenance integration",
+      "state": "pending"
+    },
+    {
+      "id": 9,
+      "name": "CI and Windows packaging verification",
+      "state": "pending"
+    }
+  ]
+}
