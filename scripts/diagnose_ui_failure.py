@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import signal
 import subprocess
+import tempfile
 
 
 def replay(command, cwd, env, output):
@@ -34,7 +35,7 @@ def diagnose(build, ctest="ctest", gdb="gdb"):
         return []
     failed = {line.partition(":")[2].strip()
               for line in failure_list.read_text().splitlines()}
-    selected = failed & {"mr_ui_tests", "mr_ui_scale_1.25", "mr_ui_scale_1.5"}
+    selected = failed & {"mr_ui_tests", "mr_ui_scale_1.25", "mr_ui_scale_1.5", "mr_gui_smoke"}
     if not selected:
         return []
     listing = subprocess.run([ctest, "--test-dir", str(build), "--show-only=json-v1"],
@@ -59,7 +60,23 @@ def diagnose(build, ctest="ctest", gdb="gdb"):
                 next(arguments, None)
             else:
                 replay_command.append(argument)
-        replay_command += ["-o", "-,txt"]
+        if test["name"] == "mr_gui_smoke":
+            # Replay only the explicit synthetic profile, on a private copy.
+            # Never mutate the failed fixture or overwrite original frames.
+            if "--smoke-test" not in replay_command or "--data-dir" not in replay_command:
+                raise ValueError("Smoke diagnostic requires explicit synthetic data")
+            index = replay_command.index("--data-dir") + 1
+            source = Path(replay_command[index]).resolve()
+            if not source.is_dir() or sum(p.stat().st_size for p in source.rglob("*") if p.is_file() and not p.is_symlink()) > 256 * 1024 * 1024:
+                raise ValueError("Synthetic smoke snapshot unavailable or oversized")
+            private = Path(tempfile.mkdtemp(prefix="private-gui-crash-", dir=build))
+            snapshot = private / "synthetic-data"
+            shutil.copytree(source, snapshot, symlinks=True)
+            replay_command[index] = str(snapshot)
+            if "--screenshot" in replay_command:
+                replay_command[replay_command.index("--screenshot") + 1] = str(private / "diagnostic-frame.png")
+        else:
+            replay_command += ["-o", "-,txt"]
         command = [gdb, "-nx", "--batch", "--return-child-result",
                    "-ex", "set pagination off", "-ex", "set debuginfod enabled off",
                    "-ex", "run", "-ex", "thread apply all bt", "--args",

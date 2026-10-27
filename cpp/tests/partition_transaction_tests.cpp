@@ -30,9 +30,9 @@ struct Fixture {
   law.setOperationPolicy(&policy);
   id=law.createCase({{"caseNumber","Synthetic partition"},{"investigatingAgency","Synthetic agency"},{"investigatorName","Synthetic investigator"},{"seizedDeviceDescription","Fixture image"},{"authorityReference","Synthetic authority"},{"issuingAuthority","Fixture owner"},{"scope","Synthetic images only"},{"jurisdiction","Test"}});
   const auto device=law.addDevice({{"model","Synthetic raw image"},{"custodian","Synthetic custodian"}});
-  QFile source(root+"/source.img");QByteArray data(1024*1024,'\0');data[510]=char(0x55);data[511]=char(0xaa);
+  QFile source(root+"/source.img");QByteArray data(1024*1024,'\0');data.replace(510,2,QByteArray::fromHex("55aa"));
   // One independent MBR Linux partition, sectors 1..1023.
-  data[450]=char(0x83);data[454]=1;data[458]=char(0xff);data[459]=3;
+  data.replace(450,1,QByteArray::fromHex("83"));data[454]=1;data.replace(458,2,QByteArray::fromHex("ff03"));
   if(!source.open(QIODevice::WriteOnly)||source.write(data)!=data.size())qFatal("Source fixture failed");
   source.close();
   evidence=law.addEvidence(device,source.fileName(),"Synthetic MBR fixture","Synthetic custodian",true);

@@ -1,0 +1,1 @@
+0o644 0 build/mr_compatibility_tests

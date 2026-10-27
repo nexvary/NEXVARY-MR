@@ -43,11 +43,17 @@ ScrollView {
    ComboBox {id:parser;objectName:"governmentAnalysisParser";Layout.fillWidth:true;model:["Classic PCAP — summary v1","JPEG EXIF — summary v1"]}
    ActionButton {objectName:"governmentAnalyzeEvidence";text:app.trx("تحليل وحفظ نتيجة موثقة","Analyze and retain provenance");primary:true;enabled:lawCaseBridge.permissions.analyze&&!!lawCaseBridge.activeCase.id&&evidence.currentIndex>=0;onClicked:page.result=lawCaseBridge.analyzeEvidence(evidence.model[evidence.currentIndex].id,parser.currentIndex===0?"classic-pcap":"jpeg-exif")}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;textFormat:Text.PlainText;text:lawCaseBridge.error;visible:text!==""}
-   GridLayout {visible:!!page.result.reportJson;Layout.fillWidth:true;columns:width>850?3:2;columnSpacing:12;rowSpacing:12
-    Repeater {model:page.summary.packetCount!==undefined?[{ar:"عدد الحزم",en:"Packets",value:page.summary.packetCount},{ar:"البيانات الملتقطة بالبايت",en:"Captured bytes",value:page.summary.capturedBytes},{ar:"حزم خارج ترتيب الوقت",en:"Out-of-order timestamps",value:page.summary.outOfOrderTimestamps}]:[{ar:"بيانات EXIF موجودة",en:"EXIF present",value:page.summary.exifPresent},{ar:"حقول البيانات الوصفية",en:"Metadata fields",value:Object.keys(page.summary.fields||{}).length},{ar:"توثيق أصل البيانات",en:"Metadata authenticity",value:page.app.trx("غير مثبت","Not established")}]
-     delegate:Panel {required property var modelData;Layout.fillWidth:true;title:page.app.ar?modelData.ar:modelData.en;iconName:"document_text"
-      Label {Layout.fillWidth:true;color:page.app.design.text;font.pixelSize:24;font.bold:true;text:String(modelData.value===undefined?"—":modelData.value);textFormat:Text.PlainText}
-     }
+   GridLayout {objectName:"governmentSummaryCards";visible:!!page.result.reportJson;Layout.fillWidth:true;columns:width>850?3:2;columnSpacing:12;rowSpacing:12
+    // These three slots never change count. Updating text/data must not destroy
+    // nested layouts while a hidden summary is being resized or mirrored.
+    Panel {objectName:"governmentSummaryFirst";Layout.fillWidth:true;title:page.summary.packetCount!==undefined?app.trx("عدد الحزم","Packets"):app.trx("بيانات EXIF موجودة","EXIF present");iconName:"document_text"
+     Label {Layout.fillWidth:true;color:page.app.design.text;font.pixelSize:24;font.bold:true;textFormat:Text.PlainText;text:String(page.summary.packetCount!==undefined?page.summary.packetCount:page.summary.exifPresent===undefined?"—":page.summary.exifPresent)}
+    }
+    Panel {objectName:"governmentSummarySecond";Layout.fillWidth:true;title:page.summary.packetCount!==undefined?app.trx("البيانات الملتقطة بالبايت","Captured bytes"):app.trx("حقول البيانات الوصفية","Metadata fields");iconName:"document_text"
+     Label {Layout.fillWidth:true;color:page.app.design.text;font.pixelSize:24;font.bold:true;textFormat:Text.PlainText;text:String(page.summary.packetCount!==undefined?page.summary.capturedBytes:Object.keys(page.summary.fields||{}).length)}
+    }
+    Panel {objectName:"governmentSummaryThird";Layout.fillWidth:true;title:page.summary.packetCount!==undefined?app.trx("حزم خارج ترتيب الوقت","Out-of-order timestamps"):app.trx("توثيق أصل البيانات","Metadata authenticity");iconName:"document_text"
+     Label {Layout.fillWidth:true;color:page.app.design.text;font.pixelSize:24;font.bold:true;textFormat:Text.PlainText;text:String(page.summary.packetCount!==undefined?page.summary.outOfOrderTimestamps:app.trx("غير مثبت","Not established"))}
     }
    }
    Label {visible:!!page.result.reportJson;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("نتيجة محدودة النطاق؛ لا تثبت أصل الملف أو توقيتًا خارجيًا، ولم يتم فك تشفير المحتوى.","Scoped summary; original-file authenticity and external time are not established. No content decryption was performed.")}
