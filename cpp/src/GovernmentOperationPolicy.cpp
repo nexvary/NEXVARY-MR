@@ -1,6 +1,7 @@
 #include "GovernmentOperationPolicy.hpp"
 #include "IdentityService.hpp"
 #include "OperationReceipt.hpp"
+#include "CaseOperationIntent.hpp"
 #include "PolicyAudit.hpp"
 #include "RecoveryFile.hpp"
 #include <QDateTime>
@@ -720,4 +721,48 @@ QVariantList GovernmentOperationPolicy::operationReceipts() const {
     result.append(r);
   }
   return result;
+}
+
+QVariantList GovernmentOperationPolicy::caseOperationStates() {
+ caseHistoryHealthy_=false;
+ if(!available())return {};
+ QString why;
+ if(!PolicyAudit::verifyExport(audit_->exportBytes(),audit_->anchor().value("publicKey").toString(),audit_->anchor(),why)){
+  fail("Case operation history rejected: "+why);return {};
+ }
+ QMap<QString,QVariantMap> states;
+ for(const auto &value:audit_->events()){
+  const auto event=value.toMap();
+  const auto p=QJsonDocument::fromJson(QByteArray::fromBase64(event.value("payload").toString().toLatin1())).object();
+  if(p.value("action")=="case-operation"){
+   const auto r=p.value("record").toObject().toVariantMap();states.insert(r.value("operationId").toString(),r);
+  }
+ }
+ caseHistoryHealthy_=true;
+ QVariantList result;for(const auto &r:states)result.append(r);return result;
+}
+bool GovernmentOperationPolicy::recordCaseOperation(const QVariantMap &r) {
+ const auto states=caseOperationStates();
+ if(!caseHistoryHealthy_ || !available())return false;
+ QVariantMap old;
+ for(const auto &value:states)if(value.toMap().value("operationId")==r.value("operationId"))old=value.toMap();
+ // Terminal observations are immutable. Identical retries do not append events.
+ if(!old.isEmpty() && old==r && old.value("recoveryState")!="prepared")return true;
+ const bool prepared=r.value("recoveryState")=="prepared";
+ if(prepared){
+  int unfinished=0;
+  for(const auto &value:states){
+   const auto previous=value.toMap();
+   if(previous.value("recoveryState")=="prepared")++unfinished;
+   if(previous.value("requestId")==r.value("requestId") || previous.value("analysisId")==r.value("analysisId"))return false;
+  }
+  if(unfinished>=64)return false;
+ }
+ if(prepared && (!identity_ || !identity_->checkSession() || !nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)))return false;
+ if(!mr::law::caseIntentEvent(r,old,prepared?identity_->userId():QString(),prepared?identity_->session().value("role").toString():QString("system-observation"),r.value("recoveryState").toString()))return false;
+ return audit("case-operation",r,r.value("recoveryState").toString(),prepared);
+}
+
+void GovernmentOperationPolicy::setSyntheticAuditWriteCheckpoint(std::function<void()> callback) {
+ if(audit_)audit_->setSyntheticWriteCheckpoint(std::move(callback));
 }

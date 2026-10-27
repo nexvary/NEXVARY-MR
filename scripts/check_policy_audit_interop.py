@@ -52,7 +52,7 @@ def independent_history(change=None):
     for sequence, (action, r, actor, role) in enumerate(operations, 1):
         if action in {"operation-start","operation-result"} and r["decisionHash"] == "__decision__":
             r = {**r, "decisionHash": events[2]["hash"]}
-        body = {"action": action, "record": r, "result": r["status"], "timeUtc": stamp,
+        body = {"action": action, "record": r, "result": r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
                 "principalId": ids[actor] if actor is not None else "", "principalRole": role}
         proof = {}
         if actor is not None:
@@ -219,6 +219,53 @@ def main():
             rows[6][1].update(status="cancelled", failureClass="operator-cancelled", sourceSha256="", outputSha256="")
             return rows
         protocol("cancelled partition without invented digests is accepted", cancelled_partition, expected=True)
+        def case_transaction(rows, ids):
+            r = {"schema": "nexvary-case-operation/v1", "operationId": "00000000-0000-4000-8000-000000000100", "requestId": "00000000-0000-4000-8000-000000000101", "caseId": "00000000-0000-4000-8000-000000000102", "evidenceId": "00000000-0000-4000-8000-000000000103", "expectedRevision": 3, "sourceSha256": "a" * 64, "caseBeforeSha256": "b" * 64, "reportSha256": "c" * 64, "analysisId": "00000000-0000-4000-8000-000000000104", "kind": "classic-pcap", "preparedUtc": "2026-10-27T06:00:00.000Z", "requester": ids[0], "requesterRole": "investigator", "recoveryState": "prepared"}
+            return rows + [("case-operation", r, 0, "investigator"), ("case-operation", {**r, "recoveryState": "completed"}, None, "system-observation")]
+        protocol("independent signed case preparation and reconciliation", case_transaction, expected=True)
+        def case_change(field, value):
+            def change(rows, ids):
+                rows = case_transaction(rows, ids)
+                rows[-1][1][field] = value
+                return rows
+            return change
+        protocol("case outcome cannot change evidence binding", case_change("evidenceId", "00000000-0000-4000-8000-000000000105"))
+        protocol("case outcome cannot change report digest", case_change("reportSha256", "d" * 64))
+        protocol("case intent cannot contain private paths", case_change("sourcePath", "private-fixture"))
+        def missing_prepared(rows, ids):
+            rows = case_transaction(rows, ids)
+            return rows[:-2] + rows[-1:]
+        protocol("case result without durable preparation rejected", missing_prepared)
+        def duplicate_terminal(rows, ids):
+            rows = case_transaction(rows, ids)
+            return rows + [copy.deepcopy(rows[-1])]
+        protocol("duplicate case recovery event rejected", duplicate_terminal)
+        def false_case_actor(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2] = ("case-operation", rows[-2][1], 1, "reviewer")
+            return rows
+        protocol("case preparation cannot forge requester identity", false_case_actor)
+        def bad_revision(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2][1]["expectedRevision"] = True
+            return rows
+        protocol("case expected revision cannot be boolean", bad_revision)
+        def reused_case_request(rows, ids):
+            rows = case_transaction(rows, ids)
+            r = {**rows[-2][1], "operationId": "00000000-0000-4000-8000-000000000106", "analysisId": "00000000-0000-4000-8000-000000000107"}
+            return rows + [("case-operation", r, 0, "investigator")]
+        protocol("signed case invocation reference cannot be reused", reused_case_request)
+        def reused_case_analysis(rows, ids):
+            rows = case_transaction(rows, ids)
+            r = {**rows[-2][1], "operationId": "00000000-0000-4000-8000-000000000106", "requestId": "00000000-0000-4000-8000-000000000107"}
+            return rows + [("case-operation", r, 0, "investigator")]
+        protocol("signed case analysis UUID cannot be reused", reused_case_analysis)
+        def brace_uuid(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2][1]["operationId"] = "{" + rows[-2][1]["operationId"] + "}"
+            return rows
+        protocol("case UUIDs must use canonical spelling", brace_uuid)
+
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))

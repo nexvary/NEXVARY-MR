@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QVariantList>
 #include <memory>
+#include <functional>
 class IdentityService;
 class PolicyAudit;
 
@@ -58,6 +59,11 @@ public:
                               const QString &sourceDigest = {},
                               const QString &outputDigest = {});
   QVariantList operationReceipts() const;
+  // Native case adapter only; local RBAC/grants and evidence checks remain in LawCaseBridge/Store.
+  bool recordCaseOperation(const QVariantMap &record);
+  void setSyntheticAuditWriteCheckpoint(std::function<void()> callback);
+  QVariantList caseOperationStates();
+  bool caseOperationHistoryHealthy() const { return caseHistoryHealthy_; }
 signals:
   void changed();
   void errorChanged();
@@ -83,6 +89,7 @@ private:
   QTimer monitor_;
   int lifetimeMs_;
   bool refreshing_ = false;
+  bool caseHistoryHealthy_ = false;
   QString error_;
   std::unique_ptr<PolicyAudit> audit_;
   QMap<QString, QVariantMap> requests_;

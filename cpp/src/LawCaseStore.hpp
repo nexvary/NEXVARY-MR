@@ -10,6 +10,8 @@ public:
  ~LawCaseStore();
  LawCaseStore(const LawCaseStore&)=delete;
  LawCaseStore &operator=(const LawCaseStore&)=delete;
+ // Synthetic native fault injection only; never exposed to QML/production.
+ void setSyntheticWriteCheckpoint(std::function<void()> callback){if(synthetic_)writeCheckpoint_=std::move(callback);}
  bool ready()const{return ready_;}
  QString error()const{return error_;}
  QVariantMap get(const QString &id);
@@ -24,7 +26,9 @@ public:
  QString addEvidence(const QString &id,qint64 revision,const QString &device,const QString &path,const QString &description,const QString &custodian,const QString &actor);
  bool transfer(const QString &id,qint64 revision,const QString &evidence,const QString &from,const QString &to,const QString &reason,const QString &actor);
  QByteArray readEvidence(const QString &id,const QString &evidence);
- QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor);
+ QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor,const QVariantMap &intent={});
+ QVariantMap prepareAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &requester,const QString &role);
+ QString reconcileAnalysis(const QVariantMap &intent);
  QVariantMap exportProtectedBackup(const QString &id,qint64 revision,const QString &path,const QString &actor);
  QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,const QString &actor,const std::function<bool(const QVariantMap&)> &authorize);
  bool retentionOperation(const QString &id,qint64 revision,const QString &operation,const QVariantMap &fields,const QString &actor);
@@ -43,4 +47,5 @@ private:
  QString connection_,error_;
  QSqlDatabase db_;
  bool ready_=false,synthetic_=false;
+ std::function<void()> writeCheckpoint_;
 };

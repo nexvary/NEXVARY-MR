@@ -169,3 +169,15 @@ per-tool/destination restrictions, comprehensive completion receipts, OS egress/
 DNS/proxy/descendant/mounted-share tests, clean physical Windows 10/11, independent
 security/records/privacy/license review, publisher signing and release approval.
 No competing licensed product was executed; no comparative superiority is proven.
+
+
+## Case-bound local analysis intent extension
+
+`case-operation` events now carry strict `nexvary-case-operation/v1` preparation
+and immutable recovery observations for existing local PCAP/EXIF case analyses.
+They are separate from reviewed external-tool exceptions; no new external
+capability is granted. Native and independent Python lifecycle verification use
+exact fields and reject changed bindings, extra private data and duplicate
+terminals. See [transaction protocol and remaining gates](GOVERNMENT_CASE_TRANSACTIONS.md).
+Older verifier versions fail closed on the new event kind. Existing journal
+capacity, protection and independent-anchor requirements remain unchanged.

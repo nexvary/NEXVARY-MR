@@ -112,6 +112,7 @@ public slots:
   if(!identity->bootstrap("ui-admin","Synthetic UI administrator",fixturePassword)||!identity->login("ui-admin",fixturePassword)||identity->createUser("ui-investigator","Synthetic UI investigator","investigator",fixturePassword).isEmpty()||!identity->login("ui-investigator",fixturePassword))qFatal("Synthetic identity fixture failed");
   operationPolicy=std::make_unique<GovernmentOperationPolicy>(identity.get());
   law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true,nexvary::law::Role::Investigator,nullptr,identity.get());
+  law->setOperationPolicy(operationPolicy.get());
   research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get(),nullptr,identity.get());
  }
  void qmlEngineAvailable(QQmlEngine *engine) {

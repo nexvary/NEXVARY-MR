@@ -71,6 +71,28 @@ def uuid(value):
 
 
 
+def case_intent_record(r, old, actor, role, result):
+    keys = {"schema", "operationId", "requestId", "caseId", "evidenceId", "expectedRevision", "sourceSha256", "caseBeforeSha256", "reportSha256", "analysisId", "kind", "preparedUtc", "requester", "requesterRole", "recoveryState"}
+    if (set(r) != keys or r["schema"] != "nexvary-case-operation/v1"
+            or any(not uuid(r[k]) or r[k] != r[k].lower() for k in ("operationId", "requestId", "caseId", "evidenceId", "analysisId", "requester"))
+            or any(not isinstance(r[k], str) or not re.fullmatch(r"[0-9a-f]{64}", r[k]) for k in ("sourceSha256", "caseBeforeSha256", "reportSha256"))
+            or type(r["expectedRevision"]) is not int or not 1 <= r["expectedRevision"] < 10000
+            or r["kind"] not in {"classic-pcap", "jpeg-exif"}
+            or r["requesterRole"] not in {"reviewer", "investigator"}
+            or r["recoveryState"] not in {"prepared", "completed", "failed", "unknown"}
+            or not isinstance(r["preparedUtc"], str) or not r["preparedUtc"].endswith("Z")
+            or result != r["recoveryState"]):
+        raise ValueError("Case operation intent fields rejected")
+    from datetime import datetime
+    datetime.fromisoformat(r["preparedUtc"].replace("Z", "+00:00"))
+    if result == "prepared":
+        if old or actor != r["requester"] or role != r["requesterRole"]:
+            raise ValueError("Case operation preparation attribution rejected")
+    elif (old.get("recoveryState") != "prepared" or actor or role != "system-observation"
+          or {k: v for k, v in r.items() if k != "recoveryState"} != {k: v for k, v in old.items() if k != "recoveryState"}):
+        raise ValueError("Case operation recovery binding/lifecycle rejected")
+
+
 def operation_record(r, request, decision, old, closure, actor, role, time, result, start):
     keys = {"capability", "caseRef", "completedUtc", "decisionHash", "decisionSequence", "failureClass", "kind", "operationId", "outputSha256", "requestId", "requester", "requesterRole", "schema", "sourceSha256", "startedUtc", "status"}
     digest = lambda x: isinstance(x, str) and (x == "" or re.fullmatch(r"[0-9a-f]{64}", x))
@@ -128,6 +150,7 @@ def verify(data, anchor):
         raise ValueError("Empty history anchor mismatch")
     states, actions, principals = {}, {}, {}
     decisions, operations, closures = {}, {}, {}
+    case_operations = {}
     for sequence, event in enumerate(rows, 1):
         raw, sig = un64(event["payload"]), un64(event["signature"])
         if not 0 < len(raw) <= 32 * 1024:
@@ -196,6 +219,13 @@ def verify(data, anchor):
                 decisions[request_id] = {"sequence": sequence, "hash": digest}
             if action in {"expire", "session-close", "restart-close", "emergency-stop", "revoke"}:
                 closures[request_id] = action
+        elif action == "case-operation":
+            if r.get("recoveryState") == "prepared" and (
+                    sum(v["recoveryState"] == "prepared" for v in case_operations.values()) >= 64
+                    or any(v["requestId"] == r.get("requestId") or v["analysisId"] == r.get("analysisId") for v in case_operations.values())):
+                raise ValueError("Case operation invocation/analysis UUID reused or unfinished capacity exceeded")
+            case_intent_record(r, case_operations.get(r.get("operationId"), {}), actor, role, p["result"])
+            case_operations[r["operationId"]] = r
         elif action in {"operation-start", "operation-result"}:
             request_id = r.get("requestId")
             operation_record(r, states.get(request_id, {}), decisions.get(request_id, {}), operations.get(r.get("operationId"), {}), closures.get(request_id, ""), actor, role, p["timeUtc"], p["result"], action == "operation-start")
@@ -213,6 +243,7 @@ def verify(data, anchor):
         if sequence == floor and previous != anchor["hash"]:
             raise ValueError("Retained history prefix mismatch")
     return {"valid": True, "events": len(rows), "requests": len(states), "actions": actions,
+            "caseOperations": {k: sum(v["recoveryState"] == k for v in case_operations.values()) for k in {v["recoveryState"] for v in case_operations.values()}},
             "head": previous, "retainedPrefixVerified": floor,
             "identityScope": "local keys/declared roles; not agency identity or independent people",
             "timeScope": "recorded local UTC; no external trusted time",

@@ -2,6 +2,7 @@
 #include "CaseVault.hpp"
 #include "IdentityService.hpp"
 #include "OperationReceipt.hpp"
+#include "CaseOperationIntent.hpp"
 #include "RecoveryFile.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -211,10 +212,18 @@ bool PolicyAudit::save(const QVariantMap &state) {
     return fail("Cannot commit protected policy audit (permissions); exceptions denied.");
   if (file.write(sealed) != sealed.size())
     return fail("Cannot commit protected policy audit (write); exceptions denied.");
+  if (synthetic_ && writeCheckpoint_)writeCheckpoint_();
   if (!file.commit())
     return fail("Cannot commit protected policy audit (replace); exceptions denied.");
 
-  fileDigest_ = QCryptographicHash::hash(sealed, QCryptographicHash::Sha256);
+  if (synthetic_ && postReplaceCheckpoint_)postReplaceCheckpoint_();
+  // A successful replacement must be observable through the same bounded,
+  // no-follow read path used by the next gate. Do not acknowledge a stale or
+  // unreadable snapshot, and do not retry/overwrite the divergent evidence.
+  const auto committed = load(path_);
+  if (committed != sealed)
+    return fail("Cannot commit protected policy audit (readback); exceptions denied.");
+  fileDigest_ = QCryptographicHash::hash(committed, QCryptographicHash::Sha256);
   return true;
 }
 bool PolicyAudit::check() {
@@ -352,7 +361,7 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
   int sequence = 0;
   QMap<QString, QVariantMap> states;
   QMap<QString, QString> principalKeys;
-  QMap<QString, QVariantMap> decisions, operations;
+  QMap<QString, QVariantMap> decisions, operations, caseOperations;
   QMap<QString, QString> closures;
 
   if (!retained.isEmpty() &&
@@ -508,6 +517,20 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
                       "emergency-stop", "revoke"}
               .contains(action))
         closures.insert(id, action);
+    } else if (action == "case-operation") {
+      const auto operationId = r.value("operationId").toString();
+      if (r.value("recoveryState")=="prepared") {
+        int unfinished=0;
+        for(const auto &prior:caseOperations){
+          if(prior.value("recoveryState")=="prepared")++unfinished;
+          if(prior.value("requestId")==r.value("requestId") || prior.value("analysisId")==r.value("analysisId"))
+            return reject("Case operation invocation/analysis UUID reused.");
+        }
+        if(unfinished>=64)return reject("Case operation unfinished capacity exceeded.");
+      }
+      if (!mr::law::caseIntentEvent(r, caseOperations.value(operationId), actor, role, p.value("result").toString()))
+        return reject("Case operation intent lifecycle/binding rejected.");
+      caseOperations.insert(operationId, r);
     } else if (action == "operation-start" || action == "operation-result") {
       const auto requestId = r.value("requestId").toString();
       const auto opId = r.value("operationId").toString();

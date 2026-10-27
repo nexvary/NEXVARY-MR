@@ -1,5 +1,7 @@
 # Signed Government operation-result receipts
 
+A separate [case-bound local analysis transaction adapter](GOVERNMENT_CASE_TRANSACTIONS.md) now uses the same signed journal for PCAP/EXIF preparation and reconciliation. The partition-analysis two-store limitation described below is still open; no new recovery guarantee is inherited by that adapter.
+
 Development-evaluation extension of the existing signed policy journal and reviewed exceptions. It neither replaces that journal nor grants additional authority. Exact tested source, results and downloads are in DEVELOPMENT_STATE.md.
 
 ## Implemented coverage

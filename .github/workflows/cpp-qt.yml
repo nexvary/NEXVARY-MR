@@ -80,8 +80,8 @@ jobs:
         if: matrix.profile == 'production'
         run: |
           cmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-avb-sanitized --target mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
-          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml
+          cmake --build build-avb-sanitized --target mr_case_transaction_tests mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
+          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|case_transaction|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml
       - name: Native Qt client through real Gunicorn and verified Caddy TLS
         if: matrix.profile == 'production'
         run: |

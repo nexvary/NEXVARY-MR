@@ -7,6 +7,7 @@
 template <typename T> class QFutureWatcher;
 #include "nexvary/LawPermissions.hpp"
 class LawCaseStore;
+class GovernmentOperationPolicy;
 class ToolBridge;
 class IdentityService;
 class EvidenceImportRunner;
@@ -35,6 +36,7 @@ public:
  explicit LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile=false,
   nexvary::law::Role role=nexvary::law::Role::Investigator,QObject *parent=nullptr,IdentityService *identity=nullptr);
  ~LawCaseBridge() override;
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  bool ready()const;
  QString error()const{return error_;}
  QString protection()const;
@@ -118,6 +120,8 @@ private:
  QVariantMap importContext_,importResult_;
  ToolBridge *tools_=nullptr;
  IdentityService *identity_=nullptr;
+ GovernmentOperationPolicy *operationPolicy_=nullptr;
+ bool transactionsReady_=true;
  bool synthetic_=false;
  nexvary::law::Role role_;
  QString error_;
