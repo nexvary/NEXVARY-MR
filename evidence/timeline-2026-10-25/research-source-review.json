@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-10-25",
+  "index": "https://www.nist.gov/itl/csd/secure-systems-and-applications/computer-forensics-tool-testing-program-cftt/cftt-7",
+  "specification": {
+    "url": "https://www.nist.gov/document/mobile-device-forensic-tool-test-specification-v33",
+    "version": "3.3 January 2025",
+    "sectionsReviewed": [
+      "6.2.4 SQLite Data",
+      "6.2.7 Timeline Analysis"
+    ],
+    "scope": "Requirement-to-gap review only, no conformance or certification claim."
+  },
+  "blockedReportReads": [
+    {
+      "url": "https://www.dhs.gov/sites/default/files/2025-03/25_0324_st_test_results_for_mobile_device_acquisition_tool-magnet_axiom_v8.1.0.42087.pdf",
+      "response": "HTTP 403"
+    },
+    {
+      "url": "https://www.dhs.gov/sites/default/files/2025-05/25_0519_st_test_results_for_mobile_device_acquisition_tool_cellebrite_inseyets_ufed_v10.3.0.260_pa_v10.3.0.3169.pdf",
+      "response": "HTTP 403"
+    }
+  ],
+  "independentResultsReviewed": false,
+  "superiorityEstablished": false
+}

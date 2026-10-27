@@ -1,0 +1,16 @@
+[OUTPUT] 
+Internal ctest changing into directory: /workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab
+
+[HANDLER_OUTPUT] 
+Test project /workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab
+
+    Start 46: mr_ui_scale_1.25
+    Test #46: mr_ui_scale_1.25 .................   Passed   38.13 sec
+    Start 46: mr_ui_scale_1.25
+    Test #46: mr_ui_scale_1.25 .................   Passed   37.31 sec
+    Start 46: mr_ui_scale_1.25
+1/1 Test #46: mr_ui_scale_1.25 .................   Passed   37.39 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) = 112.83 sec

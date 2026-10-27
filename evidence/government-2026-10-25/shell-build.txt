@@ -1,0 +1,51 @@
+[0/2] Re-checking globbed directories...
+[1/48] Generating NexvaryMR/qml/AppShell.qml
+[2/48] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[3/48] Generating .rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp
+[4/48] Running rcc for resource nexvary_mr_raw_qml_0
+[5/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp.o
+[6/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp.o
+[7/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp.o
+[8/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp.o
+[9/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp.o
+[10/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp.o
+[11/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp.o
+[12/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp.o
+[13/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp.o
+[14/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp.o
+[15/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp.o
+[16/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp.o
+[17/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp.o
+[18/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp.o
+[19/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp.o
+[20/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp.o
+[21/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp.o
+[22/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp.o
+[23/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp.o
+[24/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp.o
+[25/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp.o
+[26/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp.o
+[27/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp.o
+[28/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp.o
+[29/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp.o
+[30/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp.o
+[31/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp.o
+[32/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp.o
+[33/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp.o
+[34/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp.o
+[35/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp.o
+[36/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp.o
+[37/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp.o
+[38/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp.o
+[39/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp.o
+[40/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp.o
+[41/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp.o
+[42/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp.o
+[43/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp.o
+[44/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp.o
+[45/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp.o
+[46/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[47/48] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp.o

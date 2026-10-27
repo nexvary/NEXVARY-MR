@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Panel {
  id:panel
+ property bool fieldsReady:false
+ Component.onCompleted:fieldsReady=true
  property var app
  readonly property var report:toolBridge.deviceIntelligence
  readonly property var health:report.health||({})
@@ -10,19 +12,20 @@ Panel {
  readonly property var storage:health.storage||({})
  readonly property var partitions:health.partitions||({})
  title:"Device Intelligence";iconName:"search_visual";accent:"blue"
- stateText:(report.reportedFieldCount||0)+app.trx(" حقل مرصود"," observed fields")
+ stateText:toolBridge.activeOperation==="properties"?app.trx("تحديث جارٍ · آخر قراءة","Refreshing · last reading"):(report.reportedFieldCount||0)+app.trx(" حقل مرصود"," observed fields")
  function field(id){for(let i=0;i<fields.count;i++){const item=fields.itemAt(i);if(item&&item.modelData.id===id)return item}return null}
  function fieldState(state){return state==="reported"?app.trx("تصريح الجهاز","Device reported"):state==="expired"?app.trx("قراءة قديمة — أعد القراءة","Expired — read again"):state==="missing"?app.trx("غير متاح في القراءة","Not supplied by reading"):app.trx("لم تُقرأ هوية الهدف","Target identity unread")}
  Label {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("كل قيمة مرتبطة بمصدرها ووقت قراءتها. تصريحات الجهاز قابلة للتعديل ولا تمثل تحققًا تشفيريًا أو اعتماد موديل. القيم الغائبة أو القديمة لا تُملأ من كتالوج الموديلات.","Each value retains its source and collection time. Device declarations are mutable, not cryptographic attestation or model acceptance. Missing/expired fields are never filled from a model catalog.")}
- Label {objectName:"intelligenceReadingTime";text:app.trx("وقت قراءة الخصائص: ","Properties collected: ")+(panel.report.propertiesObservedAtUtc||"—");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;font.pixelSize:12;textFormat:Text.PlainText}
+ Label {objectName:"intelligenceReadingTime";text:app.trx("وقت قراءة الخصائص: ","Properties collected: ")+"\u2066"+(panel.report.propertiesObservedAtUtc||"—")+"\u2069";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;font.pixelSize:12;textFormat:Text.PlainText}
  Repeater {model:panel.report.warnings||[]
   delegate:Label {required property var modelData;objectName:"intelligenceWarning-"+modelData.id;text:panel.app.ar?modelData.ar:modelData.en;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:panel.app.design.danger;textFormat:Text.PlainText}
  }
  GridLayout {
   Layout.fillWidth:true;columns:width>=1000?4:width>=650?3:2;columnSpacing:16;rowSpacing:16
-  Repeater {id:fields;model:panel.report.fields||[]
+  Repeater {id:fields;model:panel.fieldsReady?(panel.report.fields||[]).length:0
    delegate:ColumnLayout {
-    required property var modelData
+    required property int index
+    readonly property var modelData:(panel.report.fields||[])[index]||({})
     objectName:"intelligenceField-"+modelData.id
     Layout.fillWidth:true;Layout.minimumWidth:0;Layout.alignment:Qt.AlignTop;spacing:4
     Label {text:panel.app.ar?modelData.labelAr:modelData.labelEn;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:panel.app.design.muted;font.pixelSize:11}

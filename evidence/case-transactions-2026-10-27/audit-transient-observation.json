@@ -1,0 +1,24 @@
+{
+  "schema": "nexvary-synthetic-audit-failure-observation/v1",
+  "originalFileSha256": "db309c3049cf137066ee749a78b4f97475290e35d7741346612ffe693cac2e3a",
+  "originalBytes": 26370,
+  "wrapperChecksumValid": true,
+  "signedHistoryValid": true,
+  "eventCount": 18,
+  "actionCounts": {
+    "operation-denied": 7,
+    "policy-rejection": 7,
+    "request": 1,
+    "review": 1,
+    "approve": 1,
+    "activate": 1
+  },
+  "observedFailureClass": "audit-digest",
+  "inMemorySequenceAtFailure": 22,
+  "expectedInMemoryFileDigest": "not captured in original diagnostics",
+  "rootCause": "unresolved; valid retained on-disk history does not establish why the in-memory snapshot digest diverged",
+  "privateOriginalPreservedLocally": true,
+  "privateJournalPublished": false,
+  "clearsOriginalFailure": false,
+  "observedOnDiskVersusMemory": "Retained signed disk prefix: 18 events; failure context: 22 in-memory events. The prefix lag is observed, but the replacement/rollback mechanism is not proved."
+}

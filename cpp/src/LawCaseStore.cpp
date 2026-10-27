@@ -1,4 +1,6 @@
 #include "LawCaseStore.hpp"
+#include "CaseOperationIntent.hpp"
+#include "LawRetention.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryFile.hpp"
 #include <QSqlQuery>
@@ -26,7 +28,7 @@ LawCaseStore::LawCaseStore(const QString &path,bool synthetic):synthetic_(synthe
  if(!db_.open()){fail("Case database could not open.");return;}
  if(!QFile::setPermissions(local,QFileDevice::ReadOwner|QFileDevice::WriteOwner)){fail("Cannot restrict database file permissions.");return;}
  QSqlQuery q(db_);
- for(const auto *sql:{"PRAGMA journal_mode=DELETE","PRAGMA secure_delete=ON","PRAGMA trusted_schema=OFF","CREATE TABLE IF NOT EXISTS law_cases(id TEXT PRIMARY KEY, revision INTEGER NOT NULL, payload BLOB NOT NULL)","CREATE TABLE IF NOT EXISTS law_evidence(id TEXT PRIMARY KEY, case_id TEXT NOT NULL, payload BLOB NOT NULL)"})
+ for(const auto *sql:{"PRAGMA journal_mode=DELETE","PRAGMA synchronous=FULL","PRAGMA secure_delete=ON","PRAGMA trusted_schema=OFF","CREATE TABLE IF NOT EXISTS law_cases(id TEXT PRIMARY KEY, revision INTEGER NOT NULL, payload BLOB NOT NULL)","CREATE TABLE IF NOT EXISTS law_evidence(id TEXT PRIMARY KEY, case_id TEXT NOT NULL, payload BLOB NOT NULL)"})
   if(!q.exec(QString::fromLatin1(sql))){fail("Case database initialization failed.");return;}
  ready_=true;
 }
@@ -34,6 +36,7 @@ LawCaseStore::~LawCaseStore(){const auto name=connection_;if(db_.isValid())db_.c
 bool LawCaseStore::fail(const QString &m){error_=m;return false;}
 bool LawCaseStore::valid(const QVariantMap &r) {
  if(r.value("schema").toInt()!=1||r.value("synthetic").toBool()!=synthetic_||r.value("revision").toLongLong()<1)return fail("Case schema/profile mismatch.");
+ if(!nexvary::law::validRetention(r))return fail("Invalid retention schema.");
  const auto events=r.value("audit").toList();if(events.isEmpty()||events.size()>10000)return fail("Invalid case audit size.");
  QString previous;int sequence=0;
  for(const auto &value:events){auto e=value.toMap();const auto hash=e.take("hash").toString();if(e.value("caseId")!=r.value("id")||e.value("sequence").toInt()!=++sequence||e.value("previous").toString()!=previous||hash!=digest(encode(e)))return fail("Case audit chain verification failed.");previous=hash;}
@@ -70,6 +73,7 @@ bool LawCaseStore::save(QVariantMap r,qint64 expected) {
  if(expected==0){q.prepare("INSERT INTO law_cases(id,revision,payload) VALUES(?,?,?)");q.addBindValue(r.value("id"));q.addBindValue(1);q.addBindValue(sealed);}
  else {q.prepare("UPDATE law_cases SET revision=?,payload=? WHERE id=? AND revision=?");q.addBindValue(expected+1);q.addBindValue(sealed);q.addBindValue(r.value("id"));q.addBindValue(expected);}
  if(!q.exec()||q.numRowsAffected()!=1)return fail("Case changed in another session or write failed. Reopen before editing.");
+ if(synthetic_ && writeCheckpoint_)writeCheckpoint_();
  return true;
 }
 QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor,const QString &ownerId) {
@@ -81,7 +85,9 @@ QString LawCaseStore::create(const QVariantMap &metadata,const QString &actor,co
 bool LawCaseStore::mutate(const QString &id,qint64 revision,const QString &event,const QString &actor,const std::function<bool(QVariantMap&)> &change) {
  error_.clear();if(!ready_||!text(actor,256)||!db_.transaction())return fail("Cannot start case transaction.");
  auto r=get(id);if(r.isEmpty()||r.value("revision").toLongLong()!=revision||r.value("audit").toList().size()>=10000){db_.rollback();return fail("Invalid case, stale revision or event limit reached.");}
- if(r.value("status")=="archived"||(r.value("status")=="closed"&&event!="case-status:archived")||(r.value("status")=="suspended"&&!event.startsWith("case-status:"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
+ const bool retention=event.startsWith("retention:");
+ const bool derived=(event=="evidence-imported"||event=="evidence-import-rejected")&&(r.value("status")=="closed"||r.value("status")=="archived");
+ if(!retention&&!derived&&((r.value("status")=="archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="closed"&&event!="case-status:archived"&&event!="evidence-working-copy-exported"&&event!="evidence-analyzed"&&event!="case-backup-exported")||(r.value("status")=="suspended"&&!event.startsWith("case-status:")&&event!="case-backup-exported"))){db_.rollback();return fail("Closed/archived cases are immutable in this prototype.");}
  if(!change(r)){db_.rollback();return false;}
  r.insert("revision",revision+1);r.insert("deviceCount",r.value("devices").toList().size());append(r,event,actor);
  if(!save(r,revision)||!db_.commit()){db_.rollback();if(error_.isEmpty())fail("Case transaction failed.");return false;}return true;
@@ -117,8 +123,114 @@ bool LawCaseStore::transfer(const QString &id,qint64 revision,const QString &evi
  if(!text(from,256)||!text(to,256)||from==to||!text(reason,2048))return fail("Custody transfer needs distinct custodians and a reason.");
  return mutate(id,revision,"custody-transferred",actor,[&](QVariantMap &r){auto rows=r.value("evidence").toList();bool found=false;for(auto &v:rows){auto e=v.toMap();if(e.value("id")==evidence){if(e.value("custodian")!=from)return fail("Current custodian does not match.");e.insert("custodian",to);v=e;found=true;}}if(!found)return fail("Evidence does not belong to this case.");r.insert("evidence",rows);auto events=r.value("custody").toList();events.append(QVariantMap{{"evidenceId",evidence},{"from",from},{"to",to},{"reason",reason},{"atUtc",now()},{"actor",actor}});r.insert("custody",events);return true;});
 }
-bool LawCaseStore::verifyEvidence(const QString &id,const QString &evidence) {
- const auto r=get(id);if(r.isEmpty())return false;QVariantMap item;for(const auto &e:r.value("evidence").toList())if(e.toMap().value("id")==evidence)item=e.toMap();if(item.isEmpty())return fail("Evidence does not belong to this case.");
- QSqlQuery q(db_);q.prepare("SELECT payload FROM law_evidence WHERE id=? AND case_id=?");q.addBindValue(evidence);q.addBindValue(id);if(!q.exec()||!q.next())return fail("Evidence payload missing.");const auto sealed=q.value(0).toByteArray();if(sealed.size()>18*1024*1024)return fail("Evidence payload exceeds limit.");const auto bytes=mr::recovery::openCaseBytes(sealed,synthetic_,error_);if(bytes.isEmpty())return false;
- return (bytes.size()==item.value("size").toLongLong()&&digest(bytes)==item.value("sha256").toString())||fail("Evidence SHA-256 mismatch.");
+QByteArray LawCaseStore::evidenceBytes(const QString &id,const QVariantMap &item) {
+ QSqlQuery q(db_);q.prepare("SELECT payload FROM law_evidence WHERE id=? AND case_id=?");q.addBindValue(item.value("id"));q.addBindValue(id);
+ if(!q.exec()||!q.next()){fail("Evidence payload missing.");return {};}
+ const auto sealed=q.value(0).toByteArray();if(sealed.size()>18*1024*1024){fail("Evidence payload exceeds limit.");return {};}
+ const auto bytes=mr::recovery::openCaseBytes(sealed,synthetic_,error_);if(bytes.isEmpty())return {};
+ if(bytes.size()!=item.value("size").toLongLong()||digest(bytes)!=item.value("sha256").toString()){fail("Evidence SHA-256 mismatch.");return {};}
+ return bytes;
+}
+QByteArray LawCaseStore::readEvidence(const QString &id,const QString &evidence) {
+ const auto r=get(id);if(r.isEmpty())return {};
+ for(const auto &e:r.value("evidence").toList())if(e.toMap().value("id")==evidence)return evidenceBytes(id,e.toMap());
+ fail("Evidence does not belong to this case.");return {};
+}
+bool LawCaseStore::verifyEvidence(const QString &id,const QString &evidence) {return !readEvidence(id,evidence).isEmpty();}
+QVariantMap LawCaseStore::recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor,const QVariantMap &intent) {
+ if(!intent.isEmpty() && (!mr::law::caseIntent(intent) || intent.value("recoveryState")!=(intent.value("schema")=="nexvary-case-operation/v2"?"candidate":"prepared") || !actor.startsWith(intent.value("requester").toString()+" / ") || intent.value("caseId")!=id || intent.value("evidenceId")!=evidence || intent.value("expectedRevision").toLongLong()!=revision || intent.value("kind")!=parser || intent.value("reportSha256")!=digest(encode(report)) || intent.value("sourceSha256")!=report.value("sourceSha256"))){fail("Analysis intent binding rejected.");return {};}
+ if(intent.value("schema")=="nexvary-case-operation/v2" && report.value("toolSha256")!=intent.value("toolSha256")){fail("Partition tool binding rejected.");return {};}
+ QVariantMap result;const auto json=encode(report);
+ if(json.size()>64*1024||report.value("sourceSha256").toString().size()!=64){fail("Invalid or oversized analysis report.");return {};}
+ const bool imported=parser.startsWith("authorized-import/");
+ const auto event=imported?(report.value("status")=="imported"?QString("evidence-imported"):QString("evidence-import-rejected")):QString("evidence-analyzed");
+ const bool ok=mutate(id,revision,event,actor,[&](QVariantMap &r){
+  if(!intent.isEmpty() && digest(encode(r))!=intent.value("caseBeforeSha256"))return fail("Case changed after preparation.");
+  QVariantMap item;for(const auto &value:r.value("evidence").toList())if(value.toMap().value("id")==evidence)item=value.toMap();
+  if(!intent.isEmpty() && evidenceBytes(id,item).isEmpty())return false;
+  if(item.isEmpty()||item.value("sha256")!=report.value("sourceSha256"))return fail("Analysis source does not match this case evidence.");
+  auto runs=r.value("analyses").toList();if(runs.size()>=100)return fail("Case analysis limit reached.");
+  result={{"id",intent.isEmpty()?uuid():intent.value("analysisId").toString()},{"evidenceId",evidence},{"parser",parser},{"implementationVersion","nexvary-mr/0.4.0"},
+   {"sourceSha256",item.value("sha256")},{"sourceSize",item.value("size")},{"reportSha256",digest(json)},{"reportJson",QString::fromUtf8(json)},
+   {"atUtc",now()},{"actor",actor},{"synthetic",synthetic_}};
+  if(!intent.isEmpty())result.insert("operationId",intent.value("operationId"));
+  runs.append(result);r.insert("analyses",runs);return true;
+ });return ok?result:QVariantMap();
+}
+QVariantMap LawCaseStore::exportWorkingCopy(const QString &id,qint64 revision,const QString &evidence,const QString &directory,const QString &purpose,const QString &actor) {
+ error_.clear();if(!text(purpose,2048)){fail("A bounded working-copy purpose is required.");return {};}
+ const auto path=mr::recovery::localFilePath(directory);
+ if(path.isEmpty()||QFileInfo(path).exists()||QFileInfo(path).isSymLink()||!QFileInfo(QFileInfo(path).absolutePath()).isDir()){fail("Choose a new package directory inside an existing local folder.");return {};}
+ bool created=false;QVariantMap result;
+ const bool ok=mutate(id,revision,"evidence-working-copy-exported",actor,[&](QVariantMap &r){
+  QVariantMap item;for(const auto &e:r.value("evidence").toList())if(e.toMap().value("id")==evidence)item=e.toMap();
+  if(item.isEmpty())return fail("Evidence does not belong to this case.");
+  auto copies=r.value("workingCopies").toList();if(copies.size()>=100)return fail("Working-copy export limit reached.");
+  const auto bytes=evidenceBytes(id,item);if(bytes.isEmpty())return false;
+  const auto packageId=uuid();
+  const QVariantMap manifest{{"schema","nexvary-evidence-package/v1"},{"packageId",packageId},{"caseId",id},{"caseRevision",revision},
+   {"auditHead",r.value("audit").toList().last().toMap().value("hash")},{"synthetic",synthetic_},{"exportedAtUtc",now()},{"actor",actor},{"purpose",purpose},
+   {"evidenceId",evidence},{"deviceId",item.value("deviceId")},{"sourceName",item.value("name")},
+   {"files",QVariantList{QVariantMap{{"path","evidence.bin"},{"size",bytes.size()},{"sha256",digest(bytes)}}}},
+   {"trustBoundary","Hash-verified working copy. Retain the manifest SHA-256 separately. No external timestamp, legal authority or original-device authenticity is established."}};
+  const auto manifestBytes=encode(manifest);const auto manifestHash=digest(manifestBytes);
+  if(!QDir().mkdir(path))return fail("Package directory already exists or cannot be created.");
+  created=true;
+  if(!QFile::setPermissions(path,QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner))return fail("Cannot restrict package directory permissions.");
+  const auto write=[&](const QString &name,const QByteArray &data){QFile f(QDir(path).filePath(name));if(!f.open(QIODevice::WriteOnly|QIODevice::NewOnly))return false;if(!f.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||f.write(data)!=data.size()||!f.flush())return false;return true;};
+  if(!write("evidence.bin",bytes)||!write("manifest.json",manifestBytes))return fail("Working-copy export failed.");
+  // The package anchors the pre-export revision. The following audit event commits
+  // its digest and export purpose atomically; no external path enters case metadata.
+  result={{"packageId",packageId},{"evidenceId",evidence},{"manifestSha256",manifestHash},{"sourceRevision",revision},{"purpose",purpose},{"exportedAtUtc",manifest.value("exportedAtUtc")},{"actor",actor}};
+  copies.append(result);r.insert("workingCopies",copies);return true;
+ });
+ if(!ok){if(created){QFile::remove(QDir(path).filePath("manifest.json"));QFile::remove(QDir(path).filePath("evidence.bin"));QDir().rmdir(path);}return {};}
+ return result;
+}
+
+QVariantMap LawCaseStore::prepareAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &requester,const QString &role) {
+ const auto r=get(id);
+ const auto source=readEvidence(id,evidence);
+ if(r.isEmpty() || r.value("revision").toLongLong()!=revision || source.isEmpty() || source.size()>8*1024*1024 || report.value("sourceSha256").toString()!=digest(source) || encode(report).size()>64*1024){fail("Cannot prepare analysis: stale case or mismatched evidence.");return {};}
+ const QVariantMap intent{{"schema","nexvary-case-operation/v1"},{"operationId",uuid()},{"requestId",uuid()},{"caseId",id},{"evidenceId",evidence},{"expectedRevision",revision},{"sourceSha256",report.value("sourceSha256")},{"caseBeforeSha256",digest(encode(r))},{"reportSha256",digest(encode(report))},{"analysisId",uuid()},{"kind",parser},{"preparedUtc",now()},{"requester",requester},{"requesterRole",role},{"recoveryState","prepared"}};
+ if(!mr::law::caseIntent(intent)){fail("Invalid analysis intent.");return {};}return intent;
+}
+QVariantMap LawCaseStore::preparePartitions(const QString &id,qint64 revision,const QString &evidence,const QVariantMap &operation,const QString &toolSha256) {
+ const auto r=get(id);const auto source=readEvidence(id,evidence);
+ if(r.isEmpty() || r.value("revision").toLongLong()!=revision || source.size()<512 || source.size()>16*1024*1024 || operation.value("caseRef")!=id || operation.value("status")!="started" || operation.value("kind")!="partition-analysis" || operation.value("capability")!="external-analysis"){
+  fail("Partition preparation requires matching registered evidence, revision and reviewed operation.");return {};
+ }
+ const QVariantMap intent{{"schema","nexvary-case-operation/v2"},{"operationId",operation.value("operationId")},{"requestId",operation.value("requestId")},{"caseId",id},{"evidenceId",evidence},{"expectedRevision",revision},{"sourceSha256",digest(source)},{"caseBeforeSha256",digest(encode(r))},{"reportSha256",QString()},{"analysisId",uuid()},{"kind","partition-analysis"},{"preparedUtc",now()},{"requester",operation.value("requester")},{"requesterRole",operation.value("requesterRole")},{"recoveryState","prepared"},{"toolSha256",toolSha256}};
+ if(!mr::law::caseIntent(intent)){fail("Invalid partition intent.");return {};}return intent;
+}
+QVariantMap LawCaseStore::partitionCandidate(const QVariantMap &intent,const QVariantMap &report) {
+ if(!mr::law::caseIntent(intent) || intent.value("schema")!="nexvary-case-operation/v2" || intent.value("recoveryState")!="prepared" || report.value("sourceSha256")!=intent.value("sourceSha256") || report.value("toolSha256")!=intent.value("toolSha256") || encode(report).size()>64*1024 || report.value("output").toString().isEmpty()){
+  fail("Partition candidate source/tool/report binding rejected.");return {};
+ }
+ auto candidate=intent;candidate.insert("reportSha256",digest(encode(report)));candidate.insert("recoveryState","candidate");return candidate;
+}
+bool LawCaseStore::analysisSnapshotCurrent(const QVariantMap &intent){
+ if(!mr::law::caseIntent(intent))return false;
+ const auto id=intent.value("caseId").toString();const auto r=get(id);const auto source=readEvidence(id,intent.value("evidenceId").toString());
+ return !r.isEmpty() && !source.isEmpty() && r.value("revision")==intent.value("expectedRevision") && digest(encode(r))==intent.value("caseBeforeSha256") && digest(source)==intent.value("sourceSha256");
+}
+QString LawCaseStore::reconcileAnalysis(const QVariantMap &intent) {
+ if(!mr::law::caseIntent(intent))return "unknown";
+ // No report was durably observed: absence of a case write cannot prove the
+ // external process did not run. Never replay or infer external failure/success.
+ if(intent.value("schema")=="nexvary-case-operation/v2" && intent.value("reportSha256").toString().isEmpty())return "unknown";
+ const auto id=intent.value("caseId").toString(),evidence=intent.value("evidenceId").toString();
+ const auto r=get(id);const auto source=readEvidence(id,evidence);
+ if(r.isEmpty() || source.isEmpty() || source.size()>(intent.value("schema")=="nexvary-case-operation/v2"?16:8)*1024*1024 || digest(source)!=intent.value("sourceSha256"))return "unknown";
+ const auto revision=intent.value("expectedRevision").toLongLong();
+ if(r.value("revision").toLongLong()==revision && digest(encode(r))==intent.value("caseBeforeSha256"))return "failed";
+ if(r.value("revision").toLongLong()!=revision+1)return "unknown";
+ int found=0;
+ for(const auto &value:r.value("analyses").toList()){
+  const auto a=value.toMap();
+  if(a.value("operationId")!=intent.value("operationId"))continue;
+  if(!a.value("actor").toString().startsWith(intent.value("requester").toString()+" / ") || a.value("id")!=intent.value("analysisId") || a.value("evidenceId")!=evidence || a.value("parser")!=intent.value("kind") || a.value("sourceSha256")!=intent.value("sourceSha256") || a.value("reportSha256")!=intent.value("reportSha256") || digest(a.value("reportJson").toString().toUtf8())!=intent.value("reportSha256"))return "unknown";
+  ++found;
+ }
+ return found==1?QString("completed"):QString("unknown");
 }

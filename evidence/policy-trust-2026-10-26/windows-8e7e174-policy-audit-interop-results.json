@@ -1,0 +1,111 @@
+{
+  "schema": "nexvary-policy-audit-interop/v1",
+  "checks": [
+    {
+      "check": "native signatures, requester, reviewer and full retained anchor",
+      "passed": true
+    },
+    {
+      "check": "empty retained prefix with independently pinned journal key",
+      "passed": true
+    },
+    {
+      "check": "reordered events",
+      "passed": true
+    },
+    {
+      "check": "valid signed history truncated below retained anchor",
+      "passed": true
+    },
+    {
+      "check": "deleted interior event",
+      "passed": true
+    },
+    {
+      "check": "duplicated event",
+      "passed": true
+    },
+    {
+      "check": "changed signature",
+      "passed": true
+    },
+    {
+      "check": "changed decision payload",
+      "passed": true
+    },
+    {
+      "check": "substituted bundled public key",
+      "passed": true
+    },
+    {
+      "check": "wrong independent key",
+      "passed": true
+    },
+    {
+      "check": "wrong independent digest",
+      "passed": true
+    },
+    {
+      "check": "wrong independent journal identity",
+      "passed": true
+    },
+    {
+      "check": "future retained sequence",
+      "passed": true
+    },
+    {
+      "check": "negative retained sequence",
+      "passed": true
+    },
+    {
+      "check": "fractional retained sequence",
+      "passed": true
+    },
+    {
+      "check": "ambiguous duplicate JSON keys",
+      "passed": true
+    },
+    {
+      "check": "over-limit input",
+      "passed": true
+    },
+    {
+      "check": "standalone CLI needs no Qt/database/private key",
+      "passed": true
+    },
+    {
+      "check": "independent producer accepted by both verifier implementations",
+      "passed": true
+    },
+    {
+      "check": "fully signed self-review is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed unassigned reviewer is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed scope change is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed previous review mutation is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed reviewer activation is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed gate without active permission is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed false system attribution is rejected",
+      "passed": true
+    }
+  ],
+  "passed": 26,
+  "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"
+}

@@ -1,0 +1,2008 @@
+{
+  "schema": "nexvary-competitive-capability-matrix/v1",
+  "reviewedOn": "2026-10-25",
+  "baseline": "e76d20a3a9f610dd2f3ee991b9705d7cd0845fae",
+  "allowedCompetitorEvidence": [
+    "Officially Claimed",
+    "Independently Verified",
+    "Publicly Documented",
+    "Unverified",
+    "Unknown"
+  ],
+  "allowedNexvaryStates": [
+    "Implemented",
+    "Tested",
+    "Lab Verified",
+    "Field Verified",
+    "Pending",
+    "Unsupported"
+  ],
+  "axes": [
+    "Device Coverage",
+    "Android / iOS Support",
+    "Authorized Data Acquisition",
+    "Backup Analysis",
+    "Evidence Integrity",
+    "Chain of Custody",
+    "SQLite / Media / Log Analysis",
+    "Timeline Analysis",
+    "Relationship Analysis",
+    "Search and Indexing",
+    "Reporting",
+    "Offline / Air-Gapped Operations",
+    "Enterprise Security",
+    "Role-Based Access Control",
+    "Auditability",
+    "Reproducibility",
+    "Research Extensibility",
+    "Deployment and Maintenance",
+    "Cost of Ownership",
+    "Training and Localization"
+  ],
+  "sources": [
+    {
+      "id": "PA",
+      "url": "https://cellebrite.com/en/products/cellebrite-inseyets/physical-analyzer/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Vendor describes timeline, decoding/import, scripting and reporting.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "XRY",
+      "url": "https://www.msab.com/product/xry-extract/xry-logical/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Logical acquisition product; exact model and method acceptance unresolved.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "XAMN",
+      "url": "https://www.msab.com/product/analyze/xamn-pro",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "OXYGEN",
+      "url": "https://www.oxygenforensics.com/technical-resources/10-analytical-features-available-in-oxygen-forensic-detective/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Published 2024 feature article describes timeline, social graph and search; no current version equivalence inferred.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "AXIOM",
+      "url": "https://www.magnetforensics.com/products/magnet-axiom/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Multi-source investigation product; not a device coverage validation.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "MAGNET-INTEGRATION",
+      "url": "https://www.magnetforensics.com/blog/automatically-import-and-process-mobile-images-in-magnet-axiom-from-a-graykey-verakey/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Historical vendor integration/analytics article; exact versions and device success unresolved.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "BELKASOFT",
+      "url": "https://belkasoft.com/timeline_full",
+      "evidenceClass": "Publicly Documented",
+      "scope": "Vendor user documentation describes UTC/local chronological views; not independent verification.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "ELCOMSOFT",
+      "url": "https://us.elcomsoft.com/eift.html",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Method/model/platform-dependent Apple acquisition; no universal deeper access inferred.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "CHIMERA",
+      "url": "https://chimeratool.com/en/features/device-info",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Samsung Download Mode device-information feature; not universal device support.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "HYDRA",
+      "url": "https://docs.hydradongle.com/supported-devices/",
+      "evidenceClass": "Publicly Documented",
+      "scope": "Chipset-organized support catalog; no exact-device operation success inferred.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "OCTOPLUS",
+      "url": "https://octoplusbox.com/en/features/features/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Repair/firmware/information feature families; no exact-device success or forensic equivalence.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "UNLOCK",
+      "url": "https://unlocktool.net/",
+      "evidenceClass": "Unknown",
+      "scope": "Official source returned HTTP 403; reseller/mirror support figures excluded.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "NIST",
+      "url": "https://www.nist.gov/itl/csd/secure-systems-and-applications/computer-forensics-tool-testing-program-cftt/cftt-7",
+      "evidenceClass": "Publicly Documented",
+      "scope": "Mobile testing index located; individual report result tables not reviewed. No certification or general pass inferred. AXIOM 8.1.0.42087 and Inseyets 10.3 report PDF requests returned HTTP 403 on this review; results remain unverified.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "RCS",
+      "url": "https://citizenlab.ca/research/mapping-hacking-teams-untraceable-spyware/",
+      "evidenceClass": "Publicly Documented",
+      "scope": "Original 2014 defensive infrastructure research; no leaked code/materials or implant reuse.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "NIST-SPEC-3.3",
+      "url": "https://www.nist.gov/document/mobile-device-forensic-tool-test-specification-v33",
+      "evidenceClass": "Publicly Documented",
+      "scope": "January 2025 specification, sections 6.2.4 and 6.2.7 inspected; requirements are not a product test result.",
+      "retrievedOn": "2026-10-25"
+    },
+    {
+      "id": "MSAB-XAMN-AUDIT-7.3",
+      "url": "https://www.msab.com/updates/new-release-xry-10-3-xamn-7-3-and-xec-7-3/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "XAMN 7.3 release (2022-10-06) describes detailed evidence-review access/activity logging. Historical version statement, not current-version test or signed-history verification.",
+      "retrievedOn": "2026-10-26"
+    },
+    {
+      "id": "OXYGEN-REVIEW-ROLES",
+      "url": "https://enterprise.oxygenforensics.com/blog/how-oxygen-review-center-provides-real-time-collaboration-anytime-you-need-it/",
+      "evidenceClass": "Officially Claimed",
+      "scope": "Review Center describes user logs and distinct case administrator/reviewer/uploader roles. Separate enterprise component; no standalone Detective audit or cryptographic guarantee inherited. Publication date not confirmed.",
+      "retrievedOn": "2026-10-26"
+    }
+  ],
+  "products": [
+    {
+      "name": "Cellebrite UFED",
+      "reviewSourceIds": [
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Cellebrite Physical Analyzer / Inseyets",
+      "reviewSourceIds": [
+        "PA"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "PA"
+          ],
+          "scope": "Vendor describes timeline, decoding/import, scripting and reporting.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "PA"
+          ],
+          "scope": "Vendor describes timeline, decoding/import, scripting and reporting.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "PA"
+          ],
+          "scope": "Vendor describes timeline, decoding/import, scripting and reporting.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "PA"
+          ],
+          "scope": "Vendor describes timeline, decoding/import, scripting and reporting.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "MSAB XRY",
+      "reviewSourceIds": [
+        "XRY",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XRY"
+          ],
+          "scope": "Logical acquisition product; exact model and method acceptance unresolved.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "MSAB XAMN",
+      "reviewSourceIds": [
+        "XAMN"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XAMN"
+          ],
+          "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XAMN"
+          ],
+          "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XAMN"
+          ],
+          "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XAMN"
+          ],
+          "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Reporting": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "XAMN"
+          ],
+          "scope": "Vendor describes timeline, connections, filters, file viewers and reports.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "MSAB-XAMN-AUDIT-7.3"
+          ],
+          "scope": "Detailed review/access logging stated for XAMN 7.3. No licensed execution, independent audit-integrity test, current-version conformance or equivalence to NEXVARY signed exception history.",
+          "confidence": "medium"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Oxygen Forensic Detective",
+      "reviewSourceIds": [
+        "OXYGEN",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "OXYGEN"
+          ],
+          "scope": "Published 2024 feature article describes timeline, social graph and search; no current version equivalence inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "OXYGEN"
+          ],
+          "scope": "Published 2024 feature article describes timeline, social graph and search; no current version equivalence inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "OXYGEN"
+          ],
+          "scope": "Published 2024 feature article describes timeline, social graph and search; no current version equivalence inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Magnet AXIOM",
+      "reviewSourceIds": [
+        "AXIOM",
+        "MAGNET-INTEGRATION",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "MAGNET-INTEGRATION"
+          ],
+          "scope": "Historical vendor integration/analytics article; exact versions and device success unresolved.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "MAGNET-INTEGRATION"
+          ],
+          "scope": "Historical vendor integration/analytics article; exact versions and device success unresolved.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Magnet Graykey",
+      "reviewSourceIds": [
+        "MAGNET-INTEGRATION",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Belkasoft Evidence Center X",
+      "reviewSourceIds": [
+        "BELKASOFT",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Publicly Documented",
+          "sourceIds": [
+            "BELKASOFT"
+          ],
+          "scope": "Vendor user documentation describes UTC/local chronological views; not independent verification.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Elcomsoft iOS Forensic Toolkit",
+      "reviewSourceIds": [
+        "ELCOMSOFT",
+        "NIST"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "ELCOMSOFT"
+          ],
+          "scope": "Method/model/platform-dependent Apple acquisition; no universal deeper access inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "ELCOMSOFT"
+          ],
+          "scope": "Method/model/platform-dependent Apple acquisition; no universal deeper access inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Chimera Tool",
+      "reviewSourceIds": [
+        "CHIMERA"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "CHIMERA"
+          ],
+          "scope": "Samsung Download Mode device-information feature; not universal device support.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Hydra Tool",
+      "reviewSourceIds": [
+        "HYDRA"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Publicly Documented",
+          "sourceIds": [
+            "HYDRA"
+          ],
+          "scope": "Chipset-organized support catalog; no exact-device operation success inferred.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "UnlockTool",
+      "reviewSourceIds": [
+        "UNLOCK"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Octoplus",
+      "reviewSourceIds": [
+        "OCTOPLUS"
+      ],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Officially Claimed",
+          "sourceIds": [
+            "OCTOPLUS"
+          ],
+          "scope": "Repair/firmware/information feature families; no exact-device success or forensic equivalence.",
+          "confidence": "medium for publication; performance unverified"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    },
+    {
+      "name": "Official OEM tools",
+      "reviewSourceIds": [],
+      "capabilities": {
+        "Device Coverage": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Android / iOS Support": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Authorized Data Acquisition": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Backup Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Evidence Integrity": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Chain of Custody": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "SQLite / Media / Log Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Timeline Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Relationship Analysis": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Search and Indexing": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reporting": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Offline / Air-Gapped Operations": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Enterprise Security": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Role-Based Access Control": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Auditability": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Reproducibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Research Extensibility": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Deployment and Maintenance": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Cost of Ownership": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        },
+        "Training and Localization": {
+          "evidenceClass": "Unknown",
+          "sourceIds": [],
+          "scope": "No capability determination in this slice. Unknown does not mean absent.",
+          "confidence": "unknown"
+        }
+      }
+    }
+  ],
+  "superiorityEstablished": false,
+  "independentComparisonPerformed": false
+}

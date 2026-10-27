@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/b91b82a596d9/NEXVARY-MR/build
+Test project /workspace/scratch/b91b82a596d9/NEXVARY-MR/build
+    Start 40: mr_gui_smoke
+1/1 Test #40: mr_gui_smoke .....................   Passed   22.78 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  22.79 sec

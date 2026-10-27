@@ -1,7 +1,7 @@
 name: C++20 and Qt Windows
 on:
   push:
-    branches: [main, dev/cpp-qt-foundation]
+    branches: [main, dev/cpp-qt-foundation, feature/government-operations]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -45,8 +45,17 @@ jobs:
       - name: Install Qt and separately packaged TSK for synthetic integration
         timeout-minutes: 10
         run: |
+          # Prefer the signed official archive over the Azure mirror that timed
+          # out while transferring packages. Keep normal APT authentication,
+          # retries, IO timeouts and the existing bounded step deadline.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf 'https://archive.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          fi
+          if [ -f /etc/apt/apt-mirrors-security.txt ]; then
+            printf 'https://security.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors-security.txt >/dev/null
+          fi
           sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv curl
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build gdb qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv python3-cryptography curl
       - name: Prepare pinned signed-manifest verification dependency
         timeout-minutes: 10
         run: |
@@ -61,16 +70,18 @@ jobs:
           done
       - name: Configure and build native GUI and fixtures
         run: |
-          cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
+          cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-g -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
           cmake --build build --parallel 2
       - name: Run Qt, recovery and real mmls synthetic-image integration
-        run: ctest --test-dir build --output-on-failure --output-junit linux-qt-results.xml
+        run: |
+          python3 scripts/diagnose_ui_failure.py --build build
+          ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
       - name: Instrument parser, identity and signed-update regressions
         if: matrix.profile == 'production'
         run: |
           cmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-avb-sanitized --target mr_identity_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
-          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_((avb|pcap|exif)_mutation|identity|update|update_journal|update_key)_tests$' --output-on-failure --output-junit avb-sanitizer-results.xml
+          cmake --build build-avb-sanitized --target mr_partition_transaction_tests mr_case_transaction_tests mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
+          UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|partition_transaction|case_transaction|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml
       - name: Native Qt client through real Gunicorn and verified Caddy TLS
         if: matrix.profile == 'production'
         run: |
@@ -82,12 +93,22 @@ jobs:
           name: NEXVARY-MR-Linux-${{ matrix.profile }}-integration-evidence
           path: |
             build/linux-qt-results.xml
+            build/gui-repeat-results.xml
+            build/gui-repeat-console.txt
+            build/full-suite-last-test.log
+            build/full-suite-failed-tests.log
+            build/*-gdb.txt
+            build/ui-crash-diagnostics.json
+            build/ui-crash-diagnostic-error.txt
             build/*-results.txt
+            build/policy-audit-interop-results.json
+            build/adb-backup-interop-results.json
             build/**/smoke*.png
             build/Testing/Temporary/LastTest.log
             build/sodium-build-receipt.json
             build/sodium-build.log
             build-avb-sanitized/avb-sanitizer-results.xml
+            build-avb-sanitized/adb-backup-interop-results.json
             build-avb-sanitized/Testing/Temporary/LastTest.log
   tracking-server:
     runs-on: ubuntu-24.04
@@ -144,6 +165,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install independent policy audit verifier
+        run: python -m pip install cryptography==50.0.2
       - name: Prepare pinned signed-manifest verification dependency
         timeout-minutes: 10
         shell: pwsh
@@ -210,6 +233,9 @@ jobs:
           $testResult = $LASTEXITCODE
           Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
+          Copy-Item build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
+          ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify read-only Windows USB inventory
         id: usb_inventory
         shell: pwsh
@@ -297,7 +323,12 @@ jobs:
           name: NEXVARY-MR-Windows-${{ matrix.profile }}-validation-evidence
           path: |
             build/qt-results.xml
+            build/gui-repeat-results.xml
+            build/gui-repeat-console.txt
+            build/full-suite-last-test.log
             build/*-results.txt
+            build/policy-audit-interop-results.json
+            build/adb-backup-interop-results.json
             build/**/smoke*.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/

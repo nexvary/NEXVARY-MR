@@ -1,0 +1,11 @@
+{
+  "sourceSha": "bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da",
+  "nativeRun": 40190246495,
+  "pythonRun": 40190246502,
+  "historyRun": 40190246577,
+  "actualPhoneConnected": false,
+  "uiFixture": "SYNTHETIC42; generated test data only",
+  "scrcpyWindowsArchiveSha256": "b12a2c4ee8be317422451fc7dcf8ee20a71b5ea7ef9ad73ddd825a25316227a5",
+  "officialLinuxVersionProbe": "5.0.1; --version and fixed flags in --help; no phone access",
+  "localAsan": "tool/mirror 2/2; detect_leaks=0; UBSAN_OPTIONS=halt_on_error=1"
+}

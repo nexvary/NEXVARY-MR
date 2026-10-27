@@ -21,7 +21,7 @@ static int fakeAdb(const QStringList &args) {
   const QString mode = qEnvironmentVariable("MR_TEST_TOOL_MODE");
   if (mode == QStringLiteral("failure")) { std::fputs("USB disconnected\n", stderr); return 7; }
   if (mode == QStringLiteral("hang")) QThread::msleep(30000);
-  if (mode == QStringLiteral("slow")) QThread::msleep(11600);
+  if (mode == QStringLiteral("slow")) QThread::msleep(10000);
   if (mode == QStringLiteral("flood")) {
     const QByteArray flood(600 * 1024, 'x');
     std::fwrite(flood.constData(), 1, static_cast<size_t>(flood.size()), stdout);
@@ -196,6 +196,32 @@ private slots:
     bridge.readLogcat();QVERIFY(!bridge.busy());QVERIFY(finished.isEmpty());QVERIFY(bridge.deviceInfo().isEmpty());
     QVERIFY(!bridge.startService("probe","DEVICE42",{{"authorized",true}}));QVERIFY(!bridge.busy());
   }
+  void manualRefreshRetainsDatedSnapshotUntilSuccessOrFailure(){
+    ToolBridge b;QSignalSpy done(&b,&ToolBridge::operationFinished);b.scanAdb();QVERIFY(done.wait(5000));b.selectDevice("DEVICE42");done.clear();b.readDeviceInfo();QVERIFY(done.wait(5000));
+    const auto before=b.deviceInfo();const auto at=b.deviceIntelligence().value("propertiesObservedAtUtc");
+    qputenv("MR_TEST_TOOL_MODE","hang");done.clear();b.readDeviceInfo();QVERIFY(b.busy());QCOMPARE(b.deviceInfo(),before);QCOMPARE(b.deviceIntelligence().value("propertiesObservedAtUtc"),at);
+    b.cancel();QVERIFY(done.wait(5000));QVERIFY(!done.last()[0].toBool());QVERIFY(b.deviceInfo().isEmpty());QVERIFY(b.deviceIntelligence().value("propertiesObservedAtUtc").toString().isEmpty());
+  }
+  void backgroundRefreshDoesNotPulseForegroundOrRebuildIdentity(){
+    ToolBridge b;QSignalSpy completed(&b,&ToolBridge::operationFinished);b.scanAdb();QVERIFY(completed.wait(5000));b.selectDevice("DEVICE42");completed.clear();b.readDeviceInfo();QVERIFY(completed.wait(5000));
+    const auto info=b.deviceInfo();const auto status=b.status();
+    QSignalSpy busy(&b,&ToolBridge::busyChanged),identity(&b,&ToolBridge::deviceInfoChanged),intel(&b,&ToolBridge::deviceIntelligenceChanged),done(&b,&ToolBridge::backgroundRefreshFinished);
+    b.setAutoRefresh(true);QVERIFY(b.backgroundRefreshing());QVERIFY(!b.busy());QVERIFY(!b.foregroundBusy());QVERIFY(b.activeOperation().isEmpty());QVERIFY(done.wait(5000));QVERIFY(done.last()[0].toBool());b.setAutoRefresh(false);
+    QCOMPARE(b.deviceInfo(),info);QCOMPARE(b.status(),status);QCOMPARE(busy.size(),0);QCOMPARE(identity.size(),0);QCOMPARE(intel.size(),0);
+  }
+  void explicitReadSupersedesSlowBackgroundWithoutFailure(){
+    ToolBridge b;QSignalSpy completed(&b,&ToolBridge::operationFinished);b.scanAdb();QVERIFY(completed.wait(5000));b.selectDevice("DEVICE42");completed.clear();
+    qputenv("MR_TEST_TOOL_MODE","hang");b.setAutoRefresh(true);QVERIFY(b.backgroundRefreshing());QVERIFY(!b.busy());qunsetenv("MR_TEST_TOOL_MODE");
+    b.readDeviceInfo();QVERIFY(b.foregroundBusy());QCOMPARE(b.activeOperation(),QString("properties"));QVERIFY(completed.wait(5000));QVERIFY(completed.last()[0].toBool());QTRY_VERIFY_WITH_TIMEOUT(!b.backgroundRefreshing(),3000);b.setAutoRefresh(false);
+    QCOMPARE(completed.size(),1);QCOMPARE(b.deviceInfo().value("ro.product.model").toString(),QString("Test Phone"));QVERIFY(!b.foregroundBusy());
+  }
+  void backgroundFailuresInvalidateStaleTarget_data(){QTest::addColumn<QByteArray>("mode");for(const auto &value:{"failure","hang","flood"})QTest::newRow(value)<<QByteArray(value);}
+  void backgroundFailuresInvalidateStaleTarget(){
+    QFETCH(QByteArray,mode);
+    ToolBridge b;QSignalSpy completed(&b,&ToolBridge::operationFinished);b.scanAdb();QVERIFY(completed.wait(5000));b.selectDevice("DEVICE42");
+    qputenv("MR_TEST_TOOL_MODE",mode);QSignalSpy done(&b,&ToolBridge::backgroundRefreshFinished);b.setAutoRefresh(true);QVERIFY(done.wait(6000));b.setAutoRefresh(false);
+    QVERIFY(!done.last()[0].toBool());QVERIFY(b.devices().isEmpty());QVERIFY(b.selectedSerial().isEmpty());QVERIFY(!b.busy());QVERIFY(b.status().contains("failed"));
+  }
   void missingToolAndNoSelection() {
     qputenv("PATH", QByteArray());
     ToolBridge bridge;
@@ -206,7 +232,7 @@ private slots:
     QCOMPARE(finished[0][0].toBool(), false);
     bridge.startMirror();
     QVERIFY(!bridge.mirrorActive());
-    if(!bridge.laboratoryBuild())QVERIFY(bridge.status().contains(QStringLiteral("Laboratory")));
+    QVERIFY(bridge.screenViewAvailable());
     bridge.selectDevice(QStringLiteral("unknown"));
     QVERIFY(bridge.selectedSerial().isEmpty());
   }
@@ -292,7 +318,9 @@ private slots:
     QSignalSpy finished(&bridge, &ToolBridge::operationFinished);
     bridge.scanAdb();
     QVERIFY(finished.wait(5000));
-    QTest::qWait(700);
+    // A stale 12 s deadline from the first command would fire 9.5 s into
+    // the second command. Its own deadline still has 2 s of startup margin.
+    QTest::qWait(2500);
     qputenv("MR_TEST_TOOL_MODE", "slow");
     bridge.scanAdb();
     QVERIFY(finished.wait(15000));

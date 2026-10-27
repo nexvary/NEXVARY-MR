@@ -1,0 +1,14 @@
+[0/2] Re-checking globbed directories...
+[1/129] Generating NexvaryMR/qml/IdentityPanel.qml
+[2/129] Generating NexvaryMR/qml/TopBar.qml
+[3/129] Automatic MOC and UIC for target nexvary_mr
+[4/128] Running AUTOMOC file extraction for target nexvary_mr
+[5/13] Running qmlimportscanner for nexvary_mr
+[6/13] Generating .rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp
+[7/13] Generating .rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp
+[8/13] Running rcc for resource nexvary_mr_raw_qml_0
+[9/13] Building CXX object CMakeFiles/nexvary_mr.dir/build-backup/.rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp.o
+[10/13] Building CXX object CMakeFiles/nexvary_mr.dir/build-backup/.rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp.o
+[11/13] Building CXX object CMakeFiles/nexvary_mr.dir/build-backup/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[12/13] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+[13/13] Linking CXX executable nexvary_mr

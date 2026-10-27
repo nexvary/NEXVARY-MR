@@ -1,0 +1,166 @@
+{
+  "sourceCommit": "7cfa1a65bd4aba84664c791f1feb17f0e344918b",
+  "sourceTree": "5beec000e51d3020d5eda91bfd0edffba95c51ac",
+  "inputs": [
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "fae8c8ffcdc6208a1a6dd24f893d199ac6bd77b2fb51f4dfabe3db60e12b4c4d"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "a421a5c2379b8f470a90320bd569084778d2c4e0db573319f84dc50baf39b47c"
+    },
+    {
+      "path": "cpp/src/CloudTracking.cpp",
+      "sha256": "c6a1a8d2b50f2e04988814cb370d6379cdbeaa74e05154c7a1af77be8b4df6cb"
+    },
+    {
+      "path": "cpp/src/CloudTracking.hpp",
+      "sha256": "abd80e4e91c862e0cc76f397712a4cd9d35c349a21c87ab10d1031809a0fe32e"
+    },
+    {
+      "path": "cpp/src/DeviceServices.cpp",
+      "sha256": "1390e6bfdc3603522568ce97d5396711e38a3f5f1125537acee395fc80a7177e"
+    },
+    {
+      "path": "cpp/src/GovernmentOperationPolicy.cpp",
+      "sha256": "86451c75e1e6c5bc9792955aab380a350d56113d34ec6635cdf7f90431dc324f"
+    },
+    {
+      "path": "cpp/src/GovernmentOperationPolicy.hpp",
+      "sha256": "edd7877feca628b3d9554db8feb4a14fd1f7606796fc6b51ebf9072083b5d9d4"
+    },
+    {
+      "path": "cpp/src/MirrorSession.cpp",
+      "sha256": "990c30a23099c3eaa0cf803c269f9591f331dd33e72d7e722a59ce4112434ec9"
+    },
+    {
+      "path": "cpp/src/MirrorSession.hpp",
+      "sha256": "bc6506aec931e0e91f325ddf7a10e97847c02aaa2633bc0be5117aedc99b60e2"
+    },
+    {
+      "path": "cpp/src/RecoveryBridge.cpp",
+      "sha256": "1c2a1abe8db7d218f9ba8c98d09092120b54816198c827edcb9ab232b0bc3800"
+    },
+    {
+      "path": "cpp/src/RecoveryBridge.hpp",
+      "sha256": "dca6a29c6682c2c282c2e9d2398379690e25d433707aa33fc94f3a00efccf6cf"
+    },
+    {
+      "path": "cpp/src/SecurityBridge.cpp",
+      "sha256": "10a4f21181d1cd289fcfe900cefc2bab0ec266617c2f66d048e1467664a149e4"
+    },
+    {
+      "path": "cpp/src/SecurityBridge.hpp",
+      "sha256": "33fc49e89cff91a0363a424e77958b610c5d56d6edf16ae20b35ed6a76b5f355"
+    },
+    {
+      "path": "cpp/src/ToolBridge.cpp",
+      "sha256": "738a2c16f7033fd50f266bca5edae9a6f31012fdf1634615566e63e3b1f60133"
+    },
+    {
+      "path": "cpp/src/ToolBridge.hpp",
+      "sha256": "75df9b0a09cad1f741a5bbf21a2ac6308e29e47267aeaf1692824b5bec747573"
+    },
+    {
+      "path": "cpp/src/TrackingPortal.cpp",
+      "sha256": "1a4069dabcabae6b1d3e13f5a89b4eb753824f87cca9acccf94c03de2b7ca897"
+    },
+    {
+      "path": "cpp/src/TrackingPortal.hpp",
+      "sha256": "0167c1c173bd1513f700c61696766e307f7495414d0055c1a2fcca741d777219"
+    },
+    {
+      "path": "cpp/src/TskImage.cpp",
+      "sha256": "56dd3bf24de2fe6739a61aa9aba1600208f5912b0d200f6cc9ac3bc464641752"
+    },
+    {
+      "path": "cpp/src/main.cpp",
+      "sha256": "ff0102ef4ff558c181aec2119180aeb1b766e4f3184f55ff4ac2f91a93d42b60"
+    },
+    {
+      "path": "cpp/tests/cloud_tests.cpp",
+      "sha256": "4e56cfd1f5dde6a76c6a3eaf5340e09900d50e8f0858330bd882128c338adecd"
+    },
+    {
+      "path": "cpp/tests/mirror_tests.cpp",
+      "sha256": "eab60bdea87a19ce05880f7b2ad790835159ab47989c3d5642cbf90325bfa0a2"
+    },
+    {
+      "path": "cpp/tests/offline_tests.cpp",
+      "sha256": "7a80034e9acd9e4a7e7055705a0146ba7c89da987112497c3f2c6d9789f8c602"
+    },
+    {
+      "path": "cpp/tests/ui_tests.cpp",
+      "sha256": "801f70e32712a3baa25faf283bc72759849322878bdd5422b6dd896db14d794f"
+    },
+    {
+      "path": "docs/GOVERNMENT_OFFLINE_POLICY.md",
+      "sha256": "c366d6fcfba5589376a5f63e1da52102c05320cddc4c8ae831b5006b9ef442f5"
+    },
+    {
+      "path": "docs/GOVERNMENT_OPERATIONS.md",
+      "sha256": "6792a7ac17042dd2540334979c9956a23ea839ea33549ad5a585644b1ec23ff3"
+    },
+    {
+      "path": "packaging/package-windows.ps1",
+      "sha256": "f7fef28db521e7922378559b32b59827f2085579fd9595a80e895f3bdd8efe21"
+    },
+    {
+      "path": "packaging/smoke-windows.ps1",
+      "sha256": "1d667d98d72243ad228e42814d5b6f0ffa100f1cc77f8f0edd48278a84c4e87d"
+    },
+    {
+      "path": "qml/DeviceServicesPage.qml",
+      "sha256": "ec494a17973c59455f8709725e14a08308c217feef47562e084f70b2b226282b"
+    },
+    {
+      "path": "qml/DriverCatalogPage.qml",
+      "sha256": "06f6a61adeccfc8ee7c3667c8d524ccbe4eff99510519dd9479138beae005248"
+    },
+    {
+      "path": "qml/ForensicToolsPage.qml",
+      "sha256": "00b477bde2ba4ed98ab4e55b1a0af8406504ad60046d788dabc539afbabdccb9"
+    },
+    {
+      "path": "qml/GovernmentNetworkPanel.qml",
+      "sha256": "322ed711e80b2ecedc88e95db31d63ee85ca617fea034bebf4804685562510a5"
+    },
+    {
+      "path": "qml/HelpPage.qml",
+      "sha256": "324a9b2a1b4fcb579f5c450c3b8bb102c31c4a26629fd6bbd3013ac5492c6391"
+    },
+    {
+      "path": "qml/IdentityPanel.qml",
+      "sha256": "5bf7076a62cf4d476ebfa2d51d4a44e4492a344ada8cd4e8113633a12c0a929a"
+    },
+    {
+      "path": "qml/Main.qml",
+      "sha256": "03a5289ff33bdf3e8b3e126c5fe9d9569a22f3974d1d0c61234e17cb4d645de2"
+    },
+    {
+      "path": "qml/SecurityPage.qml",
+      "sha256": "71076019ef6cb2ee5fa3042f3dba947c9d9e259949a2bc5fd2ffe45ab5254009"
+    },
+    {
+      "path": "qml/SettingsPage.qml",
+      "sha256": "472b5826c5729eba59482e408b13092e0a4bd3b7553495642f6bb5591639a87e"
+    },
+    {
+      "path": "qml/SupportedDevicesPage.qml",
+      "sha256": "4488dc3663d7574c4e7982db7fa82ac2197a9dd9f0c2c7e355f7789cbde717ce"
+    },
+    {
+      "path": "qml/TopBar.qml",
+      "sha256": "6dd310edfe4c8a0d8e10211b76e5e65120c38a8b0ccb71a30fe70b8984dca363"
+    },
+    {
+      "path": "qml/WorkshopHub.qml",
+      "sha256": "e317fb7c1d68f8dd12de1c6f4cbf7e7c91f2a005ddb7564f39c9e8b535b1440c"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "sha256": "7ef4d0b1efd845e07319516bee4acb70780d51a054376fc7abccbe8842fcdc07"
+    }
+  ]
+}

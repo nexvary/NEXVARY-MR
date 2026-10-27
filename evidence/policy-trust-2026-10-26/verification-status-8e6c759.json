@@ -1,0 +1,254 @@
+{
+  "source": "8e6c759a9c896486eda24fa0db94f23a5ca0f8f3",
+  "runId": 40316704075,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40316704075",
+  "overall": "failure",
+  "jobs": [
+    {
+      "id": 121551321120,
+      "name": "tracking-server",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321325,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321509,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321611,
+      "name": "linux-forensic-integration (production)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321687,
+      "name": "qt (laboratory)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321771,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121551321861,
+      "name": "qt (production)",
+      "status": "completed",
+      "result": "failure"
+    }
+  ],
+  "windowsProductionSteps": [
+    {
+      "name": "Set up job",
+      "result": "success"
+    },
+    {
+      "name": "Run actions/checkout@v4",
+      "result": "success"
+    },
+    {
+      "name": "Parse Windows deployment scripts before building",
+      "result": "success"
+    },
+    {
+      "name": "Run jurplel/install-qt-action@v4",
+      "result": "success"
+    },
+    {
+      "name": "Run actions/setup-python@v5",
+      "result": "success"
+    },
+    {
+      "name": "Install independent policy audit verifier",
+      "result": "success"
+    },
+    {
+      "name": "Prepare pinned signed-manifest verification dependency",
+      "result": "success"
+    },
+    {
+      "name": "Retain signature dependency provenance",
+      "result": "success"
+    },
+    {
+      "name": "Supply installed Windows fonts to offscreen Qt tests",
+      "result": "success"
+    },
+    {
+      "name": "Configure GUI and Qt integration tests",
+      "result": "success"
+    },
+    {
+      "name": "Build GUI",
+      "result": "success"
+    },
+    {
+      "name": "Verify bounded GUI profile probe and production packaging guard",
+      "result": "success"
+    },
+    {
+      "name": "Prepare verified standalone ClamAV for synthetic Windows integration",
+      "result": "success"
+    },
+    {
+      "name": "Run CTest suite",
+      "result": "success"
+    },
+    {
+      "name": "Verify read-only Windows USB inventory",
+      "result": "success"
+    },
+    {
+      "name": "Assemble portable Qt runtime",
+      "result": "success"
+    },
+    {
+      "name": "Verify portable in isolated path with spaces",
+      "result": "failure"
+    },
+    {
+      "name": "Build per-user Windows installer",
+      "result": "skipped"
+    },
+    {
+      "name": "Verify installer installation and deployed runtime",
+      "result": "skipped"
+    },
+    {
+      "name": "Record artifact checksums",
+      "result": "skipped"
+    },
+    {
+      "name": "Run actions/upload-artifact@v4",
+      "result": "skipped"
+    },
+    {
+      "name": "Run actions/upload-artifact@v4",
+      "result": "skipped"
+    },
+    {
+      "name": "Run actions/upload-artifact@v4",
+      "result": "success"
+    },
+    {
+      "name": "Post Run actions/setup-python@v5",
+      "result": "skipped"
+    },
+    {
+      "name": "Post Run jurplel/install-qt-action@v4",
+      "result": "success"
+    },
+    {
+      "name": "Post Run actions/checkout@v4",
+      "result": "success"
+    },
+    {
+      "name": "Complete job",
+      "result": "success"
+    }
+  ],
+  "failureScope": "Build and CTest succeeded; isolated portable validation failed. Installer/package publication skipped. Exact cause not established without full logs/artifact.",
+  "accessBlocker": {
+    "githubConnector": "Not currently installed/available; suggestion issued",
+    "publicJobLogs": "HTTP 403",
+    "publicArtifactDownload": "HTTP 401",
+    "publicAnnotations": "Exit code 1 only; no actionable root cause"
+  },
+  "artifacts": [
+    {
+      "id": 12648610995,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 63669235,
+      "digest": "sha256:ed2d3397866d4292c1e844e6bb8b136fee5c4d3d9871db724c1dd6978fabd619",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12648280820,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size_in_bytes": 60831223,
+      "digest": "sha256:3391ea99a3a10c48c694a51ec00877dbfa4593b9c22a3432af3c2798e4e3c21e",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12647980575,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size_in_bytes": 80418232,
+      "digest": "sha256:f9f235e9d590b53b1d80b04ae26c6d3d7c8e970617b68b6d00a0d12c6e13109b",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12647842116,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size_in_bytes": 80328060,
+      "digest": "sha256:e7018bfb118af442d9d0db161fde4b851730bdea0f6663e625ea33a1d5e8306a",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12647730540,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size_in_bytes": 18561,
+      "digest": "sha256:49ba7bc63968c645b6a90d49631ba83379a8a11f3ee9b14b7e0217708fb8921b",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12647162139,
+      "name": "core-test-results-windows-2022",
+      "size_in_bytes": 657,
+      "digest": "sha256:8fea1b6467a42077ccbe935e589abd4cf511d7a6e453261e485d6db5792c6bc7",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    },
+    {
+      "id": 12646673440,
+      "name": "core-test-results-ubuntu-latest",
+      "size_in_bytes": 647,
+      "digest": "sha256:1ba09ed8198e287b1f34a8bce94f1f515086ad29f5c84c22e7cc9bf0877600f7",
+      "expired": false,
+      "expires_at": "2027-01-24T11:39:37Z"
+    }
+  ],
+  "linuxDownloadedArchiveSha256": "e7018bfb118af442d9d0db161fde4b851730bdea0f6663e625ea33a1d5e8306a",
+  "linuxProduction": {
+    "ctest": {
+      "passed": 48,
+      "total": 48
+    },
+    "sanitizers": {
+      "passed": 17,
+      "total": 17
+    },
+    "policyCases": 11,
+    "uiCases": 50,
+    "interopChecks": 26
+  },
+  "local": {
+    "ctest": {
+      "passed": 48,
+      "total": 48,
+      "seconds": 331
+    },
+    "pythonTests": 38,
+    "executableSha256": "e73fdb0b62afd9c5cb1f36b21b6b1bc971dfa1b26402328a98e4493955256c65"
+  },
+  "windowsExecutableSha256": null,
+  "newWindowsDownloadsVerified": false,
+  "airGapAccepted": false,
+  "institutionallyAccepted": false,
+  "competitorExecuted": false,
+  "superiorityEstablished": false
+}

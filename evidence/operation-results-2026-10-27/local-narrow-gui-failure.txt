@@ -1,0 +1,54 @@
+Internal ctest changing into directory: /workspace/scratch/48432bb85957/NEXVARY-MR/build
+Test project /workspace/scratch/48432bb85957/NEXVARY-MR/build
+    Start 48: mr_gui_smoke
+    Test #48: mr_gui_smoke .....................   Passed   22.78 sec
+    Start 48: mr_gui_smoke
+    Test #48: mr_gui_smoke .....................   Passed   23.15 sec
+    Start 48: mr_gui_smoke
+    Test #48: mr_gui_smoke .....................***Failed   19.57 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Synthetic GUI smoke check failed: stage=policy-audit-export
+Synthetic GUI smoke exit: stage=policy-audit-deployed-verification code=16
+Synthetic GUI smoke event-loop exit: code=16
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =  65.50 sec
+
+The following tests FAILED:
+	 48 - mr_gui_smoke (Failed)
+Errors while running CTest

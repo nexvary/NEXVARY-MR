@@ -1,0 +1,40 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "selected": [
+    {
+      "name": "prod-qt-results.xml",
+      "sha256": "d08119d6beca2cb9e6154ae71b3230e67c5e279efa5bbca6e9a0a15184c21f64",
+      "bytes": 9813
+    },
+    {
+      "name": "prod-gui-repeat-results.xml",
+      "sha256": "13c9b8aa621fae1d91ce299fe3849375b0a0e2b6af0e72d6dcff6eca83173637",
+      "bytes": 411
+    },
+    {
+      "name": "prod-gui-repeat-console.txt",
+      "sha256": "1f86e63c44187b8ab3c23c247127c25258ce827e7e7f0fe28533655931babfa0",
+      "bytes": 537
+    },
+    {
+      "name": "prod-smoke-professional-ui-partition-receipt-ar.png",
+      "sha256": "ca05970576ed9b7bf69bd7809ff3de4c52e986d08c801853988725b9564691f3",
+      "bytes": 242170
+    },
+    {
+      "name": "prod-smoke-professional-ui-partition-receipt-en.png",
+      "sha256": "153583b78638c5329551e3e6c732a33d30e749b22188a56a84ee2f02cf219495",
+      "bytes": 252558
+    },
+    {
+      "name": "pr-failure-linux-qt-results.xml",
+      "sha256": "364edb180bea2b2da3549b4cf653956aa8565dd988250dcfbce4eba57d5b2ef2",
+      "bytes": 44923
+    },
+    {
+      "name": "pr-failure-LastTest.log",
+      "sha256": "ae1a0c6016a5dca78083e844fed75aaeebf30c322ecd441a72172b6e43b6372c",
+      "bytes": 87870
+    }
+  ]
+}

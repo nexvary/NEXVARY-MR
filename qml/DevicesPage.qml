@@ -13,6 +13,7 @@ Item {
  readonly property bool adbReady:page.selected&&selectedConnections.length===1&&selectedConnections[0].transport==="adb"&&selectedConnections[0].state==="device"
  readonly property string selectionReason:!page.selected?app.trx("حدد جهازًا أولًا","Select a device first"):selectedConnections.length!==1?app.trx("اتصال الجهاز غائب أو ملتبس؛ أعد الاكتشاف","Target missing or ambiguous; rediscover devices"):selectedConnections[0].state==="unauthorized"?app.trx("وافق على تصحيح USB من الهاتف","Authorize USB debugging on the phone"):selectedConnections[0].state==="offline"?app.trx("اتصال ADB غير متاح؛ افحص الكابل والتفويض","ADB is offline; check the cable and authorization"):app.trx("تتطلب هذه العملية اتصال ADB بحالة device","This operation requires an ADB connection in device state")
  readonly property bool identified:!!toolBridge.deviceInfo["ro.build.fingerprint"]
+ function screenState(){const state=toolBridge.mirrorState;return state==="running"||state.indexOf("monitor-")===0?app.trx("نافذة العرض قيد التشغيل","Screen window running"):state==="stopping"?app.trx("جارٍ إيقاف العرض","Stopping screen view"):app.trx("جارٍ التحقق من الأداة والهاتف","Checking tool and device")}
  function reviewMirror(){
   reviewedMirrorTarget=toolBridge.selectedSerial
   mirrorOwner.checked=false;mirrorComponent.checked=false;mirrorChallenge.clear();mirrorConfirm.open()
@@ -22,7 +23,7 @@ Item {
   target:toolBridge
   function onDeviceInfoChanged(){resultTabs.currentIndex=0}
   function onLogcatChanged(){logAnalysis.text="";page.showMirror=false;page.showDrivers=false;resultTabs.currentIndex=1}
-  function onDriverInfoChanged(){page.showMirror=false;page.showDrivers=true;resultTabs.currentIndex=2}
+  function onDriverInfoChanged(){if(toolBridge.activeOperation==="drivers"&&toolBridge.driverInfo!==""){page.showMirror=false;page.showDrivers=true;resultTabs.currentIndex=2}}
  }
  ScrollView {
   id:workspace;objectName:"deviceManagerScroll";anchors.fill:parent;contentWidth:availableWidth;clip:true
@@ -79,7 +80,7 @@ Item {
      app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
      iconName:"phone";title:app.trx("معلومات الهاتف","Phone information");description:app.trx("قراءة الموديل وإصدار النظام والبناء وحالات الحماية المعلنة من الهاتف.","Read the phone model, OS, build and reported security states.")
      statusText:page.identified?app.trx("تمت قراءة الهوية","Identity read"):app.trx("قراءة فقط","Read only")
-     actionText:app.trx("قراءة المعلومات","Read properties");actionName:"readDeviceInfo";available:page.adbReady&&!toolBridge.busy;working:toolBridge.busy;primary:true
+     actionText:app.trx("قراءة المعلومات","Read properties");actionName:"readDeviceInfo";available:page.adbReady&&!toolBridge.busy;working:toolBridge.activeOperation==="properties";primary:true
      unavailableReason:!page.adbReady?page.selectionReason:app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
      onTriggered:{resultTabs.currentIndex=0;toolBridge.readDeviceInfo()}
     }
@@ -87,21 +88,22 @@ Item {
      app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
      iconName:"history";title:app.trx("سجلات النظام","System logs");description:app.trx("قراءة آخر 200 سجل محليًا، ثم تحليل المؤشرات مع الاحتفاظ بالدليل النصي.","Read the last 200 log entries locally, then inspect indicators with their text evidence.")
      statusText:toolBridge.logcat!==""?app.trx("سجل متاح للمراجعة","Log available"):app.trx("قراءة فقط","Read only")
-     actionText:app.trx("قراءة آخر 200 سجل","Read last 200 logs");actionName:"readDeviceLogcat";available:page.adbReady&&!toolBridge.busy;working:toolBridge.busy
+     actionText:app.trx("قراءة آخر 200 سجل","Read last 200 logs");actionName:"readDeviceLogcat";available:page.adbReady&&!toolBridge.busy;working:toolBridge.activeOperation==="logcat"
      unavailableReason:!page.adbReady?page.selectionReason:app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
      onTriggered:{page.showMirror=false;page.showDrivers=false;resultTabs.currentIndex=1;toolBridge.readLogcat()}
     }
     ActionCard {
      app:page.app;Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
-     iconName:"gauge";title:app.trx("عرض شاشة الهاتف","Phone screen view");description:app.trx("جلسة scrcpy تجريبية بإذن المالك، مع تثبيت الهدف وإيقاف العملية من التطبيق.","An owner-consented experimental scrcpy session with a pinned target and owned process lifecycle.")
-     statusText:toolBridge.mirrorActive?toolBridge.mirrorState:toolBridge.laboratoryBuild?app.trx("تجريبي · Laboratory","Experimental · Laboratory"):app.trx("غير متاح في الإنتاج","Unavailable in production")
-     actionText:app.trx("مراجعة عرض الشاشة","Review screen view");actionName:"reviewMirror";available:toolBridge.laboratoryBuild&&!toolBridge.busy&&page.identified&&page.adbReady
-     unavailableReason:!toolBridge.laboratoryBuild?app.trx("يتطلب نسخة Laboratory","Requires a Laboratory build"):!page.adbReady?page.selectionReason:!page.identified?app.trx("حدد الهاتف واقرأ معلوماته أولًا","Select the phone and read properties first"):app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
+     iconName:"gauge";title:app.trx("عرض شاشة الهاتف","Phone screen view");description:app.trx("عرض الشاشة في نافذة مستقلة بإذن المالك، دون تحكم أو صوت أو مزامنة الحافظة.","Owner-consented screen viewing in a separate window. No remote control, audio or clipboard sync.")
+     statusText:toolBridge.mirrorActive?app.trx("جلسة عرض نشطة","Screen session active"):app.trx("بموافقة صريحة","Explicit consent")
+     actionText:app.trx("مراجعة عرض الشاشة","Review screen view");actionName:"reviewMirror";available:toolBridge.screenViewAvailable&&!toolBridge.busy&&page.identified&&page.adbReady
+     unavailableReason:!toolBridge.screenViewAvailable?app.trx("عرض الشاشة غير متاح","Screen view unavailable"):!page.adbReady?page.selectionReason:!page.identified?app.trx("حدد الهاتف واقرأ معلوماته أولًا","Select the phone and read properties first"):app.trx("انتظر انتهاء العملية الجارية","Wait for the running operation")
      onTriggered:page.reviewMirror()
     }
    }
    DeviceIntelligencePanel {objectName:"deviceIdentitySummary";app:page.app;Layout.fillWidth:true}
-   Label {objectName:"mirrorScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:toolBridge.laboratoryBuild?app.trx("عرض تجريبي عبر scrcpy 5.0.1: اقرأ معلومات الهاتف ثم راجع الموافقة. دون تحكم أو صوت أو مزامنة الحافظة.","Experimental scrcpy 5.0.1 view: read phone information, then review consent. No control, audio or clipboard sync."):app.trx("عرض الشاشة يحتاج نسخة Laboratory؛ الإنتاج للقراءة والتشخيص فقط.","Screen view requires Laboratory; production is read-only diagnostics.")}
+   Label {objectName:"mirrorScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("عرض بإذن صريح عبر scrcpy 5.0.1 في نافذة مستقلة. قد يلزم فتح شاشة الهاتف لعرض المحتوى؛ لا يتجاوز التطبيق قفل الهاتف. عند غياب الأداة، اختر ملفها الرسمي من الإعدادات.","Explicitly consented scrcpy 5.0.1 view in a separate window. The phone may need to be unlocked to display content; this does not bypass its lock. If the tool is absent, choose its official executable in Settings.")}
+   ActionButton {objectName:"mirrorToolSettings";text:app.trx("إعداد أداة عرض الشاشة","Screen-view tool settings");onClicked:app.navigate(7)}
    Panel {
     title:app.trx("3. النتائج والتفاصيل","3. RESULTS AND DETAILS");Layout.fillWidth:true
     TabBar {
@@ -115,7 +117,7 @@ Item {
      Layout.fillWidth:true;spacing:8
      ActionButton {objectName:"analyzeDeviceLog";visible:resultTabs.currentIndex===1;text:app.trx("تحليل مؤشرات السجل","Analyze log indicators");enabled:toolBridge.logcat!=="";onClicked:logAnalysis.text=repairBridge.analyzeLogReport(toolBridge.logcat,app.ar)}
      ActionButton {objectName:"stopMirror";visible:resultTabs.currentIndex===3||toolBridge.mirrorActive;text:app.trx("إيقاف عرض الشاشة","Stop screen view");enabled:toolBridge.mirrorActive;onClicked:toolBridge.stopMirror()}
-     Label {objectName:"mirrorState";visible:resultTabs.currentIndex===3&&toolBridge.mirrorActive;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:app.trx("حالة جلسة العرض: ","Screen-view state: ")+toolBridge.mirrorState}
+     Label {objectName:"mirrorState";visible:resultTabs.currentIndex===3&&toolBridge.mirrorActive;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:page.screenState()}
     }
     ScrollView {
      Layout.fillWidth:true;Layout.preferredHeight:page.height>850?300:220;contentWidth:availableWidth;clip:true
@@ -128,9 +130,9 @@ Item {
    }
   }
  }
- Dialog {id:mirrorConfirm;objectName:"mirrorConfirm";parent:Overlay.overlay;anchors.centerIn:parent;modal:true;width:Math.min(620,app.width-48);title:app.trx("موافقة عرض الشاشة التجريبي","Experimental screen-view consent");standardButtons:Dialog.Ok|Dialog.Cancel
-  onOpened:standardButton(Dialog.Ok).enabled=Qt.binding(function(){return toolBridge.laboratoryBuild&&!toolBridge.busy&&page.reviewedMirrorTarget!==""&&page.reviewedMirrorTarget===toolBridge.selectedSerial&&mirrorOwner.checked&&mirrorComponent.checked&&mirrorChallenge.text===page.reviewedMirrorTarget})
-  onAccepted:{page.showMirror=true;app.notice(toolBridge.startMirror(page.reviewedMirrorTarget,{authorized:mirrorOwner.checked,component:mirrorComponent.checked,challenge:mirrorChallenge.text}),app.trx("بدأ التحقق من أداة العرض والهدف","Screen-view tool and target checks started"),toolBridge.status)}
+ Dialog {id:mirrorConfirm;objectName:"mirrorConfirm";parent:Overlay.overlay;anchors.centerIn:parent;modal:true;width:Math.min(620,app.width-48);title:app.trx("موافقة عرض شاشة الهاتف","Phone screen-view consent");standardButtons:Dialog.Ok|Dialog.Cancel
+  onOpened:standardButton(Dialog.Ok).enabled=Qt.binding(function(){return toolBridge.screenViewAvailable&&!toolBridge.busy&&page.reviewedMirrorTarget!==""&&page.reviewedMirrorTarget===toolBridge.selectedSerial&&mirrorOwner.checked&&mirrorComponent.checked&&mirrorChallenge.text===page.reviewedMirrorTarget})
+  onAccepted:{page.showMirror=true;resultTabs.currentIndex=3;app.notice(toolBridge.startMirror(page.reviewedMirrorTarget,{authorized:mirrorOwner.checked,component:mirrorComponent.checked,challenge:mirrorChallenge.text}),app.trx("بدأ التحقق من أداة العرض والهدف","Screen-view tool and target checks started"),toolBridge.status)}
   ColumnLayout {width:mirrorConfirm.availableWidth;spacing:12
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:app.trx("الجهاز المحدد: ","Reviewed target: ")+page.reviewedMirrorTarget;color:app.tone("#edf4ff")}
    Label {objectName:"mirrorComponentNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("scrcpy يرفع مكونًا مؤقتًا ويشغله على الهاتف؛ هذه ليست عملية قراءة خالصة. قد تظهر بيانات الشاشة الخاصة في نافذة خارجية. إيقاف البرنامج لا يثبت تنظيف الهاتف أو سلامة الأدلة. اختبار الهاتف الفعلي معلق.","scrcpy uploads and runs a temporary device component; this is not a purely passive read. Private screen data may appear in an external window. Stopping the host does not prove phone cleanup or forensic integrity. Physical acceptance is pending.");color:app.tone("#eab775")}

@@ -1,0 +1,14 @@
+[0/2] Re-checking globbed directories...
+[1/11] Generating NexvaryMR/qml/DeviceIntelligencePanel.qml
+[2/11] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[3/11] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp
+[4/11] Automatic MOC and UIC for target mr_tool_tests
+[5/10] Running rcc for resource nexvary_mr_raw_qml_0
+[6/10] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp.o
+[7/10] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[8/10] Linking CXX executable nexvary_mr
+[9/10] Building CXX object CMakeFiles/mr_tool_tests.dir/cpp/tests/tool_tests.cpp.o
+[10/10] Linking CXX executable mr_tool_tests

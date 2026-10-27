@@ -1,0 +1,19 @@
+********* Start testing of CaseTransactionTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CaseTransactionTests::initTestCase()
+PASS   : CaseTransactionTests::authenticatedBridgeUsesSignedIntent()
+PASS   : CaseTransactionTests::verifiedMembershipRevisionAndDigest()
+PASS   : CaseTransactionTests::terminalBindingAndIdempotency()
+PASS   : CaseTransactionTests::changedCaseIsUnknown()
+PASS   : CaseTransactionTests::missingEvidenceIsNeverSuccess()
+PASS   : CaseTransactionTests::tamperedJournalStopsRecovery()
+PASS   : CaseTransactionTests::interruptedWrites(before-intent-write)
+PASS   : CaseTransactionTests::interruptedWrites(inside-intent-atomic-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(after-signed-intent)
+PASS   : CaseTransactionTests::interruptedWrites(inside-case-transaction)
+PASS   : CaseTransactionTests::interruptedWrites(after-case-before-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(inside-terminal-atomic-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(after-terminal)
+PASS   : CaseTransactionTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 7568ms
+********* Finished testing of CaseTransactionTests *********

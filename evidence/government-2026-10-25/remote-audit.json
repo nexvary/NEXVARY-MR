@@ -1,0 +1,202 @@
+{
+  "checkedAt": "2026-10-25",
+  "branches": [
+    {
+      "name": "dev/cpp-qt-foundation",
+      "sha": "0bfe9b113cfac6c9f50f0e278d6faa8ff6733ffc"
+    },
+    {
+      "name": "docs/usb-studio-integration-assessment-20261024",
+      "sha": "9d34680f810f159c976f8f0dc2ed120d6d012e04"
+    },
+    {
+      "name": "feature/advanced-mobile-research-program",
+      "sha": "372b9636fce50a66e64360eb315f12ecdfff8c45"
+    },
+    {
+      "name": "feature/device-service-engine",
+      "sha": "ac186f4ce569958401e1c4d63479da0553d26c1e"
+    },
+    {
+      "name": "feature/forensic-lab-foundation",
+      "sha": "0f979797f03cabf0dc0a504f23dc5c5f9c2cd116"
+    },
+    {
+      "name": "feature/law-enforcement-case-foundation",
+      "sha": "8fb9b38f771da91c60f3b85a2084868b16fe95d4"
+    },
+    {
+      "name": "feature/metallic-card-contrast",
+      "sha": "f2da5ab84c844c0921bc2d320e433a0dfe94fe54"
+    },
+    {
+      "name": "feature/npse-shared-services",
+      "sha": "a7eb9f8bce0656a4101dd6907d72452537490053"
+    },
+    {
+      "name": "feature/oem-service-catalog",
+      "sha": "ef302c9555dd4fc0b5189182be5bd109d932bbdf"
+    },
+    {
+      "name": "feature/professional-workstation-ui",
+      "sha": "2b0a83a28c1ca6b11db85c6753da935a150e9fd0"
+    },
+    {
+      "name": "feature/structured-device-diagnostics",
+      "sha": "b0c10df29ba46123ecb673994c366ef7f4fdb1d6"
+    },
+    {
+      "name": "feature/update-journal-checkpoints",
+      "sha": "7c928b0d5cc3842964dcbe9f207971c09af588b5"
+    },
+    {
+      "name": "feature/usb-doctor-intelligence",
+      "sha": "9a4392a37b85186032ded8cdbe254b2064d8ed9b"
+    },
+    {
+      "name": "feature/windows-usb-correlation",
+      "sha": "ae05d4fc6e83303239c9e6c751ec98de9b6d5abd"
+    },
+    {
+      "name": "integration/gate-1-stages-08-60",
+      "sha": "7c928b0d5cc3842964dcbe9f207971c09af588b5"
+    },
+    {
+      "name": "main",
+      "sha": "7446b17d0d83d4e7d9da3c8d4bbdd7dae6d4de17"
+    }
+  ],
+  "pullRequests": [
+    {
+      "number": 14,
+      "title": "Add validated NPSE shared Android engine, control center and live-manager tests",
+      "head": "feature/npse-shared-services",
+      "sha": "a7eb9f8bce0656a4101dd6907d72452537490053",
+      "base": "feature/usb-doctor-intelligence",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/14",
+      "draft": true
+    },
+    {
+      "number": 13,
+      "title": "Document safe integration boundaries for NEXVARY USB Studio",
+      "head": "docs/usb-studio-integration-assessment-20261024",
+      "sha": "9d34680f810f159c976f8f0dc2ed120d6d012e04",
+      "base": "feature/usb-doctor-intelligence",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/13",
+      "draft": true
+    },
+    {
+      "number": 12,
+      "title": "Establish Advanced Mobile Technology Research Program and Security Architecture Atlas",
+      "head": "feature/advanced-mobile-research-program",
+      "sha": "372b9636fce50a66e64360eb315f12ecdfff8c45",
+      "base": "integration/gate-1-stages-08-60",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/12",
+      "draft": true
+    },
+    {
+      "number": 11,
+      "title": "Add unified case/research workspaces with local identities and signed evidence review",
+      "head": "feature/law-enforcement-case-foundation",
+      "sha": "8fb9b38f771da91c60f3b85a2084868b16fe95d4",
+      "base": "integration/gate-1-stages-08-60",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/11",
+      "draft": true
+    },
+    {
+      "number": 10,
+      "title": "Add USB Doctor with fresh, target-scoped mobile connection diagnosis",
+      "head": "feature/usb-doctor-intelligence",
+      "sha": "9a4392a37b85186032ded8cdbe254b2064d8ed9b",
+      "base": "feature/professional-workstation-ui",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/10",
+      "draft": true
+    },
+    {
+      "number": 9,
+      "title": "Rebuild native workstation navigation, responsive operation cards and device context",
+      "head": "feature/professional-workstation-ui",
+      "sha": "2b0a83a28c1ca6b11db85c6753da935a150e9fd0",
+      "base": "integration/gate-1-stages-08-60",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/9",
+      "draft": true
+    },
+    {
+      "number": 8,
+      "title": "Default-deny workstation, firmware tools and signed-update verification",
+      "head": "integration/gate-1-stages-08-60",
+      "sha": "7c928b0d5cc3842964dcbe9f207971c09af588b5",
+      "base": "feature/device-service-engine",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/8",
+      "draft": true
+    },
+    {
+      "number": 7,
+      "title": "Improve card contrast with metallic silver and selective neon accents",
+      "head": "feature/metallic-card-contrast",
+      "sha": "f2da5ab84c844c0921bc2d320e433a0dfe94fe54",
+      "base": "feature/windows-usb-correlation",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/7",
+      "draft": true
+    },
+    {
+      "number": 6,
+      "title": "Correlate selected phone USB drivers and explain recovery blockers",
+      "head": "feature/windows-usb-correlation",
+      "sha": "ae05d4fc6e83303239c9e6c751ec98de9b6d5abd",
+      "base": "feature/structured-device-diagnostics",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/6",
+      "draft": true
+    },
+    {
+      "number": 5,
+      "title": "Structured device diagnostics with conservative parsing and bilingual results",
+      "head": "feature/structured-device-diagnostics",
+      "sha": "b0c10df29ba46123ecb673994c366ef7f4fdb1d6",
+      "base": "feature/device-service-engine",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/5",
+      "draft": true
+    },
+    {
+      "number": 4,
+      "title": "Add capability-gated device services and competitive engineering research",
+      "head": "feature/device-service-engine",
+      "sha": "ac186f4ce569958401e1c4d63479da0553d26c1e",
+      "base": "feature/forensic-lab-foundation",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/4",
+      "draft": true
+    },
+    {
+      "number": 3,
+      "title": "Add native forensic workspace, workshop profiles and deployable HTTPS tracking",
+      "head": "feature/forensic-lab-foundation",
+      "sha": "0f979797f03cabf0dc0a504f23dc5c5f9c2cd116",
+      "base": "dev/cpp-qt-foundation",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/3",
+      "draft": true
+    },
+    {
+      "number": 2,
+      "title": "Add OEM service capability registry and safety tests",
+      "head": "feature/oem-service-catalog",
+      "sha": "ef302c9555dd4fc0b5189182be5bd109d932bbdf",
+      "base": "main",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/2",
+      "draft": true
+    },
+    {
+      "number": 1,
+      "title": "Native Windows repair workstation, recovery cases and optional Android metadata agent",
+      "head": "dev/cpp-qt-foundation",
+      "sha": "0bfe9b113cfac6c9f50f0e278d6faa8ff6733ffc",
+      "base": "main",
+      "url": "https://github.com/nexvary/NEXVARY-MR/pull/1",
+      "draft": true
+    }
+  ],
+  "baseline": {
+    "source": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+    "run": 40098038007,
+    "pendingVerification": true
+  }
+}

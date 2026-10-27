@@ -1,0 +1,10 @@
+{
+  "platform": "Linux",
+  "posixSessionAndGroupApis": true,
+  "cgroupV2ControllersVisible": true,
+  "cgroupRootWritable": false,
+  "cgroupKillVisibleAtRoot": true,
+  "cgroupCreated": false,
+  "containmentProved": false,
+  "limitation": "Read-only capability assessment. Product detached descendant counterexample remains valid. Windows Job Objects and independent OS egress remain unimplemented/unverified."
+}

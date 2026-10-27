@@ -1,0 +1,30 @@
+{
+  "schema": "nexvary-adb-inventory-local-benchmark/v1",
+  "sourceCommit": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "qt": "6.4.2",
+  "build": "Release GCC13 warnings-as-errors",
+  "sourceBytes": 2099224,
+  "sourceSha256": "261d9937627cc8215fccc4da2f13279a5f8d1cfe0a9d9eb5ebdc9aa3530e4198",
+  "membersScanned": 4096,
+  "retainedFindings": 128,
+  "iterations": [
+    {
+      "iteration": 1,
+      "wallMillisecondsIncludingProcessStartup": 53.155,
+      "reportBytes": 52424
+    },
+    {
+      "iteration": 2,
+      "wallMillisecondsIncludingProcessStartup": 55.754,
+      "reportBytes": 52424
+    },
+    {
+      "iteration": 3,
+      "wallMillisecondsIncludingProcessStartup": 59.261,
+      "reportBytes": 52424
+    }
+  ],
+  "maximumChildResidentKiB": 18212,
+  "scope": "Synthetic Linux direct-worker process only. Excludes protected evidence decrypt/read/copy, UI, disk acquisition and case commit. No competitor comparison or general throughput/long-session claim. Reproduce with scripts/check_adb_backup_interop.py archive() and header-limit corpus."
+}

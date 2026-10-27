@@ -1,0 +1,116 @@
+{
+  "source": "0b9bc08d1ac70a81f94c4305eefffdefd63ca793",
+  "run": 40145064984,
+  "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40145064984",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 121024522872,
+      "name": "tracking-server",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523019,
+      "name": "qt (production)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523050,
+      "name": "qt (laboratory)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523064,
+      "name": "linux-forensic-integration (production)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523081,
+      "name": "linux-forensic-integration (laboratory)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523100,
+      "name": "core (ubuntu-latest)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121024523101,
+      "name": "core (windows-2022)",
+      "conclusion": "success"
+    }
+  ],
+  "ctest": {
+    "windowsProduction": 39,
+    "windowsLaboratory": 39,
+    "linuxProduction": 39,
+    "linuxLaboratory": 39,
+    "linuxProductionSanitizerGroups": 8
+  },
+  "artifacts": [
+    {
+      "id": 12581075406,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "digest": "sha256:9ba20ed50f4127732b6edd606d4b592c2c2d0f45c8a72523be5d325af3595da0",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12581070887,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "digest": "sha256:7ce02b1ab424551d9cdbb1740648fd4837d26c190cd09334e7f079eea4a86896",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12581070784,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "digest": "sha256:37ddd073d645f754311da22e3378986406d6c801b0d45b1abb7e9e4b4127dccd",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12581035923,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "digest": "sha256:b783b66283f94ef0d406fe9b8794bf9c11084ec7e8d436cf1bef0de5d90c789b",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12580901051,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "digest": "sha256:61d32e3378eb57439c7a32951d75e7d3248c14f9a14a87a3a329830e6ce4ead9",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12580550740,
+      "name": "core-test-results-windows-2022",
+      "digest": "sha256:a02b8ee63cbc2ce144ceb66d37f1d0c4f59c7cbca537785a800b6ee797c60a22",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12580545722,
+      "name": "core-test-results-ubuntu-latest",
+      "digest": "sha256:04f3dcaf65206aa91e2e76e4bd9b1cf6675788c4fa7c8c9a8f99985ec64b339e",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12580133764,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "digest": "sha256:e0d554a32400266483475cbae41005e5b0eff27f278bab6937e17408b364c66f",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    },
+    {
+      "id": 12579649886,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "digest": "sha256:b0b64794a6908e1dc4283e12b9a16834106988e44e21ec48334d6d9915a32c0a",
+      "expired": false,
+      "expiresAt": "2027-01-23T00:01:33Z"
+    }
+  ],
+  "note": "This records the first implementation. The following increment changes PDF presentation and history-scan configuration and requires its own CI."
+}

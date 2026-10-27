@@ -8,6 +8,8 @@
 #include <QCoreApplication>
 #include <QQuickWindow>
 #include <QImage>
+#include <QCryptographicHash>
+#include <QJsonDocument>
 #include <QQuickStyle>
 #include <QtEndian>
 #include <memory>
@@ -27,6 +29,7 @@
 #include "RecoveryBridge.hpp"
 #include "LawCaseBridge.hpp"
 #include "IdentityService.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "ResearchBridge.hpp"
 class Setup:public QObject {
  Q_OBJECT
@@ -44,14 +47,32 @@ class Setup:public QObject {
  std::unique_ptr<LawCaseBridge> law;
  std::unique_ptr<IdentityService> identity;
  std::unique_ptr<ResearchBridge> research;
+ std::unique_ptr<GovernmentOperationPolicy> operationPolicy;
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
 public:
+ Q_INVOKABLE QString recordSyntheticOperation(const QString &kind) {
+  const QString pass="Synthetic-only UI password 2026!";
+  if(!identity->syntheticProfile()||!identity->login("ui-investigator",pass))return {};
+  const auto request=operationPolicy->requestException("external-analysis","Synthetic operation UI",{},600,true);
+  if(request.isEmpty()||!identity->login("ui-admin",pass)||!operationPolicy->reviewException(request,"Synthetic separate account")||!operationPolicy->decideException(request,true,"Synthetic decision")||!identity->login("ui-investigator",pass)||!operationPolicy->activateException(request))return {};
+  const auto id=operationPolicy->beginOperation("external-analysis",kind);
+  if(id.isEmpty()||operationPolicy->finishOperation(id,"completed",QString(64,'b'),QString(64,'a')).isEmpty())return {};
+  return id;
+ }
  Q_INVOKABLE bool requestFrame(QObject *object) { auto *window=qobject_cast<QQuickWindow *>(object); if(!window||!window->isVisible())return false; window->update();return true; }
  Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
   auto *window=qobject_cast<QQuickWindow *>(object);
   return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+ }
+ Q_INVOKABLE QString headerFingerprint(QObject *object) {
+  auto *window=qobject_cast<QQuickWindow *>(object);
+  if(!window||window->width()<=0)return {};
+  const auto frame=window->grabWindow();if(frame.isNull())return {};
+  const auto header=frame.copy(0,0,frame.width(),qRound(72.0*frame.width()/window->width()));
+  const QByteArray pixels(reinterpret_cast<const char *>(header.constBits()),header.sizeInBytes());
+  return QString::fromLatin1(QCryptographicHash::hash(pixels,QCryptographicHash::Sha256).toHex());
  }
  Q_INVOKABLE bool setSyntheticDeviceMode(const QString &mode) {
   if(!tools||tools->busy()||!QStringList{"connected","device","unauthorized","offline","disconnected","none","error","progress"}.contains(mode))return false;
@@ -89,12 +110,32 @@ public slots:
   // Explicit synthetic credentials only; production never provisions defaults.
   const QString fixturePassword=QStringLiteral("Synthetic-only UI password 2026!");
   if(!identity->bootstrap("ui-admin","Synthetic UI administrator",fixturePassword)||!identity->login("ui-admin",fixturePassword)||identity->createUser("ui-investigator","Synthetic UI investigator","investigator",fixturePassword).isEmpty()||!identity->login("ui-investigator",fixturePassword))qFatal("Synthetic identity fixture failed");
+  operationPolicy=std::make_unique<GovernmentOperationPolicy>(identity.get());
   law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true,nexvary::law::Role::Investigator,nullptr,identity.get());
+  law->setOperationPolicy(operationPolicy.get());
   research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get(),nullptr,identity.get());
  }
  void qmlEngineAvailable(QQmlEngine *engine) {
   const auto fixture=temp.filePath(QStringLiteral("synthetic-evidence.txt"));
   QFile file(fixture);if(file.open(QIODevice::WriteOnly))file.write("SYNTHETIC UI EVIDENCE ONLY\n");file.close();
+  const auto timeline=temp.filePath("synthetic-timeline.json");
+  QVariantMap times;for(int i=0;i<15;++i)times.insert(QString("observed-%1").arg(i),QString("2026-10-25T12:00:00+03:00"));
+  times.insert("unresolved",QString("2026-10-25T12:00:00"));
+  QFile timelineFile(timeline);const auto timelineBytes=QJsonDocument::fromVariant(times).toJson(QJsonDocument::Compact);
+  if(!timelineFile.open(QIODevice::WriteOnly)||timelineFile.write(timelineBytes)!=timelineBytes.size())qFatal("Cannot create synthetic timeline fixture");
+  timelineFile.close();
+  engine->rootContext()->setContextProperty("syntheticTimelinePath",timeline);
+  const auto artifactPath=temp.filePath("synthetic-artifacts.json");
+  QVariantMap artifacts;for(int i=0;i<15;++i)artifacts.insert(QString("finding-%1").arg(i,2,10,QChar('0')),i==0?QString("أحمد"):QString("SYNTHETIC observation %1").arg(i));
+  const auto artifactBytes=QJsonDocument::fromVariant(artifacts).toJson(QJsonDocument::Compact);QFile artifactFile(artifactPath);
+  if(!artifactFile.open(QIODevice::WriteOnly)||artifactFile.write(artifactBytes)!=artifactBytes.size())qFatal("Cannot create synthetic artifact UI fixture");
+  artifactFile.close();engine->rootContext()->setContextProperty("syntheticArtifactPath",artifactPath);
+  QFile adbReference(MR_ADB_REFERENCE_PATH);
+  if(!adbReference.open(QIODevice::ReadOnly))qFatal("Cannot read synthetic ADB reference");
+  const auto adbBytes=QByteArray::fromBase64(QJsonDocument::fromJson(adbReference.readAll()).toVariant().toMap().value("backupBase64").toString().toLatin1());
+  const auto adbPath=temp.filePath("synthetic-adb-v5.ab");QFile adbFile(adbPath);
+  if(adbBytes.isEmpty()||!adbFile.open(QIODevice::WriteOnly)||adbFile.write(adbBytes)!=adbBytes.size())qFatal("Cannot create synthetic ADB UI fixture");
+  adbFile.close();engine->rootContext()->setContextProperty("syntheticAdbBackupPath",adbPath);
   const auto avb=temp.filePath(QStringLiteral("synthetic-vbmeta.img"));
   QByteArray avbBytes(320, '\0'); avbBytes.replace(0,4,"AVB0");
   qToBigEndian<quint32>(1,avbBytes.data()+4); qToBigEndian<quint64>(64,avbBytes.data()+20);
@@ -123,6 +164,9 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticExifPath",exif);
   engine->rootContext()->setContextProperty("exifScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-exif-ui-"));
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
+  engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
+  engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));
+  engine->rootContext()->setContextProperty("operationPolicy",operationPolicy.get());
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
   engine->rootContext()->setContextProperty("identityBridge",identity.get());
   engine->rootContext()->setContextProperty("researchBridge",research.get());

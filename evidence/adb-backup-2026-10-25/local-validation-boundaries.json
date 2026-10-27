@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e",
+  "localSanitizer": {
+    "defaultLeakCheck": "environment failure: cannot open /proc task; LeakSanitizer fatal inspection error",
+    "addressAndUndefinedChecksWithDetectLeaks0": "52 interoperability checks passed",
+    "hostedFullLeakCheck": "passed: 14/14 production sanitizer CTest groups, including the 52-check interop corpus, CI 40229014198 job 121276526189; CI does not disable leak detection"
+  },
+  "benchmarkScope": "Synthetic direct worker only; no UI/case/competitor throughput claim"
+}

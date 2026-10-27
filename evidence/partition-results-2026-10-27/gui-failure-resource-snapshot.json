@@ -1,0 +1,14 @@
+{
+  "source": "0b8cc755116cbdba8fc674d3c5c04e60a978769c",
+  "failedRepeat": 2,
+  "stage": "policy-audit-export",
+  "healthy": false,
+  "authenticated": true,
+  "role": "administrator",
+  "sequence": 70,
+  "class": "audit-store",
+  "privateSyntheticDirectoryCopiedBeforeAnotherGuiRun": true,
+  "journalBytesAfterFailure": 103930,
+  "journalSha256AfterFailure": "74c0138de8921a9f537db1f274e01ce79ea5e6614d309b993c00362db14c1ccf",
+  "scope": "Snapshot retained privately in scratch for investigation; no raw histories, anchors, keys or case files published. Current metadata does not establish the earlier failure cause."
+}

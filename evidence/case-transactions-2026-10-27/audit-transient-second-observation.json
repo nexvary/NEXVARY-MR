@@ -1,0 +1,11 @@
+{
+  "source": "fixture-corrected, before readback gate was linked into GUI",
+  "observedClass": "audit-digest",
+  "inMemorySequence": 41,
+  "diskSequence": 34,
+  "rawSha256": "385aa523df9e6e7d767c81134d1ae5610935a966f58d5a3ac4f74a83683497dc",
+  "bytes": 42790,
+  "wrapperChecksumValid": true,
+  "mechanism": "unresolved; second observation is not a fix",
+  "privateOriginalPreservedLocally": true
+}

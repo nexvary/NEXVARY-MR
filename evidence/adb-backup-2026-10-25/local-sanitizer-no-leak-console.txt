@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup-sanitized
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup-sanitized
+    Start 36: mr_adb_backup_interop
+1/1 Test #36: mr_adb_backup_interop ............   Passed    1.21 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   1.22 sec

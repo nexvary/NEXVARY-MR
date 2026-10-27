@@ -1,0 +1,191 @@
+{
+  "sourceSha": "feed968f905cbc3d2960e94cfa208139b7642b53",
+  "base": "3d4610bd26127ac81166b6693c7988fa188042d1",
+  "commits": 4,
+  "files": [
+    {
+      "filename": ".github/workflows/cpp-qt.yml",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "CMakeLists.txt",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 2,
+      "changes": 14,
+      "previous_filename": null
+    },
+    {
+      "filename": "DEVELOPMENT_STATE.md",
+      "status": "modified",
+      "additions": 24,
+      "deletions": 0,
+      "changes": 24,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/EvidenceImportRunner.cpp",
+      "status": "added",
+      "additions": 63,
+      "deletions": 0,
+      "changes": 63,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/EvidenceImportRunner.hpp",
+      "status": "added",
+      "additions": 29,
+      "deletions": 0,
+      "changes": 29,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/ImportAdapters.cpp",
+      "status": "added",
+      "additions": 173,
+      "deletions": 0,
+      "changes": 173,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/ImportAdapters.hpp",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0,
+      "changes": 11,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/LawCaseBridge.cpp",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 3,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/LawCaseBridge.hpp",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/LawCaseImports.cpp",
+      "status": "added",
+      "additions": 45,
+      "deletions": 0,
+      "changes": 45,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/LawCaseStore.cpp",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 2,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/src/import_worker.cpp",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/tests/import_tests.cpp",
+      "status": "added",
+      "additions": 112,
+      "deletions": 0,
+      "changes": 112,
+      "previous_filename": null
+    },
+    {
+      "filename": "cpp/tests/ui_tests.cpp",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/AUTHORIZED_IMPORT.md",
+      "status": "added",
+      "additions": 85,
+      "deletions": 0,
+      "changes": 85,
+      "previous_filename": null
+    },
+    {
+      "filename": "packaging/package-windows.ps1",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 1,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "packaging/smoke-windows.ps1",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/AppShell.qml",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 4,
+      "changes": 11,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/GovernmentAnalysisPage.qml",
+      "status": "modified",
+      "additions": 27,
+      "deletions": 1,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/Main.qml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/OperationProgress.qml",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 3,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/TopBar.qml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "qml/tests/tst_navigation.qml",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+  "prCheckoutCommit": "3efe5f9f48c0581bae4d89a43c209920345e13e4",
+  "sourceAndPrTree": "e00050af34e2a3d71566d76660e80cf89eeaf1b6",
+  "run": 40569681905,
+  "portableArtifact": 12764269447,
+  "installerArtifact": 12765890247,
+  "validationArtifact": 12766010091,
+  "providerDigestsMatched": true,
+  "manifestFileCount": 1419,
+  "completeFileSetMatched": true,
+  "allManifestDigestsMatched": true,
+  "manifestPathHandling": "Windows separators normalized; hashes compare exact unmodified file bytes",
+  "mainExecutableSha256": "a1047f8d5399ce3eab2e1bc86a68ca0fb385ea59f1aaa7a0898c0d50f673b675",
+  "importWorkerSha256": "3cafdd977ac143c4872c2beaeacce0748a55aaba767651ee15ce1b0ec7f4d74c",
+  "portableInnerZipSha256": "e0753dee8293a1193cc63fbb250ac16b1579d8c0f07705097aa1ac119d1a62d1",
+  "installerExecutableSha256": "ec428a0fe05a026924264fc3512774924bd8d7ab4208d756d081caf467daa16c",
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "3efe5f9f48c0581bae4d89a43c209920345e13e4",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "shippedSourceTextMatchesWithCheckoutLineEndings": [
+    "GOVERNMENT_CASE_TRANSACTIONS.md",
+    "GOVERNMENT_OPERATION_RESULTS.md",
+    "GOVERNMENT_POLICY_AUDIT.md",
+    "verification/verify_policy_audit.py"
+  ],
+  "portableAndInstalledReceiptBytesMatchPackage": true,
+  "installerLifecycle": {
+    "schemaVersion": 1,
+    "installationDirectory": "D:\\a\\_temp\\NEXVARY MR install test",
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  },
+  "scope": "Downloaded first-party CI archives and hosted Windows receipts; not physical Windows 10/11, trusted signing or institutional acceptance"
+}

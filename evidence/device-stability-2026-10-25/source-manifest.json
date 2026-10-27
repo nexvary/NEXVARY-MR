@@ -1,0 +1,117 @@
+{
+  "source": "bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da",
+  "files": [
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "gitBlob": "bcc6c80405fdff70675723718e7e88e6ca793b09"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "gitBlob": "65076d7168bce3d9942e48d4263fddabe509d2f1"
+    },
+    {
+      "path": "DEVELOPMENT_STATE.md",
+      "gitBlob": "c8e2e30bc596c0420f098de1e50855ff105de4b6"
+    },
+    {
+      "path": "README.md",
+      "gitBlob": "37ee4cccd5e636fa5a9b56b824d4176ad76880aa"
+    },
+    {
+      "path": "cpp/src/MirrorSession.cpp",
+      "gitBlob": "e944c4b60ec2fefaa61ddca96af50260901260a0"
+    },
+    {
+      "path": "cpp/src/MirrorSession.hpp",
+      "gitBlob": "fd6c8dc436131eaa669425442bd72ec0bedf7314"
+    },
+    {
+      "path": "cpp/src/ServiceOperationPolicy.hpp",
+      "gitBlob": "44763979391883b774b934b500c737800b1a5607"
+    },
+    {
+      "path": "cpp/src/ToolBridge.cpp",
+      "gitBlob": "259e0fd8046870813dd26e7db76fcab2d5107ad7"
+    },
+    {
+      "path": "cpp/src/ToolBridge.hpp",
+      "gitBlob": "b371f472d8ca7953d150b375e1780bd6a8035eb4"
+    },
+    {
+      "path": "cpp/src/main.cpp",
+      "gitBlob": "7d68c19373ec01202f2e08d1ec1ce76f5d27b23f"
+    },
+    {
+      "path": "cpp/tests/mirror_tests.cpp",
+      "gitBlob": "ead7fb1d81854b2b9b862e08a593064429373ef5"
+    },
+    {
+      "path": "cpp/tests/policy_tests.cpp",
+      "gitBlob": "7289e7eca3099b9d086fd4a0be9dfc3a106ccd27"
+    },
+    {
+      "path": "cpp/tests/service_tests.cpp",
+      "gitBlob": "660d9840901aa9534a0efcfd10ab7c542caf5341"
+    },
+    {
+      "path": "cpp/tests/tool_tests.cpp",
+      "gitBlob": "c064e8517dd2c386ddbeb260219ffedce6134c85"
+    },
+    {
+      "path": "docs/INTEGRATIONS.md",
+      "gitBlob": "407360a24bfe43862ca073f8cd03496e0a1ca46f"
+    },
+    {
+      "path": "docs/SCREEN_VIEW.md",
+      "gitBlob": "bedeab82a617455d4ae46960a12393fcf12f2102"
+    },
+    {
+      "path": "docs/THIRD_PARTY.md",
+      "gitBlob": "f086ee2b8e35823b031307edc050e3d61ff13ebc"
+    },
+    {
+      "path": "packaging/licenses/FFMPEG-LGPL-2.1.txt",
+      "gitBlob": "40924c2a6da76a2b0c639f6fe7ef0b2d095a6adb"
+    },
+    {
+      "path": "packaging/package-windows.ps1",
+      "gitBlob": "db6acffb18386f7e4def80c2f72cba013b566865"
+    },
+    {
+      "path": "packaging/smoke-windows.ps1",
+      "gitBlob": "510f05acf7f9bb99dbaddc07799f507bb8e7503e"
+    },
+    {
+      "path": "qml/DeviceIntelligencePanel.qml",
+      "gitBlob": "a1f9f17bc0b2dca79575b95c7082c03ca7f8860b"
+    },
+    {
+      "path": "qml/DevicesPage.qml",
+      "gitBlob": "58c20ad21e8db24fe7810c987dd664d610b246be"
+    },
+    {
+      "path": "qml/OperationProgress.qml",
+      "gitBlob": "adcd690a82a3971882e592bb0672ef9dd53403d2"
+    },
+    {
+      "path": "qml/Sidebar.qml",
+      "gitBlob": "72c6f96c757fbd69aa51a142616351de22a5cb66"
+    },
+    {
+      "path": "qml/TopBar.qml",
+      "gitBlob": "27012d655761e599730cea672a612b7fa1e56ad8"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "gitBlob": "66a1973ea8cda1929330627e1b01fa46975d560a"
+    },
+    {
+      "path": "scripts/prepare_screen_tools.py",
+      "gitBlob": "51feaa16082e1e11bb051c112209cc832ec70780"
+    },
+    {
+      "path": "tests/test_screen_tools.py",
+      "gitBlob": "1595bd327e77b4d137eb0aaf20bd43d1a0e73fe8"
+    }
+  ]
+}

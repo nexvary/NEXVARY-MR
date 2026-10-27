@@ -1,0 +1,23 @@
+[
+  {
+    "artifactId": 12627004522,
+    "bytes": 48953062,
+    "sha256": "2c062da73437529c336f880179f88980e7de3a0122fd4537e3eaf5fa13457d64",
+    "providerDigestMatched": true,
+    "path": "/workspace/scratch/1df17bb48a7d/verified-offline-build/12627004522.zip"
+  },
+  {
+    "artifactId": 12627851489,
+    "bytes": 33109130,
+    "sha256": "082b1abb04a19083e71e93a63a7878f54593af1cbef6ede4fbc03053250e4cfb",
+    "providerDigestMatched": true,
+    "path": "/workspace/scratch/1df17bb48a7d/verified-offline-build/12627851489.zip"
+  },
+  {
+    "artifactId": 12626959662,
+    "bytes": 66043387,
+    "sha256": "93cc7209de896c9bc056e8f6ac52c0207d66ba7b73af54f1fd90ed2a665d7d91",
+    "providerDigestMatched": true,
+    "path": "/workspace/scratch/1df17bb48a7d/verified-offline-build/12626959662.zip"
+  }
+]

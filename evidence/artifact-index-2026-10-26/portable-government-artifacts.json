@@ -1,0 +1,12 @@
+{
+    "edges": 5,
+    "findingCount": 1,
+    "nodes": 6,
+    "provenancePathNodes": 5,
+    "query": "أحمد",
+    "reportSha256": "00721a12a2626173ddc977d80288fbdb00bc9ffb3f348f8db4b7fc176b831819",
+    "schema": "nexvary-deployed-artifact-index/v1",
+    "scope": "Actual deployed synthetic Government UI and native index; no field/institutional verification",
+    "sourceSha256": "38593cb1d8a2a40cd2efa222256edfad201f615fdba4c65770bd8d130fc2e851",
+    "synthetic": true
+}

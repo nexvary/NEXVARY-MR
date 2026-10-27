@@ -1,0 +1,23 @@
+[
+  {
+    "id": 12625806134,
+    "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-artifact-build/12625806134.zip",
+    "sha256": "4c260da0c6c007ee8c4dd3122b47c617aff24d3704db16420ae216adef0e50cd",
+    "bytes": 48925213
+  },
+  {
+    "id": 12625686643,
+    "name": "NEXVARY-MR-Windows-production-validation-evidence",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-artifact-build/12625686643.zip",
+    "sha256": "30034cbcc5e95ca22b32e73cfd6454ce537ea15e1a08790eb5229717180c1aef",
+    "bytes": 62165647
+  },
+  {
+    "id": 12625686633,
+    "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+    "path": "/workspace/scratch/1df17bb48a7d/verified-artifact-build/12625686633.zip",
+    "sha256": "8ee2a7215ecc63ca3d6f379c4a5e0e37685f0f1dd5cfcbbc385351969a408d67",
+    "bytes": 33092443
+  }
+]

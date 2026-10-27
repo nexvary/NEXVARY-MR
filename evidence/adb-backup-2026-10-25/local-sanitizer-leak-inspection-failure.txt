@@ -1,0 +1,23 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup-sanitized
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup-sanitized
+    Start 36: mr_adb_backup_interop
+1/1 Test #36: mr_adb_backup_interop ............***Failed    0.05 sec
+Traceback (most recent call last):
+  File "/workspace/scratch/1df17bb48a7d/NEXVARY-MR/scripts/check_adb_backup_interop.py", line 165, in <module>
+    main()
+  File "/workspace/scratch/1df17bb48a7d/NEXVARY-MR/scripts/check_adb_backup_interop.py", line 99, in main
+    report = run("populated-python-ustar", blob, True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1df17bb48a7d/NEXVARY-MR/scripts/check_adb_backup_interop.py", line 88, in run
+    assert result.returncode == 0, (name, result.returncode, result.stderr.decode(errors="replace"))
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('populated-python-ustar', 1, "==193==Can't open /proc/192/task for reading.\n==192==LeakSanitizer has encountered a fatal error.\n==192==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1\n==192==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)\n")
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.05 sec
+
+The following tests FAILED:
+	 36 - mr_adb_backup_interop (Failed)
+Errors while running CTest

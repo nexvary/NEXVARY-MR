@@ -1,0 +1,12 @@
+{
+  "parent": "b89891700b21dd8ec4151a8182e97fa5bbe1f5d1",
+  "sourceHashes": {
+    "cpp/src/RecoveryBridge.cpp": "ad25c80d64c109fe4a3cc3bf9e702796b7810964e4dbd466bacb2e5bd2c68d90",
+    "cpp/src/RecoveryBridge.hpp": "0d6a24fd3faf52f9e888b4da56cc576562b87fc72f68c6616601edd13b7e8bc8",
+    "cpp/src/OperationReceipt.hpp": "094680beceb7962670219d737687d6df299c4e8bb5bfd51e3c5f03c1b0e9b2b6",
+    "scripts/verify_policy_audit.py": "28bfdff1c03ce512a6c51bf85750f4b2238098d8a950ce1de9a84caa71bae8a8",
+    "scripts/check_policy_audit_interop.py": "a8e8ed3fcd73f9591bd88c9159ff9103ab996d6d6c590bdd6a6f36d475aaa6e5",
+    "qml/GovernmentNetworkPanel.qml": "f508833163515ec8555b9860b7733c2647dc58e3fae60ac9b90163912e0051f5"
+  },
+  "scope": "Native targeted tests passed against these inputs before source publication; complete exact-source CI and packaging pending."
+}

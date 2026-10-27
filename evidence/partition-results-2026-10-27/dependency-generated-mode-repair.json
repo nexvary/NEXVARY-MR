@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "target": "codecs",
+      "size": 293448,
+      "sha256": "da44ee268a1044a081b11d235ed7bd9020b4b20ebecb3bb8676d75048ff66196",
+      "beforeMode": "0o644",
+      "afterMode": "0o755"
+    },
+    {
+      "target": "scalarmult7",
+      "size": 264192,
+      "sha256": "c47fe921e236e4750d4e2e23c486709dfdc6fe4a48172f8d6d4d946de0bdaa2c",
+      "beforeMode": "0o644",
+      "afterMode": "0o755"
+    }
+  ],
+  "scope": "Only two generated dependency test ELF executable modes repaired; no source/test/expected-output change. Original failed checks retained."
+}

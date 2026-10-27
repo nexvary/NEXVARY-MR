@@ -26,6 +26,7 @@ QByteArray hashFile(const QString &path,qint64 maximum,QString &error,const std:
  return hash.result();
 }
 QString run(const QString &exe,const QStringList &args,const QString &directory,const std::shared_ptr<std::atomic_bool> &token,const TskLimits &limits,QString &error){
+ if(token&&token->load()){error="Cancelled before external child launch.";return {};}
  QProcess process;process.setProgram(exe);process.setArguments(args);process.setWorkingDirectory(directory);process.setProcessChannelMode(QProcess::MergedChannels);process.start();
  if(!process.waitForStarted(3000)){error="Could not start the selected mmls executable.";return {};}
  process.closeWriteChannel();QElapsedTimer timer;timer.start();QByteArray output;
@@ -44,6 +45,15 @@ QString run(const QString &exe,const QStringList &args,const QString &directory,
  if(process.exitStatus()!=QProcess::NormalExit||process.exitCode()!=0){error=QStringLiteral("mmls failed with exit code %1; no result committed.").arg(process.exitCode());return {};}
  return QString::fromUtf8(output).trimmed();
 }
+}
+QByteArray partitionToolDigest(const QString &executable,QString &error){
+ error.clear();const QFileInfo tool(executable);
+ if(!QDir::isAbsolutePath(executable)||executable.startsWith("//")||executable.startsWith("\\\\")||!tool.isFile()||tool.isSymLink()||!tool.isExecutable()
+#ifdef Q_OS_WIN
+ ||tool.suffix().compare("exe",Qt::CaseInsensitive)!=0
+#endif
+ ){error="Select a trusted regular local native executable.";return {};}
+ return hashFile(executable,256*1024*1024,error,{});
 }
 TskResult analyzePartitions(const QString &image,const QString &executable,const std::shared_ptr<std::atomic_bool> &token,
  const std::function<void(qint64,qint64)> &progress,const TskLimits &limits){

@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build
+Test project /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build
+    Start 9: mr_law_workspace_tests
+1/1 Test #9: mr_law_workspace_tests ...........   Passed    0.28 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.28 sec

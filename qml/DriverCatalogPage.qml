@@ -26,7 +26,7 @@ ScrollView {
    delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.brand
     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.kind;color:app.tone("#c6daeb")}
     Label {Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText;text:modelData.url;color:app.tone("#8eb6d6");font.pixelSize:12}
-    ActionButton {text:app.trx("فتح المصدر الرسمي","Open official source");onClicked:Qt.openUrlExternally(modelData.url)}
+    ActionButton {text:app.trx("فتح المصدر الرسمي","Open official source");onClicked:app.openExternal(modelData.url)}
    }
   }
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:280;title:app.trx("نتيجة فحص التعريفات","Driver inspection output")

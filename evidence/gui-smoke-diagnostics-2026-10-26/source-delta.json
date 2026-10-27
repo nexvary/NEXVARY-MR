@@ -1,0 +1,35 @@
+{
+  "baseline": "29ead97442f35c9f18ebc454b02d32cb235784b5",
+  "source": "1fb519de373ad9324e5ad690155685fdbcf7ddb8",
+  "scope": "Seven changed files only, read back exactly from unreferenced commits before fast-forward publication; not a complete dependency or reproducible-build attestation",
+  "files": [
+    {
+      "path": "cpp/src/main.cpp",
+      "sha256": "5a753d2730cf4eada63ea296ff4a18de079c7bd4f846b4f6bf5200db3db59d13"
+    },
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "e565c30e68812a64c2c604bc5624b0eba85dbfb48828f84cac72f09ae5f456cd"
+    },
+    {
+      "path": ".github/workflows/public-history.yml",
+      "sha256": "cbe39bb8944af1749790679df8eee3eea17329cebba141abd2bc744f876a2038"
+    },
+    {
+      "path": "DEVELOPMENT_STATE.md",
+      "sha256": "18bdcd7ad5479b354d4a26473424dbe97c5fc76b3f1899f0822a6488b9cb0701"
+    },
+    {
+      "path": ".gitleaks.toml",
+      "sha256": "835bd2a63bd4c3ff0bba53f31123fd2a0322d29c290d00c3949d29d5fc5d8587"
+    },
+    {
+      "path": "scripts/check_history_digest_allowlist.py",
+      "sha256": "f11df74f14c4520170eb7531434493a1f00dd0117fd07abcde3009fa39900c3c"
+    },
+    {
+      "path": "docs/GOVERNMENT_HISTORY_SCAN_REVIEW.md",
+      "sha256": "263ba55c7c0bb3e1f84ceaf862100a14567653dcbba123c376ee560d3ac636b1"
+    }
+  ]
+}

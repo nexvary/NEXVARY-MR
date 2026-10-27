@@ -1,0 +1,33 @@
+{
+  "source": "2c45f9f9368708af16069e591952652f998ed19b",
+  "runtimeAndQmlSameAs": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "environment": {
+    "os": "Ubuntu24.04",
+    "qt": "6.4.2",
+    "compiler": "GCC13.3.0",
+    "profile": "Laboratory",
+    "buildType": "Release",
+    "flags": "-g -O3 -DNDEBUG",
+    "qpa": "offscreen",
+    "quickBackend": "software",
+    "scale": 1.25,
+    "symbolFlagAdded": true
+  },
+  "test": "mr_ui_scale_1.25",
+  "boundedDiagnosticRepeats": 3,
+  "passedRuns": 3,
+  "seconds": 112.83,
+  "purpose": "Try to reproduce the first failing DPI group under original optimization/profile, stop on first failure; not CI retry-until-green",
+  "reproducedSigsegv": false,
+  "rootCauseFound": false,
+  "runtimeFixClaimed": false,
+  "stackAvailable": false,
+  "generatedLinkFailure": {
+    "emptyObjects": [
+      "ConnectionDiagnosis.cpp.o",
+      "ui_tests.cpp.o"
+    ],
+    "objectsRetainedThenRecompiled": true,
+    "sourceWeakened": false
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 12696151398,
+    "name": "NEXVARY-MR-Linux-production-integration-evidence",
+    "size_in_bytes": 81261472,
+    "digest": "sha256:7aca657e32907d7258d149d515ad105b91ad39bfd18866b3be97b611fa7663d2",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12696151398"
+  },
+  {
+    "id": 12696136361,
+    "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+    "size_in_bytes": 81339282,
+    "digest": "sha256:a6465ec53c51418505c9a09461fb74b03b393554f9475d37b8d04179c2a0d0e0",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12696136361"
+  },
+  {
+    "id": 12695188108,
+    "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+    "size_in_bytes": 49055403,
+    "digest": "sha256:a7bd7e07bfd9f1b0f1a6573a891784a45b60844b949db192b4fe541652b16374",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12695188108"
+  },
+  {
+    "id": 12695153272,
+    "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+    "size_in_bytes": 61383913,
+    "digest": "sha256:19c407a11f4e4f06d6a1ca9e58fa7a14338b0813f77c545b51ee393b899e97ae",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12695153272"
+  },
+  {
+    "id": 12694978216,
+    "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+    "size_in_bytes": 33174556,
+    "digest": "sha256:04ece269a8fa9bc1b834053a7b64bd43ddd5bc9f14a890765f6bce8b7c17cecc",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12694978216"
+  },
+  {
+    "id": 12694473681,
+    "name": "NEXVARY-MR-Windows-production-validation-evidence",
+    "size_in_bytes": 67054853,
+    "digest": "sha256:52d836e5a034b98c2ae2a508ae72b4acceff5c9f12bf5fb78618ae7109411907",
+    "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+    "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40414566542/artifacts/12694473681"
+  }
+]

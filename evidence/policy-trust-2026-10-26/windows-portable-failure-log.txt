@@ -1,0 +1,26 @@
+2026-10-26T11:56:35.5442403Z ##[group]Run ./packaging/smoke-windows.ps1
+2026-10-26T11:56:35.5442816Z [36;1m./packaging/smoke-windows.ps1[0m
+2026-10-26T11:56:35.5484004Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-26T11:56:35.5484358Z env:
+2026-10-26T11:56:35.5484549Z   QT_QUICK_BACKEND: software
+2026-10-26T11:56:35.5484892Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-26T11:56:35.5485354Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-26T11:56:35.5485827Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-26T11:56:35.5486236Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-26T11:56:35.5486645Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-26T11:56:35.5487001Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-26T11:56:35.5487348Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-26T11:56:35.5487761Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-26T11:56:35.5488092Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-26T11:56:35.5488394Z   QT_QPA_FONTDIR: D:\a\_temp\NEXVARY-MR-test-fonts
+2026-10-26T11:56:35.5488878Z   MR_CLAMSCAN_PATH: D:\a\_temp\nexvary-clamav-fixture-runtime\clamav-1.5.4.win.x64\clamscan.exe
+2026-10-26T11:56:35.5489324Z ##[endgroup]
+2026-10-26T11:57:03.5281173Z [31;1m&: [0mD:\a\NEXVARY-MR\NEXVARY-MR\packaging\smoke-windows.ps1:104[0m
+2026-10-26T11:57:03.5282107Z [31;1m[0m[36;1mLine |[0m
+2026-10-26T11:57:03.5283157Z [31;1m[0m[36;1m[36;1m 104 | [0m   & [36;1m$verifierPython[0m $auditVerifier $auditFile --anchor $auditAnchor | …[0m
+2026-10-26T11:57:03.5284013Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m     ~~~~~~~~~~~~~~~[0m
+2026-10-26T11:57:03.5284756Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe term 'C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe[0m
+2026-10-26T11:57:03.5285920Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mC:\hostedtoolcache\windows\Python\3.15.1\x64\python.exe' is not recognized as a name of a cmdlet, function,[0m
+2026-10-26T11:57:03.5287242Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mscript file, or executable program. Check the spelling of the name, or if a path was included, verify that the[0m
+2026-10-26T11:57:03.5289330Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mpath is correct and try again.[0m
+2026-10-26T11:57:03.5500423Z ##[error]Process completed with exit code 1.

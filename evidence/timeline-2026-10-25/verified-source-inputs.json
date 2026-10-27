@@ -1,0 +1,65 @@
+{
+  "sourceSha": "3bf0485e9b45174a4a6ae2ade8322aebba3166d1",
+  "inputs": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "058d252d01129db8b9a89c310f05da15945cd35c76660939d085ccadb4f81817"
+    },
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "94ac6a6df0e879a623197f620d9d2c3a575105ff5f615abdc4d9872140441022"
+    },
+    {
+      "path": "cpp/src/CaseTimeline.cpp",
+      "sha256": "7be75e6e21025ddbc30f59f24de6f7123fd2043f1b7d54a77de19635f0ec1016"
+    },
+    {
+      "path": "cpp/src/CaseTimeline.hpp",
+      "sha256": "1f3db6c6b6090d5ae5ce69e93408c4632f16658d14eeafe675d980e6f2292aaa"
+    },
+    {
+      "path": "cpp/src/LawCaseTimeline.cpp",
+      "sha256": "43503c43ea180eb26410a1c7af98e461a72c0aaf62c64c2e969a7a88c9d37044"
+    },
+    {
+      "path": "cpp/src/LawCaseBridge.cpp",
+      "sha256": "5180b53b9eedad572e91af875c748b96a6a638a4c2224b05e17622fe9ee23c7a"
+    },
+    {
+      "path": "cpp/src/LawCaseBridge.hpp",
+      "sha256": "b2ceb9cfb9f568efed8203ac32045bf0b6e1a8445570ecab53f34d2f9dd8053a"
+    },
+    {
+      "path": "cpp/src/LawCaseImports.cpp",
+      "sha256": "16ae99f1c23a1083df46e61d1c8ce874d678d48d46c12d63a857645783308572"
+    },
+    {
+      "path": "cpp/tests/timeline_tests.cpp",
+      "sha256": "7f63808ca0d339bc3e06fd7d6c71ce9871422e0a0cf79922de71205c87f7b06b"
+    },
+    {
+      "path": "cpp/tests/ui_tests.cpp",
+      "sha256": "924278619088a16f3203e4cf9370bc8ec27209f2ca24b395ef6cb96852f389dd"
+    },
+    {
+      "path": "qml/GovernmentAnalysisPage.qml",
+      "sha256": "6a7aeb1d862efee0899472e56f4106a4702207e2101b97f475e779d06ca9da7c"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "sha256": "f3ef644dbe0e31870986f8dd9e2cac73f05bf5c793baa08fa10b5995042b0961"
+    },
+    {
+      "path": "qml/OperationProgress.qml",
+      "sha256": "b9065bc45f6e47a1c8b66b4d47d1d595c7c59628b976fefbc4fe0e354b6eb783"
+    },
+    {
+      "path": "qml/Main.qml",
+      "sha256": "7df28e2d056cecdad1073ea57268afa1e77b10b1cba2dc4c034125182908d8e0"
+    },
+    {
+      "path": "qml/AppShell.qml",
+      "sha256": "eacf09ba32eb83965876c5fbca6ff6659fc95aeef6550d1d29a3603aacfae995"
+    }
+  ]
+}

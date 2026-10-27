@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+class GovernmentOperationPolicy;
 #include <QTcpServer>
 #include <QStringList>
 class WorkshopBridge;
@@ -10,6 +11,7 @@ class TrackingPortal final:public QObject {
  Q_PROPERTY(QString error READ error NOTIFY changed)
  Q_PROPERTY(QStringList addresses READ addresses NOTIFY changed)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  explicit TrackingPortal(WorkshopBridge *workshop,QObject *parent=nullptr);
  bool running() const {return server_.isListening();}
  QString baseUrl() const;
@@ -23,6 +25,7 @@ public:
 signals:
  void changed();
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  void accept();
  WorkshopBridge *workshop_;
  QTcpServer server_;

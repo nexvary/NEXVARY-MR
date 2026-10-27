@@ -1,4 +1,5 @@
 #include "TrackingPortal.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "WorkshopBridge.hpp"
 #include <QTcpSocket>
 #include <QNetworkInterface>
@@ -29,6 +30,7 @@ QStringList TrackingPortal::addresses() const {
 }
 QString TrackingPortal::baseUrl() const {return running()?QStringLiteral("http://%1:%2").arg(server_.serverAddress().toString()).arg(server_.serverPort()):QString();}
 bool TrackingPortal::start(const QString &address,int port,bool consent){
+ if(policy_&&!policy_->permit("tracking-portal")){error_=policy_->error();emit changed();return false;}
  if(running()){error_=QStringLiteral("Stop the portal before changing its address.");emit changed();return false;}
  if(!consent||port<0||port>65535||!addresses().contains(address)||!workshop_->ready()){error_=QStringLiteral("Choose a local/private IPv4 address and explicitly approve this trusted-network HTTP portal.");emit changed();return false;}
  if(!server_.listen(QHostAddress(address),static_cast<quint16>(port))){error_=server_.errorString();emit changed();return false;}
@@ -36,11 +38,12 @@ bool TrackingPortal::start(const QString &address,int port,bool consent){
 }
 void TrackingPortal::stop(){server_.close();for(auto *s:findChildren<QTcpSocket*>())s->abort();emit changed();}
 QString TrackingPortal::link(int id,int days,bool consent){
+ if(policy_&&!policy_->permit("tracking-portal")){error_=policy_->error();emit changed();return {};}
  if(!running()){error_=QStringLiteral("Start the portal before issuing a link.");emit changed();return {};}
  const auto token=workshop_->issueTrackingToken(id,days,consent);if(token.isEmpty()){error_=workshop_->error();emit changed();return {};}
  error_.clear();emit changed();return baseUrl()+QStringLiteral("/t/")+token;
 }
-bool TrackingPortal::copyLink(const QString &url){if(!running()||!url.startsWith(baseUrl()+QStringLiteral("/t/")))return false;QGuiApplication::clipboard()->setText(url);return true;}
+bool TrackingPortal::copyLink(const QString &url){if(policy_&&!policy_->permit("tracking-portal"))return false;if(!running()||!url.startsWith(baseUrl()+QStringLiteral("/t/")))return false;QGuiApplication::clipboard()->setText(url);return true;}
 QByteArray TrackingPortal::html(const QVariantMap &s){
  if(s.isEmpty())return QByteArray("<!doctype html><html lang='en'><meta charset='utf-8'><title>Unavailable</title><p>Tracking link unavailable or expired.</p></html>");
  QString out=QStringLiteral("<!doctype html><html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta http-equiv='refresh' content='30'><title>NEXVARY — متابعة الصيانة</title><style>body{background:#0a0a0a;color:#eee;font:18px system-ui;margin:0;padding:24px}main{max-width:680px;margin:auto;border:1px solid #555;border-radius:18px;padding:24px;background:linear-gradient(160deg,#303030,#101010 28%,#080808)}h1{font-size:26px}h2{color:#62d5b5}p,li{overflow-wrap:anywhere;white-space:pre-wrap}li{padding:10px}small{color:#bdbdbd}</style></head><body><main><h1>NEXVARY MR — متابعة الصيانة</h1><p>أمر الصيانة / Repair order #%1</p><p>%2 %3</p><h2>%4</h2><p>%5</p><h3>مراحل الصيانة / Repair history</h3><ol>").arg(s.value("id").toInt()).arg(escaped(s.value("brand")),escaped(s.value("model")),statusLabel(s.value("status").toString()),escaped(s.value("message")));
@@ -48,6 +51,7 @@ QByteArray TrackingPortal::html(const QVariantMap &s){
  out+=QStringLiteral("</ol><small>تتحدث الحالة كل 30 ثانية أثناء تشغيل بوابة المركز. احتفظ بالرابط لنفسك.<br>Updates every 30 seconds while the workshop portal is online. Keep your link private.</small></main></body></html>");return out.toUtf8();
 }
 void TrackingPortal::accept(){
+ if(policy_&&!policy_->permit("tracking-portal")){stop();error_=policy_->error();emit changed();return;}
  while(server_.hasPendingConnections()){
   auto *socket=server_.nextPendingConnection();socket->setParent(this);
   if(clients_>=16){socket->abort();socket->deleteLater();continue;}++clients_;
@@ -55,6 +59,7 @@ void TrackingPortal::accept(){
   connect(socket,&QTcpSocket::disconnected,this,[this,socket]{--clients_;socket->deleteLater();});
   QTimer::singleShot(5000,socket,[socket]{socket->abort();});
   connect(socket,&QTcpSocket::readyRead,this,[this,socket]{
+   if(policy_&&!policy_->permit("tracking-portal")){stop();return;}
    if(socket->property("answered").toBool())return;
    auto request=socket->property("request").toByteArray()+socket->readAll();socket->setProperty("request",request);
    if(request.size()>4096){socket->abort();return;}
@@ -72,4 +77,10 @@ void TrackingPortal::accept(){
    socket->write(headers+body);socket->disconnectFromHost();
   });
  }
+}
+
+void TrackingPortal::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;
+ auto apply=[this]{if(policy_&&!policy_->granted("tracking-portal")){stop();error_=QStringLiteral("Government offline policy: tracking listener and clients stopped.");emit changed();}};
+ connect(policy,&GovernmentOperationPolicy::changed,this,apply);apply();
 }

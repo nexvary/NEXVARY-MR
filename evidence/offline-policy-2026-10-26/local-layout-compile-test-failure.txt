@@ -1,0 +1,108 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start  8: mr_offline_tests
+1/5 Test  #8: mr_offline_tests .................   Passed    3.10 sec
+    Start 43: mr_ui_tests
+2/5 Test #43: mr_ui_tests ......................***Failed    0.71 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml produced 4 error(s):
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml:11,2: Type MR.Main unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/Main.qml:139,5: Type SettingsPage unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/SettingsPage.qml:15,4: Type GovernmentNetworkPanel unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml:19,302: Unexpected token `;'
+  Working directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+  Import paths:
+    '/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup'
+    'qrc:/qt-project.org/imports'
+    '/workspace/scratch/1df17bb48a7d/runtime/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() Type MR.Main unavailable
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(11)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 5ms
+********* Finished testing of mr_ui *********
+
+    Start 44: mr_ui_scale_1.25
+3/5 Test #44: mr_ui_scale_1.25 .................***Failed    0.72 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml produced 4 error(s):
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml:11,2: Type MR.Main unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/Main.qml:139,5: Type SettingsPage unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/SettingsPage.qml:15,4: Type GovernmentNetworkPanel unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml:19,302: Unexpected token `;'
+  Working directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+  Import paths:
+    '/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup'
+    'qrc:/qt-project.org/imports'
+    '/workspace/scratch/1df17bb48a7d/runtime/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() Type MR.Main unavailable
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(11)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 6ms
+********* Finished testing of mr_ui *********
+Could not find the following test functions:
+    WorkstationNavigation::test_governmentAdbBackupControls()
+    WorkstationNavigation::test_governmentTimelineControls()
+    WorkstationNavigation::test_shellResponsive()
+    WorkstationNavigation::test_governmentProtectedBackupControls()
+    WorkstationNavigation::test_governmentArtifactControls()
+    WorkstationNavigation::test_governmentAuthorizedImportControls()
+    WorkstationNavigation::test_governmentNetworkPolicyControls()
+    WorkstationNavigation::test_governmentRetentionControls()
+    WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+
+    Start 45: mr_ui_scale_1.5
+4/5 Test #45: mr_ui_scale_1.5 ..................***Failed    0.68 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml produced 4 error(s):
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml:11,2: Type MR.Main unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/Main.qml:139,5: Type SettingsPage unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/SettingsPage.qml:15,4: Type GovernmentNetworkPanel unavailable
+    /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml:19,302: Unexpected token `;'
+  Working directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+  Import paths:
+    '/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup'
+    'qrc:/qt-project.org/imports'
+    '/workspace/scratch/1df17bb48a7d/runtime/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() Type MR.Main unavailable
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(11)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 6ms
+********* Finished testing of mr_ui *********
+Could not find the following test functions:
+    WorkstationNavigation::test_governmentAuthorizedImportControls()
+    WorkstationNavigation::test_governmentAdbBackupControls()
+    WorkstationNavigation::test_governmentNetworkPolicyControls()
+    WorkstationNavigation::test_governmentTimelineControls()
+    WorkstationNavigation::test_governmentProtectedBackupControls()
+    WorkstationNavigation::test_shellResponsive()
+    WorkstationNavigation::test_governmentArtifactControls()
+    WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+    WorkstationNavigation::test_governmentRetentionControls()
+
+    Start 46: mr_gui_smoke
+5/5 Test #46: mr_gui_smoke .....................   Passed   18.67 sec
+
+40% tests passed, 3 tests failed out of 5
+
+Total Test time (real) =  23.88 sec
+
+The following tests FAILED:
+	 43 - mr_ui_tests (Failed)
+	 44 - mr_ui_scale_1.25 (Failed)
+	 45 - mr_ui_scale_1.5 (Failed)
+Errors while running CTest

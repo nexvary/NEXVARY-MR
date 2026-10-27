@@ -1,0 +1,14 @@
+{
+  "schema": "nexvary-containment-observation/v1",
+  "source": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e",
+  "observer": "strace -ff -ttt -e trace=process,network",
+  "intendedCases": [
+    "defaultDenyAndExplicitAdministrator",
+    "deviceChildDeniedPermittedAndRevoked",
+    "portalDefaultDenyAndClientAbort",
+    "browserHandoffBlockedAndProtocolsRestricted"
+  ],
+  "result": "External Gate: current execution environment denies PTRACE_TRACEME/PTRACE_SETOPTIONS before native tests can run under the observer",
+  "usableTrace": false,
+  "scope": "No independent syscall/network capture is claimed. Earlier successful native application policy tests remain their own separate evidence. OS DNS/proxy/UNC/browser/descendant containment remains open. Repeat on an authorized trace-capable disposable host; do not change host controls merely to claim a result."
+}

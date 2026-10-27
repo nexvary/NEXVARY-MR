@@ -1,0 +1,22 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start  8: mr_artifact_tests
+1/8 Test  #8: mr_artifact_tests ..................   Passed    2.58 sec
+    Start  9: mr_timeline_tests
+2/8 Test  #9: mr_timeline_tests ..................   Passed    1.08 sec
+    Start 10: mr_import_tests
+3/8 Test #10: mr_import_tests ....................   Passed    6.89 sec
+    Start 37: mr_artifact_reference_validation
+4/8 Test #37: mr_artifact_reference_validation ...   Passed    0.04 sec
+    Start 42: mr_ui_tests
+5/8 Test #42: mr_ui_tests ........................   Passed   60.71 sec
+    Start 43: mr_ui_scale_1.25
+6/8 Test #43: mr_ui_scale_1.25 ...................   Passed   36.45 sec
+    Start 44: mr_ui_scale_1.5
+7/8 Test #44: mr_ui_scale_1.5 ....................   Passed   39.36 sec
+    Start 45: mr_gui_smoke
+8/8 Test #45: mr_gui_smoke .......................   Passed   16.86 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) = 163.98 sec

@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+  "fullSuiteInitial": {
+    "passed": 48,
+    "total": 49,
+    "remaining": "GUI smoke setup"
+  },
+  "savedFailureReason": "Close the existing request for this category before requesting again.",
+  "reasonScope": "A prior failed synthetic attempt left a nonterminal request. Product refusal was retained; no request was silently closed by the diagnostic.",
+  "freshDiagnosticSmokeExit": 0,
+  "originalsPreserved": true,
+  "originalAuditSnapshotLagMechanism": "unresolved",
+  "nextValidation": "three sequential CTest smoke passes from a new synthetic fixture; retained original failures are not cleared"
+}

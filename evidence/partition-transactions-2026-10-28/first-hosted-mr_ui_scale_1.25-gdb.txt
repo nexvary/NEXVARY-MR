@@ -1,0 +1,138 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff12976c0 (LWP 25839)]
+[New Thread 0x7fffeaf2e6c0 (LWP 25840)]
+[New Thread 0x7fffe9f2d6c0 (LWP 25841)]
+[New Thread 0x7fffe3fff6c0 (LWP 25842)]
+[New Thread 0x7fffe2ffe6c0 (LWP 25843)]
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+[Detaching after vfork from child process 25844]
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+
+Thread 1 "mr_ui_tests" received signal SIGSEGV, Segmentation fault.
+0x00007ffff7458aa7 in qmlAttachedPropertiesObject(QObject*, QObject* (*)(QObject*), bool) () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+
+Thread 6 (Thread 0x7fffe2ffe6c0 (LWP 25843) "Thread (pooled)"):
+#0  0x00007ffff5a98e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fffe2ffd800, op=137, expected=0, futex_word=0x555557e11104) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x7fffe2ffd800, clockid=0, expected=0, futex_word=0x555557e11104) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x555557e11104, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffe2ffd800, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x00007ffff5a9bd6e in __pthread_cond_wait_common (abstime=0x7fffe2ffd800, clockid=1, mutex=0x555557e110b0, cond=0x555557e110d8) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_timedwait64 (cond=0x555557e110d8, mutex=0x555557e110b0, abstime=0x7fffe2ffd800) at ./nptl/pthread_cond_wait.c:652
+#5  0x00007ffff6476b93 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff647cad2 in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#7  0x00007ffff647c48d in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff5a9cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007ffff5b29ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 5 (Thread 0x7fffe3fff6c0 (LWP 25842) "Thread (pooled)"):
+#0  0x00007ffff5a98e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fffe3ffe800, op=137, expected=0, futex_word=0x5555577deea0) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x7fffe3ffe800, clockid=0, expected=0, futex_word=0x5555577deea0) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555577deea0, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffe3ffe800, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x00007ffff5a9bd6e in __pthread_cond_wait_common (abstime=0x7fffe3ffe800, clockid=1, mutex=0x5555577dee50, cond=0x5555577dee78) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_timedwait64 (cond=0x5555577dee78, mutex=0x5555577dee50, abstime=0x7fffe3ffe800) at ./nptl/pthread_cond_wait.c:652
+#5  0x00007ffff6476b93 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff647cad2 in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#7  0x00007ffff647c48d in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff5a9cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007ffff5b29ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 4 (Thread 0x7fffe9f2d6c0 (LWP 25841) "Thread (pooled)"):
+#0  0x00007ffff5a98e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fffe9f2c800, op=137, expected=0, futex_word=0x5555577dc6f0) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x7fffe9f2c800, clockid=0, expected=0, futex_word=0x5555577dc6f0) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555577dc6f0, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffe9f2c800, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x00007ffff5a9bd6e in __pthread_cond_wait_common (abstime=0x7fffe9f2c800, clockid=1, mutex=0x5555577dc6a0, cond=0x5555577dc6c8) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_timedwait64 (cond=0x5555577dc6c8, mutex=0x5555577dc6a0, abstime=0x7fffe9f2c800) at ./nptl/pthread_cond_wait.c:652
+#5  0x00007ffff6476b93 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff647cad2 in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#7  0x00007ffff647c48d in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff5a9cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007ffff5b29ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 3 (Thread 0x7fffeaf2e6c0 (LWP 25840) "Thread (pooled)"):
+#0  0x00007ffff5a98e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fffeaf2d800, op=137, expected=0, futex_word=0x5555577dc4d4) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x7fffeaf2d800, clockid=0, expected=0, futex_word=0x5555577dc4d4) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555577dc4d4, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffeaf2d800, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x00007ffff5a9bd6e in __pthread_cond_wait_common (abstime=0x7fffeaf2d800, clockid=1, mutex=0x5555577dc480, cond=0x5555577dc4a8) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_timedwait64 (cond=0x5555577dc4a8, mutex=0x5555577dc480, abstime=0x7fffeaf2d800) at ./nptl/pthread_cond_wait.c:652
+#5  0x00007ffff6476b93 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff647cad2 in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#7  0x00007ffff647c48d in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff5a9cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007ffff5b29ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x7ffff12976c0 (LWP 25839) "QQmlThread"):
+#0  0x00007ffff5b1b79d in __GI___poll (fds=0x7fffec001490, nfds=1, timeout=-1) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x00007ffff5973b4e in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#2  0x00007ffff5913ad3 in g_main_context_iteration () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#3  0x00007ffff65315ef in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#4  0x00007ffff63429a3 in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#5  0x00007ffff6410683 in QThread::exec() () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff7455f28 in ?? () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#7  0x00007ffff647c48d in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff5a9cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007ffff5b29ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7ffff1f77280 (LWP 25836) "mr_ui_tests"):
+#0  0x00007ffff7458aa7 in qmlAttachedPropertiesObject(QObject*, QObject* (*)(QObject*), bool) () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#1  0x00007ffff173a6dc in ?? () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#2  0x00007ffff6be362b in QGridLayoutItem::stretchFactor(Qt::Orientation) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#3  0x00007ffff6be6767 in QGridLayoutEngine::fillRowData(QGridLayoutRowData*, double const*, double const*, Qt::Orientation, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#4  0x00007ffff6be7aa6 in QGridLayoutEngine::ensureColumnAndRowData(QGridLayoutRowData*, QGridLayoutBox*, double const*, double const*, Qt::Orientation, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#5  0x00007ffff6be7e7a in QGridLayoutEngine::sizeHint(Qt::SizeHint, QSizeF const&, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#6  0x00007ffff1734276 in QQuickGridLayoutBase::sizeHint(Qt::SizeHint) const () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#7  0x00007ffff1735187 in QQuickLayoutAttached::sizeHint(Qt::SizeHint, Qt::Orientation) const () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#8  0x00007ffff173a282 in QQuickLayout::effectiveSizeHints_helper(QQuickItem*, QSizeF*, QQuickLayoutAttached**, bool) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#9  0x00007ffff173a616 in ?? () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#10 0x00007ffff6be3826 in QGridLayoutItem::box(Qt::Orientation, bool, double) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#11 0x00007ffff6be6b75 in QGridLayoutEngine::fillRowData(QGridLayoutRowData*, double const*, double const*, Qt::Orientation, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#12 0x00007ffff6be7aa6 in QGridLayoutEngine::ensureColumnAndRowData(QGridLayoutRowData*, QGridLayoutBox*, double const*, double const*, Qt::Orientation, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#13 0x00007ffff6be8531 in QGridLayoutEngine::ensureGeometries(QSizeF const&, QAbstractLayoutStyleInfo const*) const () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#14 0x00007ffff6be8adc in QGridLayoutEngine::setGeometries(QRectF const&, QAbstractLayoutStyleInfo const*) () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#15 0x00007ffff173c105 in QQuickGridLayoutBase::rearrange(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#16 0x00007ffff1736f32 in QQuickLayout::geometryChange(QRectF const&, QRectF const&) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#17 0x00007ffff79e503a in QQuickItem::setSize(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#18 0x00007ffff79ad4fa in ?? () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#19 0x00007ffff79d6e86 in QQuickItem::geometryChange(QRectF const&, QRectF const&) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#20 0x00007ffff79e503a in QQuickItem::setSize(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#21 0x00007ffff17399da in ?? () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#22 0x00007ffff6be8d1c in QGridLayoutEngine::setGeometries(QRectF const&, QAbstractLayoutStyleInfo const*) () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#23 0x00007ffff173c105 in QQuickGridLayoutBase::rearrange(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#24 0x00007ffff1736f32 in QQuickLayout::geometryChange(QRectF const&, QRectF const&) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#25 0x00007ffff79e3939 in QQuickItem::setWidth(double) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#26 0x00007ffff79fc944 in ?? () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#27 0x00007ffff6588cdd in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#28 0x00007ffff637d523 in QtPrivate::QPropertyBindingData::notifyObserver_helper(QUntypedPropertyData*, QBindingStorage*, QPropertyObserverPointer, QVarLengthArray<QBindingObserverPtr, 256ll>&) const () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#29 0x00007ffff79eecb5 in ?? () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#30 0x00007ffff79d6f08 in QQuickItem::geometryChange(QRectF const&, QRectF const&) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#31 0x00007ffff5701b51 in QQuickControl::geometryChange(QRectF const&, QRectF const&) () from /lib/x86_64-linux-gnu/libQt6QuickTemplates2.so.6
+#32 0x00007ffff79e503a in QQuickItem::setSize(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#33 0x00007ffff17399da in ?? () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#34 0x00007ffff6be8d1c in QGridLayoutEngine::setGeometries(QRectF const&, QAbstractLayoutStyleInfo const*) () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#35 0x00007ffff173c105 in QQuickGridLayoutBase::rearrange(QSizeF const&) () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#36 0x00007ffff1738068 in QQuickLayout::updatePolish() () from /lib/x86_64-linux-gnu/libQt6QuickLayouts.so.6
+#37 0x00007ffff7a7c26e in QQuickWindowPrivate::polishItems() () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#38 0x00007ffff7aa64df in ?? () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#39 0x00007ffff7a83104 in QQuickWindow::event(QEvent*) () from /lib/x86_64-linux-gnu/libQt6Quick.so.6
+#40 0x00007ffff6338448 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#41 0x00007ffff6992365 in QGuiApplicationPrivate::sendQWindowEventToQPlatformWindow(QWindow*, QEvent*) () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#42 0x00007ffff69923df in QGuiApplication::notify(QObject*, QEvent*) () from /lib/x86_64-linux-gnu/libQt6Gui.so.6
+#43 0x00007ffff6338448 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#44 0x00007ffff647b7ab in QTimerInfoList::activateTimers() () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#45 0x00007ffff6533a29 in ?? () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#46 0x00007ffff5914635 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#47 0x00007ffff5973bf7 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#48 0x00007ffff5913ad3 in g_main_context_iteration () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+#49 0x00007ffff65315ef in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#50 0x00007ffff6338ab9 in QCoreApplication::processEvents(QFlags<QEventLoop::ProcessEventsFlag>, int) () from /lib/x86_64-linux-gnu/libQt6Core.so.6
+#51 0x00007ffff7f87f87 in QuickTestResult::waitForRendering(QQuickItem*, int) () from /lib/x86_64-linux-gnu/libQt6QuickTest.so.6
+#52 0x00007ffff7f8a626 in ?? () from /lib/x86_64-linux-gnu/libQt6QuickTest.so.6
+#53 0x00007ffff7f8ad34 in QuickTestResult::qt_metacall(QMetaObject::Call, int, void**) () from /lib/x86_64-linux-gnu/libQt6QuickTest.so.6
+#54 0x00007ffff74e858a in ?? () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#55 0x00007ffff73da568 in ?? () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#56 0x00007ffff73e0e13 in QV4::QObjectMethod::callInternal(QV4::Value const*, QV4::Value const*, int) const () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#57 0x00007ffff73f3104 in QV4::Runtime::CallPropertyLookup::call(QV4::ExecutionEngine*, QV4::Value const&, unsigned int, QV4::Value*, int) () from /lib/x86_64-linux-gnu/libQt6Qml.so.6
+#58 0x00007fffe8ee1254 in ?? ()
+#59 0x0000000000000001 in ?? ()
+#60 0x0000000000000000 in ?? ()

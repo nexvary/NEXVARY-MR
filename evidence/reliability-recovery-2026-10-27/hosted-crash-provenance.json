@@ -1,0 +1,26 @@
+{
+  "source": "2c45f9f9368708af16069e591952652f998ed19b",
+  "event": "pull_request",
+  "runId": 40497742489,
+  "jobId": 122167628437,
+  "profile": "production",
+  "test": "mr_ui_scale_1.25",
+  "firstFailureSeconds": 3.25,
+  "lastPassedSubtest": "governmentAdbBackupControls",
+  "firstFullSuitePassed": 47,
+  "firstFullSuiteTotal": 48,
+  "gdbReplayExit": 255,
+  "gdbReproducedSignal": "SIGSEGV",
+  "artifactId": 12730958767,
+  "providerZipSha256": "d2e272e4f1b4bc84f4ba75974dd9a987a8f791da69fd6152344c5c0eecd2a0f7",
+  "downloadedZipSha256Matched": true,
+  "mainThreadFrames": [
+    "QMetaObject::cast",
+    "QQuickLayout::effectiveSizePolicy_helper",
+    "QGridLayoutEngine::fillRowData",
+    "QQuickGridLayoutBase::rearrange",
+    "QQuickLayout::updatePolish",
+    "QuickTestResult::waitForRendering"
+  ],
+  "interpretation": "Confirmed layout-polish crash, consistent with a stale layout child; exact originating delegate and upstream/app cause not established by this stack alone. Dynamic import/result Repeater isolation is a candidate mitigation pending equivalent hosted regressions."
+}

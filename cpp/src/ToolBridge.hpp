@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+class GovernmentOperationPolicy;
 #include "MirrorSession.hpp"
 #include <QProcess>
 #include <QTimer>
@@ -13,13 +14,18 @@
 #include <atomic>
 #include <memory>
 
-// One runner for discovery and allowlisted device services. No arbitrary shell API.
+// One foreground command runner plus a bounded background discovery reader.
+// No arbitrary shell API; foreground actions supersede background discovery.
 class ToolBridge final : public QObject {
   Q_OBJECT
   Q_PROPERTY(bool mirrorActive READ mirrorActive NOTIFY mirrorChanged)
   Q_PROPERTY(QString mirrorState READ mirrorState NOTIFY mirrorChanged)
   Q_PROPERTY(QString mirrorStatus READ mirrorStatus NOTIFY mirrorChanged)
   Q_PROPERTY(QString mirrorOutput READ mirrorOutput NOTIFY mirrorChanged)
+  Q_PROPERTY(bool screenViewAvailable READ screenViewAvailable CONSTANT)
+  Q_PROPERTY(bool foregroundBusy READ foregroundBusy NOTIFY busyChanged)
+  Q_PROPERTY(QString activeOperation READ activeOperation NOTIFY busyChanged)
+  Q_PROPERTY(bool backgroundRefreshing READ backgroundRefreshing NOTIFY backgroundRefreshChanged)
   Q_PROPERTY(bool laboratoryBuild READ laboratoryBuild CONSTANT)
   Q_PROPERTY(QString status READ status NOTIFY statusChanged)
   Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
@@ -41,9 +47,14 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(QString servicePhase READ servicePhase NOTIFY serviceChanged)
   Q_PROPERTY(QVariantList requestedModels READ requestedModels CONSTANT)
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
   explicit ToolBridge(QObject *parent = nullptr);
   ~ToolBridge() override;
   bool laboratoryBuild() const;
+  bool screenViewAvailable()const;
+  bool foregroundBusy()const;
+  QString activeOperation()const;
+  bool backgroundRefreshing()const{return polling_;}
   QString status() const { return status_; }
   bool busy() const { return active_ || serviceRunning_ || mirror_.active(); }
   QVariantList tools() const;
@@ -90,6 +101,8 @@ public:
   Q_INVOKABLE bool startService(const QString &action, const QString &expectedSerial, const QVariantMap &approval);
   Q_INVOKABLE bool exportServiceReport(const QString &localPath, bool plaintextApproved);
 signals:
+  void backgroundRefreshChanged();
+  void backgroundRefreshFinished(bool success);
   void mirrorChanged();
   void statusChanged();
   void busyChanged();
@@ -106,6 +119,7 @@ signals:
   void operationFinished(bool success);
   void diagnosticCompleted(const QString &operation, bool success);
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
   enum class Operation { None, AdbScan, FastbootScan, Properties, Logcat, Drivers, Service, DriverBinding, UsbInventory };
   void recordConnectionObservation(Operation operation,const QString &state);
   void runUsbInventory(Operation operation);
@@ -117,9 +131,19 @@ private:
   QString toolConfigurationPath_;
   void collectOutput();
   void finish(int exitCode, QProcess::ExitStatus exitStatus);
-  void replaceDevices(const QVariantList &found, const QString &transport);
+  void replaceDevices(const QVariantList &found, const QString &transport,bool preserveUnchanged=false);
   void setStatus(const QString &value);
   MirrorSession mirror_;
+  void pollDiscovery();
+  void finishPoll(int exitCode,QProcess::ExitStatus exitStatus);
+  void cancelPoll();
+  void publishDeviceIntelligence();
+  QProcess pollProcess_;
+  QTimer pollDeadline_;
+  QByteArray pollOutput_;
+  qsizetype pollErrorBytes_=0;
+  bool polling_=false,pollSuperseded_=false,pollOverflow_=false;
+  QVariantMap lastIntelligence_;
   QProcess process_;
   QTimer timeoutTimer_;
   QTimer pollTimer_;

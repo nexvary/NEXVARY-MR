@@ -1,0 +1,41 @@
+{
+  "scanner": "Gitleaks v8.30.1",
+  "pinnedArchiveSha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+  "findings": [
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:15",
+      "publicHeader": "include/sodium/crypto_auth.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:16",
+      "publicHeader": "include/sodium/crypto_auth_hmacsha256.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:17",
+      "publicHeader": "include/sodium/crypto_auth_hmacsha512.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:18",
+      "publicHeader": "include/sodium/crypto_auth_hmacsha512256.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:45",
+      "publicHeader": "include/sodium/crypto_onetimeauth.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:46",
+      "publicHeader": "include/sodium/crypto_onetimeauth_poly1305.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    },
+    {
+      "fingerprint": "8fb9b38f771da91c60f3b85a2084868b16fe95d4:evidence/identity-2026-10-24/windows-sodium-build-receipt.json:generic-api-key:55",
+      "publicHeader": "include/sodium/crypto_secretbox.h",
+      "matchesPreparedHeaderWithWindowsCRLF": true
+    }
+  ]
+}
