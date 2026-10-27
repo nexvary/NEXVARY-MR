@@ -25,6 +25,7 @@ class RecoveryBridge final:public QObject {
  Q_PROPERTY(QVariantList evidence READ evidence NOTIFY changed)
  Q_PROPERTY(QVariantList audit READ audit NOTIFY changed)
  Q_PROPERTY(QVariantMap device READ device NOTIFY changed)
+ Q_PROPERTY(QVariantMap operationReceipt READ operationReceipt NOTIFY changed)
  Q_PROPERTY(QString lossKind READ lossKind NOTIFY changed)
  Q_PROPERTY(QString encryptionKind READ encryptionKind NOTIFY changed)
 public:
@@ -47,6 +48,7 @@ public:
  QVariantList evidence() const;
  QVariantList audit() const;
  QVariantMap device() const;
+ QVariantMap operationReceipt() const{return operationReceipt_;}
  QString lossKind()const{return document_.value("loss").toString();}
  QString encryptionKind()const{return document_.value("encryption").toString();}
  Q_INVOKABLE QString assess(const QString &loss,const QString &encryption,bool external,bool backup,bool arabic) const;
@@ -84,6 +86,8 @@ private:
  static void addAudit(QJsonObject &document,const QString &operation,const QString &outcome);
  QString directory_,path_,pendingPath_,error_,status_;
  QJsonObject document_;
+ QString operationId_;
+ QVariantMap operationReceipt_;
  bool synthetic_=false,running_=false,externalAnalysis_=false;
  double progress_=0;
  std::shared_ptr<std::atomic_bool> cancelled_;

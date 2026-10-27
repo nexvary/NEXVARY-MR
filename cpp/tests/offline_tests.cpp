@@ -15,6 +15,7 @@
 #include <QFile>
 #include <QDir>
 #include <QThread>
+#include <QThreadPool>
 #include <QCryptographicHash>
 #include <QDesktopServices>
 #include <QUrl>
@@ -135,7 +136,48 @@ private slots:
   const auto image=t.filePath("image.dd");QVERIFY(write(image,QByteArray(4096,'x')));const auto exe=QCoreApplication::applicationFilePath();
   const auto marker=t.filePath("started");qputenv("MR_OFFLINE_MARKER",marker.toUtf8());QVERIFY(!recovery.analyzePartitions(image,exe,true));QVERIFY(!QFileInfo::exists(marker));
   QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic partition fixture",password));QVERIFY(recovery.analyzePartitions(image,exe,true));QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);QVERIFY2(recovery.error().isEmpty(),qPrintable(recovery.error()));QCOMPARE(recovery.evidence().size(),1);
+  const auto receipt=recovery.operationReceipt();QCOMPARE(receipt.value("kind").toString(),QString("partition-analysis"));QCOMPARE(receipt.value("status").toString(),QString("completed"));
+  QCOMPARE(receipt.value("sourceSha256").toString(),QString::fromLatin1(QCryptographicHash::hash(QByteArray(4096,'x'),QCryptographicHash::Sha256).toHex()));
+  const auto exported=t.filePath("partition.json");QVERIFY(recovery.exportEvidence(0,exported,true));QFile report(exported);QVERIFY(report.open(QIODevice::ReadOnly));
+  QCOMPARE(receipt.value("outputSha256").toString(),QString::fromLatin1(QCryptographicHash::hash(report.readAll(),QCryptographicHash::Sha256).toHex()));
   QVERIFY(QFile::remove(marker));qputenv("MR_OFFLINE_MODE","hang");QVERIFY(recovery.analyzePartitions(image,exe,true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);policy.revoke("external-analysis");QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);QVERIFY(!recovery.error().isEmpty());QCOMPARE(recovery.evidence().size(),1);
+  QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("revoked"));
+ }
+ void partitionRunningClosure_data(){
+  QTest::addColumn<QString>("action");QTest::addColumn<QString>("status");
+  QTest::newRow("operator-cancel")<<QString("cancel")<<QString("cancelled");
+  QTest::newRow("logout")<<QString("logout")<<QString("cancelled");
+  QTest::newRow("expiry")<<QString("expire")<<QString("expired");
+ }
+ void partitionRunningClosure(){
+  QFETCH(QString,action);QFETCH(QString,status);
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity,nullptr,action=="expire"?1500:600000);
+  RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);
+  QVERIFY(recovery.createCase("Synthetic partition closure","Lab","Lab","No phone","","backup","unknown",true));QVERIFY(recovery.recordOperator("Synthetic operator","Synthetic fixture",true));
+  const auto image=t.filePath("image.dd"),marker=t.filePath("started");QVERIFY(write(image,QByteArray(4096,'x')));
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic running partition closure",password));
+  qputenv("MR_OFFLINE_MARKER",marker.toUtf8());qputenv("MR_OFFLINE_MODE","hang");
+  QVERIFY(recovery.analyzePartitions(image,QCoreApplication::applicationFilePath(),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(marker),3000);
+  if(action=="cancel")recovery.cancel();else if(action=="logout")identity.logout();
+  QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),8000);QCOMPARE(recovery.operationReceipt().value("status").toString(),status);QCOMPARE(recovery.evidence().size(),0);
+ }
+ void partitionCompletionQueuedRevocation(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
+  RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);
+  QVERIFY(recovery.createCase("Synthetic queued callback","Lab","Lab","No phone","","backup","unknown",true));QVERIFY(recovery.recordOperator("Synthetic operator","Synthetic fixture",true));
+  const auto image=t.filePath("image.dd");QVERIFY(write(image,QByteArray(4096,'x')));
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic queued result",password));
+  QFile beforeFile(recovery.casePath());QVERIFY(beforeFile.open(QIODevice::ReadOnly));const auto before=beforeFile.readAll();beforeFile.close();
+  QVERIFY(recovery.analyzePartitions(image,QCoreApplication::applicationFilePath(),true));
+  // Let the worker finish without dispatching its queued GUI callback. No
+  // timing guess or automatic retry: the pool barrier proves job completion.
+  QVERIFY(QThreadPool::globalInstance()->waitForDone(5000));QVERIFY(recovery.busy());
+  QFile pending(recovery.casePath());QVERIFY(pending.open(QIODevice::ReadOnly));QCOMPARE(pending.readAll(),before);pending.close();
+  policy.revoke("external-analysis");QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);
+  QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("revoked"));QCOMPARE(recovery.evidence().size(),0);
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic failed input",password));
+  QVERIFY(recovery.analyzePartitions(t.filePath("missing.dd"),QCoreApplication::applicationFilePath(),true));QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);
+  QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("failed"));QCOMPARE(recovery.evidence().size(),0);
  }
  void browserHandoffBlockedAndProtocolsRestricted(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
@@ -146,6 +188,23 @@ private slots:
   QDesktopServices::setUrlHandler("https",this,"captureUrl");
   QVERIFY(policy.openExternal("https://example.invalid/approved-synthetic"));QCOMPARE(capturedUrl,QUrl("https://example.invalid/approved-synthetic"));
   policy.revoke("external-links");QVERIFY(!policy.openExternal("https://example.invalid/denied-synthetic"));QCOMPARE(capturedUrl,QUrl("https://example.invalid/approved-synthetic"));
+ }
+ void partitionStoreFailure_data(){
+  QTest::addColumn<bool>("caseStore");QTest::newRow("case-write-and-restore-failure")<<true;QTest::newRow("policy-journal-corruption")<<false;
+ }
+ void partitionStoreFailure(){
+  QFETCH(bool,caseStore);
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
+  RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);
+  QVERIFY(recovery.createCase("Synthetic store failure","Lab","Lab","No phone","","backup","unknown",true));QVERIFY(recovery.recordOperator("Synthetic operator","Synthetic fixture",true));
+  const auto image=t.filePath("image.dd");QVERIFY(write(image,QByteArray(4096,'x')));QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic store failure",password));
+  QVERIFY(recovery.analyzePartitions(image,QCoreApplication::applicationFilePath(),true));QVERIFY(QThreadPool::globalInstance()->waitForDone(5000));
+  const auto path=recovery.casePath(),backup=path+".preserved";
+  if(caseStore){QVERIFY(QFile::rename(path,backup));QVERIFY(QDir().mkdir(path));}
+  else QVERIFY(write(identity.policyJournalPath(),"synthetic corrupted journal"));
+  QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);QVERIFY(!recovery.error().isEmpty());QCOMPARE(recovery.evidence().size(),0);
+  if(caseStore){QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("failed"));QVERIFY(recovery.error().contains("Case restore/audit failed"));QVERIFY(QDir().rmdir(path));QVERIFY(QFile::rename(backup,path));}
+  else QVERIFY(recovery.operationReceipt().isEmpty());
  }
 };
 int main(int argc,char **argv){

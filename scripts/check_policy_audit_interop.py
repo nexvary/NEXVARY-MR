@@ -195,6 +195,30 @@ def main():
             rows[6][1]["sourceSha256"]="not-a-digest"
             return rows
         protocol("completed scan requires a well-formed source digest", bad_digest)
+        def partition(rows, ids):
+            rows[5][1]["kind"] = rows[6][1]["kind"] = "partition-analysis"
+            return rows
+        protocol("independent partition result accepted by both verifiers", partition, expected=True)
+        def missing_partition_source(rows, ids):
+            partition(rows, ids)
+            rows[6][1]["sourceSha256"] = ""
+            return rows
+        protocol("completed partition result requires a source digest", missing_partition_source)
+        def wrong_partition_capability(rows, ids):
+            partition(rows, ids)
+            rows[5][1]["capability"] = "signature-update"
+            return rows
+        protocol("partition operation cannot use another capability", wrong_partition_capability)
+        def changed_partition_kind(rows, ids):
+            partition(rows, ids)
+            rows[6][1]["kind"] = "security-scan"
+            return rows
+        protocol("partition terminal result cannot change worker kind", changed_partition_kind)
+        def cancelled_partition(rows, ids):
+            partition(rows, ids)
+            rows[6][1].update(status="cancelled", failureClass="operator-cancelled", sourceSha256="", outputSha256="")
+            return rows
+        protocol("cancelled partition without invented digests is accepted", cancelled_partition, expected=True)
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))

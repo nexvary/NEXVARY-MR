@@ -37,7 +37,8 @@ inline bool operationRecord(const QVariantMap &r, const QVariantMap &request,
     return false;
   const auto kind = r.value("kind").toString(),
              cap = r.value("capability").toString();
-  if (!((kind == "security-scan" && cap == "external-analysis") ||
+  if (!(((kind == "security-scan" || kind == "partition-analysis") &&
+         cap == "external-analysis") ||
         (kind == "signature-update" && cap == "signature-update")))
     return false;
   const auto status = r.value("status").toString();
@@ -81,7 +82,7 @@ inline bool operationRecord(const QVariantMap &r, const QVariantMap &request,
   return request.value("status") == "active" &&
          ((status == "completed" && failure == "none" &&
            !r.value("outputSha256").toString().isEmpty() &&
-           (kind != "security-scan" ||
+           (kind == "signature-update" ||
             !r.value("sourceSha256").toString().isEmpty())) ||
           (status == "failed" && failure == "engine-failure") ||
           (status == "cancelled" && failure == "operator-cancelled"));

@@ -80,7 +80,7 @@ def operation_record(r, request, decision, old, closure, actor, role, time, resu
             or r["capability"] != request["capability"] or not decision or type(r["decisionSequence"]) not in {int, float}
             or r["decisionSequence"] != decision["sequence"] or r["decisionHash"] != decision["hash"]
             or not digest(r["sourceSha256"]) or not digest(r["outputSha256"]) or result != r["status"]
-            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("signature-update", "signature-update")}):
+            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("partition-analysis", "external-analysis"), ("signature-update", "signature-update")}):
         raise ValueError("Operation schema/approval/scope/digest rejected")
     from datetime import datetime
     def utc(value):
@@ -105,7 +105,7 @@ def operation_record(r, request, decision, old, closure, actor, role, time, resu
         if expected:
             valid = valid and (r["status"], r["failureClass"]) == expected
         else:
-            valid = valid and request["status"] == "active" and ((r["status"],r["failureClass"]) in {("failed","engine-failure"),("cancelled","operator-cancelled")} or (r["status"] == "completed" and r["failureClass"] == "none" and r["outputSha256"] and (r["kind"] != "security-scan" or r["sourceSha256"])))
+            valid = valid and request["status"] == "active" and ((r["status"],r["failureClass"]) in {("failed","engine-failure"),("cancelled","operator-cancelled")} or (r["status"] == "completed" and r["failureClass"] == "none" and r["outputSha256"] and (r["kind"] == "signature-update" or r["sourceSha256"])))
     if not valid:
         raise ValueError("Operation lifecycle/attribution rejected")
 

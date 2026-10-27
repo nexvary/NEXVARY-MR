@@ -27,10 +27,15 @@ TestCase {
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
-  const id=uiEvidence.recordSyntheticOperation();verify(id.length>0)
+  const id=uiEvidence.recordSyntheticOperation("security-scan");verify(id.length>0)
   const scroll=findChild(app,"identityPanel"),panel=findChild(scroll,"governmentNetworkPanel")
   const row=findChild(panel,"governmentOperationReceipt-"+id);verify(row!==null);compare(operationPolicy.operationReceipts[0].status,"completed");verify(row.text.indexOf("aaaaaaaa")>=0)
   for(const ar of [true,false]){app.ar=ar;reveal(scroll,row);verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"operation-receipts-"+(ar?"ar":"en")+".png"))}
+  operationPolicy.revokeAll()
+  const partitionId=uiEvidence.recordSyntheticOperation("partition-analysis");verify(partitionId.length>0)
+  verify(renderedFrame());const partitionRow=findChild(panel,"governmentOperationReceipt-"+partitionId);verify(partitionRow!==null)
+  compare(operationPolicy.operationReceipts[0].kind,"partition-analysis")
+  for(const ar of [true,false]){app.ar=ar;reveal(scroll,partitionRow);verify(renderedFrame());verify(partitionRow.text.indexOf(ar?"تحليل أقسام الصورة":"Image partition analysis")>=0);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"partition-receipt-"+(ar?"ar":"en")+".png"))}
   identityBridge.logout();verify(renderedFrame());compare(operationPolicy.operationReceipts.length,0)
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));operationPolicy.revokeAll()
  }

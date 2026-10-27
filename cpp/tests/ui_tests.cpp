@@ -51,12 +51,12 @@ class Setup:public QObject {
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
 public:
- Q_INVOKABLE QString recordSyntheticOperation() {
+ Q_INVOKABLE QString recordSyntheticOperation(const QString &kind) {
   const QString pass="Synthetic-only UI password 2026!";
   if(!identity->syntheticProfile()||!identity->login("ui-investigator",pass))return {};
   const auto request=operationPolicy->requestException("external-analysis","Synthetic operation UI",{},600,true);
   if(request.isEmpty()||!identity->login("ui-admin",pass)||!operationPolicy->reviewException(request,"Synthetic separate account")||!operationPolicy->decideException(request,true,"Synthetic decision")||!identity->login("ui-investigator",pass)||!operationPolicy->activateException(request))return {};
-  const auto id=operationPolicy->beginOperation("external-analysis","security-scan");
+  const auto id=operationPolicy->beginOperation("external-analysis",kind);
   if(id.isEmpty()||operationPolicy->finishOperation(id,"completed",QString(64,'b'),QString(64,'a')).isEmpty())return {};
   return id;
  }

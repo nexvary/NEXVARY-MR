@@ -68,7 +68,7 @@ int fixture(const QString &root, bool crash) {
     if (!performSyntheticReviewedException(i, p, "external-analysis",
                                            "Synthetic worker", pass))
       return 9;
-    const auto op = p.beginOperation("external-analysis", "security-scan");
+    const auto op = p.beginOperation("external-analysis", "partition-analysis");
     if (op.isEmpty() ||
         p.finishOperation(op, "completed", QString(64, 'b'), QString(64, 'a'))
             .isEmpty())
