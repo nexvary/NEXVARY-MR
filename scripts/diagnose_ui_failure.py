@@ -5,7 +5,26 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
+
+
+def replay(command, cwd, env, output):
+    # This Linux-only CI helper owns this fresh process group. Killing just GDB
+    # on timeout can leave its inferior stopped/alive. A detached descendant can
+    # still escape this group; this is bounded fixture cleanup, not containment.
+    child = subprocess.Popen(command, cwd=cwd, env=env, stdout=output,
+                             stderr=subprocess.STDOUT, start_new_session=True)
+    try:
+        return child.wait(timeout=180)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(child.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        child.wait(timeout=5)
+        output.write("\nDiagnostic replay exceeded 180 seconds; owned process group killed.\n")
+        return "timeout"
 
 
 def diagnose(build, ctest="ctest", gdb="gdb"):
@@ -48,13 +67,7 @@ def diagnose(build, ctest="ctest", gdb="gdb"):
         log = build / (test["name"] + "-gdb.txt")
         with log.open("w") as output:
             try:
-                replay = subprocess.run(command, cwd=properties.get("WORKING_DIRECTORY", str(build)),
-                                        env=env, stdout=output, stderr=subprocess.STDOUT,
-                                        timeout=180, check=False)
-                code = replay.returncode
-            except subprocess.TimeoutExpired:
-                output.write("\nDiagnostic replay exceeded 180 seconds.\n")
-                code = "timeout"
+                code = replay(command, properties.get("WORKING_DIRECTORY", str(build)), env, output)
             except OSError as error:
                 output.write("Diagnostic tool unavailable: " + type(error).__name__ + "\n")
                 code = "unavailable"
