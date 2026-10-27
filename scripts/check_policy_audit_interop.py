@@ -266,6 +266,49 @@ def main():
             return rows
         protocol("case UUIDs must use canonical spelling", brace_uuid)
 
+        def case_partition(rows, ids):
+            for i in (0, 1, 2, 3, 4, 7):
+                rows[i][1]["requesterRole"] = "investigator"
+                if rows[i][2] == 0:
+                    rows[i] = (*rows[i][:3], "investigator")
+            for i in (5, 6):
+                rows[i][1].update(kind="partition-analysis", requesterRole="investigator")
+                if rows[i][2] == 0:
+                    rows[i] = (*rows[i][:3], "investigator")
+            start = rows[5][1]
+            intent = {"schema": "nexvary-case-operation/v2", "operationId": start["operationId"], "requestId": start["requestId"], "caseId": start["caseRef"], "evidenceId": "00000000-0000-4000-8000-000000000103", "expectedRevision": 3, "sourceSha256": "b" * 64, "caseBeforeSha256": "d" * 64, "reportSha256": "", "analysisId": "00000000-0000-4000-8000-000000000104", "kind": "partition-analysis", "preparedUtc": start["startedUtc"], "requester": ids[0], "requesterRole": "investigator", "recoveryState": "prepared", "toolSha256": "c" * 64}
+            return rows[:6] + [("case-operation", intent, 0, "investigator"), ("case-operation", {**intent, "recoveryState": "candidate", "reportSha256": "a" * 64}, None, "system-observation"), ("case-operation", {**intent, "recoveryState": "completed", "reportSha256": "a" * 64}, None, "system-observation")] + rows[6:]
+        protocol("registered partition prepared/candidate/completed original approval", case_partition, expected=True)
+        def partition_change(index, field, value):
+            def change(rows, ids):
+                rows = case_partition(rows, ids)
+                rows[index][1][field] = value
+                return rows
+            return change
+        for index, field, value in [(6,"caseId","00000000-0000-4000-8000-000000000099"), (6,"requestId","00000000-0000-4000-8000-000000000099"), (6,"preparedUtc","2026-10-25T00:00:00.000Z"), (6,"toolSha256",""), (6,"reportSha256","a"*64), (7,"toolSha256","e"*64), (7,"sourceSha256","e"*64), (7,"evidenceId","00000000-0000-4000-8000-000000000099"), (8,"reportSha256","e"*64), (8,"caseBeforeSha256","e"*64), (9,"outputSha256","e"*64), (9,"sourceSha256","e"*64)]:
+            protocol("registered partition rejects altered " + str(index) + ":" + field, partition_change(index, field, value))
+        def omit_partition_stage(index):
+            def change(rows, ids):
+                rows = case_partition(rows, ids)
+                del rows[index]
+                return rows
+            return change
+        protocol("registered partition cannot prepare without original operation start", omit_partition_stage(5))
+        protocol("registered partition cannot complete without durable candidate", omit_partition_stage(7))
+        def duplicate_candidate(rows, ids):
+            rows = case_partition(rows, ids)
+            return rows[:8] + [copy.deepcopy(rows[7])] + rows[8:]
+        protocol("registered partition cannot append a second candidate", duplicate_candidate)
+        def revoked_candidate(rows, ids):
+            rows = case_partition(rows, ids)
+            return rows[:7] + [rows[-1]] + rows[7:-1]
+        protocol("registered partition candidate after revocation rejected", revoked_candidate)
+        def unknown_external(rows, ids):
+            rows = case_partition(rows, ids)
+            intent = {**rows[6][1], "recoveryState": "unknown"}
+            return rows[:7] + [rows[-1], ("case-operation", intent, None, "system-observation")]
+        protocol("registered partition interrupted external outcome stays unknown", unknown_external, expected=True)
+
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))

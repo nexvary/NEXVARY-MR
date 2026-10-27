@@ -138,7 +138,8 @@ QByteArray LawCaseStore::readEvidence(const QString &id,const QString &evidence)
 }
 bool LawCaseStore::verifyEvidence(const QString &id,const QString &evidence) {return !readEvidence(id,evidence).isEmpty();}
 QVariantMap LawCaseStore::recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor,const QVariantMap &intent) {
- if(!intent.isEmpty() && (!mr::law::caseIntent(intent) || intent.value("recoveryState")!="prepared" || !actor.startsWith(intent.value("requester").toString()+" / ") || intent.value("caseId")!=id || intent.value("evidenceId")!=evidence || intent.value("expectedRevision").toLongLong()!=revision || intent.value("kind")!=parser || intent.value("reportSha256")!=digest(encode(report)) || intent.value("sourceSha256")!=report.value("sourceSha256"))){fail("Analysis intent binding rejected.");return {};}
+ if(!intent.isEmpty() && (!mr::law::caseIntent(intent) || intent.value("recoveryState")!=(intent.value("schema")=="nexvary-case-operation/v2"?"candidate":"prepared") || !actor.startsWith(intent.value("requester").toString()+" / ") || intent.value("caseId")!=id || intent.value("evidenceId")!=evidence || intent.value("expectedRevision").toLongLong()!=revision || intent.value("kind")!=parser || intent.value("reportSha256")!=digest(encode(report)) || intent.value("sourceSha256")!=report.value("sourceSha256"))){fail("Analysis intent binding rejected.");return {};}
+ if(intent.value("schema")=="nexvary-case-operation/v2" && report.value("toolSha256")!=intent.value("toolSha256")){fail("Partition tool binding rejected.");return {};}
  QVariantMap result;const auto json=encode(report);
  if(json.size()>64*1024||report.value("sourceSha256").toString().size()!=64){fail("Invalid or oversized analysis report.");return {};}
  const bool imported=parser.startsWith("authorized-import/");
@@ -194,11 +195,33 @@ QVariantMap LawCaseStore::prepareAnalysis(const QString &id,qint64 revision,cons
  const QVariantMap intent{{"schema","nexvary-case-operation/v1"},{"operationId",uuid()},{"requestId",uuid()},{"caseId",id},{"evidenceId",evidence},{"expectedRevision",revision},{"sourceSha256",report.value("sourceSha256")},{"caseBeforeSha256",digest(encode(r))},{"reportSha256",digest(encode(report))},{"analysisId",uuid()},{"kind",parser},{"preparedUtc",now()},{"requester",requester},{"requesterRole",role},{"recoveryState","prepared"}};
  if(!mr::law::caseIntent(intent)){fail("Invalid analysis intent.");return {};}return intent;
 }
+QVariantMap LawCaseStore::preparePartitions(const QString &id,qint64 revision,const QString &evidence,const QVariantMap &operation,const QString &toolSha256) {
+ const auto r=get(id);const auto source=readEvidence(id,evidence);
+ if(r.isEmpty() || r.value("revision").toLongLong()!=revision || source.size()<512 || source.size()>16*1024*1024 || operation.value("caseRef")!=id || operation.value("status")!="started" || operation.value("kind")!="partition-analysis" || operation.value("capability")!="external-analysis"){
+  fail("Partition preparation requires matching registered evidence, revision and reviewed operation.");return {};
+ }
+ const QVariantMap intent{{"schema","nexvary-case-operation/v2"},{"operationId",operation.value("operationId")},{"requestId",operation.value("requestId")},{"caseId",id},{"evidenceId",evidence},{"expectedRevision",revision},{"sourceSha256",digest(source)},{"caseBeforeSha256",digest(encode(r))},{"reportSha256",QString()},{"analysisId",uuid()},{"kind","partition-analysis"},{"preparedUtc",now()},{"requester",operation.value("requester")},{"requesterRole",operation.value("requesterRole")},{"recoveryState","prepared"},{"toolSha256",toolSha256}};
+ if(!mr::law::caseIntent(intent)){fail("Invalid partition intent.");return {};}return intent;
+}
+QVariantMap LawCaseStore::partitionCandidate(const QVariantMap &intent,const QVariantMap &report) {
+ if(!mr::law::caseIntent(intent) || intent.value("schema")!="nexvary-case-operation/v2" || intent.value("recoveryState")!="prepared" || report.value("sourceSha256")!=intent.value("sourceSha256") || report.value("toolSha256")!=intent.value("toolSha256") || encode(report).size()>64*1024 || report.value("output").toString().isEmpty()){
+  fail("Partition candidate source/tool/report binding rejected.");return {};
+ }
+ auto candidate=intent;candidate.insert("reportSha256",digest(encode(report)));candidate.insert("recoveryState","candidate");return candidate;
+}
+bool LawCaseStore::analysisSnapshotCurrent(const QVariantMap &intent){
+ if(!mr::law::caseIntent(intent))return false;
+ const auto id=intent.value("caseId").toString();const auto r=get(id);const auto source=readEvidence(id,intent.value("evidenceId").toString());
+ return !r.isEmpty() && !source.isEmpty() && r.value("revision")==intent.value("expectedRevision") && digest(encode(r))==intent.value("caseBeforeSha256") && digest(source)==intent.value("sourceSha256");
+}
 QString LawCaseStore::reconcileAnalysis(const QVariantMap &intent) {
  if(!mr::law::caseIntent(intent))return "unknown";
+ // No report was durably observed: absence of a case write cannot prove the
+ // external process did not run. Never replay or infer external failure/success.
+ if(intent.value("schema")=="nexvary-case-operation/v2" && intent.value("reportSha256").toString().isEmpty())return "unknown";
  const auto id=intent.value("caseId").toString(),evidence=intent.value("evidenceId").toString();
  const auto r=get(id);const auto source=readEvidence(id,evidence);
- if(r.isEmpty() || source.isEmpty() || source.size()>8*1024*1024 || digest(source)!=intent.value("sourceSha256"))return "unknown";
+ if(r.isEmpty() || source.isEmpty() || source.size()>(intent.value("schema")=="nexvary-case-operation/v2"?16:8)*1024*1024 || digest(source)!=intent.value("sourceSha256"))return "unknown";
  const auto revision=intent.value("expectedRevision").toLongLong();
  if(r.value("revision").toLongLong()==revision && digest(encode(r))==intent.value("caseBeforeSha256"))return "failed";
  if(r.value("revision").toLongLong()!=revision+1)return "unknown";

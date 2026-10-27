@@ -6,6 +6,8 @@ DEVELOPMENT_STATE.md. It extends the existing native application operation gates
 it does not create an OS sandbox, a new product, an institutional identity provider
 or a device-acquisition capability.
 
+The registered partition adapter adds strict `nexvary-case-operation/v2` prepared/candidate/terminal history. Both verifiers bind it to the original reviewed request and operation start; a completed worker receipt must match the completed case observation digests. A case reference alone is not evidence membership. See GOVERNMENT_CASE_TRANSACTIONS.md.
+
 ## Operator workflow
 
 1. An existing local administrator provisions a different reviewer or administrator
@@ -75,7 +77,7 @@ activation/expiry/closure times. The verifier rejects changed immutable scope,
 self-review, wrong reviewer, invalid signatures, changed actor binding,
 reordering, interior deletion/duplication and mismatched retained history.
 
-The existing journal also supports strict operation-start/result records for SecurityBridge file scans/signature updates and RecoveryBridge authorized image partition analysis. See [operation-result receipts](GOVERNMENT_OPERATION_RESULTS.md) for their separate lifecycle, digest/export contract, cross-store persistence limits and remaining coverage. Older gate records keep their original meaning.
+The existing journal also supports strict operation-start/result records for SecurityBridge file scans/signature updates and LawCaseBridge registered-evidence partition analysis (historical synthetic RecoveryBridge fixtures remain). See [operation-result receipts](GOVERNMENT_OPERATION_RESULTS.md) for their separate lifecycle, digest/export contract, cross-store persistence limits and remaining coverage. Older gate records keep their original meaning.
 
 `operation-allowed` and `operation-denied` record the **native gate decision**.
 They do not assert external-tool success, the absence of network packets or a

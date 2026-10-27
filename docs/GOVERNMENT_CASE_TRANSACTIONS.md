@@ -1,9 +1,9 @@
 # Crash reconciliation of case-bound local analysis
 
 This increment integrates existing **classic-PCAP / JPEG-EXIF case analyses**
-with the existing signed government policy journal. It is a bounded first
-transaction adapter, not a claim that the partition/scanner/update adapters or
-all imports/exports have cross-store recovery. Those older paths remain unchanged.
+with the existing signed government policy journal. The registered raw-image
+partition adapter below now uses that same case store and journal. Scanner/update
+and other import/export adapters do not inherit this recovery protocol.
 
 ## Protocol and authorization
 
@@ -71,10 +71,60 @@ was never written. No automatic unknown-resolution override is introduced.
 Windows production DPAPI is still required; Linux/native crash fixtures are
 synthetic. Institutional identity, external key/time custody, independent review,
 power-loss testing, clean Windows 10/11 and physical-device acceptance remain.
-Remaining first-priority migration: the separate RecoveryBridge partition-result
-store needs a real case/evidence association and this transaction protocol; its
-optional text reference remains insufficient. Product descendant containment,
-audit-store intermittent diagnosis, GUI soak and measured performance follow.
+## Registered raw-image partition transactions
+
+The Government Analysis page accepts **an evidence UUID from the active case**,
+a trusted separately installed native `mmls`, and explicit consent. It reads and
+hash-verifies the protected evidence payload; a text case reference or arbitrary
+image path cannot establish membership. The original reviewed `external-analysis`
+exception must reference this exact case UUID and belong to the active requester.
+The production governed RecoveryBridge path refuses unbound partition dispatch;
+professional use without government policy remains separate. Historical synthetic
+RecoveryBridge negative/cancellation/descendant tests are retained, not silently
+counted as tests of the new adapter.
+
+`nexvary-case-operation/v2` binds the original signed operation-start/request,
+case/evidence/revision/pre-case/source, reserved analysis UUID, requester/role/UTC,
+and preflight executable digest. **Prepared intent is acknowledged before any
+external tool launch.** The initial report digest is empty because no result exists.
+The existing TSK engine runs asynchronously on a private copy, verifies source,
+working copy and executable again, and returns a bounded report. The signed
+`candidate` transition sets its report digest exactly once, before the SQLite
+case write. The candidate changes no other binding. The original approval and
+local role/session/case grant/revision are rechecked after each journal boundary.
+Revocation and a newly approved exception cannot authorize an old worker.
+
+The result, analysis/operation IDs and existing case audit commit through the
+same SQLite transaction as the local parsers. Case reconciliation then writes an
+immutable terminal observation. A completed external receipt must match the
+completed case observation's source/report digests. Success is withheld if the
+receipt cannot be accepted; there is no best-effort restoration of an old case.
+The report digest covers compact canonical JSON stored in `reportJson`, not a
+separately exported PDF or the older RecoveryBridge `tsk-partitions.json` format.
+
+| Durable crash observation | Recovery decision |
+|---|---|
+| Prepared, without a signed report candidate | `unknown`: external execution/outcome is not established; block for review |
+| Candidate, original case revision/digest and verified evidence unchanged | `failed` local case write; no external replay |
+| Candidate and exactly matching committed case analysis | `completed` local case mutation; never invent completed external execution on restart |
+| Changed case/revision, corrupt evidence/report/journal or ambiguous linkage | `unknown`, fail closed |
+
+Explicit worker errors/cancellation observed in the live adapter record a failed
+local mutation and the applicable failed/cancelled/revoked/expired worker receipt.
+Restart interruption receipts remain interrupted/unknown external outcome even
+when a local case mutation is reconciled as present. Repeated recovery adds no
+analysis, report or event. No tool dispatch occurs in recovery.
+
+Bounds: registered raw evidence 512 bytes–16 MiB; report 64 KiB; captured output
+8,192 bytes per tool invocation; executable hashing 256 MiB; 60 seconds per version
+or analysis invocation plus bounded existing startup/kill waits. These are input
+and timeout limits, not measured throughput or memory guarantees. Temporary copies
+are plaintext with owner permissions; crash traces/secure erasure remain external
+storage concerns. This **does not fix process-tree containment**: the existing
+TSK parent-only cancellation limitations and retained detached-child counterexamples
+remain open. Scanner/update transactions, product descendant cleanup, intermittent
+audit-store diagnosis, GUI soak and measured performance remain next work.
+
 
 ## Audit-store post-replacement acceptance
 

@@ -1,14 +1,18 @@
 # Signed Government operation-result receipts
 
-A separate [case-bound local analysis transaction adapter](GOVERNMENT_CASE_TRANSACTIONS.md) now uses the same signed journal for PCAP/EXIF preparation and reconciliation. The partition-analysis two-store limitation described below is still open; no new recovery guarantee is inherited by that adapter.
+The [case-bound transaction adapters](GOVERNMENT_CASE_TRANSACTIONS.md) use the same signed journal for local PCAP/EXIF and government registered-evidence partition analysis. The older RecoveryBridge limitation below remains historical/synthetic; scanner/update and other adapters retain their separate persistence limitations.
 
 Development-evaluation extension of the existing signed policy journal and reviewed exceptions. It neither replaces that journal nor grants additional authority. Exact tested source, results and downloads are in DEVELOPMENT_STATE.md.
 
 ## Implemented coverage
 
-The shipped SecurityBridge records native `security-scan` and `signature-update` worker dispatch/results. This covers the existing authorized local ClamAV-file scan and FreshClam update, including explicit cancellation, permission revocation, session closure and expiry. RecoveryBridge additionally records the existing `partition-analysis` workflow described below. Other operations do **not** yet have these result receipts; their existing gate/result semantics remain separate.
+The shipped SecurityBridge records native `security-scan` and `signature-update` worker dispatch/results. This covers the existing authorized local ClamAV-file scan and FreshClam update, including explicit cancellation, permission revocation, session closure and expiry. LawCaseBridge records the government `partition-analysis` workflow described below; historical synthetic RecoveryBridge fixtures retain earlier behavior. Other operations do **not** yet have these result receipts; their existing gate/result semantics remain separate.
 
-## Authorized image partition analysis
+## Government registered-evidence partition analysis
+
+The current production government adapter is LawCaseBridge through Government Analysis: actual case/evidence UUID membership, original reviewed request/start binding, prepared intent before dispatch, signed candidate before SQLite case mutation and idempotent conservative restart reconciliation. See GOVERNMENT_CASE_TRANSACTIONS.md for exact protocol, bounds and unknown states. Its completed receipt output digest covers exact stored canonical `reportJson`. The governed production RecoveryBridge path refuses unbound execution. Scanner/update receipts still have their earlier persistence boundaries.
+
+## Historical / synthetic RecoveryBridge partition analysis
 
 RecoveryBridge records `partition-analysis` for explicitly authorized local raw images and a separately installed `mmls` executable. It uses the `external-analysis` category and the same reviewed approval, without adding permission or device acquisition. Source and output digests are mandatory for a completed receipt. The output digest covers the exact embedded `tsk-partitions.json` evidence payload, including existing provenance. Explicit evidence export writes those same bytes, so its SHA-256 can be compared with the separately retained signed receipt. General case JSON/PDF reports are different documents and are not assigned this digest.
 

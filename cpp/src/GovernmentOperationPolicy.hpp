@@ -55,6 +55,8 @@ public:
   Q_INVOKABLE void refreshAudit();
   // Native consumers only. No caller-controlled labels, paths or case content.
   QString beginOperation(const QString &capability, const QString &kind);
+  QVariantMap beginCasePartitions(const QString &caseId);
+  bool caseOperationAuthorized(const QString &id);
   QVariantMap finishOperation(const QString &id, const QString &status,
                               const QString &sourceDigest = {},
                               const QString &outputDigest = {});

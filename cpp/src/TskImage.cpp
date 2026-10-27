@@ -46,6 +46,15 @@ QString run(const QString &exe,const QStringList &args,const QString &directory,
  return QString::fromUtf8(output).trimmed();
 }
 }
+QByteArray partitionToolDigest(const QString &executable,QString &error){
+ error.clear();const QFileInfo tool(executable);
+ if(!QDir::isAbsolutePath(executable)||executable.startsWith("//")||executable.startsWith("\\\\")||!tool.isFile()||tool.isSymLink()||!tool.isExecutable()
+#ifdef Q_OS_WIN
+ ||tool.suffix().compare("exe",Qt::CaseInsensitive)!=0
+#endif
+ ){error="Select a trusted regular local native executable.";return {};}
+ return hashFile(executable,256*1024*1024,error,{});
+}
 TskResult analyzePartitions(const QString &image,const QString &executable,const std::shared_ptr<std::atomic_bool> &token,
  const std::function<void(qint64,qint64)> &progress,const TskLimits &limits){
  TskResult result;

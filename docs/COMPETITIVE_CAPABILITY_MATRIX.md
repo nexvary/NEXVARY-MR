@@ -126,3 +126,13 @@ above are unchanged; no new vendor-capability or parity claim is inferred.
 Local first failures, failed-fixture isolation and exact subsequent observations
 are retained, including 18-on-disk versus 22-in-memory signed-history observations.
 A fresh-fixture pass is not used to erase the original reliability failure.
+
+
+## Registered partition transaction migration — 2026-10-28
+
+This is an MR implementation update; vendor source records above were not
+refreshed or promoted. No competitor workload was executed.
+
+| Competitor Capability | NEXVARY Capability | Gap | Implementation | Benchmark | Evidence | Limitations | Verification Status |
+|---|---|---|---|---|---|---|---|
+| Cellebrite / Magnet / MSAB / Oxygen / Belkasoft / Elcomsoft crash reconciliation: not independently measured here | Registered raw case evidence, original reviewed request/start, prepared intent before dispatch, signed result candidate, SQLite case linkage and conservative idempotent restart | Scanner/update/other adapters, product descendants, audit transient cause and independent comparative review remain | Existing TSK engine + LawCaseBridge/LawCaseStore + existing signed journal; governed unbound legacy dispatch refused | Nine abrupt write-stage interruptions, real synthetic MBR/mmls integration, cancellation/expiry/revocation/late-revocation and native/Python hostile histories; exact measured results in checkpoint | GOVERNMENT_CASE_TRANSACTIONS.md; evidence/partition-transactions-2026-10-28; DEVELOPMENT_STATE.md | 16 MiB registered image / 64 KiB report / 8 KiB captured tool output; first-party tests, no power-loss or descendant/network isolation proof | Local and hosted status must be read from exact-source checkpoint; no superiority/parity/institutional certification |

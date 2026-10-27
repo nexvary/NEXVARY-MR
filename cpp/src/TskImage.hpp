@@ -9,6 +9,7 @@ struct TskLimits {qint64 maximumImage=2LL*1024*1024*1024;int processTimeoutMs=60
 struct TskResult {QString error,version,output;QByteArray sourceSha256,toolSha256;bool sourceUnchanged=false,cancelled=false;};
 // User-selected, separately installed mmls only. A separate process and temporary
 // working copy are not an OS sandbox; no privileges or raw device access are used.
+QByteArray partitionToolDigest(const QString &executable,QString &error);
 TskResult analyzePartitions(const QString &image,const QString &executable,const std::shared_ptr<std::atomic_bool> &cancelled,
  const std::function<void(qint64,qint64)> &progress={},const TskLimits &limits={});
 }

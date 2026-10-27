@@ -522,14 +522,15 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
       if (r.value("recoveryState")=="prepared") {
         int unfinished=0;
         for(const auto &prior:caseOperations){
-          if(prior.value("recoveryState")=="prepared")++unfinished;
-          if(prior.value("requestId")==r.value("requestId") || prior.value("analysisId")==r.value("analysisId"))
+          if((prior.value("recoveryState")=="prepared" || prior.value("recoveryState")=="candidate"))++unfinished;
+          if((r.value("schema")=="nexvary-case-operation/v1" && prior.value("requestId")==r.value("requestId")) || prior.value("analysisId")==r.value("analysisId"))
             return reject("Case operation invocation/analysis UUID reused.");
         }
         if(unfinished>=64)return reject("Case operation unfinished capacity exceeded.");
       }
       if (!mr::law::caseIntentEvent(r, caseOperations.value(operationId), actor, role, p.value("result").toString()))
         return reject("Case operation intent lifecycle/binding rejected.");
+      if(!mr::law::caseIntentAuthority(r,operations.value(operationId),states.value(r.value("requestId").toString()),closures.value(r.value("requestId").toString())))return reject("Case operation original approval/start rejected.");
       caseOperations.insert(operationId, r);
     } else if (action == "operation-start" || action == "operation-result") {
       const auto requestId = r.value("requestId").toString();
@@ -541,6 +542,7 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
               action == "operation-start"))
         return reject("Operation authorization, lifecycle, digest or "
                       "attribution rejected.");
+      if(!mr::law::caseIntentReceipt(r,caseOperations.value(opId)))return reject("Case operation receipt digest/outcome mismatch.");
       operations.insert(opId, r);
     } else if (action != "operation-allowed" && action != "operation-denied" &&
                action != "browser-result" && action != "audit-verification" &&

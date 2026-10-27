@@ -28,6 +28,9 @@ public:
  QByteArray readEvidence(const QString &id,const QString &evidence);
  QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor,const QVariantMap &intent={});
  QVariantMap prepareAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &requester,const QString &role);
+ QVariantMap preparePartitions(const QString &id,qint64 revision,const QString &evidence,const QVariantMap &operation,const QString &toolSha256);
+ QVariantMap partitionCandidate(const QVariantMap &intent,const QVariantMap &report);
+ bool analysisSnapshotCurrent(const QVariantMap &intent);
  QString reconcileAnalysis(const QVariantMap &intent);
  QVariantMap exportProtectedBackup(const QString &id,qint64 revision,const QString &path,const QString &actor);
  QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,const QString &actor,const std::function<bool(const QVariantMap&)> &authorize);
