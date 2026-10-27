@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="0fc1251ee347"
+	time="55"
+	timestamp="2026-10-27T06:55:36"
+	>
+	<testcase name="mr_ui_scale_1.25" classname="mr_ui_scale_1.25" time="55.95" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation:...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

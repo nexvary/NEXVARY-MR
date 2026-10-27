@@ -70,10 +70,13 @@ ScrollView {
    Label {objectName:"governmentImportStatus";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.importReport.status==="rejected"?app.design.danger:app.design.success;text:lawCaseBridge.importBusy?app.trx("يجري تحليل نسخة العمل في عملية منفصلة…","Parsing the working copy in a separate process…"):page.importReport.status==="imported"?app.trx("حُفظت نتيجة الاستيراد وبصمتها","Import result and digest retained"):page.importReport.status==="rejected"?app.trx("رُفض الإدخال بأمان وسُجل الإخفاق: ","Input safely rejected and failure recorded: ")+(page.importReport.errorCode||""):""}
    Label {visible:!!page.imported.reportJson;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:"SHA-256: "+(page.imported.sourceSha256||"")+"\n"+app.trx("بصمة التقرير: ","Report SHA-256: ")+(page.imported.reportSha256||"")+"\n"+app.trx("ملاحظات محفوظة: ","Retained findings: ")+(page.importReport.findings||[]).length+(page.importReport.findingsTruncated?app.trx(" — عينة محدودة؛ راجع الحدود"," — bounded sample; review limits"):"")}
    Label {objectName:"governmentBackupScope";visible:!!page.importReport.backup;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("فهرس نسخة ADB v5 فقط: ملفات وبصمات ومسارات؛ دون فك محتوى التطبيقات أو استخراج الملفات. غير مشفرة وغير مضغوطة، بحد 4096 عضوًا و128 نتيجة محفوظة. وقت تعديل الملف غير موثّق ولا يُعد وقت وقوع حدث. الأعضاء المفحوصة: ","ADB v5 inventory only: members, hashes and paths; no app decoding or extraction. Unencrypted and uncompressed, up to 4,096 members and 128 retained findings. Modification time is untrusted and does not establish event time. Members scanned: ")+((page.importReport.backup||{}).membersScanned||0)}
-   Repeater {model:(page.importReport.findings||[]).slice(0,12);delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.kind==="adb-backup-member"?page.app.trx("عضو في النسخة الاحتياطية","Backup member"):modelData.kind;iconName:"document_text"
+   // Keep one stable layout item while an import reset destroys its delegates.
+   // A positioner owns the variable children, not the enclosing grid engine.
+   Column {id:importFindings;objectName:"governmentImportFindings";Layout.fillWidth:true;spacing:10
+   Repeater {id:importFindingEntries;model:(page.importReport.findings||[]).slice(0,12);delegate:Panel {required property var modelData;width:importFindings.width;title:modelData.kind==="adb-backup-member"?page.app.trx("عضو في النسخة الاحتياطية","Backup member"):modelData.kind;iconName:"document_text"
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:modelData.reference}
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.text;text:modelData.value+(modelData.valueTruncated?page.app.trx(" [قيمة مختصرة]"," [value shortened]"):"")}
-   }}
+   }}}
    ActionButton {visible:!!page.imported.reportJson;text:app.trx("عرض جميع النتائج والمصدر","Show all findings and provenance");onClicked:page.showTechnical=!page.showTechnical}
    TextArea {objectName:"governmentImportResult";visible:page.showTechnical&&!!page.imported.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.imported.reportJson?JSON.stringify(page.importReport,null,2):""}
   }
@@ -97,9 +100,10 @@ ScrollView {
    }
   }
   GovernmentArtifactPanel {app:page.app;Layout.fillWidth:true}
-  Repeater {model:lawCaseBridge.activeCase.analyses||[];delegate:Panel {required property var modelData;Layout.fillWidth:true;title:modelData.parser;iconName:"document_text"
+  Column {id:retainedAnalyses;objectName:"governmentRetainedAnalyses";Layout.fillWidth:true;spacing:12
+  Repeater {id:retainedAnalysisEntries;model:lawCaseBridge.activeCase.analyses||[];delegate:Panel {required property var modelData;width:retainedAnalyses.width;title:modelData.parser;iconName:"document_text"
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.atUtc+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256}
    ActionButton {visible:modelData.parser.indexOf("authorized-import/")===0;text:page.app.trx("فتح نتيجة الاستيراد المحفوظة","Open retained import result");onClicked:{page.savedImport=modelData;page.showTechnical=true}}
-  }}
+  }}}
  }
 }

@@ -120,6 +120,26 @@ TestCase {
   }
   verify(lawCaseBridge.verifyEvidence(source));verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();compare(button.enabled,false);app.setWorkspace(false)
  }
+ function test_governmentImportLayoutLifetime(){
+  for(let cycle=0;cycle<4;cycle++){
+   app.setWorkspace(true)
+   const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-LIFETIME-"+cycle,investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic ADB fixture",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic layout lifetime only"});verify(id!=="",lawCaseBridge.error)
+   const device=lawCaseBridge.addDevice({model:"Synthetic backup",custodian:"Synthetic custodian"});verify(device!=="")
+   const source=lawCaseBridge.addEvidence(device,syntheticAdbBackupPath,"Synthetic lifetime inventory","Synthetic custodian",true);verify(source!=="")
+   app.navigateSection(6);verify(renderedFrame())
+   verify(lawCaseBridge.importEvidence(source,"adb-backup-v5","Synthetic layout lifetime",true))
+   tryCompare(lawCaseBridge,"importBusy",false,8000);compare(JSON.parse(lawCaseBridge.importResult.reportJson).status,"imported")
+   compare(JSON.parse(lawCaseBridge.importResult.reportJson).findings.length,4);compare(lawCaseBridge.activeCase.analyses.length,1);verify(renderedFrame())
+   // Reset populated models, change direction and resize before the next frame.
+   // Exercise real case/import clearing and rendering, regardless of the
+   // implementation of the dynamic result containers.
+   app.ar=cycle%2===0;app.width=840;app.height=480
+   lawCaseBridge.closeWorkspace();verify(!lawCaseBridge.activeCase.id);verify(!lawCaseBridge.importResult.reportJson)
+   app.width=1536;app.height=980;verify(renderedFrame())
+   compare(findChild(app,"governmentImportStatus").text,"")
+   app.setWorkspace(false);verify(renderedFrame())
+  }
+ }
  function artifactClick(scroll,target){
   verify(renderedFrame());reveal(scroll,target);verify(renderedFrame());reveal(scroll,target);verify(renderedFrame())
   const point=target.mapToItem(app.contentItem,target.width/2,target.height/2)

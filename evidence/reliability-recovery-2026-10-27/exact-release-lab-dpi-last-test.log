@@ -1,0 +1,102 @@
+Start testing: Oct 27 06:40 -05
+----------------------------------------------------------
+46/48 Testing: mr_ui_scale_1.25
+46/48 Test: mr_ui_scale_1.25
+Command: "/workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab/mr_ui_tests" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: /workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab
+"mr_ui_scale_1.25" start time: Oct 27 06:40 -05
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 36461ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  38.13 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.25" end time: Oct 27 06:41 -05
+"mr_ui_scale_1.25" time elapsed: 00:00:38
+----------------------------------------------------------
+
+46/48 Testing: mr_ui_scale_1.25
+46/48 Test: mr_ui_scale_1.25
+Command: "/workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab/mr_ui_tests" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: /workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab
+"mr_ui_scale_1.25" start time: Oct 27 06:41 -05
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 36141ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  37.31 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.25" end time: Oct 27 06:42 -05
+"mr_ui_scale_1.25" time elapsed: 00:00:37
+----------------------------------------------------------
+
+46/48 Testing: mr_ui_scale_1.25
+46/48 Test: mr_ui_scale_1.25
+Command: "/workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab/mr_ui_tests" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: /workspace/scratch/e2a9f0b39de4/NEXVARY-MR/build-exact-lab
+"mr_ui_scale_1.25" start time: Oct 27 06:42 -05
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 36316ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  37.39 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.25" end time: Oct 27 06:42 -05
+"mr_ui_scale_1.25" time elapsed: 00:00:37
+----------------------------------------------------------
+
+End testing: Oct 27 06:42 -05
