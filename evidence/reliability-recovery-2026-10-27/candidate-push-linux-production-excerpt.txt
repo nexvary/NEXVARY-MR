@@ -1,0 +1,10 @@
+Source: 62251a02a37b560fafc92f892ce8b51764d5dc82
+Push run: 40500300494, Linux Production
+2026-10-27T12:09:10.6289172Z 48/48 Test #48: mr_gui_smoke .......................   Passed   18.82 sec
+2026-10-27T12:09:10.6294618Z 100% tests passed, 0 tests failed out of 48
+2026-10-27T12:09:10.6294950Z Total Test time (real) = 274.66 sec
+2026-10-27T12:10:07.5063511Z 100% tests passed, 0 tests failed out of 1
+2026-10-27T12:10:07.5064292Z Total Test time (real) =  56.53 sec
+2026-10-27T12:13:48.1687401Z 17/17 Test #44: mr_exif_mutation_tests ...........   Passed    0.29 sec
+2026-10-27T12:13:48.1691868Z 100% tests passed, 0 tests failed out of 17
+2026-10-27T12:13:48.1692174Z Total Test time (real) = 114.53 sec
