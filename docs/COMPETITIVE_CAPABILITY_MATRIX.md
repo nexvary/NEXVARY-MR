@@ -112,3 +112,17 @@ Comparison axis: existing dated MSAB XAMN 7.3 audit/access logging and separate 
 P0 increment: the existing local raw-image/mmls adapter now correlates a signed worker start/result with its reviewed approval, source SHA-256 and exact exported partition-provenance payload SHA-256. Previously it had a case activity record and application gate without an operation-result correlation. Native and separate Python validators recognize this registered kind; Government Administration renders its real receipts in AR/EN. A completed background candidate is held until the GUI callback rechecks authority. Known-answer and adverse lifecycle/storage/queued-callback checks, plus real installed Linux mmls integration, are the measurement criteria; exact execution/CI evidence is in DEVELOPMENT_STATE.md. Two-store crash atomicity and guaranteed rollback remain unimplemented.
 
 Comparison axis/source: the existing dated MSAB XAMN audit/access and Oxygen Review Center role/log source records above, reused without a new vendor-source review. No equivalent competitor partition-result workload or cryptographic audit internals were independently tested. Result: a bounded MR coverage gap is reduced from two to three registered worker kinds; no superiority/parity conclusion. Implementation cost is not measured; maintenance estimate medium (adapters, compatible verifiers, case/journal failure recovery). All-engine receipts, institutionally retained anchors and independent OS containment remain Pending.
+
+
+## Prepared local case transactions — 2026-10-27
+
+This row updates NEXVARY evidence only. Existing dated competitor source records
+above are unchanged; no new vendor-capability or parity claim is inferred.
+
+| Competitor Capability | NEXVARY Capability | Gap | Implementation | Benchmark | Evidence | Limitations | Verification Status |
+|---|---|---|---|---|---|---|---|
+| Cellebrite, Magnet, MSAB, Oxygen, Belkasoft and Elcomsoft cross-store crash semantics: not independently measured in this review | Signed prepared local PCAP/EXIF case intent, case/evidence/revision/source/report binding, conservative restart reconciliation and immutable terminal decisions | Original RecoveryBridge partition store and other adapters still need verified linkage/migration; OS descendants remain open | Existing protected policy journal + LawCaseStore SQLite transaction + native authenticated bridge; exact post-replacement journal readback | Seven process-interruption stages; 16 native transaction cases and 51 native/Python signed-history checks; not a throughput or power-loss benchmark | source 7844f01; evidence/case-transactions-2026-10-27; GOVERNMENT_CASE_TRANSACTIONS.md | Original audit snapshot-lag mechanism is unresolved; local accounts/time only; retained external anchors and independent institutional review required | Scoped first-party implementation/test evidence; no comparative superiority, parity, device or institutional certification |
+
+Local first failures, failed-fixture isolation and exact subsequent observations
+are retained, including 18-on-disk versus 22-in-memory signed-history observations.
+A fresh-fixture pass is not used to erase the original reliability failure.

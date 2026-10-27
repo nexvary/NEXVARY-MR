@@ -1,11 +1,22 @@
-# Case-bound local operation transaction increment
+# Verified case transaction increment
 
-Base branch HEAD: `14559c711a4c7801156c54680f2e67472e02170b`.
-The commit containing this increment is the source identifier (`git rev-parse HEAD`).
+Read `FINAL_CHECKPOINT.md` for final scope, all original failures, separate Push/PR
+acceptance, exact source equivalence, checked Windows packages and next executable task.
 
-- `native-first.txt`: first 15/15 native transaction tests, including seven abrupt process interruption stages; follow-up `native-final.txt` passed 16/16 (6.412 seconds) with readback refusal.
-- `interop-first.json`: 48 initial synthetic native/Python checks.
-- `interop-final.json`: 51 synthetic native/Python checks including UUID spelling and invocation/analysis reuse rejection.
-- `LOCAL_FAILURES.md` / `local-link-failure.txt`: retained first failures and artifact-only repairs.
+- Tested source: 7844f01bd1427a4f37c702dfc63c50ea74247f94.
+- Push40569670742 and PR40569681905: seven successful jobs each, first attempt.
+- Windows/Linux Production/Laboratory49/49 groups; ASan/UBSan18/18 in both events.
+- Native transactions16; independent native/Python signed-history51; QML52/DPI13;
+  repeated GUI3. Platform/profile subcase exclusions remain visible in raw reports.
+- PR Windows downloaded archives: complete1,419-file manifest and installed/portable
+  executable/worker hashes verified; see pr-windows-byte-verification.json.
+- `native-first.txt` and `interop-first.json` are earlier observations, scoped as such.
+- Initial/full intermediate/final local failures are retained without relabelling.
+  See LOCAL_FAILURES.md, audit-transient observations and smoke-isolation-observation.json.
+- Original private synthetic journals/identities were retained separately; raw
+  secret-bearing originals are not part of the public source evidence.
 
-Initial full CTest 43/49 and sanitized audit snapshot-lag observation are retained; see LOCAL_FAILURES.md. Final-source complete local CTest, exact-source hosted Push/PR CI, Windows artifacts and screenshot review are pending at this checkpoint. No prior 62251a0 result is inherited. This increment implements the local PCAP/EXIF case adapter, not the older partition two-store migration or product descendant containment. No institutional acceptance or competitive superiority is asserted.
+The first local PCAP/EXIF case adapter is implemented. Original partition migration,
+process-tree containment, audit snapshot-lag mechanism and independent institutional /
+physical-device / performance / comparative gates remain open. No readiness or
+superiority claim follows from passing CI.

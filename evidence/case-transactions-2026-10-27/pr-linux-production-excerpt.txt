@@ -1,0 +1,75 @@
+2026-10-27T19:30:17.0792351Z HEAD is now at 3efe5f9 Merge 7844f01bd1427a4f37c702dfc63c50ea74247f94 into 8fb9b38f771da91c60f3b85a2084868b16fe95d4
+2026-10-27T19:35:27.5761681Z  1/49 Test  #1: mr_research_data_validation ........   Passed    0.02 sec
+2026-10-27T19:35:27.5774005Z  2/49 Test  #2: mr_policy_tests ....................   Passed    0.00 sec
+2026-10-27T19:35:27.5788396Z  3/49 Test  #3: mr_core_tests ......................   Passed    0.00 sec
+2026-10-27T19:35:27.5804342Z  4/49 Test  #4: mr_law_enforcement_case_tests ......   Passed    0.00 sec
+2026-10-27T19:35:27.9640457Z  5/49 Test  #5: mr_update_tests ....................   Passed    0.38 sec
+2026-10-27T19:35:28.2408443Z  6/49 Test  #6: mr_update_journal_tests ............   Passed    0.27 sec
+2026-10-27T19:35:28.2439041Z  7/49 Test  #7: mr_update_key_tests ................   Passed    0.00 sec
+2026-10-27T19:35:31.8522470Z  8/49 Test  #8: mr_case_transaction_tests ..........   Passed    3.61 sec
+2026-10-27T19:35:40.8594576Z  9/49 Test  #9: mr_policy_audit_tests ..............   Passed    9.01 sec
+2026-10-27T19:35:59.2662705Z 10/49 Test #10: mr_offline_tests ...................   Passed   18.41 sec
+2026-10-27T19:36:00.1979366Z 11/49 Test #11: mr_artifact_tests ..................   Passed    0.93 sec
+2026-10-27T19:36:00.8401320Z 12/49 Test #12: mr_timeline_tests ..................   Passed    0.64 sec
+2026-10-27T19:36:11.6553825Z 13/49 Test #13: mr_import_tests ....................   Passed   10.82 sec
+2026-10-27T19:36:12.4825914Z 14/49 Test #14: mr_retention_tests .................   Passed    0.83 sec
+2026-10-27T19:36:15.3035291Z 15/49 Test #15: mr_identity_tests ..................   Passed    2.82 sec
+2026-10-27T19:36:16.6316324Z 16/49 Test #16: mr_law_workspace_tests .............   Passed    1.33 sec
+2026-10-27T19:36:16.6659889Z 17/49 Test #17: mr_research_tests ..................   Passed    0.03 sec
+2026-10-27T19:36:16.6706438Z 18/49 Test #18: mr_intelligence_tests ..............   Passed    0.00 sec
+2026-10-27T19:36:16.6765701Z 19/49 Test #19: mr_connection_tests ................   Passed    0.01 sec
+2026-10-27T19:36:18.0609266Z 20/49 Test #20: mr_workshop_tests ..................   Passed    1.38 sec
+2026-10-27T19:36:18.4857093Z 21/49 Test #21: mr_barcode_tests ...................   Passed    0.42 sec
+2026-10-27T19:36:18.5478119Z 22/49 Test #22: mr_center_tests ....................   Passed    0.06 sec
+2026-10-27T19:36:29.6182944Z 23/49 Test #23: mr_cloud_tests .....................   Passed   11.07 sec
+2026-10-27T19:36:36.2278544Z 24/49 Test #24: mr_security_tests ..................   Passed    6.61 sec
+2026-10-27T19:36:36.2494651Z 25/49 Test #25: mr_catalog_tests ...................   Passed    0.02 sec
+2026-10-27T19:37:04.4914056Z 26/49 Test #26: mr_tool_tests ......................   Passed   28.24 sec
+2026-10-27T19:37:07.3523608Z 27/49 Test #27: mr_service_tests ...................   Passed    2.86 sec
+2026-10-27T19:37:19.9227915Z 28/49 Test #28: mr_mirror_tests ....................   Passed   12.57 sec
+2026-10-27T19:37:19.9326493Z 29/49 Test #29: mr_compatibility_tests .............   Passed    0.01 sec
+2026-10-27T19:37:19.9525162Z 30/49 Test #30: mr_board_tests .....................   Passed    0.02 sec
+2026-10-27T19:37:19.9698382Z 31/49 Test #31: mr_firmware_tests ..................   Passed    0.02 sec
+2026-10-27T19:37:19.9869399Z 32/49 Test #32: mr_avb_tests .......................   Passed    0.02 sec
+2026-10-27T19:37:20.2633609Z 33/49 Test #33: mr_pcap_tests ......................   Passed    0.28 sec
+2026-10-27T19:37:20.5349737Z 34/49 Test #34: mr_exif_tests ......................   Passed    0.27 sec
+2026-10-27T19:37:27.9754143Z 35/49 Test #35: mr_recovery_tests ..................   Passed    7.44 sec
+2026-10-27T19:37:27.9891213Z 36/49 Test #36: mr_recovery_image_tests ............   Passed    0.01 sec
+2026-10-27T19:37:28.5968829Z 37/49 Test #37: mr_forensic_tests ..................   Passed    0.61 sec
+2026-10-27T19:37:33.2306311Z 38/49 Test #38: mr_tsk_tests .......................   Passed    4.63 sec
+2026-10-27T19:37:35.2249374Z 39/49 Test #39: mr_policy_audit_interop ............   Passed    1.99 sec
+2026-10-27T19:37:35.2899413Z 40/49 Test #40: mr_evidence_package_interop ........   Passed    0.06 sec
+2026-10-27T19:37:35.3113260Z 41/49 Test #41: mr_artifact_reference_validation ...   Passed    0.02 sec
+2026-10-27T19:37:35.6774420Z 42/49 Test #42: mr_adb_backup_interop ..............   Passed    0.37 sec
+2026-10-27T19:37:35.7899349Z 43/49 Test #43: mr_avb_mutation_tests ..............   Passed    0.11 sec
+2026-10-27T19:37:35.9300727Z 44/49 Test #44: mr_pcap_mutation_tests .............   Passed    0.14 sec
+2026-10-27T19:37:35.9588589Z 45/49 Test #45: mr_exif_mutation_tests .............   Passed    0.03 sec
+2026-10-27T19:38:27.2418881Z 46/49 Test #46: mr_ui_tests ........................   Passed   51.28 sec
+2026-10-27T19:38:57.5770552Z 47/49 Test #47: mr_ui_scale_1.25 ...................   Passed   30.33 sec
+2026-10-27T19:39:31.3695924Z 48/49 Test #48: mr_ui_scale_1.5 ....................   Passed   33.79 sec
+2026-10-27T19:39:49.6080037Z 49/49 Test #49: mr_gui_smoke .......................   Passed   18.24 sec
+2026-10-27T19:39:49.6085719Z 100% tests passed, 0 tests failed out of 49
+2026-10-27T19:39:49.6086001Z Total Test time (real) = 262.16 sec
+2026-10-27T19:40:44.7382077Z 1/1 Test #49: mr_gui_smoke .....................   Passed   18.38 sec
+2026-10-27T19:40:44.7387207Z 100% tests passed, 0 tests failed out of 1
+2026-10-27T19:40:44.7387681Z Total Test time (real) =  54.94 sec
+2026-10-27T19:42:18.8149636Z  1/18 Test  #5: mr_update_tests ..................   Passed    0.61 sec
+2026-10-27T19:42:19.1694919Z  2/18 Test  #6: mr_update_journal_tests ..........   Passed    0.35 sec
+2026-10-27T19:42:19.1814806Z  3/18 Test  #7: mr_update_key_tests ..............   Passed    0.01 sec
+2026-10-27T19:42:23.3442963Z  4/18 Test  #8: mr_case_transaction_tests ........   Passed    4.16 sec
+2026-10-27T19:42:30.8234594Z  5/18 Test  #9: mr_policy_audit_tests ............   Passed    7.48 sec
+2026-10-27T19:42:58.8803204Z  6/18 Test #10: mr_offline_tests .................   Passed   28.06 sec
+2026-10-27T19:43:02.9100835Z  7/18 Test #11: mr_artifact_tests ................   Passed    4.03 sec
+2026-10-27T19:43:05.2579495Z  8/18 Test #12: mr_timeline_tests ................   Passed    2.35 sec
+2026-10-27T19:43:12.7647743Z  9/18 Test #13: mr_import_tests ..................   Passed    7.51 sec
+2026-10-27T19:43:14.0420108Z 10/18 Test #14: mr_retention_tests ...............   Passed    1.28 sec
+2026-10-27T19:43:17.2067923Z 11/18 Test #15: mr_identity_tests ................   Passed    3.16 sec
+2026-10-27T19:43:19.3700038Z 12/18 Test #16: mr_law_workspace_tests ...........   Passed    2.16 sec
+2026-10-27T19:43:49.1969465Z 13/18 Test #26: mr_tool_tests ....................   Passed   29.83 sec
+2026-10-27T19:44:07.4114967Z 14/18 Test #28: mr_mirror_tests ..................   Passed   18.21 sec
+2026-10-27T19:44:08.6736634Z 15/18 Test #42: mr_adb_backup_interop ............   Passed    1.26 sec
+2026-10-27T19:44:09.5187907Z 16/18 Test #43: mr_avb_mutation_tests ............   Passed    0.85 sec
+2026-10-27T19:44:10.6336617Z 17/18 Test #44: mr_pcap_mutation_tests ...........   Passed    1.11 sec
+2026-10-27T19:44:10.8893601Z 18/18 Test #45: mr_exif_mutation_tests ...........   Passed    0.26 sec
+2026-10-27T19:44:10.8896729Z 100% tests passed, 0 tests failed out of 18
+2026-10-27T19:44:10.8897431Z Total Test time (real) = 112.69 sec
