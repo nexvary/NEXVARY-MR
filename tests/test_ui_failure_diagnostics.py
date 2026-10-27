@@ -1,7 +1,6 @@
 import importlib.util
 import json
 import io
-import signal
 from pathlib import Path
 import subprocess
 import tempfile
@@ -49,13 +48,17 @@ class UiFailureDiagnosticsTests(unittest.TestCase):
 
     def test_timeout_kills_only_the_owned_group(self):
         output = io.StringIO()
-        with patch.object(diagnostics.subprocess, "Popen") as popen, patch.object(diagnostics.os, "killpg") as kill:
+        # This helper runs only in Linux CI. Simulate its POSIX APIs explicitly
+        # so the same timeout regression also executes in Windows Python CI.
+        with patch.object(diagnostics.subprocess, "Popen") as popen, \
+                patch.object(diagnostics.os, "killpg", create=True) as kill, \
+                patch.object(diagnostics.signal, "SIGKILL", 9, create=True):
             child = popen.return_value
             child.pid = 4242
             child.wait.side_effect = [subprocess.TimeoutExpired("synthetic-gdb", 180), -9]
             self.assertEqual(diagnostics.replay(["synthetic-gdb"], "/tmp", {}, output), "timeout")
             self.assertTrue(popen.call_args.kwargs["start_new_session"])
-            kill.assert_called_once_with(4242, signal.SIGKILL)
+            kill.assert_called_once_with(4242, 9)
             self.assertEqual(child.wait.call_count, 2)
 
     def test_unavailable_diagnostic_cannot_replace_failure(self):
