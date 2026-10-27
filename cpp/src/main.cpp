@@ -1,6 +1,7 @@
 #include <QTemporaryDir>
 #include <QSaveFile>
 #include "SyntheticPolicyExercise.hpp"
+#include "RecoveryFile.hpp"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -64,8 +65,11 @@ bool deployedPolicyAudit(GovernmentOperationPolicy &policy,IdentityService &iden
  if(!smokeCheck(policy.exportAudit(exported,true),"policy-audit-export")){
   const auto status=policy.auditStatus();const auto role=identity.session().value("role").toString();
   const auto allowedRole=QStringList{"administrator","reviewer","auditor","investigator","repair-technician","trainer"}.contains(role)?role:QStringLiteral("none");
-  const char *classification=policy.error().startsWith("Audit export needs")?"export-authority":policy.error().startsWith("Choose a new")?"export-path":policy.error().startsWith("Cannot create audit export")?"export-write":policy.error().isEmpty()?"session-check":"audit-store";
+  const auto error=policy.error();
+  const char *classification=error.startsWith("Audit export needs")?"export-authority":error.startsWith("Choose a new")?"export-path":error.startsWith("Cannot create audit export")?"export-write":error.startsWith("Policy audit read refused")?"audit-read":error.startsWith("Policy audit changed/disappeared")?"audit-digest":error.startsWith("Policy audit is busy")?"audit-lock":error.contains("capacity")?"audit-capacity":error.startsWith("Policy actor signature")?"audit-actor":error.contains("(seal)")?"audit-seal":error.contains("(symlink)")?"audit-symlink":error.contains("(open)")?"audit-open":error.contains("(permissions)")?"audit-permissions":error.contains("(write)")?"audit-write":error.contains("(replace)")?"audit-replace":error.isEmpty()?"session-check":"audit-store";
   std::fprintf(stderr,"Synthetic audit export context: healthy=%d authenticated=%d role=%s sequence=%lld class=%s\n",int(status.value("healthy").toBool()),int(identity.authenticated()),qPrintable(allowedRole),static_cast<long long>(status.value("sequence").toLongLong()),classification);
+  const QFileInfo journal(identity.policyJournalPath());QFile probe(journal.filePath());const bool opened=mr::recovery::openRegularInput(probe);
+  std::fprintf(stderr,"Synthetic audit file metadata: exists=%d regular=%d symlink=%d size=%lld opened=%d\n",int(journal.exists()),int(journal.isFile()),int(journal.isSymLink()),static_cast<long long>(journal.size()),int(opened));
   return false;
  }
  if(!smokeCheck(policy.verifyAudit(exported,QString::fromUtf8(retained)),"policy-audit-retained-anchor-verification"))return false;

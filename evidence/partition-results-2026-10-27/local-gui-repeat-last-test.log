@@ -1,0 +1,112 @@
+Start testing: Oct 27 05:02 GMT
+----------------------------------------------------------
+48/48 Testing: mr_gui_smoke
+48/48 Test: mr_gui_smoke
+Command: "/workspace/scratch/48432bb85957/NEXVARY-MR/build/nexvary_mr" "--smoke-test" "--data-dir" "/workspace/scratch/48432bb85957/NEXVARY-MR/build/smoke-data" "--screenshot" "/workspace/scratch/48432bb85957/NEXVARY-MR/build/smoke.png"
+Directory: /workspace/scratch/48432bb85957/NEXVARY-MR/build
+"mr_gui_smoke" start time: Oct 27 05:02 GMT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Synthetic GUI smoke event-loop exit: code=0
+<end of output>
+Test time =  19.18 sec
+----------------------------------------------------------
+Test Passed.
+"mr_gui_smoke" end time: Oct 27 05:02 GMT
+"mr_gui_smoke" time elapsed: 00:00:19
+----------------------------------------------------------
+
+48/48 Testing: mr_gui_smoke
+48/48 Test: mr_gui_smoke
+Command: "/workspace/scratch/48432bb85957/NEXVARY-MR/build/nexvary_mr" "--smoke-test" "--data-dir" "/workspace/scratch/48432bb85957/NEXVARY-MR/build/smoke-data" "--screenshot" "/workspace/scratch/48432bb85957/NEXVARY-MR/build/smoke.png"
+Directory: /workspace/scratch/48432bb85957/NEXVARY-MR/build
+"mr_gui_smoke" start time: Oct 27 05:02 GMT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Synthetic GUI smoke check failed: stage=policy-audit-export
+Synthetic audit export context: healthy=0 authenticated=1 role=administrator sequence=70 class=audit-store
+Synthetic GUI smoke exit: stage=policy-audit-deployed-verification code=16
+Synthetic GUI smoke event-loop exit: code=16
+<end of output>
+Test time =  18.08 sec
+----------------------------------------------------------
+Test Failed.
+"mr_gui_smoke" end time: Oct 27 05:02 GMT
+"mr_gui_smoke" time elapsed: 00:00:18
+----------------------------------------------------------
+
+End testing: Oct 27 05:02 GMT

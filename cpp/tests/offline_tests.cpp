@@ -16,6 +16,8 @@
 #include <QDir>
 #include <QThread>
 #include <QThreadPool>
+#include <QProcess>
+#include <QElapsedTimer>
 #include <QCryptographicHash>
 #include <QDesktopServices>
 #include <QUrl>
@@ -27,6 +29,10 @@ void admin(IdentityService &i){if(!i.bootstrap("policy-admin","Synthetic policy 
 int child(const QStringList &args){
  const auto marker=qEnvironmentVariable("MR_OFFLINE_MARKER");
  if(!marker.isEmpty())write(marker,"child started");
+ if(qEnvironmentVariable("MR_OFFLINE_MODE")=="descendant"){
+  if(!QProcess::startDetached(QCoreApplication::applicationFilePath(),{"--synthetic-descendant",qEnvironmentVariable("MR_OFFLINE_DESCENDANT_DIR")}))return 96;
+  QThread::msleep(10000);
+ }
  if(qEnvironmentVariable("MR_OFFLINE_MODE")=="hang")QThread::msleep(10000);
  if(args==QStringList{"devices","-l"}){std::puts("List of devices attached\nSYNTHETIC42 device model:Fixture");return 0;}
  if(args==QStringList{"--version"}){std::puts("ClamAV synthetic policy fixture");return 0;}
@@ -41,7 +47,7 @@ class OfflineTests final:public QObject {
 public slots:
  void captureUrl(const QUrl &url){capturedUrl=url;}
 private slots:
- void cleanup(){QDesktopServices::unsetUrlHandler("https");capturedUrl=QUrl();qunsetenv("MR_OFFLINE_MARKER");qunsetenv("MR_OFFLINE_MODE");}
+ void cleanup(){QDesktopServices::unsetUrlHandler("https");capturedUrl=QUrl();qunsetenv("MR_OFFLINE_MARKER");qunsetenv("MR_OFFLINE_MODE");qunsetenv("MR_OFFLINE_DESCENDANT_DIR");}
  void defaultDenyAndExplicitAdministrator(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);GovernmentOperationPolicy policy(&identity);
   QVERIFY(policy.offline());QCOMPARE(policy.permissions().size(),6);
@@ -192,6 +198,20 @@ private slots:
  void partitionStoreFailure_data(){
   QTest::addColumn<bool>("caseStore");QTest::newRow("case-write-and-restore-failure")<<true;QTest::newRow("policy-journal-corruption")<<false;
  }
+ void externalAnalyzerDescendantBoundary(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
+  RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);
+  QVERIFY(recovery.createCase("Synthetic descendant boundary","Lab","Lab","No phone","","backup","unknown",true));QVERIFY(recovery.recordOperator("Synthetic operator","Bounded marker-only fixture",true));
+  const auto image=t.filePath("image.dd");QVERIFY(write(image,QByteArray(4096,'x')));QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic descendant observation",password));
+  qputenv("MR_OFFLINE_MODE","descendant");qputenv("MR_OFFLINE_DESCENDANT_DIR",t.path().toUtf8());
+  QVERIFY(recovery.analyzePartitions(image,QCoreApplication::applicationFilePath(),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(t.filePath("descendant-ready")),5000);
+  policy.revoke("external-analysis");QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("revoked"));QCOMPARE(recovery.evidence().size(),0);
+  // The descendant waits for this marker, so its later write proves survival
+  // beyond native worker termination/refusal. No network traffic or payload.
+  QVERIFY(write(t.filePath("parent-revoked"),"synthetic parent worker has returned"));
+  QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(t.filePath("descendant-after-revoke")),3000);
+  qInfo("Boundary observation: controlled detached descendant survived revoked external analyzer; application gate is not process-tree containment.");
+ }
  void partitionStoreFailure(){
   QFETCH(bool,caseStore);
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
@@ -209,6 +229,11 @@ private slots:
 };
 int main(int argc,char **argv){
  QCoreApplication app(argc,argv);const auto args=app.arguments().mid(1);
+ if(args.size()==2&&args[0]=="--synthetic-descendant"){
+  const QDir root(args[1]);if(!root.isAbsolute()||!root.exists()||!write(root.filePath("descendant-ready"),"synthetic marker-only descendant"))return 95;
+  QElapsedTimer deadline;deadline.start();while(!QFileInfo::exists(root.filePath("parent-revoked"))&&deadline.elapsed()<10000)QThread::msleep(25);
+  return QFileInfo::exists(root.filePath("parent-revoked"))&&write(root.filePath("descendant-after-revoke"),"synthetic descendant survived parent revocation")?0:94;
+ }
  if(args==QStringList{"devices","-l"}||args.contains("--version")||args.contains("-V")||args.value(0)=="--stdout"||args.value(0)=="-i")return child(args);
  OfflineTests tests;return QTest::qExec(&tests,argc,argv);
 }

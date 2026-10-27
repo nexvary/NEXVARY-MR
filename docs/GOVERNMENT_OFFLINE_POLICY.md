@@ -33,6 +33,10 @@ Reviewed source boundaries: `CloudTracking.cpp` Qt HTTP client; `TrackingPortal.
 
 Independent institutional/OS network-capture tests, clean Windows 10/11 and authorized physical-device tests remain acceptance gates. No commercial competitor was run or superiority established.
 
+### Controlled descendant revocation counterexample
+
+The native offline regression now runs a bounded first-party executable fixture as an external analyzer. That fixture creates a detached marker-only descendant. The test waits for the descendant handshake, revokes the analyzer permission, waits until the native worker has returned with a `revoked` receipt and no case result, and only then signals the descendant. A later descendant marker demonstrates that this process survived parent-worker revocation. It has a ten-second self-exit deadline, uses only its test directory and makes no network requests. This is a concrete counterexample to process-tree containment, not a network-egress measurement or a test of every tool/descendant. Exact observed platforms/source/results are in DEVELOPMENT_STATE.md. OS/institutional process controls are still required.
+
 ## Reproducible checks
 
 `mr_offline_tests` uses the complete request/separate-account review/decision/activation protocol with synthetic local identities, loopback sockets and a controlled native executable fixture, never a real phone/public endpoint. It tests startup denial, role/reason/consent/category negatives, monotonic expiry, restart, external account revocation, listener/client abort, child launch absence via marker files, permitted device/scanner/updater execution and running-worker revocation. `mr_cloud_tests` adds saved credentials with zero loopback requests while denied, explicit sync, a received GET held pending during logout and no unsolicited resume on regrant. Existing cloud TLS/redirect tests remain required.

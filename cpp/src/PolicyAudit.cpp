@@ -199,11 +199,20 @@ bool PolicyAudit::save(const QVariantMap &state) {
   QSaveFile file(path_);
   file.setDirectWriteFallback(false);
 
-  if (sealed.isEmpty() || QFileInfo(path_).isSymLink() ||
-      !file.open(QIODevice::WriteOnly) ||
-      !file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner) ||
-      file.write(sealed) != sealed.size() || !file.commit())
-    return fail("Cannot commit protected policy audit; exceptions denied.");
+  // Fixed stage codes distinguish storage failures without exposing paths,
+  // protected bytes, identity material or caller-supplied text. No retries.
+  if (sealed.isEmpty())
+    return fail("Cannot commit protected policy audit (seal); exceptions denied.");
+  if (QFileInfo(path_).isSymLink())
+    return fail("Cannot commit protected policy audit (symlink); exceptions denied.");
+  if (!file.open(QIODevice::WriteOnly))
+    return fail("Cannot commit protected policy audit (open); exceptions denied.");
+  if (!file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner))
+    return fail("Cannot commit protected policy audit (permissions); exceptions denied.");
+  if (file.write(sealed) != sealed.size())
+    return fail("Cannot commit protected policy audit (write); exceptions denied.");
+  if (!file.commit())
+    return fail("Cannot commit protected policy audit (replace); exceptions denied.");
 
   fileDigest_ = QCryptographicHash::hash(sealed, QCryptographicHash::Sha256);
   return true;
@@ -212,8 +221,9 @@ bool PolicyAudit::check() {
   if (!healthy_)
     return false;
   const auto raw = load(path_);
-  if (raw.isEmpty() ||
-      QCryptographicHash::hash(raw, QCryptographicHash::Sha256) != fileDigest_)
+  if (raw.isEmpty())
+    return fail("Policy audit read refused/empty; exceptions denied. Inspect and restart, never silently repair.");
+  if (QCryptographicHash::hash(raw, QCryptographicHash::Sha256) != fileDigest_)
     return fail(
         "Policy audit changed/disappeared outside this writer; exceptions "
         "denied. Inspect and restart, never silently repair.");
