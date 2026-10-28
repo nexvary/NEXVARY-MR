@@ -8,6 +8,8 @@ struct SqliteTableRow {
  QString rowid;
  QVariantList fields;
  QVariantList imageExtents;
+ QList<quint64> serialTypes;
+ QVariantMap imageCellExtent;
 };
 struct SqliteTableRead {
  QList<SqliteTableRow> rows;

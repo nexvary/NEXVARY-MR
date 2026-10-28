@@ -1,0 +1,30 @@
+********* Start testing of ForensicAdapterTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ForensicAdapterTests::initTestCase()
+PASS   : ForensicAdapterTests::descriptorsAndDestructiveRejection()
+PASS   : ForensicAdapterTests::provenanceHashInputAndCancellation()
+PASS   : ForensicAdapterTests::cooperativeDeadline()
+PASS   : ForensicAdapterTests::bookmarksKnownAnswerAndReadOnly()
+PASS   : ForensicAdapterTests::corruptAmbiguousDeepAndOversizedBookmarks()
+PASS   : ForensicAdapterTests::manifestStructureIsNotPayloadVerification()
+PASS   : ForensicAdapterTests::manifestPayloadVerification()
+PASS   : ForensicAdapterTests::manifestRawReferencesAndNoSymlinkResolution()
+PASS   : ForensicAdapterTests::manifestUnsafePathsAndDuplicateRejection()
+PASS   : ForensicAdapterTests::manifestCasePayloadReceiptAndIsolation()
+PASS   : ForensicAdapterTests::sqliteFamilyRuntimeOracleAndEndianness()
+PASS   : ForensicAdapterTests::sqliteFamilyMalformedAndBounds()
+PASS   : ForensicAdapterTests::sqliteFamilyBoundedMutations()
+QINFO  : ForensicAdapterTests::sqliteFamilyCaseBindingsRetentionAndCancellation() Envelope trailer preserves decoded bytes: false
+PASS   : ForensicAdapterTests::sqliteFamilyCaseBindingsRetentionAndCancellation()
+PASS   : ForensicAdapterTests::partitionKnownAnswers()
+PASS   : ForensicAdapterTests::truncatedCorruptProtectiveAndBackupGpt()
+PASS   : ForensicAdapterTests::overlapAndEbrCycle()
+PASS   : ForensicAdapterTests::boundedMutationCorpus()
+PASS   : ForensicAdapterTests::authenticatedCaseReceiptAndRecovery()
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(bookmarks)
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(manifest-content)
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(sqlite-family)
+PASS   : ForensicAdapterTests::cancellationLogoutAndCrossCaseRefuseAcceptance()
+PASS   : ForensicAdapterTests::cleanupTestCase()
+Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 5820ms
+********* Finished testing of ForensicAdapterTests *********

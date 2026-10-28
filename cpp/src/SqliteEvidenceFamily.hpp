@@ -7,6 +7,8 @@ namespace mr::forensic {
 struct SqliteFamilySnapshot {
  ForensicAdapterResult analysis;
  QByteArray committedPages;
+ // Derived page number -> original protected member payload offset. Internal only.
+ QMap<quint32,QVariantMap> pageOrigins{};
 };
 SqliteFamilySnapshot inspectSqliteEvidenceFamily(const ReadOnlyEvidenceRequest &request,QVariantMap report);
 ForensicAdapterResult validateRetainedSqliteFamily(const QVariantMap &report,

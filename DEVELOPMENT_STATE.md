@@ -1,3 +1,11 @@
+# Internal Chromium History extraction prerequisite — 2026-10-28
+
+- Continued actual integration HEAD `c4cfb41737ac4e31b06007b77d23b4970933eba6`, draft PR17. New implementation commit resolves with git rev-parse HEAD. No main/Government/Guardian write or merge.
+- Added schema-aware protected-byte History join, separate URLs-only metadata, exact raw/integer timestamps and row IDs, storage-class checks, original main/WAL/schema/cell/overflow references, deterministic 128-result/64-KiB bound and cancellation. Test-target-only prerequisite: no UI/allowlist/case retention enabled. See docs/CHROMIUM_HISTORY_READER.md.
+- Local strict Release table/history27/27, standalone CTest5/5, root Python55/55, existing signed case/forensic25/25; ASan/UBSan27/27 with local leak inspection unavailable (diagnostic retained). Actual SQLite WAL join oracle, 18 History scenarios and 256 new mutations. Source hashes and original failures under evidence/chromium-history-2026-10-28/.
+- Parent Windows Laboratory CI failed C4310 at two malformed-byte char casts in sqlite_table_tests.cpp. Fixed bit representation without weakening /WX or assertions; original full job log retained. Hosted exact corrective-source CI/package acceptance initially PENDING.
+- Next: exact-source CI, retained History validator and existing case/worker/receipt integration, then Downloads. All nine broad stages remain in-progress. Audit Store divergence, descendants, Qt root/soak/hardware, clean-host/signing/institutional gates stay OPEN.
+
 # Protected SQLite family — exact-source acceptance, 2026-10-28
 
 - Tested implementation source `e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716`, tree `b71f68a08fd26350b64525ea3c883ce72d65dbb8`; PR checkout `1129afad51f085ebf327d11d73ff32b26aa46d28` has the identical tree. Government remains `eb2322140956a55a50ee7494570f35573a1ce0c0`. Subsequent checkpoint is unshipped evidence/state/research metadata only; see scope proof and resolve its HEAD with git rev-parse HEAD. No main/Government/upstream/Guardian write or PR merge.

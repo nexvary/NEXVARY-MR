@@ -107,7 +107,13 @@ SqliteFamilySnapshot inspectSqliteEvidenceFamily(const ReadOnlyEvidenceRequest &
  if(frames>lastCommit)warnings<<"Valid uncommitted trailing frames were excluded from the derived page image.";
  report.insert("analysisParameters",parameters());report.insert("sqliteFamily",summary);report.insert("warnings",warnings);
  report.insert("findings",QVariantList{ForensicFinding{"browser-sqlite-family",reference(lastCommit),digest,"validated-structure-only",summary}.toMap()});
- return {{report,{}},image};
+ QMap<quint32,QVariantMap> origins;
+ for(quint32 page=1;page<=pages;++page){
+  if(stopped(r))return reject("cancelled");
+  const bool fromWal=committed.contains(page);
+  origins.insert(page,{{"role",fromWal?"wal":"main"},{"evidenceId",fromWal?r.sqliteFamilyMembers.value("wal").evidenceId:r.evidenceId},{"sourceSha256",fromWal?r.sqliteFamilyMembers.value("wal").sha256:r.sourceSha256},{"byteOffset",fromWal?qint64(committed.value(page)):qint64(page-1)*pageSize}});
+ }
+ return {{report,{}},image,origins};
 }
 ForensicAdapterResult validateRetainedSqliteFamily(const QVariantMap &report,const QMap<QString,QVariantMap> &inventory){
  const auto bad=[] {return ForensicAdapterResult{{},"sqlite-family-retained-provenance"};};

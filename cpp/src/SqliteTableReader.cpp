@@ -36,10 +36,9 @@ class Reader {
   }
   return false;
  }
- bool record(const QByteArray &payload,QVariantList &values){
+ bool record(const QByteArray &payload,QVariantList &values,QList<quint64> &types){
   qsizetype p=0;quint64 header=0;
   if(!varint(payload,p,payload.size(),header)||header<quint64(p)||header>quint64(payload.size()))return fail("sqlite-table-record-header");
-  QList<quint64> types;
   while(p<qsizetype(header)){
    quint64 type=0;if(types.size()>=maxFields||!varint(payload,p,qsizetype(header),type))return fail("sqlite-table-record-header");
    types.append(type);
@@ -109,8 +108,8 @@ class Reader {
      payload+=image.mid(off+4,take);extents.append(extent(off+4,take));overflow=u32(off);
     }
     if(overflow)return fail("sqlite-table-overflow-tail");
-    QVariantList values;if(!record(payload,values))return false;
-    rows.append({QString::number(rowid),values,extents});
+    QVariantList values;QList<quint64> types;if(!record(payload,values,types))return false;
+    rows.append({QString::number(rowid),values,extents,types,extent(start,p-start)});
    }
    for(const auto &range:ranges)if(start<range.second&&p>range.first)return fail("sqlite-table-overlapping-cells");
    ranges.append({start,p});previous=rowid;hasPrevious=true;
