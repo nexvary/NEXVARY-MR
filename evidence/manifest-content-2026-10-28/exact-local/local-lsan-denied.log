@@ -1,0 +1,41 @@
+Internal ctest changing into directory: /workspace/scratch/077476f00950/NEXVARY-MR/build-sanitized
+Test project /workspace/scratch/077476f00950/NEXVARY-MR/build-sanitized
+    Start 5: mr_forensic_adapter_tests
+1/1 Test #5: mr_forensic_adapter_tests ........***Failed    4.53 sec
+********* Start testing of ForensicAdapterTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ForensicAdapterTests::initTestCase()
+PASS   : ForensicAdapterTests::descriptorsAndDestructiveRejection()
+PASS   : ForensicAdapterTests::provenanceHashInputAndCancellation()
+PASS   : ForensicAdapterTests::cooperativeDeadline()
+PASS   : ForensicAdapterTests::bookmarksKnownAnswerAndReadOnly()
+PASS   : ForensicAdapterTests::corruptAmbiguousDeepAndOversizedBookmarks()
+PASS   : ForensicAdapterTests::manifestStructureIsNotPayloadVerification()
+PASS   : ForensicAdapterTests::manifestPayloadVerification()
+PASS   : ForensicAdapterTests::manifestRawReferencesAndNoSymlinkResolution()
+PASS   : ForensicAdapterTests::manifestUnsafePathsAndDuplicateRejection()
+PASS   : ForensicAdapterTests::manifestCasePayloadReceiptAndIsolation()
+PASS   : ForensicAdapterTests::partitionKnownAnswers()
+PASS   : ForensicAdapterTests::truncatedCorruptProtectiveAndBackupGpt()
+PASS   : ForensicAdapterTests::overlapAndEbrCycle()
+PASS   : ForensicAdapterTests::boundedMutationCorpus()
+PASS   : ForensicAdapterTests::authenticatedCaseReceiptAndRecovery()
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(bookmarks)
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(manifest-content)
+PASS   : ForensicAdapterTests::cancellationLogoutAndCrossCaseRefuseAcceptance()
+PASS   : ForensicAdapterTests::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 4454ms
+********* Finished testing of ForensicAdapterTests *********
+==485==Can't open /proc/482/task for reading.
+==482==LeakSanitizer has encountered a fatal error.
+==482==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==482==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   4.53 sec
+
+The following tests FAILED:
+	  5 - mr_forensic_adapter_tests (Failed)
+Errors while running CTest

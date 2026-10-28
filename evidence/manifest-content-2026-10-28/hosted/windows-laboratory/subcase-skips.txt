@@ -1,0 +1,6 @@
+barcode-results.txt: SKIP   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar() Optional independent ZBar decoder not installed.
+barcode-results.txt: SKIP   : BarcodeTests::barcodeSurvivesPdfRendering() Independent PDF rasterizer and barcode decoder not installed.
+cloud-results.txt: SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+partition_transaction-results.txt: SKIP   : PartitionTransactionTests::realMmls() Separately installed mmls not configured.
+policy_audit-results.txt: SKIP   : PolicyAuditTests::symlinkJournalNeverChangesTarget() POSIX symlink regression; QFile::link creates a Windows shortcut.
+tsk-results.txt: SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary.

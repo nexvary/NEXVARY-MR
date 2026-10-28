@@ -1,0 +1,782 @@
+Start testing: Oct 28 08:56 Coordinated Universal Time
+----------------------------------------------------------
+1/51 Testing: mr_research_data_validation
+1/51 Test: mr_research_data_validation
+Command: "C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe" "D:/a/NEXVARY-MR/NEXVARY-MR/scripts/validate_research_catalog.py"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_research_data_validation" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+Research catalog: offline validation passed
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"mr_research_data_validation" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_research_data_validation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/51 Testing: mr_policy_tests
+2/51 Test: mr_policy_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_policy_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_policy_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+production-read-only: policy passed
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_policy_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/51 Testing: mr_core_tests
+3/51 Test: mr_core_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_core_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_core_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"mr_core_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_core_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/51 Testing: mr_law_enforcement_case_tests
+4/51 Test: mr_law_enforcement_case_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_law_enforcement_case_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_law_enforcement_case_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"mr_law_enforcement_case_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_law_enforcement_case_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/51 Testing: mr_update_tests
+5/51 Test: mr_update_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_update_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/update-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_update_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.55 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_update_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/51 Testing: mr_update_journal_tests
+6/51 Test: mr_update_journal_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_update_journal_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/update-journal-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_update_journal_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   1.71 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_journal_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_update_journal_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+7/51 Testing: mr_update_key_tests
+7/51 Test: mr_update_key_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_update_key_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/update-key-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_update_key_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.22 sec
+----------------------------------------------------------
+Test Passed.
+"mr_update_key_tests" end time: Oct 28 08:56 Coordinated Universal Time
+"mr_update_key_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/51 Testing: mr_forensic_adapter_tests
+8/51 Test: mr_forensic_adapter_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_forensic_adapter_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/forensic_adapter-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_forensic_adapter_tests" start time: Oct 28 08:56 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   4.80 sec
+----------------------------------------------------------
+Test Passed.
+"mr_forensic_adapter_tests" end time: Oct 28 08:57 Coordinated Universal Time
+"mr_forensic_adapter_tests" time elapsed: 00:00:04
+----------------------------------------------------------
+
+9/51 Testing: mr_partition_transaction_tests
+9/51 Test: mr_partition_transaction_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_partition_transaction_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/partition_transaction-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_partition_transaction_tests" start time: Oct 28 08:57 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  61.68 sec
+----------------------------------------------------------
+Test Passed.
+"mr_partition_transaction_tests" end time: Oct 28 08:58 Coordinated Universal Time
+"mr_partition_transaction_tests" time elapsed: 00:01:01
+----------------------------------------------------------
+
+10/51 Testing: mr_case_transaction_tests
+10/51 Test: mr_case_transaction_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_case_transaction_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/case_transaction-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_case_transaction_tests" start time: Oct 28 08:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  24.27 sec
+----------------------------------------------------------
+Test Passed.
+"mr_case_transaction_tests" end time: Oct 28 08:58 Coordinated Universal Time
+"mr_case_transaction_tests" time elapsed: 00:00:24
+----------------------------------------------------------
+
+11/51 Testing: mr_policy_audit_tests
+11/51 Test: mr_policy_audit_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_policy_audit_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/policy_audit-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_policy_audit_tests" start time: Oct 28 08:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  15.12 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_audit_tests" end time: Oct 28 08:58 Coordinated Universal Time
+"mr_policy_audit_tests" time elapsed: 00:00:15
+----------------------------------------------------------
+
+12/51 Testing: mr_offline_tests
+12/51 Test: mr_offline_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_offline_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/offline-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_offline_tests" start time: Oct 28 08:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  23.24 sec
+----------------------------------------------------------
+Test Passed.
+"mr_offline_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_offline_tests" time elapsed: 00:00:23
+----------------------------------------------------------
+
+13/51 Testing: mr_artifact_tests
+13/51 Test: mr_artifact_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_artifact_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/artifact-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_artifact_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   2.35 sec
+----------------------------------------------------------
+Test Passed.
+"mr_artifact_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_artifact_tests" time elapsed: 00:00:02
+----------------------------------------------------------
+
+14/51 Testing: mr_timeline_tests
+14/51 Test: mr_timeline_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_timeline_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/timeline-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_timeline_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   1.73 sec
+----------------------------------------------------------
+Test Passed.
+"mr_timeline_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_timeline_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+15/51 Testing: mr_import_tests
+15/51 Test: mr_import_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_import_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/import-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_import_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  10.63 sec
+----------------------------------------------------------
+Test Passed.
+"mr_import_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_import_tests" time elapsed: 00:00:10
+----------------------------------------------------------
+
+16/51 Testing: mr_retention_tests
+16/51 Test: mr_retention_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_retention_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/retention-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_retention_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   2.51 sec
+----------------------------------------------------------
+Test Passed.
+"mr_retention_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_retention_tests" time elapsed: 00:00:02
+----------------------------------------------------------
+
+17/51 Testing: mr_identity_tests
+17/51 Test: mr_identity_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_identity_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/identity-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_identity_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   6.26 sec
+----------------------------------------------------------
+Test Passed.
+"mr_identity_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_identity_tests" time elapsed: 00:00:06
+----------------------------------------------------------
+
+18/51 Testing: mr_law_workspace_tests
+18/51 Test: mr_law_workspace_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_law_workspace_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/law_workspace-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_law_workspace_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   8.67 sec
+----------------------------------------------------------
+Test Passed.
+"mr_law_workspace_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_law_workspace_tests" time elapsed: 00:00:08
+----------------------------------------------------------
+
+19/51 Testing: mr_research_tests
+19/51 Test: mr_research_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_research_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/research-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_research_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.14 sec
+----------------------------------------------------------
+Test Passed.
+"mr_research_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_research_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/51 Testing: mr_intelligence_tests
+20/51 Test: mr_intelligence_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_intelligence_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/intelligence-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_intelligence_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"mr_intelligence_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_intelligence_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/51 Testing: mr_connection_tests
+21/51 Test: mr_connection_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_connection_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/connection-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_connection_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"mr_connection_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_connection_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/51 Testing: mr_workshop_tests
+22/51 Test: mr_workshop_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_workshop_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/workshop-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_workshop_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   5.86 sec
+----------------------------------------------------------
+Test Passed.
+"mr_workshop_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_workshop_tests" time elapsed: 00:00:05
+----------------------------------------------------------
+
+23/51 Testing: mr_barcode_tests
+23/51 Test: mr_barcode_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_barcode_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/barcode-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_barcode_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   1.33 sec
+----------------------------------------------------------
+Test Passed.
+"mr_barcode_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_barcode_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+24/51 Testing: mr_center_tests
+24/51 Test: mr_center_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_center_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/center-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_center_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.82 sec
+----------------------------------------------------------
+Test Passed.
+"mr_center_tests" end time: Oct 28 08:59 Coordinated Universal Time
+"mr_center_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/51 Testing: mr_cloud_tests
+25/51 Test: mr_cloud_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_cloud_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/cloud-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_cloud_tests" start time: Oct 28 08:59 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  13.12 sec
+----------------------------------------------------------
+Test Passed.
+"mr_cloud_tests" end time: Oct 28 09:00 Coordinated Universal Time
+"mr_cloud_tests" time elapsed: 00:00:13
+----------------------------------------------------------
+
+26/51 Testing: mr_security_tests
+26/51 Test: mr_security_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_security_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/security-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_security_tests" start time: Oct 28 09:00 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   1.99 sec
+----------------------------------------------------------
+Test Passed.
+"mr_security_tests" end time: Oct 28 09:00 Coordinated Universal Time
+"mr_security_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+27/51 Testing: mr_catalog_tests
+27/51 Test: mr_catalog_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_catalog_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/catalog-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_catalog_tests" start time: Oct 28 09:00 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"mr_catalog_tests" end time: Oct 28 09:00 Coordinated Universal Time
+"mr_catalog_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/51 Testing: mr_tool_tests
+28/51 Test: mr_tool_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_tool_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/tool-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_tool_tests" start time: Oct 28 09:00 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  28.98 sec
+----------------------------------------------------------
+Test Passed.
+"mr_tool_tests" end time: Oct 28 09:00 Coordinated Universal Time
+"mr_tool_tests" time elapsed: 00:00:28
+----------------------------------------------------------
+
+29/51 Testing: mr_service_tests
+29/51 Test: mr_service_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_service_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/service-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_service_tests" start time: Oct 28 09:00 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  10.38 sec
+----------------------------------------------------------
+Test Passed.
+"mr_service_tests" end time: Oct 28 09:00 Coordinated Universal Time
+"mr_service_tests" time elapsed: 00:00:10
+----------------------------------------------------------
+
+30/51 Testing: mr_mirror_tests
+30/51 Test: mr_mirror_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_mirror_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/mirror-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_mirror_tests" start time: Oct 28 09:00 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  25.66 sec
+----------------------------------------------------------
+Test Passed.
+"mr_mirror_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_mirror_tests" time elapsed: 00:00:25
+----------------------------------------------------------
+
+31/51 Testing: mr_compatibility_tests
+31/51 Test: mr_compatibility_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_compatibility_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/compatibility-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_compatibility_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"mr_compatibility_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_compatibility_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/51 Testing: mr_board_tests
+32/51 Test: mr_board_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_board_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/board-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_board_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.09 sec
+----------------------------------------------------------
+Test Passed.
+"mr_board_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_board_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/51 Testing: mr_firmware_tests
+33/51 Test: mr_firmware_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_firmware_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/firmware-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_firmware_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"mr_firmware_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_firmware_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+34/51 Testing: mr_avb_tests
+34/51 Test: mr_avb_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_avb_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/avb-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_avb_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"mr_avb_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_avb_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+35/51 Testing: mr_pcap_tests
+35/51 Test: mr_pcap_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_pcap_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/pcap-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_pcap_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.37 sec
+----------------------------------------------------------
+Test Passed.
+"mr_pcap_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_pcap_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+36/51 Testing: mr_exif_tests
+36/51 Test: mr_exif_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_exif_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/exif-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_exif_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.36 sec
+----------------------------------------------------------
+Test Passed.
+"mr_exif_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_exif_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+37/51 Testing: mr_recovery_tests
+37/51 Test: mr_recovery_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_recovery_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/recovery-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_recovery_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  17.37 sec
+----------------------------------------------------------
+Test Passed.
+"mr_recovery_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_recovery_tests" time elapsed: 00:00:17
+----------------------------------------------------------
+
+38/51 Testing: mr_recovery_image_tests
+38/51 Test: mr_recovery_image_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_recovery_image_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/recovery_image-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_recovery_image_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"mr_recovery_image_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_recovery_image_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+39/51 Testing: mr_forensic_tests
+39/51 Test: mr_forensic_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_forensic_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/forensic-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_forensic_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.71 sec
+----------------------------------------------------------
+Test Passed.
+"mr_forensic_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_forensic_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+40/51 Testing: mr_tsk_tests
+40/51 Test: mr_tsk_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_tsk_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/tsk-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_tsk_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   2.34 sec
+----------------------------------------------------------
+Test Passed.
+"mr_tsk_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_tsk_tests" time elapsed: 00:00:02
+----------------------------------------------------------
+
+41/51 Testing: mr_policy_audit_interop
+41/51 Test: mr_policy_audit_interop
+Command: "C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe" "D:/a/NEXVARY-MR/NEXVARY-MR/scripts/check_policy_audit_interop.py" "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_policy_audit_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_policy_audit_interop" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+{"schema": "nexvary-policy-audit-interop/v1", "checks": [{"check": "native signatures, requester, reviewer and full retained anchor", "passed": true}, {"check": "empty retained prefix with independently pinned journal key", "passed": true}, {"check": "reordered events", "passed": true}, {"check": "valid signed history truncated below retained anchor", "passed": true}, {"check": "deleted interior event", "passed": true}, {"check": "duplicated event", "passed": true}, {"check": "changed signature", "passed": true}, {"check": "changed decision payload", "passed": true}, {"check": "substituted bundled public key", "passed": true}, {"check": "wrong independent key", "passed": true}, {"check": "wrong independent digest", "passed": true}, {"check": "wrong independent journal identity", "passed": true}, {"check": "future retained sequence", "passed": true}, {"check": "negative retained sequence", "passed": true}, {"check": "fractional retained sequence", "passed": true}, {"check": "ambiguous duplicate JSON keys", "passed": true}, {"check": "over-limit input", "passed": true}, {"check": "standalone CLI needs no Qt/database/private key", "passed": true}, {"check": "independent producer accepted by both verifier implementations", "passed": true}, {"check": "fully signed self-review is rejected", "passed": true}, {"check": "fully signed unassigned reviewer is rejected", "passed": true}, {"check": "fully signed scope change is rejected", "passed": true}, {"check": "fully signed previous review mutation is rejected", "passed": true}, {"check": "fully signed reviewer activation is rejected", "passed": true}, {"check": "fully signed gate without active permission is rejected", "passed": true}, {"check": "fully signed false system attribution is rejected", "passed": true}, {"check": "signed operation cannot cite a different approval digest", "passed": true}, {"check": "signed operation cannot cite activation as approval", "passed": true}, {"check": "signed operation requester must match approval", "passed": true}, {"check": "operation receipts reject unapproved content fields", "passed": true}, {"check": "operation result without a start is rejected", "passed": true}, {"check": "duplicate terminal operation result is rejected", "passed": true}, {"check": "success after authorization revocation is rejected", "passed": true}, {"check": "operation result cannot change the declared case reference", "passed": true}, {"check": "completed scan requires a well-formed source digest", "passed": true}, {"check": "independent partition result accepted by both verifiers", "passed": true}, {"check": "completed partition result requires a source digest", "passed": true}, {"check": "partition operation cannot use another capability", "passed": true}, {"check": "partition terminal result cannot change worker kind", "passed": true}, {"check": "cancelled partition without invented digests is accepted", "passed": true}, {"check": "independent signed case preparation and reconciliation", "passed": true}, {"check": "migrated local case adapter workbench-export-manifest", "passed": true}, {"check": "migrated local case adapter chromium-bookmarks", "passed": true}, {"check": "migrated local case adapter dc-image-partitions", "passed": true}, {"check": "destructive adapter cannot enter case journal", "passed": true}, {"check": "case outcome cannot change evidence binding", "passed": true}, {"check": "case outcome cannot change report digest", "passed": true}, {"check": "case intent cannot contain private paths", "passed": true}, {"check": "case result without durable preparation rejected", "passed": true}, {"check": "duplicate case recovery event rejected", "passed": true}, {"check": "case preparation cannot forge requester identity", "passed": true}, {"check": "case expected revision cannot be boolean", "passed": true}, {"check": "signed case invocation reference cannot be reused", "passed": true}, {"check": "signed case analysis UUID cannot be reused", "passed": true}, {"check": "case UUIDs must use canonical spelling", "passed": true}, {"check": "registered partition prepared/candidate/completed original approval", "passed": true}, {"check": "registered partition rejects altered 6:caseId", "passed": true}, {"check": "registered partition rejects altered 6:requestId", "passed": true}, {"check": "registered partition rejects altered 6:preparedUtc", "passed": true}, {"check": "registered partition rejects altered 6:toolSha256", "passed": true}, {"check": "registered partition rejects altered 6:reportSha256", "passed": true}, {"check": "registered partition rejects altered 7:toolSha256", "passed": true}, {"check": "registered partition rejects altered 7:sourceSha256", "passed": true}, {"check": "registered partition rejects altered 7:evidenceId", "passed": true}, {"check": "registered partition rejects altered 8:reportSha256", "passed": true}, {"check": "registered partition rejects altered 8:caseBeforeSha256", "passed": true}, {"check": "registered partition rejects altered 9:outputSha256", "passed": true}, {"check": "registered partition rejects altered 9:sourceSha256", "passed": true}, {"check": "registered partition cannot prepare without original operation start", "passed": true}, {"check": "registered partition cannot complete without durable candidate", "passed": true}, {"check": "registered partition cannot append a second candidate", "passed": true}, {"check": "registered partition candidate after revocation rejected", "passed": true}, {"check": "registered partition interrupted external outcome stays unknown", "passed": true}], "passed": 73, "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
+<end of output>
+Test time =   3.09 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_audit_interop" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_policy_audit_interop" time elapsed: 00:00:03
+----------------------------------------------------------
+
+42/51 Testing: mr_evidence_package_interop
+42/51 Test: mr_evidence_package_interop
+Command: "C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe" "D:/a/NEXVARY-MR/NEXVARY-MR/scripts/check_evidence_interop.py" "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_law_workspace_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_evidence_package_interop" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+Native export verified independently; same-size corruption rejected.
+<end of output>
+Test time =   0.31 sec
+----------------------------------------------------------
+Test Passed.
+"mr_evidence_package_interop" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_evidence_package_interop" time elapsed: 00:00:00
+----------------------------------------------------------
+
+43/51 Testing: mr_artifact_reference_validation
+43/51 Test: mr_artifact_reference_validation
+Command: "C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe" "D:/a/NEXVARY-MR/NEXVARY-MR/scripts/check_artifact_reference.py"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_artifact_reference_validation" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+Independent synthetic artifact reference: 6 findings, 19 nodes, 20 typed edges, 2 digest groups; zero name/person/cross-case links
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"mr_artifact_reference_validation" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_artifact_reference_validation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+44/51 Testing: mr_adb_backup_interop
+44/51 Test: mr_adb_backup_interop
+Command: "C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe" "D:/a/NEXVARY-MR/NEXVARY-MR/scripts/check_adb_backup_interop.py" "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_evidence_import_worker.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_adb_backup_interop" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+ADB backup interoperability: 52 checks passed
+<end of output>
+Test time =   1.14 sec
+----------------------------------------------------------
+Test Passed.
+"mr_adb_backup_interop" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_adb_backup_interop" time elapsed: 00:00:01
+----------------------------------------------------------
+
+45/51 Testing: mr_avb_mutation_tests
+45/51 Test: mr_avb_mutation_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_avb_mutation_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_avb_mutation_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+30000 deterministic AVB mutations passed; no trust assertion permitted.
+<end of output>
+Test time =   0.27 sec
+----------------------------------------------------------
+Test Passed.
+"mr_avb_mutation_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_avb_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+46/51 Testing: mr_pcap_mutation_tests
+46/51 Test: mr_pcap_mutation_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_pcap_mutation_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_pcap_mutation_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+30000 deterministic PCAP mutations passed; no partial reports or payload/address output.
+<end of output>
+Test time =   0.34 sec
+----------------------------------------------------------
+Test Passed.
+"mr_pcap_mutation_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_pcap_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+47/51 Testing: mr_exif_mutation_tests
+47/51 Test: mr_exif_mutation_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_exif_mutation_tests.exe"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_exif_mutation_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+12000 deterministic bounded Exif mutations completed
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"mr_exif_mutation_tests" end time: Oct 28 09:01 Coordinated Universal Time
+"mr_exif_mutation_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+48/51 Testing: mr_ui_tests
+48/51 Test: mr_ui_tests
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_ui_tests.exe" "-o" "-,txt" "-o" "D:/a/NEXVARY-MR/NEXVARY-MR/build/ui-results.txt,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_ui_tests" start time: Oct 28 09:01 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  89.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_tests" end time: Oct 28 09:03 Coordinated Universal Time
+"mr_ui_tests" time elapsed: 00:01:29
+----------------------------------------------------------
+
+49/51 Testing: mr_ui_scale_1.25
+49/51 Test: mr_ui_scale_1.25
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_ui_tests.exe" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentPartitionControls" "WorkstationNavigation::test_governmentForensicEngines" "WorkstationNavigation::test_governmentManifestContent" "WorkstationNavigation::test_governmentSummaryLifetime" "WorkstationNavigation::test_governmentImportLayoutLifetime" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_ui_scale_1.25" start time: Oct 28 09:03 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  49.16 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.25" end time: Oct 28 09:03 Coordinated Universal Time
+"mr_ui_scale_1.25" time elapsed: 00:00:49
+----------------------------------------------------------
+
+50/51 Testing: mr_ui_scale_1.5
+50/51 Test: mr_ui_scale_1.5
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/mr_ui_tests.exe" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentPartitionControls" "WorkstationNavigation::test_governmentForensicEngines" "WorkstationNavigation::test_governmentManifestContent" "WorkstationNavigation::test_governmentSummaryLifetime" "WorkstationNavigation::test_governmentImportLayoutLifetime" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_ui_scale_1.5" start time: Oct 28 09:03 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =  56.74 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.5" end time: Oct 28 09:04 Coordinated Universal Time
+"mr_ui_scale_1.5" time elapsed: 00:00:56
+----------------------------------------------------------
+
+51/51 Testing: mr_gui_smoke
+51/51 Test: mr_gui_smoke
+Command: "D:/a/NEXVARY-MR/NEXVARY-MR/build/Release/nexvary_mr.exe" "--smoke-test" "--data-dir" "D:/a/NEXVARY-MR/NEXVARY-MR/build/smoke-data" "--screenshot" "D:/a/NEXVARY-MR/NEXVARY-MR/build/smoke.png"
+Directory: D:/a/NEXVARY-MR/NEXVARY-MR/build
+"mr_gui_smoke" start time: Oct 28 09:04 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+Synthetic GUI smoke event-loop exit: code=0
+<end of output>
+Test time =  23.12 sec
+----------------------------------------------------------
+Test Passed.
+"mr_gui_smoke" end time: Oct 28 09:05 Coordinated Universal Time
+"mr_gui_smoke" time elapsed: 00:00:23
+----------------------------------------------------------
+
+End testing: Oct 28 09:05 Coordinated Universal Time

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "first-native-slice-tested-broader-integration-in-progress",
+  "status": "manifest-content-tested-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -15,10 +15,16 @@
       "adapter": "workbench-export-manifest",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
-      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
-      "ci_run": 40644129202,
-      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
+      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
+      "ci_run": 40659062610,
+      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md",
+      "content_verification": {
+        "verifier_version": "nexvary-mr-manifest-content/1",
+        "scope": "explicit protected same-case payload bindings; no filesystem path resolution",
+        "tested_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
+        "ci_run": 40659062610
+      }
     },
     {
       "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
@@ -32,10 +38,10 @@
       "adapter": "chromium-bookmarks",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
-      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
-      "ci_run": 40644129202,
-      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
+      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
+      "ci_run": 40659062610,
+      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md"
     },
     {
       "repository": "nexvary/NEXVARY-DC",
@@ -49,10 +55,10 @@
       "adapter": "dc-image-partitions",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
-      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
-      "ci_run": 40644129202,
-      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
+      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
+      "ci_run": 40659062610,
+      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md"
     }
   ],
   "stages": [
