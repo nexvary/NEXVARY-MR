@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "chromium-history-implemented-awaiting-exact-source-acceptance-broader-integration-in-progress",
+  "status": "selected-chromium-history-case-integration-tested-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -15,15 +15,15 @@
       "adapter": "workbench-export-manifest",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
-      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
-      "ci_run": 40679092338,
-      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-native-adapter-tested-at-22cad41; broader-engine-stage-in-progress",
+      "acceptance_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+      "ci_run": 40688214497,
+      "evidence": "evidence/chromium-history-2026-10-28/FINAL_CHECKPOINT.md",
       "content_verification": {
         "verifier_version": "nexvary-mr-manifest-content/1",
         "scope": "explicit protected same-case payload bindings; no filesystem path resolution",
-        "tested_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
-        "ci_run": 40679092338
+        "tested_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+        "ci_run": 40688214497
       }
     },
     {
@@ -38,27 +38,29 @@
       "adapter": "chromium-bookmarks",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
-      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
-      "ci_run": 40679092338,
-      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-native-adapter-tested-at-22cad41; broader-engine-stage-in-progress",
+      "acceptance_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+      "ci_run": 40688214497,
+      "evidence": "evidence/chromium-history-2026-10-28/FINAL_CHECKPOINT.md",
       "additional_adapters": [
         "browser-sqlite-family",
         "chromium-history"
       ],
       "sqlite_family": {
         "verifier_version": "nexvary-mr-sqlite-family/1",
-        "state": "selected-foundation-tested-broader-stage-in-progress",
+        "state": "selected-slice-tested-broader-stage-in-progress",
         "scope": "protected offline main/WAL/opaque SHM; bounded checksummed committed page image only; no History or SQL execution",
         "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",
-        "tested_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
-        "ci_run": 40679092338
+        "tested_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+        "ci_run": 40688214497
       },
       "history": {
         "parser_version": "nexvary-mr-chromium-history/1",
-        "state": "implemented-awaiting-exact-source-ci",
+        "state": "selected-slice-tested-broader-stage-in-progress",
         "scope": "bounded declared rowid urls+visits, protected committed main/WAL image, original member record extents; no live profiles, urls-only fallback, Downloads/Sessions/decryption",
-        "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension"
+        "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension",
+        "tested_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+        "ci_run": 40688214497
       }
     },
     {
@@ -73,10 +75,10 @@
       "adapter": "dc-image-partitions",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
-      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
-      "ci_run": 40679092338,
-      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-native-adapter-tested-at-22cad41; broader-engine-stage-in-progress",
+      "acceptance_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+      "ci_run": 40688214497,
+      "evidence": "evidence/chromium-history-2026-10-28/FINAL_CHECKPOINT.md"
     }
   ],
   "stages": [
