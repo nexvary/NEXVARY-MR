@@ -28,7 +28,7 @@ def main():
         encode = lambda b: base64.b64encode(b).decode('ascii')
         out = {'sqliteVersion': sqlite3.sqlite_version, 'mainBase64': encode(path.read_bytes()), 'walBase64': encode(Path(str(path)+'-wal').read_bytes()), 'snapshotBase64': encode(image), 'snapshotSha256': hashlib.sha256(image).hexdigest(), 'expected': [list(r) for r in db.execute('SELECT v.id,u.id,u.url,u.title,v.visit_time,u.visit_count,u.typed_count,u.last_visit_time,v.transition,v.from_visit FROM visits v JOIN urls u ON u.id=v.url ORDER BY v.id')]}
         db.close()
-    Path(__file__).with_name('reference.json').write_text(json.dumps(out, ensure_ascii=False, indent=2)+'\n')
+    Path(__file__).with_name('reference.json').write_text(json.dumps(out, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 
 
 if __name__ == '__main__':

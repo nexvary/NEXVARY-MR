@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class ChromiumHistoryReferenceTests(unittest.TestCase):
     def test_independent_sql_join_and_exact_times(self):
-        fixture = json.loads((ROOT / 'samples/chromium-history/reference.json').read_text())
+        fixture = json.loads((ROOT / 'samples/chromium-history/reference.json').read_text(encoding='utf-8'))
         image = base64.b64decode(fixture['snapshotBase64'], validate=True)
         self.assertEqual(hashlib.sha256(image).hexdigest(), fixture['snapshotSha256'])
         with tempfile.TemporaryDirectory() as temp:
@@ -31,7 +31,7 @@ class ChromiumHistoryReferenceTests(unittest.TestCase):
 
     def test_fixture_declares_wal_distinct_from_main(self):
         script = ROOT / 'samples/chromium-history/generate_reference.py'
-        fixture = json.loads(script.with_name('reference.json').read_text())
+        fixture = json.loads(script.with_name('reference.json').read_text(encoding='utf-8'))
         # Runtime version changes need review, not an unqualified byte equality claim.
         self.assertTrue(fixture['sqliteVersion'])
         self.assertEqual(len(fixture['expected']), 2)

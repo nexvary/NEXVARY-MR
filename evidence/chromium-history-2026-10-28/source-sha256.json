@@ -21,6 +21,6 @@
   "scripts/check_policy_audit_interop.py": "b036d4b75d514be4e2255d1695f16b6a5144b7076f6757486ae05658213a8253",
   "scripts/verify_policy_audit.py": "9de888e77dc2c0f67e655db8ef43064829e9fd37468684c15448b37b619a78f7",
   "samples/chromium-history/reference.json": "0fcc4bde08f8b465ffd142ec50e0752b67388d9ff69867c9ce771ab92fb38654",
-  "samples/chromium-history/generate_reference.py": "3f36d26779aade8312e9291e77eb75ec0de636a3bbdd6eb234a878b16d2b87a4",
-  "tests/test_chromium_history_reference.py": "7f61cc91d87810fd5c7d576e3c04693592f13b021577743c369ca532ca42a504"
+  "samples/chromium-history/generate_reference.py": "b985eda87a419a366e8f69c155370f917b45d39e19f6f28858c9d415a2bc6f79",
+  "tests/test_chromium_history_reference.py": "a5eb0ac207f6e932c22630a6ba41662c037d5fb8f6e8866182ca1a469a7c94c0"
 }

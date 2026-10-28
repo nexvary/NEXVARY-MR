@@ -1,3 +1,8 @@
+# Windows UTF-8 oracle fixture correction — 2026-10-28
+
+- Published source aacd2400487ef51a2f6e21d3220d37b368237593: Python PR40687970417/job122815146893 failed1/57. Test Path.read_text used the Windows locale default for UTF-8 JSON containing Arabic; SQLite correctly returned the original title, but fixture expected text was decoded differently. Original decoded log retained. Explicit UTF-8 fixture reads and generator writes preserve the Arabic equality assertion, raw SQLite bytes, hashes and cleanup; no codec-error suppression or skip.
+- C++/QML/parser/worker/policy/fixture bytes are unchanged; the Python test/generator correction is a new source requiring its own hosted acceptance. Initial source CI failure remains failed, not relabelled. No relation to product Qt/Audit Store root causes is asserted. All9 broad stages remain in-progress.
+
 # Concurrent History source reconciled — 2026-10-28
 
 - Before branch publication, expected-head update rejected because integration advanced from c4cfb41 to `5129a15ceb44e4f63a9a8432256cdba5d91614f5`. No force push or overwrite. This increment is rebased onto that actual source, retains its18 History scenarios/evidence and uses its single ChromiumHistoryReader implementation for production. The initially separate local schema/join implementation was removed; ChromiumHistory.cpp now owns only case/report/retention policy and normalization.

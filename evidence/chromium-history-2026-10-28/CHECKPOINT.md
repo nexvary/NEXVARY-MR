@@ -86,6 +86,15 @@ inspection is INCOMPLETE: original detect_leaks=1 run ended after tests because
 
 ## 6. Original failures and concurrency
 
+Published aacd240 Python PR40687970417/job122815146893 failed1/57 because the
+UTF-8 Arabic JSON oracle used Path.read_text with Windows locale defaults.
+SQLite bytes/returned text were correct; expected fixture title was decoded with
+the locale. Explicit encoding=utf-8 for fixture reads and generator writes fixes
+this without changing SQLite fixture bytes, parser/QML/native tests or assertions.
+Original full decoded log retained, root Python57/57 rerun passes. Corrective
+source still needs its own exact hosted acceptance; aacd240 remains failed.
+
+
 Parent c4cfb41 run40684287557 Windows builds failed, Linux matrix jobs cancelled.
 Reviewed Laboratory122803274003 failed C4310/C2220 test fixture constants; original
 log retained. Concurrent5129a15 bit-preserving fixture correction is preserved,
