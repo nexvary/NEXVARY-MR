@@ -1,5 +1,7 @@
 #include "ForensicAdapters.hpp"
 #include "SqliteEvidenceFamily.hpp"
+#include "CaseVault.hpp"
+#include <QScopeGuard>
 #include "CaseArtifacts.hpp"
 #include "CaseTimeline.hpp"
 #include "GovernmentOperationPolicy.hpp"
@@ -198,8 +200,11 @@ private slots:
   // Completion is queued to this thread. Change only the auxiliary protected
   // BLOB after dispatch, then keep it changed until callback revalidation runs.
   {
-   auto db=QSqlDatabase::addDatabase("QSQLITE","sqlite-family-tamper");db.setDatabaseName(dir.filePath("cases.db"));QVERIFY(db.open());QSqlQuery q(db);q.prepare("SELECT payload FROM law_evidence WHERE id=? AND case_id=?");q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec()&&q.next());const auto original=q.value(0).toByteArray();q.finish();
-   QVERIFY(law.analyzeBrowserSqliteFamily(main,wal,shm));q.prepare("UPDATE law_evidence SET payload=? WHERE id=? AND case_id=?");q.addBindValue(original+"tampered");q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec());QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),1);
+   auto db=QSqlDatabase::addDatabase("QSQLITE","sqlite-family-tamper");db.setDatabaseName(dir.filePath("cases.db"));QVERIFY(db.open());const auto closeDb=qScopeGuard([&db]{db.close();});QSqlQuery q(db);q.prepare("SELECT payload FROM law_evidence WHERE id=? AND case_id=?");q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec()&&q.next());const auto original=q.value(0).toByteArray();q.finish();
+   QString vaultError;const auto plain=mr::recovery::openCaseBytes(original,true,vaultError);QCOMPARE(plain,familyPart("walBase64"));
+   const auto trailer=mr::recovery::openCaseBytes(original+"tampered",true,vaultError);qInfo()<<"Envelope trailer preserves decoded bytes:"<<(trailer==plain);
+   auto altered=plain;altered[70]^=1;QVERIFY(sha(altered)!=sha(plain));const auto sealed=mr::recovery::sealCase(altered,true,vaultError);QVERIFY2(!sealed.isEmpty(),qPrintable(vaultError));
+   QVERIFY(law.analyzeBrowserSqliteFamily(main,wal,shm));q.prepare("UPDATE law_evidence SET payload=? WHERE id=? AND case_id=?");q.addBindValue(sealed);q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec());QVERIFY(!law.verifyEvidence(wal));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),1);
    q.prepare("UPDATE law_evidence SET payload=? WHERE id=? AND case_id=?");q.addBindValue(original);q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec());db.close();
   }
   QSqlDatabase::removeDatabase("sqlite-family-tamper");QVERIFY(law.verifyEvidence(wal));
