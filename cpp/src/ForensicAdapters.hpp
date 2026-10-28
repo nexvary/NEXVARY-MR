@@ -34,7 +34,7 @@ struct ForensicAdapterResult {
 // never minted by an untrusted parser or treated as institutional accreditation.
 struct ForensicOperationReceipt {
  QString operationId,analysisId,reportSha256;
- QVariantMap toMap() const {return {{"operationId",operationId},{"analysisId",analysisId},{"reportSha256",reportSha256},{"authority","existing-signed-case-operation"}};}
+ QVariantMap toMap() const {return {{"operationId",operationId},{"analysisId",analysisId},{"reportSha256",reportSha256},{"authority",operationId.isEmpty()?"synthetic-unsigned-observation":"existing-signed-case-operation"}};}
 };
 QStringList forensicAdapters();
 ForensicSourceDescriptor forensicSource(const QString &adapter);

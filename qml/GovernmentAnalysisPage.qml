@@ -6,6 +6,8 @@ ScrollView {
  objectName:"governmentAnalysisWorkspace"
  property var app
  property var result:({})
+ property bool showForensicTechnical:false
+ readonly property var forensicReport:lawCaseBridge.forensicResult.reportJson?JSON.parse(lawCaseBridge.forensicResult.reportJson):({})
  readonly property var summary:result.reportJson?JSON.parse(result.reportJson):({})
  property bool showTechnical:false
  property int timelinePage:0
@@ -35,6 +37,9 @@ ScrollView {
  readonly property var importReport:page.imported.reportJson?JSON.parse(page.imported.reportJson):({})
  contentWidth:availableWidth;clip:true
  Connections {target:lawCaseBridge;function onChanged(){partitionConsent.checked=false;page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";timelineQuery.text="";if(page.contentItem)page.contentItem.contentY=0;page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
+ Connections {target:lawCaseBridge;function onForensicCompleted(success){
+  if(success){page.showForensicTechnical=false;Qt.callLater(function(){if(page.contentItem&&forensicSummary.visible){const point=forensicSummary.mapToItem(page.contentItem,0,0);page.contentItem.contentY=Math.max(0,Math.min(page.contentHeight-page.availableHeight,page.contentItem.contentY+point.y-12))}})}
+ }}
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("تحليل أدلة القضية","Case evidence analysis");iconName:"shield_checkmark"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحليل محلي لنسخة القضية المحمية بعد التحقق من SHA-256. الحد 8 MiB. يدعم إحصاءات classic PCAP وحقول JPEG EXIF المحدودة دون فك تشفير أو تشغيل الملف.","Local analysis of hash-verified protected case evidence, up to 8 MiB. Supports classic-PCAP statistics and bounded JPEG-EXIF fields without decryption or file execution.")}
@@ -71,7 +76,10 @@ ScrollView {
     BusyIndicator {running:lawCaseBridge.forensicBusy;visible:running}
    }
    Label {objectName:"governmentForensicReceipt";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;visible:!!lawCaseBridge.forensicResult.reportJson;text:app.trx("حُفظت النتيجة في القضية. بصمة التقرير: ","Result retained in the case. Report SHA-256: ")+(lawCaseBridge.forensicResult.reportSha256||"")}
-   TextArea {objectName:"governmentForensicResult";visible:!!lawCaseBridge.forensicResult.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:lawCaseBridge.forensicResult.reportJson?JSON.stringify(JSON.parse(lawCaseBridge.forensicResult.reportJson),null,2):""}
+   TextArea {id:forensicSummary;objectName:"governmentForensicSummary";visible:!!lawCaseBridge.forensicResult.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.app.trx("نتائج محفوظة: ","Retained findings: ")+(page.forensicReport.findings||[]).length+"\n"+(page.forensicReport.findings||[]).slice(0,8).map(function(f){return ((f.details||{}).title||f.kind)+"\n"+f.value}).join("\n\n")+((page.forensicReport.findings||[]).length>8?page.app.trx("\nعرض أول 8 نتائج؛ افتح التفاصيل لعرض الجميع.","\nFirst 8 findings; open details to view all."):"")}
+   Label {objectName:"governmentForensicWarnings";visible:!!lawCaseBridge.forensicResult.reportJson;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:page.app.design.muted;text:(page.forensicReport.adapter==="chromium-bookmarks"?app.trx("العلامات المرجعية بيانات مسجلة وليست إثبات زيارة. لا تُقرأ ملفات متصفح حيّة أو SQLite/WAL ولا تُفك كلمات المرور.","Bookmarks are recorded metadata, not proof of visits. No live profiles, SQLite/WAL or password decryption."):page.forensicReport.adapter==="workbench-export-manifest"?app.trx("فحص بنية البيان فقط؛ لم تُفحص الملفات أو تُتحقق بصماتها المعلنة.","Manifest structure only; declared payload files and hashes were not verified."):app.trx("أقسام صور بقطاعات 512 بايت فقط؛ دون إصلاح أو كتابة أو تحليل أنظمة الملفات.","Image partitions with 512-byte sectors only; no repair, writes or filesystem analysis."))+"\n"+app.trx("تحذيرات المحلل: ","Parser warnings: ")+(page.forensicReport.warnings||[]).length+app.trx(" — راجع التفاصيل."," — review details.")}
+   ActionButton {objectName:"governmentForensicDetails";visible:!!lawCaseBridge.forensicResult.reportJson;text:app.trx("تفاصيل جميع النتائج والمصدر","All findings and provenance details");onClicked:page.showForensicTechnical=!page.showForensicTechnical}
+   TextArea {objectName:"governmentForensicResult";visible:page.showForensicTechnical&&!!lawCaseBridge.forensicResult.reportJson;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:lawCaseBridge.forensicResult.reportJson?JSON.stringify(JSON.parse(lawCaseBridge.forensicResult.reportJson),null,2):""}
   }
   Panel {objectName:"governmentPartitionPanel";Layout.fillWidth:true;title:app.trx("تحليل أقسام دليل مسجل","Registered evidence partition analysis");iconName:"document_lock"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("صورة خام مسجلة في القضية، من 512 بايت إلى 16 MiB. يلزم استثناء مُراجع للتحليل الخارجي يشير إلى UUID هذه القضية. تُثبت النية قبل تشغيل mmls، وتُحفظ النتيجة بعد إعادة التحقق من التفويض والبصمات والمراجعة.","Registered raw case evidence, 512 bytes to 16 MiB. Requires a reviewed external-analysis exception referencing this case UUID. Intent is signed before mmls dispatch; results require renewed authority, digest and revision checks.")}

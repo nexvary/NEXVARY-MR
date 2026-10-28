@@ -105,15 +105,18 @@ TestCase {
   const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-FORENSIC-ENGINES",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic Bookmarks",authorityReference:"Synthetic scope",issuingAuthority:"Lab owner",scope:"Synthetic adapter integration"});verify(id!=="",lawCaseBridge.error)
   const dev=lawCaseBridge.addDevice({model:"Synthetic",custodian:"A"});verify(dev!=="")
   const evidence=lawCaseBridge.addEvidence(dev,syntheticBookmarksPath,"Synthetic Bookmarks","A",true);verify(evidence!=="")
-  const page=findChild(app,"governmentAnalysisWorkspace"),run=findChild(page,"governmentForensicRun"),selector=findChild(page,"governmentForensicAdapter"),result=findChild(page,"governmentForensicResult")
+  const page=findChild(app,"governmentAnalysisWorkspace"),run=findChild(page,"governmentForensicRun"),selector=findChild(page,"governmentForensicAdapter"),result=findChild(page,"governmentForensicResult"),summary=findChild(page,"governmentForensicSummary")
   selector.currentIndex=1;reveal(page,run);verify(renderedFrame());verify(run.enabled);mouseClick(run);tryCompare(lawCaseBridge,"forensicBusy",false,10000);verify(!!lawCaseBridge.forensicResult.reportJson,lawCaseBridge.error)
   const report=JSON.parse(lawCaseBridge.forensicResult.reportJson);compare(report.adapter,"chromium-bookmarks");compare(report.findings.length,1);compare(report.findings[0].value,"https://example.invalid/")
   compare(lawCaseBridge.activeCase.analyses.length,1);verify(lawCaseBridge.verifyEvidence(evidence));verify(lawCaseBridge.verifyAudit())
   for(const ar of [true,false])for(const size of [[840,480],[1366,768]]){
-   app.ar=ar;app.width=size[0];app.height=size[1];reveal(page,result);verify(renderedFrame());verify(result.visible);verify(result.width<=page.availableWidth);verify(result.text.indexOf("upstreamCommit")>=0)
+   app.ar=ar;app.width=size[0];app.height=size[1];verify(renderedFrame())
+   const point=summary.mapToItem(page.contentItem,0,0);page.contentItem.contentY=Math.max(0,Math.min(page.contentHeight-page.availableHeight,page.contentItem.contentY+point.y-12));verify(renderedFrame());verify(summary.visible);verify(summary.width<=page.availableWidth);verify(summary.text.indexOf("https://example.invalid/")>=0)
+   tryVerify(function(){const p=summary.mapToItem(page,0,0);return p.y>=0&&p.y+summary.height<=page.availableHeight},5000,"Actual findings summary is inside the viewport")
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"forensic-bookmarks-"+(ar?"ar":"en")+"-"+size[0]+"-"+uiScaleTag+".png"))
   }
-  lawCaseBridge.closeWorkspace();verify(renderedFrame());verify(!result.visible);compare(lawCaseBridge.forensicResult.reportJson,undefined)
+  artifactClick(page,findChild(page,"governmentForensicDetails"));verify(renderedFrame());verify(result.visible);verify(result.text.indexOf("upstreamCommit")>=0)
+  lawCaseBridge.closeWorkspace();verify(renderedFrame());verify(!result.visible);verify(!summary.visible);compare(lawCaseBridge.forensicResult.reportJson,undefined)
  }
  function test_governmentSummaryLifetime(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
