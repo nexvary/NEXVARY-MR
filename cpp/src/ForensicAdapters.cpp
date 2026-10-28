@@ -79,13 +79,14 @@ ForensicAdapterResult parseBookmarks(const ReadOnlyEvidenceRequest &r,QVariantMa
 }
 ForensicAdapterResult inspectManifest(const ReadOnlyEvidenceRequest &r,QVariantMap report){
  if(!unambiguousJson(r.verifiedBytes))return {{},"ambiguous-or-deep-json"};
- QJsonParseError error;const auto doc=QJsonDocument::fromJson(r.verifiedBytes,&error);QJsonArray entries;
+ QJsonParseError error;const auto doc=QJsonDocument::fromJson(r.verifiedBytes,&error);QJsonArray entries;QString entryPrefix;
  if(error.error!=QJsonParseError::NoError)return {{},"manifest-json"};
  if(doc.isArray())entries=doc.array();
  else if(doc.isObject()){
   const auto o=doc.object();QString selected;
   for(const auto &key:{"entries","evidence","files"})if(o.contains(key)){if(!selected.isEmpty()||!o.value(key).isArray())return {{},"manifest-entries-schema"};selected=key;entries=o.value(key).toArray();}
   if(selected.isEmpty())return {{},"manifest-entries-schema"};
+  entryPrefix="/"+selected;
  }else return {{},"manifest-entries-schema"};
  if(entries.isEmpty()||entries.size()>128)return {{},"manifest-entry-limit"};
  QSet<QString> seen,declaredPaths;QVariantList findings;int issues=0,missing=0,tampered=0,verified=0;
@@ -130,7 +131,7 @@ ForensicAdapterResult inspectManifest(const ReadOnlyEvidenceRequest &r,QVariantM
    }
   }
   if(!problems.isEmpty())++issues;
-  ForensicFinding f{"export-manifest-entry","/entries/"+QString::number(i),path,"structural-observation",{{"declaredSha256",e.value("sha256").toString()},{"issues",problems}}};f.details.insert(content);findings.append(f.toMap());
+  ForensicFinding f{"export-manifest-entry",entryPrefix+"/"+QString::number(i),path,"structural-observation",{{"declaredSha256",e.value("sha256").toString()},{"issues",problems}}};f.details.insert(content);findings.append(f.toMap());
  }
  if(r.verifyManifestPayloads){
   for(auto it=r.manifestPayloads.cbegin();it!=r.manifestPayloads.cend();++it)if(!declaredPaths.contains(it.key()))return {{},"manifest-unreferenced-payload"};

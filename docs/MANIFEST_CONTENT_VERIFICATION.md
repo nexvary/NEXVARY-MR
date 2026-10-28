@@ -28,7 +28,7 @@ the existing store; a missing binding is distinct from an invalid evidence ID.
 
 Reports use manifest entry order and contain no wall-clock/random data. They
 retain manifest hash, case/evidence ID, original repository and pinned commit,
-verifier version/parameters, raw entry reference, declared/actual SHA-256, payload
+verifier version/parameters, exact raw JSON entry reference (`/N` or the selected entries/files/evidence member), declared/actual SHA-256, payload
 evidence ID, size and verification status. Original/working hashes refer to the
 imported protected bytes, not an independently authenticated acquisition. The
 existing signed prepared operation and case SQLite transaction retain the report;

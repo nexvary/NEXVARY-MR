@@ -1,3 +1,10 @@
+# Exact Manifest entry references and filesystem non-resolution test — 2026-10-28
+
+- Follow-up to c83f2d7d741e0368cfb9e31f690eeb4df9273d3c: use actual JSON references `/N`, `/files/N`, `/evidence/N` or `/entries/N` instead of always claiming `/entries/N`. This is executable parser/test input and needs its own hosted acceptance; resolve source via `git rev-parse HEAD`.
+- Independent literal SHA-256 known answer (`abc`) and exact raw-reference tests added. With a matching local path present but no protected binding, report must say missing; only explicitly bound case bytes can verify. POSIX fixture uses a real symlink, Windows a matching regular file because QFile::link makes shortcuts there. No Windows symlink-creation privilege assumption or false cross-platform symlink test claim.
+- c83 local full Qt56/56 and related case/audit/artifact/timeline/identity/law6/6 groups passed; parent-only receipts retained. Parent PR40658142324 was still building when this review correction was prepared; no parent result validates changed source. New exact-source focused/hosted/Windows acceptance pending.
+- Follow-on original Browser and DC source review completed again and recorded in `evidence/manifest-content-2026-10-28/NEXT_ENGINE_REVIEW.md`; no new browser/session/WAL/filesystem/recovery capability enabled. All nine stages and original audit/descendant/Qt-root/institutional gates remain open.
+
 # Protected manifest content verification increment — 2026-10-28
 
 - Resumed actual integration HEAD `f9fdee9be9b12995b3904b5636d6c5570cee3765`; Government HEAD `eb2322140956a55a50ee7494570f35573a1ce0c0`. Resolve increment source with `git rev-parse HEAD`. PR17 remains draft; no merge to main or Government/upstream/Guardian writes.

@@ -7,6 +7,7 @@
 #include "LawCaseStore.hpp"
 #include <QCryptographicHash>
 #include <QFile>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSignalSpy>
@@ -83,6 +84,35 @@ private slots:
   QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-payload-hash-mismatch"));
   r.manifestPayloads["folder/evidence.bin"].sha256=sha("tampered");result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(result.ok());QCOMPARE(result.report.value("tamperedFiles").toInt(),1);QVERIFY(!result.report.value("payloadVerified").toBool());
   r.manifestPayloads["folder/evidence.bin"].bytes=QByteArray(8*1024*1024+1,'x');QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-payload-limit"));
+ }
+ void manifestRawReferencesAndNoSymlinkResolution(){
+  QTemporaryDir dir;QFile target(dir.filePath("outside-secret"));QVERIFY(target.open(QIODevice::WriteOnly));target.write("abc");target.close();
+  const auto link=dir.filePath("linked-payload");
+#ifdef Q_OS_WIN
+  // QFile::link creates Windows shortcuts, not POSIX symlinks. A real local
+  // matching file still proves that manifest paths are not opened on Windows.
+  QVERIFY(QFile::copy(target.fileName(),link));
+#else
+  QVERIFY(QFile::link(target.fileName(),link));QVERIFY(QFileInfo(link).isSymLink());
+#endif
+  const auto originalDirectory=QDir::currentPath();QVERIFY(QDir::setCurrent(dir.path()));
+  const QString abcHash="ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";
+  const QVariantMap entry{{"path","linked-payload"},{"sha256",abcHash}};
+  // A local file (POSIX: actual symlink) has the path and matching bytes.
+  // Without a protected evidence binding it must stay missing, never opened.
+  for(const auto &key:QStringList{"","files","evidence","entries"}){
+   const auto bytes=QJsonDocument::fromVariant(key.isEmpty()?QVariant(QVariantList{entry}):QVariant(QVariantMap{{key,QVariantList{entry}}})).toJson();
+   auto r=request("workbench-export-manifest",bytes);r.verifyManifestPayloads=true;
+   auto result=mr::forensic::analyzeReadOnlyEvidence(r);
+   // Restore the process cwd before assertions that can return from the test.
+   const bool restored=QDir::setCurrent(originalDirectory);QVERIFY(restored);
+   QVERIFY(result.ok());QCOMPARE(result.report.value("missingFiles").toInt(),1);QVERIFY(!result.report.value("payloadVerified").toBool());
+   QCOMPARE(result.report.value("findings").toList()[0].toMap().value("reference").toString(),(key.isEmpty()?QString():"/"+key)+"/0");
+   r.manifestPayloads.insert("linked-payload",{"00000000-0000-4000-8000-000000000003",abcHash,"abc"});
+   result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(result.ok());QVERIFY(result.report.value("payloadVerified").toBool());
+   QVERIFY(QDir::setCurrent(dir.path()));
+  }
+  QVERIFY(QDir::setCurrent(originalDirectory));QVERIFY(target.open(QIODevice::ReadOnly));QCOMPARE(target.readAll(),QByteArray("abc"));
  }
  void manifestUnsafePathsAndDuplicateRejection(){
   for(const auto &path:QStringList{"../secret","/etc/passwd","C:/secret","a/../b","a/./b","a//b","a\\b","a:","a/","a.","NUL","COM1.txt",QString("a")+QChar(0)}){
