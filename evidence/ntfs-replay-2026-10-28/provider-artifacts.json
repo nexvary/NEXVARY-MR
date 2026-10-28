@@ -1,0 +1,175 @@
+{
+  "artifacts": [
+    {
+      "id": 12844216454,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size_in_bytes": 92799493,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12844216454",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12844216454/zip",
+      "expired": false,
+      "created_at": "2026-10-28T19:08:43Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T19:08:43Z",
+      "digest": "sha256:6e988fda00938ef8d5ce941c9622a98416dd5f7c5adf7a135a53ce172b320c36",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12844120931,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 75541624,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12844120931",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12844120931/zip",
+      "expired": false,
+      "created_at": "2026-10-28T19:05:27Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T19:05:27Z",
+      "digest": "sha256:d6ff4f1c4d1ae4fdb52d77a4131650f3569649ecb7d867fbdfb365436b6f74db",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12843801568,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 49294767,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12843801568",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12843801568/zip",
+      "expired": false,
+      "created_at": "2026-10-28T19:05:19Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T19:05:19Z",
+      "digest": "sha256:39938a48f98af4f0ab6fabd023c025f495f041529964a2badcfe445d5b4ac3ab",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12843442109,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size_in_bytes": 69868864,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12843442109",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12843442109/zip",
+      "expired": false,
+      "created_at": "2026-10-28T19:00:10Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T19:00:10Z",
+      "digest": "sha256:a42c14b174a0724394f536da009f4ca9e5f32d1bd83606ebeda7c4fe9667ebba",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12842856452,
+      "name": "core-test-results-ubuntu-latest",
+      "size_in_bytes": 648,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842856452",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842856452/zip",
+      "expired": false,
+      "created_at": "2026-10-28T18:43:16Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T18:43:16Z",
+      "digest": "sha256:b65b1a6ff35b5438b3930fc164d33d7c06aed764aa03a58e5d6115cbc4282ae1",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12842691461,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size_in_bytes": 18563,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842691461",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842691461/zip",
+      "expired": false,
+      "created_at": "2026-10-28T18:44:15Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T18:44:15Z",
+      "digest": "sha256:5322920dd683146a7c8c8854d95e6a8ae7b263cb72db12703fc0c1756d0abb65",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12842389979,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33339410,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842389979",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12842389979/zip",
+      "expired": false,
+      "created_at": "2026-10-28T19:05:21Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T19:05:21Z",
+      "digest": "sha256:8e6ec4e1fcf8f5876d0a72b65f47539aa56854c013aff3cbe39a6174e071863a",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12841904510,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size_in_bytes": 92929771,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12841904510",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12841904510/zip",
+      "expired": false,
+      "created_at": "2026-10-28T18:59:39Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T18:59:39Z",
+      "digest": "sha256:8281cb1a22cb375f94c6c5a114536921aa476db2718381e74e433119dbd7e1f6",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    },
+    {
+      "id": 12841178706,
+      "name": "core-test-results-windows-2022",
+      "size_in_bytes": 656,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12841178706",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12841178706/zip",
+      "expired": false,
+      "created_at": "2026-10-28T18:43:42Z",
+      "expires_at": "2027-01-26T18:42:58Z",
+      "updated_at": "2026-10-28T18:43:42Z",
+      "digest": "sha256:d68550271fde98635c928357ebe09f8f6cc2634fb49d110d318ee7100a62dbbc",
+      "workflow_run": {
+        "id": 40747698401,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1a4471d89f98d4bf91c03a202b32786cb8e264fa"
+      }
+    }
+  ]
+}

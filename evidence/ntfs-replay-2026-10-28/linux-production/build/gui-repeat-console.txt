@@ -1,0 +1,16 @@
+[OUTPUT] 
+Internal ctest changing into directory: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+
+[HANDLER_OUTPUT] 
+Test project /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+
+    Start 53: mr_gui_smoke
+    Test #53: mr_gui_smoke .....................   Passed   19.14 sec
+    Start 53: mr_gui_smoke
+    Test #53: mr_gui_smoke .....................   Passed   19.32 sec
+    Start 53: mr_gui_smoke
+1/1 Test #53: mr_gui_smoke .....................   Passed   19.40 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  57.87 sec

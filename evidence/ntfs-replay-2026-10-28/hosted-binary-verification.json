@@ -1,0 +1,26 @@
+{
+  "setupSha256": "bebda71746a502cc0d5cd7196bc4c1c55af6a67b992a02c7ae888278b393760f",
+  "portableZipSha256": "10cc2865e3ba6605aa093120d6aa63d8cf5cf9746569d774c9d1d74933e9609f",
+  "actualSetupPEVerified": true,
+  "portable": {
+    "actualMainWorkerHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "installed": {
+    "actualMainWorkerHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "lifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  },
+  "scope": "Current desktop/worker deployment only; NTFS v2/replay is test-target-only, not an enabled case adapter; physical host offline."
+}
