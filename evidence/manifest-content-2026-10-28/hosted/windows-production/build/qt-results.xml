@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="51"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="runnervma5ucf"
+	time="496"
+	timestamp="2026-10-28T08:56:55"
+	>
+	<testcase name="mr_research_data_validation" classname="mr_research_data_validation" time="0.0444991" status="run">
+		<properties/>
+		<system-out>Research catalog: offline validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_policy_tests" classname="mr_policy_tests" time="0.0073963" status="run">
+		<properties/>
+		<system-out>production-read-only: policy passed
+</system-out>
+	</testcase>
+	<testcase name="mr_core_tests" classname="mr_core_tests" time="0.0118636" status="run">
+		<properties/>
+		<system-out>Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_law_enforcement_case_tests" classname="mr_law_enforcement_case_tests" time="0.0078241" status="run">
+		<properties/>
+		<system-out>432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+</system-out>
+	</testcase>
+	<testcase name="mr_update_tests" classname="mr_update_tests" time="0.553796" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_update_journal_tests" classname="mr_update_journal_tests" time="1.71257" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_update_key_tests" classname="mr_update_key_tests" time="0.223822" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_forensic_adapter_tests" classname="mr_forensic_adapter_tests" time="4.79632" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_partition_transaction_tests" classname="mr_partition_transaction_tests" time="61.6786" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_case_transaction_tests" classname="mr_case_transaction_tests" time="24.2722" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_policy_audit_tests" classname="mr_policy_audit_tests" time="15.119" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_offline_tests" classname="mr_offline_tests" time="23.2429" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_artifact_tests" classname="mr_artifact_tests" time="2.35224" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_timeline_tests" classname="mr_timeline_tests" time="1.73373" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_import_tests" classname="mr_import_tests" time="10.6263" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_retention_tests" classname="mr_retention_tests" time="2.5108" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_identity_tests" classname="mr_identity_tests" time="6.26107" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_law_workspace_tests" classname="mr_law_workspace_tests" time="8.6698" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_research_tests" classname="mr_research_tests" time="0.144059" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_intelligence_tests" classname="mr_intelligence_tests" time="0.0218033" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_connection_tests" classname="mr_connection_tests" time="0.023467" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_workshop_tests" classname="mr_workshop_tests" time="5.85713" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_barcode_tests" classname="mr_barcode_tests" time="1.32813" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_center_tests" classname="mr_center_tests" time="0.818616" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_cloud_tests" classname="mr_cloud_tests" time="13.1204" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_security_tests" classname="mr_security_tests" time="1.9933" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_catalog_tests" classname="mr_catalog_tests" time="0.0537432" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_tool_tests" classname="mr_tool_tests" time="28.9775" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_service_tests" classname="mr_service_tests" time="10.3836" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_mirror_tests" classname="mr_mirror_tests" time="25.6622" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_compatibility_tests" classname="mr_compatibility_tests" time="0.024477" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_board_tests" classname="mr_board_tests" time="0.085229" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_firmware_tests" classname="mr_firmware_tests" time="0.052234" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_avb_tests" classname="mr_avb_tests" time="0.0569203" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_pcap_tests" classname="mr_pcap_tests" time="0.369104" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_exif_tests" classname="mr_exif_tests" time="0.359796" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_recovery_tests" classname="mr_recovery_tests" time="17.3694" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_recovery_image_tests" classname="mr_recovery_image_tests" time="0.0445326" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_forensic_tests" classname="mr_forensic_tests" time="0.711362" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_tsk_tests" classname="mr_tsk_tests" time="2.34045" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_policy_audit_interop" classname="mr_policy_audit_interop" time="3.0936" status="run">
+		<properties/>
+		<system-out>{"schema": "nexvary-policy-audit-interop/v1", "checks": [{"check": "native signatures, requester, reviewer and full retained anchor", "passed": true}, {"check": "empty retained prefix with independently pinned journal key", "passed": true}, {"check": "reordered events", "passed": true}, {"check": "valid signed history truncated below retained anchor", "passed": true}, {"check": "deleted interior event", "passed": true}, {"check": "duplicated event", "passed": true}, {"check": "changed signature", "passed": true}, {"check": "changed decision payload", "passed": true}, {"check": "substituted bundled public key", "passed": true}, {"check": "wrong independent key", "passed": true}, {"check": "wrong independent digest", "passed": true}, {"check": "wrong independent journal identity", "passed": true}, {"check": "future retained sequence", "passed": true}, {"check": "negative retained sequence", "passed": true}, {"check": "fractional retained sequence", "passed": true}, {"check": "ambiguous duplicate JSON keys", "pa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_evidence_package_interop" classname="mr_evidence_package_interop" time="0.30965" status="run">
+		<properties/>
+		<system-out>Native export verified independently; same-size corruption rejected.
+</system-out>
+	</testcase>
+	<testcase name="mr_artifact_reference_validation" classname="mr_artifact_reference_validation" time="0.0466717" status="run">
+		<properties/>
+		<system-out>Independent synthetic artifact reference: 6 findings, 19 nodes, 20 typed edges, 2 digest groups; zero name/person/cross-case links
+</system-out>
+	</testcase>
+	<testcase name="mr_adb_backup_interop" classname="mr_adb_backup_interop" time="1.14403" status="run">
+		<properties/>
+		<system-out>ADB backup interoperability: 52 checks passed
+</system-out>
+	</testcase>
+	<testcase name="mr_avb_mutation_tests" classname="mr_avb_mutation_tests" time="0.268677" status="run">
+		<properties/>
+		<system-out>30000 deterministic AVB mutations passed; no trust assertion permitted.
+</system-out>
+	</testcase>
+	<testcase name="mr_pcap_mutation_tests" classname="mr_pcap_mutation_tests" time="0.33547" status="run">
+		<properties/>
+		<system-out>30000 deterministic PCAP mutations passed; no partial reports or payload/address output.
+</system-out>
+	</testcase>
+	<testcase name="mr_exif_mutation_tests" classname="mr_exif_mutation_tests" time="0.0817844" status="run">
+		<properties/>
+		<system-out>12000 deterministic bounded Exif mutations completed
+</system-out>
+	</testcase>
+	<testcase name="mr_ui_tests" classname="mr_ui_tests" time="89.0012" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.25" classname="mr_ui_scale_1.25" time="49.1589" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_ui_scale_1.5" classname="mr_ui_scale_1.5" time="56.7355" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_gui_smoke" classname="mr_gui_smoke" time="23.1197" status="run">
+		<properties/>
+		<system-out>Synthetic GUI smoke event-loop exit: code=0
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,176 @@
+{
+  "acceptanceSource": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+  "artifactId": 12798225660,
+  "profile": "windows-prod",
+  "suites": {
+    "qt-results.xml": {
+      "name": "Win32-MSBuild",
+      "tests": "51",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "runnervma5ucf",
+      "time": "508",
+      "timestamp": "2026-10-28T06:39:29"
+    },
+    "gui-repeat-results.xml": {
+      "name": "Win32-MSBuild",
+      "tests": "1",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "runnervma5ucf",
+      "time": "70",
+      "timestamp": "2026-10-28T06:47:58"
+    },
+    "gui-repeat-console.txt": [],
+    "forensic_adapter-results.txt": [
+      "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 3218ms\r"
+    ],
+    "case_transaction-results.txt": [
+      "Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 25939ms\r"
+    ],
+    "partition_transaction-results.txt": [
+      "Totals: 29 passed, 0 failed, 1 skipped, 0 blacklisted, 64401ms\r"
+    ],
+    "security-results.txt": [
+      "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1999ms\r"
+    ],
+    "policy_audit-results.txt": [
+      "Totals: 14 passed, 0 failed, 1 skipped, 0 blacklisted, 15780ms\r"
+    ],
+    "offline-results.txt": [
+      "Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 24128ms\r"
+    ],
+    "tsk-results.txt": [
+      "Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2304ms\r"
+    ],
+    "ui-results.txt": [
+      "Totals: 55 passed, 0 failed, 0 skipped, 0 blacklisted, 88199ms\r"
+    ]
+  },
+  "allQtTotals": [],
+  "subcaseSkips": [],
+  "nativeSubcaseSkips": [
+    {
+      "file": "barcode-results.txt",
+      "line": "SKIP   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar() Optional independent ZBar decoder not installed."
+    },
+    {
+      "file": "barcode-results.txt",
+      "line": "SKIP   : BarcodeTests::barcodeSurvivesPdfRendering() Independent PDF rasterizer and barcode decoder not installed."
+    },
+    {
+      "file": "cloud-results.txt",
+      "line": "SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture."
+    },
+    {
+      "file": "partition_transaction-results.txt",
+      "line": "SKIP   : PartitionTransactionTests::realMmls() Separately installed mmls not configured."
+    },
+    {
+      "file": "policy_audit-results.txt",
+      "line": "SKIP   : PolicyAuditTests::symlinkJournalNeverChangesTarget() POSIX symlink regression; QFile::link creates a Windows shortcut."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::darkModeVerification() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(permission) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(readback) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::disconnectAndIdentityChange(usb) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::disconnectAndIdentityChange(identity) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::apkPrivateCopyIntegrity() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::invalidPackageNeverReachesDevice() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::explicitApkReplace() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(adb) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(fastboot) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::apkHashAndManagerFailure(hash) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::apkHashAndManagerFailure(manager) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::apkHashAndManagerFailure(no-confirmation) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::sideloadConsentAndMode() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::fastbootFreshEraseGuard() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::syntheticErase() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::rebootInvalidatesDiscovery() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::cancellation() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::historyRetainsTargetAndFailureAfterAnotherOperation() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "service-results.txt",
+      "line": "SKIP   : ServiceTests::rebootHistoryKeepsTargetAfterDiscoveryCleared() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "tsk-results.txt",
+      "line": "SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary."
+    }
+  ],
+  "dpiGroups": [
+    {
+      "name": "mr_ui_scale_1.25",
+      "failed": false,
+      "seconds": "49.1409"
+    },
+    {
+      "name": "mr_ui_scale_1.5",
+      "failed": false,
+      "seconds": "56.0462"
+    }
+  ]
+}

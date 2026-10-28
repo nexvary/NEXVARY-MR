@@ -139,3 +139,31 @@ restores a valid older snapshot in the synthetic-only post-replace hook and
 proves fail-closed refusal, no retry/overwrite and no false acknowledged event.
 This gate detects immediate post-replace divergence; it cannot prevent or repair
 a later external rollback or prove power-loss durability.
+
+## Native three-source forensic adapters (first migration slice)
+
+The local v1 transaction allowlist additionally accepts `workbench-export-manifest`,
+`chromium-bookmarks` and `dc-image-partitions`. They receive only actual registered,
+hash-verified protected evidence bytes, up to8MiB, on a QtConcurrent task. The
+bridge captures case/evidence/revision/actor, then refuses callback acceptance on
+cancellation, ended/changed session, revoked membership, stale revision, changed
+source or mismatched report provenance. The parser has no file, command, disk,
+network, update or separate database interface. Cooperative five-second deadlines
+and input/output/traversal bounds are not OS memory isolation or hard termination.
+
+Completed report provenance records exact upstream commit, source function,
+adapter version and the limited owner-permission reference. The existing signed
+prepared intent, case SQLite transaction and terminal observation bind the report
+hash; callback publication occurs only after retention succeeds. Preparation is
+before local mutation, after pure parsing; recovery never replays the parse.
+The native crash matrix includes every existing seven interruption stage for
+all three additional operation kinds. A separate Python-authored corpus exercises
+the new strict kinds and rejects destructive command names.
+
+Findings and bookmark date-added timeline projections verify the stored report,
+source and case binding. These are observations: bookmarks are not visits,
+manifest structure checks do not verify declared payloads, and the disk parser
+supports512-byte MBR/EBR/GPT only. No SQLite/WAL or filesystem engine is enabled.
+Full source audit, exact-source hosted validation and broader migration remain
+tracked by #16/#17 and the forensic integration manifest. Existing audit-store
+lag/process-tree/physical/agency acceptance limitations remain open.

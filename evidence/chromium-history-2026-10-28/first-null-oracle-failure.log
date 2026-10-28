@@ -1,0 +1,116 @@
+Start testing: Oct 28 13:09 CET
+----------------------------------------------------------
+1/5 Testing: mr_sqlite_table_tests
+1/5 Test: mr_sqlite_table_tests
+Command: "/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history/mr_sqlite_table_tests"
+Directory: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history
+"mr_sqlite_table_tests" start time: Oct 28 13:09 CET
+Output:
+----------------------------------------------------------
+********* Start testing of SqliteTableTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : SqliteTableTests::initTestCase()
+PASS   : SqliteTableTests::committedWalOracle()
+PASS   : SqliteTableTests::runtimeOracle(512)
+PASS   : SqliteTableTests::runtimeOracle(1024)
+PASS   : SqliteTableTests::runtimeOracle(4096)
+PASS   : SqliteTableTests::runtimeOracle(65536)
+PASS   : SqliteTableTests::malformedCellsAndRecords()
+PASS   : SqliteTableTests::historySchemaJoinOracle(committed-wal)
+PASS   : SqliteTableTests::historySchemaJoinOracle(urls-only)
+PASS   : SqliteTableTests::historySchemaJoinOracle(reordered-columns)
+PASS   : SqliteTableTests::historySchemaJoinOracle(unknown-column)
+PASS   : SqliteTableTests::historySchemaJoinOracle(integer-as-text)
+PASS   : SqliteTableTests::historySchemaJoinOracle(result-bound)
+PASS   : SqliteTableTests::historySchemaJoinOracle(output-bound)
+PASS   : SqliteTableTests::historySchemaJoinOracle(missing-urls)
+PASS   : SqliteTableTests::historySchemaJoinOracle(empty-visits-no-fallback)
+PASS   : SqliteTableTests::historySchemaJoinOracle(without-rowid)
+PASS   : SqliteTableTests::historySchemaJoinOracle(blob-url)
+PASS   : SqliteTableTests::historySchemaJoinOracle(null-and-zero-time)
+PASS   : SqliteTableTests::historySchemaJoinOracle(quoted-identifier-rejected)
+PASS   : SqliteTableTests::historySchemaJoinOracle(unsupported-visits-no-fallback)
+FAIL!  : SqliteTableTests::historySchemaJoinOracle(nullable-url-and-title) Compared values are not the same
+   Actual   (item.value("url")): QVariant()
+   Expected (e[2])             : QVariant(QString)
+   Loc: [/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(181)]
+PASS   : SqliteTableTests::historySchemaJoinOracle(negative-time-preserved)
+PASS   : SqliteTableTests::resourceLimits()
+PASS   : SqliteTableTests::cleanupTestCase()
+Totals: 24 passed, 1 failed, 0 skipped, 0 blacklisted, 654ms
+********* Finished testing of SqliteTableTests *********
+<end of output>
+Test time =   0.66 sec
+----------------------------------------------------------
+Test Failed.
+"mr_sqlite_table_tests" end time: Oct 28 13:09 CET
+"mr_sqlite_table_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: mr_research_data_validation
+2/5 Test: mr_research_data_validation
+Command: "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3" "/workspace/scratch/63146b1e5274/NEXVARY-MR/scripts/validate_research_catalog.py"
+Directory: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history
+"mr_research_data_validation" start time: Oct 28 13:09 CET
+Output:
+----------------------------------------------------------
+Research catalog: offline validation passed
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"mr_research_data_validation" end time: Oct 28 13:09 CET
+"mr_research_data_validation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: mr_policy_tests
+3/5 Test: mr_policy_tests
+Command: "/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history/mr_policy_tests"
+Directory: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history
+"mr_policy_tests" start time: Oct 28 13:09 CET
+Output:
+----------------------------------------------------------
+production-read-only: policy passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_tests" end time: Oct 28 13:09 CET
+"mr_policy_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: mr_core_tests
+4/5 Test: mr_core_tests
+Command: "/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history/mr_core_tests"
+Directory: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history
+"mr_core_tests" start time: Oct 28 13:09 CET
+Output:
+----------------------------------------------------------
+Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_core_tests" end time: Oct 28 13:09 CET
+"mr_core_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: mr_law_enforcement_case_tests
+5/5 Test: mr_law_enforcement_case_tests
+Command: "/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history/mr_law_enforcement_case_tests"
+Directory: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history
+"mr_law_enforcement_case_tests" start time: Oct 28 13:09 CET
+Output:
+----------------------------------------------------------
+432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mr_law_enforcement_case_tests" end time: Oct 28 13:09 CET
+"mr_law_enforcement_case_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 28 13:09 CET

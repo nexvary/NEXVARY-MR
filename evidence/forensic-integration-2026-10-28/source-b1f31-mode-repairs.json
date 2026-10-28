@@ -1,0 +1,12 @@
+[
+  {
+    "file": "mr_law_workspace_tests",
+    "oldMode": "0o644",
+    "repair": "restore owner execute on verified generated ELF"
+  },
+  {
+    "file": "mr_research_tests",
+    "oldMode": "0o644",
+    "repair": "restore owner execute on verified generated ELF"
+  }
+]

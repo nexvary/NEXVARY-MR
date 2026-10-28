@@ -1,0 +1,22 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/63146b1e5274/NEXVARY-MR/build-history-desktop
+[0/2] Re-checking globbed directories...
+[1/12] Automatic MOC for target mr_sqlite_table_tests
+[2/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/mr_sqlite_table_tests_autogen/mocs_compilation.cpp.o
+[3/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteReaderSupport.cpp.o
+[4/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o
+[5/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+FAILED: CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o 
+/usr/bin/c++ -DMR_DOWNLOADS_REFERENCE_PATH=\"/workspace/scratch/63146b1e5274/NEXVARY-MR/samples/chromium-downloads/reference.json\" -DMR_HISTORY_REFERENCE_PATH=\"/workspace/scratch/63146b1e5274/NEXVARY-MR/samples/chromium-history/reference.json\" -DMR_SQLITE_FAMILY_REFERENCE_PATH=\"/workspace/scratch/63146b1e5274/NEXVARY-MR/samples/sqlite-family/reference.json\" -DQT_CORE_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history-desktop\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/63146b1e5274/NEXVARY-MR\" -DQT_TESTLIB_LIB -I/workspace/scratch/63146b1e5274/NEXVARY-MR/build-history-desktop/mr_sqlite_table_tests_autogen/include -I/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/src -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtTest -isystem /usr/include/x86_64-linux-gnu/qt6/QtSql -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o -MF CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o.d -o CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o -c /workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp
+/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp: In member function ‘void SqliteTableTests::downloadsWalOracle()’:
+/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp:50:125: error: inconsistent deduction for ‘auto’: ‘const QMap<QString, QVariant>’ and then ‘const QList<QVariant>’
+   50 |    const auto chains=o.value("urlChain").toList();if(i==0){QCOMPARE(chains.size(),2);for(int j=0;j<chains.size();++j){const auto c=chains[j].toMap(),e=fixture.value("expectedChains").toList()[j].toList();QCOMPARE(c.value("rowid").toString(),e[0].toString());QCOMPARE(c.value("chainIndex").toString(),e[2].toString());QCOMPARE(c.value("url").toString(),e[3].toString());references(c.value("sourceExtents").toList());}}else QVERIFY(chains.isEmpty());
+      |                                                                                                                             ^~~~
+[6/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumDownloadsReader.cpp.o
+[7/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o
+[8/12] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistoryReader.cpp.o
+ninja: build stopped: subcommand failed.

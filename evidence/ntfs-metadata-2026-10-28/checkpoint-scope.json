@@ -1,0 +1,14 @@
+{
+  "testedSource": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+  "testedTree": "9786385ae3a5d660b48d0ad527ca87fddba541b7",
+  "prCheckout": "4fe3fd07d66ea5507af555a5c7e600b535aff688",
+  "prCheckoutTree": "9786385ae3a5d660b48d0ad527ca87fddba541b7",
+  "implementationAndPRTreesIdentical": true,
+  "checkpointFullTreeIdentical": false,
+  "checkpointOnlyAllowedPaths": [
+    "DEVELOPMENT_STATE.md",
+    "research/forensic-engine-integration.json",
+    "evidence/ntfs-metadata-2026-10-28/"
+  ],
+  "scope": "Only unshipped evidence/state/research differ; executable/native/test/workflow/packaging/shipped-guide inputs unchanged. Full checkpoint rerun separate."
+}

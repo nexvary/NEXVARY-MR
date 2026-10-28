@@ -35,13 +35,13 @@ bool newOutput(const QString &input,QFile &file) {
 }
 LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
  :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
- initImports();initTimeline();initArtifacts();initPartitions();
+ initImports();initTimeline();initArtifacts();initPartitions();initForensicAdapters();
  if(identity_)connect(identity_,&IdentityService::changed,this,[this]{resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
 }
-LawCaseBridge::~LawCaseBridge(){if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
+LawCaseBridge::~LawCaseBridge(){if(forensicCancel_)forensicCancel_->store(true);if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
 bool LawCaseBridge::ready()const{return transactionsReady_&&store_->ready()&&(identity_?identity_->authenticated():synthetic_);}
 nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
 bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}
@@ -171,9 +171,12 @@ QVariantMap LawCaseBridge::analyzeEvidence(const QString &evidence,const QString
  if(parser=="classic-pcap"){const auto result=mr::forensic::summarizeCapture(source);report=result.report.toVariantMap();parseError=result.error;}
  else {const auto result=mr::forensic::summarizeExif(source);report=result.report.toVariantMap();parseError=result.error;}
  if(!parseError.isEmpty()||report.isEmpty()){fail(QStringLiteral("Analysis rejected source: ")+parseError);return {};}
+ return retainLocalAnalysis(id,active_.value("revision").toLongLong(),evidence,parser,report);
+}
+QVariantMap LawCaseBridge::retainLocalAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report) {
  // Recheck identity and current case grant after parsing, before durable preparation.
  if(!permit(nexvary::law::Action::AnalyzeEvidence) || !caseAllowed(store_->get(id)))return {};
- const auto revision=active_.value("revision").toLongLong();
+ if(active_.value("id")!=id||active_.value("revision").toLongLong()!=revision)return {};
  QVariantMap intent;
  if(identity_){
   if(!operationPolicy_){fail("Signed case-operation journal is unavailable.");return {};}

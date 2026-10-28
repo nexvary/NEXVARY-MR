@@ -38,7 +38,7 @@ struct Fixture {
   if(intent.isEmpty())qFatal("Preparation fixture failed");
  }
 };
-int crashFixture(const QString &root,const QString &stage){
+int crashFixture(const QString &root,const QString &stage,const QString &kind){
  IdentityService identity(root+"/identity",true);
  if(!identity.bootstrap("admin","Synthetic crash admin",password)||!identity.login("admin",password)||identity.createUser("investigator","Synthetic investigator","investigator",password).isEmpty()||!identity.login("investigator",password))return 1;
  GovernmentOperationPolicy policy(&identity);LawCaseStore store(root+"/cases.db",true);
@@ -48,14 +48,14 @@ int crashFixture(const QString &root,const QString &stage){
  f.close();
  const auto evidence=store.addEvidence(id,2,device,f.fileName(),"Synthetic evidence","Custodian",identity.actor());
  const QVariantMap report{{"sourceSha256",sha(bytes)},{"fixture",true}};
- auto intent=store.prepareAnalysis(id,3,evidence,"classic-pcap",report,identity.userId(),"investigator");
+ auto intent=store.prepareAnalysis(id,3,evidence,kind,report,identity.userId(),"investigator");
  if(intent.isEmpty())return 3;
  if(stage=="before-prepare")std::_Exit(86);
  if(stage=="during-prepare")policy.setSyntheticAuditWriteCheckpoint([]{std::_Exit(86);});
  if(!policy.recordCaseOperation(intent))return 4;
  if(stage=="after-prepare")std::_Exit(86);
  if(stage=="during-case")store.setSyntheticWriteCheckpoint([]{std::_Exit(86);});
- if(store.recordAnalysis(id,3,evidence,"classic-pcap",report,identity.actor(),intent).isEmpty())return 5;
+ if(store.recordAnalysis(id,3,evidence,kind,report,identity.actor(),intent).isEmpty())return 5;
  if(stage=="after-case")std::_Exit(86);
  intent.insert("recoveryState",store.reconcileAnalysis(intent));
  if(stage=="during-terminal")policy.setSyntheticAuditWriteCheckpoint([]{std::_Exit(86);});
@@ -149,18 +149,20 @@ private slots:
   QCOMPARE(f.store.get(f.id).value("revision").toInt(),3);
  }
  void interruptedWrites_data(){
-  QTest::addColumn<QString>("stage");QTest::addColumn<QString>("outcome");QTest::addColumn<int>("analyses");
-  QTest::newRow("before-intent-write")<<QString("before-prepare")<<QString()<<0;
-  QTest::newRow("inside-intent-atomic-replacement")<<QString("during-prepare")<<QString()<<0;
-  QTest::newRow("after-signed-intent")<<QString("after-prepare")<<QString("failed")<<0;
-  QTest::newRow("inside-case-transaction")<<QString("during-case")<<QString("failed")<<0;
-  QTest::newRow("after-case-before-terminal")<<QString("after-case")<<QString("completed")<<1;
-  QTest::newRow("inside-terminal-atomic-replacement")<<QString("during-terminal")<<QString("completed")<<1;
-  QTest::newRow("after-terminal")<<QString("after-terminal")<<QString("completed")<<1;
+  QTest::addColumn<QString>("stage");QTest::addColumn<QString>("outcome");QTest::addColumn<int>("analyses");QTest::addColumn<QString>("kind");
+  for(const auto &kind:QStringList{"classic-pcap","workbench-export-manifest","chromium-bookmarks","dc-image-partitions"}){
+   QTest::newRow(qPrintable(kind+"/before-intent-write"))<<QString("before-prepare")<<QString("")<<0<<kind;
+   QTest::newRow(qPrintable(kind+"/inside-intent-replacement"))<<QString("during-prepare")<<QString("")<<0<<kind;
+   QTest::newRow(qPrintable(kind+"/after-intent"))<<QString("after-prepare")<<QString("failed")<<0<<kind;
+   QTest::newRow(qPrintable(kind+"/inside-case"))<<QString("during-case")<<QString("failed")<<0<<kind;
+   QTest::newRow(qPrintable(kind+"/after-case"))<<QString("after-case")<<QString("completed")<<1<<kind;
+   QTest::newRow(qPrintable(kind+"/inside-terminal"))<<QString("during-terminal")<<QString("completed")<<1<<kind;
+   QTest::newRow(qPrintable(kind+"/after-terminal"))<<QString("after-terminal")<<QString("completed")<<1<<kind;
+  }
  }
  void interruptedWrites(){
-  QFETCH(QString,stage);QFETCH(QString,outcome);QFETCH(int,analyses);
-  QTemporaryDir dir;QProcess child;child.start(QCoreApplication::applicationFilePath(),{"--crash-fixture",dir.path(),stage});
+  QFETCH(QString,stage);QFETCH(QString,outcome);QFETCH(int,analyses);QFETCH(QString,kind);
+  QTemporaryDir dir;QProcess child;child.start(QCoreApplication::applicationFilePath(),{"--crash-fixture",dir.path(),stage,kind});
   QVERIFY(child.waitForFinished(20000));QCOMPARE(child.exitCode(),86);
   IdentityService identity(dir.filePath("identity"),true);GovernmentOperationPolicy policy(&identity);
   LawCaseBridge bridge(dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&policy);QVERIFY2(bridge.ready(),qPrintable(bridge.error()));
@@ -173,5 +175,5 @@ private slots:
   const auto record=cases.first().toMap();QCOMPARE(record.value("analyses").toList().size(),analyses);QCOMPARE(record.value("revision").toInt(),3+analyses);QVERIFY(store.verifyAudit(record.value("id").toString()));
  }
 };
-int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto args=app.arguments();if(args.size()==4 && args[1]=="--crash-fixture")return crashFixture(args[2],args[3]);CaseTransactionTests test;return QTest::qExec(&test,argc,argv);}
+int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto args=app.arguments();if(args.size()==5 && args[1]=="--crash-fixture")return crashFixture(args[2],args[3],args[4]);CaseTransactionTests test;return QTest::qExec(&test,argc,argv);}
 #include "case_transaction_tests.moc"

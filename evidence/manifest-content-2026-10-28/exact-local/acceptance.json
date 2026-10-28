@@ -1,0 +1,44 @@
+{
+  "source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
+  "branch": "integration/forensic-engines-audit",
+  "native": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0
+  },
+  "python": {
+    "passed": 53
+  },
+  "relatedCtestGroups": {
+    "passed": 9,
+    "failed": 0,
+    "nativeSubcases": [
+      37,
+      15,
+      32,
+      26,
+      12,
+      17
+    ],
+    "qtQuick": 56,
+    "qt125": 17,
+    "qt150": 17
+  },
+  "localSanitizer": {
+    "accepted": false,
+    "logicalCasesPassed": 20,
+    "reason": "LeakSanitizer cannot inspect /proc task list in this environment; default leak checking not disabled",
+    "ctestExit": 8
+  },
+  "files": {
+    "cpp/src/ForensicAdapters.cpp": "19600f8519861be21f7c0c2e3beba031e502c220842e4f798c1c484a1821cb14",
+    "cpp/src/ForensicAdapters.hpp": "8a43a5fb6a513cf98b1a40f12dc1c6bdef9dba8f9f2cc3ea9d41c68b12504bd9",
+    "cpp/src/LawCaseForensicAdapters.cpp": "2f6f22086d7ca91c38740f0554a59e5f2de0d0c3cd00a617a679965b6a4c7499",
+    "cpp/src/LawCaseBridge.hpp": "3c05e1f3b9573b70c137d26941af80a4b0fe679f417a15e12b8fe923d2f39907",
+    "cpp/tests/forensic_adapter_tests.cpp": "dfca562911c17c3169b61e7341faa59227a3cad12d876dff86c9ee3a526d0118",
+    "cpp/tests/ui_tests.cpp": "fd4c7720ffd67a1006a13cd45309851d1a6cc5fe36e582fc360d69d1e1246749",
+    "qml/GovernmentAnalysisPage.qml": "210d32cffa78d48b5a243ec88c15d3d904c29db4842e55e076d03018641add4b",
+    "qml/tests/tst_navigation.qml": "0bc64231eda0253735e3cbc11f056029f4b89e856a9fd12924b01f64a3f7a21e",
+    "CMakeLists.txt": "df75d8b32ddb214588b48ed44610135f2cf04fba6c2653d5fb4bc8e473f95b2a"
+  }
+}

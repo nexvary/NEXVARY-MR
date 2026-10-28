@@ -1,0 +1,248 @@
+﻿2026-10-28T12:27:40.3493226Z Current runner version: '2.338.0'
+2026-10-28T12:27:40.3566671Z ##[group]Runner Image Provisioner
+2026-10-28T12:27:40.3567487Z Hosted Compute Agent
+2026-10-28T12:27:40.3568011Z Version: 20261021.618
+2026-10-28T12:27:40.3568598Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T12:27:40.3569262Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T12:27:40.3569880Z Worker ID: {5b2f0e58-66f0-4366-84a9-625c4fd37955}
+2026-10-28T12:27:40.3571720Z Region: westus
+2026-10-28T12:27:40.3572491Z Cloud: Azure
+2026-10-28T12:27:40.3573165Z ##[endgroup]
+2026-10-28T12:27:40.3574623Z ##[group]Operating System
+2026-10-28T12:27:40.3575221Z Microsoft Windows Server 2025
+2026-10-28T12:27:40.3575835Z 10.0.26100
+2026-10-28T12:27:40.3576292Z Datacenter
+2026-10-28T12:27:40.3576755Z ##[endgroup]
+2026-10-28T12:27:40.3577239Z ##[group]Runner Image
+2026-10-28T12:27:40.3577759Z Image: windows-2025-vs2026
+2026-10-28T12:27:40.3578357Z Version: 20261021.278.1
+2026-10-28T12:27:40.3580115Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-28T12:27:40.3582073Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-28T12:27:40.3583012Z ##[endgroup]
+2026-10-28T12:27:40.3584465Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T12:27:40.3586315Z Contents: read
+2026-10-28T12:27:40.3586909Z Metadata: read
+2026-10-28T12:27:40.3587410Z Packages: read
+2026-10-28T12:27:40.3587896Z ##[endgroup]
+2026-10-28T12:27:40.3590022Z Secret source: Actions
+2026-10-28T12:27:40.3590933Z Cache mode: write
+2026-10-28T12:27:40.3591587Z Prepare workflow directory
+2026-10-28T12:27:40.3939337Z Prepare all required actions
+2026-10-28T12:27:40.3987483Z Getting action download info
+2026-10-28T12:27:40.7347547Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-28T12:27:40.8646289Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-28T12:27:41.3988461Z Complete job name: test
+2026-10-28T12:27:41.6967771Z ##[group]Run actions/checkout@v4
+2026-10-28T12:27:41.6969480Z with:
+2026-10-28T12:27:41.6970310Z   repository: nexvary/NEXVARY-MR
+2026-10-28T12:27:41.6978179Z   token: ***
+2026-10-28T12:27:41.6978944Z   ssh-strict: true
+2026-10-28T12:27:41.6979734Z   ssh-user: git
+2026-10-28T12:27:41.6980531Z   persist-credentials: true
+2026-10-28T12:27:41.6981771Z   clean: true
+2026-10-28T12:27:41.6982603Z   sparse-checkout-cone-mode: true
+2026-10-28T12:27:41.6983569Z   fetch-depth: 1
+2026-10-28T12:27:41.6984338Z   fetch-tags: false
+2026-10-28T12:27:41.6985138Z   show-progress: true
+2026-10-28T12:27:41.6985949Z   lfs: false
+2026-10-28T12:27:41.6986688Z   submodules: false
+2026-10-28T12:27:41.6987503Z   set-safe-directory: true
+2026-10-28T12:27:41.6988421Z   allow-unsafe-pr-checkout: false
+2026-10-28T12:27:41.6989673Z ##[endgroup]
+2026-10-28T12:27:41.8472008Z Syncing repository: nexvary/NEXVARY-MR
+2026-10-28T12:27:41.8475071Z ##[group]Getting Git version info
+2026-10-28T12:27:41.8476311Z Working directory is 'D:\a\NEXVARY-MR\NEXVARY-MR'
+2026-10-28T12:27:41.9504748Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T12:27:42.4924822Z git version 2.56.0.windows.2
+2026-10-28T12:27:42.4979738Z ##[endgroup]
+2026-10-28T12:27:42.5000078Z Temporarily overriding HOME='D:\a\_temp\02c79703-ef1c-4492-a642-1f45bfd9443f' before making global git config changes
+2026-10-28T12:27:42.5002837Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T12:27:42.5010906Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T12:27:42.5893710Z Deleting the contents of 'D:\a\NEXVARY-MR\NEXVARY-MR'
+2026-10-28T12:27:42.5900165Z ##[group]Initializing the repository
+2026-10-28T12:27:42.5908639Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T12:27:42.7839820Z Initialized empty Git repository in D:/a/NEXVARY-MR/NEXVARY-MR/.git/
+2026-10-28T12:27:42.7894658Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nexvary/NEXVARY-MR
+2026-10-28T12:27:42.8660430Z ##[endgroup]
+2026-10-28T12:27:42.8661812Z ##[group]Disabling automatic garbage collection
+2026-10-28T12:27:42.8669027Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-28T12:27:42.9052530Z ##[endgroup]
+2026-10-28T12:27:42.9054416Z ##[group]Setting up auth
+2026-10-28T12:27:42.9064618Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T12:27:42.9437462Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T12:27:44.4919618Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T12:27:44.5297573Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T12:27:45.1148667Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T12:27:45.1514203Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T12:27:45.6817456Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-28T12:27:45.7193976Z ##[endgroup]
+2026-10-28T12:27:45.7194848Z ##[group]Fetching the repository
+2026-10-28T12:27:45.7206993Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8cbf2fc76515515ec7d08822073bffaa030bf117:refs/remotes/pull/17/merge
+2026-10-28T12:27:48.1010609Z From https://github.com/nexvary/NEXVARY-MR
+2026-10-28T12:27:48.1011755Z  * [new ref]         8cbf2fc76515515ec7d08822073bffaa030bf117 -> pull/17/merge
+2026-10-28T12:27:48.1048617Z ##[endgroup]
+2026-10-28T12:27:48.1049305Z ##[group]Determining the checkout info
+2026-10-28T12:27:48.1052320Z ##[endgroup]
+2026-10-28T12:27:48.1067151Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-28T12:27:48.1586255Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-28T12:27:48.2020893Z ##[group]Checking out the ref
+2026-10-28T12:27:48.2029665Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/17/merge
+2026-10-28T12:27:48.8336274Z Note: switching to 'refs/remotes/pull/17/merge'.
+2026-10-28T12:27:48.8336608Z 
+2026-10-28T12:27:48.8336817Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-28T12:27:48.8337880Z changes and commit them, and you can discard any commits you make in this
+2026-10-28T12:27:48.8339259Z state without impacting any branches by switching back to a branch.
+2026-10-28T12:27:48.8339610Z 
+2026-10-28T12:27:48.8339828Z If you want to create a new branch to retain commits you create, you may
+2026-10-28T12:27:48.8340337Z do so (now or later) by using -c with the switch command. Example:
+2026-10-28T12:27:48.8340651Z 
+2026-10-28T12:27:48.8340850Z   git switch -c <new-branch-name>
+2026-10-28T12:27:48.8341185Z 
+2026-10-28T12:27:48.8341357Z Or undo this operation with:
+2026-10-28T12:27:48.8341658Z 
+2026-10-28T12:27:48.8341761Z   git switch -
+2026-10-28T12:27:48.8341898Z 
+2026-10-28T12:27:48.8342133Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-28T12:27:48.8342477Z 
+2026-10-28T12:27:48.8342890Z HEAD is now at 8cbf2fc Merge aacd2400487ef51a2f6e21d3220d37b368237593 into eb2322140956a55a50ee7494570f35573a1ce0c0
+2026-10-28T12:27:48.8447065Z ##[endgroup]
+2026-10-28T12:27:48.8923772Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-28T12:27:48.9626903Z 8cbf2fc76515515ec7d08822073bffaa030bf117
+2026-10-28T12:27:49.0107991Z ##[group]Run actions/setup-python@v5
+2026-10-28T12:27:49.0108329Z with:
+2026-10-28T12:27:49.0108520Z   python-version: 3.12
+2026-10-28T12:27:49.0108748Z   check-latest: false
+2026-10-28T12:27:49.0111238Z   token: ***
+2026-10-28T12:27:49.0111441Z   update-environment: true
+2026-10-28T12:27:49.0111672Z   allow-prereleases: false
+2026-10-28T12:27:49.0111886Z   freethreaded: false
+2026-10-28T12:27:49.0112130Z ##[endgroup]
+2026-10-28T12:27:49.1745901Z ##[group]Installed versions
+2026-10-28T12:27:49.1893259Z (node:8660) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T12:27:49.1894489Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T12:27:49.1895319Z Successfully set up CPython (3.12.10)
+2026-10-28T12:27:49.1896185Z ##[endgroup]
+2026-10-28T12:27:49.2236825Z ##[group]Run python -m unittest discover -s tests -v
+2026-10-28T12:27:49.2237323Z [36;1mpython -m unittest discover -s tests -v[0m
+2026-10-28T12:27:49.3130512Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T12:27:49.3130946Z env:
+2026-10-28T12:27:49.3131274Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T12:27:49.3131852Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T12:27:49.3132407Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T12:27:49.3132897Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T12:27:49.3133391Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T12:27:49.3133778Z ##[endgroup]
+2026-10-28T12:27:51.6643601Z test_fixture_declares_wal_distinct_from_main (test_chromium_history_reference.ChromiumHistoryReferenceTests.test_fixture_declares_wal_distinct_from_main) ... ok
+2026-10-28T12:27:51.7468713Z test_independent_sql_join_and_exact_times (test_chromium_history_reference.ChromiumHistoryReferenceTests.test_independent_sql_join_and_exact_times) ... FAIL
+2026-10-28T12:27:51.7954403Z test_case_persistence (test_core.CoreTests.test_case_persistence) ... ok
+2026-10-28T12:27:51.7955218Z test_catalog_and_rules (test_core.CoreTests.test_catalog_and_rules) ... ok
+2026-10-28T12:27:51.8703479Z test_readiness (test_core.CoreTests.test_readiness) ... ok
+2026-10-28T12:27:51.8704305Z test_required_fields (test_core.CoreTests.test_required_fields) ... ok
+2026-10-28T12:27:51.8793449Z test_duplicate_fields_and_invalid_json (test_evidence_package.EvidencePackageTests.test_duplicate_fields_and_invalid_json) ... ok
+2026-10-28T12:27:51.9157938Z test_missing_added_symlink_and_large_files (test_evidence_package.EvidencePackageTests.test_missing_added_symlink_and_large_files) ... ok
+2026-10-28T12:27:51.9209406Z test_path_and_schema_attacks (test_evidence_package.EvidencePackageTests.test_path_and_schema_attacks) ... ok
+2026-10-28T12:27:51.9233439Z test_replaced_manifest_requires_separate_digest (test_evidence_package.EvidencePackageTests.test_replaced_manifest_requires_separate_digest) ... ok
+2026-10-28T12:27:51.9282949Z test_same_size_evidence_tampering (test_evidence_package.EvidencePackageTests.test_same_size_evidence_tampering) ... ok
+2026-10-28T12:27:51.9329735Z test_valid_independent_fixture (test_evidence_package.EvidencePackageTests.test_valid_independent_fixture) ... ok
+2026-10-28T12:27:51.9336727Z test_current_manifest (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_current_manifest) ... ok
+2026-10-28T12:27:52.3284211Z test_gate_survives_python_optimization (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_gate_survives_python_optimization) ... ok
+2026-10-28T12:27:52.3286628Z test_no_destructive_adapter (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_destructive_adapter) ... ok
+2026-10-28T12:27:52.3288974Z test_no_destructive_permission (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_destructive_permission) ... ok
+2026-10-28T12:27:52.3291698Z test_no_partial_stage_verification (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_partial_stage_verification) ... ok
+2026-10-28T12:27:52.3293903Z test_no_unapproved_additional_adapter (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unapproved_additional_adapter) ... ok
+2026-10-28T12:27:52.3295878Z test_no_unapproved_source (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unapproved_source) ... ok
+2026-10-28T12:27:52.3298296Z test_no_unlicensed_enable (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unlicensed_enable) ... ok
+2026-10-28T12:27:52.3300484Z test_no_unmeasured_stage (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unmeasured_stage) ... ok
+2026-10-28T12:27:52.3305435Z test_no_unpinned_enable (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unpinned_enable) ... ok
+2026-10-28T12:27:52.3307303Z test_no_unrecorded_permission (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_no_unrecorded_permission) ... ok
+2026-10-28T12:27:52.3309127Z test_pinned_licensed_read_only_candidate (test_forensic_engine_integration_gate.ForensicIntegrationGateTests.test_pinned_licensed_read_only_candidate) ... ok
+2026-10-28T12:27:52.4683536Z test_backups_and_lfs_require_review (test_public_history.PublicHistoryTests.test_backups_and_lfs_require_review) ... ok
+2026-10-28T12:27:53.1757826Z test_clean_code_and_template (test_public_history.PublicHistoryTests.test_clean_code_and_template) ... ok
+2026-10-28T12:27:53.8657060Z test_deleted_database_remains_a_finding (test_public_history.PublicHistoryTests.test_deleted_database_remains_a_finding) ... ok
+2026-10-28T12:27:54.6688940Z test_other_branch_and_renamed_evidence (test_public_history.PublicHistoryTests.test_other_branch_and_renamed_evidence) ... ok
+2026-10-28T12:27:55.5965825Z test_private_material_and_large_unreviewed_blob (test_public_history.PublicHistoryTests.test_private_material_and_large_unreviewed_blob) ... ok
+2026-10-28T12:27:56.2782188Z test_reused_blob_is_checked_under_every_filename (test_public_history.PublicHistoryTests.test_reused_blob_is_checked_under_every_filename) ... ok
+2026-10-28T12:27:56.2784744Z test_complete_fixture_only (test_release_gate.ReleaseGateTests.test_complete_fixture_only) ... ok
+2026-10-28T12:27:56.2785868Z test_malformed_evidence (test_release_gate.ReleaseGateTests.test_malformed_evidence) ... ok
+2026-10-28T12:27:56.2789177Z test_missing_gate_cannot_be_substituted_by_ci (test_release_gate.ReleaseGateTests.test_missing_gate_cannot_be_substituted_by_ci) ... ok
+2026-10-28T12:27:56.2792760Z test_string_booleans_missing_reference_and_stale_evidence (test_release_gate.ReleaseGateTests.test_string_booleans_missing_reference_and_stale_evidence) ... ok
+2026-10-28T12:27:56.2794338Z test_wrong_commit_profile_and_unresolved_risk (test_release_gate.ReleaseGateTests.test_wrong_commit_profile_and_unresolved_risk) ... ok
+2026-10-28T12:27:56.2805363Z test_checked_in_catalog (test_research_catalog.ResearchCatalogTests.test_checked_in_catalog) ... ok
+2026-10-28T12:27:56.3015052Z test_hostile_and_overclaiming_data (test_research_catalog.ResearchCatalogTests.test_hostile_and_overclaiming_data) ... ok
+2026-10-28T12:27:56.3018332Z test_avb_implementation_declares_only_synthetic_scope (test_research_knowledge.ResearchKnowledgeTests.test_avb_implementation_declares_only_synthetic_scope) ... ok
+2026-10-28T12:27:56.3024857Z test_dangling_and_duplicate_records_rejected (test_research_knowledge.ResearchKnowledgeTests.test_dangling_and_duplicate_records_rejected) ... ok
+2026-10-28T12:27:56.3028071Z test_fixture_cannot_be_promoted_to_physical_support (test_research_knowledge.ResearchKnowledgeTests.test_fixture_cannot_be_promoted_to_physical_support) ... ok
+2026-10-28T12:27:56.3031762Z test_physical_record_requires_exact_scope_and_strict_pass (test_research_knowledge.ResearchKnowledgeTests.test_physical_record_requires_exact_scope_and_strict_pass) ... ok
+2026-10-28T12:27:56.3038838Z test_repository_paths_and_references (test_research_knowledge.ResearchKnowledgeTests.test_repository_paths_and_references) ... ok
+2026-10-28T12:27:56.3212415Z test_complete_fixture_and_receipt (test_screen_tools.ScreenToolsTests.test_complete_fixture_and_receipt) ... ok
+2026-10-28T12:27:56.3456256Z test_paths_symlinks_duplicates_missing_and_expansion_limits (test_screen_tools.ScreenToolsTests.test_paths_symlinks_duplicates_missing_and_expansion_limits) ... ok
+2026-10-28T12:27:56.3504010Z test_rejects_changed_bytes_and_preserves_existing_destination (test_screen_tools.ScreenToolsTests.test_rejects_changed_bytes_and_preserves_existing_destination) ... ok
+2026-10-28T12:27:56.3525467Z test_bad_cached_archive_never_downloaded_or_extracted (test_sodium_preparation.SodiumPreparationTests.test_bad_cached_archive_never_downloaded_or_extracted) ... ok
+2026-10-28T12:27:56.3541031Z test_missing_release_runtime_refused (test_sodium_preparation.SodiumPreparationTests.test_missing_release_runtime_refused) ... ok
+2026-10-28T12:27:56.3632493Z test_only_approved_release_x64_members_extracted (test_sodium_preparation.SodiumPreparationTests.test_only_approved_release_x64_members_extracted) ... ok
+2026-10-28T12:27:56.3683056Z test_parser_normalization_never_hides_unsafe_original_name (test_sodium_preparation.SodiumPreparationTests.test_parser_normalization_never_hides_unsafe_original_name) ... ok
+2026-10-28T12:27:56.3831653Z test_source_links_refused_before_running_configure (test_sodium_preparation.SodiumPreparationTests.test_source_links_refused_before_running_configure) ... ok
+2026-10-28T12:27:56.3848105Z test_zip_symlink_header_refused (test_sodium_preparation.SodiumPreparationTests.test_zip_symlink_header_refused) ... ok
+2026-10-28T12:27:56.4172140Z test_zip_traversal_and_normalized_duplicates_rejected_before_writing (test_sodium_preparation.SodiumPreparationTests.test_zip_traversal_and_normalized_duplicates_rejected_before_writing) ... ok
+2026-10-28T12:27:56.4197703Z test_source_digests_and_runtime_page_image (test_sqlite_family_reference.SqliteFamilyOracleTests.test_source_digests_and_runtime_page_image) ... ok
+2026-10-28T12:27:56.4288007Z test_passing_diagnostic_cannot_clear_original_failure (test_ui_failure_diagnostics.UiFailureDiagnosticsTests.test_passing_diagnostic_cannot_clear_original_failure) ... ok
+2026-10-28T12:27:56.4297994Z test_success_does_not_replay_stale_failures (test_ui_failure_diagnostics.UiFailureDiagnosticsTests.test_success_does_not_replay_stale_failures) ... ok
+2026-10-28T12:27:56.4304813Z test_timeout_kills_only_the_owned_group (test_ui_failure_diagnostics.UiFailureDiagnosticsTests.test_timeout_kills_only_the_owned_group) ... ok
+2026-10-28T12:27:56.4363322Z test_unavailable_diagnostic_cannot_replace_failure (test_ui_failure_diagnostics.UiFailureDiagnosticsTests.test_unavailable_diagnostic_cannot_replace_failure) ... ok
+2026-10-28T12:27:56.4364440Z 
+2026-10-28T12:27:56.4364675Z ======================================================================
+2026-10-28T12:27:56.4366258Z FAIL: test_independent_sql_join_and_exact_times (test_chromium_history_reference.ChromiumHistoryReferenceTests.test_independent_sql_join_and_exact_times)
+2026-10-28T12:27:56.4367567Z ----------------------------------------------------------------------
+2026-10-28T12:27:56.4368450Z Traceback (most recent call last):
+2026-10-28T12:27:56.4375086Z   File "D:\a\NEXVARY-MR\NEXVARY-MR\tests\test_chromium_history_reference.py", line 26, in test_independent_sql_join_and_exact_times
+2026-10-28T12:27:56.4375806Z     self.assertEqual(rows, fixture['expected'])
+2026-10-28T12:27:56.4376998Z AssertionError: Lists differ: [[11,[33 chars]1', '\u0639\u0646\u0648\u0627\u0646 \u0645\u0639\u062f\u0651\u0644 \u0645\u0646 WAL', 13344473600123456, 2[155 chars], 0]] != [[11,[33 chars]1', 'عنوان معدّل من WAL', 13344473[179 chars], 0]]
+2026-10-28T12:27:56.4378932Z 
+2026-10-28T12:27:56.4379051Z First differing element 0:
+2026-10-28T12:27:56.4379529Z [11, [32 chars]1', '\u0639\u0646\u0648\u0627\u0646 \u0645\u0639\u062f\u0651\u0644 \u0645\u0646 WAL', 13344473600123456, 2[32 chars]8, 0]
+2026-10-28T12:27:56.4380171Z [11, [32 chars]1', 'عنوان معدّل من WAL', 13344473[44 chars]8, 0]
+2026-10-28T12:27:56.4380386Z 
+2026-10-28T12:27:56.4380457Z   [[11,
+2026-10-28T12:27:56.4380615Z     7,
+2026-10-28T12:27:56.4380814Z     'https://example.invalid/a?x=1',
+2026-10-28T12:27:56.4381170Z -   '\u0639\u0646\u0648\u0627\u0646 \u0645\u0639\u062f\u0651\u0644 \u0645\u0646 WAL',
+2026-10-28T12:27:56.4381578Z +   'عنوان معدّل من WAL',
+2026-10-28T12:27:56.4381779Z     13344473600123456,
+2026-10-28T12:27:56.4381963Z     2,
+2026-10-28T12:27:56.4382115Z     1,
+2026-10-28T12:27:56.4382265Z     13344473600123456,
+2026-10-28T12:27:56.4382443Z     805306368,
+2026-10-28T12:27:56.4382620Z     0],
+2026-10-28T12:27:56.4382771Z    [15,
+2026-10-28T12:27:56.4382931Z     7,
+2026-10-28T12:27:56.4383292Z     'https://example.invalid/a?x=1',
+2026-10-28T12:27:56.4383656Z -   '\u0639\u0646\u0648\u0627\u0646 \u0645\u0639\u062f\u0651\u0644 \u0645\u0646 WAL',
+2026-10-28T12:27:56.4384058Z +   'عنوان معدّل من WAL',
+2026-10-28T12:27:56.4384251Z     13344473600999999,
+2026-10-28T12:27:56.4384436Z     2,
+2026-10-28T12:27:56.4384585Z     1,
+2026-10-28T12:27:56.4384739Z     13344473600123456,
+2026-10-28T12:27:56.4384915Z     805306368,
+2026-10-28T12:27:56.4385081Z     0]]
+2026-10-28T12:27:56.4385168Z 
+2026-10-28T12:27:56.4385315Z ----------------------------------------------------------------------
+2026-10-28T12:27:56.4385637Z Ran 57 tests in 4.773s
+2026-10-28T12:27:56.4385766Z 
+2026-10-28T12:27:56.4385838Z FAILED (failures=1)
+2026-10-28T12:27:56.5863368Z ##[error]Process completed with exit code 1.
+2026-10-28T12:27:56.6140391Z Post job cleanup.
+2026-10-28T12:27:56.8174022Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T12:27:56.8518530Z git version 2.56.0.windows.2
+2026-10-28T12:27:56.8590014Z Temporarily overriding HOME='D:\a\_temp\518452eb-82a6-4298-9abf-20ba023522a9' before making global git config changes
+2026-10-28T12:27:56.8590772Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T12:27:56.8601258Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T12:27:56.8998682Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T12:27:56.9396141Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T12:27:57.4972876Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T12:27:57.5328697Z http.https://github.com/.extraheader
+2026-10-28T12:27:57.5375586Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T12:27:57.5755050Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T12:27:58.1397327Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T12:27:58.1768961Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T12:27:58.7488830Z Cleaning up orphan processes
+2026-10-28T12:27:58.7523138Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

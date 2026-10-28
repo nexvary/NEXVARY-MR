@@ -1,0 +1,28 @@
+{
+  "sourceCommit": "1129afad51f085ebf327d11d73ff32b26aa46d28",
+  "platform": "Windows",
+  "version": "10.0.19045",
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "1129afad51f085ebf327d11d73ff32b26aa46d28",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "providerSha256": "910827009e72935d1c55e82a207a537db5d496f515efc176b2ef40ec5056cce7",
+  "executables": {
+    "NEXVARY-MR.exe": "276a8a99be0fdb5e77429a15e1383aa80ba083cab6590668f95e7d87790a6b38",
+    "mr_evidence_import_worker.exe": "3368026087442847ab8f476ef9429407c569a5ee37b631fa703295a142e8b37e"
+  },
+  "manifestFilesVerified": 1419,
+  "spdxFilesVerified": 1418,
+  "mainExit": 0,
+  "workerExit": 0,
+  "sdkExcludedFromPath": true,
+  "softwareRenderer": true,
+  "policyDefaultDeniedCategories": 6,
+  "auditValid": true,
+  "auditEvents": 23,
+  "installationPerformed": false,
+  "scope": "Existing Windows 10 host; synthetic direct portable smoke, not clean install/Windows 11/hardware-renderer/device acceptance"
+}

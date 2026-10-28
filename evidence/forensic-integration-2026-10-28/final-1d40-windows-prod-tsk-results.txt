@@ -1,0 +1,13 @@
+********* Start testing of TskTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : TskTests::initTestCase()
+PASS   : TskTests::privateCopyHashAndProvenance()
+PASS   : TskTests::failureCancellationBoundsAndChanges()
+PASS   : TskTests::toolSelectionDoesNotExecuteAndPersists()
+PASS   : TskTests::inputPolicy()
+PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary.
+D:\a\NEXVARY-MR\NEXVARY-MR\cpp\tests\tsk_tests.cpp(88) : failure location
+PASS   : TskTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2304ms
+********* Finished testing of TskTests *********

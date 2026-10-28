@@ -1,0 +1,11 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentChromiumHistory()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentForensicEngines() 'verify()' returned FALSE. ()
+   Loc: [/workspace/scratch/077476f00950/NEXVARY-MR/qml/tests/tst_navigation.qml(109)]
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 3 passed, 1 failed, 0 skipped, 0 blacklisted, 1493ms
+********* Finished testing of mr_ui *********

@@ -1,0 +1,24 @@
+[  0%] Built target mr_sqlite_table_tests_autogen_timestamp_deps
+[ 11%] Automatic MOC for target mr_sqlite_table_tests
+[ 11%] Built target mr_sqlite_table_tests_autogen
+[ 22%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o
+[ 33%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+[100%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o
+[100%] Linking CXX executable mr_sqlite_table_tests
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+/usr/bin/ld: CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o: in function `mr::forensic::readProtectedSqliteTable(mr::forensic::ReadOnlyEvidenceRequest const&, unsigned int)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/SqliteTableReader.cpp:133:(.text+0x8e8a): undefined reference to `mr::forensic::inspectSqliteEvidenceFamily(mr::forensic::ReadOnlyEvidenceRequest const&, QMap<QString, QVariant>)'
+/usr/bin/ld: CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o: in function `mr::forensic::inspectChromiumHistory(mr::forensic::ReadOnlyEvidenceRequest const&, QMap<QString, QVariant>)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ChromiumHistory.cpp:78:(.text+0x9afb): undefined reference to `mr::forensic::inspectSqliteEvidenceFamily(mr::forensic::ReadOnlyEvidenceRequest const&, QMap<QString, QVariant>)'
+/usr/bin/ld: CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o: in function `mr::forensic::validateRetainedChromiumHistory(QMap<QString, QVariant> const&, QMap<QString, QMap<QString, QVariant> > const&)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ChromiumHistory.cpp:126:(.text+0x1eb3a): undefined reference to `mr::forensic::validateRetainedSqliteFamily(QMap<QString, QVariant> const&, QMap<QString, QMap<QString, QVariant> > const&)'
+/usr/bin/ld: CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ForensicAdapters.cpp.o: in function `mr::forensic::analyzeReadOnlyEvidence(mr::forensic::ReadOnlyEvidenceRequest const&)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ForensicAdapters.cpp:180:(.text+0x1da76): undefined reference to `mr::forensic::inspectSqliteEvidenceFamily(mr::forensic::ReadOnlyEvidenceRequest const&, QMap<QString, QVariant>)'
+/usr/bin/ld: CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ForensicAdapters.cpp.o: in function `mr::forensic::retainedForensicReport(QMap<QString, QVariant> const&, QMap<QString, QVariant> const&, QString const&, QMap<QString, QMap<QString, QVariant> > const&)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ForensicAdapters.cpp:191:(.text+0x24b69): undefined reference to `mr::forensic::validateRetainedSqliteFamily(QMap<QString, QVariant> const&, QMap<QString, QMap<QString, QVariant> > const&)'
+collect2: error: ld returned 1 exit status
+gmake[3]: *** [CMakeFiles/mr_sqlite_table_tests.dir/build.make:196: mr_sqlite_table_tests] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:876: CMakeFiles/mr_sqlite_table_tests.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:883: CMakeFiles/mr_sqlite_table_tests.dir/rule] Error 2
+gmake: *** [Makefile:511: mr_sqlite_table_tests] Error 2

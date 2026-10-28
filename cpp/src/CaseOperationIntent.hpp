@@ -26,7 +26,7 @@ inline bool caseIntent(const QVariantMap &r) {
  if(rev.metaType().id()==QMetaType::Bool || rev.metaType().id()==QMetaType::QString || rev.toDouble()!=rev.toLongLong() || rev.toLongLong()<1 || rev.toLongLong()>=10000)return false;
  const auto time=r.value("preparedUtc").toString();
  return time.endsWith('Z') && QDateTime::fromString(time,Qt::ISODateWithMs).isValid() &&
-  (external?r.value("kind")=="partition-analysis":QStringList{"classic-pcap","jpeg-exif"}.contains(r.value("kind").toString())) &&
+  (external?r.value("kind")=="partition-analysis":QStringList{"classic-pcap","jpeg-exif","workbench-export-manifest","chromium-bookmarks","dc-image-partitions","browser-sqlite-family", "chromium-history", "chromium-downloads"}.contains(r.value("kind").toString())) &&
   QStringList{"reviewer","investigator"}.contains(r.value("requesterRole").toString()) &&
   (external?QStringList{"prepared","candidate","completed","failed","unknown"}:QStringList{"prepared","completed","failed","unknown"}).contains(state);
 }

@@ -1,0 +1,23 @@
+********* Start testing of OfflineTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : OfflineTests::initTestCase()
+PASS   : OfflineTests::defaultDenyAndExplicitAdministrator()
+PASS   : OfflineTests::expiryAndExternalAccountRevocation()
+PASS   : OfflineTests::restartDoesNotRestoreExceptions()
+PASS   : OfflineTests::portalDefaultDenyAndClientAbort()
+PASS   : OfflineTests::deviceChildDeniedPermittedAndRevoked()
+PASS   : OfflineTests::externalAnalyzersAndUpdaterAreSeparatePermissions()
+PASS   : OfflineTests::scannerExpiryResult()
+PASS   : OfflineTests::externalPartitionChildPermissionAndRevoke()
+PASS   : OfflineTests::partitionRunningClosure(operator-cancel)
+PASS   : OfflineTests::partitionRunningClosure(logout)
+PASS   : OfflineTests::partitionRunningClosure(expiry)
+PASS   : OfflineTests::partitionCompletionQueuedRevocation()
+PASS   : OfflineTests::browserHandoffBlockedAndProtocolsRestricted()
+QINFO  : OfflineTests::externalAnalyzerDescendantBoundary() Boundary observation: controlled detached descendant survived revoked external analyzer; application gate is not process-tree containment.
+PASS   : OfflineTests::externalAnalyzerDescendantBoundary()
+PASS   : OfflineTests::partitionStoreFailure(case-write-and-restore-failure)
+PASS   : OfflineTests::partitionStoreFailure(policy-journal-corruption)
+PASS   : OfflineTests::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 21491ms
+********* Finished testing of OfflineTests *********

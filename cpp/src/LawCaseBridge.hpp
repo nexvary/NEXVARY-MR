@@ -26,6 +26,8 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
+ Q_PROPERTY(bool forensicBusy READ forensicBusy NOTIFY forensicChanged)
+ Q_PROPERTY(QVariantMap forensicResult READ forensicResult NOTIFY forensicChanged)
  Q_PROPERTY(bool partitionsBusy READ partitionsBusy NOTIFY partitionsChanged)
  Q_PROPERTY(QVariantMap partitionsResult READ partitionsResult NOTIFY partitionsChanged)
  Q_PROPERTY(bool artifactsBusy READ artifactsBusy NOTIFY artifactsChanged)
@@ -62,6 +64,14 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ bool forensicBusy()const{return forensicActive_;}
+ QVariantMap forensicResult()const{return forensicResult_;}
+ Q_INVOKABLE bool analyzeForensicEvidence(const QString &evidence,const QString &adapter);
+ Q_INVOKABLE bool analyzeChromiumDownloads(const QString &mainEvidence,const QString &walEvidence,const QString &shmEvidence);
+ Q_INVOKABLE bool analyzeChromiumHistory(const QString &mainEvidence,const QString &walEvidence,const QString &shmEvidence);
+ Q_INVOKABLE bool analyzeBrowserSqliteFamily(const QString &mainEvidence,const QString &walEvidence,const QString &shmEvidence);
+ Q_INVOKABLE bool verifyManifestEvidence(const QString &manifestEvidence,const QVariantMap &pathToEvidence);
+ Q_INVOKABLE void cancelForensicAnalysis();
  bool partitionsBusy()const{return partitionsActive_;}
  QVariantMap partitionsResult()const{return partitionsResult_;}
  Q_INVOKABLE bool analyzePartitions(const QString &evidence,const QString &executable,bool consent);
@@ -92,6 +102,8 @@ public:
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
 signals:
+ void forensicChanged();
+ void forensicCompleted(bool success);
  void partitionsChanged();
  void partitionsCompleted(bool success);
  void artifactsChanged();
@@ -104,6 +116,13 @@ signals:
  void trainingChanged();
  void accessChanged();
 private:
+ void initForensicAdapters();
+ bool startForensicEvidence(const QString &evidence,const QString &adapter,const QVariantMap &payloads,bool verifyPayloads);
+ QVariantMap retainLocalAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report);
+ std::unique_ptr<QFutureWatcher<QVariantMap>> forensic_;
+ std::shared_ptr<std::atomic_bool> forensicCancel_;
+ QVariantMap forensicContext_,forensicResult_;
+ bool forensicActive_=false;
  bool permit(nexvary::law::Action action,bool caseBound=true);
  bool caseAllowed(const QVariantMap &record)const;
  nexvary::law::Role currentRole()const;

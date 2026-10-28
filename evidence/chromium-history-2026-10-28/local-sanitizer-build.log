@@ -1,0 +1,9 @@
+[1/9] Automatic MOC for target mr_sqlite_table_tests
+[2/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/mr_sqlite_table_tests_autogen/mocs_compilation.cpp.o
+[3/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o
+[4/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+[5/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o
+[6/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteEvidenceFamily.cpp.o
+[7/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ForensicAdapters.cpp.o
+[8/9] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/DcImagePartitions.cpp.o
+[9/9] Linking CXX executable mr_sqlite_table_tests

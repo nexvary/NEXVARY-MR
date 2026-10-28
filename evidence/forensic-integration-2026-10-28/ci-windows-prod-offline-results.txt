@@ -1,0 +1,25 @@
+********* Start testing of OfflineTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : OfflineTests::initTestCase()
+PASS   : OfflineTests::defaultDenyAndExplicitAdministrator()
+PASS   : OfflineTests::expiryAndExternalAccountRevocation()
+PASS   : OfflineTests::restartDoesNotRestoreExceptions()
+PASS   : OfflineTests::portalDefaultDenyAndClientAbort()
+PASS   : OfflineTests::deviceChildDeniedPermittedAndRevoked()
+PASS   : OfflineTests::externalAnalyzersAndUpdaterAreSeparatePermissions()
+PASS   : OfflineTests::scannerExpiryResult()
+PASS   : OfflineTests::externalPartitionChildPermissionAndRevoke()
+PASS   : OfflineTests::partitionRunningClosure(operator-cancel)
+PASS   : OfflineTests::partitionRunningClosure(logout)
+PASS   : OfflineTests::partitionRunningClosure(expiry)
+PASS   : OfflineTests::partitionCompletionQueuedRevocation()
+PASS   : OfflineTests::browserHandoffBlockedAndProtocolsRestricted()
+QWARN  : OfflineTests::externalAnalyzerDescendantBoundary() QTemporaryDir: Unable to remove "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\nexvary-mr-tsk-EniEWC" most likely due to the presence of read-only files.
+QWARN  : OfflineTests::externalAnalyzerDescendantBoundary() QTemporaryDir: Unable to remove "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\nexvary-mr-tsk-EniEWC" most likely due to the presence of read-only files.
+QINFO  : OfflineTests::externalAnalyzerDescendantBoundary() Boundary observation: controlled detached descendant survived revoked external analyzer; application gate is not process-tree containment.
+PASS   : OfflineTests::externalAnalyzerDescendantBoundary()
+PASS   : OfflineTests::partitionStoreFailure(case-write-and-restore-failure)
+PASS   : OfflineTests::partitionStoreFailure(policy-journal-corruption)
+PASS   : OfflineTests::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 19637ms
+********* Finished testing of OfflineTests *********

@@ -1,0 +1,10 @@
+{
+  "cpp/src/NtfsMetadata.cpp": "8941ce8ba39084797581a0941798a2d39f7f3904198c593e176b4543f4502156",
+  "cpp/src/NtfsMetadata.hpp": "ef1ec99b7e049a49d5fbb66ed0589f58c565f0c74208d104780a5c72567d94fb",
+  "cpp/tests/ntfs_metadata_tests.cpp": "193f22e2b15f9984d5d22bb2bf0278ade65eb2c60888b6e1f922718cdc97022f",
+  "docs/NTFS_METADATA_PREREQUISITE.md": "5c9d21f2344faaaa4a431bc8a8ff3c4ee3d1607bce75b7e01a338ed47a2d8314",
+  "CMakeLists.txt": "8b9c6b1d3e7acbbac4d6dfa5edf66facc928a2faa2ed9c661c2b424dccbd409e",
+  ".github/workflows/cpp-qt.yml": "f3bce5acd39948306ac2c242eefca90b5ba89670fdd96047f780cbc4454f57e0",
+  "samples/ntfs-metadata/reference.json": "1a311cc47d4267f42d217bc04eb316cc90d4f7905c0f8fad3c843bbce5cf74ba",
+  "samples/ntfs-metadata/ntfs3g-reference.json": "f205e6367532b04d3bbdecbc137bf766e4da28864d26e2ba8642858b01b8b878"
+}

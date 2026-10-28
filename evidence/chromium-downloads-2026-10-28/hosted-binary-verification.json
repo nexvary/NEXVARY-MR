@@ -1,0 +1,26 @@
+{
+  "setupSha256": "8b219eac2937efbc749f795ff424091d61b0ada0387faa36fd8751802fe95d9b",
+  "portableZipSha256": "d671894d64846703f6dec422fee862765d33e3dadf079ed101a3f4a42e70c7a4",
+  "actualSetupPEVerified": true,
+  "scope": "Static exact installer bytes; hosted install/launch/uninstall proof separate",
+  "portable": {
+    "actualBinaryHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "installed": {
+    "actualBinaryHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "installerLifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  }
+}

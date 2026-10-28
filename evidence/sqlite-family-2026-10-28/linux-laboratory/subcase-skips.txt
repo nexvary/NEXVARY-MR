@@ -1,0 +1,1 @@
+build/cloud-results.txt: SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.

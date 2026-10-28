@@ -1,0 +1,22 @@
+{
+  "portable": {
+    "actualExecutableHashesMatched": true,
+    "exitCode": 0,
+    "auditValid": true,
+    "events": 23
+  },
+  "installed": {
+    "actualExecutableHashesMatched": true,
+    "exitCode": 0,
+    "auditValid": true,
+    "events": 23
+  },
+  "lifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  }
+}

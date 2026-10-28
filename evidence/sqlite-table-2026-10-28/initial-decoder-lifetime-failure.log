@@ -1,0 +1,36 @@
+Start testing: Oct 28 12:55 CET
+----------------------------------------------------------
+1/5 Testing: mr_sqlite_table_tests
+1/5 Test: mr_sqlite_table_tests
+Command: "/workspace/scratch/bf8911e256ff/NEXVARY-MR/build-sqlite-reader/mr_sqlite_table_tests"
+Directory: /workspace/scratch/bf8911e256ff/NEXVARY-MR/build-sqlite-reader
+"mr_sqlite_table_tests" start time: Oct 28 12:55 CET
+Output:
+----------------------------------------------------------
+********* Start testing of SqliteTableTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : SqliteTableTests::initTestCase()
+PASS   : SqliteTableTests::committedWalOracle()
+FAIL!  : SqliteTableTests::runtimeOracle(512) 'result.ok()' returned FALSE. (sqlite-table-invalid-utf8)
+   Loc: [/workspace/scratch/bf8911e256ff/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(59)]
+FAIL!  : SqliteTableTests::runtimeOracle(1024) 'result.ok()' returned FALSE. (sqlite-table-invalid-utf8)
+   Loc: [/workspace/scratch/bf8911e256ff/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(59)]
+FAIL!  : SqliteTableTests::runtimeOracle(4096) Compared lists differ at index 1.
+   Actual   (fields): QVariant(QString,نص-
+   Expected (expected[i]): QVariant(QString,نص-11)
+   Loc: [/workspace/scratch/bf8911e256ff/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(60)]
+FAIL!  : SqliteTableTests::runtimeOracle(65536) 'result.ok()' returned FALSE. (sqlite-table-invalid-utf8)
+   Loc: [/workspace/scratch/bf8911e256ff/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(59)]
+PASS   : SqliteTableTests::malformedCellsAndRecords()
+PASS   : SqliteTableTests::cleanupTestCase()
+Totals: 4 passed, 4 failed, 0 skipped, 0 blacklisted, 34ms
+********* Finished testing of SqliteTableTests *********
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Failed.
+"mr_sqlite_table_tests" end time: Oct 28 12:55 CET
+"mr_sqlite_table_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 28 12:55 CET
