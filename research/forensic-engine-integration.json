@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "sqlite-family-implemented-awaiting-acceptance-broader-integration-in-progress",
+  "status": "sqlite-family-foundation-tested-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -15,15 +15,15 @@
       "adapter": "workbench-export-manifest",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
-      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
-      "ci_run": 40659062610,
-      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
+      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
+      "ci_run": 40679092338,
+      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md",
       "content_verification": {
         "verifier_version": "nexvary-mr-manifest-content/1",
         "scope": "explicit protected same-case payload bindings; no filesystem path resolution",
-        "tested_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
-        "ci_run": 40659062610
+        "tested_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
+        "ci_run": 40679092338
       }
     },
     {
@@ -38,18 +38,20 @@
       "adapter": "chromium-bookmarks",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
-      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
-      "ci_run": 40659062610,
-      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
+      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
+      "ci_run": 40679092338,
+      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md",
       "additional_adapters": [
         "browser-sqlite-family"
       ],
       "sqlite_family": {
         "verifier_version": "nexvary-mr-sqlite-family/1",
-        "state": "implemented-awaiting-exact-source-acceptance",
+        "state": "selected-foundation-tested-broader-stage-in-progress",
         "scope": "protected offline main/WAL/opaque SHM; bounded checksummed committed page image only; no History or SQL execution",
-        "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension"
+        "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",
+        "tested_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
+        "ci_run": 40679092338
       }
     },
     {
@@ -64,10 +66,10 @@
       "adapter": "dc-image-partitions",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
-      "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
-      "ci_run": 40659062610,
-      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-native-adapter-tested-at-e0ddc8c; broader-engine-stage-in-progress",
+      "acceptance_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
+      "ci_run": 40679092338,
+      "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md"
     }
   ],
   "stages": [

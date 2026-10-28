@@ -1,0 +1,10 @@
+{
+  "providerSha256": "3b924686f04a3f5a9f59e43d5e2a4f915561ddbb4510ffd128e3cf7aa237edc4",
+  "size": 33288035,
+  "setupSha256": "eeaf7086903f85caf82d00c93b80fd911ec415210f84bac5ebb9fe1505662d01",
+  "portableZipSha256": "69103344b7d0e50ed24378b20f0599e20d66f31d26f715ef632b0ed378bad897",
+  "checksumSetMatched": true,
+  "setupPEVerified": true,
+  "scope": "Static archive/actual installer executable verification plus separately retained hosted install/launch/uninstall receipts",
+  "downloadObservation": "Initial full-body downloads ended at 25165824 bytes; rejected as incomplete. Reconstructed with HTTP 206 tail; only full provider-digest-matching archive accepted."
+}

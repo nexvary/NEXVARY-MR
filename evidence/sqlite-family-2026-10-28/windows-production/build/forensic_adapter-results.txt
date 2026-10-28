@@ -1,0 +1,30 @@
+********* Start testing of ForensicAdapterTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : ForensicAdapterTests::initTestCase()
+PASS   : ForensicAdapterTests::descriptorsAndDestructiveRejection()
+PASS   : ForensicAdapterTests::provenanceHashInputAndCancellation()
+PASS   : ForensicAdapterTests::cooperativeDeadline()
+PASS   : ForensicAdapterTests::bookmarksKnownAnswerAndReadOnly()
+PASS   : ForensicAdapterTests::corruptAmbiguousDeepAndOversizedBookmarks()
+PASS   : ForensicAdapterTests::manifestStructureIsNotPayloadVerification()
+PASS   : ForensicAdapterTests::manifestPayloadVerification()
+PASS   : ForensicAdapterTests::manifestRawReferencesAndNoSymlinkResolution()
+PASS   : ForensicAdapterTests::manifestUnsafePathsAndDuplicateRejection()
+PASS   : ForensicAdapterTests::manifestCasePayloadReceiptAndIsolation()
+PASS   : ForensicAdapterTests::sqliteFamilyRuntimeOracleAndEndianness()
+PASS   : ForensicAdapterTests::sqliteFamilyMalformedAndBounds()
+PASS   : ForensicAdapterTests::sqliteFamilyBoundedMutations()
+QINFO  : ForensicAdapterTests::sqliteFamilyCaseBindingsRetentionAndCancellation() Envelope trailer preserves decoded bytes: true
+PASS   : ForensicAdapterTests::sqliteFamilyCaseBindingsRetentionAndCancellation()
+PASS   : ForensicAdapterTests::partitionKnownAnswers()
+PASS   : ForensicAdapterTests::truncatedCorruptProtectiveAndBackupGpt()
+PASS   : ForensicAdapterTests::overlapAndEbrCycle()
+PASS   : ForensicAdapterTests::boundedMutationCorpus()
+PASS   : ForensicAdapterTests::authenticatedCaseReceiptAndRecovery()
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(bookmarks)
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(manifest-content)
+PASS   : ForensicAdapterTests::grantRevocationLogoutAndAuditFailure(sqlite-family)
+PASS   : ForensicAdapterTests::cancellationLogoutAndCrossCaseRefuseAcceptance()
+PASS   : ForensicAdapterTests::cleanupTestCase()
+Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 7144ms
+********* Finished testing of ForensicAdapterTests *********
