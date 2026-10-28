@@ -25,6 +25,77 @@ qsizetype attributeOffset(const QByteArray &b,int record,quint32 kind){
 class NtfsMetadataTests:public QObject {
  Q_OBJECT
 private slots:
+ void mappedOriginalBytesAndUsaReconstruction(){
+  const auto b=image();auto r=request(b);const auto result=mr::forensic::inspectNtfsMetadata(r);QVERIFY2(result.ok(),qPrintable(result.errorCode));
+  QCOMPARE(result.report.value("schema").toString(),QString("nexvary-mr-ntfs-metadata/2"));QCOMPARE(result.report.value("caseId").toString(),r.caseId);QCOMPARE(result.report.value("evidenceId").toString(),r.evidenceId);QCOMPARE(result.report.value("workingCopySha256").toString(),sha(b));
+  const auto mapping=result.report.value("mftMapping").toList();QCOMPARE(mapping.size(),2);QCOMPARE(mapping[0].toMap().value("byteOffset").toLongLong(),16384);QCOMPARE(mapping[0].toMap().value("lengthBytes").toLongLong(),12288);QCOMPARE(mapping[1].toMap().value("byteOffset").toLongLong(),81920);qint64 streamOffset=0;
+  for(const auto &v:mapping){const auto m=v.toMap();QCOMPARE(m.value("logicalByteOffset").toLongLong(),streamOffset);QVERIFY(m.value("byteOffset").toLongLong()>=0);streamOffset+=m.value("lengthBytes").toLongLong();}
+  auto records=QVariantList{};const auto sources=result.report.value("metadataSources").toMap();for(const auto &key:{"mftBootstrap","volumeRecord","bitmapRecord"})records.append(sources.value(key));
+  for(const auto &v:result.report.value("findings").toList())records.append(v.toMap().value("details"));
+  for(const auto &v:records){
+   const auto d=v.toMap();const auto index=d.value("recordIndex").toLongLong();const auto refs=d.value("rawRecordExtents").toList();QVERIFY(!refs.isEmpty());QCOMPARE(refs[0].toMap().value("byteOffset").toLongLong(),recordOffset(int(index)));QByteArray raw;qint64 copied=0;
+   for(const auto &ref:refs){const auto extent=ref.toMap();const auto recordOffset=extent.value("recordByteOffset").toLongLong(),offset=extent.value("byteOffset").toLongLong(),length=extent.value("lengthBytes").toLongLong();QCOMPARE(recordOffset,copied);const auto logical=index*1024+recordOffset;
+    bool found=false;for(const auto &entry:mapping){const auto map=entry.toMap();const auto start=map.value("logicalByteOffset").toLongLong(),n=map.value("lengthBytes").toLongLong();if(logical>=start&&logical<start+n){QCOMPARE(offset,map.value("byteOffset").toLongLong()+logical-start);QVERIFY(length<=n-(logical-start));found=true;}}
+    QVERIFY(found);raw+=b.mid(offset,length);copied+=length;
+   }
+   QCOMPARE(raw.size(),1024);QCOMPARE(sha(raw),d.value("rawRecordSha256").toString());
+   const auto usa=d.value("usa").toMap();const auto array=QByteArray::fromHex(usa.value("arrayHex").toByteArray());const auto p=usa.value("recordByteOffset").toLongLong();QCOMPARE(array,raw.mid(p,6));const auto replacements=usa.value("replacements").toList();QCOMPARE(replacements.size(),2);auto fixed=raw;
+   for(int i=0;i<replacements.size();++i){const auto item=replacements[i].toMap();const auto off=item.value("recordByteOffset").toLongLong();QCOMPARE(off,(i+1)*512-2);QCOMPARE(item.value("originalHex").toByteArray(),raw.mid(off,2).toHex());QCOMPARE(raw.mid(off,2),array.left(2));const auto restored=QByteArray::fromHex(item.value("replacementHex").toByteArray());QCOMPARE(restored,array.mid(2*(i+1),2));fixed.replace(off,2,restored);}
+   QCOMPARE(sha(fixed),d.value("reconstructedRecordSha256").toString());
+  }
+  QCOMPARE(r.verifiedBytes,b);
+ }
+ void replayAcceptsOnlyExactBoundReport(){
+  const auto b=image();const auto r=request(b);const auto parsed=mr::forensic::inspectNtfsMetadata(r);QVERIFY(parsed.ok());const auto json=QJsonDocument::fromVariant(parsed.report).toJson(QJsonDocument::Compact);
+  const auto accepted=mr::forensic::verifyNtfsMetadataReport(r,json,sha(json));QVERIFY2(accepted.ok(),qPrintable(accepted.errorCode));QCOMPARE(accepted.report,parsed.report);
+  auto other=r;other.caseId="00000000-0000-4000-8000-000000000099";QCOMPARE(mr::forensic::verifyNtfsMetadataReport(other,json,sha(json)).errorCode,QString("ntfs-report-source-mismatch"));
+  other=r;other.evidenceId=other.caseId;QCOMPARE(mr::forensic::verifyNtfsMetadataReport(other,json,sha(json)).errorCode,QString("ntfs-report-source-mismatch"));
+  other=r;other.verifiedBytes[recordOffset(16)+510]^=1;other.sourceSha256=sha(other.verifiedBytes);const auto torn=mr::forensic::verifyNtfsMetadataReport(other,json,sha(json));QVERIFY(!torn.ok());QVERIFY(torn.report.isEmpty());
+  other=r;other.verifiedBytes[1000]^=1;QCOMPARE(mr::forensic::verifyNtfsMetadataReport(other,json,sha(json)).errorCode,QString("ntfs-input-or-hash"));
+  other=r;other.verifiedBytes[1000]^=1;other.sourceSha256=sha(other.verifiedBytes);QCOMPARE(mr::forensic::verifyNtfsMetadataReport(other,json,sha(json)).errorCode,QString("ntfs-report-source-mismatch"));
+ }
+ void rehashedReportForgery_data(){QTest::addColumn<int>("mode");for(int i=0;i<26;++i)QTest::newRow(qPrintable(QString::number(i)))<<i;}
+ void rehashedReportForgery(){
+  QFETCH(int,mode);auto r=request(image());auto parsed=mr::forensic::inspectNtfsMetadata(r);QVERIFY(parsed.ok());auto report=parsed.report;auto findings=report.value("findings").toList();auto finding=findings[0].toMap(),details=finding.value("details").toMap();
+  if(mode==0)report.insert("caseId","00000000-0000-4000-8000-000000000099");
+  if(mode==1)report.insert("evidenceId",r.caseId);
+  if(mode==2)report.insert("sourceCommit",QString(40,'0'));
+  if(mode==3)report.insert("parserVersion","nexvary-mr-ntfs-metadata/1");
+  if(mode==4)report.insert("workingCopySha256",QString(64,'0'));
+  if(mode==5)report.insert("bitmapAvailable",false);
+  if(mode==6)report.insert("emptySlots",0);
+  if(mode==7)report.insert("limitations",QStringList{});
+  if(mode==8){auto mapping=report.value("mftMapping").toList();auto map=mapping[0].toMap();map.insert("byteOffset",map.value("byteOffset").toLongLong()+512);mapping[0]=map;report.insert("mftMapping",mapping);}
+  if(mode==9){auto refs=details.value("rawRecordExtents").toList();auto ref=refs[0].toMap();ref.insert("byteOffset",ref.value("byteOffset").toLongLong()+512);refs[0]=ref;details.insert("rawRecordExtents",refs);}
+  if(mode==10)details.insert("rawRecordSha256",QString(64,'0'));
+  if(mode==11)details.insert("reconstructedRecordSha256",details.value("rawRecordSha256"));
+  if(mode==12){auto usa=details.value("usa").toMap();usa.insert("recordByteOffset",58);details.insert("usa",usa);}
+  if(mode==13){auto usa=details.value("usa").toMap();usa.insert("arrayHex","010000000000");details.insert("usa",usa);}
+  if(mode==14){auto usa=details.value("usa").toMap();auto replacements=usa.value("replacements").toList();replacements.removeLast();usa.insert("replacements",replacements);details.insert("usa",usa);}
+  if(mode==15)details.insert("recordIndex",QString::number(details.value("recordIndex").toLongLong()));
+  if(mode==16)details.insert("deleted",!details.value("deleted").toBool());
+  if(mode==17){auto names=details.value("names").toList();auto name=names[0].toMap();name.insert("createdFiletimeRaw","133444736001234576");names[0]=name;details.insert("names",names);}
+  if(mode==18){auto data=details.value("dataStream").toMap();data.insert("recovery","complete");details.insert("dataStream",data);}
+  if(mode==19)finding.insert("confidence","verified-recovery");
+  if(mode==20)report.insert("unexpectedAuthority","signed-case-acceptance");
+  if(mode==21){auto sources=report.value("metadataSources").toMap();sources.insert("bitmapBytesSha256",QString(64,'0'));report.insert("metadataSources",sources);}
+  if(mode==25){auto parameters=report.value("analysisParameters").toMap();parameters.insert("volumeImageOffset",512);report.insert("analysisParameters",parameters);}
+  finding.insert("details",details);findings[0]=finding;report.insert("findings",findings);auto json=QJsonDocument::fromVariant(report).toJson(QJsonDocument::Compact);
+  if(mode==22)json=" "+json;
+  if(mode==23)json.insert(1,"\"caseId\":\"00000000-0000-4000-8000-000000000099\",");
+  if(mode==24)json="["+json+"]";
+  const auto forged=mr::forensic::verifyNtfsMetadataReport(r,json,sha(json));QCOMPARE(forged.errorCode,QString("ntfs-report-source-mismatch"));QVERIFY(forged.report.isEmpty());
+ }
+ void replayBoundsBindingsAndCancellation(){
+  auto r=request(image());const auto parsed=mr::forensic::inspectNtfsMetadata(r);QVERIFY(parsed.ok());const auto json=QJsonDocument::fromVariant(parsed.report).toJson(QJsonDocument::Compact);
+  QCOMPARE(mr::forensic::verifyNtfsMetadataReport(r,json,QString(64,'0')).errorCode,QString("ntfs-report-hash"));
+  for(const auto &bytes:QList<QByteArray>{QByteArray{},QByteArray(65537,'[')}){const auto rejected=mr::forensic::verifyNtfsMetadataReport(r,bytes,sha(bytes));QCOMPARE(rejected.errorCode,QString("ntfs-report-limit"));QVERIFY(rejected.report.isEmpty());}
+  r.caseId="arbitrary";QCOMPARE(mr::forensic::inspectNtfsMetadata(r).errorCode,QString("ntfs-provenance-binding"));
+  r=request(image());r.evidenceId.clear();QCOMPARE(mr::forensic::inspectNtfsMetadata(r).errorCode,QString("ntfs-provenance-binding"));
+  r=request(image());r.verifyManifestPayloads=true;QCOMPARE(mr::forensic::inspectNtfsMetadata(r).errorCode,QString("ntfs-auxiliary-mode-unsupported"));
+  r=request(image());r.sqliteFamilyMembers.insert("wal",{r.evidenceId,r.sourceSha256,r.verifiedBytes});QCOMPARE(mr::forensic::inspectNtfsMetadata(r).errorCode,QString("ntfs-auxiliary-mode-unsupported"));
+  r=request(image());r.cancelled->store(true);QCOMPARE(mr::forensic::verifyNtfsMetadataReport(r,json,sha(json)).errorCode,QString("cancelled"));r.cancelled->store(false);r.deadline=QDeadlineTimer(0);QCOMPARE(mr::forensic::verifyNtfsMetadataReport(r,json,sha(json)).errorCode,QString("worker-timeout"));
+ }
  void knownAnswerAndOriginalReferences(){
   const auto b=image();QCOMPARE(b.size(),4*1024*1024);QCOMPARE(sha(b),oracle().value("imageSha256").toString());
   auto r=request(b);const auto result=mr::forensic::inspectNtfsMetadata(r);QVERIFY2(result.ok(),qPrintable(result.errorCode));QCOMPARE(result.report,mr::forensic::inspectNtfsMetadata(r).report);QCOMPARE(r.verifiedBytes,b);
@@ -39,6 +110,7 @@ private slots:
   const auto result=mr::forensic::inspectNtfsMetadata(request(b));QVERIFY2(result.ok(),qPrintable(result.errorCode));const auto rows=result.report.value("findings").toList();const auto inventory=expected.value("expectedNamedUserRecords").toList();QCOMPARE(rows.size(),inventory.size());QVariantMap record;
   for(int i=0;i<rows.size();++i){const auto actual=rows[i].toMap();QCOMPARE(actual.value("value").toString(),inventory[i].toMap().value("name").toString());QCOMPARE(actual.value("details").toMap().value("recordIndex").toInt(),inventory[i].toMap().value("record").toInt());if(actual.value("value")=="known.txt")record=actual;}
   QVERIFY(!record.isEmpty());QCOMPARE(record.value("value").toString(),QString("known.txt"));const auto data=record.value("details").toMap().value("dataStream").toMap();QCOMPARE(data.value("logicalBytes").toLongLong(),3);QCOMPARE(data.value("reconstructedResidentSha256").toString(),expected.value("knownContentSha256").toString());
+  const auto json=QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact);const auto verified=mr::forensic::verifyNtfsMetadataReport(request(b),json,sha(json));QVERIFY2(verified.ok(),qPrintable(verified.errorCode));QCOMPARE(verified.report,result.report);
  }
  void malformedRecordsAndRuns_data(){QTest::addColumn<int>("mode");for(int i=0;i<21;++i)QTest::newRow(qPrintable(QString::number(i)))<<i;}
  void malformedRecordsAndRuns(){

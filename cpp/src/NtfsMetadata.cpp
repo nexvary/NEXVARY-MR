@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QSet>
 #include <QStringDecoder>
+#include <QRegularExpression>
 #include <QtEndian>
 #include <bit>
 #include <limits>
@@ -14,6 +15,8 @@ quint16 u16(const QByteArray &b,qsizetype p){return qFromLittleEndian<quint16>(r
 quint32 u32(const QByteArray &b,qsizetype p){return qFromLittleEndian<quint32>(reinterpret_cast<const uchar*>(b.constData()+p));}
 quint64 u64(const QByteArray &b,qsizetype p){return qFromLittleEndian<quint64>(reinterpret_cast<const uchar*>(b.constData()+p));}
 QString sha(const QByteArray &b){return QString::fromLatin1(QCryptographicHash::hash(b,QCryptographicHash::Sha256).toHex());}
+bool identity(const QString &s){static const QRegularExpression uuid("\\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\z");return uuid.match(s).hasMatch();}
+QString stopped(const ReadOnlyEvidenceRequest &r){return r.cancelled&&r.cancelled->load()?"cancelled":r.deadline.hasExpired()?"worker-timeout":QString{};}
 struct Run {qint64 physical=0,length=0;};
 struct Stream {QByteArray resident;QList<Run> runs;qint64 size=0,initialized=0;bool valid=false,isResident=false;};
 class Parser {
@@ -77,6 +80,18 @@ class Parser {
   const auto usn=b.mid(p,2);if(usn==QByteArray(2,0))return fail("ntfs-usa-zero");
   for(int i=1;i<count;++i){const int tail=i*512-2;if(b.mid(tail,2)!=usn)return fail("ntfs-torn-record");b.replace(tail,2,b.mid(p+2*i,2));}
   return true;
+ }
+ QVariantMap recordProvenance(const QByteArray &raw,const QByteArray &fixed,const QVariantList &refs){
+  // fixup has already checked the entire array and every trailer. These bytes
+  // describe the transformation, not an on-disk write or a recovered file.
+  const int p=u16(raw,4),count=u16(raw,6);QVariantList replacements;
+  for(int i=1;i<count;++i)replacements.append(QVariantMap{{"recordByteOffset",i*512-2},{"originalHex",QString::fromLatin1(raw.mid(i*512-2,2).toHex())},{"replacementHex",QString::fromLatin1(raw.mid(p+2*i,2).toHex())}});
+  return {{"rawRecordExtents",refs},{"rawRecordSha256",sha(raw)},{"reconstructedRecordSha256",sha(fixed)},
+   {"usa",QVariantMap{{"recordByteOffset",p},{"arrayHex",QString::fromLatin1(raw.mid(p,2*count).toHex())},{"replacements",replacements}}}};
+ }
+ QVariantMap systemRecord(qint64 index,const QByteArray &raw,const QByteArray &fixed){
+  QVariantList refs;streamRead(mft,index*recordSize,recordSize,&refs);
+  auto result=recordProvenance(raw,fixed,refs);result.insert("recordIndex",index);return result;
  }
  QList<QByteArray> attributes(const QByteArray &b){
   QList<QByteArray> result;const auto used=u32(b,24);quint32 p=u16(b,20);QSet<quint16> ids;
@@ -142,6 +157,8 @@ public:
  ForensicAdapterResult parse(){
   const auto reject=[&]{return ForensicAdapterResult{{},error};};
   if(!active())return reject();
+  if(!identity(r.caseId)||!identity(r.evidenceId)){fail("ntfs-provenance-binding");return reject();}
+  if(r.verifyManifestPayloads||!r.manifestPayloads.isEmpty()||!r.sqliteFamilyMembers.isEmpty()){fail("ntfs-auxiliary-mode-unsupported");return reject();}
   if(image.size()<512||image.size()>limit||sha(image)!=r.sourceSha256){fail("ntfs-input-or-hash");return reject();}
   if(image.mid(3,8)!="NTFS    "||image.mid(510,2)!=QByteArray::fromHex("55aa")||u16(image,11)!=512){fail("ntfs-volume-unsupported");return reject();}
   const auto spc=uchar(image[13]);const auto sectors=u64(image,40),mftCluster=u64(image,48);const auto code=std::bit_cast<qint8>(uchar(image[64]));
@@ -153,10 +170,10 @@ public:
   if(!error.isEmpty())return reject();
   if(!mft.valid||mft.isResident||mft.initialized!=mft.size||mft.size%recordSize||mft.size/recordSize<16||mft.size/recordSize>128){fail("ntfs-mft-bound");return reject();}
   if(streamRead(mft,0,recordSize)!=first){fail("ntfs-mft-bootstrap-map");return reject();}
-  auto vol=streamRead(mft,3*recordSize,recordSize);if(!fixup(vol))return reject();if(u64(vol,32)||!(u16(vol,22)&1)){fail("ntfs-volume-base-reference");return reject();}const auto va=attributes(vol);if(!error.isEmpty())return reject();bool version=false,versionSeen=false;
+  const auto rawVol=streamRead(mft,3*recordSize,recordSize);auto vol=rawVol;if(!fixup(vol))return reject();if(u64(vol,32)||!(u16(vol,22)&1)){fail("ntfs-volume-base-reference");return reject();}const auto va=attributes(vol);if(!error.isEmpty())return reject();bool version=false,versionSeen=false;
   for(const auto &a:va)if(u32(a,0)==0x70){if(versionSeen){fail("ntfs-volume-version-duplicate");return reject();}versionSeen=true;const auto s=stream(a);if(s.valid&&s.isResident&&s.size>=12&&s.resident[8]==3&&(s.resident[9]==0||s.resident[9]==1))version=true;}
   if(!version){fail("ntfs-version-unsupported");return reject();}
-  auto br=streamRead(mft,6*recordSize,recordSize);
+  const auto rawBitmap=streamRead(mft,6*recordSize,recordSize);auto br=rawBitmap;QVariantMap bitmapRecord;
   if(!br.isEmpty()&&br!=QByteArray(br.size(),0)){
    if(!fixup(br))return reject();
    if(u64(br,32)||!(u16(br,22)&1)){fail("ntfs-bitmap-base-reference");return reject();}
@@ -164,6 +181,7 @@ public:
    if(!error.isEmpty())return reject();
    const auto needed=(volume/cluster+7)/8;
    if(bs.valid&&bs.size>=needed&&bs.size<=65536&&bs.initialized==bs.size)bitmap=streamRead(bs,0,bs.size);
+   bitmapRecord=systemRecord(6,rawBitmap,br);
   }
   QVariantList findings;
   for(qint64 i=0;i<mft.size/recordSize;++i){
@@ -176,15 +194,31 @@ public:
    const auto ns=names(as);const auto ds=data(as);if(!error.isEmpty())return reject();
    if(ns.isEmpty()){if(!(u16(fixedRecord,22)&1)&&!ds.valid){++empty;continue;}fail("ntfs-user-name-missing");return reject();}
    const bool deleted=!(u16(fixedRecord,22)&1);const auto detail=describe(ds,deleted);if(!error.isEmpty())return reject();
-   QVariantMap d{{"recordIndex",i},{"sequence",u16(fixedRecord,16)},{"deleted",deleted},{"directory",bool(u16(fixedRecord,22)&2)},{"names",ns},{"dataStream",detail},{"rawRecordExtents",raw},{"rawRecordSha256",sha(b)},{"usaVerified",true}};
+   auto d=recordProvenance(b,fixedRecord,raw);d.insert("recordIndex",i);d.insert("sequence",u16(fixedRecord,16));d.insert("deleted",deleted);d.insert("directory",bool(u16(fixedRecord,22)&2));d.insert("names",ns);d.insert("dataStream",detail);d.insert("usaVerified",true);
    findings.append(QVariantMap{{"kind","ntfs-file-record"},{"reference","ntfs/mft/record/"+QString::number(i)},{"value",ns[0].toMap().value("name")},{"confidence","recorded-metadata-only"},{"details",d}});
   }
   if(!active())return reject();
-  QVariantMap report{{"schema","nexvary-mr-ntfs-metadata/1"},{"sourceSha256",r.sourceSha256},{"sourceBytes",image.size()},{"sourceRepository","nexvary/NEXVARY-DC"},{"sourceCommit","d8e2baf61b43d044b33a1dd76a444d093c80023c"},{"sourceModule","src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs; bounded metadata-only derivative"},{"parserVersion","nexvary-mr-ntfs-metadata/1"},{"geometry",QVariantMap{{"volumeBytes",volume},{"clusterBytes",cluster},{"recordBytes",recordSize},{"sectorBytes",512},{"trailingImageBytes",image.size()-volume}}},{"mftRecords",mft.size/recordSize},{"emptySlots",empty},{"extensionRecordsExcluded",extensions},{"namedDataStreamsExcluded",named},{"bitmapAvailable",!bitmap.isEmpty()},{"findings",findings},{"limitations",QStringList{"Internal metadata prerequisite only; not an enabled case adapter or recovered file.","512-byte-sector NTFS3.0/3.1 volume-image prefix only; at most128 MFT records and128 runs/stream. No attribute-list, compression/encryption or named-stream interpretation.","Raw record extents reference pre-fixup protected bytes; resident hashes refer to USA-reconstructed data. Internal consistency does not establish authenticity or absence of overwrite.","Bitmap bits/counters are recorded observations, not recovery success. No file bytes are saved, no target paths are resolved, and no source/device/filesystem writes occur."}}};
+  QVariantList mapping;qint64 logical=0;for(const auto &run:mft.runs){mapping.append(QVariantMap{{"logicalByteOffset",logical},{"byteOffset",run.physical},{"lengthBytes",run.length}});logical+=run.length;}
+  QVariantMap metadataSources{{"mftBootstrap",systemRecord(0,first,fixed)},{"volumeRecord",systemRecord(3,rawVol,vol)},{"bitmapRecord",bitmapRecord},{"bitmapBytesSha256",bitmap.isEmpty()?QString():sha(bitmap)}};
+  if(!active()||!error.isEmpty())return reject();
+  const QVariantMap parameters{{"volumeImageOffset",0},{"maxInputBytes",limit},{"maxReportBytes",65536},{"maxMftRecords",128},{"maxRunsPerStream",128},{"maxAttributesPerRecord",64},{"minimumNamedRecordIndex",16},{"nameSelection","first recorded FILE_NAME attribute; no preferred-alias or hierarchy inference"},{"timestampPolicy","raw unsigned FILETIME100ns; no timeline conversion or deletion-event inference"},{"recovery","not-performed"}};
+  QVariantMap report{{"schema","nexvary-mr-ntfs-metadata/2"},{"caseId",r.caseId},{"evidenceId",r.evidenceId},{"sourceSha256",r.sourceSha256},{"workingCopySha256",r.sourceSha256},{"sourceBytes",image.size()},{"sourceRepository","nexvary/NEXVARY-DC"},{"sourceCommit","d8e2baf61b43d044b33a1dd76a444d093c80023c"},{"sourceModule","src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs; bounded metadata-only derivative"},{"parserVersion","nexvary-mr-ntfs-metadata/2"},{"analysisParameters",parameters},{"geometry",QVariantMap{{"volumeBytes",volume},{"clusterBytes",cluster},{"recordBytes",recordSize},{"sectorBytes",512},{"trailingImageBytes",image.size()-volume}}},{"mftMapping",mapping},{"metadataSources",metadataSources},{"mftRecords",mft.size/recordSize},{"emptySlots",empty},{"extensionRecordsExcluded",extensions},{"namedDataStreamsExcluded",named},{"bitmapAvailable",!bitmap.isEmpty()},{"findings",findings},{"limitations",QStringList{"Internal metadata prerequisite only; not an enabled case adapter or recovered file.","512-byte-sector NTFS3.0/3.1 volume-image prefix only; at most128 MFT records and128 runs/stream. No attribute-list, compression/encryption or named-stream interpretation.","Raw record extents reference pre-fixup protected bytes; resident hashes refer to USA-reconstructed data. Internal consistency does not establish authenticity or absence of overwrite.","Bitmap bits/counters are recorded observations, not recovery success. No file bytes are saved, no target paths are resolved, and no source/device/filesystem writes occur."}}};
   if(QJsonDocument::fromVariant(report).toJson(QJsonDocument::Compact).size()>65536){fail("ntfs-output-limit");return reject();}
   return {report,{}};
  }
 };
 }
 ForensicAdapterResult inspectNtfsMetadata(const ReadOnlyEvidenceRequest &r){return Parser(r).parse();}
+ForensicAdapterResult verifyNtfsMetadataReport(const ReadOnlyEvidenceRequest &r,const QByteArray &json,const QString &expectedSha){
+ const auto stop=stopped(r);if(!stop.isEmpty())return {{},stop};
+ // Compare the complete bounded canonical report after protected-byte replay.
+ // No parsing of attacker-controlled JSON, trust in in-range offsets alone,
+ // or self-reported digest can substitute for freshly supplied source bytes.
+ if(json.isEmpty()||json.size()>65536)return {{},"ntfs-report-limit"};
+ if(sha(json)!=expectedSha)return {{},"ntfs-report-hash"};
+ const auto replay=inspectNtfsMetadata(r);if(!replay.ok())return replay;
+ if(QJsonDocument::fromVariant(replay.report).toJson(QJsonDocument::Compact)!=json)return {{},"ntfs-report-source-mismatch"};
+ const auto end=stopped(r);if(!end.isEmpty())return {{},end};
+ return replay;
+}
 }

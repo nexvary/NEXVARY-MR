@@ -90,14 +90,19 @@
       "ci_run": 40738028510,
       "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md",
       "ntfs_metadata_prerequisite": {
-        "state": "internal-prerequisite-tested-case-integration-pending",
+        "state": "internal-provenance-replay-local-tested-hosted-pending-case-integration-pending",
         "enabled": false,
         "registered_case_adapter": false,
-        "parser_version": "nexvary-mr-ntfs-metadata/1",
-        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
-        "ci_run": 40738028510,
         "source_module": "src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs selected metadata-only derivative",
-        "scope": "Internal test target;512-sector NTFS3/8MiB/128records, no recovered file/source writes/desktop case receipt"
+        "scope": "Internal test target; bounded protected-source replay, exact case/evidence labels, MFT map/USA/raw-reconstructed metadata provenance; no authorization, signed retention or recovered file",
+        "accepted_predecessor": {
+          "parser_version": "nexvary-mr-ntfs-metadata/1",
+          "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+          "ci_run": 40738028510,
+          "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md"
+        },
+        "parser_version": "nexvary-mr-ntfs-metadata/2",
+        "evidence": "evidence/ntfs-replay-2026-10-28/CHECKPOINT.md"
       }
     }
   ],

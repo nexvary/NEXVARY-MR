@@ -6,6 +6,38 @@ Reports. It does not authorize caller-supplied bytes or issue a signed receipt.
 Case integration/retained validation is a subsequent acceptance gate; do not treat
 its internal observations as accepted case findings or recovered files.
 
+The internal schema is now `nexvary-mr-ntfs-metadata/2`. It binds exact case and
+evidence UUID strings, protected source/working-copy SHA256 and explicit analysis
+parameters. These are provenance labels, not access authorization, original
+acquisition proof or a signed audit receipt. The original acquisition hash must
+come from the existing case evidence store at eventual integration.
+
+The report retains the nonresident MFT logical-to-image mapping, original byte
+ranges and raw/reconstructed record digests for named records and the bootstrap,
+$Volume and available $Bitmap records. Each record includes the original USA
+array and exact trailer replacement offsets/bytes. The bitmap content digest is
+separate from its source record digest. Reconstructed resident/file-record hashes
+must never be described as a recovered external file's original content hash.
+
+`verifyNtfsMetadataReport` is an internal replay gate. Its caller must supply
+fresh protected bytes and trusted current case/evidence bindings. It checks the
+bounded report digest, re-runs the parser with the same deadline/cancellation
+token and compares the entire canonical report byte-for-byte. Rehashing a forged
+report, an in-bounds but false MFT reference, altered USA data or a changed case
+cannot pass replay. Noncanonical/duplicate-key/unknown-field JSON is refused by
+the exact comparison without parsing attacker-controlled report JSON. No v1
+compatibility fallback. The expected report digest is only an equality token;
+any caller can hash arbitrary bytes, so a digest alone establishes no authority.
+
+This gate is NOT wired into the case store yet. It does not test grants, expired
+sessions, signed preparation, crash reconciliation or restart deduplication.
+Before enablement, call it on re-read protected bytes before the existing signed
+transaction; retain the current authority/member/revision checks and all case
+integration acceptance requirements. A stored report alone cannot replace replay
+or independently prove source mapping, authenticity, free-space integrity or
+recoverability. Bounds remain 8MiB input/64KiB output; added provenance can cause
+earlier whole-report rejection, never silent omission or partial success.
+
 Pinned Disk Care source d8e2baf61b43d044b33a1dd76a444d093c80023c,
 src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs was inspected.
 Image(QFile), Output::save and all destination/format/repair/erase/rebuild/controller
