@@ -1,5 +1,7 @@
 #include "SqliteTableReader.hpp"
 #include "ChromiumHistoryReader.hpp"
+#include "ChromiumDownloadsReader.hpp"
+#include "ChromiumDownloads.hpp"
 #include "ChromiumHistory.hpp"
 #include "SqliteEvidenceFamily.hpp"
 #include <QCryptographicHash>
@@ -24,6 +26,99 @@ void be32(QByteArray &bytes,int offset,quint32 value){qToBigEndian(value,reinter
 class SqliteTableTests:public QObject {
  Q_OBJECT
 private slots:
+
+
+ void downloadsRuntimeCases_data(){
+  QTest::addColumn<int>("mode");
+  const char *names[]={"absent-chain-table","reordered-columns","orphan-chain","chain-gap","negative-index","unknown-column","blob-url","text-size","null-target","row-limit","per-chain-index-limit","missing-composite-key","reversed-composite-key","duplicate-chain-index","output-limit","overflow-paths","existing-target-untouched","empty-tables","chain-table-without-rowid","chain-row-limit","shared-table-root"};
+  for(int i=0;i<21;++i)QTest::newRow(names[i])<<i;
+ }
+ void downloadsRuntimeCases(){
+  QFETCH(int,mode);QTemporaryDir temp;QVERIFY(temp.isValid());const auto path=temp.filePath("History"),marker=temp.filePath("untouched-file.bin");
+  {QFile f(marker);QVERIFY(f.open(QIODevice::WriteOnly));QCOMPARE(f.write("untouched-content"),qint64(17));}
+  mr::forensic::ReadOnlyEvidenceRequest r;QList<QVariantList> expected;
+  {
+   auto db=QSqlDatabase::addDatabase("QSQLITE","downloads-runtime");db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);
+   QVERIFY(q.exec("PRAGMA page_size=512"));
+   QVERIFY(q.exec(mode==1?"CREATE TABLE downloads(target_path TEXT,state INTEGER,id INTEGER PRIMARY KEY,total_bytes INTEGER,current_path TEXT,start_time INTEGER,end_time INTEGER,received_bytes INTEGER)":"CREATE TABLE downloads(id INTEGER PRIMARY KEY,current_path TEXT,target_path TEXT,start_time INTEGER,end_time INTEGER,received_bytes INTEGER,total_bytes INTEGER,state INTEGER)"));
+   if(mode==5)QVERIFY(q.exec("ALTER TABLE downloads ADD COLUMN unknown INTEGER"));
+   if(mode!=0){
+    QString key=mode==11||mode==13?QString{}:mode==12?",PRIMARY KEY(chain_index,id)":",PRIMARY KEY(id,chain_index)";
+    QVERIFY(q.exec("CREATE TABLE downloads_url_chains(id INTEGER NOT NULL,chain_index INTEGER NOT NULL,url LONGVARCHAR NOT NULL"+key+")"+(mode==18?" WITHOUT ROWID":"")));
+    if(mode==20){QVERIFY(q.exec("PRAGMA writable_schema=ON"));QVERIFY(q.exec("UPDATE sqlite_master SET rootpage=(SELECT rootpage FROM sqlite_master WHERE name='downloads') WHERE name='downloads_url_chains'"));}
+    if(mode==13){
+     QVERIFY(q.exec("PRAGMA writable_schema=ON"));
+     QVERIFY(q.exec("UPDATE sqlite_master SET sql='CREATE TABLE downloads_url_chains(id INTEGER NOT NULL,chain_index INTEGER NOT NULL,url LONGVARCHAR NOT NULL,PRIMARY KEY(id,chain_index))' WHERE name='downloads_url_chains'"));
+    }
+   }
+   if(mode!=17){
+    QVERIFY(q.prepare("INSERT INTO downloads(id,current_path,target_path,start_time,end_time,received_bytes,total_bytes,state) VALUES(?,?,?,?,?,?,?,?)"));
+    const int count=mode==9?129:mode==14?40:mode==19?9:1;
+    for(int i=0;i<count;++i){
+     q.bindValue(0,i+1);q.bindValue(1,mode==15?QString(1500,QChar(0x0639)):QString("../unresolved-part.bin"));
+     q.bindValue(2,mode==8?QVariant{}:QVariant(mode==16?marker:mode==14?QString(2000,'x'):QString("C:\\synthetic\\target.bin")));
+     q.bindValue(3,Q_INT64_C(11644473600000001));q.bindValue(4,std::numeric_limits<qint64>::max());
+     q.bindValue(5,mode==7?QVariant(QString("wrong-storage-type")):QVariant(Q_INT64_C(9007199254740993)));q.bindValue(6,-1);q.bindValue(7,4);QVERIFY(q.exec());
+    }
+    if(mode!=0){
+     QVERIFY(q.prepare("INSERT INTO downloads_url_chains VALUES(?,?,?)"));
+     const int chains=mode==13?2:mode==19?513:1;
+     for(int i=0;i<chains;++i){q.bindValue(0,mode==2?999:mode==19?i/64+1:1);q.bindValue(1,mode==3?1:mode==4?-1:mode==10?64:mode==13?0:mode==19?i%64:0);q.bindValue(2,mode==6?QVariant(QByteArray("https://blob.invalid/")):QVariant(QString("https://source.invalid/file")));QVERIFY(q.exec());}
+    }
+   }
+   QVERIFY(q.exec("SELECT id,current_path,target_path,start_time,end_time,received_bytes,total_bytes,state FROM downloads ORDER BY id"));while(q.next()){QVariantList row;for(int i=0;i<8;++i)row.append(q.value(i));expected.append(row);}q.finish();db.close();
+  }
+  QSqlDatabase::removeDatabase("downloads-runtime");QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));r=request(f.readAll());
+  const auto result=mr::forensic::readProtectedChromiumDownloads(r);
+  const QMap<int,QString> errors{{2,"downloads-orphan-chain"},{3,"downloads-chain-gap"},{4,"downloads-chain-index-or-url"},{5,"downloads-schema-unsupported"},{6,"downloads-chain-record-type-or-limit"},{7,"downloads-record-type-or-limit"},{8,"downloads-record-type-or-limit"},{9,"downloads-result-limit"},{10,"downloads-chain-index-or-url"},{11,"downloads-schema-unsupported"},{12,"downloads-schema-unsupported"},{13,"downloads-chain-index-or-url"},{14,"downloads-output-limit"},{18,"downloads-schema-unsupported"},{19,"downloads-chain-result-limit"},{20,"downloads-schema-shared-root"}};
+  if(errors.contains(mode)){QCOMPARE(result.errorCode,errors.value(mode));QVERIFY(result.report.isEmpty());return;}
+  QVERIFY2(result.ok(),qPrintable(result.errorCode));const auto rows=result.report.value("observations").toList();QCOMPARE(rows.size(),expected.size());
+  for(int i=0;i<rows.size();++i){const auto row=rows[i].toMap(),fields=row.value("fields").toMap();const auto e=expected[i];
+   QCOMPARE(fields.value("id").toString(),e[0].toString());QCOMPARE(fields.value("current_path"),e[1]);QCOMPARE(fields.value("target_path"),e[2]);
+   QCOMPARE(fields.value("received_bytes").toString(),QString("9007199254740993"));QCOMPARE(fields.value("total_bytes").toString(),QString("-1"));
+   const auto times=row.value("times").toMap();QCOMPARE(times.value("start_time").toMap().value("unixMicroseconds").toString(),QString("1"));
+   QCOMPARE(times.value("end_time").toMap().value("unixMicroseconds").toString(),QString::number(std::numeric_limits<qint64>::max()-Q_INT64_C(11644473600000000)));
+   if(mode==0){QCOMPARE(row.value("chainStatus").toString(),QString("table-not-supplied"));QVERIFY(row.value("urlChain").toList().isEmpty());}
+   if(mode==15){QVERIFY(row.value("sourceExtents").toList().size()>3);const auto family=mr::forensic::inspectSqliteEvidenceFamily(r,{});for(const auto &v:row.value("sourceExtents").toList()){const auto x=v.toMap();QCOMPARE(r.verifiedBytes.mid(x.value("byteOffset").toLongLong(),x.value("lengthBytes").toLongLong()),family.committedPages.mid(x.value("imageByteOffset").toLongLong(),x.value("lengthBytes").toLongLong()));}}
+  }
+  QFile m(marker);QVERIFY(m.open(QIODevice::ReadOnly));QCOMPARE(m.readAll(),QByteArray("untouched-content"));
+ }
+ void downloadsWalOracle(){
+  QFile f(MR_DOWNLOADS_REFERENCE_PATH);QVERIFY(f.open(QIODevice::ReadOnly));const auto fixture=QJsonDocument::fromJson(f.readAll()).toVariant().toMap();
+  auto r=request(QByteArray::fromBase64(fixture.value("mainBase64").toByteArray()));
+  for(const auto &role:QStringList{"wal","shm"}){const auto bytes=QByteArray::fromBase64(fixture.value(role+"Base64").toByteArray());r.sqliteFamilyMembers.insert(role,{role=="wal"?"00000000-0000-4000-8000-000000000003":"00000000-0000-4000-8000-000000000004",sha(bytes),bytes});}
+  auto adapterRequest=r;adapterRequest.adapter="chromium-downloads";
+  const auto signedInput=mr::forensic::analyzeReadOnlyEvidence(adapterRequest);QVERIFY2(signedInput.ok(),qPrintable(signedInput.errorCode));
+  QMap<QString,QVariantMap> inventory{{r.evidenceId,{{"id",r.evidenceId},{"sha256",r.sourceSha256},{"size",r.verifiedBytes.size()}}}};
+  for(const auto &member:r.sqliteFamilyMembers)inventory.insert(member.evidenceId,{{"id",member.evidenceId},{"sha256",member.sha256},{"size",member.bytes.size()}});
+  QVERIFY(mr::forensic::validateRetainedChromiumDownloads(signedInput.report,inventory).ok());
+  auto forged=signedInput.report;forged.insert("chainRows",999);QVERIFY(!mr::forensic::validateRetainedChromiumDownloads(forged,inventory).ok());
+  const auto before=r.verifiedBytes,wal=r.sqliteFamilyMembers["wal"].bytes;
+  const auto parsed=mr::forensic::readProtectedChromiumDownloads(r);QVERIFY2(parsed.ok(),qPrintable(parsed.errorCode));
+  QCOMPARE(parsed.report,mr::forensic::readProtectedChromiumDownloads(r).report);
+  const auto family=mr::forensic::inspectSqliteEvidenceFamily(r,{});QVERIFY(family.analysis.ok());
+  QCOMPARE(sha(family.committedPages),fixture.value("snapshotSha256").toString());
+  const auto observations=parsed.report.value("observations").toList(),expected=fixture.value("expected").toList();QCOMPARE(observations.size(),expected.size());
+  bool fromMain=false,fromWal=false;
+  const auto references=[&](const QVariantList &refs){
+   QVERIFY(!refs.isEmpty());
+   for(const auto &v:refs){const auto x=v.toMap();const bool w=x.value("role")=="wal";fromWal|=w;fromMain|=!w;const auto &bytes=w?wal:r.verifiedBytes;
+    const auto off=x.value("byteOffset").toLongLong(),len=x.value("lengthBytes").toLongLong();QVERIFY(off>=0&&len>0&&off+len<=bytes.size());
+    QCOMPARE(x.value("sourceSha256").toString(),sha(bytes));QCOMPARE(bytes.mid(off,len),family.committedPages.mid(x.value("imageByteOffset").toLongLong(),len));
+   }
+  };
+  for(int i=0;i<observations.size();++i){const auto o=observations[i].toMap();QCOMPARE(o.value("fields").toMap(),expected[i].toMap());references(o.value("sourceExtents").toList());
+   QCOMPARE(o.value("times").toMap().value("start_time").toMap().value("unixMicroseconds").toString(),QString("1700000000123456"));
+   const auto end=o.value("times").toMap().value("end_time").toMap();QCOMPARE(end.value("status").toString(),QString("unset-zero"));QVERIFY(!end.contains("unixMicroseconds"));
+   const auto chains=o.value("urlChain").toList();if(i==0){QCOMPARE(chains.size(),2);for(int j=0;j<chains.size();++j){const auto c=chains[j].toMap();const auto e=fixture.value("expectedChains").toList()[j].toList();QCOMPARE(c.value("rowid").toString(),e[0].toString());QCOMPARE(c.value("chainIndex").toString(),e[2].toString());QCOMPARE(c.value("url").toString(),e[3].toString());references(c.value("sourceExtents").toList());}}else QVERIFY(chains.isEmpty());
+  }
+  for(const auto &t:parsed.report.value("downloadsSchema").toMap())references(t.toMap().value("schemaSourceExtents").toList());
+  QVERIFY(fromMain);QVERIFY(fromWal);QCOMPARE(r.verifiedBytes,before);QCOMPARE(r.sqliteFamilyMembers["wal"].bytes,wal);
+  r.sqliteFamilyMembers["wal"].bytes[40]^=1;const auto bad=mr::forensic::readProtectedChromiumDownloads(r);QVERIFY(!bad.ok());QVERIFY(bad.report.isEmpty());
+  auto image=request(family.committedPages);std::mt19937 mutations(0x444f574e);
+  for(int i=0;i<256;++i){auto b=image.verifiedBytes;b[int(mutations()%quint32(b.size()))]^=char(1u<<(mutations()%8));auto mutated=request(b);mutated.adapter="chromium-downloads";const auto result=mr::forensic::analyzeReadOnlyEvidence(mutated);if(!result.ok())QVERIFY(result.report.isEmpty());else QVERIFY(QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact).size()<=65536);}
+  image.cancelled->store(true);QCOMPARE(mr::forensic::readProtectedChromiumDownloads(image).errorCode,QString("cancelled"));image.cancelled->store(false);image.deadline=QDeadlineTimer(0);QVERIFY(!mr::forensic::readProtectedChromiumDownloads(image).ok());
+ }
  void historyWalOracleAndProvenance(){
   QFile f(MR_HISTORY_REFERENCE_PATH);QVERIFY(f.open(QIODevice::ReadOnly));const auto fixture=QJsonDocument::fromJson(f.readAll()).toVariant().toMap();
   auto r=request(QByteArray::fromBase64(fixture.value("mainBase64").toByteArray()));r.adapter="chromium-history";

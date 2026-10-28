@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "selected-chromium-history-case-integration-tested-broader-integration-in-progress",
+  "status": "chromium-downloads-implemented-awaiting-exact-source-acceptance-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -44,7 +44,8 @@
       "evidence": "evidence/chromium-history-2026-10-28/FINAL_CHECKPOINT.md",
       "additional_adapters": [
         "browser-sqlite-family",
-        "chromium-history"
+        "chromium-history",
+        "chromium-downloads"
       ],
       "sqlite_family": {
         "verifier_version": "nexvary-mr-sqlite-family/1",
@@ -61,6 +62,13 @@
         "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension",
         "tested_source": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
         "ci_run": 40688214497
+      },
+      "downloads": {
+        "parser_version": "nexvary-mr-chromium-downloads/1",
+        "state": "implemented-exact-source-hosted-acceptance-pending",
+        "scope": "protected offline downloads and optional ordered rowid URL chains; original byte extents; existing signed case/Findings/Timeline; no path/file/live-profile/SQL access or completion/content inference",
+        "source_module": "nbf/parsers.py:ChromiumParser.downloads; MR shared bounded byte/provenance implementation",
+        "evidence": "evidence/chromium-downloads-2026-10-28/CHECKPOINT.md"
       }
     },
     {

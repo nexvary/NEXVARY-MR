@@ -1,6 +1,7 @@
 #include "ChromiumHistory.hpp"
 #include "ChromiumHistoryReader.hpp"
 #include "SqliteEvidenceFamily.hpp"
+#include "SqliteReaderSupport.hpp"
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QRegularExpression>
@@ -24,16 +25,11 @@ ForensicAdapterResult inspectChromiumHistory(const ReadOnlyEvidenceRequest &r,QV
  if(x.value("mode")!="visits-joined-to-urls")return reject("history-required-tables");
  if(x.value("unmatchedVisitCount").toInt()!=0)return reject("history-orphan-visit");
  const auto family=inspectSqliteEvidenceFamily(r,{});if(!family.analysis.ok())return family.analysis;
- const auto record=[](const QString &id,const QVariantList &refs){
-  QVariantList image,raw;
-  for(const auto &v:refs){auto e=v.toMap();image.append(QVariantMap{{"imageByteOffset",e.take("imageByteOffset")},{"lengthBytes",e.value("lengthBytes")}});raw.append(e);}
-  return QVariantMap{{"rowid",id},{"imageExtents",image},{"rawExtents",raw}};
- };
  QVariantList findings;
  for(const auto &v:x.value("observations").toList()){
   const auto o=v.toMap();const auto url=o.value("url").toString(),title=o.value("title").toString(),id=o.value("visitId").toString(),raw=o.value("visitTime").toMap().value("rawMicroseconds1601").toString();
   if(o.value("url").isNull()||url.isEmpty()||url.size()>2048||title.size()>2048||o.value("visitCount").isNull()||o.value("typedCount").isNull()||o.value("lastVisit").toMap().value("rawMicroseconds1601").isNull()||o.value("visitCount").toLongLong()<0||o.value("typedCount").toLongLong()<0||o.value("transition").isNull())return reject("history-value-limit");
-  QVariantMap d{{"urlId",o.value("urlId")},{"title",title},{"visitTimeRaw",raw},{"timestampUtc",chromiumHistoryTime(raw)},{"lastVisitTimeRaw",o.value("lastVisit").toMap().value("rawMicroseconds1601")},{"visitCount",o.value("visitCount")},{"typedCount",o.value("typedCount")},{"transitionRaw",o.value("transition")},{"fromVisitRaw",o.value("fromVisit")},{"visitRecord",record(id,o.value("visitSourceExtents").toList())},{"urlRecord",record(o.value("urlId").toString(),o.value("urlSourceExtents").toList())}};
+  QVariantMap d{{"urlId",o.value("urlId")},{"title",title},{"visitTimeRaw",raw},{"timestampUtc",chromiumHistoryTime(raw)},{"lastVisitTimeRaw",o.value("lastVisit").toMap().value("rawMicroseconds1601")},{"visitCount",o.value("visitCount")},{"typedCount",o.value("typedCount")},{"transitionRaw",o.value("transition")},{"fromVisitRaw",o.value("fromVisit")},{"visitRecord",sqliteRecordReference(id,o.value("visitSourceExtents").toList())},{"urlRecord",sqliteRecordReference(o.value("urlId").toString(),o.value("urlSourceExtents").toList())}};
   findings.append(ForensicFinding{"browser-history-visit","sqlite/visits/rowid/"+id,url,"source-reported-unverified",d}.toMap());
  }
  report.insert("analysisParameters",parameters());report.insert("familyParameters",family.analysis.report.value("analysisParameters"));report.insert("sqliteFamily",family.analysis.report.value("sqliteFamily"));report.insert("historySchema",x.value("historySchema"));report.insert("urlRows",x.value("urlRows"));report.insert("visitRows",x.value("visitRows"));report.insert("warnings",warnings());report.insert("findings",findings);
@@ -46,31 +42,9 @@ ForensicAdapterResult validateRetainedChromiumHistory(const QVariantMap &r,const
  familyReport.insert("analysisParameters",r.value("familyParameters"));
  familyReport.insert("findings",QVariantList{ForensicFinding{"browser-sqlite-family","sqlite/main+wal/last-commit-frame/"+summary.value("lastCommitFrame").toString(),summary.value("snapshotSha256").toString(),"validated-structure-only",summary}.toMap()});
  if(!validateRetainedSqliteFamily(familyReport,inventory).ok())return bad();
- QMap<QString,QVariantMap> members;for(const auto &v:summary.value("members").toList())members.insert(v.toMap().value("role").toString(),v.toMap());
  const auto ps=summary.value("pageSize").toLongLong(),imageSize=summary.value("snapshotBytes").toLongLong();QMap<qint64,QVariantMap> origins;
  const auto canonicalInteger=[](const QVariant &v,bool positive=false){bool ok=false;const auto n=v.toString().toLongLong(&ok);return v.metaType().id()==QMetaType::QString&&ok&&QString::number(n)==v.toString()&&(!positive||n>0);};
- const auto record=[&](const QVariantMap &rec){
-  if(rec.size()!=3||!canonicalInteger(rec.value("rowid")))return false;
-  const auto image=rec.value("imageExtents").toList(),raw=rec.value("rawExtents").toList();
-  if(image.isEmpty()||image.size()!=raw.size()||image.size()>141)return false;
-  qint64 total=0;
-  for(qsizetype i=0;i<image.size();++i){
-   const auto e=image[i].toMap(),o=raw[i].toMap();
-   const auto exact=[](const QVariant &v){bool ok=false;const auto n=v.toLongLong(&ok);return ok&&v.toDouble()==double(n);};
-   if(e.size()!=2||o.size()!=5||!exact(e.value("imageByteOffset"))||!exact(e.value("lengthBytes"))||!exact(o.value("byteOffset"))||!exact(o.value("lengthBytes")))return false;
-   const auto offset=e.value("imageByteOffset").toLongLong(),length=e.value("lengthBytes").toLongLong(),rawOffset=o.value("byteOffset").toLongLong();
-   if(offset<0||length<=0||offset>imageSize-length||offset/ps!=(offset+length-1)/ps||o.value("lengthBytes").toLongLong()!=length)return false;
-   const auto role=o.value("role").toString();if(role!="main"&&role!="wal")return false;
-   const auto m=members.value(role);if(m.isEmpty()||o.value("evidenceId")!=m.value("evidenceId")||o.value("sourceSha256")!=m.value("originalSha256")||rawOffset<0||rawOffset>m.value("bytes").toLongLong()-length)return false;
-   const auto base=rawOffset-offset%ps;
-   if(role=="main"&&base!=offset/ps*ps)return false;
-   if(role=="wal"&&(base<56||(base-56)%(ps+24)||(base-56)/(ps+24)+1>summary.value("lastCommitFrame").toLongLong()))return false;
-   QVariantMap origin{{"role",role},{"base",base}};const auto page=offset/ps;
-   if(origins.contains(page)&&origins.value(page)!=origin)return false;
-   origins.insert(page,origin);total+=length;if(total>64*1024)return false;
-  }
-  return true;
- };
+ const auto record=[&](const QVariantMap &rec){return validateSqliteRecordReference(rec,summary,origins);};
  const auto schema=r.value("historySchema").toMap();if(schema.size()!=2||!schema.contains("urls")||!schema.contains("visits"))return bad();QSet<qint64> roots;
  for(auto it=schema.cbegin();it!=schema.cend();++it){
   const auto t=it.value().toMap();const auto root=t.value("rootPage").toLongLong();const auto cols=t.value("columns").toStringList();

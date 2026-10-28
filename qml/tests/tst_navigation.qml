@@ -164,6 +164,21 @@ TestCase {
   for(const ar of [true,false]){app.ar=ar;verify(renderedFrame());reveal(page,findChild(page,"governmentForensicWarnings"));verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"chromium-history-"+(ar?"ar":"en")+"-"+uiScaleTag+".png"))}
   lawCaseBridge.closeWorkspace();app.setWorkspace(false)
  }
+ function test_governmentChromiumDownloads(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-DOWNLOADS",investigatingAgency:"Lab",investigatorName:"Operator",seizedDeviceDescription:"Synthetic offline database",authorityReference:"Synthetic scope",issuingAuthority:"Owner",scope:"Synthetic family structural verification"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic",custodian:"A"});verify(dev!=="")
+  const main=lawCaseBridge.addEvidence(dev,syntheticDownloadsmainPath,"Main","A",true),wal=lawCaseBridge.addEvidence(dev,syntheticDownloadswalPath,"WAL","A",true),shm=lawCaseBridge.addEvidence(dev,syntheticDownloadsshmPath,"SHM","A",true);verify(main!==""&&wal!==""&&shm!=="")
+  const page=findChild(app,"governmentAnalysisWorkspace"),selector=findChild(page,"governmentForensicAdapter"),input=findChild(page,"governmentForensicEvidence"),walInput=findChild(page,"governmentSqliteWal"),shmInput=findChild(page,"governmentSqliteShm")
+  selector.currentIndex=5
+  for(let i=0;i<input.model.length;i++)if(input.model[i].id===main)input.currentIndex=i
+  for(let i=0;i<walInput.model.length;i++)if(walInput.model[i].id===wal)walInput.currentIndex=i
+  for(let i=0;i<shmInput.model.length;i++)if(shmInput.model[i].id===shm)shmInput.currentIndex=i
+  artifactClick(page,findChild(page,"governmentForensicRun"));tryCompare(lawCaseBridge,"forensicBusy",false,10000);verify(!!lawCaseBridge.forensicResult.reportJson,lawCaseBridge.error)
+  const report=JSON.parse(lawCaseBridge.forensicResult.reportJson);compare(report.adapter,"chromium-downloads");compare(report.findings.length,2);compare(report.findings[0].details.fields.received_bytes,"9007199254740993");compare(report.findings[0].details.urlChain.length,2);verify(report.findings[0].details.downloadRecord.rawExtents.length>0);compare(report.sqliteFamily.commitFrames,2);compare(report.sqliteFamily.members.length,3);compare(report.sqliteFamily.shmUsedForReplay,false);verify(lawCaseBridge.verifyAudit())
+  for(const ar of [true,false]){app.ar=ar;verify(renderedFrame());verify(findChild(page,"governmentForensicWarnings").text.indexOf(ar?"بيانات تنزيل مسجلة":"Recorded download metadata")>=0);reveal(page,findChild(page,"governmentForensicWarnings"));verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"chromium-downloads-"+(ar?"ar":"en")+"-"+uiScaleTag+".png"))}
+  lawCaseBridge.closeWorkspace();app.setWorkspace(false)
+ }
  function test_governmentSummaryLifetime(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
   const page=findChild(app,"governmentAnalysisWorkspace"),names=["governmentSummaryFirst","governmentSummarySecond","governmentSummaryThird"],cards=names.map(function(name){return findChild(page,name)})
