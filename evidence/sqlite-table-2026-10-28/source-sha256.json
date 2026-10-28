@@ -1,0 +1,11 @@
+{
+  "CMakeLists.txt": "77f1c17b2f2ce0f513934de4807212ef59f3ec115e20de7ff88d6e73cae56f1d",
+  ".github/workflows/cpp-qt.yml": "5c184f2d1b90d3acf4bbd10952cdfb026c151d3fc185deea02eb28cedd6f2db5",
+  "cpp/src/SqliteTableReader.hpp": "b1d336b5aed6e982c159396cca588a424d160eaf4877deea16b0b2e14a3969a0",
+  "cpp/src/SqliteTableReader.cpp": "9e59d1a0be37a20fe5d062409cae0da4e42d01f0cea1bec66a7aa3991a7463e3",
+  "cpp/tests/sqlite_table_tests.cpp": "c4510fbfad381faed1c070cc20557fb830e2c797e4e3608666cd2e98ffaa37c2",
+  "cpp/src/SqliteEvidenceFamily.cpp": "9f14937127e22238f66fca2c909442a8dd00f0b5f04cadc3d4573711ac41922f",
+  "cpp/src/ForensicAdapters.cpp": "7633ea76588f1b8ca22aac786a23855a615c1ce68a53a990bf7bfe4bf37e91c7",
+  "cpp/src/DcImagePartitions.cpp": "006f69616661c5ca13580de05f31cea4040a0f51ec1b0ca82d5ead3261608d81",
+  "samples/sqlite-family/reference.json": "8e3fe4d8f857902c7f96254be612aa75689cc70e9ac2e5a83768f268488287e5"
+}
