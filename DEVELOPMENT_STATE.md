@@ -1,3 +1,9 @@
+# SQLite oracle Windows connection-lifetime correction — 2026-10-28
+
+- First source `fc553e643b7839d272a70b599045c28e20b5bf00`, PR Python40675903819/job122774112836 failed the independent oracle at TemporaryDirectory cleanup: Windows WinError32 held page-image.sqlite. Python sqlite3 connection context manager handles transactions but does not close the connection; the fixture kept that handle alive. Original decoded CI log retained under `evidence/sqlite-family-2026-10-28/first-python-ci-failure.log` (text line endings normalized).
+- Use contextlib.closing around that connection, preserving SQL expectations, immutable read, hash checks and normal cleanup. No cleanup-error suppression or test skip. This is a test fixture resource-lifetime correction; executable C++/QML/parser/worker/policy/packaging inputs are unchanged from fc553e6. No association with the original product Qt crash or Audit Store divergence is asserted.
+- The first C++ run40675903815 was still executing; it and the local fc553e6 observations cannot be claimed as exact-source acceptance for this test correction. Resolve corrective source with git rev-parse HEAD. Required exact-source Python/native/Windows/CI/package acceptance remains PENDING.
+
 # Protected SQLite family foundation — implementation, 2026-10-28
 
 - Resumed/rechecked actual integration HEAD `4fff6d9eaebc57217b89963cccb1f96159d814a0`, Government `eb2322140956a55a50ee7494570f35573a1ce0c0`. Parent checkpoint PR40664067469 and its Python/public-history workflows finished successfully; those results do not accept this increment. Resolve current implementation source with `git rev-parse HEAD`; exact-source hosted/Windows/packaging acceptance is PENDING.
