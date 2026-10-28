@@ -2,6 +2,7 @@
 #include "DcImagePartitions.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
+#include <QTimeZone>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -39,7 +40,7 @@ bool unambiguousJson(const QByteArray &b){
 QString chromeTime(const QString &raw){
  static const QRegularExpression number("\\A[0-9]{1,18}\\z");if(!number.match(raw).hasMatch())return {};
  bool ok=false;const auto micros=raw.toLongLong(&ok);if(!ok||micros<=0)return {};
- const auto dt=QDateTime(QDate(1601,1,1),QTime(0,0),Qt::UTC).addMSecs(micros/1000);
+ const auto dt=QDateTime(QDate(1601,1,1),QTime(0,0),QTimeZone(0)).addMSecs(micros/1000).toUTC();
  if(!dt.isValid()||dt.date().year()<1||dt.date().year()>9999)return {};
  // Preserve submillisecond precision for the timeline's explicit unresolved gate.
  if(micros%1000==0)return dt.toString(Qt::ISODateWithMs);
