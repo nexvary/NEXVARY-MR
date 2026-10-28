@@ -1,0 +1,23 @@
+[
+  {
+    "file": "mr_mirror_tests",
+    "bytes": 0,
+    "mode": "0o644",
+    "first4hex": "",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "mr_board_tests",
+    "bytes": 3424208,
+    "mode": "0o644",
+    "first4hex": "00000000",
+    "sha256": "738952e4019a39c2fd533cabc9eff1a82fb88737b279b9c31d69088e5c47a7e4"
+  },
+  {
+    "file": "mr_pcap_mutation_tests",
+    "bytes": 40920,
+    "mode": "0o644",
+    "first4hex": "7f454c46",
+    "sha256": "5d097c6ecca566cb6b2f0f65548d74de89d2c37416b6f11d44cf6ad23d5831c6"
+  }
+]

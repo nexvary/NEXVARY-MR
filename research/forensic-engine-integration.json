@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "first-native-adapters-implemented-acceptance-pending",
+  "status": "first-native-slice-tested-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -15,7 +15,10 @@
       "adapter": "workbench-export-manifest",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "pending-exact-source-ci"
+      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
+      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "ci_run": 40644129202,
+      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
     },
     {
       "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
@@ -29,7 +32,10 @@
       "adapter": "chromium-bookmarks",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "pending-exact-source-ci"
+      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
+      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "ci_run": 40644129202,
+      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
     },
     {
       "repository": "nexvary/NEXVARY-DC",
@@ -43,7 +49,10 @@
       "adapter": "dc-image-partitions",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "pending-exact-source-ci"
+      "verification": "selected-native-slice-tested-at-1d40b09; broader-engine-stage-in-progress",
+      "acceptance_source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "ci_run": 40644129202,
+      "evidence": "evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md"
     }
   ],
   "stages": [

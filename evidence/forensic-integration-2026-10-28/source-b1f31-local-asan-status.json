@@ -1,0 +1,21 @@
+{
+  "source": "b1f31a4e00b2bf5a0b2f5d0e69da524a4f732346",
+  "buildProfile": "Debug production ASan/UBSan GCC13 Qt6.4.2",
+  "testCases": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "processExit": 1,
+  "acceptance": "NOT PASSED: LeakSanitizer fatal process-inspection restriction",
+  "stderr": [
+    "Can't open /proc/2/task for reading.",
+    "LeakSanitizer has encountered a fatal error.",
+    "LeakSanitizer does not work under ptrace"
+  ],
+  "ciLeakChecks": "unchanged/enabled",
+  "earlierLocalBuilds": [
+    "RelWithDebInfo -O2 existing PackagePreflight Qt/GCC array-bounds warning at warnings-as-errors; no runtime assertion/fix claimed",
+    "Debug linking failed with two observed zero-byte generated ToolBridge/CaseArtifacts objects; originals retained privately, invalid objects rebuilt"
+  ]
+}

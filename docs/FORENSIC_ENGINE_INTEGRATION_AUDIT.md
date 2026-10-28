@@ -97,6 +97,24 @@ No FAT/NTFS/exFAT or damaged-filesystem recovery support is inferred from this
 partition adapter. Latest returned DC runs38022683250/38022679120 succeeded at
 2bc8ea1d..., a different SHA; exact inspected-HEAD acceptance is unproved.
 
+Further source checks: Workbench `engines_151_250.py` primarily projects
+existing case tables (group counts, histograms, facets, health scores and
+CSV/JSON/HTML exports). `engines_251_800.py` adds bounded query parameters and
+case analytics, but its generic stage registry is not evidence of hundreds of
+independent parsers. `engines_801_1200.py` registers400 stage IDs by cycling20
+analytics operation names across packs; it has three functions and a swallowed
+capability-run logging exception. Do not translate these marketing/catalog
+counts into migrated engine counts or independent audit assurance.
+
+Browser `session_recon.py` reads entire files, recognizes SNSS/SSNS command-size
+frames and extracts URL-like byte strings; its fallback is explicitly a low
+confidence raw trace. Firefox mozLz4 uses optional `lz4.block` and recursive JSON
+walking. These are useful candidates, not proof of complete session semantics or
+bounded hostile decompression; neither is enabled in MR. DC `MediaRead.cpp`
+uses a shared `copy` flag to switch from surface reads into image/map destination
+writes. A method described as read-only cannot safely expose that entire API;
+future reuse needs a separate read-only boundary, not a caller-controlled boolean.
+
 No general original-code LICENSE was found in the inspected inputs. Selected
 original function reuse relies on the project owner's explicit migration grant.
 Qt/third-party licenses remain separately scoped; no proprietary third-party
@@ -145,3 +163,7 @@ cookies/sessions, DC read-only filesystem splitting, and any genuinely new
 Workbench capability. Existing Audit Store divergence, process-tree containment,
 physical Windows10/11/install/device/hardware-renderer and external custody/
 identity/time/signing/comparative acceptance are not closed by these adapters.
+
+## Selected-slice acceptance checkpoint — 2026-10-28
+
+Exact source1d40b09/tree88e348, PR40644129202 attempt1:7/7 jobs; all four profiles51/51, ASan/UBSan20/20 with default leak checks. Final Windows provider/inner manifests, source/profile/SPDX/deployed EXE+worker, CI install/run/uninstall and final-byte physical Win10 native smoke verified. Detailed bounds, skips, failed predecessors and13-item source/artifact report: [checkpoint](../evidence/forensic-integration-2026-10-28/FINAL_CHECKPOINT.md). This accepts the three selected native ports within tested synthetic scope; full upstream source audit, broader migration and external/government acceptance remain in-progress. Previous acceptance-pending paragraphs describe historical gates and are superseded only for this exact tested slice.

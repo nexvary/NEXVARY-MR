@@ -1,0 +1,128 @@
+{
+  "acceptanceSource": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+  "artifactId": 12798260147,
+  "profile": "linux-production",
+  "suites": {
+    "linux-qt-results.xml": {
+      "name": "Linux-c++",
+      "tests": "51",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "runnervmtai0g",
+      "time": "360",
+      "timestamp": "2026-10-28T06:36:00"
+    },
+    "gui-repeat-results.xml": {
+      "name": "Linux-c++",
+      "tests": "1",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "runnervmtai0g",
+      "time": "57",
+      "timestamp": "2026-10-28T06:42:00"
+    },
+    "gui-repeat-console.txt": [],
+    "forensic_adapter-results.txt": [
+      "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 1768ms"
+    ],
+    "case_transaction-results.txt": [
+      "Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 12239ms"
+    ],
+    "partition_transaction-results.txt": [
+      "Totals: 30 passed, 0 failed, 0 skipped, 0 blacklisted, 48733ms"
+    ],
+    "security-results.txt": [
+      "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 8067ms"
+    ],
+    "policy_audit-results.txt": [
+      "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 9182ms"
+    ],
+    "offline-results.txt": [
+      "Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 21491ms"
+    ],
+    "tsk-results.txt": [
+      "Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 5701ms"
+    ],
+    "ui-results.txt": [
+      "Totals: 55 passed, 0 failed, 0 skipped, 0 blacklisted, 60256ms"
+    ]
+  },
+  "allQtTotals": [
+    "Totals: 40 passed, 0 failed, 0 skipped, 0 blacklisted, 474ms",
+    "Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 157ms",
+    "Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 1ms",
+    "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 1768ms",
+    "Totals: 30 passed, 0 failed, 0 skipped, 0 blacklisted, 48733ms",
+    "Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 12239ms",
+    "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 9182ms",
+    "Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 21491ms",
+    "Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 1125ms",
+    "Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 764ms",
+    "Totals: 36 passed, 0 failed, 0 skipped, 0 blacklisted, 6547ms",
+    "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 867ms",
+    "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 3875ms",
+    "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 1301ms",
+    "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 18ms",
+    "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms",
+    "Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 5ms",
+    "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1628ms",
+    "Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 567ms",
+    "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 53ms",
+    "Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 11160ms",
+    "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 8067ms",
+    "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 7ms",
+    "Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 27957ms",
+    "Totals: 35 passed, 0 failed, 21 skipped, 0 blacklisted, 4118ms",
+    "Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 13009ms",
+    "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 3ms",
+    "Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 11ms",
+    "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 10ms",
+    "Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 11ms",
+    "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 271ms",
+    "Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 259ms",
+    "Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 8205ms",
+    "Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 8ms",
+    "Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 545ms",
+    "Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 5701ms",
+    "Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 14ms",
+    "Totals: 55 passed, 0 failed, 0 skipped, 0 blacklisted, 60256ms",
+    "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 39238ms",
+    "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 45124ms"
+  ],
+  "subcaseSkips": [
+    "SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.",
+    "SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only.",
+    "SKIP   : ServiceTests::darkModeVerification() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(permission) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(readback) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::disconnectAndIdentityChange(usb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::disconnectAndIdentityChange(identity) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::apkPrivateCopyIntegrity() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::invalidPackageNeverReachesDevice() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::explicitApkReplace() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(adb) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(fastboot) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::apkHashAndManagerFailure(hash) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::apkHashAndManagerFailure(manager) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::apkHashAndManagerFailure(no-confirmation) Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::sideloadConsentAndMode() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::fastbootFreshEraseGuard() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::syntheticErase() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::rebootInvalidatesDiscovery() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::cancellation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::historyRetainsTargetAndFailureAfterAnotherOperation() Write fixture runs only in the separate Laboratory build; production denial is tested independently.",
+    "SKIP   : ServiceTests::rebootHistoryKeepsTargetAfterDiscoveryCleared() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+  ],
+  "sanitizer": {
+    "name": "Linux-c++",
+    "tests": "20",
+    "failures": "0",
+    "disabled": "0",
+    "skipped": "0",
+    "hostname": "runnervmtai0g",
+    "time": "199",
+    "timestamp": "2026-10-28T06:45:28"
+  }
+}
