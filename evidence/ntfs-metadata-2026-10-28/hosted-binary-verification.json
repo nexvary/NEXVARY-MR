@@ -1,0 +1,26 @@
+{
+  "setupSha256": "da7758631d1e8bd1f7da2a7b2ae5e3ac87e28571ff691c33025357c737422188",
+  "portableZipSha256": "6ba15d28a263b26c90bf849c047d1bd3e6f0c22b985bc9058bdc73a32deeb058",
+  "actualSetupPEVerified": true,
+  "portable": {
+    "actualMainWorkerHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "installed": {
+    "actualMainWorkerHashesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "auditValid": true
+  },
+  "lifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  },
+  "scope": "Current desktop/worker deployment only; NTFS prerequisite is test-target-only, not a deployable case adapter; no fresh physical device execution."
+}

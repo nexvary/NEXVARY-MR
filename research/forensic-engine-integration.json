@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "selected-downloads-case-integration-tested-broader-integration-in-progress",
+  "status": "selected-internal-ntfs-prerequisite-tested-case-integration-pending-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -15,15 +15,15 @@
       "adapter": "workbench-export-manifest",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapters-tested-at-9ce3449; broader-engine-stage-in-progress",
-      "acceptance_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-      "ci_run": 40693581027,
-      "evidence": "evidence/chromium-downloads-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-existing-case-adapters-regression-tested-at-302ec29; broader-engine-stage-in-progress",
+      "acceptance_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+      "ci_run": 40738028510,
+      "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md",
       "content_verification": {
         "verifier_version": "nexvary-mr-manifest-content/1",
         "scope": "explicit protected same-case payload bindings; no filesystem path resolution",
-        "tested_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-        "ci_run": 40693581027
+        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+        "ci_run": 40738028510
       }
     },
     {
@@ -38,10 +38,10 @@
       "adapter": "chromium-bookmarks",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapters-tested-at-9ce3449; broader-engine-stage-in-progress",
-      "acceptance_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-      "ci_run": 40693581027,
-      "evidence": "evidence/chromium-downloads-2026-10-28/FINAL_CHECKPOINT.md",
+      "verification": "selected-existing-case-adapters-regression-tested-at-302ec29; broader-engine-stage-in-progress",
+      "acceptance_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+      "ci_run": 40738028510,
+      "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md",
       "additional_adapters": [
         "browser-sqlite-family",
         "chromium-history",
@@ -52,16 +52,16 @@
         "state": "selected-slice-tested-broader-stage-in-progress",
         "scope": "protected offline main/WAL/opaque SHM; bounded checksummed committed page image only; no History or SQL execution",
         "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",
-        "tested_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-        "ci_run": 40693581027
+        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+        "ci_run": 40738028510
       },
       "history": {
         "parser_version": "nexvary-mr-chromium-history/1",
         "state": "selected-slice-tested-broader-stage-in-progress",
         "scope": "bounded declared rowid urls+visits, protected committed main/WAL image, original member record extents; no live profiles, urls-only fallback, Downloads/Sessions/decryption",
         "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension",
-        "tested_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-        "ci_run": 40693581027
+        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+        "ci_run": 40738028510
       },
       "downloads": {
         "parser_version": "nexvary-mr-chromium-downloads/1",
@@ -69,8 +69,8 @@
         "scope": "protected offline downloads and optional ordered rowid URL chains; original byte extents; existing signed case/Findings/Timeline; no path/file/live-profile/SQL access or completion/content inference",
         "source_module": "nbf/parsers.py:ChromiumParser.downloads; MR shared bounded byte/provenance implementation",
         "evidence": "evidence/chromium-downloads-2026-10-28/CHECKPOINT.md",
-        "tested_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-        "ci_run": 40693581027
+        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+        "ci_run": 40738028510
       }
     },
     {
@@ -85,10 +85,20 @@
       "adapter": "dc-image-partitions",
       "adapter_version": "nexvary-mr-forensic/1",
       "scope": "selected original function only; no general upstream license asserted",
-      "verification": "selected-native-adapters-tested-at-9ce3449; broader-engine-stage-in-progress",
-      "acceptance_source": "9ce344941158c0ce02d2dd9e87000dfa000f0d88",
-      "ci_run": 40693581027,
-      "evidence": "evidence/chromium-downloads-2026-10-28/FINAL_CHECKPOINT.md"
+      "verification": "selected-existing-case-adapters-regression-tested-at-302ec29; broader-engine-stage-in-progress",
+      "acceptance_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+      "ci_run": 40738028510,
+      "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md",
+      "ntfs_metadata_prerequisite": {
+        "state": "internal-prerequisite-tested-case-integration-pending",
+        "enabled": false,
+        "registered_case_adapter": false,
+        "parser_version": "nexvary-mr-ntfs-metadata/1",
+        "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+        "ci_run": 40738028510,
+        "source_module": "src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs selected metadata-only derivative",
+        "scope": "Internal test target;512-sector NTFS3/8MiB/128records, no recovered file/source writes/desktop case receipt"
+      }
     }
   ],
   "stages": [
