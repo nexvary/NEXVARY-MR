@@ -67,6 +67,7 @@ public:
  bool forensicBusy()const{return forensicActive_;}
  QVariantMap forensicResult()const{return forensicResult_;}
  Q_INVOKABLE bool analyzeForensicEvidence(const QString &evidence,const QString &adapter);
+ Q_INVOKABLE bool verifyManifestEvidence(const QString &manifestEvidence,const QVariantMap &pathToEvidence);
  Q_INVOKABLE void cancelForensicAnalysis();
  bool partitionsBusy()const{return partitionsActive_;}
  QVariantMap partitionsResult()const{return partitionsResult_;}
@@ -113,6 +114,7 @@ signals:
  void accessChanged();
 private:
  void initForensicAdapters();
+ bool startForensicEvidence(const QString &evidence,const QString &adapter,const QVariantMap &payloads,bool verifyPayloads);
  QVariantMap retainLocalAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report);
  std::unique_ptr<QFutureWatcher<QVariantMap>> forensic_;
  std::shared_ptr<std::atomic_bool> forensicCancel_;

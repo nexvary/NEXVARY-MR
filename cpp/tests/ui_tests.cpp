@@ -166,6 +166,12 @@ public slots:
   const auto bookmarksPath=temp.filePath("synthetic-bookmarks.json");QFile bookmarksFile(bookmarksPath);
   if(!bookmarksFile.open(QIODevice::WriteOnly)||bookmarksFile.write("{\"roots\":{\"bookmark_bar\":{\"type\":\"folder\",\"name\":\"Synthetic lab\",\"children\":[{\"type\":\"url\",\"name\":\"Authorized fixture\",\"url\":\"https://example.invalid/\",\"date_added\":\"13300000000000000\"}]}}}")<0)qFatal("Synthetic bookmarks fixture failed");
   bookmarksFile.close();engine->rootContext()->setContextProperty("syntheticBookmarksPath",bookmarksPath);
+  QFile payloadInput(bookmarksPath);if(!payloadInput.open(QIODevice::ReadOnly))qFatal("Cannot read manifest fixture payload");
+  const auto payloadHash=QString::fromLatin1(QCryptographicHash::hash(payloadInput.readAll(),QCryptographicHash::Sha256).toHex());
+  const auto manifestPath=temp.filePath("synthetic-manifest.json");QFile manifestFile(manifestPath);
+  const auto manifestBytes=QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path","bookmarks.json"},{"sha256",payloadHash}}}).toJson(QJsonDocument::Compact);
+  if(!manifestFile.open(QIODevice::WriteOnly)||manifestFile.write(manifestBytes)!=manifestBytes.size())qFatal("Cannot create manifest UI fixture");
+  manifestFile.close();engine->rootContext()->setContextProperty("syntheticManifestPath",manifestPath);
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));

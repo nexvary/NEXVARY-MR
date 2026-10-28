@@ -14,11 +14,17 @@ struct ForensicSourceDescriptor {
  int maxInputBytes=8*1024*1024, maxOutputBytes=64*1024, maxFindings=128;
  QVariantMap toMap() const;
 };
+struct ManifestEvidencePayload {
+ QString evidenceId, sha256;
+ QByteArray bytes;
+};
 struct ReadOnlyEvidenceRequest {
  QString caseId,evidenceId,sourceSha256,adapter;
  QByteArray verifiedBytes;
  std::shared_ptr<std::atomic_bool> cancelled;
  QDeadlineTimer deadline{5000};
+ bool verifyManifestPayloads=false;
+ QMap<QString,ManifestEvidencePayload> manifestPayloads{};
 };
 struct ForensicFinding {
  QString kind,reference,value,confidence="source-reported-unverified";
@@ -36,6 +42,8 @@ struct ForensicOperationReceipt {
  QString operationId,analysisId,reportSha256;
  QVariantMap toMap() const {return {{"operationId",operationId},{"analysisId",analysisId},{"reportSha256",reportSha256},{"authority",operationId.isEmpty()?"synthetic-unsigned-observation":"existing-signed-case-operation"}};}
 };
+// Portable logical package names only; never resolved as filesystem paths.
+bool safeManifestPath(const QString &path);
 QStringList forensicAdapters();
 ForensicSourceDescriptor forensicSource(const QString &adapter);
 ForensicAdapterResult analyzeReadOnlyEvidence(const ReadOnlyEvidenceRequest &request);

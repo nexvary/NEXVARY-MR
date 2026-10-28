@@ -59,47 +59,92 @@
     {
       "id": 1,
       "name": "upstream inventory",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Inventory all executable payload modules for each of the three pinned commits with file SHA-256, selected workflow overlays and callable capability classification.",
+        "Record allowed, deferred or excluded disposition for every discovered capability; no unclassified executable module."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 2,
       "name": "license and dependency audit",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Record owner permission and redistribution scope for every migrated module and transitive dependency, with exact version/hash and notice obligations.",
+        "Block any enabled module with unresolved permission or undeclared dependency; negative gate tests pass."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 3,
       "name": "capability overlap map",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Map each upstream callable capability to an existing MR service or a justified missing function, with one implementation owner.",
+        "Document all deferred/excluded capabilities and test that no duplicate evidence store or updater authority is introduced."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 4,
       "name": "read-only trust boundaries",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Test allowlisted byte-only entry points against traversal, symlinks, hostile sizes, corrupt evidence, cancellation, timeouts and revoked authority.",
+        "Demonstrate no evidence/device writes or arbitrary commands and fail-closed acceptance after case/session/grant/source changes."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 5,
       "name": "workbench adapter",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Verify intact, modified and missing manifest payloads by SHA-256 using protected case evidence; reject duplicate/unsafe paths and bound all input/output.",
+        "Preserve per-file provenance, deterministic reports, signed acceptance and restart isolation; review disposition of all remaining Workbench functions."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 6,
       "name": "browser artifact adapter",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Review original History, Downloads, Sessions, profile and timestamp parsers; migrate only licensed and bounded functions.",
+        "Test coherent protected SQLite main/WAL/SHM families, corruption, truncation, size limits, raw timestamps, timeline provenance, cancellation and revocation without modifying original profiles."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 7,
       "name": "disk image adapter",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Review original NTFS/exFAT/FAT32/deleted metadata/extents/image verification/carving; migrate a strictly read-only capability allowlist.",
+        "Use known-answer and malformed images to verify bounds, partial versus complete recovery labels, cancellation and authority checks; prove destructive APIs unreachable."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 8,
       "name": "case provenance integration",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Every supported finding binds case/evidence IDs, original/working hashes, parser/version, pinned repository, parameters, raw reference, confidence/warnings and signed audit receipt.",
+        "Pass findings/timeline/report integrity, case isolation, revocation, cancellation, crash reconciliation and duplicate-restart acceptance tests for every enabled adapter/mode."
+      ],
+      "verification_evidence": []
     },
     {
       "id": 9,
       "name": "CI and Windows packaging verification",
-      "state": "in-progress"
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "For the exact implementation tree pass required native/Linux/MSVC-WX/sanitizer/malformed/security/audit groups and AR/EN Qt at DPI 100/125/150.",
+        "Verify actual Windows Portable and Installer executable bytes, manifests, launch/install/uninstall and source provenance; retain original failure logs and scope all exclusions."
+      ],
+      "verification_evidence": []
     }
   ]
 }

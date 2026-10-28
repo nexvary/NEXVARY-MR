@@ -18,6 +18,21 @@ class ForensicIntegrationGateTests(unittest.TestCase):
     def test_current_manifest(self):
         gate.validate(deepcopy(self.original))
 
+    def test_no_partial_stage_verification(self):
+        data = deepcopy(self.original)
+        data["stages"][4]["state"] = "verified"
+        with self.assertRaises(ValueError):
+            gate.validate(data)
+        data["stages"][4]["verification_evidence"] = [{"criterion": 1, "commit": "a" * 40, "test": "native", "receipt": "exact-source-log"}]
+        with self.assertRaises(ValueError):
+            gate.validate(data)
+
+    def test_no_unmeasured_stage(self):
+        data = deepcopy(self.original)
+        del data["stages"][0]["acceptance_criteria"]
+        with self.assertRaises(ValueError):
+            gate.validate(data)
+
     def test_no_destructive_permission(self):
         data = deepcopy(self.original)
         data["sources"][2]["permission"] = "write"

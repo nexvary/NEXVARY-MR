@@ -43,6 +43,19 @@ def validate(payload):
     require([s.get("id") for s in stages] == list(range(1, 10)), "nine ordered stages required")
     require(all(s.get("state") in {"pending", "in-progress", "verified", "blocked"} for s in stages), "invalid stage state")
 
+    for stage in stages:
+        criteria = stage.get("acceptance_criteria")
+        require(isinstance(criteria, list) and len(criteria) >= 2 and all(isinstance(c, str) and c.strip() for c in criteria), "measurable stage criteria required")
+        evidence = stage.get("verification_evidence")
+        require(isinstance(evidence, list), "stage evidence must be a list")
+        if stage["state"] == "verified":
+            require(len(evidence) == len(criteria), "every criterion requires exact-source acceptance evidence")
+            require(all(isinstance(e, dict) and e.get("criterion") == i and
+                        isinstance(e.get("commit"), str) and re.fullmatch(r"[0-9a-f]{40}", e["commit"]) and
+                        isinstance(e.get("test"), str) and bool(e["test"].strip()) and
+                        isinstance(e.get("receipt"), str) and bool(e["receipt"].strip())
+                        for i, e in enumerate(evidence, 1)), "invalid stage acceptance evidence")
+
 if __name__ == "__main__":
     validate(json.loads(MANIFEST.read_text(encoding="utf-8")))
     print("forensic engine manifest gate: OK (does not certify any adapter)")

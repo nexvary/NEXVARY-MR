@@ -118,6 +118,22 @@ TestCase {
   artifactClick(page,findChild(page,"governmentForensicDetails"));verify(renderedFrame());verify(result.visible);verify(result.text.indexOf("upstreamCommit")>=0)
   lawCaseBridge.closeWorkspace();verify(renderedFrame());verify(!result.visible);verify(!summary.visible);compare(lawCaseBridge.forensicResult.reportJson,undefined)
  }
+ function test_governmentManifestContent(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-MANIFEST",investigatingAgency:"Lab",investigatorName:"Operator",seizedDeviceDescription:"Synthetic package",authorityReference:"Synthetic scope",issuingAuthority:"Owner",scope:"Synthetic manifest verification"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic",custodian:"A"});verify(dev!=="")
+  const payload=lawCaseBridge.addEvidence(dev,syntheticBookmarksPath,"Payload","A",true);verify(payload!=="")
+  const manifest=lawCaseBridge.addEvidence(dev,syntheticManifestPath,"Manifest","A",true);verify(manifest!=="")
+  const page=findChild(app,"governmentAnalysisWorkspace"),selector=findChild(page,"governmentForensicAdapter"),input=findChild(page,"governmentForensicEvidence"),payloadInput=findChild(page,"governmentManifestPayload"),run=findChild(page,"governmentForensicRun")
+  selector.currentIndex=0;findChild(page,"governmentManifestVerify").checked=true
+  for(let i=0;i<input.model.length;i++)if(input.model[i].id===manifest)input.currentIndex=i
+  for(let i=0;i<payloadInput.model.length;i++)if(payloadInput.model[i].id===payload)payloadInput.currentIndex=i
+  findChild(page,"governmentManifestPath").text="bookmarks.json";artifactClick(page,findChild(page,"governmentManifestBind"));compare(Object.keys(page.manifestBindings).length,1)
+  for(const ar of [true,false]){app.ar=ar;verify(renderedFrame());verify(findChild(page,"governmentManifestBindings").text.indexOf("bookmarks.json")>=0);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"manifest-content-"+(ar?"ar":"en")+"-"+uiScaleTag+".png"))}
+  artifactClick(page,run);tryCompare(lawCaseBridge,"forensicBusy",false,10000);verify(!!lawCaseBridge.forensicResult.reportJson,lawCaseBridge.error)
+  const report=JSON.parse(lawCaseBridge.forensicResult.reportJson);compare(report.payloadVerified,true);compare(report.verifiedFiles,1);compare(report.findings[0].details.payloadEvidenceId,payload);verify(lawCaseBridge.verifyAudit())
+  lawCaseBridge.closeWorkspace();verify(renderedFrame());compare(Object.keys(page.manifestBindings).length,0);app.setWorkspace(false)
+ }
  function test_governmentSummaryLifetime(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
   const page=findChild(app,"governmentAnalysisWorkspace"),names=["governmentSummaryFirst","governmentSummarySecond","governmentSummaryThird"],cards=names.map(function(name){return findChild(page,name)})

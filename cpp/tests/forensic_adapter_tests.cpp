@@ -70,6 +70,52 @@ private slots:
    const auto r=mr::forensic::analyzeReadOnlyEvidence(request("workbench-export-manifest",bytes));QVERIFY(!r.ok()||!r.report.value("structurallyValid").toBool());
   }
  }
+ void manifestPayloadVerification(){
+  const QByteArray payload="synthetic package bytes";
+  const auto bytes=QJsonDocument::fromVariant(QVariantMap{{"entries",QVariantList{QVariantMap{{"path","folder/evidence.bin"},{"sha256",sha(payload)}}}}}).toJson(QJsonDocument::Compact);
+  auto r=request("workbench-export-manifest",bytes);r.verifyManifestPayloads=true;
+  auto result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(result.ok());QCOMPARE(result.report.value("missingFiles").toInt(),1);QVERIFY(!result.report.value("payloadVerified").toBool());
+  r.manifestPayloads.insert("folder/evidence.bin",{"00000000-0000-4000-8000-000000000003",sha(payload),payload});
+  result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(result.ok());QVERIFY(result.report.value("payloadVerified").toBool());QCOMPARE(result.report.value("verifiedFiles").toInt(),1);
+  QCOMPARE(QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact),QJsonDocument::fromVariant(mr::forensic::analyzeReadOnlyEvidence(r).report).toJson(QJsonDocument::Compact));
+  const auto detail=result.report.value("findings").toList()[0].toMap().value("details").toMap();QCOMPARE(detail.value("originalSha256").toString(),sha(payload));QCOMPARE(detail.value("workingCopySha256").toString(),sha(payload));
+  r.manifestPayloads["folder/evidence.bin"].bytes="tampered";
+  QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-payload-hash-mismatch"));
+  r.manifestPayloads["folder/evidence.bin"].sha256=sha("tampered");result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(result.ok());QCOMPARE(result.report.value("tamperedFiles").toInt(),1);QVERIFY(!result.report.value("payloadVerified").toBool());
+  r.manifestPayloads["folder/evidence.bin"].bytes=QByteArray(8*1024*1024+1,'x');QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-payload-limit"));
+ }
+ void manifestUnsafePathsAndDuplicateRejection(){
+  for(const auto &path:QStringList{"../secret","/etc/passwd","C:/secret","a/../b","a/./b","a//b","a\\b","a:","a/","a.","NUL","COM1.txt",QString("a")+QChar(0)}){
+   QVERIFY2(!mr::forensic::safeManifestPath(path),qPrintable(path));
+   const auto bytes=QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path",path},{"sha256",QString(64,'a')}}}).toJson();
+   auto r=request("workbench-export-manifest",bytes);r.verifyManifestPayloads=true;QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-unsafe-path"));
+  }
+  for(const auto &path:QStringList{"a.bin","folder/a-1.bin"})QVERIFY(mr::forensic::safeManifestPath(path));
+  auto r=request("workbench-export-manifest",QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path","a"},{"sha256",QString(64,'a')}},QVariantMap{{"path","A"},{"sha256",QString(64,'a')}}}).toJson());r.verifyManifestPayloads=true;
+  QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("manifest-duplicate-path"));
+ }
+ void manifestCasePayloadReceiptAndIsolation(){
+  QTemporaryDir dir;LawCaseBridge law(dir.filePath("cases.db"),nullptr,true);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});
+  const QByteArray payload="synthetic protected payload";
+  QFile f(dir.filePath("payload"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(payload);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic payload","A",true);QVERIFY(!e.isEmpty());
+  const auto bytes=QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path","payload.bin"},{"sha256",sha(payload)}}}).toJson();
+  QFile m(dir.filePath("manifest"));QVERIFY(m.open(QIODevice::WriteOnly));m.write(bytes);m.close();const auto manifestId=law.addEvidence(dev,m.fileName(),"Synthetic manifest","A",true);QVERIFY(!manifestId.isEmpty());
+  QVERIFY(!law.verifyManifestEvidence(manifestId,{{"../payload",e}}));
+  QVERIFY(law.verifyManifestEvidence(manifestId,{{"payload.bin",e}}));QTRY_VERIFY(!law.forensicBusy());const auto result=law.forensicResult();QVERIFY2(!result.isEmpty(),qPrintable(law.error()));
+  const auto report=QJsonDocument::fromJson(result.value("reportJson").toString().toUtf8()).object();QVERIFY(report.value("payloadVerified").toBool());QVERIFY(law.verifyAudit());
+  QVariantMap source;for(const auto &entry:law.activeCase().value("evidence").toList())if(entry.toMap().value("id")==manifestId)source=entry.toMap();
+  QVERIFY(mr::forensic::retainedForensicReport(result,source,id).ok());
+  for(const auto &field:QStringList{"verifiedFiles","analysisParameters"}){
+   auto forgedReport=report.toVariantMap();if(field=="verifiedFiles")forgedReport.insert(field,99);else forgedReport.remove(field);
+   const auto forgedBytes=QJsonDocument::fromVariant(forgedReport).toJson(QJsonDocument::Compact);auto forged=result;forged.insert("reportJson",QString::fromUtf8(forgedBytes));forged.insert("reportSha256",sha(forgedBytes));
+   QVERIFY(!mr::forensic::retainedForensicReport(forged,source,id).ok());
+  }
+  const auto projected=nexvary::law::projectArtifacts(law.activeCase(),{},std::make_shared<std::atomic_bool>(false));QVERIFY(!projected.contains("errorCode"));QCOMPARE(projected.value("rows").toList().size(),1);
+  const auto count=law.activeCase().value("analyses").toList().size();
+  QVERIFY(law.verifyManifestEvidence(manifestId,{{"payload.bin",e}}));law.cancelForensicAnalysis();QTRY_VERIFY(!law.forensicBusy());QCOMPARE(law.activeCase().value("analyses").toList().size(),count);
+  const auto other=law.createCase(metadata());QVERIFY(!other.isEmpty());QVERIFY(!law.verifyManifestEvidence(manifestId,{{"payload.bin",e}}));QVERIFY(law.openCase(id));
+  LawCaseBridge restart(dir.filePath("cases.db"),nullptr,true);QVERIFY(restart.openCase(id));QCOMPARE(restart.activeCase().value("analyses").toList().size(),count);
+ }
  void partitionKnownAnswers(){
   for(const auto &bytes:QList<QByteArray>{mbr(),gpt()}){
    const auto before=bytes;const auto result=mr::forensic::analyzeReadOnlyEvidence(request("dc-image-partitions",bytes));QVERIFY2(result.ok(),qPrintable(result.errorCode));QCOMPARE(bytes,before);
@@ -106,15 +152,20 @@ private slots:
   QCOMPARE(law.activeCase().value("analyses").toList().size(),3);QCOMPARE(policy.caseOperationStates().size(),3);const auto anchor=policy.auditStatus();
   LawCaseBridge restarted(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);restarted.setOperationPolicy(&policy);QVERIFY(restarted.openCase(id));QCOMPARE(restarted.activeCase().value("analyses").toList().size(),3);QCOMPARE(policy.auditStatus(),anchor);
  }
+ void grantRevocationLogoutAndAuditFailure_data(){
+  QTest::addColumn<bool>("contentVerification");QTest::newRow("bookmarks")<<false;QTest::newRow("manifest-content")<<true;
+ }
  void grantRevocationLogoutAndAuditFailure(){
+  QFETCH(bool,contentVerification);
   QTemporaryDir dir;const QString password="Synthetic forensic boundary 2026!";IdentityService identity(dir.filePath("identity"),true);QVERIFY(identity.bootstrap("admin","Synthetic admin",password));QVERIFY(identity.login("admin",password));
   const auto owner=identity.createUser("owner","Synthetic owner","investigator",password),peer=identity.createUser("peer","Synthetic peer","investigator",password);QVERIFY(!owner.isEmpty()&&!peer.isEmpty());QVERIFY(identity.login("owner",password));
   GovernmentOperationPolicy policy(&identity);LawCaseBridge law(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);law.setOperationPolicy(&policy);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});
-  QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic","A",true);QVERIFY(!e.isEmpty());
-  QVERIFY(law.analyzeForensicEvidence(e,"chromium-bookmarks"));identity.logout();QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
-  IdentityService administrator(dir.filePath("identity"),true);QVERIFY(administrator.login("admin",password));QVERIFY(administrator.setCaseGrant(id,peer,true));QVERIFY(identity.login("peer",password));QVERIFY(law.openCase(id));QVERIFY(law.analyzeForensicEvidence(e,"chromium-bookmarks"));QVERIFY(administrator.setCaseGrant(id,peer,false));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());
+  QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(contentVerification?manifest:bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic","A",true);QVERIFY(!e.isEmpty());
+  const auto start=[&]{return contentVerification?law.verifyManifestEvidence(e,{{"evidence.bin",e}}):law.analyzeForensicEvidence(e,"chromium-bookmarks");};
+  QVERIFY(start());identity.logout();QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
+  IdentityService administrator(dir.filePath("identity"),true);QVERIFY(administrator.login("admin",password));QVERIFY(administrator.setCaseGrant(id,peer,true));QVERIFY(identity.login("peer",password));QVERIFY(law.openCase(id));QVERIFY(start());QVERIFY(administrator.setCaseGrant(id,peer,false));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());
   QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
-  QFile journal(identity.policyJournalPath());QVERIFY(journal.open(QIODevice::Append));journal.write("X");journal.close();QVERIFY(law.analyzeForensicEvidence(e,"chromium-bookmarks"));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
+  QFile journal(identity.policyJournalPath());QVERIFY(journal.open(QIODevice::Append));journal.write("X");journal.close();QVERIFY(start());QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
  }
  void cancellationLogoutAndCrossCaseRefuseAcceptance(){
   QTemporaryDir dir;LawCaseBridge law(dir.filePath("cases.db"),nullptr,true);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic bookmarks","A",true);QVERIFY(!e.isEmpty());
