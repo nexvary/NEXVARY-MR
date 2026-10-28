@@ -1,0 +1,19 @@
+{
+  "providerSha256": "49ec416d5b0f202c9e1847f7127579e64e3ade67217825eb55ba224fd6bae488",
+  "portableZipSha256": "d671894d64846703f6dec422fee862765d33e3dadf079ed101a3f4a42e70c7a4",
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "0fcd821774d45c9f75a060211728f96dc72f317f",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "manifestFilesVerified": 1419,
+  "spdxFilesVerified": 1418,
+  "executables": {
+    "NEXVARY-MR.exe": "5c90815a15d7903b15065aa13dda271174e83c1f7d0e6e0e8ef601dd5da0e1d0",
+    "mr_evidence_import_worker.exe": "9fc3840d56591046f4699e57d1bfef6e8a1d16130faf7307879de41a6b6c5f47"
+  },
+  "peMachine": "AMD64",
+  "scope": "Static full manifest/file-set/SPDX/PE verification; launch acceptance is separate"
+}
