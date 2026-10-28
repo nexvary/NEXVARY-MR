@@ -1,5 +1,6 @@
 #pragma once
 #include "ForensicAdapters.hpp"
+#include <QSet>
 
 namespace mr::forensic {
 // Internal prerequisite for History, not an allowlisted forensic adapter.
@@ -14,6 +15,7 @@ struct SqliteTableRow {
 struct SqliteTableRead {
  QList<SqliteTableRow> rows;
  QString errorCode;
+ QSet<quint32> visitedPages{};
  bool ok() const { return errorCode.isEmpty(); }
 };
 // Revalidates the protected family before traversing a table root. No SQL,

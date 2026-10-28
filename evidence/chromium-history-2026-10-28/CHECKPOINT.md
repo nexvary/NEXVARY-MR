@@ -1,69 +1,121 @@
-# Internal Chromium History prerequisite — 2026-10-28
+# Reconciled protected Chromium History case integration — 2026-10-28
 
-Base `c4cfb41737ac4e31b06007b77d23b4970933eba6`, existing integration branch and draft
-PR17. Resolve the implementation commit with git rev-parse HEAD. This increment
-is not case/UI enablement; all nine broad migration stages remain in-progress.
-See `docs/CHROMIUM_HISTORY_READER.md` for the exact scope and limitations.
+## 1. Branch / exact source
 
-## Implemented
+Branch integration/forensic-engines-audit, draft PR17. Actual parent
+5129a15ceb44e4f63a9a8432256cdba5d91614f5, Government unchanged
+eb2322140956a55a50ee7494570f35573a1ce0c0. Resolve published HEAD with git rev-parse HEAD.
+The first expected-head publication attempt found concurrent5129a15 and did NOT
+update/force the branch. Its isolated local commit c67cdc1 was never the branch
+HEAD. Reconciled source uses the existing ChromiumHistoryReader, not a duplicate
+schema/join parser. Source/test hashes bind local receipts; exact-source hosted CI,
+MSVC and newly built Windows binaries/packages remain PENDING until separately
+recorded. No prior source/package result is inherited.
 
-Schema-aware protected-byte History join, distinct URLs-only metadata, explicit
-unmatched visits, raw/exact timestamps and large row IDs, nullable values, storage
-class validation, source main/WAL/schema/cell/overflow provenance, deterministic
-bounded report, cancellation and refusal without partial findings. The internal
-reader is compiled only into its test executable. Production SQLite family
-verification additionally returns an internal page-origin map, without changing
-the existing persisted family report/adapter format or allowlist.
+## 2. Upstream pins
 
-## Local exact-input verification
+Workbench8b35940b1c879e0ce5f5c13e0d6c89aeab023757;
+Browserd7754cd8f051d285406403465b6d7daa3bc4b060;
+DCd8e2baf61b43d044b33a1dd76a444d093c80023c.
+Browser pinned reconstructed payload SHA256
+62b9af68d8d8a0a78a7126b113b8344852e80b7f199c76c721844edb5d7ee226;
+original nbf/parsers.py:ChromiumParser.history was re-inspected. Source/permission
+review: docs/FORENSIC_SOURCE_PERMISSIONS.md; format reference
+https://www.sqlite.org/fileformat2.html . No new runtime dependency, upstream store,
+updater or signing authority. Original repositories and Guardian unchanged.
 
-GCC13/Qt6.4.2 Release, strict -Wall/-Wextra/-Wpedantic/-Werror:
-- SQLite/table/history suite 27/27 Qt entries (25 substantive data/test executions;
-  init and cleanup included). No skips. Independent real SQLite WAL join oracle,
-  reordered/current sync-field schemas, Arabic title, IDs above 2^53, NULLs,
-  zero/negative/max-int64 timestamp and exact one-microsecond conversion.
-- Missing/empty/unsupported visits distinguished; missing URLs, unknown/quoted/
-  WITHOUT ROWID schema, text numeric impostor and BLOB URL refusal. 129-result and
-  64 KiB-output overflow fail without partial reports. Actual source slices equal
-  derived image slices for data/schema references and include committed WAL bytes.
-- Existing 512-bit mutation corpus plus 256 new History page-image mutations,
-  repeated deterministic output, cancellation/deadline and changed WAL refusal.
-- Standalone CTest 5/5 groups (`ctest-results.xml`). Root Python 55/55.
-- Existing Government forensic adapter regression 25/25, with real signed case
-  retention, revocation and SQLite-family tamper tests; no UI change is claimed.
-- ASan/UBSan: 27/27, exit0 with halt_on_error=1 and detect_leaks=0. Leak checking
-  remains unaccepted locally: detect_leaks=1 cannot inspect /proc under this host;
-  original diagnostic retained, no hosted sanitizer gate disabled.
+## 3. Actual delivered capability
 
-Results cover the hashed source/test/build inputs in source-sha256.json. Hosted
-Windows/Linux exact-source CI and package acceptance are initially pending; parent
-CI results do not accept this implementation. No hardware or physical-host claim.
+Fifth native allowlisted adapter chromium-history now reuses the concurrent
+ChromiumHistoryReader in production and adds existing Government main/WAL/opaque
+SHM selection, strict case report/retention policy, member/revision/session/grant
+revalidation and existing signed prepared-journal acceptance. Raw exact IDs/times,
+URL/title/counts/transition/nullable from-visit and source byte provenance are
+retained. Findings/Timeline/Reports use validated case/member/schema/time/extent
+provenance. Existing four native adapters preserved. No SQL/live profiles,
+decryption/Downloads/Sessions/deleted recovery/new database is enabled.
 
-## Failures and correction
+One declaration/table/join implementation: concurrent reader's explicit column
+allowlist and8192ASCII/32column grammar retained, including reviewed sync columns
+and AUTOINCREMENT. Its separately tested URLs-only metadata and unmatched-visit
+counts remain internal; production case wrapper requires ordinary urls+visits
+and refuses orphans. Schema/URL/visit page sets must not alias. Nullable referrer
+stays NULL; nullable title displays empty with original bytes; case URL/count/
+last-time/transition must be available. Limits:8MiB family/image,4096rows/table,
+128findings,64KiB report/record and existing cooperative5s deadline. Valid large or
+unsupported real profiles can reject; no partial/truncated success.
 
-- Parent PR run40684287557 Windows Laboratory/job122803274003 failed compiling
-  sqlite_table_tests.cpp at lines87/91: C4310 constant-to-char truncation with /WX,
-  not a QML/installer error. Full decoded original log retained. Represent 0xff
-  via std::bit_cast<char>(quint8(255)), preserving all malformed-byte assertions
-  and /WX. That parent remains failed; exact corrective-source CI is required.
-- First new fixture build had an ambiguous QVariant conversion of the literal
-  -2147483648. Use std::numeric_limits<int>::min(); original build log retained.
-- First nullable oracle comparison compared an invalid NULL QVariant with Qt SQL's
-  typed NULL QString QVariant. Both are NULL. The assertion now checks isNull()
-  for actual NULLs and exact values otherwise. Original failure retained; product
-  nullable behavior and all non-NULL equality checks remain unchanged.
+Deterministic rowid ordering, family/image/declaration hashes, schema references
+and original protected main/WAL id/hash/byte extents include entire leaf cell
+(rowid/local payload/first overflow pointer), record payload and overflow data.
+Internal navigation/later overflow-pointer bytes are not all enumerated. No
+full database integrity/authenticity/common acquisition/profile identity claim.
+Exact raw Chromium microseconds retained; UTC display floors to milliseconds.
+Recorded visits are not proof of human viewing or external trusted time.
 
-## Reproduce
+## 4. Modified files
 
-    cmake -S . -B build-history -DMR_BUILD_SQLITE_READER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
-    cmake --build build-history --parallel 4
-    ctest --test-dir build-history --output-on-failure
-    python3 -m unittest discover -s tests -v
-    cmake -S . -B build-history-asan -DMR_BUILD_SQLITE_READER=ON -DMR_WARNINGS_AS_ERRORS=ON -DMR_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug
-    cmake --build build-history-asan --target mr_sqlite_table_tests --parallel 4
-    UBSAN_OPTIONS=halt_on_error=1 ASAN_OPTIONS=detect_leaks=0 build-history-asan/mr_sqlite_table_tests
+ChromiumHistory.cpp/.hpp case wrapper and retained validator; existing
+ChromiumHistoryReader metadata/alias guards, SqliteTableReader visited page set;
+ForensicAdapters, LawCaseBridge/LawCaseForensicAdapters, CaseTimeline;
+CaseOperationIntent, Python public verifier/interoperability allowlist;
+GovernmentAnalysisPage.qml and native/UI/table tests, CMakeLists;
+samples/chromium-history and independent Python oracle; research/gate;
+permissions/docs/state/evidence. Existing family/pageOrigins implementation is
+retained from5129a15. See source-sha256.json and git diff parent..HEAD for full paths.
 
-Next: inspect exact-source CI, then retained History report validation and existing
-case/worker/operation integration before Downloads. Audit Store divergence,
-descendant containment, historical Qt root/soak/hardware and institutional/signing
-boundaries remain OPEN. Main/Government/Guardian are unchanged; no PR merge.
+## 5. Reconciled local validation
+
+- Strict GCC13/Qt6.4.2 desktop/test build passes with -Wall/-Wextra/-Wpedantic/-Werror.
+- Table/History29/29: all18 concurrent History scenarios kept plus two integration
+executions; prior1200row runtime oracle over four page sizes, overflow/Arabic/BLOBs,
+corruption/cycles/resource limits and mutation tests retained. New fixture has
+reordered columns/two visits/Arabic title updated in WAL, raw time known answer,
+exact original main/WAL byte-slice checks, retained forged time/offset refusal,
+missing/schema/type/orphan/129row and100row report-size rejection/128mutations.
+- Native27/27: signed History retention, Findings/Timeline, auxiliary plaintext
+substitution after dispatch rejected, wrong-case WAL rejected, cancellation,
+logout/grant revocation/audit failure, restart without duplicate acceptance.
+- Root Python57/57; immutable independent SQLite JOIN/quick_check and exact
+2023-11-14T22:13:20.123456+00:00 microsecond oracle; source bytes unchanged.
+- Signed interoperability75/75 after current native verifier rebuild.
+- Reconciled related CTest8/8 passed (197.75s), including Qt58/58 and125/150percent groups with actual Arabic/English History controls/results. Exact reconciled receipts attached. This is selected local acceptance, not full Windows/Linux52/52 acceptance.
+- Reconciled ASan/UBSan29/29 with detect_leaks=0/halt_on_error=1 passes. Local leak
+inspection is INCOMPLETE: original detect_leaks=1 run ended after tests because
+/proc access is restricted. Hosted workflow's normal leak gate remains enabled.
+
+## 6. Original failures and concurrency
+
+Parent c4cfb41 run40684287557 Windows builds failed, Linux matrix jobs cancelled.
+Reviewed Laboratory122803274003 failed C4310/C2220 test fixture constants; original
+log retained. Concurrent5129a15 bit-preserving fixture correction is preserved,
+/WX and malformed-byte assertions remain enabled.
+First local strict indentation/UTC format failures, stale native policy verifier,
+bookmarks test layout timing and generated zero-byte sanitizer object/link failures
+are retained. Existing actual-viewport artifactClick helper fixes ordered UI
+interaction without skipping assertions; default passed before reconciliation and
+must pass again after it. Fresh Ninja sanitizer build passed; zero-object cause
+unproven. Reconciliation removed an unused helper flagged by -Werror. No disabled
+tests or claimed shared root cause with historical product Qt/audit faults.
+Pre-reconciliation receipts are explicitly historical in
+pre-reconciliation-local-checkpoint.md; concurrent-CHECKPOINT.md and concurrent
+source hashes preserve5129a15 review. Neither accepts this reconciled source.
+
+## 7–9. Commit / PR / Windows packages
+
+Resolve implementation source with git rev-parse HEAD. PR17
+https://github.com/nexvary/NEXVARY-MR/pull/17 remains draft; issue16 open; no merge
+or Government/main/upstream/Guardian write. Exact-source hosted CI and Windows
+Portable/Installer executable acceptance are PENDING. No accepted new artifacts
+claimed; e0dd artifacts accept e0dd only. Subsequent CI evidence must bind this
+published commit and PR checkout tree before acceptance.
+
+## 10–11. Open problems / next phase
+
+All9 broad stages remain in-progress. Audit Store signed disk/memory sequence
+divergence, descendant containment, original Qt SIGSEGV root/DPI soak/hardware,
+product signing/clean-host/agency identity/trusted-time/independent validation
+remain open. Synthetic successes do not close them. Next: exact-source hosted
+CI and actual Windows runtime/package verification, then bounded Downloads on
+this one protected page path. Sessions/profile and read-only DC filesystem/
+partial extents/recovery remain separate reviewed increments; no destructive APIs.

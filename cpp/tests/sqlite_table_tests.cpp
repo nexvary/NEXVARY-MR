@@ -1,5 +1,6 @@
 #include "SqliteTableReader.hpp"
 #include "ChromiumHistoryReader.hpp"
+#include "ChromiumHistory.hpp"
 #include "SqliteEvidenceFamily.hpp"
 #include <QCryptographicHash>
 #include <QFile>
@@ -23,6 +24,66 @@ void be32(QByteArray &bytes,int offset,quint32 value){qToBigEndian(value,reinter
 class SqliteTableTests:public QObject {
  Q_OBJECT
 private slots:
+ void historyWalOracleAndProvenance(){
+  QFile f(MR_HISTORY_REFERENCE_PATH);QVERIFY(f.open(QIODevice::ReadOnly));const auto fixture=QJsonDocument::fromJson(f.readAll()).toVariant().toMap();
+  auto r=request(QByteArray::fromBase64(fixture.value("mainBase64").toByteArray()));r.adapter="chromium-history";
+  const auto wal=QByteArray::fromBase64(fixture.value("walBase64").toByteArray());r.sqliteFamilyMembers.insert("wal",{"00000000-0000-4000-8000-000000000003",sha(wal),wal});
+  const auto parsed=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY2(parsed.ok(),qPrintable(parsed.errorCode));
+  QCOMPARE(parsed.report,mr::forensic::analyzeReadOnlyEvidence(r).report);
+  const auto rows=parsed.report.value("findings").toList(),expected=fixture.value("expected").toList();QCOMPARE(rows.size(),expected.size());
+  bool walUsed=false;
+  const auto snapshot=mr::forensic::inspectSqliteEvidenceFamily(r,{});QVERIFY(snapshot.analysis.ok());
+  for(int i=0;i<rows.size();++i){
+   const auto finding=rows[i].toMap(),d=finding.value("details").toMap();const auto e=expected[i].toList();
+   QCOMPARE(d.value("visitRecord").toMap().value("rowid").toString(),e[0].toString());QCOMPARE(d.value("urlId").toString(),e[1].toString());QCOMPARE(finding.value("value").toString(),e[2].toString());QCOMPARE(d.value("title").toString(),e[3].toString());
+   for(const auto &pair:QList<QPair<QString,int>>{{"visitTimeRaw",4},{"visitCount",5},{"typedCount",6},{"lastVisitTimeRaw",7},{"transitionRaw",8},{"fromVisitRaw",9}})QCOMPARE(d.value(pair.first).toString(),e[pair.second].toString());
+   for(const auto &name:QStringList{"visitRecord","urlRecord"}){
+    const auto ref=d.value(name).toMap();const auto raw=ref.value("rawExtents").toList(),image=ref.value("imageExtents").toList();QCOMPARE(raw.size(),image.size());
+    for(int j=0;j<raw.size();++j){const auto o=raw[j].toMap(),v=image[j].toMap();const bool w=o.value("role")=="wal";walUsed|=w;const auto source=w?wal:r.verifiedBytes;QCOMPARE(source.mid(o.value("byteOffset").toLongLong(),o.value("lengthBytes").toLongLong()),snapshot.committedPages.mid(v.value("imageByteOffset").toLongLong(),v.value("lengthBytes").toLongLong()));}
+   }
+  }
+  QVERIFY(walUsed);QCOMPARE(rows[0].toMap().value("details").toMap().value("timestampUtc").toString(),QString("2023-11-14T22:13:20.123Z"));
+  QMap<QString,QVariantMap> inventory{{r.evidenceId,{{"id",r.evidenceId},{"sha256",r.sourceSha256},{"size",r.verifiedBytes.size()}}},{r.sqliteFamilyMembers["wal"].evidenceId,{{"id",r.sqliteFamilyMembers["wal"].evidenceId},{"sha256",sha(wal)},{"size",wal.size()}}}};
+  const auto retained=mr::forensic::validateRetainedChromiumHistory(parsed.report,inventory);QVERIFY2(retained.ok(),qPrintable(retained.errorCode));
+  for(int mode=0;mode<5;++mode){
+   auto bad=parsed.report;auto changedRows=rows;auto v=changedRows[0].toMap(),d=v.value("details").toMap();
+   if(mode==0)d.insert("timestampUtc","2000-01-01T00:00:00.000Z");
+   if(mode==1)d.insert("urlId","99");
+   if(mode==2){auto record=d.value("visitRecord").toMap();auto extents=record.value("rawExtents").toList();auto extent=extents[0].toMap();extent.insert("byteOffset",999999);extents[0]=extent;record.insert("rawExtents",extents);d.insert("visitRecord",record);}
+   if(mode==3)d.insert("visitTimeRaw","001");
+   if(mode==4)bad.insert("visitRows",99);
+   v.insert("details",d);changedRows[0]=v;bad.insert("findings",changedRows);QVERIFY(!mr::forensic::validateRetainedChromiumHistory(bad,inventory).ok());
+  }
+  auto wrong=inventory;wrong.remove(r.sqliteFamilyMembers["wal"].evidenceId);QVERIFY(!mr::forensic::validateRetainedChromiumHistory(parsed.report,wrong).ok());
+  const auto image=QByteArray::fromBase64(fixture.value("snapshotBase64").toByteArray());
+  for(const auto &change:QList<QPair<QByteArray,QByteArray>>{{"PRIMARY KEY","PRIMARY xyz"},{"LONGVARCHAR","FLOAT      "}}){
+   auto b=image;const auto offset=b.indexOf(change.first);QVERIFY(offset>=0);b.replace(offset,change.first.size(),change.second);auto invalid=request(b);invalid.adapter="chromium-history";QVERIFY(!mr::forensic::analyzeReadOnlyEvidence(invalid).ok());
+  }
+  std::mt19937 mutations(0x48495354);
+  for(int i=0;i<128;++i){auto b=image;b[int(mutations()%quint32(b.size()))]^=char(1u<<(mutations()%8));auto mutated=request(b);mutated.adapter="chromium-history";const auto result=mr::forensic::analyzeReadOnlyEvidence(mutated);if(!result.ok())QVERIFY(result.report.isEmpty());else QVERIFY(QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact).size()<=65536);}
+  r.cancelled->store(true);QVERIFY(!mr::forensic::analyzeReadOnlyEvidence(r).ok());r.cancelled->store(false);r.deadline=QDeadlineTimer(0);QVERIFY(!mr::forensic::analyzeReadOnlyEvidence(r).ok());
+ }
+ void historyUnsupportedAndLimits(){
+  for(int mode=0;mode<8;++mode){
+   QTemporaryDir temp;QVERIFY(temp.isValid());const auto path=temp.filePath("History");
+   {
+    auto db=QSqlDatabase::addDatabase("QSQLITE","history-negative");db.setDatabaseName(path);QVERIFY(db.open());QSqlQuery q(db);
+    QVERIFY(q.exec(mode==0?"CREATE TABLE urls(id INTEGER PRIMARY KEY,url TEXT)":"CREATE TABLE urls(id INTEGER PRIMARY KEY,url TEXT,title TEXT,visit_count INTEGER,typed_count INTEGER,last_visit_time INTEGER,hidden INTEGER)"));
+    if(mode!=1)QVERIFY(q.exec("CREATE TABLE visits(id INTEGER PRIMARY KEY,url INTEGER,visit_time INTEGER,from_visit INTEGER,transition INTEGER)"));
+    if(mode!=0){QVERIFY(q.exec("INSERT INTO urls VALUES(7,'https://example.invalid','title',1,0,13344473600123456,0)"));}
+    if(mode!=1){
+     const auto url=mode==2?"999":mode==3?"'7'":"7";
+     for(int i=0;i<(mode==4?129:mode==7?100:1);++i)QVERIFY(q.exec(QString("INSERT INTO visits VALUES(%1,%2,13344473600123456,0,0)").arg(i+1).arg(url)));
+     if(mode==3)QVERIFY(q.exec("UPDATE visits SET visit_time='not-an-integer'"));
+    }
+    if(mode==5)QVERIFY(q.exec("UPDATE urls SET title=zeroblob(16)"));
+    if(mode==6)QVERIFY(q.exec("UPDATE urls SET url='https://' || replace(hex(zeroblob(1100)), '00', 'aa')"));
+    db.close();
+   }
+   QSqlDatabase::removeDatabase("history-negative");QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));auto r=request(f.readAll());r.adapter="chromium-history";const auto result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY2(!result.ok(),qPrintable(QString::number(mode)));QVERIFY(result.report.isEmpty());
+  }
+  QCOMPARE(mr::forensic::chromiumHistoryTime("0"),QString{});QCOMPARE(mr::forensic::chromiumHistoryTime("9223372036854775807"),QString{});
+ }
  void committedWalOracle(){
   QFile file(MR_SQLITE_FAMILY_REFERENCE_PATH);QVERIFY(file.open(QIODevice::ReadOnly));const auto fixture=QJsonDocument::fromJson(file.readAll()).toVariant().toMap();
   auto r=request(QByteArray::fromBase64(fixture.value("mainBase64").toByteArray()));

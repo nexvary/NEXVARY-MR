@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "sqlite-family-foundation-tested-broader-integration-in-progress",
+  "status": "chromium-history-implemented-awaiting-exact-source-acceptance-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -43,7 +43,8 @@
       "ci_run": 40679092338,
       "evidence": "evidence/sqlite-family-2026-10-28/FINAL_CHECKPOINT.md",
       "additional_adapters": [
-        "browser-sqlite-family"
+        "browser-sqlite-family",
+        "chromium-history"
       ],
       "sqlite_family": {
         "verifier_version": "nexvary-mr-sqlite-family/1",
@@ -52,6 +53,12 @@
         "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",
         "tested_source": "e0ddc8c2ca9f0ec4b4c00f6e3ccec07226127716",
         "ci_run": 40679092338
+      },
+      "history": {
+        "parser_version": "nexvary-mr-chromium-history/1",
+        "state": "implemented-awaiting-exact-source-ci",
+        "scope": "bounded declared rowid urls+visits, protected committed main/WAL image, original member record extents; no live profiles, urls-only fallback, Downloads/Sessions/decryption",
+        "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension"
       }
     },
     {

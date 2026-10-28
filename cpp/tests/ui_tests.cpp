@@ -180,6 +180,14 @@ public slots:
    member.close();
    engine->rootContext()->setContextProperty("syntheticSqlite"+role+"Path",name);
   }
+  QFile historyFile(MR_HISTORY_REFERENCE_PATH);if(!historyFile.open(QIODevice::ReadOnly))qFatal("Missing History fixture");
+  const auto history=QJsonDocument::fromJson(historyFile.readAll()).toVariant().toMap();
+  for(const auto &role:QStringList{"main","wal"}){
+   const auto name=temp.filePath("history-"+role);QFile member(name);const auto bytes=QByteArray::fromBase64(history.value(role+"Base64").toByteArray());
+   if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("History fixture write failed");
+   member.close();engine->rootContext()->setContextProperty("syntheticHistory"+role+"Path",name);
+  }
+
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));

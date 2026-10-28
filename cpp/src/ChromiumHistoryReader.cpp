@@ -2,6 +2,7 @@
 #include "SqliteEvidenceFamily.hpp"
 #include "SqliteTableReader.hpp"
 #include <QJsonDocument>
+#include <QCryptographicHash>
 #include <QRegularExpression>
 #include <QSet>
 
@@ -83,6 +84,9 @@ ForensicAdapterResult readProtectedChromiumHistory(const ReadOnlyEvidenceRequest
  if(tables.contains("visits")&&tables["visits"].root==tables["urls"].root)return bad("history-schema-shared-root");
  QMap<QString,SqliteTableRow> urls;
  const auto urlTable=tables.value("urls");const auto urlRows=readProtectedSqliteTable(r,urlTable.root);if(!urlRows.ok())return bad(urlRows.errorCode);
+ QSet<quint32> occupied=schema.visitedPages;
+ for(const auto page:urlRows.visitedPages)if(occupied.contains(page))return bad("history-aliased-table-page");
+ occupied.unite(urlRows.visitedPages);
  auto valid=[&](const SqliteTableRow &row,const Table &table){
   if(row.fields.size()!=table.columns.size()||row.serialTypes.size()!=row.fields.size())return false;
   const auto id=table.columns.indexOf("id");if(row.serialTypes[id]!=0)return false;
@@ -95,7 +99,7 @@ ForensicAdapterResult readProtectedChromiumHistory(const ReadOnlyEvidenceRequest
   return true;
  };
  for(const auto &row:urlRows.rows){if(!valid(row,urlTable))return bad("history-url-record");urls.insert(row.rowid,row);}
- QVariantList observations;int unmatched=0;
+ QVariantList observations;int unmatched=0,visitRows=0;
  const auto add=[&](const SqliteTableRow &u,const SqliteTableRow *v,const Table *visits)->bool{
   const auto ui=[&](const QString &key){return u.fields[urlTable.columns.indexOf(key)];};
   const auto urlRefs=sourceExtents(u,family),schemaRefs=sourceExtents(urlTable.schemaRow,family);if(urlRefs.isEmpty()||schemaRefs.isEmpty())return false;
@@ -109,6 +113,8 @@ ForensicAdapterResult readProtectedChromiumHistory(const ReadOnlyEvidenceRequest
  };
  if(tables.contains("visits")){
   const auto table=tables.value("visits");const auto visits=readProtectedSqliteTable(r,table.root);if(!visits.ok())return bad(visits.errorCode);
+  visitRows=int(visits.rows.size());
+  for(const auto page:visits.visitedPages)if(occupied.contains(page))return bad("history-aliased-table-page");
   for(const auto &v:visits.rows){
    const auto stop=stopped(r);if(!stop.isEmpty())return bad(stop);
    if(!valid(v,table)||!integer(v,table.columns.indexOf("url"))||!integer(v,table.columns.indexOf("visit_time")))return bad("history-visit-record");
@@ -123,6 +129,14 @@ ForensicAdapterResult readProtectedChromiumHistory(const ReadOnlyEvidenceRequest
  }
  const auto stop=stopped(r);if(!stop.isEmpty())return bad(stop);
  QVariantMap report{{"schema","nexvary-mr-chromium-history-observation/1"},{"caseId",r.caseId},{"evidenceId",r.evidenceId},{"sourceSha256",r.sourceSha256},{"sqliteFamily",family.analysis.report.value("sqliteFamily")},{"mode",tables.contains("visits")?"visits-joined-to-urls":"urls-only-metadata"},{"unmatchedVisitCount",unmatched},{"observations",observations},{"limitations",QStringList{"Source-reported timestamps/URLs do not establish operator identity, local browsing, authenticity or common acquisition.","Bounded internal extractor; no case retention, SQL execution, live files, Downloads, deleted records or complete database-integrity claim."}}};
+ QVariantMap descriptors;
+ for(auto it=tables.cbegin();it!=tables.cend();++it){
+  QVariantList image,raw;
+  for(const auto &v:sourceExtents(it->schemaRow,family)){auto e=v.toMap();image.append(QVariantMap{{"imageByteOffset",e.take("imageByteOffset")},{"lengthBytes",e.value("lengthBytes")}});raw.append(e);}
+  const auto digest=QString::fromLatin1(QCryptographicHash::hash(it->schemaRow.fields[4].toString().toUtf8(),QCryptographicHash::Sha256).toHex());
+  descriptors.insert(it.key(),QVariantMap{{"rootPage",it->root},{"columns",it->columns},{"declarationSha256",digest},{"schemaRecord",QVariantMap{{"rowid",it->schemaRow.rowid},{"imageExtents",image},{"rawExtents",raw}}}});
+ }
+ report.insert("historySchema",descriptors);report.insert("urlRows",urlRows.rows.size());report.insert("visitRows",visitRows);
  if(QJsonDocument::fromVariant(report).toJson(QJsonDocument::Compact).size()>64*1024)return bad("history-output-limit");
  return {report,{}};
 }

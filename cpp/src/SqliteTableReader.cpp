@@ -124,7 +124,7 @@ public:
   if(u32(56)!=1)return {{},"sqlite-table-encoding-unsupported"};
   if(!walk(root,0,0,false,0,false))return {{},error};
   if(!active())return {{},error};
-  return {rows,{}};
+  return {rows,{},seen};
  }
 };
 }

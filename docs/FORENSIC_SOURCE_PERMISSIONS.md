@@ -14,6 +14,7 @@ approval, or permission to reuse unrelated repositories is inferred.
 | NEXVARY-Digital-Forensics-Workbench `8b35940b1c879e0ce5f5c13e0d6c89aeab023757`, verified v12.22 payload | `nexvary_lab/pro_tools_v1221.py:export_validate` | `ForensicAdapters.cpp:inspectManifest` |
 | NEXVARY-Browser-Forensics-Lab `d7754cd8f051d285406403465b6d7daa3bc4b060`, verified v4.2.0 payload | `nbf/parsers.py:ChromiumParser.bookmarks`, `nbf/core.py:chrome_time` | `ForensicAdapters.cpp:parseBookmarks/chromeTime` |
 | NEXVARY-Browser-Forensics-Lab `d7754cd8f051d285406403465b6d7daa3bc4b060`, verified v4.2.0 payload | `nbf/core.py:CaseManager.snapshot_sqlite_family` family provenance concept; MR independently implements bounded byte-only WAL validation | `SqliteEvidenceFamily.cpp` |
+| NEXVARY-Browser-Forensics-Lab `d7754cd8f051d285406403465b6d7daa3bc4b060`, verified v4.2.0 payload | `nbf/parsers.py:ChromiumParser.history`, `nbf/core.py:chrome_time`; selected urls/visits join only, MR bounded schema/table reader and original member extent mapping | `ChromiumHistory.cpp`, `SqliteTableReader.cpp` |
 | NEXVARY-DC `d8e2baf61b43d044b33a1dd76a444d093c80023c` | `src/core/Partitions.cpp:imageVolumes` | `DcImagePartitions.cpp` |
 
 The inspected payloads contain no general LICENSE for original application
@@ -32,3 +33,5 @@ MR's existing dynamically linked Qt distribution and notices continue to apply.
 Any additional module requires its own source/permission/dependency review;
 this permission record must not be treated as approval of an entire dependency
 tree or all files bearing the NEXVARY name.
+
+History review: original history() snapshots History and joins visits.url to urls.id. MR adapts the selected join/metadata semantics only; it does not copy _connect_ro, CaseManager, derived_web_artifacts, urls-only fallback, arbitrary SQL, profile filesystem enumeration or the upstream store. No new dependency: Qt Core handles byte traversal/time/hash; Qt Sql is used only by independent generated-fixture tests. No CPython/SQLite runtime is newly linked by this adapter. Schema/table/file-format interpretation is an MR extension and remains deliberately bounded.

@@ -58,15 +58,18 @@ QVariantMap projectTimeline(const QVariantMap &record,const QString &query,const
    if(id.isEmpty()||seen.contains(id))return rejected("analysis-inventory");
    seen.insert(id);
    const auto checked=mr::forensic::retainedForensicReport(run,source,record.value("id").toString(),sources);if(!checked.ok())return rejected(checked.errorCode);
-   if(parser!="chromium-bookmarks")continue;
+   if(parser!="chromium-bookmarks"&&parser!="chromium-history")continue;
+   const bool history=parser=="chromium-history";
    const auto findings=checked.report.value("findings").toList();
    for(qsizetype i=0;i<findings.size();++i){
     if(stopped())return rejected("cancelled");
     const auto finding=findings[i].toMap(),details=finding.value("details").toMap();const auto timestamp=details.value("timestampUtc").toString();
-    if(details.value("dateAddedRaw").toString().isEmpty())continue;
-    ++candidates;auto row=timeValue(timestamp.isEmpty()?details.value("dateAddedRaw").toString():timestamp,false,"browser-bookmark-date-added");
-    row.insert("sourceTimeLiteral",details.value("dateAddedRaw"));row.insert("eventMeaning","recorded-bookmark-date-added; not a visit");
-    row.insert("id",id+":"+QString::number(i));row.insert("analysisId",id);row.insert("caseId",record.value("id"));row.insert("evidenceId",eid);row.insert("deviceId",source.value("deviceId"));row.insert("sourceName",source.value("name"));row.insert("sourceSha256",source.value("sha256"));row.insert("reportSha256",run.value("reportSha256"));row.insert("reference",finding.value("reference"));row.insert("kind","browser-bookmark-date-added");
+    const auto raw=details.value(history?"visitTimeRaw":"dateAddedRaw").toString();
+    if(raw.isEmpty())continue;
+    ++candidates;auto row=timeValue(timestamp.isEmpty()?raw:timestamp,false,"browser-bookmark-date-added");
+    row.insert("sourceTimeLiteral",raw);row.insert("eventMeaning",history?"source-recorded-visit; not proof of human viewing":"recorded-bookmark-date-added; not a visit");
+    if(history){row.insert("visitRecord",details.value("visitRecord"));row.insert("urlRecord",details.value("urlRecord"));}
+    row.insert("id",id+":"+QString::number(i));row.insert("analysisId",id);row.insert("caseId",record.value("id"));row.insert("evidenceId",eid);row.insert("deviceId",source.value("deviceId"));row.insert("sourceName",source.value("name"));row.insert("sourceSha256",source.value("sha256"));row.insert("reportSha256",run.value("reportSha256"));row.insert("reference",finding.value("reference"));row.insert("kind",history?"browser-history-visit":"browser-bookmark-date-added");
     if(!query.isEmpty()&&!QString::fromUtf8(QJsonDocument::fromVariant(row).toJson(QJsonDocument::Compact)).contains(query,Qt::CaseInsensitive))continue;
     if(events.size()>=timelineEventLimit){++omitted;continue;}if(row.value("timeState")=="normalized")++normalized;else ++unresolved;events.append(row);
    }

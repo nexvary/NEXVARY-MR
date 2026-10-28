@@ -6,11 +6,13 @@ sqlite_schema from its committed page image, resolves ordinary `urls` and
 `visits` tables, validates a deliberately small CREATE grammar and maps columns
 by their declared names. It never executes SQL or accepts a filesystem path.
 
-This increment is compiled into the SQLite reader test target only. It is not
-registered in the production adapter allowlist, exposed in QML, retained as a case
-analysis, or projected into a timeline. That integration needs a separate retained
-report validator, current authority/hash revalidation, signed operation and worker
-protocol tests. Do not present internal results as accepted case findings.
+The initial5129a15 prerequisite was test-target-only. The production integration
+now compiles this SAME reader into mr_desktop and wraps it in ChromiumHistory.cpp.
+That wrapper owns the allowlist, retained validator, authority/member revalidation,
+signed case receipt, QML and timeline integration; see CHROMIUM_HISTORY.md.
+Internal urls-only and unmatched-visit observations below remain separately tested;
+the case adapter deliberately refuses urls-only mode and any orphan visits.
+Do not confuse internal observations with accepted case findings.
 
 ## Supported observations
 
