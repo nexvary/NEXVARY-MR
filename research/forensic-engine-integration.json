@@ -1,78 +1,96 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "audit-required",
+  "status": "first-native-adapters-implemented-acceptance-pending",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
       "module": "evidence-adapter",
       "permission": "read-only",
-      "license_verified": false,
-      "source_sha": null,
-      "enabled": false
+      "license_verified": true,
+      "source_sha": "8b35940b1c879e0ce5f5c13e0d6c89aeab023757",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "workbench-export-manifest",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "pending-exact-source-ci"
     },
     {
       "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
       "module": "browser-artifact-adapter",
       "permission": "read-only",
-      "license_verified": false,
-      "source_sha": null,
-      "enabled": false
+      "license_verified": true,
+      "source_sha": "d7754cd8f051d285406403465b6d7daa3bc4b060",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "chromium-bookmarks",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "pending-exact-source-ci"
     },
     {
       "repository": "nexvary/NEXVARY-DC",
       "module": "disk-image-adapter",
       "permission": "read-only",
-      "license_verified": false,
-      "source_sha": null,
-      "enabled": false
+      "license_verified": true,
+      "source_sha": "d8e2baf61b43d044b33a1dd76a444d093c80023c",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "dc-image-partitions",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "pending-exact-source-ci"
     }
   ],
   "stages": [
     {
       "id": 1,
       "name": "upstream inventory",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 2,
       "name": "license and dependency audit",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 3,
       "name": "capability overlap map",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 4,
       "name": "read-only trust boundaries",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 5,
       "name": "workbench adapter",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 6,
       "name": "browser artifact adapter",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 7,
       "name": "disk image adapter",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 8,
       "name": "case provenance integration",
-      "state": "pending"
+      "state": "in-progress"
     },
     {
       "id": 9,
       "name": "CI and Windows packaging verification",
-      "state": "pending"
+      "state": "in-progress"
     }
   ]
 }

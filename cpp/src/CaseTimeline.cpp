@@ -1,4 +1,5 @@
 #include "CaseTimeline.hpp"
+#include "ForensicAdapters.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QTimeZone>
@@ -51,7 +52,27 @@ QVariantMap projectTimeline(const QVariantMap &record,const QString &query,const
  static const QRegularExpression candidate(QStringLiteral("\\A[0-9]{4}-[0-9]{2}-[0-9]{2}(?:T| |$)"));
  for(const auto &v:runs){
   if(stopped())return rejected("cancelled");
-  const auto run=v.toMap();if(!run.value("parser").toString().startsWith("authorized-import/"))continue;
+  const auto run=v.toMap();const auto parser=run.value("parser").toString();
+  if(mr::forensic::forensicAdapters().contains(parser)){
+   const auto id=run.value("id").toString(),eid=run.value("evidenceId").toString();const auto source=sources.value(eid);
+   if(id.isEmpty()||seen.contains(id))return rejected("analysis-inventory");
+   seen.insert(id);
+   const auto checked=mr::forensic::retainedForensicReport(run,source,record.value("id").toString());if(!checked.ok())return rejected(checked.errorCode);
+   if(parser!="chromium-bookmarks")continue;
+   const auto findings=checked.report.value("findings").toList();
+   for(qsizetype i=0;i<findings.size();++i){
+    if(stopped())return rejected("cancelled");
+    const auto finding=findings[i].toMap(),details=finding.value("details").toMap();const auto timestamp=details.value("timestampUtc").toString();
+    if(details.value("dateAddedRaw").toString().isEmpty())continue;
+    ++candidates;auto row=timeValue(timestamp.isEmpty()?details.value("dateAddedRaw").toString():timestamp,false,"browser-bookmark-date-added");
+    row.insert("sourceTimeLiteral",details.value("dateAddedRaw"));row.insert("eventMeaning","recorded-bookmark-date-added; not a visit");
+    row.insert("id",id+":"+QString::number(i));row.insert("analysisId",id);row.insert("caseId",record.value("id"));row.insert("evidenceId",eid);row.insert("deviceId",source.value("deviceId"));row.insert("sourceName",source.value("name"));row.insert("sourceSha256",source.value("sha256"));row.insert("reportSha256",run.value("reportSha256"));row.insert("reference",finding.value("reference"));row.insert("kind","browser-bookmark-date-added");
+    if(!query.isEmpty()&&!QString::fromUtf8(QJsonDocument::fromVariant(row).toJson(QJsonDocument::Compact)).contains(query,Qt::CaseInsensitive))continue;
+    if(events.size()>=timelineEventLimit){++omitted;continue;}if(row.value("timeState")=="normalized")++normalized;else ++unresolved;events.append(row);
+   }
+   continue;
+  }
+  if(!parser.startsWith("authorized-import/"))continue;
   const auto id=run.value("id").toString(),eid=run.value("evidenceId").toString();const auto source=sources.value(eid);
   const auto bytes=run.value("reportJson").toString().toUtf8();
   if(id.isEmpty()||seen.contains(id)||source.isEmpty()||bytes.size()>64*1024||digest(bytes)!=run.value("reportSha256").toString()||source.value("sha256")!=run.value("sourceSha256"))return rejected("report-integrity");
@@ -88,6 +109,6 @@ QVariantMap projectTimeline(const QVariantMap &record,const QString &query,const
  return {{"schema","nexvary-case-timeline/v1"},{"caseId",record.value("id")},{"caseRevision",record.value("revision")},
   {"synthetic",record.value("synthetic")},{"query",query},{"events",events},{"candidateCount",candidates},{"normalizedCount",normalized},{"unresolvedCount",unresolved},
   {"omittedMatchingCandidates",omitted},{"truncatedImportReports",truncatedRuns},{"eventLimit",timelineEventLimit},
-  {"scope","Observed timestamp literals from retained authorized imports only. No timestamp authenticity, causal/person relationship, timezone inference, complete device activity or current source-byte verification is established."}};
+  {"scope","Observed timestamp literals from retained authorized imports and recorded bookmark date-added metadata only. No timestamp authenticity, causal/person relationship, timezone inference, complete device activity or current source-byte verification is established."}};
 }
 }

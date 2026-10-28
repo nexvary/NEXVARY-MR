@@ -1,0 +1,136 @@
+[0/2] Re-checking globbed directories...
+[1/283] Automatic MOC and UIC for target mr_desktop
+[2/283] Generating NexvaryMR/qml/GovernmentAnalysisPage.qml
+[3/283] Generating NexvaryMR/qml/ForensicToolsPage.qml
+[4/283] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[5/283] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateKeyStore.cpp.o
+[6/283] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateVerifier.cpp.o
+[7/283] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[8/283] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateJournal.cpp.o
+[9/283] Linking CXX static library libmr_update_verifier.a
+[10/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+[11/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+[12/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+[13/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+[14/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+[15/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+[16/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/GovernmentOperationPolicy.cpp.o
+[17/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[18/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+[19/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[20/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseRetention.cpp.o
+[21/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PolicyAudit.cpp.o
+[22/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+[23/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseImports.cpp.o
+[24/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[25/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseTimeline.cpp.o
+[26/283] Automatic MOC for target mr_update_tests
+[27/282] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+[28/282] Automatic MOC for target mr_update_journal_tests
+[29/281] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCasePartitions.cpp.o
+[30/281] Automatic MOC for target mr_update_key_tests
+[31/280] Linking CXX executable mr_update_key_tests
+[32/280] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+[33/280] Linking CXX static library libmr_desktop.a
+[34/280] Automatic MOC and UIC for target nexvary_mr
+[35/279] Running AUTOMOC file extraction for target nexvary_mr
+[36/164] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp
+[37/164] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp
+[38/164] Running rcc for resource nexvary_mr_raw_qml_0
+[39/164] Automatic MOC and UIC for target mr_partition_transaction_tests
+[40/164] Building CXX object CMakeFiles/mr_update_journal_tests.dir/cpp/tests/update_journal_tests.cpp.o
+[41/164] Linking CXX executable mr_update_journal_tests
+[42/164] Building CXX object CMakeFiles/mr_update_tests.dir/cpp/tests/update_tests.cpp.o
+[43/164] Linking CXX executable mr_update_tests
+[44/164] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[45/164] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+[46/164] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp.o
+[47/164] Automatic MOC and UIC for target mr_case_transaction_tests
+[48/163] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp.o
+[49/163] Automatic MOC and UIC for target mr_policy_audit_tests
+[50/162] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+[51/162] Linking CXX executable nexvary_mr
+[52/162] Automatic MOC and UIC for target mr_offline_tests
+[53/161] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+[54/161] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/cpp/tests/case_transaction_tests.cpp.o
+[55/161] Linking CXX executable mr_partition_transaction_tests
+[56/161] Linking CXX executable mr_case_transaction_tests
+[57/161] Automatic MOC and UIC for target mr_artifact_tests
+[58/160] Automatic MOC and UIC for target mr_timeline_tests
+[59/159] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/cpp/tests/policy_audit_tests.cpp.o
+[60/159] Linking CXX executable mr_policy_audit_tests
+[61/159] Automatic MOC and UIC for target mr_import_tests
+[62/158] Building CXX object CMakeFiles/mr_offline_tests.dir/cpp/tests/offline_tests.cpp.o
+[63/158] Linking CXX executable mr_offline_tests
+[64/158] Automatic MOC and UIC for target mr_retention_tests
+[65/157] Building CXX object CMakeFiles/mr_timeline_tests.dir/cpp/tests/timeline_tests.cpp.o
+[66/157] Linking CXX executable mr_timeline_tests
+[67/157] Automatic MOC and UIC for target mr_identity_tests
+[68/156] Building CXX object CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o
+[69/156] Linking CXX executable mr_artifact_tests
+[70/156] Automatic MOC and UIC for target mr_law_workspace_tests
+[71/155] Building CXX object CMakeFiles/mr_import_tests.dir/cpp/tests/import_tests.cpp.o
+[72/155] Linking CXX executable mr_import_tests
+[73/155] Automatic MOC and UIC for target mr_research_tests
+[74/154] Linking CXX executable mr_research_tests
+[75/154] Automatic MOC and UIC for target mr_intelligence_tests
+[76/153] Linking CXX executable mr_intelligence_tests
+[77/153] Automatic MOC and UIC for target mr_connection_tests
+[78/152] Linking CXX executable mr_connection_tests
+[79/152] Automatic MOC and UIC for target mr_workshop_tests
+[80/151] Building CXX object CMakeFiles/mr_retention_tests.dir/cpp/tests/retention_tests.cpp.o
+[81/151] Linking CXX executable mr_workshop_tests
+[82/151] Automatic MOC and UIC for target mr_barcode_tests
+[83/150] Linking CXX executable mr_retention_tests
+[84/150] Automatic MOC and UIC for target mr_center_tests
+[85/149] Building CXX object CMakeFiles/mr_identity_tests.dir/cpp/tests/identity_tests.cpp.o
+[86/149] Linking CXX executable mr_barcode_tests
+[87/149] Automatic MOC and UIC for target mr_cloud_tests
+[88/148] Linking CXX executable mr_center_tests
+[89/148] Linking CXX executable mr_identity_tests
+[90/148] Automatic MOC and UIC for target mr_security_tests
+[91/147] Automatic MOC and UIC for target mr_catalog_tests
+[92/146] Linking CXX executable mr_catalog_tests
+[93/146] Automatic MOC and UIC for target mr_tool_tests
+[94/145] Linking CXX executable mr_security_tests
+[95/145] Automatic MOC and UIC for target mr_service_tests
+[96/144] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+[97/144] Linking CXX executable mr_tool_tests
+[98/144] Linking CXX executable mr_service_tests
+[99/144] Automatic MOC and UIC for target mr_mirror_tests
+[100/143] Automatic MOC and UIC for target mr_compatibility_tests
+[101/142] Linking CXX executable mr_law_workspace_tests
+[102/142] Automatic MOC and UIC for target mr_board_tests
+[103/141] Linking CXX executable mr_compatibility_tests
+[104/141] Automatic MOC and UIC for target mr_firmware_tests
+[105/140] Linking CXX executable mr_firmware_tests
+[106/140] Linking CXX executable mr_board_tests
+[107/140] Automatic MOC and UIC for target mr_avb_tests
+[108/139] Automatic MOC and UIC for target mr_pcap_tests
+[109/138] Linking CXX executable mr_avb_tests
+[110/138] Automatic MOC and UIC for target mr_exif_tests
+[111/137] Building CXX object CMakeFiles/mr_exif_tests.dir/cpp/tests/exif_tests.cpp.o
+[112/137] Linking CXX executable mr_exif_tests
+[113/137] Automatic MOC and UIC for target mr_recovery_tests
+[114/136] Building CXX object CMakeFiles/mr_pcap_tests.dir/cpp/tests/pcap_tests.cpp.o
+[115/136] Linking CXX executable mr_pcap_tests
+[116/136] Building CXX object CMakeFiles/mr_mirror_tests.dir/cpp/tests/mirror_tests.cpp.o
+[117/136] Automatic MOC and UIC for target mr_recovery_image_tests
+[118/135] Linking CXX executable mr_recovery_image_tests
+[119/135] Linking CXX executable mr_mirror_tests
+[120/135] Automatic MOC and UIC for target mr_forensic_tests
+[121/134] Automatic MOC and UIC for target mr_tsk_tests
+[122/133] Building CXX object CMakeFiles/mr_cloud_tests.dir/cpp/tests/cloud_tests.cpp.o
+[123/133] Linking CXX executable mr_cloud_tests
+FAILED: mr_cloud_tests 
+: && /usr/bin/c++ -O3 -DNDEBUG  CMakeFiles/mr_cloud_tests.dir/mr_cloud_tests_autogen/mocs_compilation.cpp.o CMakeFiles/mr_cloud_tests.dir/cpp/tests/cloud_tests.cpp.o -o mr_cloud_tests  CMakeFiles/mr_desktop_resources_1.dir/./mr_desktop_resources_1_autogen/mocs_compilation.cpp.o  CMakeFiles/mr_desktop_resources_1.dir/./build/.rcc/qrc_research_catalog.cpp.o  CMakeFiles/mr_desktop_resources_2.dir/./mr_desktop_resources_2_autogen/mocs_compilation.cpp.o  CMakeFiles/mr_desktop_resources_2.dir/./build/.rcc/qrc_device_catalog.cpp.o  libmr_desktop.a  /usr/lib/x86_64-linux-gnu/libQt6Test.so.6.4.2  libmr_import_adapters.a  libmr_core.a  libmr_user_protection.a  /tmp/mr-sodium/lib/libsodium.a  -ldl  /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so  /usr/lib/x86_64-linux-gnu/libQt6Sql.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Concurrent.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Network.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.4.2 && :
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+[124/133] Building CXX object CMakeFiles/mr_forensic_tests.dir/cpp/tests/forensic_tests.cpp.o
+[125/133] Building CXX object CMakeFiles/mr_recovery_tests.dir/cpp/tests/recovery_tests.cpp.o
+[126/133] Building CXX object CMakeFiles/mr_tsk_tests.dir/cpp/tests/tsk_tests.cpp.o
+ninja: build stopped: subcommand failed.

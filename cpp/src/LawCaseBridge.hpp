@@ -7,6 +7,7 @@
 template <typename T> class QFutureWatcher;
 #include "nexvary/LawPermissions.hpp"
 class LawCaseStore;
+class GovernmentOperationPolicy;
 class ToolBridge;
 class IdentityService;
 class EvidenceImportRunner;
@@ -25,6 +26,10 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
+ Q_PROPERTY(bool forensicBusy READ forensicBusy NOTIFY forensicChanged)
+ Q_PROPERTY(QVariantMap forensicResult READ forensicResult NOTIFY forensicChanged)
+ Q_PROPERTY(bool partitionsBusy READ partitionsBusy NOTIFY partitionsChanged)
+ Q_PROPERTY(QVariantMap partitionsResult READ partitionsResult NOTIFY partitionsChanged)
  Q_PROPERTY(bool artifactsBusy READ artifactsBusy NOTIFY artifactsChanged)
  Q_PROPERTY(QVariantMap artifactsResult READ artifactsResult NOTIFY artifactsChanged)
  Q_PROPERTY(bool timelineBusy READ timelineBusy NOTIFY timelineChanged)
@@ -35,6 +40,7 @@ public:
  explicit LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile=false,
   nexvary::law::Role role=nexvary::law::Role::Investigator,QObject *parent=nullptr,IdentityService *identity=nullptr);
  ~LawCaseBridge() override;
+ void setOperationPolicy(GovernmentOperationPolicy *policy);
  bool ready()const;
  QString error()const{return error_;}
  QString protection()const;
@@ -58,6 +64,14 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ bool forensicBusy()const{return forensicActive_;}
+ QVariantMap forensicResult()const{return forensicResult_;}
+ Q_INVOKABLE bool analyzeForensicEvidence(const QString &evidence,const QString &adapter);
+ Q_INVOKABLE void cancelForensicAnalysis();
+ bool partitionsBusy()const{return partitionsActive_;}
+ QVariantMap partitionsResult()const{return partitionsResult_;}
+ Q_INVOKABLE bool analyzePartitions(const QString &evidence,const QString &executable,bool consent);
+ Q_INVOKABLE void cancelPartitions();
  bool artifactsBusy()const;
  QVariantMap artifactsResult()const{return artifactsResult_;}
  Q_INVOKABLE bool buildArtifacts(const QString &query=QString());
@@ -84,6 +98,10 @@ public:
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
 signals:
+ void forensicChanged();
+ void forensicCompleted(bool success);
+ void partitionsChanged();
+ void partitionsCompleted(bool success);
  void artifactsChanged();
  void artifactsCompleted(bool success);
  void timelineChanged();
@@ -94,6 +112,12 @@ signals:
  void trainingChanged();
  void accessChanged();
 private:
+ void initForensicAdapters();
+ QVariantMap retainLocalAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report);
+ std::unique_ptr<QFutureWatcher<QVariantMap>> forensic_;
+ std::shared_ptr<std::atomic_bool> forensicCancel_;
+ QVariantMap forensicContext_,forensicResult_;
+ bool forensicActive_=false;
  bool permit(nexvary::law::Action action,bool caseBound=true);
  bool caseAllowed(const QVariantMap &record)const;
  nexvary::law::Role currentRole()const;
@@ -103,6 +127,12 @@ private:
  QString actor()const;
  std::unique_ptr<LawCaseStore> store_;
  std::unique_ptr<EvidenceImportRunner> importer_;
+ void initPartitions();
+ std::unique_ptr<QFutureWatcher<QVariantMap>> partitions_;
+ std::shared_ptr<std::atomic_bool> partitionsCancel_;
+ QVariantMap partitionsContext_,partitionsResult_;
+ bool partitionsActive_=false;
+ QMetaObject::Connection partitionsPolicyConnection_;
  void initArtifacts();
  std::unique_ptr<QFutureWatcher<QVariantMap>> artifacts_;
  std::shared_ptr<std::atomic_bool> artifactsCancel_;
@@ -118,6 +148,8 @@ private:
  QVariantMap importContext_,importResult_;
  ToolBridge *tools_=nullptr;
  IdentityService *identity_=nullptr;
+ GovernmentOperationPolicy *operationPolicy_=nullptr;
+ bool transactionsReady_=true;
  bool synthetic_=false;
  nexvary::law::Role role_;
  QString error_;

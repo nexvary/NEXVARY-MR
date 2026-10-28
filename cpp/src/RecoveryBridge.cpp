@@ -462,6 +462,7 @@ bool RecoveryBridge::exportTimeline(const QString &value,bool confirmed){
 }
 
 bool RecoveryBridge::analyzePartitions(const QString &image,const QString &executable,bool consent){
+ if(policy_&&!synthetic_)return fail(QStringLiteral("Government partition analysis requires registered evidence in the Government Analysis workspace; a recovery case label is insufficient."));
  if(policy_&&!policy_->permit("external-analysis"))return fail(policy_->error());
  if(busy())return fail(QStringLiteral("A recovery operation is already running."));
  if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record the operator, and authorize the raw image and trusted mmls executable."));

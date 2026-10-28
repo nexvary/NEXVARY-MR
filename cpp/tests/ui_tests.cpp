@@ -112,6 +112,7 @@ public slots:
   if(!identity->bootstrap("ui-admin","Synthetic UI administrator",fixturePassword)||!identity->login("ui-admin",fixturePassword)||identity->createUser("ui-investigator","Synthetic UI investigator","investigator",fixturePassword).isEmpty()||!identity->login("ui-investigator",fixturePassword))qFatal("Synthetic identity fixture failed");
   operationPolicy=std::make_unique<GovernmentOperationPolicy>(identity.get());
   law=std::make_unique<LawCaseBridge>(temp.filePath("law.db"),tools.get(),true,nexvary::law::Role::Investigator,nullptr,identity.get());
+  law->setOperationPolicy(operationPolicy.get());
   research=std::make_unique<ResearchBridge>(temp.filePath("research.json"),tools.get(),firmware.get(),nullptr,identity.get());
  }
  void qmlEngineAvailable(QQmlEngine *engine) {
@@ -162,6 +163,9 @@ public slots:
   QFile exifFile(exif);if(!exifFile.open(QIODevice::WriteOnly)||exifFile.write(syntheticExifJpeg())<0)qFatal("Cannot create Exif UI fixture");exifFile.close();
   engine->rootContext()->setContextProperty("syntheticExifPath",exif);
   engine->rootContext()->setContextProperty("exifScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-exif-ui-"));
+  const auto bookmarksPath=temp.filePath("synthetic-bookmarks.json");QFile bookmarksFile(bookmarksPath);
+  if(!bookmarksFile.open(QIODevice::WriteOnly)||bookmarksFile.write("{\"roots\":{\"bookmark_bar\":{\"type\":\"folder\",\"name\":\"Synthetic lab\",\"children\":[{\"type\":\"url\",\"name\":\"Authorized fixture\",\"url\":\"https://example.invalid/\",\"date_added\":\"13300000000000000\"}]}}}")<0)qFatal("Synthetic bookmarks fixture failed");
+  bookmarksFile.close();engine->rootContext()->setContextProperty("syntheticBookmarksPath",bookmarksPath);
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));

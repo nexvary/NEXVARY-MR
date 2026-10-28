@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="7b4d31f21c89"
+	time="0"
+	timestamp="2026-10-27T21:43:33"
+	>
+	<testcase name="mr_compatibility_tests" classname="mr_compatibility_tests" time="0.0259667" status="run">
+		<properties/>
+		<system-out>********* Start testing of CompatibilityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CompatibilityTests::initTestCase()
+PASS   : CompatibilityTests::modernApiFamilies(Android15)
+PASS   : CompatibilityTests::modernApiFamilies(Android16)
+PASS   : CompatibilityTests::modernApiFamilies(Android17)
+PASS   : CompatibilityTests::layoutAndEncryptionAreOnlyReported()
+PASS   : CompatibilityTests::futureApiAndPreviewStayUnapproved()
+PASS   : CompatibilityTests::missingDoesNotMeanDisabled()
+PASS   : CompatibilityTests::invalidValuesAreNotInferred()
+PASS   : CompatibilityTests::inconsistentFirstApi()
+PASS   : CompatibilityTests::fastbootModes(bootloader)
+PASS   : CompatibilityTests::fastbootModes(fastbootd)
+PASS   : CompatibilityTests::fastbootModes(missing)
+PASS   : CompatibilityTests::fastbootModes(malformed)
+PASS   : CompatibilityTests::exportProjection()
+PASS   : CompatibilityTests::duplicatePropertiesAreUnk...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

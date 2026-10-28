@@ -52,7 +52,7 @@ def independent_history(change=None):
     for sequence, (action, r, actor, role) in enumerate(operations, 1):
         if action in {"operation-start","operation-result"} and r["decisionHash"] == "__decision__":
             r = {**r, "decisionHash": events[2]["hash"]}
-        body = {"action": action, "record": r, "result": r["status"], "timeUtc": stamp,
+        body = {"action": action, "record": r, "result": r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
                 "principalId": ids[actor] if actor is not None else "", "principalRole": role}
         proof = {}
         if actor is not None:
@@ -219,6 +219,109 @@ def main():
             rows[6][1].update(status="cancelled", failureClass="operator-cancelled", sourceSha256="", outputSha256="")
             return rows
         protocol("cancelled partition without invented digests is accepted", cancelled_partition, expected=True)
+        def case_transaction(rows, ids):
+            r = {"schema": "nexvary-case-operation/v1", "operationId": "00000000-0000-4000-8000-000000000100", "requestId": "00000000-0000-4000-8000-000000000101", "caseId": "00000000-0000-4000-8000-000000000102", "evidenceId": "00000000-0000-4000-8000-000000000103", "expectedRevision": 3, "sourceSha256": "a" * 64, "caseBeforeSha256": "b" * 64, "reportSha256": "c" * 64, "analysisId": "00000000-0000-4000-8000-000000000104", "kind": "classic-pcap", "preparedUtc": "2026-10-27T06:00:00.000Z", "requester": ids[0], "requesterRole": "investigator", "recoveryState": "prepared"}
+            return rows + [("case-operation", r, 0, "investigator"), ("case-operation", {**r, "recoveryState": "completed"}, None, "system-observation")]
+        protocol("independent signed case preparation and reconciliation", case_transaction, expected=True)
+        for adapter in ("workbench-export-manifest", "chromium-bookmarks", "dc-image-partitions"):
+            def migrated(rows, ids, adapter=adapter):
+                rows = case_transaction(rows, ids)
+                for row in rows[-2:]:
+                    row[1]["kind"] = adapter
+                return rows
+            protocol("migrated local case adapter " + adapter, migrated, expected=True)
+        def destructive_case(rows, ids):
+            rows = case_transaction(rows, ids)
+            for row in rows[-2:]:
+                row[1]["kind"] = "dc-format"
+            return rows
+        protocol("destructive adapter cannot enter case journal", destructive_case)
+        def case_change(field, value):
+            def change(rows, ids):
+                rows = case_transaction(rows, ids)
+                rows[-1][1][field] = value
+                return rows
+            return change
+        protocol("case outcome cannot change evidence binding", case_change("evidenceId", "00000000-0000-4000-8000-000000000105"))
+        protocol("case outcome cannot change report digest", case_change("reportSha256", "d" * 64))
+        protocol("case intent cannot contain private paths", case_change("sourcePath", "private-fixture"))
+        def missing_prepared(rows, ids):
+            rows = case_transaction(rows, ids)
+            return rows[:-2] + rows[-1:]
+        protocol("case result without durable preparation rejected", missing_prepared)
+        def duplicate_terminal(rows, ids):
+            rows = case_transaction(rows, ids)
+            return rows + [copy.deepcopy(rows[-1])]
+        protocol("duplicate case recovery event rejected", duplicate_terminal)
+        def false_case_actor(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2] = ("case-operation", rows[-2][1], 1, "reviewer")
+            return rows
+        protocol("case preparation cannot forge requester identity", false_case_actor)
+        def bad_revision(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2][1]["expectedRevision"] = True
+            return rows
+        protocol("case expected revision cannot be boolean", bad_revision)
+        def reused_case_request(rows, ids):
+            rows = case_transaction(rows, ids)
+            r = {**rows[-2][1], "operationId": "00000000-0000-4000-8000-000000000106", "analysisId": "00000000-0000-4000-8000-000000000107"}
+            return rows + [("case-operation", r, 0, "investigator")]
+        protocol("signed case invocation reference cannot be reused", reused_case_request)
+        def reused_case_analysis(rows, ids):
+            rows = case_transaction(rows, ids)
+            r = {**rows[-2][1], "operationId": "00000000-0000-4000-8000-000000000106", "requestId": "00000000-0000-4000-8000-000000000107"}
+            return rows + [("case-operation", r, 0, "investigator")]
+        protocol("signed case analysis UUID cannot be reused", reused_case_analysis)
+        def brace_uuid(rows, ids):
+            rows = case_transaction(rows, ids)
+            rows[-2][1]["operationId"] = "{" + rows[-2][1]["operationId"] + "}"
+            return rows
+        protocol("case UUIDs must use canonical spelling", brace_uuid)
+
+        def case_partition(rows, ids):
+            for i in (0, 1, 2, 3, 4, 7):
+                rows[i][1]["requesterRole"] = "investigator"
+                if rows[i][2] == 0:
+                    rows[i] = (*rows[i][:3], "investigator")
+            for i in (5, 6):
+                rows[i][1].update(kind="partition-analysis", requesterRole="investigator")
+                if rows[i][2] == 0:
+                    rows[i] = (*rows[i][:3], "investigator")
+            start = rows[5][1]
+            intent = {"schema": "nexvary-case-operation/v2", "operationId": start["operationId"], "requestId": start["requestId"], "caseId": start["caseRef"], "evidenceId": "00000000-0000-4000-8000-000000000103", "expectedRevision": 3, "sourceSha256": "b" * 64, "caseBeforeSha256": "d" * 64, "reportSha256": "", "analysisId": "00000000-0000-4000-8000-000000000104", "kind": "partition-analysis", "preparedUtc": start["startedUtc"], "requester": ids[0], "requesterRole": "investigator", "recoveryState": "prepared", "toolSha256": "c" * 64}
+            return rows[:6] + [("case-operation", intent, 0, "investigator"), ("case-operation", {**intent, "recoveryState": "candidate", "reportSha256": "a" * 64}, None, "system-observation"), ("case-operation", {**intent, "recoveryState": "completed", "reportSha256": "a" * 64}, None, "system-observation")] + rows[6:]
+        protocol("registered partition prepared/candidate/completed original approval", case_partition, expected=True)
+        def partition_change(index, field, value):
+            def change(rows, ids):
+                rows = case_partition(rows, ids)
+                rows[index][1][field] = value
+                return rows
+            return change
+        for index, field, value in [(6,"caseId","00000000-0000-4000-8000-000000000099"), (6,"requestId","00000000-0000-4000-8000-000000000099"), (6,"preparedUtc","2026-10-25T00:00:00.000Z"), (6,"toolSha256",""), (6,"reportSha256","a"*64), (7,"toolSha256","e"*64), (7,"sourceSha256","e"*64), (7,"evidenceId","00000000-0000-4000-8000-000000000099"), (8,"reportSha256","e"*64), (8,"caseBeforeSha256","e"*64), (9,"outputSha256","e"*64), (9,"sourceSha256","e"*64)]:
+            protocol("registered partition rejects altered " + str(index) + ":" + field, partition_change(index, field, value))
+        def omit_partition_stage(index):
+            def change(rows, ids):
+                rows = case_partition(rows, ids)
+                del rows[index]
+                return rows
+            return change
+        protocol("registered partition cannot prepare without original operation start", omit_partition_stage(5))
+        protocol("registered partition cannot complete without durable candidate", omit_partition_stage(7))
+        def duplicate_candidate(rows, ids):
+            rows = case_partition(rows, ids)
+            return rows[:8] + [copy.deepcopy(rows[7])] + rows[8:]
+        protocol("registered partition cannot append a second candidate", duplicate_candidate)
+        def revoked_candidate(rows, ids):
+            rows = case_partition(rows, ids)
+            return rows[:7] + [rows[-1]] + rows[7:-1]
+        protocol("registered partition candidate after revocation rejected", revoked_candidate)
+        def unknown_external(rows, ids):
+            rows = case_partition(rows, ids)
+            intent = {**rows[6][1], "recoveryState": "unknown"}
+            return rows[:7] + [rows[-1], ("case-operation", intent, None, "system-observation")]
+        protocol("registered partition interrupted external outcome stays unknown", unknown_external, expected=True)
+
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))

@@ -9,6 +9,7 @@ class GovernmentOperationPolicy;
 #include <memory>
 class RecoveryBridge final:public QObject {
  Q_OBJECT
+ Q_PROPERTY(bool governmentCaseRequired READ governmentCaseRequired NOTIFY changed)
  Q_PROPERTY(bool active READ active NOTIFY changed)
  Q_PROPERTY(bool busy READ busy NOTIFY changed)
  Q_PROPERTY(double progress READ progress NOTIFY changed)
@@ -30,6 +31,7 @@ class RecoveryBridge final:public QObject {
  Q_PROPERTY(QString encryptionKind READ encryptionKind NOTIFY changed)
 public:
  void setOperationPolicy(GovernmentOperationPolicy *policy);
+ bool governmentCaseRequired()const{return policy_&&!synthetic_;}
  explicit RecoveryBridge(const QString &directory,bool syntheticTestProfile=false,QObject *parent=nullptr);
  ~RecoveryBridge() override;
  bool active() const{return !document_.isEmpty();}

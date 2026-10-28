@@ -1,0 +1,402 @@
+{
+  "sourceCommit": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+  "tree": "e00050af34e2a3d71566d76660e80cf89eeaf1b6",
+  "profile": "production-read-only / Release / warnings as errors / Qt 6.4.2 / synthetic Linux",
+  "fullRun": {
+    "passed": 48,
+    "total": 49,
+    "durationSeconds": 298.51,
+    "failedTest": "mr_gui_smoke",
+    "failureReason": "nonterminal request retained from earlier failed synthetic fixture; isolated diagnostic and three sequential fresh-fixture CTest runs passed; initial result remains failed"
+  },
+  "tests": [
+    {
+      "name": "mr_research_data_validation",
+      "result": "passed",
+      "duration": "0.0297093",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_policy_tests",
+      "result": "passed",
+      "duration": "0.00214282",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_core_tests",
+      "result": "passed",
+      "duration": "0.00179302",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_law_enforcement_case_tests",
+      "result": "passed",
+      "duration": "0.00192751",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_update_tests",
+      "result": "passed",
+      "duration": "0.485159",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_update_journal_tests",
+      "result": "passed",
+      "duration": "0.170361",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_update_key_tests",
+      "result": "passed",
+      "duration": "0.00404617",
+      "qtTotals": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_case_transaction_tests",
+      "result": "passed",
+      "duration": "6.47398",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_policy_audit_tests",
+      "result": "passed",
+      "duration": "12.7841",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_offline_tests",
+      "result": "passed",
+      "duration": "18.8086",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_artifact_tests",
+      "result": "passed",
+      "duration": "1.46001",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_timeline_tests",
+      "result": "passed",
+      "duration": "1.01564",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_import_tests",
+      "result": "passed",
+      "duration": "7.59896",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_retention_tests",
+      "result": "passed",
+      "duration": "1.06973",
+      "qtTotals": [
+        9,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_identity_tests",
+      "result": "passed",
+      "duration": "5.81717",
+      "qtTotals": [
+        12,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_law_workspace_tests",
+      "result": "passed",
+      "duration": "1.42201",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_research_tests",
+      "result": "passed",
+      "duration": "0.0461822",
+      "qtTotals": [
+        9,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_intelligence_tests",
+      "result": "passed",
+      "duration": "0.00813129",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_connection_tests",
+      "result": "passed",
+      "duration": "0.0086479",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_workshop_tests",
+      "result": "passed",
+      "duration": "1.63116",
+      "qtTotals": [
+        14,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_barcode_tests",
+      "result": "passed",
+      "duration": "0.58109",
+      "qtTotals": [
+        13,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_center_tests",
+      "result": "passed",
+      "duration": "0.0856729",
+      "qtTotals": [
+        6,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_cloud_tests",
+      "result": "passed",
+      "duration": "11.7904",
+      "qtTotals": [
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "mr_security_tests",
+      "result": "passed",
+      "duration": "1.47862",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_catalog_tests",
+      "result": "passed",
+      "duration": "0.0394019",
+      "qtTotals": [
+        4,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_tool_tests",
+      "result": "passed",
+      "duration": "27.9668",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_service_tests",
+      "result": "passed",
+      "duration": "5.02404",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_mirror_tests",
+      "result": "passed",
+      "duration": "13.7494",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_compatibility_tests",
+      "result": "passed",
+      "duration": "0.0349342",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_board_tests",
+      "result": "passed",
+      "duration": "0.024387",
+      "qtTotals": [
+        8,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_firmware_tests",
+      "result": "passed",
+      "duration": "0.0419559",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_avb_tests",
+      "result": "passed",
+      "duration": "0.0298599",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_pcap_tests",
+      "result": "passed",
+      "duration": "0.30054",
+      "qtTotals": [
+        16,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_exif_tests",
+      "result": "passed",
+      "duration": "0.282511",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_recovery_tests",
+      "result": "passed",
+      "duration": "9.21128",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_recovery_image_tests",
+      "result": "passed",
+      "duration": "0.0268331",
+      "qtTotals": [
+        10,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_forensic_tests",
+      "result": "passed",
+      "duration": "0.544535",
+      "qtTotals": [
+        7,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_tsk_tests",
+      "result": "passed",
+      "duration": "2.91929",
+      "qtTotals": [
+        8,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_policy_audit_interop",
+      "result": "passed",
+      "duration": "2.63699",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_evidence_package_interop",
+      "result": "passed",
+      "duration": "0.111333",
+      "qtTotals": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "mr_artifact_reference_validation",
+      "result": "passed",
+      "duration": "0.0459035",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_adb_backup_interop",
+      "result": "passed",
+      "duration": "0.596583",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_avb_mutation_tests",
+      "result": "passed",
+      "duration": "0.148699",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_pcap_mutation_tests",
+      "result": "passed",
+      "duration": "0.196559",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_exif_mutation_tests",
+      "result": "passed",
+      "duration": "0.0421152",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_ui_tests",
+      "result": "passed",
+      "duration": "73.4316",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_ui_scale_1.25",
+      "result": "passed",
+      "duration": "41.9095",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_ui_scale_1.5",
+      "result": "passed",
+      "duration": "45.4798",
+      "qtTotals": null
+    },
+    {
+      "name": "mr_gui_smoke",
+      "result": "failed",
+      "duration": "0.930175",
+      "qtTotals": null
+    }
+  ],
+  "guiRepeat": {
+    "passes": 3,
+    "durationSeconds": 60.94,
+    "originalsPreserved": true,
+    "clearsAuditRootCause": false
+  },
+  "nativeTransactionCases": 16,
+  "interopChecks": 51,
+  "rootPython": 42,
+  "screenshots": [
+    {
+      "file": "analysis-ar.png",
+      "sha256": "3ae370d8fbf9bfccf6ae4ed83afc473d2d2e1dbccf4f679b7608a00f1f89216c",
+      "width": 2304,
+      "height": 1470,
+      "source": "actual offscreen Qt application/fixture render; synthetic data; no image editing"
+    },
+    {
+      "file": "analysis-en.png",
+      "sha256": "f725ebe9b194c2bcacfa0bd7a365a4c7ac1eec758137a7964f750c5733ce2eb8",
+      "width": 2304,
+      "height": 1470,
+      "source": "actual offscreen Qt application/fixture render; synthetic data; no image editing"
+    },
+    {
+      "file": "application-artifacts-ar.png",
+      "sha256": "e427f8bcf645f293768411b8098482d339e6be442a239f08f3fbf535844ec7cc",
+      "width": 1536,
+      "height": 980,
+      "source": "actual offscreen Qt application/fixture render; synthetic data; no image editing"
+    }
+  ],
+  "linuxExecutableSha256": "134803397780b55f4ec5bf37b3e1b8dfd38809581a146e4407af47668d24cb2b",
+  "institutionalAcceptance": false
+}

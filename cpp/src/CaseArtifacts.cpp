@@ -1,4 +1,5 @@
 #include "CaseArtifacts.hpp"
+#include "ForensicAdapters.hpp"
 #include "ImportAdapters.hpp"
 #include <QCryptographicHash>
 #include <QJsonArray>
@@ -108,6 +109,24 @@ QVariantMap projectArtifacts(const QVariantMap &record, const QString &query,
         const auto run = v.toMap(); const auto runId = run.value("id").toString(), parser = run.value("parser").toString();
         if (!identifier(runId) || seen.contains(runId)) return reject("analysis-inventory");
         seen.insert(runId);
+        if(mr::forensic::forensicAdapters().contains(parser)){
+            const auto eid=run.value("evidenceId").toString();const auto source=sources.value(eid);
+            const auto checked=mr::forensic::retainedForensicReport(run,source,caseId);
+            if(!checked.ok())return reject(checked.errorCode);
+            const auto findings=checked.report.value("findings").toList();
+            for(qsizetype i=0;i<findings.size();++i){
+                if(stopped())return reject("cancelled");
+                const auto f=findings[i].toMap();++observed;
+                QVariantMap row{{"id",key(caseId,"finding",runId+":"+QString::number(i))},{"caseId",caseId},
+                    {"analysisId",runId},{"ordinal",i},{"evidenceId",eid},{"deviceId",source.value("deviceId")},
+                    {"sourceName",source.value("name")},{"sourceSha256",source.value("sha256")},{"reportSha256",run.value("reportSha256")},
+                    {"adapter",parser},{"kind",f.value("kind")},{"reference",f.value("reference")},{"value",f.value("value")},
+                    {"valueTruncated",false},{"memberSha256",QString()},{"confidence",f.value("confidence")},{"details",f.value("details")}};
+                if(!query.isEmpty()&&!QString::fromUtf8(QJsonDocument::fromVariant(row).toJson(QJsonDocument::Compact)).contains(query,Qt::CaseInsensitive))continue;
+                ++matching;if(rows.size()>=artifactRowLimit){++omitted;continue;}rows.append(row);
+            }
+            continue;
+        }
         if (!parser.startsWith("authorized-import/")) { ++unsupported; continue; }
         const auto adapter = parser.mid(18), eid = run.value("evidenceId").toString();
         const auto source = sources.value(eid); const auto bytes = run.value("reportJson").toString().toUtf8();
@@ -206,6 +225,6 @@ QVariantMap projectArtifacts(const QVariantMap &record, const QString &query,
         {"synthetic", record.value("synthetic")}, {"query", query}, {"rows", rows}, {"nodes", graph.nodeList()}, {"edges", graph.edgeList()}, {"digestGroups", groups},
         {"observedCount", observed}, {"matchingCount", matching}, {"omittedMatchingFindings", omitted}, {"truncatedImportReports", truncated},
         {"rejectedImportReports", rejected}, {"unsupportedAnalysisReports", unsupported}, {"rowLimit", artifactRowLimit},
-        {"scope", "Retained import observations and recorded provenance only. Graph covers retained matches; equal recorded digests are claims, not current byte verification, people, events or causality. No semantic/Arabic normalization or full device/app indexing."}};
+        {"scope", "Retained import/forensic observations and recorded provenance only. Graph covers retained matches; equal recorded digests are claims, not current byte verification, people, events or causality. No semantic/Arabic normalization or full device/app indexing."}};
 }
 }

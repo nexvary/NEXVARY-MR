@@ -6,6 +6,8 @@ DEVELOPMENT_STATE.md. It extends the existing native application operation gates
 it does not create an OS sandbox, a new product, an institutional identity provider
 or a device-acquisition capability.
 
+The registered partition adapter adds strict `nexvary-case-operation/v2` prepared/candidate/terminal history. Both verifiers bind it to the original reviewed request and operation start; a completed worker receipt must match the completed case observation digests. A case reference alone is not evidence membership. See GOVERNMENT_CASE_TRANSACTIONS.md.
+
 ## Operator workflow
 
 1. An existing local administrator provisions a different reviewer or administrator
@@ -75,7 +77,7 @@ activation/expiry/closure times. The verifier rejects changed immutable scope,
 self-review, wrong reviewer, invalid signatures, changed actor binding,
 reordering, interior deletion/duplication and mismatched retained history.
 
-The existing journal also supports strict operation-start/result records for SecurityBridge file scans/signature updates and RecoveryBridge authorized image partition analysis. See [operation-result receipts](GOVERNMENT_OPERATION_RESULTS.md) for their separate lifecycle, digest/export contract, cross-store persistence limits and remaining coverage. Older gate records keep their original meaning.
+The existing journal also supports strict operation-start/result records for SecurityBridge file scans/signature updates and LawCaseBridge registered-evidence partition analysis (historical synthetic RecoveryBridge fixtures remain). See [operation-result receipts](GOVERNMENT_OPERATION_RESULTS.md) for their separate lifecycle, digest/export contract, cross-store persistence limits and remaining coverage. Older gate records keep their original meaning.
 
 `operation-allowed` and `operation-denied` record the **native gate decision**.
 They do not assert external-tool success, the absence of network packets or a
@@ -169,3 +171,15 @@ per-tool/destination restrictions, comprehensive completion receipts, OS egress/
 DNS/proxy/descendant/mounted-share tests, clean physical Windows 10/11, independent
 security/records/privacy/license review, publisher signing and release approval.
 No competing licensed product was executed; no comparative superiority is proven.
+
+
+## Case-bound local analysis intent extension
+
+`case-operation` events now carry strict `nexvary-case-operation/v1` preparation
+and immutable recovery observations for existing local PCAP/EXIF case analyses.
+They are separate from reviewed external-tool exceptions; no new external
+capability is granted. Native and independent Python lifecycle verification use
+exact fields and reject changed bindings, extra private data and duplicate
+terminals. See [transaction protocol and remaining gates](GOVERNMENT_CASE_TRANSACTIONS.md).
+Older verifier versions fail closed on the new event kind. Existing journal
+capacity, protection and independent-anchor requirements remain unchanged.

@@ -71,6 +71,58 @@ def uuid(value):
 
 
 
+def case_intent_record(r, old, actor, role, result):
+    keys = {"schema", "operationId", "requestId", "caseId", "evidenceId", "expectedRevision", "sourceSha256", "caseBeforeSha256", "reportSha256", "analysisId", "kind", "preparedUtc", "requester", "requesterRole", "recoveryState"}
+    external = r.get("schema") == "nexvary-case-operation/v2"
+    if external:
+        keys.add("toolSha256")
+    state = r.get("recoveryState")
+    digests = {"sourceSha256", "caseBeforeSha256"}
+    if external:
+        digests.add("toolSha256")
+    if not external or state in {"candidate", "completed"} or r.get("reportSha256") != "":
+        digests.add("reportSha256")
+    if (set(r) != keys or (not external and r["schema"] != "nexvary-case-operation/v1")
+            or any(not uuid(r[k]) or r[k] != r[k].lower() for k in ("operationId", "requestId", "caseId", "evidenceId", "analysisId", "requester"))
+            or any(not isinstance(r[k], str) or not re.fullmatch(r"[0-9a-f]{64}", r[k]) for k in digests)
+            or (external and state == "prepared" and r["reportSha256"] != "")
+            or type(r["expectedRevision"]) is not int or not 1 <= r["expectedRevision"] < 10000
+            or r["kind"] not in ({"partition-analysis"} if external else {"classic-pcap", "jpeg-exif", "workbench-export-manifest", "chromium-bookmarks", "dc-image-partitions"})
+            or r["requesterRole"] not in {"reviewer", "investigator"}
+            or state not in ({"prepared", "candidate", "completed", "failed", "unknown"} if external else {"prepared", "completed", "failed", "unknown"})
+            or not isinstance(r["preparedUtc"], str) or not r["preparedUtc"].endswith("Z")
+            or result != state):
+        raise ValueError("Case operation intent fields rejected")
+    from datetime import datetime
+    datetime.fromisoformat(r["preparedUtc"].replace("Z", "+00:00"))
+    if result == "prepared":
+        if old or actor != r["requester"] or role != r["requesterRole"]:
+            raise ValueError("Case operation preparation attribution rejected")
+        return
+    if (old.get("recoveryState") not in ({"prepared", "candidate"} if external else {"prepared"})
+            or actor or role != "system-observation"
+            or (external and result == "completed" and old.get("recoveryState") != "candidate")
+            or (result == "candidate" and old.get("recoveryState") != "prepared")):
+        raise ValueError("Case operation recovery lifecycle rejected")
+    mutable = {"recoveryState", "reportSha256"} if external and result == "candidate" else {"recoveryState"}
+    if {k: v for k, v in r.items() if k not in mutable} != {k: v for k, v in old.items() if k not in mutable}:
+        raise ValueError("Case operation recovery binding rejected")
+
+
+def case_intent_authority(r, operation, request, closure):
+    if r["schema"] != "nexvary-case-operation/v2" or r["recoveryState"] not in {"prepared", "candidate"}:
+        return
+    from datetime import datetime
+    if (closure or request.get("status") != "active" or operation.get("status") != "started"
+            or operation.get("kind") != "partition-analysis" or operation.get("capability") != "external-analysis"
+            or operation.get("operationId") != r["operationId"] or operation.get("requestId") != r["requestId"]
+            or request.get("id") != r["requestId"] or operation.get("requester") != r["requester"]
+            or operation.get("requesterRole") != r["requesterRole"] or operation.get("caseRef") != r["caseId"]
+            or request.get("caseRef") != r["caseId"]
+            or datetime.fromisoformat(r["preparedUtc"]) < datetime.fromisoformat(operation["startedUtc"])):
+        raise ValueError("Case operation original approval/start rejected")
+
+
 def operation_record(r, request, decision, old, closure, actor, role, time, result, start):
     keys = {"capability", "caseRef", "completedUtc", "decisionHash", "decisionSequence", "failureClass", "kind", "operationId", "outputSha256", "requestId", "requester", "requesterRole", "schema", "sourceSha256", "startedUtc", "status"}
     digest = lambda x: isinstance(x, str) and (x == "" or re.fullmatch(r"[0-9a-f]{64}", x))
@@ -128,6 +180,7 @@ def verify(data, anchor):
         raise ValueError("Empty history anchor mismatch")
     states, actions, principals = {}, {}, {}
     decisions, operations, closures = {}, {}, {}
+    case_operations = {}
     for sequence, event in enumerate(rows, 1):
         raw, sig = un64(event["payload"]), un64(event["signature"])
         if not 0 < len(raw) <= 32 * 1024:
@@ -196,9 +249,20 @@ def verify(data, anchor):
                 decisions[request_id] = {"sequence": sequence, "hash": digest}
             if action in {"expire", "session-close", "restart-close", "emergency-stop", "revoke"}:
                 closures[request_id] = action
+        elif action == "case-operation":
+            if r.get("recoveryState") == "prepared" and (
+                    sum(v["recoveryState"] in {"prepared", "candidate"} for v in case_operations.values()) >= 64
+                    or any((r.get("schema") == "nexvary-case-operation/v1" and v["requestId"] == r.get("requestId")) or v["analysisId"] == r.get("analysisId") for v in case_operations.values())):
+                raise ValueError("Case operation invocation/analysis UUID reused or unfinished capacity exceeded")
+            case_intent_record(r, case_operations.get(r.get("operationId"), {}), actor, role, p["result"])
+            case_intent_authority(r, operations.get(r["operationId"], {}), states.get(r["requestId"], {}), closures.get(r["requestId"], ""))
+            case_operations[r["operationId"]] = r
         elif action in {"operation-start", "operation-result"}:
             request_id = r.get("requestId")
             operation_record(r, states.get(request_id, {}), decisions.get(request_id, {}), operations.get(r.get("operationId"), {}), closures.get(request_id, ""), actor, role, p["timeUtc"], p["result"], action == "operation-start")
+            case = case_operations.get(r["operationId"], {})
+            if case.get("schema") == "nexvary-case-operation/v2" and r["status"] == "completed" and (case["recoveryState"] != "completed" or r["sourceSha256"] != case["sourceSha256"] or r["outputSha256"] != case["reportSha256"]):
+                raise ValueError("Case operation receipt digest/outcome mismatch")
             operations[r["operationId"]] = r
         elif action not in {"operation-allowed", "operation-denied", "browser-result", "audit-verification", "policy-rejection"}:
             raise ValueError("Unknown event action")
@@ -213,6 +277,7 @@ def verify(data, anchor):
         if sequence == floor and previous != anchor["hash"]:
             raise ValueError("Retained history prefix mismatch")
     return {"valid": True, "events": len(rows), "requests": len(states), "actions": actions,
+            "caseOperations": {k: sum(v["recoveryState"] == k for v in case_operations.values()) for k in {v["recoveryState"] for v in case_operations.values()}},
             "head": previous, "retainedPrefixVerified": floor,
             "identityScope": "local keys/declared roles; not agency identity or independent people",
             "timeScope": "recorded local UTC; no external trusted time",

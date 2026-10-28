@@ -1,0 +1,139 @@
+2026-10-27T19:30:46.6796767Z HEAD is now at 3efe5f9 Merge 7844f01bd1427a4f37c702dfc63c50ea74247f94 into 8fb9b38f771da91c60f3b85a2084868b16fe95d4
+2026-10-27T19:30:47.2220679Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-27T19:31:17.8385197Z   Created wheel for inflate64: filename=inflate64-1.0.4-cp315-cp315-win_amd64.whl size=36119 sha256=df00815e6f9f3314a0a8d53baee306dc76dc2ed5654f8911aecb8c53880540cb
+2026-10-27T19:31:19.9248313Z   Created wheel for pybcj: filename=pybcj-1.0.8-cp315-cp315-win_amd64.whl size=25063 sha256=2b4e683417392f1fb3ae2ec4bbe0e3139308d56be11f051fa2cec4504dcce6ff
+2026-10-27T19:31:26.1185256Z   Created wheel for pyppmd: filename=pyppmd-1.3.1-cp315-cp315-win_amd64.whl size=47777 sha256=ee6a51f01f207088e5bd16c870b7a121ce927d6ae7deb40d2f2001b91faefc62
+2026-10-27T19:31:56.3861082Z {"prepared": "D:\\a\\_temp\\nexvary-sodium", "version": "1.0.22", "archiveSha256": "3e03a726fac4bc09cb61d8f29d658ef7a5eca0811de59082130414f7ca2e4279"}
+2026-10-27T19:32:21.2586066Z   build_profile_probe_fixture.cpp
+2026-10-27T19:32:25.0696885Z   mr_build_profile_fixture.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_build_profile_fixture.exe
+2026-10-27T19:37:17.1163056Z [36;1m./packaging/test-build-profile.ps1 -FixturePath build/Release/mr_build_profile_fixture.exe -ApplicationPath (Join-Path 'build/Release' $binaryName) -ExpectedProfile 'production'[0m
+2026-10-27T19:37:17.5138810Z PASS: Laboratory profile is read accurately
+2026-10-27T19:37:17.6009947Z PASS: Empty profile rejected
+2026-10-27T19:37:17.6093587Z PASS: Multiple profiles rejected
+2026-10-27T19:37:17.7423909Z PASS: No timed-out profile child remains
+2026-10-27T19:37:17.9189301Z PASS: Actual production application profile verified
+2026-10-27T19:37:17.9551047Z PASS: Actual production application passes packaging profile gate
+2026-10-27T19:37:18.0227491Z [36;1mif ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) { throw 'Official ClamAV artifact SHA256 mismatch' }[0m
+2026-10-27T19:37:18.0228555Z [36;1mif (-not $engine) { throw 'ClamAV executable missing from verified package' }[0m
+2026-10-27T19:37:25.4590708Z  1/49 Test  #1: mr_research_data_validation ........   Passed    0.03 sec
+2026-10-27T19:37:25.4656201Z  2/49 Test  #2: mr_policy_tests ....................   Passed    0.01 sec
+2026-10-27T19:37:25.4827886Z  3/49 Test  #3: mr_core_tests ......................   Passed    0.02 sec
+2026-10-27T19:37:25.4891038Z  4/49 Test  #4: mr_law_enforcement_case_tests ......   Passed    0.01 sec
+2026-10-27T19:37:25.8950751Z  5/49 Test  #5: mr_update_tests ....................   Passed    0.41 sec
+2026-10-27T19:37:27.9006215Z  6/49 Test  #6: mr_update_journal_tests ............   Passed    2.00 sec
+2026-10-27T19:37:28.1382420Z  7/49 Test  #7: mr_update_key_tests ................   Passed    0.24 sec
+2026-10-27T19:37:36.1475248Z  8/49 Test  #8: mr_case_transaction_tests ..........   Passed    8.01 sec
+2026-10-27T19:37:48.7185052Z  9/49 Test  #9: mr_policy_audit_tests ..............   Passed   12.57 sec
+2026-10-27T19:38:11.7188966Z 10/49 Test #10: mr_offline_tests ...................   Passed   23.00 sec
+2026-10-27T19:38:13.8256283Z 11/49 Test #11: mr_artifact_tests ..................   Passed    2.11 sec
+2026-10-27T19:38:15.8946938Z 12/49 Test #12: mr_timeline_tests ..................   Passed    2.07 sec
+2026-10-27T19:38:26.8114153Z 13/49 Test #13: mr_import_tests ....................   Passed   10.92 sec
+2026-10-27T19:38:29.3910071Z 14/49 Test #14: mr_retention_tests .................   Passed    2.58 sec
+2026-10-27T19:38:34.9405762Z 15/49 Test #15: mr_identity_tests ..................   Passed    5.55 sec
+2026-10-27T19:38:42.7567342Z 16/49 Test #16: mr_law_workspace_tests .............   Passed    7.82 sec
+2026-10-27T19:38:42.9105680Z 17/49 Test #17: mr_research_tests ..................   Passed    0.15 sec
+2026-10-27T19:38:42.9273341Z 18/49 Test #18: mr_intelligence_tests ..............   Passed    0.02 sec
+2026-10-27T19:38:42.9450613Z 19/49 Test #19: mr_connection_tests ................   Passed    0.02 sec
+2026-10-27T19:38:48.5928072Z 20/49 Test #20: mr_workshop_tests ..................   Passed    5.65 sec
+2026-10-27T19:38:50.2412691Z 21/49 Test #21: mr_barcode_tests ...................   Passed    1.65 sec
+2026-10-27T19:38:51.1973134Z 22/49 Test #22: mr_center_tests ....................   Passed    0.96 sec
+2026-10-27T19:39:04.2368234Z 23/49 Test #23: mr_cloud_tests .....................   Passed   13.04 sec
+2026-10-27T19:39:06.1196412Z 24/49 Test #24: mr_security_tests ..................   Passed    1.88 sec
+2026-10-27T19:39:06.1679046Z 25/49 Test #25: mr_catalog_tests ...................   Passed    0.05 sec
+2026-10-27T19:39:35.1880815Z 26/49 Test #26: mr_tool_tests ......................   Passed   29.02 sec
+2026-10-27T19:39:50.7152757Z 27/49 Test #27: mr_service_tests ...................   Passed   15.53 sec
+2026-10-27T19:40:17.9328283Z 28/49 Test #28: mr_mirror_tests ....................   Passed   27.22 sec
+2026-10-27T19:40:17.9522008Z 29/49 Test #29: mr_compatibility_tests .............   Passed    0.02 sec
+2026-10-27T19:40:18.0445519Z 30/49 Test #30: mr_board_tests .....................   Passed    0.09 sec
+2026-10-27T19:40:18.0845947Z 31/49 Test #31: mr_firmware_tests ..................   Passed    0.04 sec
+2026-10-27T19:40:18.1289264Z 32/49 Test #32: mr_avb_tests .......................   Passed    0.04 sec
+2026-10-27T19:40:18.4937157Z 33/49 Test #33: mr_pcap_tests ......................   Passed    0.36 sec
+2026-10-27T19:40:18.8688930Z 34/49 Test #34: mr_exif_tests ......................   Passed    0.37 sec
+2026-10-27T19:40:34.3872223Z 35/49 Test #35: mr_recovery_tests ..................   Passed   15.52 sec
+2026-10-27T19:40:34.4184424Z 36/49 Test #36: mr_recovery_image_tests ............   Passed    0.03 sec
+2026-10-27T19:40:35.1413484Z 37/49 Test #37: mr_forensic_tests ..................   Passed    0.72 sec
+2026-10-27T19:40:37.6311135Z 38/49 Test #38: mr_tsk_tests .......................   Passed    2.49 sec
+2026-10-27T19:40:39.9750280Z 39/49 Test #39: mr_policy_audit_interop ............   Passed    2.34 sec
+2026-10-27T19:40:40.2746818Z 40/49 Test #40: mr_evidence_package_interop ........   Passed    0.30 sec
+2026-10-27T19:40:40.3122546Z 41/49 Test #41: mr_artifact_reference_validation ...   Passed    0.04 sec
+2026-10-27T19:40:41.2764848Z 42/49 Test #42: mr_adb_backup_interop ..............   Passed    0.96 sec
+2026-10-27T19:40:41.4568611Z 43/49 Test #43: mr_avb_mutation_tests ..............   Passed    0.18 sec
+2026-10-27T19:40:41.6980428Z 44/49 Test #44: mr_pcap_mutation_tests .............   Passed    0.24 sec
+2026-10-27T19:40:41.7609397Z 45/49 Test #45: mr_exif_mutation_tests .............   Passed    0.06 sec
+2026-10-27T19:41:56.4158324Z 46/49 Test #46: mr_ui_tests ........................   Passed   74.65 sec
+2026-10-27T19:42:30.7798061Z 47/49 Test #47: mr_ui_scale_1.25 ...................   Passed   34.36 sec
+2026-10-27T19:43:08.6746450Z 48/49 Test #48: mr_ui_scale_1.5 ....................   Passed   37.89 sec
+2026-10-27T19:43:30.3473411Z 49/49 Test #49: mr_gui_smoke .......................   Passed   21.67 sec
+2026-10-27T19:43:30.3480745Z 100% tests passed, 0 tests failed out of 49
+2026-10-27T19:43:30.3483535Z Total Test time (real) = 364.97 sec
+2026-10-27T19:43:30.4377645Z Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 2088ms
+2026-10-27T19:43:30.4388078Z Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 27ms
+2026-10-27T19:43:30.4395084Z Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 1626ms
+2026-10-27T19:43:30.4402663Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 73ms
+2026-10-27T19:43:30.4413037Z PASS   : CaseTransactionTests::verifiedMembershipRevisionAndDigest()
+2026-10-27T19:43:30.4421475Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 7990ms
+2026-10-27T19:43:30.4430265Z Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 26ms
+2026-10-27T19:43:30.4436808Z PASS   : CenterTests::profilesPersistWithoutDuplicateOwnership()
+2026-10-27T19:43:30.4440446Z Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 935ms
+2026-10-27T19:43:30.4451356Z Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 13017ms
+2026-10-27T19:43:30.4467595Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 3ms
+2026-10-27T19:43:30.4484611Z PASS   : ConnectionTests::fastbootSubtypeRequiresFreshProfileForSameTarget()
+2026-10-27T19:43:30.4500118Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms
+2026-10-27T19:43:30.4517368Z Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 357ms
+2026-10-27T19:43:30.4532614Z Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 20ms
+2026-10-27T19:43:30.4542732Z Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 700ms
+2026-10-27T19:43:30.4554886Z Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 5529ms
+2026-10-27T19:43:30.4707240Z Totals: 36 passed, 0 failed, 0 skipped, 0 blacklisted, 10898ms
+2026-10-27T19:43:30.4726737Z Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 3ms
+2026-10-27T19:43:30.4734828Z PASS   : LawWorkspaceTests::metadataAndProfileValidation()
+2026-10-27T19:43:30.4743446Z Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 7793ms
+2026-10-27T19:43:30.4761358Z Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 27197ms
+2026-10-27T19:43:30.4779297Z Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 22982ms
+2026-10-27T19:43:30.4793770Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 347ms
+2026-10-27T19:43:30.4810168Z Totals: 14 passed, 0 failed, 1 skipped, 0 blacklisted, 12552ms
+2026-10-27T19:43:30.4821435Z Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 14ms
+2026-10-27T19:43:30.4844614Z Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 15500ms
+2026-10-27T19:43:30.4855445Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 133ms
+2026-10-27T19:43:30.4866327Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 2557ms
+2026-10-27T19:43:30.4880094Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1861ms
+2026-10-27T19:43:30.4929841Z Totals: 35 passed, 0 failed, 21 skipped, 0 blacklisted, 15509ms
+2026-10-27T19:43:30.4983545Z Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 2050ms
+2026-10-27T19:43:30.5008783Z Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 29002ms
+2026-10-27T19:43:30.5017999Z PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+2026-10-27T19:43:30.5020636Z Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2462ms
+2026-10-27T19:43:30.5037463Z PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+2026-10-27T19:43:30.5038800Z PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+2026-10-27T19:43:30.5082618Z Totals: 52 passed, 0 failed, 0 skipped, 0 blacklisted, 72166ms
+2026-10-27T19:43:30.5093419Z PASS   : JournalTests::malformedAuthenticatedState(profile)
+2026-10-27T19:43:30.5113403Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 1990ms
+2026-10-27T19:43:30.5125524Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 222ms
+2026-10-27T19:43:30.5137887Z PASS   : UpdateTests::signedPolicyViolations(profile)
+2026-10-27T19:43:30.5155394Z PASS   : UpdateTests::stagingRetainsVerifiedBytesAndCleansUp()
+2026-10-27T19:43:30.5158760Z Totals: 40 passed, 0 failed, 0 skipped, 0 blacklisted, 391ms
+2026-10-27T19:43:30.5172753Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 5626ms
+2026-10-27T19:44:34.6276278Z 1/1 Test #49: mr_gui_smoke .....................   Passed   21.60 sec
+2026-10-27T19:44:34.6284556Z 100% tests passed, 0 tests failed out of 1
+2026-10-27T19:44:34.6284785Z Total Test time (real) =  64.09 sec
+2026-10-27T19:44:34.6739152Z ##[group]Run $raw = & "$env:SystemRoot/System32/WindowsPowerShell/v1.0/powershell.exe" -NoLogo -NoProfile -NonInteractive -File packaging/inspect-usb.ps1
+2026-10-27T19:44:34.6739875Z [36;1m$raw = & "$env:SystemRoot/System32/WindowsPowerShell/v1.0/powershell.exe" -NoLogo -NoProfile -NonInteractive -File packaging/inspect-usb.ps1[0m
+2026-10-27T19:44:36.4568535Z Updating qmldbg_profiler.dll.
+2026-10-27T19:44:36.4568771Z Updating qmldbg_quickprofiler.dll.
+2026-10-27T19:44:38.0845756Z {"prepared": "dist\\NEXVARY-MR\\tools\\scrcpy", "version": "5.0.1", "archiveSha256": "b12a2c4ee8be317422451fc7dcf8ee20a71b5ea7ef9ad73ddd825a25316227a5"}
+2026-10-27T19:45:09.1231122Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }[0m
+2026-10-27T19:45:25.0609704Z    Compressing: D:\a\NEXVARY-MR\NEXVARY-MR\packaging\..\dist\NEXVARY-MR\SHA256SUMS.txt
+2026-10-27T19:45:27.1664409Z    Compressing: D:\a\NEXVARY-MR\NEXVARY-MR\packaging\..\dist\NEXVARY-MR\qmltooling\qmldbg_profiler.dll
+2026-10-27T19:45:27.1674909Z    Compressing: D:\a\NEXVARY-MR\NEXVARY-MR\packaging\..\dist\NEXVARY-MR\qmltooling\qmldbg_quickprofiler.dll
+2026-10-27T19:45:32.7072288Z [36;1mif ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }[0m
+2026-10-27T19:45:32.7076714Z [36;1mif ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }[0m
+2026-10-27T19:45:32.7078458Z [36;1mif (Test-Path -LiteralPath $installedExe) { throw 'Uninstaller left the installed application executable' }[0m
+2026-10-27T19:45:32.7079135Z [36;1mif (Test-Path -LiteralPath $uninstallKey) { throw 'Uninstaller left its per-user registry entry' }[0m
+2026-10-27T19:45:32.7081510Z [36;1m} | ConvertTo-Json | Set-Content dist/evidence/installer-lifecycle.json[0m
+2026-10-27T19:46:00.1357216Z ##[group]Run Get-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt
+2026-10-27T19:46:00.1357955Z [36;1mGet-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt[0m
+2026-10-27T19:46:03.0247483Z SHA256 digest of uploaded artifact zip is 36a3fc6f88f18a112ad11715743cb747cfde454abe65ecdd52eeb15e370e4aa0
+2026-10-27T19:46:03.5291002Z   name: NEXVARY-MR-Windows-x64-installer-unsigned
+dist/SHA256SUMS.txt
+2026-10-27T19:46:06.2609024Z SHA256 digest of uploaded artifact zip is df753653d63afbcecd99076a7c775de867584bf65d1d83ffdf254939cedd4926
+2026-10-27T19:46:06.8382124Z Artifact NEXVARY-MR-Windows-x64-installer-unsigned.zip successfully finalized. Artifact ID 12765890247
+2026-10-27T19:46:06.8382787Z Artifact NEXVARY-MR-Windows-x64-installer-unsigned has been successfully uploaded! Final size is 33193761 bytes. Artifact ID is 12765890247
+2026-10-27T19:46:10.1173168Z SHA256 digest of uploaded artifact zip is 1f5dc025ada99b78f78bcdd0666eae690cfdc678f6ce70ae3727cf2c61aa2f21

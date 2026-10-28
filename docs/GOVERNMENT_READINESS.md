@@ -1,5 +1,7 @@
 # Government Edition evaluation readiness
 
+Case-bound local PCAP/EXIF and registered raw-image partition analysis now have signed prepared intents, case transaction binding and restart reconciliation adapters. See [scope, decision rules and remaining migration](GOVERNMENT_CASE_TRANSACTIONS.md); exact validation is recorded in DEVELOPMENT_STATE.md. The production governed unbound RecoveryBridge partition path now refuses dispatch. Scanner/update and other paths are not declared crash-transaction-safe by this increment.
+
 Current trust increment (implementation; exact CI status in DEVELOPMENT_STATE.md): protected signed policy history, separate-account request/review/decision, one-time requester activation, revocation/expiry, public audit export and independent Python verifier are integrated. Direct grants are disabled. See GOVERNMENT_POLICY_AUDIT.md for tested scope and remaining institutional/OS/key/time/rotation/completion-receipt gaps. Earlier checkpoint rows below remain historical where they say durable policy audit/delegation is unimplemented. No competitor executable or comparative superiority result is introduced.
 
 
