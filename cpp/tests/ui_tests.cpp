@@ -172,6 +172,14 @@ public slots:
   const auto manifestBytes=QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path","bookmarks.json"},{"sha256",payloadHash}}}).toJson(QJsonDocument::Compact);
   if(!manifestFile.open(QIODevice::WriteOnly)||manifestFile.write(manifestBytes)!=manifestBytes.size())qFatal("Cannot create manifest UI fixture");
   manifestFile.close();engine->rootContext()->setContextProperty("syntheticManifestPath",manifestPath);
+  QFile familyFixture(MR_SQLITE_FAMILY_REFERENCE_PATH);if(!familyFixture.open(QIODevice::ReadOnly))qFatal("Missing SQLite family UI fixture");
+  const auto family=QJsonDocument::fromJson(familyFixture.readAll()).toVariant().toMap();
+  for(const auto &role:QStringList{"main","wal","shm"}){
+   const auto name=temp.filePath("sqlite-"+role);QFile member(name);const auto bytes=QByteArray::fromBase64(family.value(role+"Base64").toString().toLatin1());
+   if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("Cannot create SQLite family UI evidence");
+   member.close();
+   engine->rootContext()->setContextProperty("syntheticSqlite"+role+"Path",name);
+  }
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));

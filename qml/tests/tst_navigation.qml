@@ -134,6 +134,21 @@ TestCase {
   const report=JSON.parse(lawCaseBridge.forensicResult.reportJson);compare(report.payloadVerified,true);compare(report.verifiedFiles,1);compare(report.findings[0].details.payloadEvidenceId,payload);verify(lawCaseBridge.verifyAudit())
   lawCaseBridge.closeWorkspace();verify(renderedFrame());compare(Object.keys(page.manifestBindings).length,0);app.setWorkspace(false)
  }
+ function test_governmentSqliteFamily(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
+  const id=lawCaseBridge.createCase({caseNumber:"SYNTHETIC-SQLITE-FAMILY",investigatingAgency:"Lab",investigatorName:"Operator",seizedDeviceDescription:"Synthetic offline database",authorityReference:"Synthetic scope",issuingAuthority:"Owner",scope:"Synthetic family structural verification"});verify(id!=="",lawCaseBridge.error)
+  const dev=lawCaseBridge.addDevice({model:"Synthetic",custodian:"A"});verify(dev!=="")
+  const main=lawCaseBridge.addEvidence(dev,syntheticSqlitemainPath,"Main","A",true),wal=lawCaseBridge.addEvidence(dev,syntheticSqlitewalPath,"WAL","A",true),shm=lawCaseBridge.addEvidence(dev,syntheticSqliteshmPath,"SHM","A",true);verify(main!==""&&wal!==""&&shm!=="")
+  const page=findChild(app,"governmentAnalysisWorkspace"),selector=findChild(page,"governmentForensicAdapter"),input=findChild(page,"governmentForensicEvidence"),walInput=findChild(page,"governmentSqliteWal"),shmInput=findChild(page,"governmentSqliteShm")
+  selector.currentIndex=3
+  for(let i=0;i<input.model.length;i++)if(input.model[i].id===main)input.currentIndex=i
+  for(let i=0;i<walInput.model.length;i++)if(walInput.model[i].id===wal)walInput.currentIndex=i
+  for(let i=0;i<shmInput.model.length;i++)if(shmInput.model[i].id===shm)shmInput.currentIndex=i
+  artifactClick(page,findChild(page,"governmentForensicRun"));tryCompare(lawCaseBridge,"forensicBusy",false,10000);verify(!!lawCaseBridge.forensicResult.reportJson,lawCaseBridge.error)
+  const report=JSON.parse(lawCaseBridge.forensicResult.reportJson);compare(report.adapter,"browser-sqlite-family");compare(report.sqliteFamily.commitFrames,2);compare(report.sqliteFamily.members.length,3);compare(report.sqliteFamily.shmUsedForReplay,false);verify(lawCaseBridge.verifyAudit())
+  for(const ar of [true,false]){app.ar=ar;verify(renderedFrame());reveal(page,findChild(page,"governmentForensicWarnings"));verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"sqlite-family-"+(ar?"ar":"en")+"-"+uiScaleTag+".png"))}
+  lawCaseBridge.closeWorkspace();app.setWorkspace(false)
+ }
  function test_governmentSummaryLifetime(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame())
   const page=findChild(app,"governmentAnalysisWorkspace"),names=["governmentSummaryFirst","governmentSummarySecond","governmentSummaryThird"],cards=names.map(function(name){return findChild(page,name)})

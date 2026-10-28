@@ -223,7 +223,7 @@ def main():
             r = {"schema": "nexvary-case-operation/v1", "operationId": "00000000-0000-4000-8000-000000000100", "requestId": "00000000-0000-4000-8000-000000000101", "caseId": "00000000-0000-4000-8000-000000000102", "evidenceId": "00000000-0000-4000-8000-000000000103", "expectedRevision": 3, "sourceSha256": "a" * 64, "caseBeforeSha256": "b" * 64, "reportSha256": "c" * 64, "analysisId": "00000000-0000-4000-8000-000000000104", "kind": "classic-pcap", "preparedUtc": "2026-10-27T06:00:00.000Z", "requester": ids[0], "requesterRole": "investigator", "recoveryState": "prepared"}
             return rows + [("case-operation", r, 0, "investigator"), ("case-operation", {**r, "recoveryState": "completed"}, None, "system-observation")]
         protocol("independent signed case preparation and reconciliation", case_transaction, expected=True)
-        for adapter in ("workbench-export-manifest", "chromium-bookmarks", "dc-image-partitions"):
+        for adapter in ("workbench-export-manifest", "chromium-bookmarks", "dc-image-partitions", "browser-sqlite-family"):
             def migrated(rows, ids, adapter=adapter):
                 rows = case_transaction(rows, ids)
                 for row in rows[-2:]:

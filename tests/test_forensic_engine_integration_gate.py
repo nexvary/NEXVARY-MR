@@ -64,6 +64,12 @@ class ForensicIntegrationGateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             gate.validate(data)
 
+    def test_no_unapproved_additional_adapter(self):
+        data = deepcopy(self.original)
+        data["sources"][1]["additional_adapters"] = ["browser-live-passwords"]
+        with self.assertRaises(ValueError):
+            gate.validate(data)
+
     def test_no_destructive_adapter(self):
         data = deepcopy(self.original)
         data["sources"][2]["adapter"] = "dc-format"

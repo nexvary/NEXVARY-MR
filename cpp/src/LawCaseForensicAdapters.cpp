@@ -36,7 +36,7 @@ void LawCaseBridge::initForensicAdapters(){
   for(auto it=payloads.cbegin();it!=payloads.cend();++it){
    const auto binding=it.value().toMap();const auto bytes=store_->readEvidence(id,binding.value("evidenceId").toString());
    if(bytes.isEmpty()||QString::fromLatin1(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex())!=binding.value("sha256")){
-    fail("Manifest result refused: protected payload changed.");finish(false);return;
+    fail("Forensic result refused: protected auxiliary evidence changed.");finish(false);return;
    }
   }
   const auto result=retainLocalAnalysis(id,context.value("caseRevision").toLongLong(),evidence,context.value("adapter").toString(),report);
@@ -52,6 +52,10 @@ void LawCaseBridge::initForensicAdapters(){
 bool LawCaseBridge::analyzeForensicEvidence(const QString &evidence,const QString &adapter){
  return startForensicEvidence(evidence,adapter,{},false);
 }
+bool LawCaseBridge::analyzeBrowserSqliteFamily(const QString &main,const QString &wal,const QString &shm){
+ QVariantMap roles;if(!wal.isEmpty())roles.insert("wal",wal);if(!shm.isEmpty())roles.insert("shm",shm);
+ return startForensicEvidence(main,"browser-sqlite-family",roles,false);
+}
 bool LawCaseBridge::verifyManifestEvidence(const QString &evidence,const QVariantMap &payloads){
  return startForensicEvidence(evidence,"workbench-export-manifest",payloads,true);
 }
@@ -65,7 +69,7 @@ bool LawCaseBridge::startForensicEvidence(const QString &evidence,const QString 
  if(source.size()>8*1024*1024)return fail("Forensic adapters accept at most 8 MiB of protected evidence.");
  const auto digest=QString::fromLatin1(QCryptographicHash::hash(source,QCryptographicHash::Sha256).toHex());
  if(payloads.size()>128)return fail("Manifest payload count exceeds 128.");
- QMap<QString,mr::forensic::ManifestEvidencePayload> protectedPayloads;QVariantMap bindings;qint64 total=0;
+ QMap<QString,mr::forensic::ManifestEvidencePayload> protectedPayloads;QVariantMap bindings;qint64 total=adapter=="browser-sqlite-family"?source.size():0;
  for(auto it=payloads.cbegin();it!=payloads.cend();++it){
   if(!mr::forensic::safeManifestPath(it.key())||it.value().metaType().id()!=QMetaType::QString)return fail("Invalid manifest path/evidence binding.");
   const auto payloadId=it.value().toString();
@@ -82,7 +86,7 @@ bool LawCaseBridge::startForensicEvidence(const QString &evidence,const QString 
  }
  forensicCancel_=std::make_shared<std::atomic_bool>(false);
  mr::forensic::ReadOnlyEvidenceRequest request{id,evidence,digest,adapter,source,forensicCancel_};
- request.verifyManifestPayloads=verifyPayloads;request.manifestPayloads=protectedPayloads;
+ request.verifyManifestPayloads=verifyPayloads;if(adapter=="browser-sqlite-family")request.sqliteFamilyMembers=protectedPayloads;else request.manifestPayloads=protectedPayloads;
  forensicContext_={{"caseId",id},{"caseRevision",active_.value("revision")},{"evidenceId",evidence},{"sourceSha256",digest},{"actor",actor()},{"adapter",adapter},{"manifestPayloads",bindings}};
  forensicResult_.clear();error_.clear();forensicActive_=true;
  forensic_->setFuture(QtConcurrent::run([request]{const auto r=mr::forensic::analyzeReadOnlyEvidence(request);return r.ok()?r.report:QVariantMap{{"errorCode",r.errorCode}};}));

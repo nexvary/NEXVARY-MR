@@ -1,5 +1,6 @@
 #include "ForensicAdapters.hpp"
 #include "DcImagePartitions.hpp"
+#include "SqliteEvidenceFamily.hpp"
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QTimeZone>
@@ -156,9 +157,10 @@ bool safeManifestPath(const QString &path){
 }
 QVariantMap ForensicFinding::toMap() const{return {{"kind",kind},{"reference",reference},{"value",value},{"confidence",confidence},{"details",details}};}
 QVariantMap ForensicSourceDescriptor::toMap() const{return {{"adapter",adapter},{"adapterVersion","nexvary-mr-forensic/1"},{"repository",repository},{"upstreamCommit",upstreamCommit},{"sourceModule",sourceModule},{"permissionBasis",permissionBasis},{"maxInputBytes",maxInputBytes},{"maxOutputBytes",maxOutputBytes},{"maxFindings",maxFindings}};}
-QStringList forensicAdapters(){return {"workbench-export-manifest","chromium-bookmarks","dc-image-partitions"};}
+QStringList forensicAdapters(){return {"workbench-export-manifest","chromium-bookmarks","dc-image-partitions","browser-sqlite-family"};}
 ForensicSourceDescriptor forensicSource(const QString &adapter){
  if(adapter=="workbench-export-manifest")return {adapter,"nexvary/NEXVARY-Digital-Forensics-Workbench","8b35940b1c879e0ce5f5c13e0d6c89aeab023757","nexvary_lab/pro_tools_v1221.py:export_validate",permission};
+ if(adapter=="browser-sqlite-family")return {adapter,"nexvary/NEXVARY-Browser-Forensics-Lab","d7754cd8f051d285406403465b6d7daa3bc4b060","nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",permission};
  if(adapter=="chromium-bookmarks")return {adapter,"nexvary/NEXVARY-Browser-Forensics-Lab","d7754cd8f051d285406403465b6d7daa3bc4b060","nbf/parsers.py:ChromiumParser.bookmarks",permission};
  if(adapter=="dc-image-partitions")return {adapter,"nexvary/NEXVARY-DC","d8e2baf61b43d044b33a1dd76a444d093c80023c","src/core/Partitions.cpp:imageVolumes",permission};
  return {};
@@ -166,22 +168,24 @@ ForensicSourceDescriptor forensicSource(const QString &adapter){
 ForensicAdapterResult analyzeReadOnlyEvidence(const ReadOnlyEvidenceRequest &r){
  if(!forensicAdapters().contains(r.adapter))return {{},"adapter-not-allowlisted"};
  if(r.adapter!="workbench-export-manifest"&&(r.verifyManifestPayloads||!r.manifestPayloads.isEmpty()))return {{},"payload-mode-not-supported"};
+ if(r.adapter!="browser-sqlite-family"&&!r.sqliteFamilyMembers.isEmpty())return {{},"sqlite-family-mode-not-supported"};
  const auto descriptor=forensicSource(r.adapter);
  if(!uuid(r.caseId)||!uuid(r.evidenceId)||!hash(r.sourceSha256))return {{},"invalid-provenance"};
  if(stopped(r))return {{},r.deadline.hasExpired()?"worker-timeout":"cancelled"};
  if(r.verifiedBytes.isEmpty()||r.verifiedBytes.size()>descriptor.maxInputBytes)return {{},"input-limit"};
  if(sha(r.verifiedBytes)!=r.sourceSha256)return {{},"source-hash-mismatch"};
  QVariantMap report{{"schema","nexvary-forensic-adapter/v1"},{"adapter",r.adapter},{"caseId",r.caseId},{"evidenceId",r.evidenceId},{"sourceSha256",r.sourceSha256},{"sourceBytes",r.verifiedBytes.size()},{"provenance",descriptor.toMap()},{"status","analyzed"}};
- auto result=r.adapter=="chromium-bookmarks"?parseBookmarks(r,report):r.adapter=="workbench-export-manifest"?inspectManifest(r,report):inspectDcPartitions(r,report);
+ auto result=r.adapter=="browser-sqlite-family"?inspectSqliteEvidenceFamily(r,report).analysis:r.adapter=="chromium-bookmarks"?parseBookmarks(r,report):r.adapter=="workbench-export-manifest"?inspectManifest(r,report):inspectDcPartitions(r,report);
  if(stopped(r))return {{},r.deadline.hasExpired()?"worker-timeout":"cancelled"};
  if(result.ok()&&QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact).size()>descriptor.maxOutputBytes)return {{},"output-limit"};
  return result;
 }
-ForensicAdapterResult retainedForensicReport(const QVariantMap &run,const QVariantMap &source,const QString &caseId){
+ForensicAdapterResult retainedForensicReport(const QVariantMap &run,const QVariantMap &source,const QString &caseId,const QMap<QString,QVariantMap> &evidenceInventory){
  const auto adapter=run.value("parser").toString();const auto bytes=run.value("reportJson").toString().toUtf8();
  if(!forensicAdapters().contains(adapter)||source.isEmpty()||bytes.isEmpty()||bytes.size()>65536||!unambiguousJson(bytes)||sha(bytes)!=run.value("reportSha256")||run.value("sourceSha256")!=source.value("sha256")||run.value("sourceSize")!=source.value("size"))return {{},"forensic-report-integrity"};
  QJsonParseError error;const auto doc=QJsonDocument::fromJson(bytes,&error);const auto o=doc.object();const auto r=o.toVariantMap();
  if(error.error!=QJsonParseError::NoError||!doc.isObject()||r.value("schema")!="nexvary-forensic-adapter/v1"||r.value("status")!="analyzed"||r.value("adapter")!=adapter||r.value("caseId")!=caseId||r.value("evidenceId")!=source.value("id")||r.value("evidenceId")!=run.value("evidenceId")||r.value("sourceSha256")!=source.value("sha256")||r.value("sourceBytes")!=source.value("size")||r.value("provenance").toMap()!=forensicSource(adapter).toMap()||!o.value("findings").isArray()||o.value("findings").toArray().size()>128)return {{},"forensic-report-provenance"};
+ if(adapter=="browser-sqlite-family")return validateRetainedSqliteFamily(r,evidenceInventory);
  if(adapter=="workbench-export-manifest"&&!r.contains("analysisParameters")&&
     (o.value("payloadVerified")!=QJsonValue(false)||r.contains("verifiedFiles")||r.contains("missingFiles")||r.contains("tamperedFiles")))return {{},"manifest-retained-mode"};
  if(adapter=="workbench-export-manifest"&&r.contains("analysisParameters")){

@@ -25,6 +25,7 @@ struct ReadOnlyEvidenceRequest {
  QDeadlineTimer deadline{5000};
  bool verifyManifestPayloads=false;
  QMap<QString,ManifestEvidencePayload> manifestPayloads{};
+ QMap<QString,ManifestEvidencePayload> sqliteFamilyMembers{};
 };
 struct ForensicFinding {
  QString kind,reference,value,confidence="source-reported-unverified";
@@ -48,5 +49,5 @@ QStringList forensicAdapters();
 ForensicSourceDescriptor forensicSource(const QString &adapter);
 ForensicAdapterResult analyzeReadOnlyEvidence(const ReadOnlyEvidenceRequest &request);
 // Validate a retained, case-bound report before projecting findings/timestamps.
-ForensicAdapterResult retainedForensicReport(const QVariantMap &run,const QVariantMap &source,const QString &caseId);
+ForensicAdapterResult retainedForensicReport(const QVariantMap &run,const QVariantMap &source,const QString &caseId,const QMap<QString,QVariantMap> &evidenceInventory={});
 }

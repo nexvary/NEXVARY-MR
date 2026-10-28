@@ -38,6 +38,8 @@ def validate(payload):
             require(source.get("permission_record") == "docs/FORENSIC_SOURCE_PERMISSIONS.md", "missing auditable permission record")
             require(source.get("adapter") == adapters[source["repository"]], "unapproved adapter or write command")
             require(source.get("adapter_version") == "nexvary-mr-forensic/1", "unknown adapter version")
+            extra = ["browser-sqlite-family"] if source["repository"] == "nexvary/NEXVARY-Browser-Forensics-Lab" else []
+            require(source.get("additional_adapters", []) == extra, "unapproved additional adapter")
     stages = payload.get("stages")
     require(isinstance(stages, list) and all(isinstance(s, dict) for s in stages), "invalid stages")
     require([s.get("id") for s in stages] == list(range(1, 10)), "nine ordered stages required")

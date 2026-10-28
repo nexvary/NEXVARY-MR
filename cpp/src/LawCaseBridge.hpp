@@ -67,6 +67,7 @@ public:
  bool forensicBusy()const{return forensicActive_;}
  QVariantMap forensicResult()const{return forensicResult_;}
  Q_INVOKABLE bool analyzeForensicEvidence(const QString &evidence,const QString &adapter);
+ Q_INVOKABLE bool analyzeBrowserSqliteFamily(const QString &mainEvidence,const QString &walEvidence,const QString &shmEvidence);
  Q_INVOKABLE bool verifyManifestEvidence(const QString &manifestEvidence,const QVariantMap &pathToEvidence);
  Q_INVOKABLE void cancelForensicAnalysis();
  bool partitionsBusy()const{return partitionsActive_;}

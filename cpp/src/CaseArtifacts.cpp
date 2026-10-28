@@ -111,7 +111,7 @@ QVariantMap projectArtifacts(const QVariantMap &record, const QString &query,
         seen.insert(runId);
         if(mr::forensic::forensicAdapters().contains(parser)){
             const auto eid=run.value("evidenceId").toString();const auto source=sources.value(eid);
-            const auto checked=mr::forensic::retainedForensicReport(run,source,caseId);
+            const auto checked=mr::forensic::retainedForensicReport(run,source,caseId,sources);
             if(!checked.ok())return reject(checked.errorCode);
             const auto findings=checked.report.value("findings").toList();
             for(qsizetype i=0;i<findings.size();++i){

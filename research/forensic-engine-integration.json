@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "issue": 16,
-  "status": "manifest-content-tested-broader-integration-in-progress",
+  "status": "sqlite-family-implemented-awaiting-acceptance-broader-integration-in-progress",
   "sources": [
     {
       "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
@@ -41,7 +41,16 @@
       "verification": "selected-native-adapter-tested-at-9864f08; broader-engine-stage-in-progress",
       "acceptance_source": "9864f08511c938828c4e3b37f7023af1ec79bed2",
       "ci_run": 40659062610,
-      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md"
+      "evidence": "evidence/manifest-content-2026-10-28/FINAL_CHECKPOINT.md",
+      "additional_adapters": [
+        "browser-sqlite-family"
+      ],
+      "sqlite_family": {
+        "verifier_version": "nexvary-mr-sqlite-family/1",
+        "state": "implemented-awaiting-exact-source-acceptance",
+        "scope": "protected offline main/WAL/opaque SHM; bounded checksummed committed page image only; no History or SQL execution",
+        "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension"
+      }
     },
     {
       "repository": "nexvary/NEXVARY-DC",

@@ -1,4 +1,5 @@
 #include "ForensicAdapters.hpp"
+#include "SqliteEvidenceFamily.hpp"
 #include "CaseArtifacts.hpp"
 #include "CaseTimeline.hpp"
 #include "GovernmentOperationPolicy.hpp"
@@ -11,6 +12,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSignalSpy>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QTemporaryDir>
 #include <QtEndian>
 #include <QtTest>
@@ -21,6 +24,12 @@ const QByteArray bookmarks=R"({"roots":{"bookmark_bar":{"type":"folder","name":"
 const QByteArray manifest=R"({"entries":[{"path":"evidence.bin","sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}]})";
 QString sha(const QByteArray &b){return QString::fromLatin1(QCryptographicHash::hash(b,QCryptographicHash::Sha256).toHex());}
 mr::forensic::ReadOnlyEvidenceRequest request(const QString &adapter,const QByteArray &bytes){return {"00000000-0000-4000-8000-000000000001","00000000-0000-4000-8000-000000000002",sha(bytes),adapter,bytes,std::make_shared<std::atomic_bool>(false)};}
+QVariantMap familyOracle(){QFile f(MR_SQLITE_FAMILY_REFERENCE_PATH);if(!f.open(QIODevice::ReadOnly))qFatal("Missing independent SQLite family oracle");return QJsonDocument::fromJson(f.readAll()).toVariant().toMap();}
+QByteArray familyPart(const QString &key){return QByteArray::fromBase64(familyOracle().value(key).toString().toLatin1());}
+mr::forensic::ReadOnlyEvidenceRequest familyRequest(const QString &walKey="walBase64"){
+ auto r=request("browser-sqlite-family",familyPart("mainBase64"));const auto wal=familyPart(walKey),shm=familyPart("shmBase64");
+ r.sqliteFamilyMembers.insert("wal",{"00000000-0000-4000-8000-000000000003",sha(wal),wal});r.sqliteFamilyMembers.insert("shm",{"00000000-0000-4000-8000-000000000004",sha(shm),shm});return r;
+}
 void u32(QByteArray &b,int p,quint32 v){qToLittleEndian(v,reinterpret_cast<uchar*>(b.data()+p));}
 void u64(QByteArray &b,int p,quint64 v){qToLittleEndian(v,reinterpret_cast<uchar*>(b.data()+p));}
 quint32 crc(const QByteArray &b){quint32 c=~0u;for(uchar x:b){c^=x;for(int i=0;i<8;++i)c=(c>>1)^(0xedb88320u&(0u-(c&1)));}return ~c;}
@@ -39,7 +48,7 @@ class ForensicAdapterTests:public QObject {
  Q_OBJECT
 private slots:
  void descriptorsAndDestructiveRejection(){
-  QCOMPARE(mr::forensic::forensicAdapters().size(),3);
+  QCOMPARE(mr::forensic::forensicAdapters().size(),4);
   for(const auto &id:mr::forensic::forensicAdapters()){const auto d=mr::forensic::forensicSource(id);QCOMPARE(d.upstreamCommit.size(),40);QCOMPARE(d.maxFindings,128);QVERIFY(!d.permissionBasis.isEmpty());}
   for(const auto &command:{"format","erase","repair","write","rebuild-partitions","dc.format","powershell","../../Operations.cpp"})QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(request(command,mbr())).errorCode,QString("adapter-not-allowlisted"));
  }
@@ -146,6 +155,59 @@ private slots:
   const auto other=law.createCase(metadata());QVERIFY(!other.isEmpty());QVERIFY(!law.verifyManifestEvidence(manifestId,{{"payload.bin",e}}));QVERIFY(law.openCase(id));
   LawCaseBridge restart(dir.filePath("cases.db"),nullptr,true);QVERIFY(restart.openCase(id));QCOMPARE(restart.activeCase().value("analyses").toList().size(),count);
  }
+ void sqliteFamilyRuntimeOracleAndEndianness(){
+  for(const auto &variant:QStringList{"walBase64","bigEndianWalBase64","uncommittedWalBase64"}){
+   const auto r=familyRequest(variant);const auto before=r.verifiedBytes;const auto wal=r.sqliteFamilyMembers.value("wal").bytes;
+   const auto snapshot=mr::forensic::inspectSqliteEvidenceFamily(r,{});QVERIFY2(snapshot.analysis.ok(),qPrintable(snapshot.analysis.errorCode));QCOMPARE(snapshot.committedPages,familyPart("snapshotBase64"));
+   const auto result=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY2(result.ok(),qPrintable(result.errorCode));const auto summary=result.report.value("sqliteFamily").toMap();
+   QCOMPARE(summary.value("snapshotSha256").toString(),familyOracle().value("snapshotSha256").toString());QCOMPARE(summary.value("commitFrames").toInt(),2);QCOMPARE(summary.value("shmUsedForReplay").toBool(),false);
+   QCOMPARE(summary.value("uncommittedFrames").toInt(),variant=="uncommittedWalBase64"?1:0);QCOMPARE(r.verifiedBytes,before);QCOMPARE(r.sqliteFamilyMembers.value("wal").bytes,wal);
+   QCOMPARE(QJsonDocument::fromVariant(result.report).toJson(QJsonDocument::Compact),QJsonDocument::fromVariant(mr::forensic::analyzeReadOnlyEvidence(r).report).toJson(QJsonDocument::Compact));
+  }
+  auto r=familyRequest();auto &shm=r.sqliteFamilyMembers["shm"];shm.bytes=QByteArray(32,42);shm.sha256=sha(shm.bytes);const auto ignored=mr::forensic::inspectSqliteEvidenceFamily(r,{});QVERIFY(ignored.analysis.ok());QCOMPARE(ignored.committedPages,familyPart("snapshotBase64"));
+  r.sqliteFamilyMembers.clear();const auto missing=mr::forensic::analyzeReadOnlyEvidence(r);QVERIFY(missing.ok());QCOMPARE(missing.report.value("sqliteFamily").toMap().value("snapshotSha256").toString(),sha(r.verifiedBytes));QVERIFY(missing.report.value("warnings").toStringList().join(' ').contains("missing sidecar"));
+ }
+ void sqliteFamilyMalformedAndBounds(){
+  auto r=familyRequest();r.sqliteFamilyMembers["wal"].bytes[70]^=1;QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-member-hash"));
+  const auto damaged=[&](int offset,const QString &expected){auto q=familyRequest();auto &w=q.sqliteFamilyMembers["wal"];w.bytes[offset]^=1;w.sha256=sha(w.bytes);QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(q).errorCode,expected);};
+  damaged(24,"sqlite-family-wal-header-checksum");damaged(40,"sqlite-family-frame-salt");damaged(70,"sqlite-family-frame-checksum");
+  r=familyRequest();auto &w=r.sqliteFamilyMembers["wal"];w.bytes.chop(1);w.sha256=sha(w.bytes);QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-incomplete-wal"));
+  for(const auto &variant:QStringList{"missingGrowthWalBase64","shrinkGrowWalBase64"})QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(familyRequest(variant)).errorCode,QString("sqlite-family-missing-committed-page"));
+  r=familyRequest();r.sqliteFamilyMembers["wal"].evidenceId=r.evidenceId;QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-member-provenance"));
+  r=familyRequest();r.sqliteFamilyMembers.remove("wal");QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-orphan-shm"));
+  r=familyRequest();r.sqliteFamilyMembers["wal"].bytes=QByteArray(8*1024*1024,'x');QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-input-limit"));
+  r=familyRequest();auto &many=r.sqliteFamilyMembers["wal"];many.bytes=many.bytes.left(32)+QByteArray(4097*(1024+24),0);many.sha256=sha(many.bytes);QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("sqlite-family-frame-limit"));
+  r=familyRequest();r.cancelled->store(true);QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("cancelled"));r.cancelled->store(false);r.deadline=QDeadlineTimer(0);QCOMPARE(mr::forensic::analyzeReadOnlyEvidence(r).errorCode,QString("worker-timeout"));
+  for(const auto &b:QList<QByteArray>{QByteArray("SQLite format 3"),familyPart("mainBase64").chopped(1)})QVERIFY(!mr::forensic::analyzeReadOnlyEvidence(request("browser-sqlite-family",b)).ok());
+ }
+ void sqliteFamilyBoundedMutations(){
+  std::mt19937 random(0x534c514c);for(int i=0;i<256;++i){auto r=familyRequest();auto &w=r.sqliteFamilyMembers["wal"];w.bytes[int(random()%quint32(w.bytes.size()))]^=char(1u<<(random()%8));w.sha256=sha(w.bytes);const auto result=mr::forensic::analyzeReadOnlyEvidence(r);if(result.ok()){QVERIFY(result.report.value("findings").toList().size()==1);QVERIFY(result.report.value("sqliteFamily").toMap().value("snapshotBytes").toInt()<=8*1024*1024);}}
+ }
+ void sqliteFamilyCaseBindingsRetentionAndCancellation(){
+  QTemporaryDir dir;const QString password="Synthetic SQLite family 2026!";IdentityService identity(dir.filePath("identity"),true);QVERIFY(identity.bootstrap("admin","Synthetic administrator",password));QVERIFY(identity.login("admin",password));QVERIFY(!identity.createUser("investigator","Synthetic investigator","investigator",password).isEmpty());QVERIFY(identity.login("investigator",password));
+  GovernmentOperationPolicy policy(&identity);LawCaseBridge law(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);law.setOperationPolicy(&policy);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});
+  const auto add=[&](const QString &name,const QByteArray &bytes){QFile f(dir.filePath(name));if(!f.open(QIODevice::WriteOnly)||f.write(bytes)!=bytes.size())return QString();f.close();return law.addEvidence(dev,f.fileName(),"Synthetic SQLite member","A",true);};
+  const auto main=add("History",familyPart("mainBase64")),wal=add("History-wal",familyPart("walBase64")),shm=add("History-shm",familyPart("shmBase64"));QVERIFY(!main.isEmpty()&&!wal.isEmpty()&&!shm.isEmpty());
+  QVERIFY(law.analyzeBrowserSqliteFamily(main,wal,shm));QTRY_VERIFY(!law.forensicBusy());const auto run=law.forensicResult();QVERIFY2(!run.isEmpty(),qPrintable(law.error()));QVERIFY(!run.value("operationId").toString().isEmpty());QVERIFY(law.verifyAudit());
+  const auto record=law.activeCase();QMap<QString,QVariantMap> inventory;for(const auto &v:record.value("evidence").toList())inventory.insert(v.toMap().value("id").toString(),v.toMap());
+  QVERIFY(mr::forensic::retainedForensicReport(run,inventory.value(main),id,inventory).ok());auto foreign=inventory;foreign.remove(wal);QVERIFY(!mr::forensic::retainedForensicReport(run,inventory.value(main),id,foreign).ok());
+  const auto projected=nexvary::law::projectArtifacts(record,{},std::make_shared<std::atomic_bool>(false));QVERIFY(!projected.contains("errorCode"));QCOMPARE(projected.value("rows").toList().size(),1);
+  const auto timeline=nexvary::law::projectTimeline(record,{},std::make_shared<std::atomic_bool>(false));QVERIFY(!timeline.contains("errorCode"));QCOMPARE(timeline.value("events").toList().size(),0);
+  auto changedReport=QJsonDocument::fromJson(run.value("reportJson").toString().toUtf8()).toVariant().toMap();auto summary=changedReport.value("sqliteFamily").toMap();auto raw=summary.value("rawArtifact").toMap();raw.insert("byteOffset",0);summary.insert("rawArtifact",raw);changedReport.insert("sqliteFamily",summary);
+  const auto forgedBytes=QJsonDocument::fromVariant(changedReport).toJson(QJsonDocument::Compact);auto forged=run;forged.insert("reportJson",QString::fromUtf8(forgedBytes));forged.insert("reportSha256",sha(forgedBytes));QVERIFY(!mr::forensic::retainedForensicReport(forged,inventory.value(main),id,inventory).ok());
+  // Completion is queued to this thread. Change only the auxiliary protected
+  // BLOB after dispatch, then keep it changed until callback revalidation runs.
+  {
+   auto db=QSqlDatabase::addDatabase("QSQLITE","sqlite-family-tamper");db.setDatabaseName(dir.filePath("cases.db"));QVERIFY(db.open());QSqlQuery q(db);q.prepare("SELECT payload FROM law_evidence WHERE id=? AND case_id=?");q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec()&&q.next());const auto original=q.value(0).toByteArray();q.finish();
+   QVERIFY(law.analyzeBrowserSqliteFamily(main,wal,shm));q.prepare("UPDATE law_evidence SET payload=? WHERE id=? AND case_id=?");q.addBindValue(original+"tampered");q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec());QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),1);
+   q.prepare("UPDATE law_evidence SET payload=? WHERE id=? AND case_id=?");q.addBindValue(original);q.addBindValue(wal);q.addBindValue(id);QVERIFY(q.exec());db.close();
+  }
+  QSqlDatabase::removeDatabase("sqlite-family-tamper");QVERIFY(law.verifyEvidence(wal));
+  QVERIFY(law.analyzeBrowserSqliteFamily(main,wal,shm));law.cancelForensicAnalysis();QTRY_VERIFY(!law.forensicBusy());QCOMPARE(law.activeCase().value("analyses").toList().size(),1);
+  const auto other=law.createCase(metadata());QVERIFY(!other.isEmpty());const auto otherDev=law.addDevice({{"model","Other"},{"custodian","A"}});QVERIFY(!otherDev.isEmpty());QVERIFY(!law.analyzeBrowserSqliteFamily(main,wal,shm));
+  QFile otherFile(dir.filePath("Other-main"));QVERIFY(otherFile.open(QIODevice::WriteOnly));otherFile.write(familyPart("mainBase64"));otherFile.close();const auto otherMain=law.addEvidence(otherDev,otherFile.fileName(),"Other synthetic main","A",true);QVERIFY(!otherMain.isEmpty());QVERIFY(!law.analyzeBrowserSqliteFamily(otherMain,wal,{}));QVERIFY(law.openCase(id));
+  const auto anchor=policy.auditStatus();LawCaseBridge restart(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);restart.setOperationPolicy(&policy);QVERIFY(restart.openCase(id));QCOMPARE(restart.activeCase().value("analyses").toList().size(),1);QVERIFY(restart.verifyAudit());QCOMPARE(policy.auditStatus(),anchor);
+ }
  void partitionKnownAnswers(){
   for(const auto &bytes:QList<QByteArray>{mbr(),gpt()}){
    const auto before=bytes;const auto result=mr::forensic::analyzeReadOnlyEvidence(request("dc-image-partitions",bytes));QVERIFY2(result.ok(),qPrintable(result.errorCode));QCOMPARE(bytes,before);
@@ -171,27 +233,27 @@ private slots:
   GovernmentOperationPolicy policy(&identity);LawCaseBridge law(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);law.setOperationPolicy(&policy);
   const auto id=law.createCase(metadata());QVERIFY2(!id.isEmpty(),qPrintable(law.error()));const auto device=law.addDevice({{"model","Synthetic"},{"custodian","A"}});QVERIFY(!device.isEmpty());
   for(const auto &adapter:mr::forensic::forensicAdapters()){
-   const auto bytes=adapter=="chromium-bookmarks"?bookmarks:adapter=="workbench-export-manifest"?manifest:mbr();QFile f(dir.filePath(adapter));QVERIFY(f.open(QIODevice::WriteOnly));QCOMPARE(f.write(bytes),bytes.size());f.close();const auto e=law.addEvidence(device,f.fileName(),"Synthetic source","A",true);QVERIFY2(!e.isEmpty(),qPrintable(law.error()));
+   const auto bytes=adapter=="chromium-bookmarks"?bookmarks:adapter=="workbench-export-manifest"?manifest:adapter=="browser-sqlite-family"?familyPart("mainBase64"):mbr();QFile f(dir.filePath(adapter));QVERIFY(f.open(QIODevice::WriteOnly));QCOMPARE(f.write(bytes),bytes.size());f.close();const auto e=law.addEvidence(device,f.fileName(),"Synthetic source","A",true);QVERIFY2(!e.isEmpty(),qPrintable(law.error()));
    QVERIFY(law.analyzeForensicEvidence(e,adapter));QTRY_VERIFY_WITH_TIMEOUT(!law.forensicBusy(),10000);const auto result=law.forensicResult();QVERIFY2(!result.isEmpty(),qPrintable(law.error()));QCOMPARE(result.value("sourceSha256").toString(),sha(bytes));QVERIFY(!result.value("operationId").toString().isEmpty());
    const auto intent=policy.caseOperationStates().last().toMap();QVERIFY(!intent.isEmpty());QVERIFY(law.verifyAudit());QVERIFY(law.verifyEvidence(e));
   }
   const auto record=law.activeCase();const auto cancelled=std::make_shared<std::atomic_bool>(false);
-  const auto artifacts=nexvary::law::projectArtifacts(record,{},cancelled);QVERIFY2(!artifacts.contains("errorCode"),qPrintable(artifacts.value("errorCode").toString()));QCOMPARE(artifacts.value("rows").toList().size(),3);
+  const auto artifacts=nexvary::law::projectArtifacts(record,{},cancelled);QVERIFY2(!artifacts.contains("errorCode"),qPrintable(artifacts.value("errorCode").toString()));QCOMPARE(artifacts.value("rows").toList().size(),4);
   const auto timeline=nexvary::law::projectTimeline(record,{},cancelled);QVERIFY2(!timeline.contains("errorCode"),qPrintable(timeline.value("errorCode").toString()));QCOMPARE(timeline.value("events").toList().size(),1);QCOMPARE(timeline.value("normalizedCount").toInt(),1);
   auto badRecord=record;auto runs=record.value("analyses").toList();auto badRun=runs[0].toMap();auto report=QJsonDocument::fromJson(badRun.value("reportJson").toString().toUtf8()).object().toVariantMap();report.insert("caseId","00000000-0000-4000-8000-000000000099");const auto changed=QJsonDocument::fromVariant(report).toJson(QJsonDocument::Compact);badRun.insert("reportJson",QString::fromUtf8(changed));badRun.insert("reportSha256",sha(changed));runs[0]=badRun;badRecord.insert("analyses",runs);QVERIFY(nexvary::law::projectArtifacts(badRecord,{},cancelled).contains("errorCode"));QVERIFY(nexvary::law::projectTimeline(badRecord,{},cancelled).contains("errorCode"));
-  QCOMPARE(law.activeCase().value("analyses").toList().size(),3);QCOMPARE(policy.caseOperationStates().size(),3);const auto anchor=policy.auditStatus();
-  LawCaseBridge restarted(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);restarted.setOperationPolicy(&policy);QVERIFY(restarted.openCase(id));QCOMPARE(restarted.activeCase().value("analyses").toList().size(),3);QCOMPARE(policy.auditStatus(),anchor);
+  QCOMPARE(law.activeCase().value("analyses").toList().size(),4);QCOMPARE(policy.caseOperationStates().size(),4);const auto anchor=policy.auditStatus();
+  LawCaseBridge restarted(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);restarted.setOperationPolicy(&policy);QVERIFY(restarted.openCase(id));QCOMPARE(restarted.activeCase().value("analyses").toList().size(),4);QCOMPARE(policy.auditStatus(),anchor);
  }
  void grantRevocationLogoutAndAuditFailure_data(){
-  QTest::addColumn<bool>("contentVerification");QTest::newRow("bookmarks")<<false;QTest::newRow("manifest-content")<<true;
+  QTest::addColumn<int>("mode");QTest::newRow("bookmarks")<<0;QTest::newRow("manifest-content")<<1;QTest::newRow("sqlite-family")<<2;
  }
  void grantRevocationLogoutAndAuditFailure(){
-  QFETCH(bool,contentVerification);
+  QFETCH(int,mode);
   QTemporaryDir dir;const QString password="Synthetic forensic boundary 2026!";IdentityService identity(dir.filePath("identity"),true);QVERIFY(identity.bootstrap("admin","Synthetic admin",password));QVERIFY(identity.login("admin",password));
   const auto owner=identity.createUser("owner","Synthetic owner","investigator",password),peer=identity.createUser("peer","Synthetic peer","investigator",password);QVERIFY(!owner.isEmpty()&&!peer.isEmpty());QVERIFY(identity.login("owner",password));
   GovernmentOperationPolicy policy(&identity);LawCaseBridge law(dir.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);law.setOperationPolicy(&policy);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});
-  QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(contentVerification?manifest:bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic","A",true);QVERIFY(!e.isEmpty());
-  const auto start=[&]{return contentVerification?law.verifyManifestEvidence(e,{{"evidence.bin",e}}):law.analyzeForensicEvidence(e,"chromium-bookmarks");};
+  QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(mode==1?manifest:mode==2?familyPart("mainBase64"):bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic","A",true);QVERIFY(!e.isEmpty());
+  const auto start=[&]{return mode==1?law.verifyManifestEvidence(e,{{"evidence.bin",e}}):mode==2?law.analyzeBrowserSqliteFamily(e,{},{}):law.analyzeForensicEvidence(e,"chromium-bookmarks");};
   QVERIFY(start());identity.logout();QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
   IdentityService administrator(dir.filePath("identity"),true);QVERIFY(administrator.login("admin",password));QVERIFY(administrator.setCaseGrant(id,peer,true));QVERIFY(identity.login("peer",password));QVERIFY(law.openCase(id));QVERIFY(start());QVERIFY(administrator.setCaseGrant(id,peer,false));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());
   QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);

@@ -13,6 +13,7 @@ approval, or permission to reuse unrelated repositories is inferred.
 |---|---|---|
 | NEXVARY-Digital-Forensics-Workbench `8b35940b1c879e0ce5f5c13e0d6c89aeab023757`, verified v12.22 payload | `nexvary_lab/pro_tools_v1221.py:export_validate` | `ForensicAdapters.cpp:inspectManifest` |
 | NEXVARY-Browser-Forensics-Lab `d7754cd8f051d285406403465b6d7daa3bc4b060`, verified v4.2.0 payload | `nbf/parsers.py:ChromiumParser.bookmarks`, `nbf/core.py:chrome_time` | `ForensicAdapters.cpp:parseBookmarks/chromeTime` |
+| NEXVARY-Browser-Forensics-Lab `d7754cd8f051d285406403465b6d7daa3bc4b060`, verified v4.2.0 payload | `nbf/core.py:CaseManager.snapshot_sqlite_family` family provenance concept; MR independently implements bounded byte-only WAL validation | `SqliteEvidenceFamily.cpp` |
 | NEXVARY-DC `d8e2baf61b43d044b33a1dd76a444d093c80023c` | `src/core/Partitions.cpp:imageVolumes` | `DcImagePartitions.cpp` |
 
 The inspected payloads contain no general LICENSE for original application
@@ -23,7 +24,7 @@ third-party distribution notices. The owner's specific integration instruction
 authorizes this migration; it does not silently relicense those third parties.
 External distribution/license review remains an acceptance gate.
 
-Only these small, traceable functions are adapted. Python stdlib calls are
+Only these small, traceable functions/concepts are adapted. The SQLite-family increment does not copy the upstream CaseManager store, live-file copying, updater or WAL URL carving. Its frame/salt/checksum/last-commit page-image validation is an MR extension based on the published SQLite file format; no new SQLite/Python/third-party runtime is linked. Python stdlib calls are
 replaced with existing Qt Core APIs; CPython, PySide6, lz4, pytsk3, smartctl,
 CrystalDiskInfo, OpenSuperClone, GRUB, PowerShell helpers and updater/signing
 code are not copied, linked, downloaded at runtime, or bundled by this change.

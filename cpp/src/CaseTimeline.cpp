@@ -57,7 +57,7 @@ QVariantMap projectTimeline(const QVariantMap &record,const QString &query,const
    const auto id=run.value("id").toString(),eid=run.value("evidenceId").toString();const auto source=sources.value(eid);
    if(id.isEmpty()||seen.contains(id))return rejected("analysis-inventory");
    seen.insert(id);
-   const auto checked=mr::forensic::retainedForensicReport(run,source,record.value("id").toString());if(!checked.ok())return rejected(checked.errorCode);
+   const auto checked=mr::forensic::retainedForensicReport(run,source,record.value("id").toString(),sources);if(!checked.ok())return rejected(checked.errorCode);
    if(parser!="chromium-bookmarks")continue;
    const auto findings=checked.report.value("findings").toList();
    for(qsizetype i=0;i<findings.size();++i){
