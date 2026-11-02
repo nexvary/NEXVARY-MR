@@ -63,9 +63,11 @@ adapter, purpose and protected provenance on the same build produce the same
 report digest. Audit envelopes separately retain the authenticated actor and UTC
 time; file content or mutable metadata is not proof of source authenticity.
 
-Successful imports append `evidence-imported`; parser rejection/cancellation
+Successful imports append `evidence-imported`; ordinary parser rejection
 appends `evidence-import-rejected` with a bounded generic code and no source-text
-error echo, when the case/session/revision still permit a write. Preflight denials
+error echo, when the case/session/revision still permit a write. Explicit cancellation invalidates
+the original persistence context before stopping the worker and retains neither a
+successful import nor a rejection. Preflight denials
 and results discarded after sign-out/case switch or a conflicting revision are
 not appended under a new actor/case. Existing `analyses` records hold the reports;
 there is no duplicate evidence or parallel database. Closed/archived cases permit

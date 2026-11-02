@@ -1,0 +1,12 @@
+{
+  "CMakeLists.txt": "3aa11df8b9484a2d56d0257ee3e12b3b2363b4c3ba7db38fb1f1fdd8137e272d",
+  "cpp/tests/policy_audit_tests.cpp": "4248c853858d54f902f6541b19aeadc3596bf0031ddf62a7927ddea5f5939acd",
+  "scripts/check_government_evaluation.py": "f18af7400ddd6899565bf5635f842636b5060155726d6aa1498e3fe87da25c46",
+  "samples/government-evaluation/evidence.json": "de3235cb237a5ad62f28e60f9fccddf75a91ae60f4b3403519f0838e30eba762",
+  "samples/government-evaluation/ground-truth.json": "6c720b0927f31b0de9435053208fbfc9963053bd33fb3118df57b9b5519ff920",
+  "samples/government-evaluation/duplicate-key.json": "a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c",
+  "docs/AUTHORIZED_IMPORT.md": "5bff33ca2983c14e9bb6d4539731e22ab58a8b7623f7f4bf868fc960ee8852cf",
+  "docs/GOVERNMENT_EVALUATION_RELEASE.md": "5c0fdce23b2c14685aa6eede17b41e06f1ddeca09ad1628dd12b6817fb7706bc",
+  "packaging/package-windows.ps1": "da56955e00ac9967d89eece8ad02204244e73e8926573e7d4e50292c3ab566f7",
+  "docs/COMPETITIVE_CAPABILITY_MATRIX.md": "8cea54c59a4cdcf3efac61e5bbeb467ecfebe6b1cdef5913b1bc102d68de4fd3"
+}

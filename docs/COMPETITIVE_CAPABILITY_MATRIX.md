@@ -150,3 +150,27 @@ The [NIST mobile CFTT index](https://www.nist.gov/itl/csd/secure-systems-and-app
 was rechecked as a version-specific report/specification index. Its listing does
 not confer accreditation or verify an uninspected result table. This review does
 not promote broad current-product matrix cells or assert comparative superiority.
+
+
+## Frozen evaluation source review on 2026-11-02
+
+Official pages were retrieved/search-inspected on2026-11-02; access date is not
+publication date. All following vendor observations are Officially Claimed or
+Publicly Documented, not direct MR/commercial comparative results. No licensed
+commercial executable was available or run, no purchase authorized, no parity.
+
+| Product | Official source | Relevant vendor observation | MR gap / verification limit |
+|---|---|---|---|
+| Cellebrite Physical Analyzer | https://cellebrite.com/en/products/cellebrite-inseyets/physical-analyzer/ | Decoding/import, visual timeline, custom reporting | Search-visible official excerpt; full-page open403. MR bounded parsers do not establish decoder equivalence. |
+| Magnet AXIOM | https://www.magnetforensics.com/blog/using-magnet-axiom-for-your-forensic-analysis/ | Timeline and source linking to parsed locations | Full page retrieved; historical article, not current build measurement. MR literal timestamp projection lacks equivalent activity semantics. |
+| MSAB XAMN Pro | https://www.msab.com/product/analyze/xamn-pro/ | Content/time filters, analytical views, source details and reports | Full page retrieved; vendor claims. MR provenance graph is not a person/social relationship graph. |
+| Oxygen Forensic Detective | https://www.oxygenforensics.com/products/oxygen-forensic-detective/ | Timeline/link analysis and custom reports | Official search excerpt; full-page open403. Unknown performance/coverage, never assumed absent. |
+| Belkasoft X | https://belkasoft.com/x and https://belkasoft.com/offline-dfir | Timeline/connection graph/reports and documented local workflows | Product page retrieved; no matched corpus or independent process/audit test. |
+| Elcomsoft Phone Viewer | https://www.elcomsoft.com/epv.html | Viewing iOS backups and data from acquisition tools | Full page retrieved; viewer distinct from acquisition tool. MR does not claim iOS backup support. |
+
+Independent MR ground truth: samples/government-evaluation/ground-truth.json.
+The direct worker checker establishes8 expected observations and refusal of hash
+mismatch/duplicate keys only. It does not validate GUI/search/timeline/case state,
+phone extraction, competitors, large-case accuracy, institutional key custody or
+legal acceptance. The same-device/settings/corpus comparator protocol remains
+unexecuted. See GOVERNMENT_EVALUATION_RELEASE.md for frozen scope/blockers.

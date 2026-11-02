@@ -3,6 +3,7 @@
 #include "PolicyAudit.hpp"
 #include "SyntheticPolicyExercise.hpp"
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -99,6 +100,33 @@ int storageCrashFixture(const QString &root,const QString &stage){
   if(stage=="acknowledged"&&(!write(root+"/ack.json",json(journal.anchor()))||!write(root+"/ack-export.json",journal.exportBytes())))return 75;
   std::_Exit(86);
 }
+#ifdef Q_OS_LINUX
+int permissionFixture(const QString &root) {
+  const auto writable = QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner;
+  const auto readOnly = QFileDevice::ReadOwner | QFileDevice::ExeOwner;
+  const auto path = root + "/journal";
+  PolicyAudit journal(path, true);
+  if (!journal.healthy()) return 80;
+  const auto before = bytes(path);
+  const auto retained = journal.anchor();
+  journal.setSyntheticWriteCheckpoint([&] {
+    if (!QFile::setPermissions(root, readOnly))
+      qFatal("Synthetic directory permission transition failed");
+  });
+  const bool accepted = journal.append("policy-rejection", {{"reason", "synthetic-revoked-before-replace"}}, "denied");
+  // Restore access even on assertion failure so the parent can inspect the bytes.
+  if (!QFile::setPermissions(root, writable)) return 81;
+  if (accepted || journal.healthy() || !journal.error().contains("(replace)")) return 82;
+  if (bytes(path) != before || journal.anchor() != retained) return 83;
+  journal.setSyntheticWriteCheckpoint({});
+  if (journal.append("policy-rejection", {{"reason", "synthetic-no-silent-retry"}}, "denied")) return 84;
+  // Failed unlink leaves a lock owned by this still-live process. Never remove
+  // it manually or weaken the runtime lock policy to make this test pass.
+  if (!QFileInfo::exists(path + ".lock")) return 85;
+  return 0;
+}
+#endif
+
 } // namespace
 class PolicyAuditTests final : public QObject {
   Q_OBJECT
@@ -150,17 +178,22 @@ private slots:
     QFile probe(t.filePath("permission-probe"));const bool override=probe.open(QIODevice::WriteOnly|QIODevice::NewOnly);probe.close();
     QVERIFY(QFile::setPermissions(t.path(),writable));
     if(override)QSKIP("Host overrides directory write denial; cannot test a real permission transition here.");
-    const auto path=t.filePath("journal");PolicyAudit journal(path,true);QVERIFY(journal.healthy());
-    QVERIFY(journal.append("policy-rejection",{{"reason","synthetic-before-permission-change"}},"denied"));
-    const auto before=bytes(path);const auto retained=journal.anchor();
-    journal.setSyntheticWriteCheckpoint([&]{if(!QFile::setPermissions(t.path(),readOnly))qFatal("Synthetic directory permission transition failed");});
-    const bool accepted=journal.append("policy-rejection",{{"reason","synthetic-revoked-before-replace"}},"denied");
-    QVERIFY(QFile::setPermissions(t.path(),writable));
-    QVERIFY(!accepted);QVERIFY(!journal.healthy());QVERIFY(journal.error().contains("(replace)"));
-    QCOMPARE(bytes(path),before);QCOMPARE(journal.anchor(),retained);
-    journal.setSyntheticWriteCheckpoint({});
-    QVERIFY(!journal.append("policy-rejection",{{"reason","synthetic-no-silent-retry"}},"denied"));
-    PolicyAudit restarted(path,true);QVERIFY(restarted.healthy());QCOMPARE(restarted.anchor(),retained);
+    const auto path = t.filePath("journal");
+    PolicyAudit journal(path, true); QVERIFY(journal.healthy());
+    QVERIFY(journal.append("policy-rejection", {{"reason", "synthetic-before-permission-change"}}, "denied"));
+    const auto before = bytes(path); const auto retained = journal.anchor();
+    QProcess child;
+    child.start(QCoreApplication::applicationFilePath(), {"--permission-fixture", t.path()});
+    QVERIFY(child.waitForFinished(30000));
+    QCOMPARE(child.exitStatus(), QProcess::NormalExit);
+    QVERIFY2(child.exitCode() == 0, child.readAllStandardError().constData());
+    QCOMPARE(bytes(path), before); QCOMPARE(journal.anchor(), retained);
+    PolicyAudit restarted(path, true);
+    QVERIFY2(restarted.healthy(), qPrintable(restarted.error()));
+    QCOMPARE(restarted.anchor(), retained); QCOMPARE(restarted.exportBytes(), journal.exportBytes());
+    QVERIFY(restarted.append("policy-rejection", {{"reason", "synthetic-explicit-after-owner-exit"}}, "denied"));
+    PolicyAudit fresh(path, true); QVERIFY(fresh.healthy());
+    QCOMPARE(fresh.events().size(), 2); QCOMPARE(fresh.exportBytes(), restarted.exportBytes());
 #else
     QSKIP("POSIX directory write transition; Windows ACL transition needs a separate native fixture.");
 #endif
@@ -547,6 +580,9 @@ private slots:
 int main(int argc, char **argv) {
   QCoreApplication app(argc, argv);
   const auto a = app.arguments();
+#ifdef Q_OS_LINUX
+  if (a.size() == 3 && a[1] == "--permission-fixture") return permissionFixture(a[2]);
+#endif
   if(a.size()==4&&a[1]=="--storage-crash-fixture")return storageCrashFixture(a[2],a[3]);
   if (a.size() == 3 &&
       (a[1] == "--export-fixture" || a[1] == "--crash-fixture"))

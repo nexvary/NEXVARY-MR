@@ -109,9 +109,13 @@ Copy-Item (Join-Path $repo 'docs/GOVERNMENT_CASE_TRANSACTIONS.md') $bundle
 Copy-Item (Join-Path $repo 'docs/READINESS_BENCHMARK.md') $bundle
 Copy-Item (Join-Path $repo 'docs/OWNED_PROCESS_LIFECYCLE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/CASE_WORKLOAD_BENCHMARK.md') $bundle
+Copy-Item (Join-Path $repo 'docs/GOVERNMENT_EVALUATION_RELEASE.md') $bundle
+Copy-Item (Join-Path $repo 'samples/government-evaluation') (Join-Path $bundle 'evaluation-samples') -Recurse
+
 New-Item -ItemType Directory -Force (Join-Path $bundle 'verification') | Out-Null
 Copy-Item (Join-Path $repo 'scripts/verify_evidence_package.py') (Join-Path $bundle 'verification/verify_evidence_package.py')
 Copy-Item (Join-Path $repo 'scripts/verify_policy_audit.py') (Join-Path $bundle 'verification/verify_policy_audit.py')
+Copy-Item (Join-Path $repo 'scripts/check_government_evaluation.py') (Join-Path $bundle 'verification/check_government_evaluation.py')
 Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/THIRD_PARTY.md') $bundle
 Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle

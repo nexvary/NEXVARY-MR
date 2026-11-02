@@ -176,6 +176,8 @@ if(MR_BUILD_GUI)
   set_target_properties(mr_owned_process_tests PROPERTIES WIN32_EXECUTABLE FALSE)
   mr_warnings(mr_owned_process_tests)
   add_test(NAME mr_owned_process_tests COMMAND mr_owned_process_tests -o -,txt -o ${CMAKE_CURRENT_BINARY_DIR}/owned_process-results.txt,txt)
+  add_test(NAME mr_government_evaluation_reference COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/check_government_evaluation.py --worker $<TARGET_FILE:mr_evidence_import_worker>)
+  set_tests_properties(mr_government_evaluation_reference PROPERTIES TIMEOUT 30)
   set_tests_properties(mr_owned_process_tests PROPERTIES TIMEOUT 60)
   # Manual bounded readiness measurement, intentionally not a timed CI assertion.
   add_executable(mr_readiness_benchmark cpp/tests/readiness_benchmark.cpp)

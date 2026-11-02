@@ -1,0 +1,44 @@
+Internal ctest changing into directory: /workspace/scratch/542fa711ae03/build-gov
+Test project /workspace/scratch/542fa711ae03/build-gov
+      Start  1: mr_research_data_validation
+ 1/52 Test  #1: mr_research_data_validation ..........   Passed    0.02 sec
+      Start  2: mr_policy_tests
+ 2/52 Test  #2: mr_policy_tests ......................   Passed    0.00 sec
+      Start  3: mr_core_tests
+ 3/52 Test  #3: mr_core_tests ........................   Passed    0.00 sec
+      Start  4: mr_law_enforcement_case_tests
+ 4/52 Test  #4: mr_law_enforcement_case_tests ........   Passed    0.00 sec
+      Start  5: mr_update_tests
+ 5/52 Test  #5: mr_update_tests ......................   Passed    0.50 sec
+      Start  6: mr_update_journal_tests
+ 6/52 Test  #6: mr_update_journal_tests ..............   Passed    0.21 sec
+      Start  7: mr_update_key_tests
+ 7/52 Test  #7: mr_update_key_tests ..................   Passed    0.00 sec
+      Start  8: mr_owned_process_tests
+ 8/52 Test  #8: mr_owned_process_tests ...............   Passed   18.96 sec
+      Start  9: mr_government_evaluation_reference
+ 9/52 Test  #9: mr_government_evaluation_reference ...***Failed    0.03 sec
+Traceback (most recent call last):
+  File "/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/scripts/check_government_evaluation.py", line 49, in <module>
+    main()
+  File "/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/scripts/check_government_evaluation.py", line 25, in main
+    run = invoke('evidence.json', digest)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/scripts/check_government_evaluation.py", line 24, in invoke
+    return subprocess.run([str(args.worker.resolve()), '--input', str((args.samples / name).resolve()), '--sha256', sha, '--adapter', 'json'], capture_output=True, timeout=10, check=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: '/workspace/scratch/542fa711ae03/build-gov/mr_evidence_import_worker'
+
+      Start 10: mr_partition_transaction_tests
+Process not started
+ /workspace/scratch/542fa711ae03/build-gov/mr_partition_transaction_tests
+[permission denied]
+10/52 Test #10: mr_partition_transaction_tests .......***Not Run   0.00 sec
+      Start 11: mr_case_transaction_tests
