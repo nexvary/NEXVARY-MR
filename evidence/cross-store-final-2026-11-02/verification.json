@@ -1,0 +1,461 @@
+{
+  "sourceCommit": "5e0ac5b9c07daca4a46949f145c3eed09b21daa2",
+  "providerArchives": {
+    "portable": {
+      "artifactId": 13134056269,
+      "sha256": "4648f592be835c3844b074f122e3c00ab7e7d838407631475aeb99eb1bb545f4",
+      "size": 49139414
+    },
+    "installer": {
+      "artifactId": 13132818157,
+      "sha256": "7ba4893d9a4bb7bad825d65e5cad8492a96353c63e6e06c74f647fa2b674d798",
+      "size": 33235095
+    },
+    "evidence": {
+      "artifactId": 13133656987,
+      "sha256": "c95a68cc7b716ffe75f4f926c48599a0f015aa44532a1cff51693a39cf95e6a5",
+      "size": 69765375
+    }
+  },
+  "portableZipSha256": "836ddbc41305bd8e3c0eb551734a6605ba04a93daaf8b7e658b133485424835c",
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "5e0ac5b9c07daca4a46949f145c3eed09b21daa2",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "manifestFiles": 1420,
+  "spdxFiles": 1419,
+  "executables": {
+    "NEXVARY-MR.exe": "580c8f365aa1ec0df6c3f846b4ba12ceddfb22bed0eb77d74df4201a18cbed09",
+    "mr_evidence_import_worker.exe": "1e5b659e6a27be0a4ce5951edfc4ff0dd94c86be242478265f9317906904f58d"
+  },
+  "peMachines": {
+    "NEXVARY-MR.exe": "0x8664",
+    "mr_evidence_import_worker.exe": "0x8664"
+  },
+  "shippedGuideHashes": {
+    "GOVERNMENT_CASE_TRANSACTIONS.md": "91cefa602b7218f2e69f275454c9b03a6e4e20a5a3259534dfa3900667e82045",
+    "READINESS_BENCHMARK.md": "f45fe4ef9546b4e958106ea84eeb9c972b6176f69965e06be8669b41b3b3e6df",
+    "verification/verify_policy_audit.py": "a370c2763ec808f74c734864cba76925a392c633163b8dabebf02ebe79995b74"
+  },
+  "testBenchmarkExcluded": true,
+  "setupSha256": "3a857a502fb28adfc2db62915b4f9f2c6dd05f062fcf0d928fc280436df37280",
+  "installerPeMachine": "0x14c",
+  "portable": {
+    "mainAndWorkerBytesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "scope": "synthetic same-run retained anchor, not institutional external trust"
+  },
+  "installed": {
+    "mainAndWorkerBytesMatched": true,
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "scope": "synthetic same-run retained anchor, not institutional external trust"
+  },
+  "installerLifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  },
+  "nativeScopedTotals": {
+    "build/case_transaction-results.txt": [
+      {
+        "passed": 41,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/partition_transaction-results.txt": [
+      {
+        "passed": 27,
+        "failed": 0,
+        "skipped": 1
+      }
+    ],
+    "build/policy_audit-results.txt": [
+      {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 1
+      }
+    ]
+  },
+  "allNativeTotals": {
+    "build/artifact-results.txt": [
+      {
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/avb-results.txt": [
+      {
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/barcode-results.txt": [
+      {
+        "passed": 11,
+        "failed": 0,
+        "skipped": 2
+      }
+    ],
+    "build/board-results.txt": [
+      {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/case_transaction-results.txt": [
+      {
+        "passed": 41,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/catalog-results.txt": [
+      {
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/center-results.txt": [
+      {
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/cloud-results.txt": [
+      {
+        "passed": 7,
+        "failed": 0,
+        "skipped": 1
+      }
+    ],
+    "build/compatibility-results.txt": [
+      {
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/connection-results.txt": [
+      {
+        "passed": 42,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/exif-results.txt": [
+      {
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/firmware-results.txt": [
+      {
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/forensic-results.txt": [
+      {
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/identity-results.txt": [
+      {
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/intelligence-results.txt": [
+      {
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/import-results.txt": [
+      {
+        "passed": 36,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/law_workspace-results.txt": [
+      {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/mirror-results.txt": [
+      {
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/offline-results.txt": [
+      {
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/partition_transaction-results.txt": [
+      {
+        "passed": 27,
+        "failed": 0,
+        "skipped": 1
+      }
+    ],
+    "build/pcap-results.txt": [
+      {
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/policy_audit-results.txt": [
+      {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 1
+      }
+    ],
+    "build/recovery-results.txt": [
+      {
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/recovery_image-results.txt": [
+      {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/research-results.txt": [
+      {
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/retention-results.txt": [
+      {
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/service-results.txt": [
+      {
+        "passed": 35,
+        "failed": 0,
+        "skipped": 21
+      }
+    ],
+    "build/security-results.txt": [
+      {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/timeline-results.txt": [
+      {
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/tool-results.txt": [
+      {
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/tsk-results.txt": [
+      {
+        "passed": 7,
+        "failed": 0,
+        "skipped": 1
+      }
+    ],
+    "build/ui-results.txt": [
+      {
+        "passed": 54,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/update-journal-results.txt": [
+      {
+        "passed": 42,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/update-key-results.txt": [
+      {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/update-results.txt": [
+      {
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/workshop-results.txt": [
+      {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "intentionalSkipObservations": [
+    {
+      "file": "build/barcode-results.txt",
+      "observation": "SKIP   : BarcodeTests::nativeBarcodeDecodedByIndependentZbar() Optional independent ZBar decoder not installed."
+    },
+    {
+      "file": "build/barcode-results.txt",
+      "observation": "SKIP   : BarcodeTests::barcodeSurvivesPdfRendering() Independent PDF rasterizer and barcode decoder not installed."
+    },
+    {
+      "file": "build/cloud-results.txt",
+      "observation": "SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture."
+    },
+    {
+      "file": "build/partition_transaction-results.txt",
+      "observation": "SKIP   : PartitionTransactionTests::realMmls() Separately installed mmls not configured."
+    },
+    {
+      "file": "build/policy_audit-results.txt",
+      "observation": "SKIP   : PolicyAuditTests::symlinkJournalNeverChangesTarget() POSIX symlink regression; QFile::link creates a Windows shortcut."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::corruptPackageStartsNoDeviceProcess() Package transport fixture is Laboratory-only."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::darkModeVerification() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(permission) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::deniedAndUnconfirmedReadback(readback) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::disconnectAndIdentityChange(usb) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::disconnectAndIdentityChange(identity) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::apkPrivateCopyIntegrity() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::invalidPackageNeverReachesDevice() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::explicitApkReplace() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(adb) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::duplicateSerialRejectedBeforeWrite(fastboot) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::apkHashAndManagerFailure(hash) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::apkHashAndManagerFailure(manager) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::apkHashAndManagerFailure(no-confirmation) Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::sideloadConsentAndMode() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::fastbootFreshEraseGuard() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::syntheticErase() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::rebootInvalidatesDiscovery() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::cancellation() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::historyRetainsTargetAndFailureAfterAnotherOperation() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/service-results.txt",
+      "observation": "SKIP   : ServiceTests::rebootHistoryKeepsTargetAfterDiscoveryCleared() Write fixture runs only in the separate Laboratory build; production denial is tested independently."
+    },
+    {
+      "file": "build/tsk-results.txt",
+      "observation": "SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary."
+    }
+  ],
+  "signedInteropChecks": 77,
+  "windowsCtest": {
+    "tests": 50,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Unsigned hosted evaluation. No physical Windows10/11, phone, process-tree/network isolation, signing, independent institutional or competitor acceptance."
+}
