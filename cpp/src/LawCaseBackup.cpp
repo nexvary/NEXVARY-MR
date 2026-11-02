@@ -106,5 +106,6 @@ QString LawCaseStore::restoreProtectedBackup(const QString &path,const QString &
  if(!insert.exec())return abort("Case restoration insert failed.");
  for(const auto &v:source.blobs){const auto blob=v.toMap();QSqlQuery q(db_);q.prepare("INSERT INTO law_evidence(id,case_id,payload) VALUES(?,?,?)");q.addBindValue(blob.value("id"));q.addBindValue(id);q.addBindValue(blob.value("payload"));if(!q.exec())return abort("Evidence identifier conflict or restoration write failure.");}
  if(!db_.commit())return abort("Case restoration commit failed.");
+ ++mutationGeneration_;
  return id;
 }

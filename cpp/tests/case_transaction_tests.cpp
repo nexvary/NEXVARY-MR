@@ -176,13 +176,38 @@ private slots:
  }
  void completedSourceBytesMustStillVerify(){
   Fixture f;commitAnalysis(f);
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(bridge.ready());QVERIFY(bridge.ready());
   {
    auto db=QSqlDatabase::addDatabase("QSQLITE","synthetic-source-replacement");db.setDatabaseName(f.dir.filePath("cases.db"));QVERIFY(db.open());
    QString error;const auto bytes=mr::recovery::sealCase("Changed protected source",true,error);
    {QSqlQuery q(db);q.prepare("UPDATE law_evidence SET payload=? WHERE id=?");q.addBindValue(bytes);q.addBindValue(f.evidence);QVERIFY(q.exec());}db.close();
   }
   QSqlDatabase::removeDatabase("synthetic-source-replacement");
-  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(!bridge.ready());QVERIFY(f.policy.caseReconciliationBlocked());
+  QVERIFY(!bridge.ready());QVERIFY(f.policy.caseReconciliationBlocked());
+ }
+ void warmedReadinessRejectsJournalReplacement_data(){
+  QTest::addColumn<bool>("older");QTest::newRow("corrupt")<<false;QTest::newRow("valid-signed-older")<<true;
+ }
+ void warmedReadinessRejectsJournalReplacement(){
+  QFETCH(bool,older);Fixture f;QFile journal(f.identity.policyJournalPath());QVERIFY(journal.open(QIODevice::ReadOnly));const auto original=journal.readAll();journal.close();
+  commitAnalysis(f);LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(bridge.ready());QVERIFY(bridge.ready());
+  QVERIFY(journal.open(older?(QIODevice::WriteOnly|QIODevice::Truncate):QIODevice::Append));const auto bytes=older?original:QByteArray("X");QCOMPARE(journal.write(bytes),bytes.size());journal.close();
+  QVERIFY(!bridge.ready());QVERIFY(!bridge.searchCases());QCOMPARE(f.store.get(f.id).value("analyses").toList().size(),1);
+ }
+ void nativeGateDoesNotTrustWarmDisplayStatus(){
+  Fixture f;commitAnalysis(f);const auto before=QSqlDatabase::connectionNames();
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(bridge.ready());QVERIFY(bridge.ready());
+  QStringList added;for(const auto &name:QSqlDatabase::connectionNames())if(!before.contains(name))added.append(name);QCOMPARE(added.size(),1);
+  {
+   // A deliberately bypassed in-process writer is not a trusted Store API.
+   // It does not advance that connection's SQLite data_version. Native action
+   // acceptance must still reread source bytes rather than trusting UI status.
+   auto db=QSqlDatabase::database(added.first());QSqlQuery q(db);QVERIFY(q.exec("PRAGMA data_version"));QVERIFY(q.next());const auto version=q.value(0);q.finish();
+   QVERIFY(q.exec("UPDATE law_evidence SET payload=X'00'"));q.finish();
+   QVERIFY(q.exec("PRAGMA data_version"));QVERIFY(q.next());QCOMPARE(q.value(0),version);
+  }
+  QVERIFY(!bridge.searchCases());QVERIFY(!bridge.ready());QVERIFY(f.policy.caseReconciliationBlocked());
+  QCOMPARE(f.store.get(f.id).value("analyses").toList().size(),1);
  }
  void recoveryDecisionInterruption_data(){
   QTest::addColumn<QString>("stage");for(const auto &stage:{"before","during","after"})QTest::newRow(stage)<<QString(stage);

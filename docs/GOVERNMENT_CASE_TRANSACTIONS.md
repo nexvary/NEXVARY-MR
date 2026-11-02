@@ -145,7 +145,7 @@ a later external rollback or prove power-loss durability.
 
 Startup now reconciles unfinished operations and then walks **both** the signed
 terminal intent inventory and the protected case inventory. The native readiness
-gate repeats that check before exposing readiness or permitting case actions.
+gate checks store versions for display and repeats the full verification before every native case action; unchanged display reads reuse only the in-memory proof described below.
 Each operation-linked analysis requires a completed signed intent, unique operation
 and allocated analysis identifiers, the same actual case/evidence/parser/requester,
 verified protected source bytes and SHA-256, and the exact bounded stored report
@@ -199,3 +199,29 @@ independently retained trusted anchor to detect; the aggregate observation diges
 is not that external anchor. This change does not resolve the historical Audit
 Store lag, detached descendants, GUI root cause, NTFS case integration or any
 institutional acceptance gate.
+
+
+### Readiness display cost and fresh native gates
+
+A display getter must not repeatedly hash every source. After full startup/native
+verification, only the last verified **in-memory** case/journal versions are kept.
+The existing audit check compares the exact protected snapshot digest before its
+anchor can be used; it does not trust file timestamps. SQLite `PRAGMA data_version`
+is compared only on the same open connection to notice other connections' commits;
+a local mutation generation covers this Store's saves and protected restores.
+[SQLite's documented connection-scoped semantics](https://www.sqlite.org/pragma.html#pragma_data_version)
+are a change hint, not a signed anchor or a substitute for source verification.
+
+A changed/unavailable version invalidates display readiness and invokes full proof
+verification. Both versions must still match after a successful scan. Every native
+case action forces the full case/source/report check regardless of cached display
+status, and existing persistence/callback authority/revision/source checks remain.
+A synthetic same-connection SQL bypass test deliberately avoids change tracking
+and still proves native action refusal on changed evidence. Other-connection case
+and evidence mutation, corrupt journal and valid-signed old journal tests warm the
+cache first, then require refusal. No proof cache survives restart, creates an
+intent, grants access or detects a mutually consistent whole-store rollback.
+
+The manual bounded benchmark and exact observations/limits are documented in
+[READINESS_BENCHMARK.md](READINESS_BENCHMARK.md). This improves unchanged UI status
+reads, not cold evidence verification or large-case import/index/PDF throughput.
