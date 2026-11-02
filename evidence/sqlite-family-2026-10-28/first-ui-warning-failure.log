@@ -1,0 +1,39 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/077476f00950/NEXVARY-MR/build
+[0/2] Re-checking globbed directories...
+[1/26] Automatic MOC and UIC for target mr_import_adapters
+[2/24] Automatic MOC and UIC for target mr_desktop_resources_1
+[3/23] Automatic MOC and UIC for target mr_desktop_resources_2
+[4/22] Automatic MOC and UIC for target mr_ui_device_fixture
+[5/22] Automatic MOC and UIC for target mr_evidence_import_worker
+[6/20] Automatic MOC and UIC for target mr_desktop
+[7/19] Running qmlimportscanner for mr_ui_tests
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[8/19] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/mr_ui_device_fixture_autogen/mocs_compilation.cpp.o
+[9/19] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/cpp/tests/ui_device_fixture.cpp.o
+[10/19] Linking CXX executable mr_ui_device_fixture
+[11/19] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/EvidenceImportRunner.cpp.o
+[12/19] Linking CXX static library libmr_desktop.a
+[13/19] Running rcc for resource samples
+[14/19] Automatic MOC and UIC for target mr_ui_tests
+[15/19] Building CXX object CMakeFiles/mr_ui_tests.dir/mr_ui_tests_autogen/mocs_compilation.cpp.o
+[16/19] Linking CXX executable mr_forensic_adapter_tests
+[17/19] Building CXX object CMakeFiles/mr_ui_tests.dir/build/.rcc/qrc_samples.cpp.o
+[18/19] Building CXX object CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o
+FAILED: CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o 
+/usr/bin/c++ -DMR_ADB_REFERENCE_PATH=\"/workspace/scratch/077476f00950/NEXVARY-MR/samples/authorized-import/adb-v5-reference.json\" -DMR_ENABLE_LAB_OPERATIONS=0 -DMR_SQLITE_FAMILY_REFERENCE_PATH=\"/workspace/scratch/077476f00950/NEXVARY-MR/samples/sqlite-family/reference.json\" -DMR_UI_DEVICE_FIXTURE_PATH=\"/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_ui_device_fixture\" -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QMLMODELS_LIB -DQT_QMLTEST_LIB -DQT_QML_LIB -DQT_QUICKCONTROLS2_LIB -DQT_QUICK_LIB -DQT_SQL_LIB -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/077476f00950/NEXVARY-MR/build\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/077476f00950/NEXVARY-MR\" -DQT_TESTLIB_LIB -DQUICK_TEST_SOURCE_DIR=\"/workspace/scratch/077476f00950/NEXVARY-MR/qml/tests\" -I/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_ui_tests_autogen/include -I/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src -I/workspace/scratch/077476f00950/NEXVARY-MR/cpp/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /workspace/scratch/077476f00950/sodium-manual/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /usr/include/x86_64-linux-gnu/qt6/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt6/QtQuickTest -isystem /usr/include/x86_64-linux-gnu/qt6/QtTest -isystem /usr/include/x86_64-linux-gnu/qt6/QtQuickControls2 -isystem /usr/include/x86_64-linux-gnu/qt6/QtQuick -isystem /usr/include/x86_64-linux-gnu/qt6/QtQml -isystem /usr/include/x86_64-linux-gnu/qt6/QtQmlIntegration -isystem /usr/include/x86_64-linux-gnu/qt6/QtQmlModels -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGL -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o -MF CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o.d -o CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o -c /workspace/scratch/077476f00950/NEXVARY-MR/cpp/tests/ui_tests.cpp
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/tests/ui_tests.cpp: In member function ‘void Setup::qmlEngineAvailable(QQmlEngine*)’:
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/tests/ui_tests.cpp:179:4: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+  179 |    if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("Cannot create SQLite family UI evidence");member.close();
+      |    ^~
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/tests/ui_tests.cpp:179:127: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  179 |    if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("Cannot create SQLite family UI evidence");member.close();
+      |                                                                                                                               ^~~~~~
+cc1plus: all warnings being treated as errors
+ninja: build stopped: subcommand failed.

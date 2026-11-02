@@ -1,0 +1,7 @@
+Original pinned source: nexvary/NEXVARY-DC d8e2baf61b43d044b33a1dd76a444d093c80023c
+Module reviewed: src/core/FilesystemRecovery.cpp
+Review scope: fixup, attributes, ntStream and ntfs; original bytes kept as Git blob e2fa91596ca5d56059b7cce4e905da170b40f814.
+Image(QFile)/Output::save are coupled to destination writes in upstream. MR must split byte-only metadata/extents from those writer APIs; no Output, format/erase/repair/rebuild or QFile/device operation is imported.
+Original helper uses supplied sector size for fixups; selected MR slice is restricted to 512-byte NTFS3 sectors and validates the full USA array before the first trailer. No 4Kn fixup claim.
+Independent reference: https://learn.microsoft.com/en-us/windows/win32/devnotes/multi-sector-header ; https://learn.microsoft.com/en-us/windows/win32/devnotes/file-record-segment-header .
+No third-party filesystem code/runtime is copied; scoped owner permission is required in FORENSIC_SOURCE_PERMISSIONS.md before enabled integration.

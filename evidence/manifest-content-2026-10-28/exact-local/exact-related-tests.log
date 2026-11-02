@@ -1,0 +1,24 @@
+Internal ctest changing into directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+Test project /workspace/scratch/077476f00950/NEXVARY-MR/build
+    Start  7: mr_case_transaction_tests
+1/9 Test  #7: mr_case_transaction_tests ........   Passed   16.82 sec
+    Start  8: mr_policy_audit_tests
+2/9 Test  #8: mr_policy_audit_tests ............   Passed   12.45 sec
+    Start 10: mr_artifact_tests
+3/9 Test #10: mr_artifact_tests ................   Passed    1.95 sec
+    Start 11: mr_timeline_tests
+4/9 Test #11: mr_timeline_tests ................   Passed    1.22 sec
+    Start 14: mr_identity_tests
+5/9 Test #14: mr_identity_tests ................   Passed    5.14 sec
+    Start 15: mr_law_workspace_tests
+6/9 Test #15: mr_law_workspace_tests ...........   Passed    1.38 sec
+    Start 45: mr_ui_tests
+7/9 Test #45: mr_ui_tests ......................   Passed   73.17 sec
+    Start 46: mr_ui_scale_1.25
+8/9 Test #46: mr_ui_scale_1.25 .................   Passed   46.05 sec
+    Start 47: mr_ui_scale_1.5
+9/9 Test #47: mr_ui_scale_1.5 ..................   Passed   53.59 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) = 211.76 sec

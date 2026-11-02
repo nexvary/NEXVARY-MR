@@ -1,0 +1,20 @@
+********* Start testing of PolicyAuditTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : PolicyAuditTests::initTestCase()
+PASS   : PolicyAuditTests::operationResultLifecycle()
+PASS   : PolicyAuditTests::operationExpiryAndRestart()
+PASS   : PolicyAuditTests::requestInputsAndRoles()
+PASS   : PolicyAuditTests::separatedReviewAndOneTimeActivation()
+PASS   : PolicyAuditTests::rejectionAndPendingRevocation()
+PASS   : PolicyAuditTests::monotonicExpiryAndLogout()
+PASS   : PolicyAuditTests::reviewerDisableInvalidatesApprovalAndActiveUse()
+PASS   : PolicyAuditTests::exportVerificationAndMutation()
+PASS   : PolicyAuditTests::outsideWriterChangeFailsClosed()
+PASS   : PolicyAuditTests::competingWriterNeverOverwrites()
+PASS   : PolicyAuditTests::lockedJournalRefusesAppendAndRequiresRestart()
+SKIP   : PolicyAuditTests::symlinkJournalNeverChangesTarget() POSIX symlink regression; QFile::link creates a Windows shortcut.
+D:\a\NEXVARY-MR\NEXVARY-MR\cpp\tests\policy_audit_tests.cpp(417) : failure location
+PASS   : PolicyAuditTests::crashRestartRetainsSignedClosure()
+PASS   : PolicyAuditTests::cleanupTestCase()
+Totals: 14 passed, 0 failed, 1 skipped, 0 blacklisted, 11356ms
+********* Finished testing of PolicyAuditTests *********

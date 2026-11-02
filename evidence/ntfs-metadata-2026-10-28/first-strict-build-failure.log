@@ -1,0 +1,28 @@
+[1/13] Building CXX object CMakeFiles/mr_policy_tests.dir/cpp/tests/policy_tests.cpp.o
+[2/13] Linking CXX executable mr_policy_tests
+[3/13] Building CXX object CMakeFiles/mr_core.dir/cpp/src/RepairCore.cpp.o
+[4/13] Linking CXX static library libmr_core.a
+[5/13] Building CXX object CMakeFiles/mr_core_tests.dir/cpp/tests/core_tests.cpp.o
+[6/13] Linking CXX executable mr_core_tests
+[7/13] Automatic MOC for target mr_ntfs_metadata_tests
+[8/13] Building CXX object CMakeFiles/mr_ntfs_metadata_tests.dir/mr_ntfs_metadata_tests_autogen/mocs_compilation.cpp.o
+[9/13] Building CXX object CMakeFiles/mr_law_enforcement_case_tests.dir/cpp/tests/law_enforcement_case_tests.cpp.o
+[10/13] Building CXX object CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/src/NtfsMetadata.cpp.o
+FAILED: CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/src/NtfsMetadata.cpp.o 
+/usr/bin/c++ -DMR_NTFS_REFERENCE_PATH=\"/workspace/scratch/077476f00950/NEXVARY-MR/samples/ntfs-metadata/reference.json\" -DQT_CORE_LIB -DQT_NO_DEBUG -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/077476f00950/NEXVARY-MR/build-ntfs\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/077476f00950/NEXVARY-MR\" -DQT_TESTLIB_LIB -I/workspace/scratch/077476f00950/NEXVARY-MR/build-ntfs/mr_ntfs_metadata_tests_autogen/include -I/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src -isystem /workspace/scratch/077476f00950/qt-prefix/usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /workspace/scratch/077476f00950/qt-prefix/usr/include/x86_64-linux-gnu/qt6 -isystem /workspace/scratch/077476f00950/qt-prefix/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /workspace/scratch/077476f00950/qt-prefix/usr/include/x86_64-linux-gnu/qt6/QtTest -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/src/NtfsMetadata.cpp.o -MF CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/src/NtfsMetadata.cpp.o.d -o CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/src/NtfsMetadata.cpp.o -c /workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp: In member function ‘mr::forensic::ForensicAdapterResult mr::forensic::{anonymous}::Parser::parse()’:
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp:157:4: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+  157 |    if(!fixup(br))return reject();const auto bs=data(attributes(br));
+      |    ^~
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp:157:34: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  157 |    if(!fixup(br))return reject();const auto bs=data(attributes(br));
+      |                                  ^~~~~
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp:169:4: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+  169 |    if(i<16)continue;const auto ns=names(as);const auto ds=data(as);if(!error.isEmpty())return reject();
+      |    ^~
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/NtfsMetadata.cpp:169:21: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  169 |    if(i<16)continue;const auto ns=names(as);const auto ds=data(as);if(!error.isEmpty())return reject();
+      |                     ^~~~~
+cc1plus: all warnings being treated as errors
+[11/13] Building CXX object CMakeFiles/mr_ntfs_metadata_tests.dir/cpp/tests/ntfs_metadata_tests.cpp.o
+ninja: build stopped: subcommand failed.

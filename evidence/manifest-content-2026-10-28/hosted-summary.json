@@ -1,0 +1,162 @@
+{
+  "linux-production": {
+    "ctest": {
+      "tests": "51",
+      "failures": "0",
+      "skipped": "0",
+      "disabled": "0"
+    },
+    "forensicAdapters": [
+      [
+        "20",
+        "0",
+        "0"
+      ]
+    ],
+    "qtQuick": [
+      [
+        "56",
+        "0",
+        "0"
+      ]
+    ],
+    "dpi": {
+      "mr_ui_scale_1.25": {
+        "groupPassed": true,
+        "seconds": "31.6479",
+        "capturedTotals": [
+          [
+            "17",
+            "0",
+            "0"
+          ]
+        ]
+      },
+      "mr_ui_scale_1.5": {
+        "groupPassed": true,
+        "seconds": "35.4167",
+        "capturedTotals": [
+          [
+            "17",
+            "0",
+            "0"
+          ]
+        ]
+      }
+    }
+  },
+  "linux-laboratory": {
+    "ctest": {
+      "tests": "51",
+      "failures": "0",
+      "skipped": "0",
+      "disabled": "0"
+    },
+    "forensicAdapters": [
+      [
+        "20",
+        "0",
+        "0"
+      ]
+    ],
+    "qtQuick": [
+      [
+        "56",
+        "0",
+        "0"
+      ]
+    ],
+    "dpi": {
+      "mr_ui_scale_1.25": {
+        "groupPassed": true,
+        "seconds": "34.1802",
+        "capturedTotals": [
+          [
+            "17",
+            "0",
+            "0"
+          ]
+        ]
+      },
+      "mr_ui_scale_1.5": {
+        "groupPassed": true,
+        "seconds": "38.4151",
+        "capturedTotals": [
+          [
+            "17",
+            "0",
+            "0"
+          ]
+        ]
+      }
+    }
+  },
+  "windows-production": {
+    "ctest": {
+      "tests": "51",
+      "failures": "0",
+      "skipped": "0",
+      "disabled": "0"
+    },
+    "forensicAdapters": [
+      [
+        "20",
+        "0",
+        "0"
+      ]
+    ],
+    "qtQuick": [
+      [
+        "56",
+        "0",
+        "0"
+      ]
+    ],
+    "dpi": {
+      "mr_ui_scale_1.25": {
+        "groupPassed": true,
+        "seconds": "49.1589",
+        "capturedTotals": null
+      },
+      "mr_ui_scale_1.5": {
+        "groupPassed": true,
+        "seconds": "56.7355",
+        "capturedTotals": null
+      }
+    }
+  },
+  "windows-laboratory": {
+    "ctest": {
+      "tests": "51",
+      "failures": "0",
+      "skipped": "0",
+      "disabled": "0"
+    },
+    "forensicAdapters": [
+      [
+        "20",
+        "0",
+        "0"
+      ]
+    ],
+    "qtQuick": [
+      [
+        "56",
+        "0",
+        "0"
+      ]
+    ],
+    "dpi": {
+      "mr_ui_scale_1.25": {
+        "groupPassed": true,
+        "seconds": "48.3789",
+        "capturedTotals": null
+      },
+      "mr_ui_scale_1.5": {
+        "groupPassed": true,
+        "seconds": "56.017",
+        "capturedTotals": null
+      }
+    }
+  }
+}

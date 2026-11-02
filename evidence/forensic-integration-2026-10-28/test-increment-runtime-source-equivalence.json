@@ -1,0 +1,10 @@
+{
+  "runtimeImplementation": "ec8ff812beb914cbea71c6ad79cc5cada0befb84",
+  "acceptanceSource": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+  "changedPaths": [
+    "DEVELOPMENT_STATE.md",
+    "cpp/tests/partition_transaction_tests.cpp"
+  ],
+  "productionParserPolicyWorkerGuiPackagingSourceUnchanged": true,
+  "note": "This proves source-set equivalence, not equality of independently linked Windows executable bytes; artifact byte verification remains source-specific."
+}

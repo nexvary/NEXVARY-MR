@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="runnervm48cm3"
+	time="54"
+	timestamp="2026-10-28T06:07:43"
+	>
+	<testcase name="mr_gui_smoke" classname="mr_gui_smoke" time="18.4294" status="run">
+		<properties/>
+		<system-out>Synthetic GUI smoke event-loop exit: code=0
+</system-out>
+	</testcase>
+</testsuite>

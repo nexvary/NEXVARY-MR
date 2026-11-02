@@ -1,0 +1,4 @@
+==137==Can't open /proc/135/task for reading.
+==135==LeakSanitizer has encountered a fatal error.
+==135==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==135==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)

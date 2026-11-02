@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/077476f00950/NEXVARY-MR/scripts/prepare_sodium.py", line 171, in <module>
+    main()
+  File "/workspace/scratch/077476f00950/NEXVARY-MR/scripts/prepare_sodium.py", line 158, in main
+    build_source(archive, destination)
+  File "/workspace/scratch/077476f00950/NEXVARY-MR/scripts/prepare_sodium.py", line 138, in build_source
+    raise RuntimeError("dependency build/check failed; see build.log")
+RuntimeError: dependency build/check failed; see build.log

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "label": "installed",
+  "mode": "installed-in-place",
+  "executable": "D:\\a\\_temp\\NEXVARY MR install test\\NEXVARY-MR.exe",
+  "executableSha256": "5c90815a15d7903b15065aa13dda271174e83c1f7d0e6e0e8ef601dd5da0e1d0",
+  "sourceCommit": "0fcd821774d45c9f75a060211728f96dc72f317f",
+  "importWorkerSha256": "9fc3840d56591046f4699e57d1bfef6e8a1d16130faf7307879de41a6b6c5f47",
+  "exitCode": 0,
+  "screenshot": "D:\\a\\NEXVARY-MR\\NEXVARY-MR\\dist\\evidence\\installed.png",
+  "dataDirectory": "D:\\a\\_temp\\NEXVARY MR isolated installed 37128e04a98f4c4fb5907a32c8aaa891\\test data",
+  "qtSdkExcludedFromPath": true,
+  "testFontOverrideCleared": true
+}

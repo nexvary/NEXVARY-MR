@@ -1,0 +1,14 @@
+test_case_id_never_reuses_nonempty_folder (test_v2_integrity_reports.V2IntegrityReportTests.test_case_id_never_reuses_nonempty_folder) ... ok
+test_chromium_omnibox_shortcuts (test_v2_integrity_reports.V2IntegrityReportTests.test_chromium_omnibox_shortcuts) ... ok
+test_firefox_extensions_permissions_input_history (test_v2_integrity_reports.V2IntegrityReportTests.test_firefox_extensions_permissions_input_history) ... ok
+test_raw_scan_registers_external_evidence (test_v2_integrity_reports.V2IntegrityReportTests.test_raw_scan_registers_external_evidence) ... ok
+test_raw_utf16le_url_trace (test_v2_integrity_reports.V2IntegrityReportTests.test_raw_utf16le_url_trace) ... ok
+test_reanalysis_deduplicates (test_v2_integrity_reports.V2IntegrityReportTests.test_reanalysis_deduplicates) ... ok
+test_report_package (test_v2_integrity_reports.V2IntegrityReportTests.test_report_package) ... ok
+test_sqlite_wal_family_is_preserved_and_read (test_v2_integrity_reports.V2IntegrityReportTests.test_sqlite_wal_family_is_preserved_and_read) ... ok
+test_tamper_detection (test_v2_integrity_reports.V2IntegrityReportTests.test_tamper_detection) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.443s
+
+OK

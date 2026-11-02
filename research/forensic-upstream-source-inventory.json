@@ -1,0 +1,3275 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "sources": [
+    {
+      "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
+      "sourceSha": "8b35940b1c879e0ce5f5c13e0d6c89aeab023757",
+      "inventoryScope": "decoded payload (overlays excluded)",
+      "files": [
+        {
+          "path": ".github/workflows/windows-build.yml",
+          "bytes": 2718,
+          "sha256": "1c87040b1fc6d85ea45c59c9327a1c9a0d3d85c670d8c7c60e31e3ac462ebe4f"
+        },
+        {
+          "path": "BUILD_WINDOWS_README.txt",
+          "bytes": 584,
+          "sha256": "08cb7146e35a9d1d0b47237155b56c9170246c39e88aff072eebda578ed3be95"
+        },
+        {
+          "path": "build_preflight.py",
+          "bytes": 863,
+          "sha256": "7b119de09b88e528c3609200b25bad5629b57081a13ab9a6672a02da013e1e26",
+          "functions": [
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "sys",
+            "tkinter"
+          ]
+        },
+        {
+          "path": "build_windows.bat",
+          "bytes": 9677,
+          "sha256": "3bd80055451fa89bb17bf51b705a6665626230c9d0c2b2672bcf41d61bb39423"
+        },
+        {
+          "path": "installer.iss",
+          "bytes": 1531,
+          "sha256": "432b1962267dfcd98959aca1198a4e3132d8f83ec2def03fa075b05863e6e7f6"
+        },
+        {
+          "path": "make_update_manifest.py",
+          "bytes": 625,
+          "sha256": "f68f64c51b58eac62711c560657c631bdbdcec2586c89d42cec359baa8419e7f",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "argparse",
+            "hashlib",
+            "json",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "nexvary_lab/__init__.py",
+          "bytes": 22,
+          "sha256": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+          "functions": [],
+          "classes": [],
+          "imports": []
+        },
+        {
+          "path": "nexvary_lab/advanced.py",
+          "bytes": 12514,
+          "sha256": "d3b56a772614819ff571a86aca9439662ad2e0b004e37624186a586f001e237c",
+          "functions": [
+            "_iso",
+            "filesystem_timeline",
+            "parse_reg_export",
+            "parse_event_xml",
+            "extract_strings",
+            "memory_indicators",
+            "pcap_flows",
+            "media_inventory",
+            "generic_sqlite",
+            "keyword_search",
+            "ioc_extract",
+            "hash_inventory",
+            "graph_from_artifacts",
+            "export_graph_json",
+            "export_case_html",
+            "score_training",
+            "node",
+            "esc",
+            "table",
+            "first"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "html",
+            "ipaddress",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "struct",
+            "urllib.parse",
+            "xml.etree.ElementTree"
+          ]
+        },
+        {
+          "path": "nexvary_lab/analyzers.py",
+          "bytes": 5025,
+          "sha256": "ffca8402a000ff70e16b87d5945ff807c4f21e46a55517562e912967ec41aa4b",
+          "functions": [
+            "iso_mtime",
+            "classify_path",
+            "scan_directory",
+            "inspect_zip",
+            "chrome_time_to_iso",
+            "parse_sqlite_artifacts",
+            "analyze_path"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "datetime",
+            "json",
+            "os",
+            "pathlib",
+            "sqlite3",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "nexvary_lab/app.py",
+          "bytes": 72007,
+          "sha256": "cb5c259a0e3d0068952b4f6b77a98c20ad137509d2e0024db4c6039d5fbc9061",
+          "functions": [
+            "main",
+            "__init__",
+            "_style",
+            "_case_command",
+            "_add_menu_command",
+            "_build_kali_menubar",
+            "_show_rows_250",
+            "show_intelligence_250",
+            "show_tool_catalog_250",
+            "cross_source_search_250",
+            "engines_151_250",
+            "_show_json_800",
+            "tool_catalog_800",
+            "engines_251_800",
+            "diagnostics_251_800",
+            "_all_tool_rows",
+            "_favorite_ids",
+            "_toggle_favorite",
+            "open_tool_launcher",
+            "open_favorites_recent",
+            "_menu_choose_file",
+            "_menu_choose_folder",
+            "_menu_fs_timeline",
+            "_menu_hash_inventory",
+            "_menu_memory_triage",
+            "_menu_pcap_flow",
+            "_menu_sqlite_explorer",
+            "_menu_media_inventory",
+            "_menu_ioc_extract",
+            "_build",
+            "_tree",
+            "_build_overview",
+            "_build_evidence",
+            "_build_artifacts",
+            "_build_timeline",
+            "_build_findings",
+            "_build_audit",
+            "_build_training",
+            "_build_modules",
+            "refresh_cases",
+            "new_case",
+            "seed_training",
+            "on_case_select",
+            "refresh_case_view",
+            "add_evidence",
+            "verify_selected",
+            "analyze_selected",
+            "analyze_folder",
+            "_run_advanced_results",
+            "advanced_lab",
+            "engines_21_60",
+            "correlate_current_case",
+            "show_attention_score",
+            "export_manifest",
+            "export_artifacts",
+            "export_timeline",
+            "export_case_bundle",
+            "engines_61_100",
+            "show_timeline_bursts",
+            "show_geo_points",
+            "extract_case_entities",
+            "export_entity_graph",
+            "export_case_dashboard",
+            "export_case_bookmarks",
+            "export_case_notes",
+            "export_integrity_snapshot",
+            "show_findings_matrix",
+            "show_completeness",
+            "show_training_hints",
+            "show_provenance_digest",
+            "show_release_health",
+            "engines_101_150",
+            "show_execution_correlation",
+            "show_usb_correlation",
+            "show_browser_intelligence",
+            "show_network_intelligence",
+            "show_mobile_correlation",
+            "show_mobile_locations_150",
+            "show_source_coverage",
+            "build_review_queue",
+            "create_case_snapshot",
+            "show_timeline_gaps",
+            "show_timeline_diversity",
+            "show_training_challenges_150",
+            "export_investigation_package",
+            "show_release_150_health",
+            "case_search",
+            "export_report",
+            "evaluate_training",
+            "on_close",
+            "run",
+            "refresh",
+            "html",
+            "refresh",
+            "run_selected",
+            "refresh",
+            "selected_id",
+            "show_desc",
+            "run_selected",
+            "favorite",
+            "save",
+            "choose_file",
+            "choose_folder",
+            "one_file",
+            "folder",
+            "one_file",
+            "one_folder",
+            "run"
+          ],
+          "classes": [
+            "App"
+          ],
+          "imports": [
+            "__future__",
+            "advanced",
+            "analyzers",
+            "core",
+            "datetime",
+            "engines_101_150",
+            "engines_151_250",
+            "engines_21_60",
+            "engines_251_800",
+            "engines_61_100",
+            "json",
+            "os",
+            "pathlib",
+            "tkinter"
+          ]
+        },
+        {
+          "path": "nexvary_lab/app_v9.py",
+          "bytes": 45757,
+          "sha256": "95241a007607ed691430abc9ff6ba2f554fbbc63f9d90d3e802f7257b768080f",
+          "functions": [
+            "main",
+            "__init__",
+            "_build_kali_menubar",
+            "_style",
+            "_load_icons",
+            "_build",
+            "_startup_update_check",
+            "check_for_updates",
+            "_restore_ready_status",
+            "_handle_update_error",
+            "_handle_update_result",
+            "_download_and_install_update",
+            "_launch_update_installer",
+            "_build_sidebar",
+            "toggle_sidebar",
+            "_build_workspace",
+            "_metric_card",
+            "_build_dashboard_v9",
+            "_category_tile",
+            "_tree_v9",
+            "_build_evidence_v9",
+            "_build_artifacts_v9",
+            "_build_timeline_v9",
+            "open_timeline_filter",
+            "open_evidence_compare",
+            "_build_graph_v9",
+            "refresh_graph_v9",
+            "_build_findings_v9",
+            "_build_audit_v9",
+            "_section_header",
+            "_build_applications_tab",
+            "open_tool_launcher",
+            "_run_selected_evidence_tool",
+            "run_real_tool",
+            "_show_result_v9",
+            "_show_hex_result",
+            "refresh_case_view",
+            "worker",
+            "worker",
+            "refresh",
+            "run",
+            "cat_button",
+            "refresh",
+            "current",
+            "select",
+            "run",
+            "favorite",
+            "save_json",
+            "render",
+            "meta"
+          ],
+          "classes": [
+            "AppV9"
+          ],
+          "imports": [
+            "__future__",
+            "advanced",
+            "analyzers",
+            "app",
+            "electric_icons",
+            "engines_21_60",
+            "engines_251_800",
+            "engines_61_100",
+            "engines_801_1200",
+            "hashlib",
+            "json",
+            "math",
+            "os",
+            "pathlib",
+            "pro_tools_v12",
+            "subprocess",
+            "threading",
+            "tkinter",
+            "tools_v9",
+            "updater"
+          ]
+        },
+        {
+          "path": "nexvary_lab/core.py",
+          "bytes": 24074,
+          "sha256": "487bf948bd4180ead5c956a21a420db22d21b5f4d98cd0bb67c72486340d2ad7",
+          "functions": [
+            "utc_now",
+            "sha256_file",
+            "__init__",
+            "close",
+            "_init_schema",
+            "create_case",
+            "list_cases",
+            "get_case",
+            "next_evidence_number",
+            "add_evidence",
+            "list_evidence",
+            "verify_evidence",
+            "add_timeline",
+            "list_timeline",
+            "add_finding",
+            "list_findings",
+            "add_artifact",
+            "list_artifacts",
+            "ingest_analysis_results",
+            "log",
+            "audit_log",
+            "search_case",
+            "add_bookmark",
+            "list_bookmarks",
+            "add_case_tag",
+            "list_case_tags",
+            "add_note",
+            "list_notes",
+            "upsert_entity",
+            "list_entities",
+            "add_relation",
+            "list_relations",
+            "add_training_run",
+            "list_training_runs",
+            "add_correlation",
+            "list_correlations",
+            "enqueue_review",
+            "list_review_queue",
+            "add_case_snapshot",
+            "list_case_snapshots",
+            "case_stats",
+            "seed_training_case"
+          ],
+          "classes": [
+            "Case",
+            "ForensicDB"
+          ],
+          "imports": [
+            "__future__",
+            "dataclasses",
+            "datetime",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "shutil",
+            "sqlite3"
+          ]
+        },
+        {
+          "path": "nexvary_lab/electric_icons.py",
+          "bytes": 5377,
+          "sha256": "e523315e88d22299f7113e82a642094401b472e22945509001a82d34ceae9aca",
+          "functions": [],
+          "classes": [],
+          "imports": []
+        },
+        {
+          "path": "nexvary_lab/engines_101_150.py",
+          "bytes": 20521,
+          "sha256": "bdad0cdf4d8e7923d8dd819fe209480ad53f01fd8e1145b3ca48162323e883a7",
+          "functions": [
+            "_d",
+            "evtx_structural_map",
+            "registry_cell_map",
+            "ntfs_path_candidates",
+            "file_extension_summary",
+            "decode_usn_reason",
+            "correlate_recycle_bin",
+            "execution_correlation",
+            "usb_activity_correlation",
+            "unified_browser_activity",
+            "browser_domain_stats",
+            "download_metadata_triage",
+            "browser_search_terms",
+            "communication_inventory",
+            "normalize_ip",
+            "network_endpoint_stats",
+            "dns_artifact_correlation",
+            "http_host_timeline",
+            "session_bucket",
+            "service_label",
+            "classify_endpoint",
+            "memory_string_iocs",
+            "memory_process_names",
+            "memory_network_strings",
+            "memory_paths",
+            "memory_triage_summary",
+            "mobile_communication_correlation",
+            "normalize_contacts",
+            "mobile_location_timeline",
+            "media_catalog",
+            "media_temporal_groups",
+            "video_sidecar_inventory",
+            "dvr_folder_inventory",
+            "geo_temporal_clusters",
+            "entity_cooccurrence",
+            "alias_candidates",
+            "entity_timeline",
+            "source_coverage_matrix",
+            "provenance_matrix",
+            "correlation_confidence",
+            "review_priority",
+            "case_snapshot_digest",
+            "compare_case_snapshots",
+            "timeline_gaps",
+            "timeline_source_diversity",
+            "finding_artifact_coverage",
+            "executive_summary_payload",
+            "training_challenges",
+            "training_performance_trend",
+            "export_investigation_html",
+            "release_150_health",
+            "build"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "html",
+            "ipaddress",
+            "json",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "struct",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nexvary_lab/engines_151_250.py",
+          "bytes": 9782,
+          "sha256": "203e322abb04094339ca82af36f0f3dda89df3184b1633504b6716ac70de6c75",
+          "functions": [
+            "_rows",
+            "_count",
+            "dashboard_metrics",
+            "group_counts",
+            "evidence_type_matrix",
+            "artifact_facets",
+            "timeline_category_histogram",
+            "timeline_source_histogram",
+            "finding_severity_summary",
+            "audit_action_summary",
+            "entity_type_summary",
+            "relationship_type_summary",
+            "review_priority_summary",
+            "timeline_daily_histogram",
+            "timeline_hour_histogram",
+            "file_extension_statistics",
+            "duplicate_hash_groups",
+            "search_case",
+            "case_health_score",
+            "release_diagnostics",
+            "export_table_csv",
+            "export_case_json",
+            "portable_html_dashboard"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nexvary_lab/engines_21_60.py",
+          "bytes": 29085,
+          "sha256": "c4364faad97540dc42bc40fcade9c072d3e050d02082e32c86c2904ae17d7952",
+          "functions": [
+            "_iso",
+            "_artifact",
+            "evtx_structure",
+            "registry_hive_info",
+            "prefetch_info",
+            "lnk_info",
+            "jumplist_info",
+            "mft_records",
+            "usn_records",
+            "recycle_i_info",
+            "zone_identifier",
+            "pe_metadata",
+            "setupapi_usb",
+            "scheduled_task_xml",
+            "chromium_downloads",
+            "chromium_cookie_inventory",
+            "firefox_history",
+            "csv_artifacts",
+            "amcache_csv",
+            "shimcache_csv",
+            "srum_csv",
+            "dns_text",
+            "pcap_dns",
+            "pcap_http_hosts",
+            "connection_graph",
+            "_sqlite_tables",
+            "android_sms",
+            "android_calls",
+            "mobile_contacts",
+            "mobile_location_rows",
+            "jpeg_exif_strings",
+            "ffprobe_metadata",
+            "duplicate_media",
+            "correlate_timeline",
+            "normalize_iocs",
+            "dedupe_artifacts",
+            "attention_score",
+            "evidence_manifest",
+            "export_artifacts_csv",
+            "export_timeline_csv",
+            "export_case_json",
+            "evaluate_objectives",
+            "capability_registry",
+            "ft",
+            "d",
+            "g"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "ipaddress",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "struct",
+            "subprocess",
+            "xml.etree.ElementTree"
+          ]
+        },
+        {
+          "path": "nexvary_lab/engines_251_800.py",
+          "bytes": 12866,
+          "sha256": "260958b72ecca1fbe9db2eec0f91ff1fb653593b217ad91e9bcfd356d4ad1e64",
+          "functions": [
+            "_rows",
+            "_safe_count",
+            "case_inventory",
+            "table_columns",
+            "value_distribution",
+            "timeline_histogram",
+            "timeline_gaps",
+            "timeline_bursts",
+            "cross_source_search",
+            "integrity_matrix",
+            "source_coverage",
+            "risk_summary",
+            "review_backlog",
+            "entity_centrality",
+            "provenance_digest",
+            "completeness_score",
+            "diagnostics",
+            "run_capability",
+            "tool_search",
+            "export_case_bundle",
+            "parse"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "json",
+            "math",
+            "pathlib",
+            "re"
+          ]
+        },
+        {
+          "path": "nexvary_lab/engines_61_100.py",
+          "bytes": 24757,
+          "sha256": "1a2783c90bc780844938d391a5585c516c2f7e8a7b415ef62aeff913c3892962",
+          "functions": [
+            "_artifact",
+            "_iso_unix",
+            "_filetime",
+            "_ro_conn",
+            "_tables",
+            "evtx_record_carve",
+            "registry_key_carve",
+            "mft_attribute_inventory",
+            "mft_filename_inventory",
+            "chromium_bookmarks",
+            "chromium_session_urls",
+            "firefox_bookmarks",
+            "registry_mru_export",
+            "correlate_usb",
+            "persistence_triage",
+            "executable_hash_inventory",
+            "rule_scan_file",
+            "compare_known_hashes",
+            "ioc_context",
+            "timeline_bursts",
+            "project_timeline_timezone",
+            "geo_points",
+            "export_geojson",
+            "extract_entities",
+            "entity_graph",
+            "export_graph_json",
+            "artifact_statistics",
+            "timeline_daily_counts",
+            "case_dashboard",
+            "export_bookmarks",
+            "notes_markdown",
+            "integrity_snapshot",
+            "compare_integrity_snapshots",
+            "findings_matrix",
+            "completeness_score",
+            "training_hints",
+            "evaluate_rubric",
+            "provenance_digest",
+            "package_manifest",
+            "export_dashboard_html",
+            "redact_rows",
+            "methodology_appendix",
+            "release_health",
+            "capability_registry_61_100",
+            "walk"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "html",
+            "json",
+            "math",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "struct",
+            "xml.etree.ElementTree"
+          ]
+        },
+        {
+          "path": "nexvary_lab/engines_801_1200.py",
+          "bytes": 5463,
+          "sha256": "64cd8daa0dd0fa7f131618dd2b72c5361a08da111476f7bd6286c8ead340f438",
+          "functions": [
+            "_dist",
+            "_count",
+            "run_stage_801_1200"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "datetime",
+            "json"
+          ]
+        },
+        {
+          "path": "nexvary_lab/pro_tools_v12.py",
+          "bytes": 28461,
+          "sha256": "898533097e3fc8d705059ed11241508518ee64bb833f75e7bcc8f7e2e9662941",
+          "functions": [
+            "_u16",
+            "_u32",
+            "_u64",
+            "_sha",
+            "mbr_inspect",
+            "gpt_inspect",
+            "ntfs_boot",
+            "fat_boot",
+            "signature_carver",
+            "_magic_type",
+            "mismatch_scan",
+            "entropy_hotspots",
+            "chunk_hash_map",
+            "merkle_manifest",
+            "timestamp_anomalies",
+            "sqlite_integrity",
+            "sqlite_wal",
+            "csv_profile",
+            "json_profile",
+            "eml_headers",
+            "mbox_inventory",
+            "ooxml_metadata",
+            "pdf_metadata",
+            "browser_profile",
+            "leveldb_inventory",
+            "windows_bulk",
+            "evtx_bulk",
+            "registry_set",
+            "prefetch_bulk",
+            "elf_header",
+            "macho_header",
+            "executable_inventory",
+            "_pcap_packets",
+            "pcap_stats",
+            "pcap_arp",
+            "pcap_icmp",
+            "mobile_backup",
+            "plist_inspect",
+            "messaging_sqlite",
+            "media_timeline",
+            "image_dimensions",
+            "media_sidecars",
+            "archive_safety",
+            "offline_ioc",
+            "json_rule_scan",
+            "chunk_similarity",
+            "dispatch_pro_tool",
+            "walk"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "email",
+            "engines_21_60",
+            "hashlib",
+            "json",
+            "mailbox",
+            "math",
+            "os",
+            "pathlib",
+            "plistlib",
+            "pro_tools_v1212",
+            "pro_tools_v1221",
+            "re",
+            "sqlite3",
+            "struct",
+            "time",
+            "urllib.parse",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "nexvary_lab/pro_tools_v1212.py",
+          "bytes": 9056,
+          "sha256": "162a311449859d73a645e38fb27fde9d8b876856ff574e8a4840a30fb8d64b18",
+          "functions": [
+            "_sha256",
+            "hashset_compare",
+            "sqlite_rows",
+            "_parse_time",
+            "timeline_normalize",
+            "timestamp_decode",
+            "pe_string_triage",
+            "dns_log_normalize",
+            "filetype_histogram",
+            "_manifest_map",
+            "manifest_diff",
+            "html_findings_report",
+            "dispatch_next_pro_tool"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "html",
+            "json",
+            "pathlib",
+            "re",
+            "sqlite3",
+            "struct"
+          ]
+        },
+        {
+          "path": "nexvary_lab/pro_tools_v1221.py",
+          "bytes": 10801,
+          "sha256": "fe98b9bfaea71e3980b468d86b6bafe2d7a1f8c44e3dea625c5b94b7fe0f00ef",
+          "functions": [
+            "_sha256",
+            "evidence_folder_snapshot",
+            "_snapshot_map",
+            "snapshot_compare",
+            "_parse_dt",
+            "timeline_distribution",
+            "sqlite_relationships",
+            "hashset_build",
+            "exact_duplicates",
+            "findings_summary",
+            "export_validate",
+            "path_classify",
+            "dispatch_deep_pro_tool"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "csv",
+            "datetime",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "sqlite3"
+          ]
+        },
+        {
+          "path": "nexvary_lab/stage_runner.py",
+          "bytes": 1336,
+          "sha256": "2274b99312e41653849c41257e908940530e950f6dc6c1c24618bf00d38db51c",
+          "functions": [
+            "run_stage_analyzer"
+          ],
+          "classes": [],
+          "imports": [
+            "advanced",
+            "engines_101_150",
+            "engines_21_60",
+            "engines_61_100",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "nexvary_lab/tools_v9.py",
+          "bytes": 11340,
+          "sha256": "fa18d1225de65e8e533b20dd67500f36032da9e4cca385026f095d7375b0f339",
+          "functions": [
+            "file_hashes",
+            "file_signature",
+            "entropy_report",
+            "strings_extract",
+            "hex_slice",
+            "recursive_inventory",
+            "zip_inventory_safe",
+            "sqlite_schema",
+            "ent"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "collections",
+            "hashlib",
+            "json",
+            "math",
+            "os",
+            "pathlib",
+            "pro_tools_v12",
+            "re",
+            "sqlite3",
+            "struct",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "nexvary_lab/updater.py",
+          "bytes": 3314,
+          "sha256": "c7fdf881e291677a1741d895bc58b3887cdbd83751b8c558bff82ae2fd9d6d4f",
+          "functions": [
+            "_version_tuple",
+            "is_newer",
+            "update_feed_url",
+            "_open",
+            "fetch_update_info",
+            "download_installer",
+            "installer_command"
+          ],
+          "classes": [
+            "UpdateInfo"
+          ],
+          "imports": [
+            "__future__",
+            "dataclasses",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "tempfile",
+            "typing",
+            "urllib.request"
+          ]
+        },
+        {
+          "path": "pro_tools_smoke.py",
+          "bytes": 6148,
+          "sha256": "bec89c492022d0072a2ddb955fd48af8eb0355e442e496b12a50ba23eb9e41d4",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "hashlib",
+            "json",
+            "mailbox",
+            "nexvary_lab.pro_tools_v12",
+            "pathlib",
+            "sqlite3",
+            "tempfile",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "pytest.ini",
+          "bytes": 24,
+          "sha256": "07e12af78809b103a9e003b9bf24f9718928fa263046b37bf3ebc9ebbf802ceb"
+        },
+        {
+          "path": "requirements-build.txt",
+          "bytes": 32,
+          "sha256": "3ec9442e7c0d72bb0209ffd2b311b322a78ea21f5fc46d769345ca88a786a772"
+        },
+        {
+          "path": "requirements.txt",
+          "bytes": 95,
+          "sha256": "2e14832b3041eadadc964cef196cd78af0a10c047f002fc415babb012ec07183"
+        },
+        {
+          "path": "run_lab.py",
+          "bytes": 74,
+          "sha256": "fa99926fb9e98f081f2fa576a722312cc57ad0352faf7232a1088b262a27b451",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.app_v9"
+          ]
+        },
+        {
+          "path": "stage100_smoke.py",
+          "bytes": 1660,
+          "sha256": "19d7f4380e76f86afe6176b7a5a9c29d4cd984edd3efafd0d13f8a042781d34d",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "json",
+            "nexvary_lab.core",
+            "nexvary_lab.engines_61_100",
+            "pathlib",
+            "struct",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "stage1200_smoke.py",
+          "bytes": 919,
+          "sha256": "af31fbda6a97aeb42816dee0988aa92e375a6614491511216408f076ffdcbff3",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_801_1200",
+            "pathlib",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "stage150_smoke.py",
+          "bytes": 1923,
+          "sha256": "6c04421fd4e6830a9d9c47f696028a21adb006acb56bc92326665d6e31a27860",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_101_150",
+            "pathlib",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "stage250_smoke.py",
+          "bytes": 856,
+          "sha256": "779d0fabc0fdacc4e54a8a1f63de12bf676a8a22d76ec2cf5727a84fa384c11f",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_151_250",
+            "pathlib",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "stage800_smoke.py",
+          "bytes": 957,
+          "sha256": "58b85fb36f2346edeb6daa2bd0aaa3e4f9198f36aaf1d23a15068fd634aa86ef",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_251_800",
+            "pathlib",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "strict_release_gate.py",
+          "bytes": 1965,
+          "sha256": "93195db2364a6817bc0c6cc55546d82e1ff76f07150457daf930ae1e1ab090e3",
+          "functions": [
+            "py_files",
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "ast",
+            "importlib",
+            "pathlib",
+            "py_compile",
+            "sys"
+          ]
+        },
+        {
+          "path": "tests/test_advanced.py",
+          "bytes": 2704,
+          "sha256": "db8a621eb16481fe3326c56370fa0632a31809da5c7bf52bf4a50503694dce8e",
+          "functions": [
+            "test_reg_event_fs_keyword_ioc_hash",
+            "test_memory_and_sqlite",
+            "test_pcap_graph_report_score_and_search"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.advanced",
+            "nexvary_lab.core",
+            "pathlib",
+            "sqlite3",
+            "struct",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "tests/test_analyzers.py",
+          "bytes": 1870,
+          "sha256": "21d5520cb3db13fd88cb3195397aa584b5ab5e52176101aa5fb16f17d7a39264",
+          "functions": [
+            "test_directory_windows_classification_and_ingest",
+            "test_zip_inventory",
+            "test_chrome_history_readonly"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.analyzers",
+            "nexvary_lab.core",
+            "pathlib",
+            "sqlite3",
+            "tempfile",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "tests/test_audit_hardening.py",
+          "bytes": 3249,
+          "sha256": "d812264465da64fb59e88b3fe18fc915e5544ded1936fd199d47f6acf2c02399",
+          "functions": [
+            "test_malformed_sqlite_inputs_do_not_crash",
+            "test_dynamic_identifier_whitelist",
+            "test_invalid_regex_is_safe",
+            "test_capability_run_is_audited",
+            "test_evidence_tamper_detection_and_source_preservation",
+            "test_all_251_800_capabilities_preserve_evidence_bytes"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.advanced",
+            "nexvary_lab.core",
+            "nexvary_lab.engines_151_250",
+            "nexvary_lab.engines_21_60",
+            "nexvary_lab.engines_251_800",
+            "pathlib",
+            "sqlite3"
+          ]
+        },
+        {
+          "path": "tests/test_core.py",
+          "bytes": 951,
+          "sha256": "c50b549296d6ed06046514b58ce1073f7bacaf99ca2b9c4d6ad578f7abdf478e",
+          "functions": [
+            "test_case_and_evidence",
+            "test_training_case"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "pathlib",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "tests/test_electric_ui_v1202.py",
+          "bytes": 622,
+          "sha256": "7b5b9eeaaf982cb6fe8ee6a6db2223af712096bea8547bfe0851816480540fff",
+          "functions": [
+            "test_electric_icon_pack_complete",
+            "test_electric_ui_version_and_launcher"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab",
+            "nexvary_lab.electric_icons",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "tests/test_electric_ui_v1203.py",
+          "bytes": 349,
+          "sha256": "d466925dff1ad8f24f0d5bbabe6fa62e1e88e6270c4ee3c268d5b9b4e4815103",
+          "functions": [
+            "test_v1203_shortcuts_and_result_export_present"
+          ],
+          "classes": [],
+          "imports": [
+            "pathlib"
+          ]
+        },
+        {
+          "path": "tests/test_engines_101_150.py",
+          "bytes": 3398,
+          "sha256": "fe22627470871a8f1d5be52ff72ef4458ddf4030b91209906ce40b2b850dbd1c",
+          "functions": [
+            "test_evtx_registry_structures",
+            "test_browser_network_mobile_correlations",
+            "test_ntfs_review_and_timeline",
+            "test_memory_media",
+            "test_db_schema_150_and_snapshot",
+            "test_training_and_export"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_101_150",
+            "pathlib",
+            "struct"
+          ]
+        },
+        {
+          "path": "tests/test_engines_151_250.py",
+          "bytes": 952,
+          "sha256": "efdcf9871e3badd9ad7c342e6a8b232c95d350743db7c3f0328dc8f8fee2ccfc",
+          "functions": [
+            "test_registry_count",
+            "test_schema_and_dashboard",
+            "test_search_and_exports"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_151_250"
+          ]
+        },
+        {
+          "path": "tests/test_engines_21_60.py",
+          "bytes": 6223,
+          "sha256": "78759d3ea8360f393f8594de05b208ff98989376783ba1fc64a092e52987db33",
+          "functions": [
+            "test_windows_native_group_21_32",
+            "test_browser_mobile_and_exports_33_58",
+            "test_network_dns_pcap_40_42_and_correlation"
+          ],
+          "classes": [],
+          "imports": [
+            "csv",
+            "json",
+            "nexvary_lab.core",
+            "nexvary_lab.engines_21_60",
+            "pathlib",
+            "sqlite3",
+            "struct",
+            "tempfile"
+          ]
+        },
+        {
+          "path": "tests/test_engines_251_800.py",
+          "bytes": 1683,
+          "sha256": "4ee879818e10f15a1be129ef1ee33eedbb730202b2fce521d1d2813c0597bc8f",
+          "functions": [
+            "test_registry_exactly_550",
+            "test_every_stage_invokable",
+            "test_diagnostics_schema800",
+            "test_search_registry",
+            "test_bundle"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_251_800"
+          ]
+        },
+        {
+          "path": "tests/test_engines_61_100.py",
+          "bytes": 2957,
+          "sha256": "6512fc13cd94d01639f6bf36427cadd4ef4b61642dee37e9ae9ebb3d42499426",
+          "functions": [
+            "test_registry_carve",
+            "test_mft_filename",
+            "test_browser_and_geo",
+            "test_entities_graph_and_dashboard",
+            "test_integrity_and_db_schema",
+            "test_rule_scan_and_training"
+          ],
+          "classes": [],
+          "imports": [
+            "json",
+            "nexvary_lab.core",
+            "nexvary_lab.engines_61_100",
+            "pathlib",
+            "sqlite3",
+            "struct"
+          ]
+        },
+        {
+          "path": "tests/test_engines_801_1200.py",
+          "bytes": 645,
+          "sha256": "37f978c787529ac4e4cd7b9639193d3fdddd2c90e9fa0f3fe18b6b6cd599db64",
+          "functions": [
+            "test_stage_registry",
+            "test_all_stages_execute"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.core",
+            "nexvary_lab.engines_801_1200"
+          ]
+        },
+        {
+          "path": "tests/test_pro_tools_v12.py",
+          "bytes": 1554,
+          "sha256": "2bf3b7cf843d4dd1b08275b0acbbe20a7c3275c41c866866e36c805dfe60a9b1",
+          "functions": [
+            "test_disk_parsers",
+            "test_carve_zip_and_json",
+            "test_sqlite_and_mail",
+            "test_pro_registry_count"
+          ],
+          "classes": [],
+          "imports": [
+            "json",
+            "nexvary_lab.pro_tools_v12",
+            "pathlib",
+            "sqlite3",
+            "struct",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "tests/test_pro_tools_v1212.py",
+          "bytes": 1636,
+          "sha256": "510f1871851439b38afef8b699f7bb6ee41fd83b612e19fd1e2aa694ea9e8c3b",
+          "functions": [
+            "test_nine_next_tools",
+            "test_registry_has_nine_tools"
+          ],
+          "classes": [],
+          "imports": [
+            "hashlib",
+            "json",
+            "nexvary_lab.pro_tools_v1212",
+            "pathlib",
+            "sqlite3"
+          ]
+        },
+        {
+          "path": "tests/test_pro_tools_v1221.py",
+          "bytes": 1815,
+          "sha256": "27d755f972daa2440edbe8fec18cb88d12cb703a3db60006d782b0bbb0724cce",
+          "functions": [
+            "test_deep_nine_tools",
+            "test_deep_registry_count"
+          ],
+          "classes": [],
+          "imports": [
+            "json",
+            "nexvary_lab.pro_tools_v1221",
+            "pathlib",
+            "sqlite3"
+          ]
+        },
+        {
+          "path": "tests/test_release_gate_806.py",
+          "bytes": 1157,
+          "sha256": "9a8f03f6bd1b2ff3700921b86616cd7072d9eecc14842063dd0da54d53701d52",
+          "functions": [
+            "test_all_python_sources_parse_as_python_310_grammar",
+            "test_strict_release_gate_executes_cleanly",
+            "test_windows_builder_is_cmd_only_and_version_gated"
+          ],
+          "classes": [],
+          "imports": [
+            "ast",
+            "pathlib",
+            "subprocess",
+            "sys"
+          ]
+        },
+        {
+          "path": "tests/test_stage1200_windows_cleanup.py",
+          "bytes": 614,
+          "sha256": "552f26bff048fe4e714d33f5b80e70e7c5a2371535d561a89b61cf826cd07292",
+          "functions": [
+            "test_stage1200_smoke_closes_database_before_temp_cleanup",
+            "test_stage1200_smoke_runs_as_external_process"
+          ],
+          "classes": [],
+          "imports": [
+            "pathlib",
+            "subprocess",
+            "sys"
+          ]
+        },
+        {
+          "path": "tests/test_tool_actions_v809.py",
+          "bytes": 680,
+          "sha256": "110f1258b3937f090cd7d64d0969e5bcf5a5243ef60aa09e5fccf2488a25140a",
+          "functions": [
+            "test_catalog_has_activation_bindings",
+            "test_launcher_category_click_is_not_dead"
+          ],
+          "classes": [],
+          "imports": [
+            "pathlib"
+          ]
+        },
+        {
+          "path": "tests/test_ui_dashboard_808.py",
+          "bytes": 1041,
+          "sha256": "5f7be5cb697ad75b45529694dcdf90c77253c30952a37874623c7d04bfcee9fc",
+          "functions": [
+            "test_tool_launcher_catalog_completeness",
+            "test_dashboard_ui_markers_present",
+            "test_builder_release_name_and_isolation_preserved"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.app",
+            "nexvary_lab.engines_251_800",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "tests/test_ui_taxonomy.py",
+          "bytes": 472,
+          "sha256": "e629504c0458908c9bd0c5dd42a858293538625688f516b1c1b5134b2f8582da",
+          "functions": [
+            "test_kali_tool_taxonomy_has_ten_ordered_categories"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.app"
+          ]
+        },
+        {
+          "path": "tests/test_ui_taxonomy_250.py",
+          "bytes": 235,
+          "sha256": "1e9f4f617da1c4fe65858f88835f25abe4d55259377141efef5b808e7c5deb01",
+          "functions": [
+            "test_kali_categories_250"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.engines_151_250"
+          ]
+        },
+        {
+          "path": "tests/test_updater_v1222.py",
+          "bytes": 1221,
+          "sha256": "2e7fdf53ef8898794a304c62a9b63ac9e6b4c388f26ebb8fc77e16ae5d799c4f",
+          "functions": [
+            "test_version_compare",
+            "test_local_feed",
+            "test_invalid_hash_rejected"
+          ],
+          "classes": [],
+          "imports": [
+            "hashlib",
+            "json",
+            "nexvary_lab.updater",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "tests/test_v9_workbench.py",
+          "bytes": 1658,
+          "sha256": "06d307d66b4427f61cdd669637922c20e31373b210f435b2694ba1a914c5e48c",
+          "functions": [
+            "test_real_tool_registry_is_substantial_and_separate",
+            "test_file_tools",
+            "test_inventory_zip_sqlite",
+            "test_v9_source_has_large_launcher_and_workspaces"
+          ],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.tools_v9",
+            "pathlib",
+            "sqlite3",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "update-feed.example.json",
+          "bytes": 270,
+          "sha256": "c021ad390b92c5136d5835718cf35c3e2ccbf3d5cd5d44e355ec1f0df8081397"
+        },
+        {
+          "path": "v9_ui_smoke.py",
+          "bytes": 847,
+          "sha256": "034c0b3d721d780cdd6d09e67c976b853ddcdaaf1f514ba2305a75f69900b565",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "nexvary_lab.app",
+            "nexvary_lab.app_v9",
+            "nexvary_lab.core",
+            "pathlib",
+            "tempfile"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
+      "sourceSha": "d7754cd8f051d285406403465b6d7daa3bc4b060",
+      "inventoryScope": "decoded payload (overlays excluded)",
+      "files": [
+        {
+          "path": ".github/workflows/windows-build.yml",
+          "bytes": 6384,
+          "sha256": "2e91e71146cc826196c528dc180f5c5ba3cc83b5c82e69e1d89123b4bb1a59ba"
+        },
+        {
+          "path": "00_BUILD_V420_ONLY.cmd",
+          "bytes": 1259,
+          "sha256": "c15139c3952fb4a7ed4da30f30cf08d2a4aa2e33bc57a96925544032d26d84f5"
+        },
+        {
+          "path": "ANDROID15_STATUS_AR.txt",
+          "bytes": 1239,
+          "sha256": "555a2e8680e08a9970f892ecd824889330258b0ebfd34e604f4492ae0adde20e"
+        },
+        {
+          "path": "BUILD_DIAGNOSTIC.cmd",
+          "bytes": 976,
+          "sha256": "9ed69f512dc1ff4440a4411c9e12324898e2201a7f6a77675d97126ab61236aa"
+        },
+        {
+          "path": "BUILD_WINDOWS_EXE.cmd",
+          "bytes": 48,
+          "sha256": "d419e0c83b47b831389a45d49838e429b79971d3aa7ef0c01a64a4363a6ed1c8"
+        },
+        {
+          "path": "INTERNAL_USE.txt",
+          "bytes": 711,
+          "sha256": "2e2de1675143b69b05ea170e6951a02127ef289f701338f5ef216ed1ef2409ee"
+        },
+        {
+          "path": "README.md",
+          "bytes": 4599,
+          "sha256": "93f4180e73a992c723e837044749930d5c38f739a0f1d270120c692737a92b2d"
+        },
+        {
+          "path": "RELEASE_ID_V420.txt",
+          "bytes": 84,
+          "sha256": "1cbc30c6da7a430c582baed8011f00661fa15e8379a94c52d89674d697676523"
+        },
+        {
+          "path": "REPAIR_BUILD_ENV.cmd",
+          "bytes": 301,
+          "sha256": "84f4610d95f13235653ac03f1ffe375064d0ed8124359b42290bcc21dd293c50"
+        },
+        {
+          "path": "RUN_WINDOWS.cmd",
+          "bytes": 46,
+          "sha256": "0f20086f3dc3a7e256d1a865db393de226ac896ef934602392b89e4c1baac932"
+        },
+        {
+          "path": "RUN_WINDOWS_ONECLICK.cmd",
+          "bytes": 907,
+          "sha256": "b6f388000cd62dff70367732a63ea02831382662e8bd963ae3587ba44086626e"
+        },
+        {
+          "path": "SELF_CHECK.py",
+          "bytes": 6980,
+          "sha256": "e0a77c3281ba3aacc73f7fcfbe49c06439950e06e60c203cfafaa467c0f3e414",
+          "functions": [
+            "sha",
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "hashlib",
+            "importlib",
+            "json",
+            "nbf.browsers",
+            "nbf.cache_recon",
+            "nbf.core",
+            "nbf.i18n",
+            "nbf.images",
+            "nbf.parsers",
+            "nbf.report",
+            "nbf.session_recon",
+            "nbf.sqlite_recovery",
+            "pathlib",
+            "sqlite3",
+            "struct",
+            "tempfile",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "START_HERE_AR.txt",
+          "bytes": 984,
+          "sha256": "393dce2b116cf897133fba80c6f0a80b42bd541371c3caea683b9a55cc679c58"
+        },
+        {
+          "path": "UI_SMOKE.py",
+          "bytes": 6724,
+          "sha256": "9112dfbfe0280f8887d6a2692ea658847f9f2197bb432707df7bebd97f60795d",
+          "functions": [
+            "main",
+            "on_timeout"
+          ],
+          "classes": [],
+          "imports": [
+            "PySide6",
+            "__future__",
+            "nbf.i18n",
+            "nbf.ui_qt",
+            "os",
+            "pathlib",
+            "sys"
+          ]
+        },
+        {
+          "path": "V420_UI_WORKSPACE_AR.txt",
+          "bytes": 2765,
+          "sha256": "901dfc32f5a139580d6a69f125b28f45d7269203a224732437aa2cdeda99768b"
+        },
+        {
+          "path": "VERIFY_WINDOWS.cmd",
+          "bytes": 49,
+          "sha256": "01b2b4b4413ec79db5b4adcfbf39e96cd026b86f23e4d214e3e616a5a393f4bd"
+        },
+        {
+          "path": "app.py",
+          "bytes": 2156,
+          "sha256": "3f5ee3cb140f792b2ddbb4291a485ae7d335f12b8890add6acd35030a3d98f1c",
+          "functions": [
+            "_package_smoke",
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "PySide6",
+            "__future__",
+            "nbf.i18n",
+            "nbf.ui_qt",
+            "os",
+            "sys"
+          ]
+        },
+        {
+          "path": "assets/nbf_icon.svg",
+          "bytes": 2512,
+          "sha256": "efbb5da087a399e4e0162dea394a2cc6a3d36b22b6b7f1288d11f556aeaf52d0"
+        },
+        {
+          "path": "nbf/__init__.py",
+          "bytes": 22,
+          "sha256": "a54e7a6438c20e751b20d7b7f6162e2971f2f5423d4dfe318d6827c419711039",
+          "functions": [],
+          "classes": [],
+          "imports": []
+        },
+        {
+          "path": "nbf/browsers.py",
+          "bytes": 6364,
+          "sha256": "466f004f2603fd3e0d4881b7581fcee0f09e8f3507e45c4db0b70bf4c3bbfca2",
+          "functions": [
+            "_looks_chromium_profile",
+            "_looks_firefox_profile",
+            "_existing_profiles",
+            "discover_windows_profiles",
+            "classify_custom_profile",
+            "discover_all_windows_users"
+          ],
+          "classes": [
+            "BrowserProfile"
+          ],
+          "imports": [
+            "__future__",
+            "dataclasses",
+            "os",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "nbf/cache_recon.py",
+          "bytes": 3471,
+          "sha256": "1f5e574723abed6204459fe4c1506ad1ed01f80530f8dd3b90fcc4d7e19a3f9d",
+          "functions": [
+            "_simple_entry",
+            "_generic_cache_trace",
+            "reconstruct_profile_cache"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "core",
+            "pathlib",
+            "re",
+            "struct"
+          ]
+        },
+        {
+          "path": "nbf/core.py",
+          "bytes": 24302,
+          "sha256": "c575ecbbcb18d16572df5fc7feedf2d54484eb6a791b23337720273469acf048",
+          "functions": [
+            "utc_now_iso",
+            "safe_iso",
+            "chrome_time",
+            "unix_microseconds",
+            "unix_seconds",
+            "unix_milliseconds",
+            "sha256_file",
+            "sha256_bytes",
+            "sanitize_filename",
+            "_json_dumps",
+            "fingerprint",
+            "__init__",
+            "create",
+            "_columns",
+            "_init_db",
+            "info",
+            "log",
+            "register_provenance_alias",
+            "_provenance_original",
+            "_register_evidence_row",
+            "snapshot_file",
+            "register_external_file",
+            "snapshot_sqlite_family",
+            "add_artifacts",
+            "query_artifacts",
+            "get_artifact",
+            "counts",
+            "evidence_sources",
+            "audit_entries",
+            "verify_evidence",
+            "summary"
+          ],
+          "classes": [
+            "Artifact",
+            "CaseManager"
+          ],
+          "imports": [
+            "__future__",
+            "contextlib",
+            "dataclasses",
+            "datetime",
+            "hashlib",
+            "json",
+            "pathlib",
+            "shutil",
+            "sqlite3",
+            "typing"
+          ]
+        },
+        {
+          "path": "nbf/deleted.py",
+          "bytes": 5690,
+          "sha256": "973b066a3331c5f1e513b407d3d1e629753834e4e2b4614b15189e74c25c253a",
+          "functions": [
+            "_clean_url",
+            "scan_file_for_residual_urls",
+            "import_residual_scan",
+            "deep_scan_profile"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "core",
+            "pathlib",
+            "re",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nbf/i18n.py",
+          "bytes": 64247,
+          "sha256": "ab115025accd861f48978b57454724cc9d9a51be5689a4c64eee4892ad9f3410",
+          "functions": [
+            "normalize_language",
+            "is_rtl",
+            "tr",
+            "translation_gaps"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__"
+          ]
+        },
+        {
+          "path": "nbf/images.py",
+          "bytes": 27264,
+          "sha256": "8eefaea49884eee9794c1037ae3e1cc0999857640c920d5a35338ff08c002926",
+          "functions": [
+            "open_image",
+            "_guid_le",
+            "parse_partitions",
+            "_combined_hash",
+            "register_image",
+            "_reader_url_hits",
+            "raw_image_url_scan",
+            "_safe_name",
+            "_is_interesting",
+            "_derive_profile",
+            "extract_browser_artifacts_tsk",
+            "analyze_disk_image",
+            "scan_ntfs_unallocated",
+            "offset",
+            "length",
+            "read",
+            "get_size",
+            "segment_paths",
+            "close",
+            "__enter__",
+            "__exit__",
+            "__init__",
+            "read",
+            "get_size",
+            "segment_paths",
+            "close",
+            "__init__",
+            "read",
+            "get_size",
+            "segment_paths",
+            "close",
+            "__init__",
+            "read",
+            "get_size",
+            "segment_paths",
+            "close",
+            "__new__",
+            "__init__",
+            "close",
+            "read",
+            "get_size"
+          ],
+          "classes": [
+            "Partition",
+            "ImageReader",
+            "RawImageReader",
+            "TskNativeImageReader",
+            "EwfImageReader",
+            "_TskImgInfo",
+            "Adapter"
+          ],
+          "imports": [
+            "__future__",
+            "browsers",
+            "cache_recon",
+            "core",
+            "dataclasses",
+            "hashlib",
+            "io",
+            "json",
+            "os",
+            "parsers",
+            "pathlib",
+            "pyewf",
+            "pytsk3",
+            "re",
+            "session_recon",
+            "sqlite_recovery",
+            "struct",
+            "typing",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nbf/parsers.py",
+          "bytes": 46887,
+          "sha256": "5edd1440ac7d5e3f29e892f9c419736267211c64ad82eeecd769ca251b372ad7",
+          "functions": [
+            "derived_web_artifacts",
+            "_connect_ro",
+            "_table_columns",
+            "_has_table",
+            "_read_json",
+            "analyze_profile",
+            "__init__",
+            "_snap",
+            "_snap_json",
+            "parse_all",
+            "history",
+            "keyword_search_terms",
+            "omnibox_shortcuts",
+            "downloads",
+            "bookmarks",
+            "cookies",
+            "logins_metadata",
+            "autofill",
+            "favicons",
+            "top_sites",
+            "extensions",
+            "site_permissions",
+            "__init__",
+            "_snap",
+            "_snap_json",
+            "parse_all",
+            "history_bookmarks",
+            "input_history",
+            "legacy_downloads",
+            "cookies",
+            "forms",
+            "favicons",
+            "logins_metadata",
+            "permissions",
+            "extensions",
+            "walk"
+          ],
+          "classes": [
+            "ChromiumParser",
+            "FirefoxParser"
+          ],
+          "imports": [
+            "__future__",
+            "browsers",
+            "contextlib",
+            "core",
+            "json",
+            "pathlib",
+            "sqlite3",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nbf/report.py",
+          "bytes": 14411,
+          "sha256": "0efe31cd1eef9bbe75385f3790df4fd860de565afd94e68fb328bdfc64a714ea",
+          "functions": [
+            "_artifact_rows",
+            "export_csv",
+            "export_evidence_csv",
+            "export_audit_csv",
+            "export_json",
+            "_col_letter",
+            "_xlsx_cell",
+            "export_xlsx",
+            "export_html",
+            "_find_edge",
+            "try_export_pdf_from_html",
+            "export_hash_manifest",
+            "export_all",
+            "e"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "core",
+            "csv",
+            "html",
+            "i18n",
+            "json",
+            "os",
+            "pathlib",
+            "shutil",
+            "subprocess",
+            "xml.sax.saxutils",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "nbf/session_recon.py",
+          "bytes": 4781,
+          "sha256": "9b6c3bb871d872795edb5825da52fe50e68fd875ce7e7e6aa349131e9455edc6",
+          "functions": [
+            "_url_hits",
+            "parse_chromium_session",
+            "_moz_lz4",
+            "_walk_json_urls",
+            "parse_firefox_session",
+            "reconstruct_profile_sessions"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "core",
+            "json",
+            "lz4.block",
+            "pathlib",
+            "re",
+            "struct"
+          ]
+        },
+        {
+          "path": "nbf/sqlite_recovery.py",
+          "bytes": 6917,
+          "sha256": "3846faf1bed5a668a5c63b355b4f396a029f33de69ef01a800a1b408d50cc96a",
+          "functions": [
+            "_be16",
+            "_be32",
+            "_page_size",
+            "_clean_url",
+            "_hits",
+            "recover_sqlite_file",
+            "recover_wal_file",
+            "_candidate_sqlite_files",
+            "recover_profile_sqlite"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "core",
+            "pathlib",
+            "re",
+            "struct",
+            "urllib.parse"
+          ]
+        },
+        {
+          "path": "nbf/ui.py",
+          "bytes": 270,
+          "sha256": "f6ac5cca30e329114d1cd7547b26fb4b92f890a438257f425aad446a6fa73d6f",
+          "functions": [],
+          "classes": [],
+          "imports": [
+            "ui_qt"
+          ]
+        },
+        {
+          "path": "nbf/ui_qt.py",
+          "bytes": 91500,
+          "sha256": "341b1a39a7ef534d5ff72a4d1280d124ecb7f508d5d897138d7c87128946b539",
+          "functions": [
+            "_resource_path",
+            "electric_icon",
+            "run",
+            "__init__",
+            "run",
+            "__init__",
+            "set_headers",
+            "set_rows",
+            "rowCount",
+            "columnCount",
+            "data",
+            "headerData",
+            "artifact_at",
+            "__init__",
+            "__init__",
+            "s",
+            "_build_ui",
+            "_page_shell",
+            "_build_dashboard_page",
+            "_build_cases_page",
+            "_build_examination_page",
+            "_build_evidence_page",
+            "_build_artifacts_page",
+            "_build_reports_page",
+            "_build_settings_page",
+            "_build_about_page",
+            "_build_help_page",
+            "_make_action_button",
+            "_invoke_action",
+            "_set_action_group_enabled",
+            "_apply_theme",
+            "_apply_font_scale",
+            "_translate",
+            "_sync_language_combos",
+            "_language_changed",
+            "_settings_language_changed",
+            "set_language",
+            "save_ui_settings",
+            "_navigate",
+            "_install_shortcuts",
+            "_focus_search",
+            "_open_external",
+            "_apply_language_alignment",
+            "_reflow_quick_actions",
+            "_reflow_metric_cards",
+            "_reflow_dashboard_middle",
+            "_reflow_exam_groups",
+            "_apply_adaptive_layout",
+            "resizeEvent",
+            "keyPressEvent",
+            "_recent_case_paths",
+            "_remember_case",
+            "_refresh_recent_cases",
+            "open_recent_case",
+            "open_case_from_cases",
+            "_refresh_case_workspace",
+            "_format_bytes",
+            "_refresh_evidence_workspace",
+            "_open_local_path",
+            "open_evidence_folder",
+            "open_reports_folder",
+            "_refresh_reports_workspace",
+            "_open_selected_report_file",
+            "_require_case",
+            "_set_busy",
+            "_run_worker",
+            "_worker_error",
+            "_update_case_badge",
+            "new_case",
+            "open_case",
+            "_open_case_folder",
+            "discover",
+            "_fill_profiles",
+            "add_profile",
+            "selected_profiles",
+            "analyze_selected",
+            "analyze_all",
+            "_analyze_profiles",
+            "deep_scan_selected",
+            "raw_scan",
+            "analyze_image",
+            "sqlite_recover_selected",
+            "cache_reconstruct_selected",
+            "session_reconstruct_selected",
+            "verify_evidence",
+            "export_report",
+            "refresh",
+            "_update_cards",
+            "show_artifact_details",
+            "finished",
+            "done",
+            "finished",
+            "fn",
+            "done",
+            "fn",
+            "done",
+            "done",
+            "work",
+            "done",
+            "work",
+            "work",
+            "work",
+            "done",
+            "done"
+          ],
+          "classes": [
+            "WorkerSignals",
+            "Worker",
+            "ArtifactModel",
+            "MetricCard",
+            "MainWindow"
+          ],
+          "imports": [
+            "PySide6",
+            "__future__",
+            "browsers",
+            "cache_recon",
+            "core",
+            "deleted",
+            "i18n",
+            "images",
+            "json",
+            "parsers",
+            "pathlib",
+            "report",
+            "session_recon",
+            "sqlite_recovery",
+            "sys",
+            "traceback"
+          ]
+        },
+        {
+          "path": "nbf_cli.py",
+          "bytes": 7222,
+          "sha256": "3c1400e904ce33e6e64939a30241a7a8c639f2eb7f5060e34eef44935262783e",
+          "functions": [
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "argparse",
+            "json",
+            "nbf.browsers",
+            "nbf.cache_recon",
+            "nbf.core",
+            "nbf.deleted",
+            "nbf.i18n",
+            "nbf.images",
+            "nbf.parsers",
+            "nbf.report",
+            "nbf.session_recon",
+            "nbf.sqlite_recovery",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "requirements-windows.txt",
+          "bytes": 253,
+          "sha256": "867e6f9d5848b919c97d71bb1b4d6be8d02c48cefd2414521e0d69e8e217721d"
+        },
+        {
+          "path": "scripts/BUILD_WINDOWS_EXE.cmd",
+          "bytes": 1896,
+          "sha256": "75809b9bee92686c5bd1c1ab1207555b874e6c367c049376bad891ce476b19e3"
+        },
+        {
+          "path": "scripts/INSTALL_FORENSIC_DEPS.cmd",
+          "bytes": 239,
+          "sha256": "65bf1d4573867a91f7218fbc534344131a2b7bd7e0d20434886c9abbfa6c7665"
+        },
+        {
+          "path": "scripts/PACKAGE_WINDOWS.py",
+          "bytes": 7529,
+          "sha256": "f570fca141f7ff951f40a743dd38559206bbf15ef1e50704f4fa35b144f14620",
+          "functions": [
+            "sha256_file",
+            "run_logged",
+            "unique_destination",
+            "copy_release_extras",
+            "make_verify_cmd",
+            "build_once",
+            "package_smoke",
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "__future__",
+            "hashlib",
+            "importlib.util",
+            "os",
+            "pathlib",
+            "shutil",
+            "subprocess",
+            "sys",
+            "tempfile",
+            "time",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "scripts/RUN_LINUX.sh",
+          "bytes": 59,
+          "sha256": "55de3a5ecfb931013d06c49b1a9deb330d581ec5e46dcd63b164bd515e24127c"
+        },
+        {
+          "path": "scripts/RUN_WINDOWS.cmd",
+          "bytes": 512,
+          "sha256": "7f3f2d0c9f85d1a023f1dc3dc7d9e8a13e3f872a7dc3d2f52956e86ef4bf3497"
+        },
+        {
+          "path": "scripts/VERIFY_WINDOWS.cmd",
+          "bytes": 691,
+          "sha256": "e337d1699c6cd84a7cffe1ea31f639e2ee11821ce97fa4cd016653bddf4c102d"
+        },
+        {
+          "path": "scripts/WINDOWS_BUILD_DRIVER.py",
+          "bytes": 10305,
+          "sha256": "c8715d57060d8b6bef3ecb98556d52cf5c5e4f96c41c5d04467b0357991dc70f",
+          "functions": [
+            "project_root",
+            "env_python",
+            "timestamp",
+            "verify_release_identity",
+            "run_or_fail",
+            "module_exists",
+            "ensure_module",
+            "verify_base_python",
+            "create_or_validate_venv",
+            "source_qa",
+            "diagnostic",
+            "prepare_runtime",
+            "run_app",
+            "build",
+            "main",
+            "__init__",
+            "close",
+            "line",
+            "command"
+          ],
+          "classes": [
+            "BuildLog"
+          ],
+          "imports": [
+            "__future__",
+            "argparse",
+            "importlib.util",
+            "os",
+            "pathlib",
+            "shutil",
+            "subprocess",
+            "sys",
+            "tempfile",
+            "time"
+          ]
+        },
+        {
+          "path": "tests/test_core_parsers.py",
+          "bytes": 5339,
+          "sha256": "f0330734cc0f1b371345fc3152131ff101a0da49024f7dfc78391a500d12406d",
+          "functions": [
+            "setUp",
+            "tearDown",
+            "make_chrome",
+            "make_firefox",
+            "test_chromium_parse_and_secret_redaction",
+            "test_firefox_parse",
+            "test_residual_scan",
+            "test_search_query_derivation",
+            "test_deep_profile_cache_trace"
+          ],
+          "classes": [
+            "BrowserForensicsTests"
+          ],
+          "imports": [
+            "json",
+            "nbf.browsers",
+            "nbf.core",
+            "nbf.deleted",
+            "nbf.parsers",
+            "pathlib",
+            "sqlite3",
+            "tempfile",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_github_actions_windows.py",
+          "bytes": 1791,
+          "sha256": "e8852dd8a694c88eb48413214e49b0df4989d3e1d4eba8bcc7929a7b33b2f13c",
+          "functions": [
+            "setUpClass",
+            "test_workflow_exists",
+            "test_uses_windows_2025_hosted_runner",
+            "test_tests_python_311_and_312",
+            "test_runs_full_windows_quality_gate",
+            "test_uses_authoritative_build_driver",
+            "test_packaged_exe_is_smoke_tested_and_hashed",
+            "test_build_artifacts_and_logs_are_uploaded",
+            "test_current_node24_compatible_action_generations"
+          ],
+          "classes": [
+            "GitHubActionsWindowsTests"
+          ],
+          "imports": [
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v2_integrity_reports.py",
+          "bytes": 10807,
+          "sha256": "26aa0a2b97401d029624b447450978947ee5d1de1c35c2190331f6c24d08ee58",
+          "functions": [
+            "setUp",
+            "tearDown",
+            "make_chromium_profile",
+            "make_firefox_profile",
+            "test_case_id_never_reuses_nonempty_folder",
+            "test_reanalysis_deduplicates",
+            "test_tamper_detection",
+            "test_firefox_extensions_permissions_input_history",
+            "test_report_package",
+            "test_sqlite_wal_family_is_preserved_and_read",
+            "test_raw_scan_registers_external_evidence",
+            "test_raw_utf16le_url_trace",
+            "test_chromium_omnibox_shortcuts"
+          ],
+          "classes": [
+            "V2IntegrityReportTests"
+          ],
+          "imports": [
+            "json",
+            "nbf.browsers",
+            "nbf.core",
+            "nbf.deleted",
+            "nbf.parsers",
+            "nbf.report",
+            "pathlib",
+            "sqlite3",
+            "tempfile",
+            "unittest",
+            "zipfile"
+          ]
+        },
+        {
+          "path": "tests/test_v3_image_sqlite_cache_session.py",
+          "bytes": 7729,
+          "sha256": "70d1ca0d7059e29b4e8d56df3c48df0ed9aa6398cd029987cb6cd23bc77b1fe6",
+          "functions": [
+            "setUp",
+            "tearDown",
+            "test_mbr_partition_parser",
+            "test_image_browser_path_classification",
+            "test_gpt_partition_parser",
+            "test_image_raw_carve_and_case_registration",
+            "test_provenance_alias_survives_snapshot",
+            "test_sqlite_freelist_recovery",
+            "test_sqlite_wal_recovery",
+            "test_chromium_simple_cache_parser",
+            "test_chromium_session_command_parser",
+            "test_firefox_session_json_parser"
+          ],
+          "classes": [
+            "V3ForensicEngines"
+          ],
+          "imports": [
+            "__future__",
+            "json",
+            "nbf.cache_recon",
+            "nbf.core",
+            "nbf.images",
+            "nbf.session_recon",
+            "nbf.sqlite_recovery",
+            "pathlib",
+            "shutil",
+            "struct",
+            "tempfile",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v401_build_gate.py",
+          "bytes": 940,
+          "sha256": "5eb1b711f5e3a398a38af640cdc29832a561b3b7fcb3607a9fcc263a47cd85a7",
+          "functions": [
+            "setUp",
+            "test_version_hotfix",
+            "test_builder_verifies_pyinstaller_in_isolated_driver",
+            "test_repair_entrypoint_exists",
+            "test_ui_smoke_uses_windows_font_directory_when_available"
+          ],
+          "classes": [
+            "V401BuildGateTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v402_quick_actions.py",
+          "bytes": 2192,
+          "sha256": "1fb8737b2b4cd1d3456ce62c4366d42af7ed1ef65d970367306c13332d4a4626",
+          "functions": [
+            "setUp",
+            "test_version_is_v402",
+            "test_startup_does_not_auto_discover_and_lock_dashboard",
+            "test_action_buttons_use_guarded_dispatcher",
+            "test_discovery_does_not_disable_all_quick_actions",
+            "test_new_status_messages_exist_for_all_languages",
+            "test_windows_ui_smoke_clicks_dashboard_quick_actions"
+          ],
+          "classes": [
+            "V402QuickActionsRegressionTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "nbf.i18n",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v403_isolated_builder.py",
+          "bytes": 1165,
+          "sha256": "8a05427c8e4007bac476a4647d1be41bd6067530e088f74e79b8ee6d9a1e6357",
+          "functions": [
+            "test_version",
+            "test_builder_uses_isolated_temp_venv",
+            "test_packager_uses_short_temp_workspace_and_logs",
+            "test_final_exe_is_smoke_tested"
+          ],
+          "classes": [
+            "V403IsolatedBuilderTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v404_command_router.py",
+          "bytes": 847,
+          "sha256": "eaa080cd2f54247900d07ea4e11775486172a076ca806d17df962dd2ec3e53ae",
+          "functions": [
+            "test_version",
+            "test_v405_removes_powershell_router_from_primary_path",
+            "test_driver_self_test_is_noninteractive"
+          ],
+          "classes": [
+            "V404CommandRouterRegressionTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v405_pure_python_builder.py",
+          "bytes": 3231,
+          "sha256": "57b403742c4fc58d009bda090c1f03d801dc1135b86c475bc00775dcfb7c835c",
+          "functions": [
+            "test_version",
+            "test_primary_builder_does_not_invoke_powershell",
+            "test_launcher_never_starts_bare_python",
+            "test_driver_uses_sys_executable_and_venv_without_shell",
+            "test_pytsk3_is_optional_not_build_blocker",
+            "test_packaged_exe_smoke_remains_required",
+            "test_oneclick_runtime_fallback_exists",
+            "test_diagnostic_entrypoint_exists"
+          ],
+          "classes": [
+            "V405PurePythonBuilderTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v406_worker_lifecycle.py",
+          "bytes": 1291,
+          "sha256": "ddbaf20a90317cdf7e441a770cf1b67d6ee603ef24cf0b1a972a9e5cc7553da4",
+          "functions": [
+            "test_version",
+            "test_mainwindow_retains_active_workers",
+            "test_ui_smoke_waits_for_explicit_discovery_signal",
+            "test_smoke_checks_worker_release"
+          ],
+          "classes": [
+            "V406WorkerLifecycleTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v410_release_identity.py",
+          "bytes": 1358,
+          "sha256": "b099d96b92558ed9d3ab903cdbc12f47bb39be4fde1e40903e1fb4788f5862e1",
+          "functions": [
+            "test_release_version",
+            "test_unique_release_marker_exists",
+            "test_unmistakable_launcher_exists",
+            "test_generic_launcher_routes_through_version_guard",
+            "test_driver_verifies_release_identity"
+          ],
+          "classes": [
+            "V420ReleaseIdentityTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v410_ui_quality_about.py",
+          "bytes": 3784,
+          "sha256": "a7d4f43f61de6917b1c808cb4b4137f85b39c6903ec45d6594989c2c9998a177",
+          "functions": [
+            "test_version",
+            "test_about_and_social_strings_all_localized",
+            "test_about_page_contains_official_links",
+            "test_back_button_and_system_back_close_app",
+            "test_arabic_alignment_and_technical_ltr_are_explicit",
+            "test_icons_and_buttons_have_overlap_guards",
+            "test_expressive_application_icon_assets_exist",
+            "test_android_status_is_not_misrepresented",
+            "test_release_guard_is_v420"
+          ],
+          "classes": [
+            "V420UiQualityTests"
+          ],
+          "imports": [
+            "nbf.core",
+            "nbf.i18n",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v420_workspace_expansion.py",
+          "bytes": 3347,
+          "sha256": "19f5ef1f237d879fcd8883fa571998c53fb007f83c99af600465563c69057d11",
+          "functions": [
+            "test_version",
+            "test_navigation_contains_case_evidence_reports",
+            "test_case_workspace_is_real",
+            "test_evidence_workspace_uses_chain_of_custody_data",
+            "test_reports_workspace_and_report_language",
+            "test_adaptive_reflow_covers_main_screen_groups",
+            "test_technical_tables_stay_ltr",
+            "test_new_workspace_strings_all_localized",
+            "test_windows_smoke_targets_nine_pages"
+          ],
+          "classes": [
+            "V420WorkspaceExpansionTests"
+          ],
+          "imports": [
+            "nbf.core",
+            "nbf.i18n",
+            "pathlib",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_v4_i18n_ui_reports.py",
+          "bytes": 2637,
+          "sha256": "ac6a24d3f9213b7afd372dee8eb4f2c9065f599c8fc03b8b3f08c04e92d02f8b",
+          "functions": [
+            "test_version_is_v4",
+            "test_seven_languages_and_no_translation_gaps",
+            "test_only_arabic_is_rtl",
+            "test_ui_recovery_buttons_use_real_selected_profiles_method",
+            "test_localized_html_report_direction_and_title",
+            "test_localized_xlsx_headers"
+          ],
+          "classes": [
+            "V4InternationalUiTests"
+          ],
+          "imports": [
+            "__future__",
+            "nbf.core",
+            "nbf.i18n",
+            "nbf.report",
+            "pathlib",
+            "tempfile",
+            "unittest",
+            "zipfile"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "nexvary/NEXVARY-DC",
+      "sourceSha": "d8e2baf61b43d044b33a1dd76a444d093c80023c",
+      "inventoryScope": "text source/build/tests/docs inventory; binary assets excluded",
+      "files": [
+        {
+          "path": ".github/workflows/build.yml",
+          "bytes": 20854,
+          "sha256": "89826d0e3ea20159281facd6e2538d8b207280284b6f7079fe6f6eaf16fe3ad3"
+        },
+        {
+          "path": ".github/workflows/cancel-obsolete.yml",
+          "bytes": 879,
+          "sha256": "b9da1a523dcb50e2d21622a28216bedb565d2b5e4e8f3cb2cd076851d4b7c929"
+        },
+        {
+          "path": "CMakeLists.txt",
+          "bytes": 6454,
+          "sha256": "d781ee00820b7a44a7144df852d42ff4b0182a3a998c3883deb80a3af45322f6"
+        },
+        {
+          "path": "NOTICE.md",
+          "bytes": 3110,
+          "sha256": "6af4872962fa9c978ad8594ac7cec965116cedcb486bf54a5b4a5c6713fd8756"
+        },
+        {
+          "path": "README.md",
+          "bytes": 9454,
+          "sha256": "c4e68ecf74f990b1422b93e3c12e8f061a977795d24d99ce277ccd905651f81c"
+        },
+        {
+          "path": "docs/ADVANCED-RESCUE-AR.md",
+          "bytes": 4963,
+          "sha256": "9477956a312239f697166fae2ad623aa059d947d4ab85d2e22a20e18fc89de6a"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "bytes": 7447,
+          "sha256": "3a231077784884583b7215afa26d984987e1296cc127285589f68ad9d8939f77"
+        },
+        {
+          "path": "docs/BOOT-REPAIR-AR.md",
+          "bytes": 5321,
+          "sha256": "703683bed673390f9d08936703d6bea5ebf55598a166c910ba75ebe509dad9a0"
+        },
+        {
+          "path": "docs/DIRECT-AHCI-AR.md",
+          "bytes": 11858,
+          "sha256": "6ba5716137fa6eb1aaf96c1a40271fb4354c41fd8873f0547635084c3cf10cd9"
+        },
+        {
+          "path": "docs/HARDWARE-TESTS-AR.md",
+          "bytes": 9700,
+          "sha256": "220565f6e6a2e0f5cfdd4d0f7ed89e6f09247aebdfc9868e7e1204ffbd897392"
+        },
+        {
+          "path": "docs/OBSERVATIONS.md",
+          "bytes": 3109,
+          "sha256": "496a672e6b4f8c0312cb26b1b896d0a7bd2a0b07cf1e6d052c30501c684f5634"
+        },
+        {
+          "path": "docs/PRODUCT.md",
+          "bytes": 3338,
+          "sha256": "ff644af977eec81baf54cbf188df08a09e0d2933f4bc287bc483405a10b8b9d3"
+        },
+        {
+          "path": "docs/RELEASE-0.4.0.md",
+          "bytes": 1280,
+          "sha256": "6ebe8a6875b40e95ed51dff235ff452b9ad562455a2f74cbcbf4b613508c6318"
+        },
+        {
+          "path": "docs/RELEASE-0.5.0.md",
+          "bytes": 1710,
+          "sha256": "a4fa7f282de6bed9666273b15c33e669e4b427815cfd22cb2925a13a69a8bdee"
+        },
+        {
+          "path": "docs/RELEASE-0.5.1.md",
+          "bytes": 1930,
+          "sha256": "bfefbc6842191c39b08f3b09fbb7a4fb22ff1dbd1128c0b40b83bc2c0deeca82"
+        },
+        {
+          "path": "docs/RELEASE-0.6.0.md",
+          "bytes": 1764,
+          "sha256": "024f252d995f495f6a7d749cbca3bfa2b95fb025094fc16231c6925b94961d62"
+        },
+        {
+          "path": "docs/RELEASE-0.7.0.md",
+          "bytes": 2952,
+          "sha256": "78ee4936a6f0503d8e241cd46223ae889573f3046a8c065d02a78ab67a03347b"
+        },
+        {
+          "path": "docs/RELEASE-0.8.0.md",
+          "bytes": 2558,
+          "sha256": "8ebb94fd4c017f3a01772ade41c0e86dd3693a58778aa057bf4033c593f94ec4"
+        },
+        {
+          "path": "docs/REPORT-0.7.0-AR.md",
+          "bytes": 6802,
+          "sha256": "c006a3d626e8a39b918d7ab96dc4cada2e422359b49b6ae008d19881b935bcb9"
+        },
+        {
+          "path": "docs/REPORT-0.8.0-AR.md",
+          "bytes": 6997,
+          "sha256": "132a61b6271e5a83ada483a30e915ab8be20b2a15b53314814e95c997b87a164"
+        },
+        {
+          "path": "docs/RESEARCH.md",
+          "bytes": 4163,
+          "sha256": "50da8998027affd4147bf23467f06dd678cc27f1fa19604cb1ca87edc6baed73"
+        },
+        {
+          "path": "docs/SMART-CRYSTAL-AR.md",
+          "bytes": 4726,
+          "sha256": "ebb16921a69f5c02314ff071448cf05b02adec2ec279e62da61edad905473f70"
+        },
+        {
+          "path": "docs/VERIFICATION.md",
+          "bytes": 10258,
+          "sha256": "86652a4d93c239467a4ed2d3d91ddfed5510c6c5074dadec43e1c0a1d2f194db"
+        },
+        {
+          "path": "scripts/boot_repair.py",
+          "bytes": 16242,
+          "sha256": "55c9cf1479d22db604f95a729d2e7a0f1240c3db1bf3cc39041180834219b178",
+          "functions": [
+            "run",
+            "sha",
+            "flatten",
+            "inventory",
+            "mounted",
+            "regular",
+            "secure_boot",
+            "firmware_order",
+            "on_disk",
+            "plan",
+            "snapshot",
+            "apply",
+            "main"
+          ],
+          "classes": [],
+          "imports": [
+            "argparse",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "shutil",
+            "subprocess",
+            "sys",
+            "tempfile",
+            "time"
+          ]
+        },
+        {
+          "path": "scripts/direct_rescue.py",
+          "bytes": 21318,
+          "sha256": "1b8e9de2f23b668f0a580cd08552c6a8b12d9d82c67c55c830fbb59379ffa358",
+          "functions": [
+            "digest",
+            "guard_controller",
+            "checked_text",
+            "ata_text_check",
+            "read_script",
+            "restore_progress",
+            "recover_sectors",
+            "rescue",
+            "main",
+            "__init__",
+            "validate",
+            "read",
+            "_transfer",
+            "progress",
+            "cycle"
+          ],
+          "classes": [
+            "AHCI",
+            "CancelledRead"
+          ],
+          "imports": [
+            "argparse",
+            "contextlib",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "re",
+            "relay_power",
+            "rescue_map",
+            "shutil",
+            "signal",
+            "stat",
+            "subprocess",
+            "sys",
+            "tempfile",
+            "time"
+          ]
+        },
+        {
+          "path": "scripts/firmware_boot.ps1",
+          "bytes": 5277,
+          "sha256": "e3cc0aec70fcaecf18415ab3ccf5e9f79a02c611d64b4038f393040ba3f37e3c"
+        },
+        {
+          "path": "scripts/hybrid.ps1",
+          "bytes": 5293,
+          "sha256": "80d26565052d6fa71cef49b86fc00c2c6e57ca8e2eca7abff585af5f35455bc0"
+        },
+        {
+          "path": "scripts/osc_adapter_patch.py",
+          "bytes": 1804,
+          "sha256": "73e499b270d1da6109840cd8d1d543adc6994647aa22181be822c2d3b84c997b",
+          "functions": [
+            "apply"
+          ],
+          "classes": [],
+          "imports": [
+            "pathlib"
+          ]
+        },
+        {
+          "path": "scripts/policy.ps1",
+          "bytes": 3170,
+          "sha256": "346a21d5d1378f56c656c85eabc730d430b575bab6054317a95d5db30b5e7bf8"
+        },
+        {
+          "path": "scripts/qualify_opensuperclone.py",
+          "bytes": 3710,
+          "sha256": "8c3dab3af52ee043f9b36c1d3e1386fbe3d45e774c21bd8f88fc0a041428eccd",
+          "functions": [
+            "run",
+            "qualify"
+          ],
+          "classes": [],
+          "imports": [
+            "argparse",
+            "direct_rescue",
+            "hashlib",
+            "json",
+            "os",
+            "osc_adapter_patch",
+            "pathlib",
+            "subprocess"
+          ]
+        },
+        {
+          "path": "scripts/relay_power.py",
+          "bytes": 4248,
+          "sha256": "a9ce1809a9f28919f0f0f2d515f41c86d1c14842a5d8bbd37d9ed6007bf2b59c",
+          "functions": [
+            "__init__",
+            "state",
+            "switch",
+            "cycle",
+            "connect"
+          ],
+          "classes": [
+            "RelayPower"
+          ],
+          "imports": [
+            "time",
+            "usb.core",
+            "usb.util"
+          ]
+        },
+        {
+          "path": "scripts/rescue_map.py",
+          "bytes": 2988,
+          "sha256": "0b4ed63b5be73c55e95d4292dcec1fdbd97ade5db815416b01b46645c7369d68",
+          "functions": [
+            "export_map",
+            "emit"
+          ],
+          "classes": [],
+          "imports": [
+            "argparse",
+            "direct_rescue",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib"
+          ]
+        },
+        {
+          "path": "scripts/storage.ps1",
+          "bytes": 13077,
+          "sha256": "c9c56d1ec28aa56178f33dbab04b5adbde4de77105cbc4dc85c470cf5f1b13ec"
+        },
+        {
+          "path": "src/app/Controller.cpp",
+          "bytes": 26977,
+          "sha256": "c661f5b01e4bd101ea2ba1bafb2c458e83051a8b01c74b919d287bd6561820d1"
+        },
+        {
+          "path": "src/app/Controller.h",
+          "bytes": 4959,
+          "sha256": "f6b21324745b29a388a6ddf617e8515d9f84df1dc8db66f1755dc30c2e3268ef"
+        },
+        {
+          "path": "src/app/CrystalEngine.cpp",
+          "bytes": 6630,
+          "sha256": "d35b4a1f0da1bb34e9af80786624714c043d720fd278944657a640f781179cd3"
+        },
+        {
+          "path": "src/app/CrystalEngine.h",
+          "bytes": 278,
+          "sha256": "36a01a22cc17bdbe34dcc7b03f51cba682f17985f517fca9cc5aef2126971171"
+        },
+        {
+          "path": "src/app/main.cpp",
+          "bytes": 4569,
+          "sha256": "cac65fe4b9bac829f12367de9cc41ceee9f0534a01c429c47bf7b7a084f52885"
+        },
+        {
+          "path": "src/core/CrystalReport.cpp",
+          "bytes": 4475,
+          "sha256": "85bbbf7129d8c12d134829635e5bed8aab57f42c203170655db9e4a99a4660ce"
+        },
+        {
+          "path": "src/core/CrystalReport.h",
+          "bytes": 206,
+          "sha256": "dd8884241382829f3d2b3dc8941bee4bb2cd50a0c84108090921ef3202b5f021"
+        },
+        {
+          "path": "src/core/FatRecovery.cpp",
+          "bytes": 239,
+          "sha256": "ddc662130b3b185de169e42bd9896580216daac3a2ee01e28785ccddaa5c4b93"
+        },
+        {
+          "path": "src/core/FilesystemRecovery.cpp",
+          "bytes": 32324,
+          "sha256": "6d115ae9a28b3de2bf5314c92f079c28d3c63cd2e93cdbd68bff2a8e579b4ecb"
+        },
+        {
+          "path": "src/core/FilesystemRecovery.h",
+          "bytes": 295,
+          "sha256": "96d0a79bb77c241b52615cc6c0136d22e2f3f3187ca943a2a99f104c701fa93e"
+        },
+        {
+          "path": "src/core/MediaRead.cpp",
+          "bytes": 11341,
+          "sha256": "2f069c981cf27f643c1dc1daae358b70a3735623d6e5e0d659348ce339da027c"
+        },
+        {
+          "path": "src/core/MediaRead.h",
+          "bytes": 654,
+          "sha256": "c6a5eb5e11e4d7e0e87efd5545138e8ae6e7e5da119b66d0edd821849a754c5a"
+        },
+        {
+          "path": "src/core/Operations.cpp",
+          "bytes": 8277,
+          "sha256": "25d2bcc79cc7417f6412f85f820a819f2b7a6dce7351bf69d438d2f68b69fb12"
+        },
+        {
+          "path": "src/core/Operations.h",
+          "bytes": 1140,
+          "sha256": "9e555ce19e0852e237edf38cb2386da552ba4ffb016d57f48e8c421732c52049"
+        },
+        {
+          "path": "src/core/Partitions.cpp",
+          "bytes": 4052,
+          "sha256": "f7f0e2c71b578a22aaeb2bdd21fc9e1bfeb4b26685670e7b167d2c93fe182519"
+        },
+        {
+          "path": "src/core/Partitions.h",
+          "bytes": 309,
+          "sha256": "1d1f925062f8dcc37aadecb649f7958ac7ca5beb3ba04f0bc48354c0914c9865"
+        },
+        {
+          "path": "src/core/ReadCoverage.cpp",
+          "bytes": 5310,
+          "sha256": "d3150c60d47c3724ff72a0c8928a1d1c612bf70ae34d8d1da991362a189226b8"
+        },
+        {
+          "path": "src/core/ReadCoverage.h",
+          "bytes": 394,
+          "sha256": "b559a6204a073468cbebbf414bd048f31879c686b6d3907753319e2316039e01"
+        },
+        {
+          "path": "src/core/Recovery.cpp",
+          "bytes": 7800,
+          "sha256": "cf563ff8646cb03e2fb5b883148b1b46cf1cad01a5ed18f51636ae81be5ccaac"
+        },
+        {
+          "path": "src/core/Recovery.h",
+          "bytes": 333,
+          "sha256": "46439b9ee41edc06dc50f5adbbce07041699699aca4b3c002f915da29aff3fad"
+        },
+        {
+          "path": "src/core/RescueEngine.cpp",
+          "bytes": 14438,
+          "sha256": "53fe5f2c9fc527d3812b44fcd85febea74bf8fef66ca89a79932fe4e1db6e0a9"
+        },
+        {
+          "path": "src/core/RescueEngine.h",
+          "bytes": 708,
+          "sha256": "6ff0ad19b6741233d737068b62f980a03dd03c9016093d7aaeeac7fdb6389525"
+        },
+        {
+          "path": "src/core/StoragePolicy.cpp",
+          "bytes": 7106,
+          "sha256": "ea82cf5e5fe60fbb5712b1755965f2e65ca8d667e7ad29611a670e6827686d48"
+        },
+        {
+          "path": "src/core/StoragePolicy.h",
+          "bytes": 264,
+          "sha256": "bdd0a19cb078e7497c4e8bbceb18ffd89b37ec4e9705b6f564dbbc775fe23326"
+        },
+        {
+          "path": "tests/boot/test_boot_repair.py",
+          "bytes": 3644,
+          "sha256": "36b8e45058ac9ad001b3827295c2b48fd6a87e2b7953cadc7355da118a3256e0",
+          "functions": [
+            "test_running_system_device_mapper_parent_protection",
+            "test_firmware_order",
+            "test_snapshot_hash_and_links",
+            "test_no_space_before_writes",
+            "test_stale_identity_and_wrong_confirmation",
+            "test_privilege_and_path_guard"
+          ],
+          "classes": [
+            "RepairTests"
+          ],
+          "imports": [
+            "importlib.util",
+            "pathlib",
+            "tempfile",
+            "unittest",
+            "unittest.mock"
+          ]
+        },
+        {
+          "path": "tests/boot/test_firmware_boot.ps1",
+          "bytes": 1200,
+          "sha256": "3c41ba6c98532984f3dde3401a1f758aa1d7b232d335c8b15a01949976964954"
+        },
+        {
+          "path": "tests/direct/test_direct.py",
+          "bytes": 6885,
+          "sha256": "1a3da90533d549552b57281cdec72decd43186512a7d9af163a240d539a841e1",
+          "functions": [
+            "__init__",
+            "read",
+            "__init__",
+            "ctrl_transfer",
+            "setUp",
+            "tearDown",
+            "test_stream_sha_resume_cancel_crash_tail",
+            "test_sector_fallback_bad_map",
+            "test_corrupt_image_and_changed_identity_do_not_modify",
+            "test_bounds_corrupt_map_destination_space",
+            "test_read_command_allowlist_and_injection",
+            "test_controller_system_and_shared_protection",
+            "test_relay_bounded_identity_and_restore",
+            "test_actual_identity_before_resume_mutation",
+            "test_identity_change_is_fatal_not_bad_sector"
+          ],
+          "classes": [
+            "Source",
+            "USB",
+            "DirectTests"
+          ],
+          "imports": [
+            "direct_rescue",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "relay_power",
+            "sys",
+            "tempfile",
+            "unittest",
+            "unittest.mock"
+          ]
+        },
+        {
+          "path": "tests/direct/test_passes.py",
+          "bytes": 6321,
+          "sha256": "b4968d098f2bad5737ee2ca483b0558d71fdc7ec793fe80e5bae594309df7bc0",
+          "functions": [
+            "setUp",
+            "tearDown",
+            "fast",
+            "test_fast_then_targeted_reverse_sha_base_preserved",
+            "test_retry_cancel_resume_and_changed_strategy",
+            "test_base_corruption_refuses_new_output",
+            "test_incomplete_base_and_same_destination_refused",
+            "test_export_deferred_success_and_unattempted",
+            "test_export_confirmed_failure",
+            "test_corrupt_map_export_refused",
+            "test_timeout_allowlist_bounds",
+            "test_base_changed_identity_and_plan_fail_before_mutation",
+            "test_export_accepted_by_gnu_parser",
+            "read"
+          ],
+          "classes": [
+            "PassTests"
+          ],
+          "imports": [
+            "direct_rescue",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "rescue_map",
+            "shutil",
+            "subprocess",
+            "sys",
+            "tempfile",
+            "test_direct",
+            "unittest"
+          ]
+        },
+        {
+          "path": "tests/test_advanced.cpp",
+          "bytes": 25181,
+          "sha256": "3e8afc2680deb654241b21ce1a1f2ccd049b5111b398b40841a33cd27fadbcb3"
+        },
+        {
+          "path": "tests/test_boot.ps1",
+          "bytes": 2545,
+          "sha256": "34d22ff0e42b9abf213f1b07d9290dc7b09df341337c12543b0dae5364631cad"
+        },
+        {
+          "path": "tests/test_controller.cpp",
+          "bytes": 5284,
+          "sha256": "76a2a2c234b4dd4dc6b424afd75a887581a23eab3f7563054dee591af89ff3f2"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "bytes": 3871,
+          "sha256": "798f7b5cf52e93fa0ad75578e3446c145dad8ac1730a1297f2168fa6b1d91fb4"
+        },
+        {
+          "path": "tests/test_crystal.cpp",
+          "bytes": 4170,
+          "sha256": "479f35d0691f99e77285d9458b8485ae4c99903e3801d0c19b69650950d5de32"
+        },
+        {
+          "path": "tests/test_crystal_engine.ps1",
+          "bytes": 3399,
+          "sha256": "22ea2ed7fd8c22df34ed9ae070e6e47894b3cdf4b06a7188e9876b5dffe0f172"
+        },
+        {
+          "path": "tests/test_policy.cpp",
+          "bytes": 5295,
+          "sha256": "0073f7005339dd5a14a8f7c237b9f01ea802833fb7f769ef6e2f15739725f646"
+        },
+        {
+          "path": "tests/test_recovery.cpp",
+          "bytes": 4789,
+          "sha256": "199bef7811ab39881393a29cc7fd527375f8672b5b7c55a2e7d0faf83dfb0b2b"
+        },
+        {
+          "path": "tests/test_storage_policy.ps1",
+          "bytes": 3321,
+          "sha256": "0f36e0ae4edfbb4c235c8800ce941fe62c392103059e4cb6d01d1be941555ca5"
+        },
+        {
+          "path": "tests/vm/boot_linux.py",
+          "bytes": 4801,
+          "sha256": "0adc8ea31fe858c2fdd1ed36539c2e701934533e7176e0d3606fe980437e43b9",
+          "functions": [
+            "chunk",
+            "qmp"
+          ],
+          "classes": [],
+          "imports": [
+            "base64",
+            "hashlib",
+            "json",
+            "pathlib",
+            "shutil",
+            "socket",
+            "struct",
+            "subprocess",
+            "time",
+            "urllib.request",
+            "zlib"
+          ]
+        },
+        {
+          "path": "tests/vm/direct_ahci.py",
+          "bytes": 7295,
+          "sha256": "1d180088272c2a1f2911ee78eda95b5c6b14109bab97d6623b41d41769f09055",
+          "functions": [
+            "binary"
+          ],
+          "classes": [],
+          "imports": [
+            "glob",
+            "hashlib",
+            "json",
+            "pathlib",
+            "shutil",
+            "subprocess",
+            "time"
+          ]
+        },
+        {
+          "path": "tests/vm/repair_boot.py",
+          "bytes": 9692,
+          "sha256": "9074a8b434106434c71dec37e3572155549290fba48b42567ffeafdfd374c995",
+          "functions": [
+            "call",
+            "binary",
+            "vm"
+          ],
+          "classes": [],
+          "imports": [
+            "glob",
+            "json",
+            "os",
+            "pathlib",
+            "shutil",
+            "subprocess",
+            "time"
+          ]
+        },
+        {
+          "path": "tests/vm/windows_boot.ps1",
+          "bytes": 11946,
+          "sha256": "df0dd5d7f3ebd2b0d194f36d7a92e12a4bf33ebf0c4d3dd60394e26501eef1f5"
+        },
+        {
+          "path": "tests/vm/windows_guest.ps1",
+          "bytes": 7473,
+          "sha256": "c6aaca2492f71642afc2601488a1e6c2cf6771b79ea2efcdfca69aef2dddcf10"
+        },
+        {
+          "path": "tests/vm/windows_kvm.py",
+          "bytes": 13141,
+          "sha256": "f5e5c55e302e85e7e03aa8255431efebab1fae5418d495a67302ed97858ffd37",
+          "functions": [
+            "sha",
+            "command",
+            "text",
+            "deployment",
+            "qmp_capture",
+            "guest",
+            "require",
+            "main",
+            "request"
+          ],
+          "classes": [],
+          "imports": [
+            "argparse",
+            "hashlib",
+            "json",
+            "os",
+            "pathlib",
+            "shutil",
+            "socket",
+            "subprocess",
+            "time"
+          ]
+        }
+      ]
+    }
+  ]
+}

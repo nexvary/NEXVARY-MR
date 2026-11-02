@@ -1,26 +1,26 @@
 {
-  "sourceCommit": "5e0ac5b9c07daca4a46949f145c3eed09b21daa2",
+  "sourceCommit": "b3113a49a85ff0574c07e7e6386a3d185f6faf7f",
   "providerArchives": {
     "portable": {
-      "artifactId": 13134056269,
-      "sha256": "4648f592be835c3844b074f122e3c00ab7e7d838407631475aeb99eb1bb545f4",
-      "size": 49139414
+      "artifactId": 13133571959,
+      "sha256": "54fdd1dc7bc71c626983e1b3910a36734cfdecc7d7fc83b460f09685cc6661aa",
+      "size": 49310008
     },
     "installer": {
-      "artifactId": 13132818157,
-      "sha256": "7ba4893d9a4bb7bad825d65e5cad8492a96353c63e6e06c74f647fa2b674d798",
-      "size": 33235095
+      "artifactId": 13134280538,
+      "sha256": "09ce054843058714b5cb90fc7d6c329a93113debe8ceebc11c141f3fd75f3cd9",
+      "size": 33353927
     },
     "evidence": {
-      "artifactId": 13133656987,
-      "sha256": "c95a68cc7b716ffe75f4f926c48599a0f015aa44532a1cff51693a39cf95e6a5",
-      "size": 69765375
+      "artifactId": 13133841695,
+      "sha256": "9d293576657491d416fe8ab57501c0b2944a0ff80d23348afe161494eae75fcc",
+      "size": 75538666
     }
   },
-  "portableZipSha256": "836ddbc41305bd8e3c0eb551734a6605ba04a93daaf8b7e658b133485424835c",
+  "portableZipSha256": "1b3d4d3ecaee07c3d393371111b872820c1395a96d56400ccfcb9f04d65199e1",
   "profile": {
     "schemaVersion": 1,
-    "commit": "5e0ac5b9c07daca4a46949f145c3eed09b21daa2",
+    "commit": "b3113a49a85ff0574c07e7e6386a3d185f6faf7f",
     "buildProfile": "production-read-only",
     "signed": false,
     "qtVersion": "6.8.3"
@@ -28,20 +28,20 @@
   "manifestFiles": 1420,
   "spdxFiles": 1419,
   "executables": {
-    "NEXVARY-MR.exe": "580c8f365aa1ec0df6c3f846b4ba12ceddfb22bed0eb77d74df4201a18cbed09",
-    "mr_evidence_import_worker.exe": "1e5b659e6a27be0a4ce5951edfc4ff0dd94c86be242478265f9317906904f58d"
+    "NEXVARY-MR.exe": "863a2c08a8da91ba45a20e6b96b466479fa1221e6a71ec95cb7b38363e2ec23d",
+    "mr_evidence_import_worker.exe": "2327cf7743239a90b118105806533a14e112b3a2da0c2d00f33cfac7d669a997"
   },
   "peMachines": {
     "NEXVARY-MR.exe": "0x8664",
     "mr_evidence_import_worker.exe": "0x8664"
   },
   "shippedGuideHashes": {
-    "GOVERNMENT_CASE_TRANSACTIONS.md": "91cefa602b7218f2e69f275454c9b03a6e4e20a5a3259534dfa3900667e82045",
+    "GOVERNMENT_CASE_TRANSACTIONS.md": "cfa5dfeacacc5fc1cec8ed0a6b9fd78352bf8706c0ec0423fff2c595eb021b9a",
     "READINESS_BENCHMARK.md": "f45fe4ef9546b4e958106ea84eeb9c972b6176f69965e06be8669b41b3b3e6df",
-    "verification/verify_policy_audit.py": "a370c2763ec808f74c734864cba76925a392c633163b8dabebf02ebe79995b74"
+    "verification/verify_policy_audit.py": "f300e276d81f3ae75c99a1e41c99e38dc3be4c8750fbd29f609b7c5dc5fb9872"
   },
   "testBenchmarkExcluded": true,
-  "setupSha256": "3a857a502fb28adfc2db62915b4f9f2c6dd05f062fcf0d928fc280436df37280",
+  "setupSha256": "e84317ef66c5bd9835f65023b10e0bcef0faadb9d23cb2724c628850b1af3d74",
   "installerPeMachine": "0x14c",
   "portable": {
     "mainAndWorkerBytesMatched": true,
@@ -66,14 +66,14 @@
   "nativeScopedTotals": {
     "build/case_transaction-results.txt": [
       {
-        "passed": 41,
+        "passed": 62,
         "failed": 0,
         "skipped": 0
       }
     ],
     "build/partition_transaction-results.txt": [
       {
-        "passed": 27,
+        "passed": 29,
         "failed": 0,
         "skipped": 1
       }
@@ -87,13 +87,6 @@
     ]
   },
   "allNativeTotals": {
-    "build/artifact-results.txt": [
-      {
-        "passed": 32,
-        "failed": 0,
-        "skipped": 0
-      }
-    ],
     "build/avb-results.txt": [
       {
         "passed": 22,
@@ -108,6 +101,13 @@
         "skipped": 2
       }
     ],
+    "build/artifact-results.txt": [
+      {
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
     "build/board-results.txt": [
       {
         "passed": 8,
@@ -117,7 +117,7 @@
     ],
     "build/case_transaction-results.txt": [
       {
-        "passed": 41,
+        "passed": 62,
         "failed": 0,
         "skipped": 0
       }
@@ -178,9 +178,16 @@
         "skipped": 0
       }
     ],
-    "build/identity-results.txt": [
+    "build/forensic_adapter-results.txt": [
       {
-        "passed": 12,
+        "passed": 30,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/import-results.txt": [
+      {
+        "passed": 36,
         "failed": 0,
         "skipped": 0
       }
@@ -192,9 +199,9 @@
         "skipped": 0
       }
     ],
-    "build/import-results.txt": [
+    "build/identity-results.txt": [
       {
-        "passed": 36,
+        "passed": 12,
         "failed": 0,
         "skipped": 0
       }
@@ -220,9 +227,16 @@
         "skipped": 0
       }
     ],
+    "build/ntfs-metadata-results.txt": [
+      {
+        "passed": 57,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
     "build/partition_transaction-results.txt": [
       {
-        "passed": 27,
+        "passed": 29,
         "failed": 0,
         "skipped": 1
       }
@@ -241,16 +255,16 @@
         "skipped": 1
       }
     ],
-    "build/recovery-results.txt": [
+    "build/recovery_image-results.txt": [
       {
-        "passed": 32,
+        "passed": 10,
         "failed": 0,
         "skipped": 0
       }
     ],
-    "build/recovery_image-results.txt": [
+    "build/recovery-results.txt": [
       {
-        "passed": 10,
+        "passed": 32,
         "failed": 0,
         "skipped": 0
       }
@@ -269,13 +283,6 @@
         "skipped": 0
       }
     ],
-    "build/service-results.txt": [
-      {
-        "passed": 35,
-        "failed": 0,
-        "skipped": 21
-      }
-    ],
     "build/security-results.txt": [
       {
         "passed": 14,
@@ -283,16 +290,23 @@
         "skipped": 0
       }
     ],
-    "build/timeline-results.txt": [
+    "build/service-results.txt": [
       {
-        "passed": 26,
+        "passed": 35,
         "failed": 0,
-        "skipped": 0
+        "skipped": 21
       }
     ],
     "build/tool-results.txt": [
       {
         "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/timeline-results.txt": [
+      {
+        "passed": 26,
         "failed": 0,
         "skipped": 0
       }
@@ -306,14 +320,7 @@
     ],
     "build/ui-results.txt": [
       {
-        "passed": 54,
-        "failed": 0,
-        "skipped": 0
-      }
-    ],
-    "build/update-journal-results.txt": [
-      {
-        "passed": 42,
+        "passed": 59,
         "failed": 0,
         "skipped": 0
       }
@@ -321,6 +328,13 @@
     "build/update-key-results.txt": [
       {
         "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "build/update-journal-results.txt": [
+      {
+        "passed": 42,
         "failed": 0,
         "skipped": 0
       }
@@ -450,9 +464,9 @@
       "observation": "SKIP   : TskTests::realInstalledMmlsIntegration() Set MR_TSK_MMLS_PATH to exercise a real separately installed TSK binary."
     }
   ],
-  "signedInteropChecks": 77,
+  "signedInteropChecks": 84,
   "windowsCtest": {
-    "tests": 50,
+    "tests": 53,
     "failures": 0,
     "errors": 0,
     "skipped": 0

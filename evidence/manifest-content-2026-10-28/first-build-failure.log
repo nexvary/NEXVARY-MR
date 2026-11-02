@@ -1,0 +1,129 @@
+[0/2] Re-checking globbed directories...
+[1/67] Building CXX object CMakeFiles/mr_core.dir/cpp/src/RepairCore.cpp.o
+[2/67] Linking CXX static library libmr_core.a
+[3/67] Automatic MOC and UIC for target mr_import_adapters
+[4/67] Automatic MOC and UIC for target mr_desktop_resources_1
+[5/67] Automatic MOC and UIC for target mr_desktop_resources_2
+[6/67] Building CXX object CMakeFiles/mr_import_adapters.dir/mr_import_adapters_autogen/mocs_compilation.cpp.o
+[7/67] Building CXX object CMakeFiles/mr_user_protection.dir/cpp/src/CaseVault.cpp.o
+[8/67] Linking CXX static library libmr_user_protection.a
+[9/67] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/AdbBackupImport.cpp.o
+[10/67] Running rcc for resource research_catalog
+[11/67] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/mr_desktop_resources_1_autogen/mocs_compilation.cpp.o
+[12/67] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/build/.rcc/qrc_research_catalog.cpp.o
+[13/67] Running rcc for resource device_catalog
+[14/67] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/mr_desktop_resources_2_autogen/mocs_compilation.cpp.o
+[15/67] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/build/.rcc/qrc_device_catalog.cpp.o
+[16/67] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/ImportAdapters.cpp.o
+[17/67] Linking CXX static library libmr_import_adapters.a
+[18/67] Automatic MOC and UIC for target mr_evidence_import_worker
+[19/67] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/mr_evidence_import_worker_autogen/mocs_compilation.cpp.o
+[20/67] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/cpp/src/import_worker.cpp.o
+[21/67] Linking CXX executable mr_evidence_import_worker
+[22/67] Automatic MOC and UIC for target mr_desktop
+[23/67] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[24/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+[25/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RepairBridge.cpp.o
+[26/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/WorkshopBridge.cpp.o
+[27/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+[28/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+[29/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+[30/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ServiceCatalog.cpp.o
+[31/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/BoardBridge.cpp.o
+[32/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/FirmwareBridge.cpp.o
+[33/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryImage.cpp.o
+[34/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+[35/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+[36/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicRecord.cpp.o
+[37/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PolicyAudit.cpp.o
+[38/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/GovernmentOperationPolicy.cpp.o
+[39/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+[40/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[41/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[42/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseRetention.cpp.o
+[43/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawRetention.cpp.o
+[44/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[45/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ResearchBridge.cpp.o
+[46/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+[47/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/AvbMetadata.cpp.o
+[48/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+[49/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PcapSummary.cpp.o
+[50/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ExifSummary.cpp.o
+[51/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ConnectionDiagnosis.cpp.o
+[52/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceIntelligence.cpp.o
+[53/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/EvidenceImportRunner.cpp.o
+[54/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseImports.cpp.o
+[55/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseTimeline.cpp.o
+[56/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseTimeline.cpp.o
+[57/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseArtifacts.cpp.o
+[58/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+[59/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCasePartitions.cpp.o
+[60/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseForensicAdapters.cpp.o
+[61/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicAdapters.cpp.o
+[62/67] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DcImagePartitions.cpp.o
+[63/67] Linking CXX static library libmr_desktop.a
+[64/67] Automatic MOC and UIC for target mr_forensic_adapter_tests
+[65/67] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/mr_forensic_adapter_tests_autogen/mocs_compilation.cpp.o
+[66/67] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/cpp/tests/forensic_adapter_tests.cpp.o
+[67/67] Linking CXX executable mr_forensic_adapter_tests
+FAILED: mr_forensic_adapter_tests 
+: && /usr/bin/c++ -g  CMakeFiles/mr_forensic_adapter_tests.dir/mr_forensic_adapter_tests_autogen/mocs_compilation.cpp.o CMakeFiles/mr_forensic_adapter_tests.dir/cpp/tests/forensic_adapter_tests.cpp.o -o mr_forensic_adapter_tests  CMakeFiles/mr_desktop_resources_1.dir/./mr_desktop_resources_1_autogen/mocs_compilation.cpp.o  CMakeFiles/mr_desktop_resources_1.dir/./build/.rcc/qrc_research_catalog.cpp.o  CMakeFiles/mr_desktop_resources_2.dir/./mr_desktop_resources_2_autogen/mocs_compilation.cpp.o  CMakeFiles/mr_desktop_resources_2.dir/./build/.rcc/qrc_device_catalog.cpp.o  libmr_desktop.a  /usr/lib/x86_64-linux-gnu/libQt6Test.so.6.4.2  libmr_import_adapters.a  libmr_core.a  libmr_user_protection.a  /workspace/scratch/077476f00950/sodium/lib/libsodium.a  -ldl  /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so  /usr/lib/x86_64-linux-gnu/libQt6Sql.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Concurrent.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Network.so.6.4.2  /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.4.2 && :
+/usr/bin/ld: libmr_desktop.a(mocs_compilation.cpp.o): in function `WorkshopBridge::qt_static_metacall(QObject*, QMetaObject::Call, int, void**)':
+/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:499:(.text+0x960f): undefined reference to `WorkshopBridge::issueDeviceCard(int)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:501:(.text+0x966d): undefined reference to `WorkshopBridge::deviceCard(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:503:(.text+0x96c9): undefined reference to `WorkshopBridge::lookupBarcode(QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:505:(.text+0x9727): undefined reference to `WorkshopBridge::orderHistory(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:507:(.text+0x979a): undefined reference to `WorkshopBridge::exportIntakeCard(int, QString const&, bool)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:509:(.text+0x97ea): undefined reference to `WorkshopBridge::customerProfile(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:511:(.text+0x9848): undefined reference to `WorkshopBridge::deviceProfile(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:513:(.text+0x98b5): undefined reference to `WorkshopBridge::updateCustomer(int, QString const&, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:515:(.text+0x9922): undefined reference to `WorkshopBridge::createOrderForDevice(int, QString const&, QString const&, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:517:(.text+0x99b2): undefined reference to `WorkshopBridge::createOrderForCustomer(int, QString const&, QString const&, QString const&, QString const&, QString const&, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:519:(.text+0x9a23): undefined reference to `WorkshopBridge::issueTrackingToken(int, int, bool)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:521:(.text+0x9a7c): undefined reference to `WorkshopBridge::revokeTracking(int)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:523:(.text+0x9ad2): undefined reference to `WorkshopBridge::setPublicMessage(int, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:525:(.text+0x9b75): undefined reference to `WorkshopBridge::createOrder(QString const&, QString const&, QString const&, QString const&, QString const&, QString const&, QString const&, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:527:(.text+0x9bf5): undefined reference to `WorkshopBridge::updateOrder(int, QString const&, QString const&, int, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:529:(.text+0x9c64): undefined reference to `WorkshopBridge::addPart(QString const&, QString const&, int, int)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:531:(.text+0x9cc7): undefined reference to `WorkshopBridge::restockPart(int, int, int)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:533:(.text+0x9d2a): undefined reference to `WorkshopBridge::usePart(int, int, int)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:535:(.text+0x9d7a): undefined reference to `WorkshopBridge::invoice(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:537:(.text+0x9dd2): undefined reference to `WorkshopBridge::exportOrders(QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:539:(.text+0x9e28): undefined reference to `WorkshopBridge::exportInvoice(int, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:541:(.text+0x9e78): undefined reference to `WorkshopBridge::diagnoses(int) const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:543:(.text+0x9f0b): undefined reference to `WorkshopBridge::saveDiagnosis(int, QString const&, QString const&, QString const&, QString const&, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:545:(.text+0x9f65): undefined reference to `WorkshopBridge::exportDiagnosisReport(int, QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:547:(.text+0x9faf): undefined reference to `WorkshopBridge::backup(QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:549:(.text+0xa00a): undefined reference to `WorkshopBridge::restore(QString const&, bool)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:551:(.text+0xa04d): undefined reference to `WorkshopBridge::checkIntegrity()'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:576:(.text+0xa1ce): undefined reference to `WorkshopBridge::orders() const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:577:(.text+0xa205): undefined reference to `WorkshopBridge::customers() const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:578:(.text+0xa23c): undefined reference to `WorkshopBridge::devices() const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:579:(.text+0xa273): undefined reference to `WorkshopBridge::inventory() const'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/build/mr_desktop_autogen/NEBJVJ5X2P/moc_WorkshopBridge.cpp:580:(.text+0xa2aa): undefined reference to `WorkshopBridge::events() const'
+/usr/bin/ld: libmr_desktop.a(mocs_compilation.cpp.o): in function `QtPrivate::QMetaTypeForType<WorkshopBridge>::getDtor()::{lambda(QtPrivate::QMetaTypeInterface const*, void*)#1}::operator()(QtPrivate::QMetaTypeInterface const*, void*) const':
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qmetatype.h:2331:(.text._ZZN9QtPrivate16QMetaTypeForTypeI14WorkshopBridgeE7getDtorEvENKUlPKNS_18QMetaTypeInterfaceEPvE_clES5_S6_[_ZZN9QtPrivate16QMetaTypeForTypeI14WorkshopBridgeE7getDtorEvENKUlPKNS_18QMetaTypeInterfaceEPvE_clES5_S6_]+0x20): undefined reference to `WorkshopBridge::~WorkshopBridge()'
+/usr/bin/ld: libmr_desktop.a(mocs_compilation.cpp.o):(.data.rel.ro._ZTV14WorkshopBridge[_ZTV14WorkshopBridge]+0x28): undefined reference to `WorkshopBridge::~WorkshopBridge()'
+/usr/bin/ld: libmr_desktop.a(mocs_compilation.cpp.o):(.data.rel.ro._ZTV14WorkshopBridge[_ZTV14WorkshopBridge]+0x30): undefined reference to `WorkshopBridge::~WorkshopBridge()'
+/usr/bin/ld: libmr_desktop.a(TrackingPortal.cpp.o): in function `TrackingPortal::link(int, int, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/TrackingPortal.cpp:43:(.text+0x1882): undefined reference to `WorkshopBridge::issueTrackingToken(int, int, bool)'
+/usr/bin/ld: libmr_desktop.a(TrackingPortal.cpp.o): in function `TrackingPortal::accept()::{lambda()#3}::operator()() const':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/TrackingPortal.cpp:74:(.text+0x3340): undefined reference to `WorkshopBridge::publicTracking(QString const&) const'
+/usr/bin/ld: libmr_desktop.a(CloudTracking.cpp.o): in function `CloudTracking::importCredentials(QString const&, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/CloudTracking.cpp:56:(.text+0x20a9): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: libmr_desktop.a(CloudTracking.cpp.o): in function `CloudTracking::request(QString const&, QByteArray const&, long long)::{lambda()#2}::operator()() const':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/CloudTracking.cpp:79:(.text+0x2f71): undefined reference to `WorkshopBridge::publicTrackingSnapshot() const'
+/usr/bin/ld: libmr_desktop.a(CloudTracking.cpp.o): in function `CloudTracking::issueLink(int, int, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/CloudTracking.cpp:91:(.text+0x42a6): undefined reference to `WorkshopBridge::issueTrackingToken(int, int, bool)'
+/usr/bin/ld: libmr_desktop.a(SecurityBridge.cpp.o): in function `SecurityBridge::configure(QString const&, QString const&)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/SecurityBridge.cpp:252:(.text+0x909e): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: /workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/SecurityBridge.cpp:253:(.text+0x90b7): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: libmr_desktop.a(SecurityBridge.cpp.o): in function `SecurityBridge::scan(QString const&, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/SecurityBridge.cpp:302:(.text+0x9c17): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: libmr_desktop.a(SecurityBridge.cpp.o): in function `SecurityBridge::exportReport(QString const&, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/SecurityBridge.cpp:316:(.text+0x9fab): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: libmr_desktop.a(ServiceCatalog.cpp.o): in function `ServiceCatalog::importDeviceCatalog(QString const&, QString const&, bool)':
+/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ServiceCatalog.cpp:55:(.text+0x3a11): undefined reference to `WorkshopBridge::localPath(QString const&)'
+/usr/bin/ld: libmr_desktop.a(ServiceCatalog.cpp.o):/workspace/scratch/077476f00950/NEXVARY-MR/cpp/src/ServiceCatalog.cpp:87: more undefined references to `WorkshopBridge::localPath(QString const&)' follow
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.

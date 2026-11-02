@@ -1,0 +1,14 @@
+{
+  "testedSource": "22cad4191c9b1101da5c36ac154bcdc6db720bb6",
+  "testedTree": "8f96a2f559d1a9cc09f9efca26ebdc8a30559f34",
+  "prCheckout": "b1f4e8c546cd7e0fd49b6491a95dd96b43a78f7d",
+  "prCheckoutTree": "8f96a2f559d1a9cc09f9efca26ebdc8a30559f34",
+  "implementationAndPRTreesIdentical": true,
+  "checkpointFullTreeIdentical": false,
+  "checkpointOnlyAllowedPaths": [
+    "DEVELOPMENT_STATE.md",
+    "research/forensic-engine-integration.json",
+    "evidence/chromium-history-2026-10-28/"
+  ],
+  "scope": "Evidence/state/unshipped research metadata only; no parser/native/QML/test/workflow/packaging/shipped-guide changes. Full checkpoint native rerun is separate, not inherited exact-tree acceptance."
+}

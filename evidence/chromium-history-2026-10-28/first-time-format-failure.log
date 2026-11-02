@@ -1,0 +1,18 @@
+********* Start testing of SqliteTableTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : SqliteTableTests::initTestCase()
+FAIL!  : SqliteTableTests::historyWalOracleAndProvenance() Compared values are not the same
+   Actual   (rows[0].toMap().value("details").toMap().value("timestampUtc").toString()): "2023-11-14T22:13:20.123+00:00"
+   Expected (QString("2023-11-14T22:13:20.123Z"))                                      : "2023-11-14T22:13:20.123Z"
+   Loc: [/workspace/scratch/077476f00950/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp(43)]
+PASS   : SqliteTableTests::historyUnsupportedAndLimits()
+PASS   : SqliteTableTests::committedWalOracle()
+PASS   : SqliteTableTests::runtimeOracle(512)
+PASS   : SqliteTableTests::runtimeOracle(1024)
+PASS   : SqliteTableTests::runtimeOracle(4096)
+PASS   : SqliteTableTests::runtimeOracle(65536)
+PASS   : SqliteTableTests::malformedCellsAndRecords()
+PASS   : SqliteTableTests::resourceLimits()
+PASS   : SqliteTableTests::cleanupTestCase()
+Totals: 10 passed, 1 failed, 0 skipped, 0 blacklisted, 449ms
+********* Finished testing of SqliteTableTests *********

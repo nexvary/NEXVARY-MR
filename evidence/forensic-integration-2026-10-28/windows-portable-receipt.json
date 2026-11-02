@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "label": "portable",
+  "mode": "isolated-copy",
+  "executable": "D:\\a\\_temp\\NEXVARY MR isolated portable c9d2ffa6b7764e658e306f55127a75f5\\NEXVARY-MR.exe",
+  "executableSha256": "b919361cf0ea20e89e00aa3d6086d5b8c3f221f7956dd7b9d9a5f2b6dea75968",
+  "sourceCommit": "e15260a2660baf350bbe1b0657dbe38b81239da8",
+  "importWorkerSha256": "7b89e7abeeb406d3b52945fb4ac52f3877d5b618de11499faba51cabeb3c766f",
+  "exitCode": 0,
+  "screenshot": "D:\\a\\NEXVARY-MR\\NEXVARY-MR\\dist\\evidence\\portable.png",
+  "dataDirectory": "D:\\a\\_temp\\NEXVARY MR isolated portable c9d2ffa6b7764e658e306f55127a75f5\\test data",
+  "qtSdkExcludedFromPath": true,
+  "testFontOverrideCleared": true
+}

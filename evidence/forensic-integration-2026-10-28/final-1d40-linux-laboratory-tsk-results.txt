@@ -1,0 +1,13 @@
+********* Start testing of TskTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : TskTests::initTestCase()
+PASS   : TskTests::privateCopyHashAndProvenance()
+PASS   : TskTests::failureCancellationBoundsAndChanges()
+PASS   : TskTests::toolSelectionDoesNotExecuteAndPersists()
+PASS   : TskTests::inputPolicy()
+PASS   : TskTests::caseAdapterCommitsOnlyVerifiedResults()
+QINFO  : TskTests::realInstalledMmlsIntegration() Real installed mmls integration succeeded: The Sleuth Kit ver 4.12.1
+PASS   : TskTests::realInstalledMmlsIntegration()
+PASS   : TskTests::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 6055ms
+********* Finished testing of TskTests *********

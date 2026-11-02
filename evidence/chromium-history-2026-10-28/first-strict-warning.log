@@ -1,0 +1,16 @@
+[ 11%] Built target mr_core
+[ 23%] Built target mr_law_enforcement_case_tests
+[ 23%] Built target mr_sqlite_table_tests_autogen_timestamp_deps
+[ 35%] Built target mr_policy_tests
+[ 47%] Built target mr_core_tests
+[ 52%] Automatic MOC for target mr_sqlite_table_tests
+[ 52%] Built target mr_sqlite_table_tests_autogen
+[ 58%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/mr_sqlite_table_tests_autogen/mocs_compilation.cpp.o
+[ 64%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o
+[ 76%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+[ 76%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o
+[ 82%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteEvidenceFamily.cpp.o
+[ 88%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ForensicAdapters.cpp.o
+[ 94%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/DcImagePartitions.cpp.o
+[100%] Linking CXX executable mr_sqlite_table_tests
+[100%] Built target mr_sqlite_table_tests

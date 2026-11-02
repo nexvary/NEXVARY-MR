@@ -1,0 +1,19 @@
+{
+  "id": 12804220634,
+  "name": "NEXVARY-MR-Linux-production-integration-evidence",
+  "size_in_bytes": 88158634,
+  "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12804220634",
+  "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12804220634/zip",
+  "expired": false,
+  "created_at": "2026-10-28T09:02:05Z",
+  "expires_at": "2027-01-26T08:45:18Z",
+  "updated_at": "2026-10-28T09:02:05Z",
+  "digest": "sha256:1a0711dd95f12c53eae89f8ed44a94e137a004b3cdedd7d5c62e509bad722a74",
+  "workflow_run": {
+    "id": 40659062610,
+    "repository_id": 1421842070,
+    "head_repository_id": 1421842070,
+    "head_branch": "integration/forensic-engines-audit",
+    "head_sha": "9864f08511c938828c4e3b37f7023af1ec79bed2"
+  }
+}

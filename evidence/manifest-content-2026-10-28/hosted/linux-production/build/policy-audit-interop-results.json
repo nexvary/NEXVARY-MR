@@ -1,0 +1,299 @@
+{
+  "schema": "nexvary-policy-audit-interop/v1",
+  "checks": [
+    {
+      "check": "native signatures, requester, reviewer and full retained anchor",
+      "passed": true
+    },
+    {
+      "check": "empty retained prefix with independently pinned journal key",
+      "passed": true
+    },
+    {
+      "check": "reordered events",
+      "passed": true
+    },
+    {
+      "check": "valid signed history truncated below retained anchor",
+      "passed": true
+    },
+    {
+      "check": "deleted interior event",
+      "passed": true
+    },
+    {
+      "check": "duplicated event",
+      "passed": true
+    },
+    {
+      "check": "changed signature",
+      "passed": true
+    },
+    {
+      "check": "changed decision payload",
+      "passed": true
+    },
+    {
+      "check": "substituted bundled public key",
+      "passed": true
+    },
+    {
+      "check": "wrong independent key",
+      "passed": true
+    },
+    {
+      "check": "wrong independent digest",
+      "passed": true
+    },
+    {
+      "check": "wrong independent journal identity",
+      "passed": true
+    },
+    {
+      "check": "future retained sequence",
+      "passed": true
+    },
+    {
+      "check": "negative retained sequence",
+      "passed": true
+    },
+    {
+      "check": "fractional retained sequence",
+      "passed": true
+    },
+    {
+      "check": "ambiguous duplicate JSON keys",
+      "passed": true
+    },
+    {
+      "check": "over-limit input",
+      "passed": true
+    },
+    {
+      "check": "standalone CLI needs no Qt/database/private key",
+      "passed": true
+    },
+    {
+      "check": "independent producer accepted by both verifier implementations",
+      "passed": true
+    },
+    {
+      "check": "fully signed self-review is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed unassigned reviewer is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed scope change is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed previous review mutation is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed reviewer activation is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed gate without active permission is rejected",
+      "passed": true
+    },
+    {
+      "check": "fully signed false system attribution is rejected",
+      "passed": true
+    },
+    {
+      "check": "signed operation cannot cite a different approval digest",
+      "passed": true
+    },
+    {
+      "check": "signed operation cannot cite activation as approval",
+      "passed": true
+    },
+    {
+      "check": "signed operation requester must match approval",
+      "passed": true
+    },
+    {
+      "check": "operation receipts reject unapproved content fields",
+      "passed": true
+    },
+    {
+      "check": "operation result without a start is rejected",
+      "passed": true
+    },
+    {
+      "check": "duplicate terminal operation result is rejected",
+      "passed": true
+    },
+    {
+      "check": "success after authorization revocation is rejected",
+      "passed": true
+    },
+    {
+      "check": "operation result cannot change the declared case reference",
+      "passed": true
+    },
+    {
+      "check": "completed scan requires a well-formed source digest",
+      "passed": true
+    },
+    {
+      "check": "independent partition result accepted by both verifiers",
+      "passed": true
+    },
+    {
+      "check": "completed partition result requires a source digest",
+      "passed": true
+    },
+    {
+      "check": "partition operation cannot use another capability",
+      "passed": true
+    },
+    {
+      "check": "partition terminal result cannot change worker kind",
+      "passed": true
+    },
+    {
+      "check": "cancelled partition without invented digests is accepted",
+      "passed": true
+    },
+    {
+      "check": "independent signed case preparation and reconciliation",
+      "passed": true
+    },
+    {
+      "check": "migrated local case adapter workbench-export-manifest",
+      "passed": true
+    },
+    {
+      "check": "migrated local case adapter chromium-bookmarks",
+      "passed": true
+    },
+    {
+      "check": "migrated local case adapter dc-image-partitions",
+      "passed": true
+    },
+    {
+      "check": "destructive adapter cannot enter case journal",
+      "passed": true
+    },
+    {
+      "check": "case outcome cannot change evidence binding",
+      "passed": true
+    },
+    {
+      "check": "case outcome cannot change report digest",
+      "passed": true
+    },
+    {
+      "check": "case intent cannot contain private paths",
+      "passed": true
+    },
+    {
+      "check": "case result without durable preparation rejected",
+      "passed": true
+    },
+    {
+      "check": "duplicate case recovery event rejected",
+      "passed": true
+    },
+    {
+      "check": "case preparation cannot forge requester identity",
+      "passed": true
+    },
+    {
+      "check": "case expected revision cannot be boolean",
+      "passed": true
+    },
+    {
+      "check": "signed case invocation reference cannot be reused",
+      "passed": true
+    },
+    {
+      "check": "signed case analysis UUID cannot be reused",
+      "passed": true
+    },
+    {
+      "check": "case UUIDs must use canonical spelling",
+      "passed": true
+    },
+    {
+      "check": "registered partition prepared/candidate/completed original approval",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 6:caseId",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 6:requestId",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 6:preparedUtc",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 6:toolSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 6:reportSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 7:toolSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 7:sourceSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 7:evidenceId",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 8:reportSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 8:caseBeforeSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 9:outputSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition rejects altered 9:sourceSha256",
+      "passed": true
+    },
+    {
+      "check": "registered partition cannot prepare without original operation start",
+      "passed": true
+    },
+    {
+      "check": "registered partition cannot complete without durable candidate",
+      "passed": true
+    },
+    {
+      "check": "registered partition cannot append a second candidate",
+      "passed": true
+    },
+    {
+      "check": "registered partition candidate after revocation rejected",
+      "passed": true
+    },
+    {
+      "check": "registered partition interrupted external outcome stays unknown",
+      "passed": true
+    }
+  ],
+  "passed": 73,
+  "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"
+}

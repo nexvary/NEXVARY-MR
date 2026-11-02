@@ -1,0 +1,10 @@
+test_chromium_parse_and_secret_redaction (test_core_parsers.BrowserForensicsTests.test_chromium_parse_and_secret_redaction) ... ok
+test_deep_profile_cache_trace (test_core_parsers.BrowserForensicsTests.test_deep_profile_cache_trace) ... ok
+test_firefox_parse (test_core_parsers.BrowserForensicsTests.test_firefox_parse) ... ok
+test_residual_scan (test_core_parsers.BrowserForensicsTests.test_residual_scan) ... ok
+test_search_query_derivation (test_core_parsers.BrowserForensicsTests.test_search_query_derivation) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.271s
+
+OK

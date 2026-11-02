@@ -1,0 +1,18 @@
+********* Start testing of SecurityTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : SecurityTests::initTestCase()
+PASS   : SecurityTests::adapterAndIntegrity()
+PASS   : SecurityTests::cancellationAndBounds()
+PASS   : SecurityTests::versionDeadlineIsReported()
+PASS   : SecurityTests::bridgeConsentAndExport()
+PASS   : SecurityTests::databaseUpdaterOutcomes(success)
+PASS   : SecurityTests::databaseUpdaterOutcomes(network-failure)
+PASS   : SecurityTests::databaseUpdaterOutcomes(empty-result)
+PASS   : SecurityTests::databaseUpdaterOutcomes(timeout)
+PASS   : SecurityTests::databaseUpdaterOutcomes(output-bound)
+PASS   : SecurityTests::databaseLockAndPreCancellation()
+PASS   : SecurityTests::bridgeUpdateConsentAndScanExclusion()
+PASS   : SecurityTests::realClamAvWithSyntheticSignature()
+PASS   : SecurityTests::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1864ms
+********* Finished testing of SecurityTests *********

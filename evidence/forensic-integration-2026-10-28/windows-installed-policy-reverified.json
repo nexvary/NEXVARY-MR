@@ -1,0 +1,22 @@
+{
+  "actions": {
+    "activate": 1,
+    "approve": 1,
+    "operation-allowed": 4,
+    "operation-denied": 7,
+    "policy-rejection": 7,
+    "request": 1,
+    "review": 1,
+    "session-close": 1
+  },
+  "caseOperations": {},
+  "events": 23,
+  "head": "3e8043fbd987d557117d075294fd3baf731b8afe688781695d45cb144a7db2aa",
+  "identityScope": "local keys/declared roles; not agency identity or independent people",
+  "operationScope": "signed native worker receipts for integrated kinds; no external OS/tool truth or universal completion proof",
+  "operations": {},
+  "requests": 1,
+  "retainedPrefixVerified": 23,
+  "timeScope": "recorded local UTC; no external trusted time",
+  "valid": true
+}

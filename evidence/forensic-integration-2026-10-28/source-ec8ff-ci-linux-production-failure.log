@@ -1,0 +1,1967 @@
+﻿2026-10-28T05:57:06.7425811Z Current runner version: '2.338.0'
+2026-10-28T05:57:06.7449316Z ##[group]Runner Image Provisioner
+2026-10-28T05:57:06.7450262Z Hosted Compute Agent
+2026-10-28T05:57:06.7450831Z Version: 20261021.618
+2026-10-28T05:57:06.7451823Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T05:57:06.7452551Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T05:57:06.7453243Z Worker ID: {a166a75c-7aff-4ea2-b582-3f0a4ab0436e}
+2026-10-28T05:57:06.7453976Z Region: centralus
+2026-10-28T05:57:06.7454531Z Cloud: Azure
+2026-10-28T05:57:06.7455074Z ##[endgroup]
+2026-10-28T05:57:06.7456479Z ##[group]Operating System
+2026-10-28T05:57:06.7457142Z Ubuntu
+2026-10-28T05:57:06.7457701Z 24.04.5
+2026-10-28T05:57:06.7458216Z LTS
+2026-10-28T05:57:06.7458744Z ##[endgroup]
+2026-10-28T05:57:06.7459289Z ##[group]Runner Image
+2026-10-28T05:57:06.7459849Z Image: ubuntu-24.04
+2026-10-28T05:57:06.7460458Z Version: 20261025.353.1
+2026-10-28T05:57:06.7461966Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-28T05:57:06.7463506Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-28T05:57:06.7464427Z ##[endgroup]
+2026-10-28T05:57:06.7465583Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T05:57:06.7467937Z Contents: read
+2026-10-28T05:57:06.7468575Z Metadata: read
+2026-10-28T05:57:06.7469118Z ##[endgroup]
+2026-10-28T05:57:06.7471378Z Secret source: Actions
+2026-10-28T05:57:06.7472465Z Cache mode: write
+2026-10-28T05:57:06.7473170Z Prepare workflow directory
+2026-10-28T05:57:06.7887628Z Prepare all required actions
+2026-10-28T05:57:06.7936698Z Getting action download info
+2026-10-28T05:57:07.0682748Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-28T05:57:07.1854060Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-28T05:57:07.4235153Z Complete job name: linux-forensic-integration (production)
+2026-10-28T05:57:07.4946508Z ##[group]Run actions/checkout@v4
+2026-10-28T05:57:07.4947599Z with:
+2026-10-28T05:57:07.4948099Z   repository: nexvary/NEXVARY-MR
+2026-10-28T05:57:07.4952332Z   token: ***
+2026-10-28T05:57:07.4952838Z   ssh-strict: true
+2026-10-28T05:57:07.4953367Z   ssh-user: git
+2026-10-28T05:57:07.4953883Z   persist-credentials: true
+2026-10-28T05:57:07.4954424Z   clean: true
+2026-10-28T05:57:07.4954983Z   sparse-checkout-cone-mode: true
+2026-10-28T05:57:07.4955564Z   fetch-depth: 1
+2026-10-28T05:57:07.4956114Z   fetch-tags: false
+2026-10-28T05:57:07.4956620Z   show-progress: true
+2026-10-28T05:57:07.4957108Z   lfs: false
+2026-10-28T05:57:07.4957635Z   submodules: false
+2026-10-28T05:57:07.4958144Z   set-safe-directory: true
+2026-10-28T05:57:07.4958707Z   allow-unsafe-pr-checkout: false
+2026-10-28T05:57:07.4959484Z env:
+2026-10-28T05:57:07.4959969Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T05:57:07.4960572Z   QT_QUICK_BACKEND: software
+2026-10-28T05:57:07.4961377Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T05:57:07.4962026Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T05:57:07.4962633Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T05:57:07.4963242Z ##[endgroup]
+2026-10-28T05:57:07.7390526Z Syncing repository: nexvary/NEXVARY-MR
+2026-10-28T05:57:07.7393666Z ##[group]Getting Git version info
+2026-10-28T05:57:07.7394887Z Working directory is '/home/runner/work/NEXVARY-MR/NEXVARY-MR'
+2026-10-28T05:57:07.7396874Z [command]/usr/bin/git version
+2026-10-28T05:57:07.7461584Z git version 2.56.0
+2026-10-28T05:57:07.7482251Z ##[endgroup]
+2026-10-28T05:57:07.7493413Z Temporarily overriding HOME='/home/runner/work/_temp/b266541c-f598-43c6-a6ed-aab744059da6' before making global git config changes
+2026-10-28T05:57:07.7495799Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T05:57:07.7499380Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/NEXVARY-MR/NEXVARY-MR
+2026-10-28T05:57:07.7545163Z Deleting the contents of '/home/runner/work/NEXVARY-MR/NEXVARY-MR'
+2026-10-28T05:57:07.7548375Z ##[group]Initializing the repository
+2026-10-28T05:57:07.7551915Z [command]/usr/bin/git init /home/runner/work/NEXVARY-MR/NEXVARY-MR
+2026-10-28T05:57:07.7652644Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-28T05:57:07.7654875Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-28T05:57:07.7657109Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-28T05:57:07.7658710Z hint: call:
+2026-10-28T05:57:07.7659673Z hint:
+2026-10-28T05:57:07.7660831Z hint: 	git config --global init.defaultBranch <name>
+2026-10-28T05:57:07.7662559Z hint:
+2026-10-28T05:57:07.7663818Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-28T05:57:07.7665503Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-28T05:57:07.7667227Z hint:
+2026-10-28T05:57:07.7668131Z hint: 	git branch -m <name>
+2026-10-28T05:57:07.7669163Z hint:
+2026-10-28T05:57:07.7670525Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-28T05:57:07.7672663Z Initialized empty Git repository in /home/runner/work/NEXVARY-MR/NEXVARY-MR/.git/
+2026-10-28T05:57:07.7675756Z [command]/usr/bin/git remote add origin https://github.com/nexvary/NEXVARY-MR
+2026-10-28T05:57:07.7721844Z ##[endgroup]
+2026-10-28T05:57:07.7723808Z ##[group]Disabling automatic garbage collection
+2026-10-28T05:57:07.7725443Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-28T05:57:07.7758167Z ##[endgroup]
+2026-10-28T05:57:07.7759870Z ##[group]Setting up auth
+2026-10-28T05:57:07.7765068Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T05:57:07.7800705Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T05:57:07.8182239Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T05:57:07.8190240Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T05:57:07.8415342Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T05:57:07.8450528Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T05:57:07.8675558Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-28T05:57:07.8718973Z ##[endgroup]
+2026-10-28T05:57:07.8720306Z ##[group]Fetching the repository
+2026-10-28T05:57:07.8732466Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e15260a2660baf350bbe1b0657dbe38b81239da8:refs/remotes/pull/17/merge
+2026-10-28T05:57:09.4660670Z From https://github.com/nexvary/NEXVARY-MR
+2026-10-28T05:57:09.4664206Z  * [new ref]         e15260a2660baf350bbe1b0657dbe38b81239da8 -> pull/17/merge
+2026-10-28T05:57:09.4671626Z ##[endgroup]
+2026-10-28T05:57:09.4674092Z ##[group]Determining the checkout info
+2026-10-28T05:57:09.4677196Z ##[endgroup]
+2026-10-28T05:57:09.4679617Z [command]/usr/bin/git sparse-checkout disable
+2026-10-28T05:57:09.4734854Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-28T05:57:09.4768333Z ##[group]Checking out the ref
+2026-10-28T05:57:09.4771200Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/17/merge
+2026-10-28T05:57:09.6231794Z Note: switching to 'refs/remotes/pull/17/merge'.
+2026-10-28T05:57:09.6232943Z 
+2026-10-28T05:57:09.6234155Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-28T05:57:09.6236501Z changes and commit them, and you can discard any commits you make in this
+2026-10-28T05:57:09.6239449Z state without impacting any branches by switching back to a branch.
+2026-10-28T05:57:09.6241729Z 
+2026-10-28T05:57:09.6242961Z If you want to create a new branch to retain commits you create, you may
+2026-10-28T05:57:09.6245589Z do so (now or later) by using -c with the switch command. Example:
+2026-10-28T05:57:09.6247124Z 
+2026-10-28T05:57:09.6247870Z   git switch -c <new-branch-name>
+2026-10-28T05:57:09.6249071Z 
+2026-10-28T05:57:09.6250039Z Or undo this operation with:
+2026-10-28T05:57:09.6251409Z 
+2026-10-28T05:57:09.6252201Z   git switch -
+2026-10-28T05:57:09.6253192Z 
+2026-10-28T05:57:09.6254881Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-28T05:57:09.6257022Z 
+2026-10-28T05:57:09.6260129Z HEAD is now at e15260a Merge ec8ff812beb914cbea71c6ad79cc5cada0befb84 into eb2322140956a55a50ee7494570f35573a1ce0c0
+2026-10-28T05:57:09.6266269Z ##[endgroup]
+2026-10-28T05:57:09.6291428Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T05:57:09.6317058Z e15260a2660baf350bbe1b0657dbe38b81239da8
+2026-10-28T05:57:09.6602826Z ##[group]Run # Prefer the signed official archive over the Azure mirror that timed
+2026-10-28T05:57:09.6605708Z [36;1m# Prefer the signed official archive over the Azure mirror that timed[0m
+2026-10-28T05:57:09.6608228Z [36;1m# out while transferring packages. Keep normal APT authentication,[0m
+2026-10-28T05:57:09.6610582Z [36;1m# retries, IO timeouts and the existing bounded step deadline.[0m
+2026-10-28T05:57:09.6613414Z [36;1mif [ -f /etc/apt/apt-mirrors.txt ]; then[0m
+2026-10-28T05:57:09.6616906Z [36;1m  printf 'https://archive.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null[0m
+2026-10-28T05:57:09.6620329Z [36;1mfi[0m
+2026-10-28T05:57:09.6622104Z [36;1mif [ -f /etc/apt/apt-mirrors-security.txt ]; then[0m
+2026-10-28T05:57:09.6626002Z [36;1m  printf 'https://security.ubuntu.com/ubuntu/\tpriority:1\nhttps://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors-security.txt >/dev/null[0m
+2026-10-28T05:57:09.6629472Z [36;1mfi[0m
+2026-10-28T05:57:09.6632075Z [36;1msudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update[0m
+2026-10-28T05:57:09.6642960Z [36;1msudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install -y cmake ninja-build gdb qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins libqt6svg6 qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtquick-dialogs qml6-module-qttest qml6-module-qtqml-workerscript sleuthkit clamav zbar-tools poppler-utils python3-venv python3-cryptography curl[0m
+2026-10-28T05:57:09.6671913Z shell: /usr/bin/bash -e {0}
+2026-10-28T05:57:09.6673280Z env:
+2026-10-28T05:57:09.6674371Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T05:57:09.6675803Z   QT_QUICK_BACKEND: software
+2026-10-28T05:57:09.6677152Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T05:57:09.6678533Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T05:57:09.6679977Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T05:57:09.6681326Z ##[endgroup]
+2026-10-28T05:57:09.7386318Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [98 B]
+2026-10-28T05:57:09.7831377Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-28T05:57:09.8490267Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [666 kB]
+2026-10-28T05:57:09.8664509Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [602 kB]
+2026-10-28T05:57:10.5763684Z Hit:2 https://archive.ubuntu.com/ubuntu noble InRelease
+2026-10-28T05:57:10.7210582Z Get:3 https://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-28T05:57:11.2324502Z Get:4 https://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-28T05:57:11.4570301Z Get:5 https://archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-28T05:57:11.6689397Z Get:9 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1406 kB]
+2026-10-28T05:57:12.2523848Z Get:10 https://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
+2026-10-28T05:57:12.4067571Z Get:11 https://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-10-28T05:57:12.6564080Z Get:12 https://archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-10-28T05:57:12.8077001Z Get:13 https://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1809 kB]
+2026-10-28T05:57:13.0339306Z Get:14 https://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+2026-10-28T05:57:13.1863907Z Get:15 https://archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-10-28T05:57:13.3216666Z Get:16 https://archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-10-28T05:57:13.5057085Z Get:17 https://archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-28T05:57:13.6500418Z Get:18 https://archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-10-28T05:57:13.8376430Z Get:19 https://archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-10-28T05:57:16.1099858Z Fetched 10.5 MB in 4s (2528 kB/s)
+2026-10-28T05:57:17.1268698Z Reading package lists...
+2026-10-28T05:57:17.1641553Z Reading package lists...
+2026-10-28T05:57:17.3698740Z Building dependency tree...
+2026-10-28T05:57:17.3704055Z Reading state information...
+2026-10-28T05:57:17.5468786Z python3-venv is already the newest version (3.12.3-0ubuntu2.1).
+2026-10-28T05:57:17.5469889Z python3-cryptography is already the newest version (41.0.7-4ubuntu0.4).
+2026-10-28T05:57:17.5471207Z python3-cryptography set to manually installed.
+2026-10-28T05:57:17.5472118Z curl is already the newest version (8.5.0-2ubuntu10.16).
+2026-10-28T05:57:17.5472918Z The following additional packages will be installed:
+2026-10-28T05:57:17.5473991Z   clamav-base clamav-freshclam cmake-data libafflib0t64 libb2-1 libbabeltrace1
+2026-10-28T05:57:17.5475636Z   libbfio1 libc6-dbg libclamav12 libdate-manip-perl libdjvulibre-text
+2026-10-28T05:57:17.5476719Z   libdjvulibre21 libdouble-conversion3 libegl-mesa0 libegl1 libewf2 libgl-dev
+2026-10-28T05:57:17.5477682Z   libglx-dev libimath-3-1-29t64 libinput-bin libinput10 libipt2 libjsoncpp25
+2026-10-28T05:57:17.5478616Z   libjxr-tools libjxr0t64 libmagickcore-6.q16-7-extra libmd4c0 libmng2
+2026-10-28T05:57:17.5479609Z   libmtdev1t64 libopenexr-3-1-30 libopengl-dev libopengl0 libpoppler134
+2026-10-28T05:57:17.5480472Z   libproxy1v5 libpthread-stubs0-dev libqt6concurrent6t64 libqt6core6t64
+2026-10-28T05:57:17.5481621Z   libqt6dbus6t64 libqt6gui6t64 libqt6jsonrpc6 libqt6labsanimation6
+2026-10-28T05:57:17.5482498Z   libqt6labsfolderlistmodel6 libqt6labsqmlmodels6 libqt6labssettings6
+2026-10-28T05:57:17.5483583Z   libqt6labssharedimage6 libqt6labswavefrontmesh6 libqt6languageserver6
+2026-10-28T05:57:17.5484609Z   libqt6network6t64 libqt6opengl6t64 libqt6openglwidgets6t64
+2026-10-28T05:57:17.5485448Z   libqt6printsupport6t64 libqt6qml6 libqt6qmlcompiler6 libqt6qmlcore6
+2026-10-28T05:57:17.5486549Z   libqt6qmllocalstorage6 libqt6qmlmodels6 libqt6qmlworkerscript6
+2026-10-28T05:57:17.5487455Z   libqt6qmlxmllistmodel6 libqt6quick6 libqt6quickcontrols2-6
+2026-10-28T05:57:17.5488288Z   libqt6quickcontrols2impl6 libqt6quickdialogs2-6
+2026-10-28T05:57:17.5489240Z   libqt6quickdialogs2quickimpl6 libqt6quickdialogs2utils6 libqt6quicklayouts6
+2026-10-28T05:57:17.5490199Z   libqt6quickparticles6 libqt6quickshapes6 libqt6quicktemplates2-6
+2026-10-28T05:57:17.5491408Z   libqt6quicktest6 libqt6quickwidgets6 libqt6sql6-sqlite libqt6sql6t64
+2026-10-28T05:57:17.5492116Z   libqt6test6t64 libqt6waylandclient6 libqt6waylandcompositor6
+2026-10-28T05:57:17.5492638Z   libqt6waylandeglclienthwintegration6
+2026-10-28T05:57:17.5493269Z   libqt6waylandeglcompositorhwintegration6 libqt6widgets6t64
+2026-10-28T05:57:17.5493968Z   libqt6wlshellintegration6 libqt6xml6t64 librhash0 libsource-highlight-common
+2026-10-28T05:57:17.5494931Z   libsource-highlight4t64 libts0t64 libtsk19t64 libv4l-0t64 libv4lconvert0t64
+2026-10-28T05:57:17.5495603Z   libvhdi1 libvmdk1 libvulkan-dev libwacom-common libwacom9 libwayland-server0
+2026-10-28T05:57:17.5496294Z   libwmflite-0.2-7 libx11-dev libxau-dev libxcb-icccm4 libxcb-image0
+2026-10-28T05:57:17.5496937Z   libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xkb1
+2026-10-28T05:57:17.5497517Z   libxcb1-dev libxdmcp-dev libxkbcommon-x11-0 libzbar0t64 poppler-data qmake6
+2026-10-28T05:57:17.5498148Z   qmake6-bin qt6-base-dev-tools qt6-declarative-dev-tools
+2026-10-28T05:57:17.5498794Z   qt6-gtk-platformtheme qt6-qmllint-plugins qt6-qmltooling-plugins
+2026-10-28T05:57:17.5499304Z   qt6-qpa-plugins qt6-translations-l10n qt6-wayland x11proto-dev
+2026-10-28T05:57:17.5499773Z   xorg-sgml-doctools xtrans-dev
+2026-10-28T05:57:17.5500118Z Suggested packages:
+2026-10-28T05:57:17.5500716Z   libclamunrar clamav-doc cmake-doc cmake-format elpa-cmake-mode gdb-doc
+2026-10-28T05:57:17.5501585Z   gdbserver libclamunrar11 inkscape libwacom-bin libx11-doc libxcb-doc
+2026-10-28T05:57:17.5502244Z   ghostscript fonts-japanese-mincho | fonts-ipafont-mincho
+2026-10-28T05:57:17.5502936Z   fonts-japanese-gothic | fonts-ipafont-gothic fonts-arphic-ukai
+2026-10-28T05:57:17.5503730Z   fonts-arphic-uming fonts-nanum autopsy mac-robber zbarcam-gtk zbarcam-qt
+2026-10-28T05:57:17.5851387Z The following NEW packages will be installed:
+2026-10-28T05:57:17.5852329Z   clamav clamav-base clamav-freshclam cmake cmake-data gdb libafflib0t64
+2026-10-28T05:57:17.5853150Z   libb2-1 libbabeltrace1 libbfio1 libc6-dbg libclamav12 libdate-manip-perl
+2026-10-28T05:57:17.5854016Z   libdjvulibre-text libdjvulibre21 libdouble-conversion3 libegl-mesa0 libegl1
+2026-10-28T05:57:17.5854851Z   libewf2 libgl-dev libglx-dev libimath-3-1-29t64 libinput-bin libinput10
+2026-10-28T05:57:17.5855738Z   libipt2 libjsoncpp25 libjxr-tools libjxr0t64 libmagickcore-6.q16-7-extra
+2026-10-28T05:57:17.5856566Z   libmd4c0 libmng2 libmtdev1t64 libopenexr-3-1-30 libopengl-dev libopengl0
+2026-10-28T05:57:17.5857326Z   libpoppler134 libproxy1v5 libpthread-stubs0-dev libqt6concurrent6t64
+2026-10-28T05:57:17.5858110Z   libqt6core6t64 libqt6dbus6t64 libqt6gui6t64 libqt6jsonrpc6
+2026-10-28T05:57:17.5858894Z   libqt6labsanimation6 libqt6labsfolderlistmodel6 libqt6labsqmlmodels6
+2026-10-28T05:57:17.5859616Z   libqt6labssettings6 libqt6labssharedimage6 libqt6labswavefrontmesh6
+2026-10-28T05:57:17.5860460Z   libqt6languageserver6 libqt6network6t64 libqt6opengl6t64
+2026-10-28T05:57:17.5861402Z   libqt6openglwidgets6t64 libqt6printsupport6t64 libqt6qml6 libqt6qmlcompiler6
+2026-10-28T05:57:17.5862232Z   libqt6qmlcore6 libqt6qmllocalstorage6 libqt6qmlmodels6
+2026-10-28T05:57:17.5862922Z   libqt6qmlworkerscript6 libqt6qmlxmllistmodel6 libqt6quick6
+2026-10-28T05:57:17.5863686Z   libqt6quickcontrols2-6 libqt6quickcontrols2impl6 libqt6quickdialogs2-6
+2026-10-28T05:57:17.5864615Z   libqt6quickdialogs2quickimpl6 libqt6quickdialogs2utils6 libqt6quicklayouts6
+2026-10-28T05:57:17.5865477Z   libqt6quickparticles6 libqt6quickshapes6 libqt6quicktemplates2-6
+2026-10-28T05:57:17.5866395Z   libqt6quicktest6 libqt6quickwidgets6 libqt6sql6-sqlite libqt6sql6t64
+2026-10-28T05:57:17.5867361Z   libqt6svg6 libqt6test6t64 libqt6waylandclient6 libqt6waylandcompositor6
+2026-10-28T05:57:17.5868264Z   libqt6waylandeglclienthwintegration6
+2026-10-28T05:57:17.5868978Z   libqt6waylandeglcompositorhwintegration6 libqt6widgets6t64
+2026-10-28T05:57:17.5869905Z   libqt6wlshellintegration6 libqt6xml6t64 librhash0 libsource-highlight-common
+2026-10-28T05:57:17.5871212Z   libsource-highlight4t64 libts0t64 libtsk19t64 libv4l-0t64 libv4lconvert0t64
+2026-10-28T05:57:17.5872492Z   libvhdi1 libvmdk1 libvulkan-dev libwacom-common libwacom9 libwayland-server0
+2026-10-28T05:57:17.5873499Z   libwmflite-0.2-7 libx11-dev libxau-dev libxcb-icccm4 libxcb-image0
+2026-10-28T05:57:17.5874501Z   libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xkb1
+2026-10-28T05:57:17.5875979Z   libxcb1-dev libxdmcp-dev libxkbcommon-x11-0 libzbar0t64 ninja-build
+2026-10-28T05:57:17.5876973Z   poppler-data poppler-utils qmake6 qmake6-bin qml6-module-qtqml-workerscript
+2026-10-28T05:57:17.5877987Z   qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-dialogs
+2026-10-28T05:57:17.5878832Z   qml6-module-qtquick-layouts qml6-module-qtquick-templates
+2026-10-28T05:57:17.5879721Z   qml6-module-qtquick-window qml6-module-qttest qt6-base-dev
+2026-10-28T05:57:17.5880597Z   qt6-base-dev-tools qt6-declarative-dev qt6-declarative-dev-tools
+2026-10-28T05:57:17.5882591Z   qt6-gtk-platformtheme qt6-image-formats-plugins qt6-qmllint-plugins
+2026-10-28T05:57:17.5883728Z   qt6-qmltooling-plugins qt6-qpa-plugins qt6-translations-l10n qt6-wayland
+2026-10-28T05:57:17.5884684Z   sleuthkit x11proto-dev xorg-sgml-doctools xtrans-dev zbar-tools
+2026-10-28T05:57:17.6070943Z 0 upgraded, 140 newly installed, 0 to remove and 5 not upgraded.
+2026-10-28T05:57:17.6071890Z Need to get 82.7 MB of archives.
+2026-10-28T05:57:17.6072489Z After this operation, 352 MB of additional disk space will be used.
+2026-10-28T05:57:17.6073004Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [98 B]
+2026-10-28T05:57:17.8319435Z Get:2 https://archive.ubuntu.com/ubuntu noble/main amd64 poppler-data all 0.4.12-1 [2060 kB]
+2026-10-28T05:57:18.1355147Z Get:3 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 clamav-base all 1.5.4+dfsg-0ubuntu0.24.04.1 [112 kB]
+2026-10-28T05:57:18.1752319Z Get:4 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libclamav12 amd64 1.5.4+dfsg-0ubuntu0.24.04.1 [8110 kB]
+2026-10-28T05:57:18.3218216Z Get:5 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 clamav-freshclam amd64 1.5.4+dfsg-0ubuntu0.24.04.1 [102 kB]
+2026-10-28T05:57:18.3611797Z Get:6 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 clamav amd64 1.5.4+dfsg-0ubuntu0.24.04.1 [7324 kB]
+2026-10-28T05:57:18.4489812Z Get:7 https://archive.ubuntu.com/ubuntu noble/main amd64 libjsoncpp25 amd64 1.9.5-6build1 [82.8 kB]
+2026-10-28T05:57:18.4884555Z Get:8 https://archive.ubuntu.com/ubuntu noble/main amd64 librhash0 amd64 1.4.3-3build1 [129 kB]
+2026-10-28T05:57:18.5279083Z Get:9 https://archive.ubuntu.com/ubuntu noble/main amd64 cmake-data all 3.28.3-1build7 [2155 kB]
+2026-10-28T05:57:18.5806526Z Get:10 https://archive.ubuntu.com/ubuntu noble/main amd64 cmake amd64 3.28.3-1build7 [11.2 MB]
+2026-10-28T05:57:18.6857689Z Get:11 https://archive.ubuntu.com/ubuntu noble/main amd64 libbabeltrace1 amd64 1.5.11-3build3 [164 kB]
+2026-10-28T05:57:18.7252936Z Get:12 https://archive.ubuntu.com/ubuntu noble/main amd64 libipt2 amd64 2.0.6-1build1 [45.7 kB]
+2026-10-28T05:57:18.7642333Z Get:13 https://archive.ubuntu.com/ubuntu noble/main amd64 libsource-highlight-common all 3.1.9-4.3build1 [64.2 kB]
+2026-10-28T05:57:18.8035554Z Get:14 https://archive.ubuntu.com/ubuntu noble/main amd64 libsource-highlight4t64 amd64 3.1.9-4.3build1 [258 kB]
+2026-10-28T05:57:18.8455917Z Get:15 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 gdb amd64 15.1-1ubuntu1~24.04.1 [4083 kB]
+2026-10-28T05:57:18.9086027Z Get:16 https://archive.ubuntu.com/ubuntu noble/universe amd64 libafflib0t64 amd64 3.7.20-1.1ubuntu5 [224 kB]
+2026-10-28T05:57:18.9487088Z Get:17 https://archive.ubuntu.com/ubuntu noble/universe amd64 libb2-1 amd64 0.98.1-1.1build1 [45.0 kB]
+2026-10-28T05:57:18.9875635Z Get:18 https://archive.ubuntu.com/ubuntu noble/universe amd64 libbfio1 amd64 20170123-6 [306 kB]
+2026-10-28T05:57:19.0298151Z Get:19 https://archive.ubuntu.com/ubuntu noble/main amd64 libdate-manip-perl all 6.95-1 [923 kB]
+2026-10-28T05:57:19.0740942Z Get:20 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libdjvulibre-text all 3.5.28-2ubuntu0.24.04.2 [51.1 kB]
+2026-10-28T05:57:19.1926036Z Get:21 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libdjvulibre21 amd64 3.5.28-2ubuntu0.24.04.2 [638 kB]
+2026-10-28T05:57:19.2353767Z Get:22 https://archive.ubuntu.com/ubuntu noble/universe amd64 libdouble-conversion3 amd64 3.3.0-1build1 [40.3 kB]
+2026-10-28T05:57:19.2741622Z Get:23 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.4 [117 kB]
+2026-10-28T05:57:19.3136154Z Get:24 https://archive.ubuntu.com/ubuntu noble/universe amd64 libewf2 amd64 20140814-1build3 [573 kB]
+2026-10-28T05:57:19.3555816Z Get:25 https://archive.ubuntu.com/ubuntu noble/main amd64 xorg-sgml-doctools all 1:1.11-1.1 [10.9 kB]
+2026-10-28T05:57:19.3948449Z Get:26 https://archive.ubuntu.com/ubuntu noble/main amd64 x11proto-dev all 2023.2-1 [602 kB]
+2026-10-28T05:57:19.4373250Z Get:27 https://archive.ubuntu.com/ubuntu noble/main amd64 libxau-dev amd64 1:1.0.9-1build6 [9570 B]
+2026-10-28T05:57:19.4762656Z Get:28 https://archive.ubuntu.com/ubuntu noble/main amd64 libxdmcp-dev amd64 1:1.1.3-0ubuntu6 [26.5 kB]
+2026-10-28T05:57:19.5151656Z Get:29 https://archive.ubuntu.com/ubuntu noble/main amd64 xtrans-dev all 1.4.0-1 [68.9 kB]
+2026-10-28T05:57:19.5543025Z Get:30 https://archive.ubuntu.com/ubuntu noble/main amd64 libpthread-stubs0-dev amd64 0.4-1build3 [4746 B]
+2026-10-28T05:57:19.5932962Z Get:31 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb1-dev amd64 1.15-1ubuntu2 [85.8 kB]
+2026-10-28T05:57:19.6327016Z Get:32 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libx11-dev amd64 2:1.8.7-1ubuntu0.1 [732 kB]
+2026-10-28T05:57:19.6756946Z Get:33 https://archive.ubuntu.com/ubuntu noble/main amd64 libglx-dev amd64 1.7.0-1build1 [14.2 kB]
+2026-10-28T05:57:19.7143457Z Get:34 https://archive.ubuntu.com/ubuntu noble/main amd64 libgl-dev amd64 1.7.0-1build1 [102 kB]
+2026-10-28T05:57:19.7537185Z Get:35 https://archive.ubuntu.com/ubuntu noble/universe amd64 libimath-3-1-29t64 amd64 3.1.9-3.1ubuntu2 [72.2 kB]
+2026-10-28T05:57:19.7932494Z Get:36 https://archive.ubuntu.com/ubuntu noble/main amd64 libwacom-common all 2.10.0-2 [63.4 kB]
+2026-10-28T05:57:19.8323682Z Get:37 https://archive.ubuntu.com/ubuntu noble/main amd64 libwacom9 amd64 2.10.0-2 [23.9 kB]
+2026-10-28T05:57:19.8717356Z Get:38 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libinput-bin amd64 1.25.0-1ubuntu3.7 [23.6 kB]
+2026-10-28T05:57:19.9104077Z Get:39 https://archive.ubuntu.com/ubuntu noble/main amd64 libmtdev1t64 amd64 1.1.6-1.1build1 [14.4 kB]
+2026-10-28T05:57:20.0277600Z Get:40 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libinput10 amd64 1.25.0-1ubuntu3.7 [133 kB]
+2026-10-28T05:57:20.0673310Z Get:41 https://archive.ubuntu.com/ubuntu noble/universe amd64 libjxr0t64 amd64 1.2~git20170615.f752187-5.1ubuntu2 [181 kB]
+2026-10-28T05:57:20.1070950Z Get:42 https://archive.ubuntu.com/ubuntu noble/universe amd64 libjxr-tools amd64 1.2~git20170615.f752187-5.1ubuntu2 [15.8 kB]
+2026-10-28T05:57:20.1461175Z Get:43 https://archive.ubuntu.com/ubuntu noble/universe amd64 libopenexr-3-1-30 amd64 3.1.5-5.1build3 [1004 kB]
+2026-10-28T05:57:20.1917875Z Get:44 https://archive.ubuntu.com/ubuntu noble/main amd64 libwmflite-0.2-7 amd64 0.2.13-1.1build3 [68.6 kB]
+2026-10-28T05:57:20.2310897Z Get:45 https://archive.ubuntu.com/ubuntu noble/universe amd64 libmagickcore-6.q16-7-extra amd64 8:6.9.12.98+dfsg1-5.2build2 [70.1 kB]
+2026-10-28T05:57:20.2699944Z Get:46 https://archive.ubuntu.com/ubuntu noble/universe amd64 libmd4c0 amd64 0.4.8-1build1 [42.3 kB]
+2026-10-28T05:57:20.3091949Z Get:47 https://archive.ubuntu.com/ubuntu noble/universe amd64 libmng2 amd64 2.0.3+dfsg-4build1 [188 kB]
+2026-10-28T05:57:20.3488829Z Get:48 https://archive.ubuntu.com/ubuntu noble/main amd64 libopengl0 amd64 1.7.0-1build1 [32.8 kB]
+2026-10-28T05:57:20.3878795Z Get:49 https://archive.ubuntu.com/ubuntu noble/main amd64 libopengl-dev amd64 1.7.0-1build1 [3454 B]
+2026-10-28T05:57:20.4268999Z Get:50 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpoppler134 amd64 24.02.0-1ubuntu9.11 [1118 kB]
+2026-10-28T05:57:20.4722390Z Get:51 https://archive.ubuntu.com/ubuntu noble/main amd64 libproxy1v5 amd64 0.5.4-4build1 [26.5 kB]
+2026-10-28T05:57:20.5123203Z Get:52 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6core6t64 amd64 6.4.2+dfsg-21.1build5 [1789 kB]
+2026-10-28T05:57:20.5617849Z Get:53 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6concurrent6t64 amd64 6.4.2+dfsg-21.1build5 [33.4 kB]
+2026-10-28T05:57:20.6007147Z Get:54 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6dbus6t64 amd64 6.4.2+dfsg-21.1build5 [267 kB]
+2026-10-28T05:57:20.6412857Z Get:55 https://archive.ubuntu.com/ubuntu noble/main amd64 libegl1 amd64 1.7.0-1build1 [28.7 kB]
+2026-10-28T05:57:20.6804162Z Get:56 https://archive.ubuntu.com/ubuntu noble/universe amd64 libts0t64 amd64 1.22-1.1build1 [63.8 kB]
+2026-10-28T05:57:20.7193130Z Get:57 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-icccm4 amd64 0.4.1-1.1build3 [10.8 kB]
+2026-10-28T05:57:20.7579593Z Get:58 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-util1 amd64 0.4.0-1build3 [10.7 kB]
+2026-10-28T05:57:20.8751493Z Get:59 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-image0 amd64 0.4.0-2build1 [10.8 kB]
+2026-10-28T05:57:20.9142149Z Get:60 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-keysyms1 amd64 0.4.0-1build4 [7956 B]
+2026-10-28T05:57:20.9527571Z Get:61 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-render-util0 amd64 0.3.9-1build4 [9608 B]
+2026-10-28T05:57:20.9916246Z Get:62 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-shape0 amd64 1.15-1ubuntu2 [6100 B]
+2026-10-28T05:57:21.0301528Z Get:63 https://archive.ubuntu.com/ubuntu noble/main amd64 libxcb-xkb1 amd64 1.15-1ubuntu2 [32.3 kB]
+2026-10-28T05:57:21.0690837Z Get:64 https://archive.ubuntu.com/ubuntu noble/main amd64 libxkbcommon-x11-0 amd64 1.6.0-1build1 [14.5 kB]
+2026-10-28T05:57:21.1079435Z Get:65 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6gui6t64 amd64 6.4.2+dfsg-21.1build5 [3119 kB]
+2026-10-28T05:57:21.1653819Z Get:66 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6jsonrpc6 amd64 6.4.2-2build2 [51.3 kB]
+2026-10-28T05:57:21.2047084Z Get:67 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6network6t64 amd64 6.4.2+dfsg-21.1build5 [740 kB]
+2026-10-28T05:57:21.2479804Z Get:68 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qml6 amd64 6.4.2+dfsg-4build3 [1619 kB]
+2026-10-28T05:57:21.2961581Z Get:69 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labsanimation6 amd64 6.4.2+dfsg-4build3 [23.8 kB]
+2026-10-28T05:57:21.3354206Z Get:70 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labsfolderlistmodel6 amd64 6.4.2+dfsg-4build3 [37.3 kB]
+2026-10-28T05:57:21.3744629Z Get:71 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmlmodels6 amd64 6.4.2+dfsg-4build3 [267 kB]
+2026-10-28T05:57:21.4148304Z Get:72 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labsqmlmodels6 amd64 6.4.2+dfsg-4build3 [72.8 kB]
+2026-10-28T05:57:21.4540752Z Get:73 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labssettings6 amd64 6.4.2+dfsg-4build3 [27.7 kB]
+2026-10-28T05:57:21.4931744Z Get:74 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6opengl6t64 amd64 6.4.2+dfsg-21.1build5 [420 kB]
+2026-10-28T05:57:21.5342967Z Get:75 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quick6 amd64 6.4.2+dfsg-4build3 [2001 kB]
+2026-10-28T05:57:21.5864119Z Get:76 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labssharedimage6 amd64 6.4.2+dfsg-4build3 [24.1 kB]
+2026-10-28T05:57:21.7043039Z Get:77 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6labswavefrontmesh6 amd64 6.4.2+dfsg-4build3 [26.3 kB]
+2026-10-28T05:57:21.7438216Z Get:78 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6languageserver6 amd64 6.4.2-2build2 [299 kB]
+2026-10-28T05:57:21.7845331Z Get:79 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6widgets6t64 amd64 6.4.2+dfsg-21.1build5 [2648 kB]
+2026-10-28T05:57:21.8404218Z Get:80 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6openglwidgets6t64 amd64 6.4.2+dfsg-21.1build5 [40.4 kB]
+2026-10-28T05:57:21.8807179Z Get:81 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6printsupport6t64 amd64 6.4.2+dfsg-21.1build5 [222 kB]
+2026-10-28T05:57:21.9269585Z Get:82 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmlcompiler6 amd64 6.4.2+dfsg-4build3 [509 kB]
+2026-10-28T05:57:21.9689978Z Get:83 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmlcore6 amd64 6.4.2+dfsg-4build3 [26.1 kB]
+2026-10-28T05:57:22.0080766Z Get:84 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6sql6t64 amd64 6.4.2+dfsg-21.1build5 [141 kB]
+2026-10-28T05:57:22.0476242Z Get:85 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmllocalstorage6 amd64 6.4.2+dfsg-4build3 [26.9 kB]
+2026-10-28T05:57:22.0866472Z Get:86 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmlworkerscript6 amd64 6.4.2+dfsg-4build3 [34.3 kB]
+2026-10-28T05:57:22.1259084Z Get:87 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6qmlxmllistmodel6 amd64 6.4.2+dfsg-4build3 [48.7 kB]
+2026-10-28T05:57:22.1646929Z Get:88 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quicktemplates2-6 amd64 6.4.2+dfsg-4build3 [591 kB]
+2026-10-28T05:57:22.2073221Z Get:89 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickcontrols2-6 amd64 6.4.2+dfsg-4build3 [28.9 kB]
+2026-10-28T05:57:22.2465118Z Get:90 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickcontrols2impl6 amd64 6.4.2+dfsg-4build3 [105 kB]
+2026-10-28T05:57:22.2856790Z Get:91 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickdialogs2utils6 amd64 6.4.2+dfsg-4build3 [21.2 kB]
+2026-10-28T05:57:22.3253770Z Get:92 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickdialogs2quickimpl6 amd64 6.4.2+dfsg-4build3 [369 kB]
+2026-10-28T05:57:22.3663949Z Get:93 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickdialogs2-6 amd64 6.4.2+dfsg-4build3 [57.8 kB]
+2026-10-28T05:57:22.4839905Z Get:94 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quicklayouts6 amd64 6.4.2+dfsg-4build3 [65.2 kB]
+2026-10-28T05:57:22.5233774Z Get:95 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickparticles6 amd64 6.4.2+dfsg-4build3 [228 kB]
+2026-10-28T05:57:22.5639682Z Get:96 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickshapes6 amd64 6.4.2+dfsg-4build3 [90.0 kB]
+2026-10-28T05:57:22.6034453Z Get:97 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6test6t64 amd64 6.4.2+dfsg-21.1build5 [167 kB]
+2026-10-28T05:57:22.6431966Z Get:98 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quicktest6 amd64 6.4.2+dfsg-4build3 [120 kB]
+2026-10-28T05:57:22.6827522Z Get:99 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6quickwidgets6 amd64 6.4.2+dfsg-4build3 [43.8 kB]
+2026-10-28T05:57:22.7216304Z Get:100 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6sql6-sqlite amd64 6.4.2+dfsg-21.1build5 [57.8 kB]
+2026-10-28T05:57:22.7610895Z Get:101 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6svg6 amd64 6.4.2-4ubuntu3 [156 kB]
+2026-10-28T05:57:22.8006767Z Get:102 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6waylandclient6 amd64 6.4.2-5build3 [251 kB]
+2026-10-28T05:57:23.0371882Z Get:103 https://archive.ubuntu.com/ubuntu noble/main amd64 libwayland-server0 amd64 1.22.0-2.1build1 [33.9 kB]
+2026-10-28T05:57:23.1453369Z Get:104 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6waylandcompositor6 amd64 6.4.2-5build3 [427 kB]
+2026-10-28T05:57:23.3422690Z Get:105 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6waylandeglclienthwintegration6 amd64 6.4.2-5build3 [19.5 kB]
+2026-10-28T05:57:23.3870271Z Get:106 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6waylandeglcompositorhwintegration6 amd64 6.4.2-5build3 [15.2 kB]
+2026-10-28T05:57:23.4318632Z Get:107 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6wlshellintegration6 amd64 6.4.2-5build3 [38.0 kB]
+2026-10-28T05:57:23.4786353Z Get:108 https://archive.ubuntu.com/ubuntu noble/universe amd64 libqt6xml6t64 amd64 6.4.2+dfsg-21.1build5 [75.9 kB]
+2026-10-28T05:57:23.5280384Z Get:109 https://archive.ubuntu.com/ubuntu noble/universe amd64 libvhdi1 amd64 20210425-1build5 [425 kB]
+2026-10-28T05:57:23.6032174Z Get:110 https://archive.ubuntu.com/ubuntu noble/universe amd64 libvmdk1 amd64 20200926-2build5 [453 kB]
+2026-10-28T05:57:23.6745707Z Get:111 https://archive.ubuntu.com/ubuntu noble/universe amd64 libtsk19t64 amd64 4.12.1+dfsg-1.1ubuntu2 [435 kB]
+2026-10-28T05:57:23.7423437Z Get:112 https://archive.ubuntu.com/ubuntu noble/main amd64 libv4lconvert0t64 amd64 1.26.1-4build3 [87.6 kB]
+2026-10-28T05:57:23.7907367Z Get:113 https://archive.ubuntu.com/ubuntu noble/main amd64 libv4l-0t64 amd64 1.26.1-4build3 [46.9 kB]
+2026-10-28T05:57:23.8372017Z Get:114 https://archive.ubuntu.com/ubuntu noble/main amd64 libvulkan-dev amd64 1.3.275.0-1build1 [1239 kB]
+2026-10-28T05:57:23.9483561Z Get:115 https://archive.ubuntu.com/ubuntu noble/universe amd64 libzbar0t64 amd64 0.23.93-4build3 [123 kB]
+2026-10-28T05:57:23.9947434Z Get:116 https://archive.ubuntu.com/ubuntu noble/universe amd64 ninja-build amd64 1.11.1-2 [129 kB]
+2026-10-28T05:57:24.0410888Z Get:117 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 poppler-utils amd64 24.02.0-1ubuntu9.11 [212 kB]
+2026-10-28T05:57:24.0888106Z Get:118 https://archive.ubuntu.com/ubuntu noble/universe amd64 qmake6-bin amd64 6.4.2+dfsg-21.1build5 [624 kB]
+2026-10-28T05:57:24.1447017Z Get:119 https://archive.ubuntu.com/ubuntu noble/universe amd64 qmake6 amd64 6.4.2+dfsg-21.1build5 [178 kB]
+2026-10-28T05:57:24.1924427Z Get:120 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtqml-workerscript amd64 6.4.2+dfsg-4build3 [13.3 kB]
+2026-10-28T05:57:24.3215086Z Get:121 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick amd64 6.4.2+dfsg-4build3 [49.3 kB]
+2026-10-28T05:57:24.3668870Z Get:122 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick-controls amd64 6.4.2+dfsg-4build3 [1439 kB]
+2026-10-28T05:57:24.4372197Z Get:123 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick-dialogs amd64 6.4.2+dfsg-4build3 [32.5 kB]
+2026-10-28T05:57:24.4821477Z Get:124 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick-layouts amd64 6.4.2+dfsg-4build3 [14.3 kB]
+2026-10-28T05:57:24.5274082Z Get:125 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick-templates amd64 6.4.2+dfsg-4build3 [33.4 kB]
+2026-10-28T05:57:24.5721306Z Get:126 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qtquick-window amd64 6.4.2+dfsg-4build3 [13.5 kB]
+2026-10-28T05:57:24.6169039Z Get:127 https://archive.ubuntu.com/ubuntu noble/universe amd64 qml6-module-qttest amd64 6.4.2+dfsg-4build3 [30.1 kB]
+2026-10-28T05:57:24.6618468Z Get:128 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-base-dev-tools amd64 6.4.2+dfsg-21.1build5 [970 kB]
+2026-10-28T05:57:24.7228549Z Get:129 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-qpa-plugins amd64 6.4.2+dfsg-21.1build5 [89.3 kB]
+2026-10-28T05:57:24.7685288Z Get:130 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-base-dev amd64 6.4.2+dfsg-21.1build5 [1458 kB]
+2026-10-28T05:57:24.8374469Z Get:131 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-declarative-dev-tools amd64 6.4.2+dfsg-4build3 [1668 kB]
+2026-10-28T05:57:24.9095717Z Get:132 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-qmllint-plugins amd64 6.4.2+dfsg-4build3 [47.1 kB]
+2026-10-28T05:57:24.9552464Z Get:133 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-qmltooling-plugins amd64 6.4.2+dfsg-4build3 [263 kB]
+2026-10-28T05:57:25.0031447Z Get:134 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-declarative-dev amd64 6.4.2+dfsg-4build3 [1591 kB]
+2026-10-28T05:57:25.0710864Z Get:135 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-gtk-platformtheme amd64 6.4.2+dfsg-21.1build5 [55.1 kB]
+2026-10-28T05:57:25.1162566Z Get:136 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-image-formats-plugins amd64 6.4.2-5build2 [49.9 kB]
+2026-10-28T05:57:25.1613942Z Get:137 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-translations-l10n all 6.4.2-1 [1761 kB]
+2026-10-28T05:57:25.2319883Z Get:138 https://archive.ubuntu.com/ubuntu noble/universe amd64 qt6-wayland amd64 6.4.2-5build3 [127 kB]
+2026-10-28T05:57:25.3638039Z Get:139 https://archive.ubuntu.com/ubuntu noble/universe amd64 sleuthkit amd64 4.12.1+dfsg-1.1ubuntu2 [383 kB]
+2026-10-28T05:57:25.4135744Z Get:140 https://archive.ubuntu.com/ubuntu noble/universe amd64 zbar-tools amd64 0.23.93-4build3 [22.4 kB]
+2026-10-28T05:57:25.4586813Z Get:141 https://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc6-dbg amd64 2.39-0ubuntu8.9 [7474 kB]
+2026-10-28T05:57:25.9240538Z Preconfiguring packages ...
+2026-10-28T05:57:26.0046965Z Fetched 82.7 MB in 8s (10.4 MB/s)
+2026-10-28T05:57:26.0315435Z Selecting previously unselected package poppler-data.
+2026-10-28T05:57:26.0501414Z (Reading database ... 
+2026-10-28T05:57:26.0501958Z (Reading database ... 5%
+2026-10-28T05:57:26.0502420Z (Reading database ... 10%
+2026-10-28T05:57:26.0502960Z (Reading database ... 15%
+2026-10-28T05:57:26.0503440Z (Reading database ... 20%
+2026-10-28T05:57:26.0504103Z (Reading database ... 25%
+2026-10-28T05:57:26.0504608Z (Reading database ... 30%
+2026-10-28T05:57:26.0505093Z (Reading database ... 35%
+2026-10-28T05:57:26.0505467Z (Reading database ... 40%
+2026-10-28T05:57:26.0505817Z (Reading database ... 45%
+2026-10-28T05:57:26.0506137Z (Reading database ... 50%
+2026-10-28T05:57:26.0537058Z (Reading database ... 55%
+2026-10-28T05:57:26.2223758Z (Reading database ... 60%
+2026-10-28T05:57:26.3877291Z (Reading database ... 65%
+2026-10-28T05:57:26.6190626Z (Reading database ... 70%
+2026-10-28T05:57:26.8261998Z (Reading database ... 75%
+2026-10-28T05:57:26.9845881Z (Reading database ... 80%
+2026-10-28T05:57:27.1278925Z (Reading database ... 85%
+2026-10-28T05:57:27.2763589Z (Reading database ... 90%
+2026-10-28T05:57:27.4815048Z (Reading database ... 95%
+2026-10-28T05:57:27.4815840Z (Reading database ... 100%
+2026-10-28T05:57:27.4816468Z (Reading database ... 215504 files and directories currently installed.)
+2026-10-28T05:57:27.4864140Z Preparing to unpack .../000-poppler-data_0.4.12-1_all.deb ...
+2026-10-28T05:57:27.4968186Z Unpacking poppler-data (0.4.12-1) ...
+2026-10-28T05:57:27.6071911Z Selecting previously unselected package clamav-base.
+2026-10-28T05:57:27.6208490Z Preparing to unpack .../001-clamav-base_1.5.4+dfsg-0ubuntu0.24.04.1_all.deb ...
+2026-10-28T05:57:27.6220780Z Unpacking clamav-base (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:27.6448888Z Selecting previously unselected package libclamav12:amd64.
+2026-10-28T05:57:27.6584337Z Preparing to unpack .../002-libclamav12_1.5.4+dfsg-0ubuntu0.24.04.1_amd64.deb ...
+2026-10-28T05:57:27.6609269Z Unpacking libclamav12:amd64 (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:27.8747391Z Selecting previously unselected package clamav-freshclam.
+2026-10-28T05:57:27.8884631Z Preparing to unpack .../003-clamav-freshclam_1.5.4+dfsg-0ubuntu0.24.04.1_amd64.deb ...
+2026-10-28T05:57:27.8897776Z Unpacking clamav-freshclam (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:27.9742426Z Selecting previously unselected package clamav.
+2026-10-28T05:57:27.9876315Z Preparing to unpack .../004-clamav_1.5.4+dfsg-0ubuntu0.24.04.1_amd64.deb ...
+2026-10-28T05:57:27.9888631Z Unpacking clamav (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:28.1637584Z Selecting previously unselected package libjsoncpp25:amd64.
+2026-10-28T05:57:28.1771782Z Preparing to unpack .../005-libjsoncpp25_1.9.5-6build1_amd64.deb ...
+2026-10-28T05:57:28.1784597Z Unpacking libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-28T05:57:28.1988782Z Selecting previously unselected package librhash0:amd64.
+2026-10-28T05:57:28.2123985Z Preparing to unpack .../006-librhash0_1.4.3-3build1_amd64.deb ...
+2026-10-28T05:57:28.2135632Z Unpacking librhash0:amd64 (1.4.3-3build1) ...
+2026-10-28T05:57:28.2349623Z Selecting previously unselected package cmake-data.
+2026-10-28T05:57:28.2483295Z Preparing to unpack .../007-cmake-data_3.28.3-1build7_all.deb ...
+2026-10-28T05:57:28.2546595Z Unpacking cmake-data (3.28.3-1build7) ...
+2026-10-28T05:57:28.6545178Z Selecting previously unselected package cmake.
+2026-10-28T05:57:28.6697457Z Preparing to unpack .../008-cmake_3.28.3-1build7_amd64.deb ...
+2026-10-28T05:57:28.6710156Z Unpacking cmake (3.28.3-1build7) ...
+2026-10-28T05:57:28.9728776Z Selecting previously unselected package libbabeltrace1:amd64.
+2026-10-28T05:57:28.9866394Z Preparing to unpack .../009-libbabeltrace1_1.5.11-3build3_amd64.deb ...
+2026-10-28T05:57:28.9879490Z Unpacking libbabeltrace1:amd64 (1.5.11-3build3) ...
+2026-10-28T05:57:29.0105051Z Selecting previously unselected package libipt2.
+2026-10-28T05:57:29.0241875Z Preparing to unpack .../010-libipt2_2.0.6-1build1_amd64.deb ...
+2026-10-28T05:57:29.0254283Z Unpacking libipt2 (2.0.6-1build1) ...
+2026-10-28T05:57:29.0436945Z Selecting previously unselected package libsource-highlight-common.
+2026-10-28T05:57:29.0573884Z Preparing to unpack .../011-libsource-highlight-common_3.1.9-4.3build1_all.deb ...
+2026-10-28T05:57:29.0584842Z Unpacking libsource-highlight-common (3.1.9-4.3build1) ...
+2026-10-28T05:57:29.0950121Z Selecting previously unselected package libsource-highlight4t64:amd64.
+2026-10-28T05:57:29.1089238Z Preparing to unpack .../012-libsource-highlight4t64_3.1.9-4.3build1_amd64.deb ...
+2026-10-28T05:57:29.1098792Z Unpacking libsource-highlight4t64:amd64 (3.1.9-4.3build1) ...
+2026-10-28T05:57:29.1329369Z Selecting previously unselected package gdb.
+2026-10-28T05:57:29.1464928Z Preparing to unpack .../013-gdb_15.1-1ubuntu1~24.04.1_amd64.deb ...
+2026-10-28T05:57:29.1475328Z Unpacking gdb (15.1-1ubuntu1~24.04.1) ...
+2026-10-28T05:57:29.3035807Z Selecting previously unselected package libafflib0t64:amd64.
+2026-10-28T05:57:29.3172124Z Preparing to unpack .../014-libafflib0t64_3.7.20-1.1ubuntu5_amd64.deb ...
+2026-10-28T05:57:29.3186612Z Unpacking libafflib0t64:amd64 (3.7.20-1.1ubuntu5) ...
+2026-10-28T05:57:29.3421744Z Selecting previously unselected package libb2-1:amd64.
+2026-10-28T05:57:29.3558222Z Preparing to unpack .../015-libb2-1_0.98.1-1.1build1_amd64.deb ...
+2026-10-28T05:57:29.3569818Z Unpacking libb2-1:amd64 (0.98.1-1.1build1) ...
+2026-10-28T05:57:29.3767942Z Selecting previously unselected package libbfio1:amd64.
+2026-10-28T05:57:29.3905123Z Preparing to unpack .../016-libbfio1_20170123-6_amd64.deb ...
+2026-10-28T05:57:29.3915176Z Unpacking libbfio1:amd64 (20170123-6) ...
+2026-10-28T05:57:29.4344832Z Selecting previously unselected package libdate-manip-perl.
+2026-10-28T05:57:29.4480595Z Preparing to unpack .../017-libdate-manip-perl_6.95-1_all.deb ...
+2026-10-28T05:57:29.4490086Z Unpacking libdate-manip-perl (6.95-1) ...
+2026-10-28T05:57:29.6400111Z Selecting previously unselected package libdjvulibre-text.
+2026-10-28T05:57:29.6540218Z Preparing to unpack .../018-libdjvulibre-text_3.5.28-2ubuntu0.24.04.2_all.deb ...
+2026-10-28T05:57:29.6552958Z Unpacking libdjvulibre-text (3.5.28-2ubuntu0.24.04.2) ...
+2026-10-28T05:57:29.6762510Z Selecting previously unselected package libdjvulibre21:amd64.
+2026-10-28T05:57:29.6900606Z Preparing to unpack .../019-libdjvulibre21_3.5.28-2ubuntu0.24.04.2_amd64.deb ...
+2026-10-28T05:57:29.6914062Z Unpacking libdjvulibre21:amd64 (3.5.28-2ubuntu0.24.04.2) ...
+2026-10-28T05:57:29.7249318Z Selecting previously unselected package libdouble-conversion3:amd64.
+2026-10-28T05:57:29.7386813Z Preparing to unpack .../020-libdouble-conversion3_3.3.0-1build1_amd64.deb ...
+2026-10-28T05:57:29.7403521Z Unpacking libdouble-conversion3:amd64 (3.3.0-1build1) ...
+2026-10-28T05:57:29.7607615Z Selecting previously unselected package libegl-mesa0:amd64.
+2026-10-28T05:57:29.7744942Z Preparing to unpack .../021-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+2026-10-28T05:57:29.7756608Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-10-28T05:57:29.7965976Z Selecting previously unselected package libewf2:amd64.
+2026-10-28T05:57:29.8101621Z Preparing to unpack .../022-libewf2_20140814-1build3_amd64.deb ...
+2026-10-28T05:57:29.8111908Z Unpacking libewf2:amd64 (20140814-1build3) ...
+2026-10-28T05:57:29.8410484Z Selecting previously unselected package xorg-sgml-doctools.
+2026-10-28T05:57:29.8548132Z Preparing to unpack .../023-xorg-sgml-doctools_1%3a1.11-1.1_all.deb ...
+2026-10-28T05:57:29.8560955Z Unpacking xorg-sgml-doctools (1:1.11-1.1) ...
+2026-10-28T05:57:29.9274508Z Selecting previously unselected package x11proto-dev.
+2026-10-28T05:57:29.9408991Z Preparing to unpack .../024-x11proto-dev_2023.2-1_all.deb ...
+2026-10-28T05:57:29.9422309Z Unpacking x11proto-dev (2023.2-1) ...
+2026-10-28T05:57:29.9875322Z Selecting previously unselected package libxau-dev:amd64.
+2026-10-28T05:57:30.0013242Z Preparing to unpack .../025-libxau-dev_1%3a1.0.9-1build6_amd64.deb ...
+2026-10-28T05:57:30.0024045Z Unpacking libxau-dev:amd64 (1:1.0.9-1build6) ...
+2026-10-28T05:57:30.0214504Z Selecting previously unselected package libxdmcp-dev:amd64.
+2026-10-28T05:57:30.0350272Z Preparing to unpack .../026-libxdmcp-dev_1%3a1.1.3-0ubuntu6_amd64.deb ...
+2026-10-28T05:57:30.0360320Z Unpacking libxdmcp-dev:amd64 (1:1.1.3-0ubuntu6) ...
+2026-10-28T05:57:30.0536245Z Selecting previously unselected package xtrans-dev.
+2026-10-28T05:57:30.0673222Z Preparing to unpack .../027-xtrans-dev_1.4.0-1_all.deb ...
+2026-10-28T05:57:30.0684968Z Unpacking xtrans-dev (1.4.0-1) ...
+2026-10-28T05:57:30.0914278Z Selecting previously unselected package libpthread-stubs0-dev:amd64.
+2026-10-28T05:57:30.1051998Z Preparing to unpack .../028-libpthread-stubs0-dev_0.4-1build3_amd64.deb ...
+2026-10-28T05:57:30.1062978Z Unpacking libpthread-stubs0-dev:amd64 (0.4-1build3) ...
+2026-10-28T05:57:30.1237007Z Selecting previously unselected package libxcb1-dev:amd64.
+2026-10-28T05:57:30.1372749Z Preparing to unpack .../029-libxcb1-dev_1.15-1ubuntu2_amd64.deb ...
+2026-10-28T05:57:30.1385982Z Unpacking libxcb1-dev:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:30.1604306Z Selecting previously unselected package libx11-dev:amd64.
+2026-10-28T05:57:30.1741609Z Preparing to unpack .../030-libx11-dev_2%3a1.8.7-1ubuntu0.1_amd64.deb ...
+2026-10-28T05:57:30.1755091Z Unpacking libx11-dev:amd64 (2:1.8.7-1ubuntu0.1) ...
+2026-10-28T05:57:30.2131666Z Selecting previously unselected package libglx-dev:amd64.
+2026-10-28T05:57:30.2268007Z Preparing to unpack .../031-libglx-dev_1.7.0-1build1_amd64.deb ...
+2026-10-28T05:57:30.2280813Z Unpacking libglx-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:30.2455487Z Selecting previously unselected package libgl-dev:amd64.
+2026-10-28T05:57:30.2590110Z Preparing to unpack .../032-libgl-dev_1.7.0-1build1_amd64.deb ...
+2026-10-28T05:57:30.2601127Z Unpacking libgl-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:30.2856270Z Selecting previously unselected package libimath-3-1-29t64:amd64.
+2026-10-28T05:57:30.2993114Z Preparing to unpack .../033-libimath-3-1-29t64_3.1.9-3.1ubuntu2_amd64.deb ...
+2026-10-28T05:57:30.3003750Z Unpacking libimath-3-1-29t64:amd64 (3.1.9-3.1ubuntu2) ...
+2026-10-28T05:57:30.3205848Z Selecting previously unselected package libwacom-common.
+2026-10-28T05:57:30.3342377Z Preparing to unpack .../034-libwacom-common_2.10.0-2_all.deb ...
+2026-10-28T05:57:30.3353498Z Unpacking libwacom-common (2.10.0-2) ...
+2026-10-28T05:57:30.3920897Z Selecting previously unselected package libwacom9:amd64.
+2026-10-28T05:57:30.4059515Z Preparing to unpack .../035-libwacom9_2.10.0-2_amd64.deb ...
+2026-10-28T05:57:30.4080164Z Unpacking libwacom9:amd64 (2.10.0-2) ...
+2026-10-28T05:57:30.4256899Z Selecting previously unselected package libinput-bin.
+2026-10-28T05:57:30.4392493Z Preparing to unpack .../036-libinput-bin_1.25.0-1ubuntu3.7_amd64.deb ...
+2026-10-28T05:57:30.4402920Z Unpacking libinput-bin (1.25.0-1ubuntu3.7) ...
+2026-10-28T05:57:30.4620963Z Selecting previously unselected package libmtdev1t64:amd64.
+2026-10-28T05:57:30.4760746Z Preparing to unpack .../037-libmtdev1t64_1.1.6-1.1build1_amd64.deb ...
+2026-10-28T05:57:30.4771419Z Unpacking libmtdev1t64:amd64 (1.1.6-1.1build1) ...
+2026-10-28T05:57:30.4967333Z Selecting previously unselected package libinput10:amd64.
+2026-10-28T05:57:30.5103117Z Preparing to unpack .../038-libinput10_1.25.0-1ubuntu3.7_amd64.deb ...
+2026-10-28T05:57:30.5113566Z Unpacking libinput10:amd64 (1.25.0-1ubuntu3.7) ...
+2026-10-28T05:57:30.5318480Z Selecting previously unselected package libjxr0t64:amd64.
+2026-10-28T05:57:30.5457954Z Preparing to unpack .../039-libjxr0t64_1.2~git20170615.f752187-5.1ubuntu2_amd64.deb ...
+2026-10-28T05:57:30.5468981Z Unpacking libjxr0t64:amd64 (1.2~git20170615.f752187-5.1ubuntu2) ...
+2026-10-28T05:57:30.5671555Z Selecting previously unselected package libjxr-tools.
+2026-10-28T05:57:30.5807991Z Preparing to unpack .../040-libjxr-tools_1.2~git20170615.f752187-5.1ubuntu2_amd64.deb ...
+2026-10-28T05:57:30.5817569Z Unpacking libjxr-tools (1.2~git20170615.f752187-5.1ubuntu2) ...
+2026-10-28T05:57:30.6002875Z Selecting previously unselected package libopenexr-3-1-30:amd64.
+2026-10-28T05:57:30.6139786Z Preparing to unpack .../041-libopenexr-3-1-30_3.1.5-5.1build3_amd64.deb ...
+2026-10-28T05:57:30.6150695Z Unpacking libopenexr-3-1-30:amd64 (3.1.5-5.1build3) ...
+2026-10-28T05:57:30.6668460Z Selecting previously unselected package libwmflite-0.2-7:amd64.
+2026-10-28T05:57:30.6806399Z Preparing to unpack .../042-libwmflite-0.2-7_0.2.13-1.1build3_amd64.deb ...
+2026-10-28T05:57:30.6819113Z Unpacking libwmflite-0.2-7:amd64 (0.2.13-1.1build3) ...
+2026-10-28T05:57:30.7005716Z Selecting previously unselected package libmagickcore-6.q16-7-extra:amd64.
+2026-10-28T05:57:30.7142411Z Preparing to unpack .../043-libmagickcore-6.q16-7-extra_8%3a6.9.12.98+dfsg1-5.2build2_amd64.deb ...
+2026-10-28T05:57:30.7153278Z Unpacking libmagickcore-6.q16-7-extra:amd64 (8:6.9.12.98+dfsg1-5.2build2) ...
+2026-10-28T05:57:30.7372870Z Selecting previously unselected package libmd4c0:amd64.
+2026-10-28T05:57:30.7508365Z Preparing to unpack .../044-libmd4c0_0.4.8-1build1_amd64.deb ...
+2026-10-28T05:57:30.7519831Z Unpacking libmd4c0:amd64 (0.4.8-1build1) ...
+2026-10-28T05:57:30.7713961Z Selecting previously unselected package libmng2:amd64.
+2026-10-28T05:57:30.7851279Z Preparing to unpack .../045-libmng2_2.0.3+dfsg-4build1_amd64.deb ...
+2026-10-28T05:57:30.7860942Z Unpacking libmng2:amd64 (2.0.3+dfsg-4build1) ...
+2026-10-28T05:57:30.8079131Z Selecting previously unselected package libopengl0:amd64.
+2026-10-28T05:57:30.8215283Z Preparing to unpack .../046-libopengl0_1.7.0-1build1_amd64.deb ...
+2026-10-28T05:57:30.8227081Z Unpacking libopengl0:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:30.8406706Z Selecting previously unselected package libopengl-dev:amd64.
+2026-10-28T05:57:30.8543337Z Preparing to unpack .../047-libopengl-dev_1.7.0-1build1_amd64.deb ...
+2026-10-28T05:57:30.8556956Z Unpacking libopengl-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:30.8736805Z Selecting previously unselected package libpoppler134:amd64.
+2026-10-28T05:57:30.8871842Z Preparing to unpack .../048-libpoppler134_24.02.0-1ubuntu9.11_amd64.deb ...
+2026-10-28T05:57:30.8883319Z Unpacking libpoppler134:amd64 (24.02.0-1ubuntu9.11) ...
+2026-10-28T05:57:30.9401980Z Selecting previously unselected package libproxy1v5:amd64.
+2026-10-28T05:57:30.9539403Z Preparing to unpack .../049-libproxy1v5_0.5.4-4build1_amd64.deb ...
+2026-10-28T05:57:30.9549356Z Unpacking libproxy1v5:amd64 (0.5.4-4build1) ...
+2026-10-28T05:57:30.9768472Z Selecting previously unselected package libqt6core6t64:amd64.
+2026-10-28T05:57:30.9907664Z Preparing to unpack .../050-libqt6core6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:30.9921335Z Unpacking libqt6core6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.0610768Z Selecting previously unselected package libqt6concurrent6t64:amd64.
+2026-10-28T05:57:31.0749631Z Preparing to unpack .../051-libqt6concurrent6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:31.0761948Z Unpacking libqt6concurrent6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.0968746Z Selecting previously unselected package libqt6dbus6t64:amd64.
+2026-10-28T05:57:31.1108110Z Preparing to unpack .../052-libqt6dbus6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:31.1119329Z Unpacking libqt6dbus6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.1361666Z Selecting previously unselected package libegl1:amd64.
+2026-10-28T05:57:31.1498491Z Preparing to unpack .../053-libegl1_1.7.0-1build1_amd64.deb ...
+2026-10-28T05:57:31.1508313Z Unpacking libegl1:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:31.1703600Z Selecting previously unselected package libts0t64:amd64.
+2026-10-28T05:57:31.1842146Z Preparing to unpack .../054-libts0t64_1.22-1.1build1_amd64.deb ...
+2026-10-28T05:57:31.1851472Z Unpacking libts0t64:amd64 (1.22-1.1build1) ...
+2026-10-28T05:57:31.2095898Z Selecting previously unselected package libxcb-icccm4:amd64.
+2026-10-28T05:57:31.2232785Z Preparing to unpack .../055-libxcb-icccm4_0.4.1-1.1build3_amd64.deb ...
+2026-10-28T05:57:31.2243645Z Unpacking libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-10-28T05:57:31.2438760Z Selecting previously unselected package libxcb-util1:amd64.
+2026-10-28T05:57:31.2578282Z Preparing to unpack .../056-libxcb-util1_0.4.0-1build3_amd64.deb ...
+2026-10-28T05:57:31.2588789Z Unpacking libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-10-28T05:57:31.2781697Z Selecting previously unselected package libxcb-image0:amd64.
+2026-10-28T05:57:31.2921299Z Preparing to unpack .../057-libxcb-image0_0.4.0-2build1_amd64.deb ...
+2026-10-28T05:57:31.2936337Z Unpacking libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-10-28T05:57:31.3126491Z Selecting previously unselected package libxcb-keysyms1:amd64.
+2026-10-28T05:57:31.3264874Z Preparing to unpack .../058-libxcb-keysyms1_0.4.0-1build4_amd64.deb ...
+2026-10-28T05:57:31.3274923Z Unpacking libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-10-28T05:57:31.3462414Z Selecting previously unselected package libxcb-render-util0:amd64.
+2026-10-28T05:57:31.3598951Z Preparing to unpack .../059-libxcb-render-util0_0.3.9-1build4_amd64.deb ...
+2026-10-28T05:57:31.3609862Z Unpacking libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-10-28T05:57:31.3801900Z Selecting previously unselected package libxcb-shape0:amd64.
+2026-10-28T05:57:31.3939963Z Preparing to unpack .../060-libxcb-shape0_1.15-1ubuntu2_amd64.deb ...
+2026-10-28T05:57:31.3950756Z Unpacking libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:31.4141240Z Selecting previously unselected package libxcb-xkb1:amd64.
+2026-10-28T05:57:31.4278136Z Preparing to unpack .../061-libxcb-xkb1_1.15-1ubuntu2_amd64.deb ...
+2026-10-28T05:57:31.4291386Z Unpacking libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:31.4486596Z Selecting previously unselected package libxkbcommon-x11-0:amd64.
+2026-10-28T05:57:31.4623229Z Preparing to unpack .../062-libxkbcommon-x11-0_1.6.0-1build1_amd64.deb ...
+2026-10-28T05:57:31.4636575Z Unpacking libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-10-28T05:57:31.4851635Z Selecting previously unselected package libqt6gui6t64:amd64.
+2026-10-28T05:57:31.4990003Z Preparing to unpack .../063-libqt6gui6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:31.5003998Z Unpacking libqt6gui6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.5989444Z Selecting previously unselected package libqt6jsonrpc6:amd64.
+2026-10-28T05:57:31.6127462Z Preparing to unpack .../064-libqt6jsonrpc6_6.4.2-2build2_amd64.deb ...
+2026-10-28T05:57:31.6142649Z Unpacking libqt6jsonrpc6:amd64 (6.4.2-2build2) ...
+2026-10-28T05:57:31.6347299Z Selecting previously unselected package libqt6network6t64:amd64.
+2026-10-28T05:57:31.6483722Z Preparing to unpack .../065-libqt6network6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:31.6496592Z Unpacking libqt6network6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.6885734Z Selecting previously unselected package libqt6qml6:amd64.
+2026-10-28T05:57:31.7023466Z Preparing to unpack .../066-libqt6qml6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.7037433Z Unpacking libqt6qml6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.7715853Z Selecting previously unselected package libqt6labsanimation6:amd64.
+2026-10-28T05:57:31.7851705Z Preparing to unpack .../067-libqt6labsanimation6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.7864069Z Unpacking libqt6labsanimation6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.8058662Z Selecting previously unselected package libqt6labsfolderlistmodel6:amd64.
+2026-10-28T05:57:31.8194623Z Preparing to unpack .../068-libqt6labsfolderlistmodel6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.8207897Z Unpacking libqt6labsfolderlistmodel6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.8404106Z Selecting previously unselected package libqt6qmlmodels6:amd64.
+2026-10-28T05:57:31.8540739Z Preparing to unpack .../069-libqt6qmlmodels6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.8551483Z Unpacking libqt6qmlmodels6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.8807910Z Selecting previously unselected package libqt6labsqmlmodels6:amd64.
+2026-10-28T05:57:31.8946845Z Preparing to unpack .../070-libqt6labsqmlmodels6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.8958913Z Unpacking libqt6labsqmlmodels6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.9159891Z Selecting previously unselected package libqt6labssettings6:amd64.
+2026-10-28T05:57:31.9296632Z Preparing to unpack .../071-libqt6labssettings6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:31.9307931Z Unpacking libqt6labssettings6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:31.9501147Z Selecting previously unselected package libqt6opengl6t64:amd64.
+2026-10-28T05:57:31.9638564Z Preparing to unpack .../072-libqt6opengl6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:31.9650618Z Unpacking libqt6opengl6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:31.9972226Z Selecting previously unselected package libqt6quick6:amd64.
+2026-10-28T05:57:32.0109913Z Preparing to unpack .../073-libqt6quick6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.0120648Z Unpacking libqt6quick6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.0891598Z Selecting previously unselected package libqt6labssharedimage6:amd64.
+2026-10-28T05:57:32.1029251Z Preparing to unpack .../074-libqt6labssharedimage6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.1043064Z Unpacking libqt6labssharedimage6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.1238778Z Selecting previously unselected package libqt6labswavefrontmesh6:amd64.
+2026-10-28T05:57:32.1376157Z Preparing to unpack .../075-libqt6labswavefrontmesh6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.1388479Z Unpacking libqt6labswavefrontmesh6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.1586282Z Selecting previously unselected package libqt6languageserver6:amd64.
+2026-10-28T05:57:32.1721406Z Preparing to unpack .../076-libqt6languageserver6_6.4.2-2build2_amd64.deb ...
+2026-10-28T05:57:32.1733912Z Unpacking libqt6languageserver6:amd64 (6.4.2-2build2) ...
+2026-10-28T05:57:32.2087995Z Selecting previously unselected package libqt6widgets6t64:amd64.
+2026-10-28T05:57:32.2225023Z Preparing to unpack .../077-libqt6widgets6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:32.2239371Z Unpacking libqt6widgets6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:32.3114157Z Selecting previously unselected package libqt6openglwidgets6t64:amd64.
+2026-10-28T05:57:32.3250302Z Preparing to unpack .../078-libqt6openglwidgets6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:32.3264359Z Unpacking libqt6openglwidgets6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:32.3596841Z Selecting previously unselected package libqt6printsupport6t64:amd64.
+2026-10-28T05:57:32.3735602Z Preparing to unpack .../079-libqt6printsupport6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:32.3748761Z Unpacking libqt6printsupport6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:32.3989797Z Selecting previously unselected package libqt6qmlcompiler6:amd64.
+2026-10-28T05:57:32.4126204Z Preparing to unpack .../080-libqt6qmlcompiler6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.4136778Z Unpacking libqt6qmlcompiler6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.4448399Z Selecting previously unselected package libqt6qmlcore6:amd64.
+2026-10-28T05:57:32.4587198Z Preparing to unpack .../081-libqt6qmlcore6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.5060419Z Unpacking libqt6qmlcore6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.5270836Z Selecting previously unselected package libqt6sql6t64:amd64.
+2026-10-28T05:57:32.5408887Z Preparing to unpack .../082-libqt6sql6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:32.5431986Z Unpacking libqt6sql6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:32.5643796Z Selecting previously unselected package libqt6qmllocalstorage6:amd64.
+2026-10-28T05:57:32.5780957Z Preparing to unpack .../083-libqt6qmllocalstorage6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.5789663Z Unpacking libqt6qmllocalstorage6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.5988111Z Selecting previously unselected package libqt6qmlworkerscript6:amd64.
+2026-10-28T05:57:32.6123831Z Preparing to unpack .../084-libqt6qmlworkerscript6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.6133347Z Unpacking libqt6qmlworkerscript6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.6323482Z Selecting previously unselected package libqt6qmlxmllistmodel6:amd64.
+2026-10-28T05:57:32.6459865Z Preparing to unpack .../085-libqt6qmlxmllistmodel6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.6469233Z Unpacking libqt6qmlxmllistmodel6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.6674801Z Selecting previously unselected package libqt6quicktemplates2-6:amd64.
+2026-10-28T05:57:32.6810448Z Preparing to unpack .../086-libqt6quicktemplates2-6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.6819507Z Unpacking libqt6quicktemplates2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.7219630Z Selecting previously unselected package libqt6quickcontrols2-6:amd64.
+2026-10-28T05:57:32.7356113Z Preparing to unpack .../087-libqt6quickcontrols2-6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.7373906Z Unpacking libqt6quickcontrols2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.7563965Z Selecting previously unselected package libqt6quickcontrols2impl6:amd64.
+2026-10-28T05:57:32.7700961Z Preparing to unpack .../088-libqt6quickcontrols2impl6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.7709056Z Unpacking libqt6quickcontrols2impl6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.7918848Z Selecting previously unselected package libqt6quickdialogs2utils6:amd64.
+2026-10-28T05:57:32.8057457Z Preparing to unpack .../089-libqt6quickdialogs2utils6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.8066268Z Unpacking libqt6quickdialogs2utils6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.8262353Z Selecting previously unselected package libqt6quickdialogs2quickimpl6:amd64.
+2026-10-28T05:57:32.8401223Z Preparing to unpack .../090-libqt6quickdialogs2quickimpl6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.8409489Z Unpacking libqt6quickdialogs2quickimpl6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.8903492Z Selecting previously unselected package libqt6quickdialogs2-6:amd64.
+2026-10-28T05:57:32.9040392Z Preparing to unpack .../091-libqt6quickdialogs2-6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.9049618Z Unpacking libqt6quickdialogs2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.9245105Z Selecting previously unselected package libqt6quicklayouts6:amd64.
+2026-10-28T05:57:32.9383088Z Preparing to unpack .../092-libqt6quicklayouts6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.9395013Z Unpacking libqt6quicklayouts6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.9586037Z Selecting previously unselected package libqt6quickparticles6:amd64.
+2026-10-28T05:57:32.9723650Z Preparing to unpack .../093-libqt6quickparticles6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:32.9735982Z Unpacking libqt6quickparticles6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:32.9991277Z Selecting previously unselected package libqt6quickshapes6:amd64.
+2026-10-28T05:57:33.0129952Z Preparing to unpack .../094-libqt6quickshapes6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:33.0141592Z Unpacking libqt6quickshapes6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:33.0352317Z Selecting previously unselected package libqt6test6t64:amd64.
+2026-10-28T05:57:33.0491850Z Preparing to unpack .../095-libqt6test6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:33.0500490Z Unpacking libqt6test6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:33.0748117Z Selecting previously unselected package libqt6quicktest6:amd64.
+2026-10-28T05:57:33.0886076Z Preparing to unpack .../096-libqt6quicktest6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:33.0894694Z Unpacking libqt6quicktest6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:33.1104012Z Selecting previously unselected package libqt6quickwidgets6:amd64.
+2026-10-28T05:57:33.1241741Z Preparing to unpack .../097-libqt6quickwidgets6_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:33.1253238Z Unpacking libqt6quickwidgets6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:33.1446271Z Selecting previously unselected package libqt6sql6-sqlite:amd64.
+2026-10-28T05:57:33.1584838Z Preparing to unpack .../098-libqt6sql6-sqlite_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:33.1593360Z Unpacking libqt6sql6-sqlite:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:33.1815534Z Selecting previously unselected package libqt6svg6:amd64.
+2026-10-28T05:57:33.1952359Z Preparing to unpack .../099-libqt6svg6_6.4.2-4ubuntu3_amd64.deb ...
+2026-10-28T05:57:33.1962318Z Unpacking libqt6svg6:amd64 (6.4.2-4ubuntu3) ...
+2026-10-28T05:57:33.2182962Z Selecting previously unselected package libqt6waylandclient6:amd64.
+2026-10-28T05:57:33.2322643Z Preparing to unpack .../100-libqt6waylandclient6_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:33.2332039Z Unpacking libqt6waylandclient6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:33.2583116Z Selecting previously unselected package libwayland-server0:amd64.
+2026-10-28T05:57:33.2721530Z Preparing to unpack .../101-libwayland-server0_1.22.0-2.1build1_amd64.deb ...
+2026-10-28T05:57:33.2735743Z Unpacking libwayland-server0:amd64 (1.22.0-2.1build1) ...
+2026-10-28T05:57:33.2937205Z Selecting previously unselected package libqt6waylandcompositor6:amd64.
+2026-10-28T05:57:33.3076040Z Preparing to unpack .../102-libqt6waylandcompositor6_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:33.3089875Z Unpacking libqt6waylandcompositor6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:33.3427879Z Selecting previously unselected package libqt6waylandeglclienthwintegration6:amd64.
+2026-10-28T05:57:33.3566428Z Preparing to unpack .../103-libqt6waylandeglclienthwintegration6_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:33.3578182Z Unpacking libqt6waylandeglclienthwintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:33.3772795Z Selecting previously unselected package libqt6waylandeglcompositorhwintegration6:amd64.
+2026-10-28T05:57:33.3910244Z Preparing to unpack .../104-libqt6waylandeglcompositorhwintegration6_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:33.3920783Z Unpacking libqt6waylandeglcompositorhwintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:33.4124663Z Selecting previously unselected package libqt6wlshellintegration6:amd64.
+2026-10-28T05:57:33.4264786Z Preparing to unpack .../105-libqt6wlshellintegration6_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:33.4273828Z Unpacking libqt6wlshellintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:33.4470626Z Selecting previously unselected package libqt6xml6t64:amd64.
+2026-10-28T05:57:33.4609366Z Preparing to unpack .../106-libqt6xml6t64_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:33.4619393Z Unpacking libqt6xml6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:33.4830889Z Selecting previously unselected package libvhdi1:amd64.
+2026-10-28T05:57:33.4969084Z Preparing to unpack .../107-libvhdi1_20210425-1build5_amd64.deb ...
+2026-10-28T05:57:33.4978544Z Unpacking libvhdi1:amd64 (20210425-1build5) ...
+2026-10-28T05:57:33.5261895Z Selecting previously unselected package libvmdk1:amd64.
+2026-10-28T05:57:33.5399505Z Preparing to unpack .../108-libvmdk1_20200926-2build5_amd64.deb ...
+2026-10-28T05:57:33.5409635Z Unpacking libvmdk1:amd64 (20200926-2build5) ...
+2026-10-28T05:57:33.5674771Z Selecting previously unselected package libtsk19t64:amd64.
+2026-10-28T05:57:33.5813346Z Preparing to unpack .../109-libtsk19t64_4.12.1+dfsg-1.1ubuntu2_amd64.deb ...
+2026-10-28T05:57:33.5821782Z Unpacking libtsk19t64:amd64 (4.12.1+dfsg-1.1ubuntu2) ...
+2026-10-28T05:57:33.6089097Z Selecting previously unselected package libv4lconvert0t64:amd64.
+2026-10-28T05:57:33.6228903Z Preparing to unpack .../110-libv4lconvert0t64_1.26.1-4build3_amd64.deb ...
+2026-10-28T05:57:33.6237824Z Unpacking libv4lconvert0t64:amd64 (1.26.1-4build3) ...
+2026-10-28T05:57:33.6455028Z Selecting previously unselected package libv4l-0t64:amd64.
+2026-10-28T05:57:33.6590871Z Preparing to unpack .../111-libv4l-0t64_1.26.1-4build3_amd64.deb ...
+2026-10-28T05:57:33.6600011Z Unpacking libv4l-0t64:amd64 (1.26.1-4build3) ...
+2026-10-28T05:57:33.6785415Z Selecting previously unselected package libvulkan-dev:amd64.
+2026-10-28T05:57:33.6923324Z Preparing to unpack .../112-libvulkan-dev_1.3.275.0-1build1_amd64.deb ...
+2026-10-28T05:57:33.6935358Z Unpacking libvulkan-dev:amd64 (1.3.275.0-1build1) ...
+2026-10-28T05:57:33.8470183Z Selecting previously unselected package libzbar0t64:amd64.
+2026-10-28T05:57:33.8608976Z Preparing to unpack .../113-libzbar0t64_0.23.93-4build3_amd64.deb ...
+2026-10-28T05:57:33.8619798Z Unpacking libzbar0t64:amd64 (0.23.93-4build3) ...
+2026-10-28T05:57:33.8815304Z Selecting previously unselected package ninja-build.
+2026-10-28T05:57:33.8950582Z Preparing to unpack .../114-ninja-build_1.11.1-2_amd64.deb ...
+2026-10-28T05:57:33.8960737Z Unpacking ninja-build (1.11.1-2) ...
+2026-10-28T05:57:33.9820501Z Selecting previously unselected package poppler-utils.
+2026-10-28T05:57:33.9961162Z Preparing to unpack .../115-poppler-utils_24.02.0-1ubuntu9.11_amd64.deb ...
+2026-10-28T05:57:33.9977237Z Unpacking poppler-utils (24.02.0-1ubuntu9.11) ...
+2026-10-28T05:57:34.0214100Z Selecting previously unselected package qmake6-bin.
+2026-10-28T05:57:34.0351984Z Preparing to unpack .../116-qmake6-bin_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:34.0361196Z Unpacking qmake6-bin (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:34.0669523Z Selecting previously unselected package qmake6:amd64.
+2026-10-28T05:57:34.0807882Z Preparing to unpack .../117-qmake6_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:34.0817151Z Unpacking qmake6:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:34.1475352Z Selecting previously unselected package qml6-module-qtqml-workerscript:amd64.
+2026-10-28T05:57:34.1615004Z Preparing to unpack .../118-qml6-module-qtqml-workerscript_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.1623484Z Unpacking qml6-module-qtqml-workerscript:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.1804857Z Selecting previously unselected package qml6-module-qtquick:amd64.
+2026-10-28T05:57:34.1943028Z Preparing to unpack .../119-qml6-module-qtquick_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.1951940Z Unpacking qml6-module-qtquick:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.2148705Z Selecting previously unselected package qml6-module-qtquick-controls:amd64.
+2026-10-28T05:57:34.2286485Z Preparing to unpack .../120-qml6-module-qtquick-controls_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.2296123Z Unpacking qml6-module-qtquick-controls:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.3230570Z Selecting previously unselected package qml6-module-qtquick-dialogs:amd64.
+2026-10-28T05:57:34.3369895Z Preparing to unpack .../121-qml6-module-qtquick-dialogs_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.3381472Z Unpacking qml6-module-qtquick-dialogs:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.3597634Z Selecting previously unselected package qml6-module-qtquick-layouts:amd64.
+2026-10-28T05:57:34.3735383Z Preparing to unpack .../122-qml6-module-qtquick-layouts_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.3745090Z Unpacking qml6-module-qtquick-layouts:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.3919614Z Selecting previously unselected package qml6-module-qtquick-templates:amd64.
+2026-10-28T05:57:34.4057922Z Preparing to unpack .../123-qml6-module-qtquick-templates_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.4072786Z Unpacking qml6-module-qtquick-templates:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.4266601Z Selecting previously unselected package qml6-module-qtquick-window:amd64.
+2026-10-28T05:57:34.4402687Z Preparing to unpack .../124-qml6-module-qtquick-window_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.4418061Z Unpacking qml6-module-qtquick-window:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.4587028Z Selecting previously unselected package qml6-module-qttest:amd64.
+2026-10-28T05:57:34.4723337Z Preparing to unpack .../125-qml6-module-qttest_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.4735572Z Unpacking qml6-module-qttest:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.4917328Z Selecting previously unselected package qt6-base-dev-tools.
+2026-10-28T05:57:34.5054581Z Preparing to unpack .../126-qt6-base-dev-tools_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:34.5062559Z Unpacking qt6-base-dev-tools (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:34.5426489Z Selecting previously unselected package qt6-qpa-plugins:amd64.
+2026-10-28T05:57:34.5564413Z Preparing to unpack .../127-qt6-qpa-plugins_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:34.5572881Z Unpacking qt6-qpa-plugins:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:34.5770918Z Selecting previously unselected package qt6-base-dev:amd64.
+2026-10-28T05:57:34.5908761Z Preparing to unpack .../128-qt6-base-dev_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:34.5917214Z Unpacking qt6-base-dev:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:34.9098527Z Selecting previously unselected package qt6-declarative-dev-tools.
+2026-10-28T05:57:34.9250208Z Preparing to unpack .../129-qt6-declarative-dev-tools_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:34.9265035Z Unpacking qt6-declarative-dev-tools (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:34.9890233Z Selecting previously unselected package qt6-qmllint-plugins:amd64.
+2026-10-28T05:57:35.0030218Z Preparing to unpack .../130-qt6-qmllint-plugins_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:35.0044621Z Unpacking qt6-qmllint-plugins:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:35.0224547Z Selecting previously unselected package qt6-qmltooling-plugins:amd64.
+2026-10-28T05:57:35.0364215Z Preparing to unpack .../131-qt6-qmltooling-plugins_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:35.0372921Z Unpacking qt6-qmltooling-plugins:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:35.0609090Z Selecting previously unselected package qt6-declarative-dev:amd64.
+2026-10-28T05:57:35.0750495Z Preparing to unpack .../132-qt6-declarative-dev_6.4.2+dfsg-4build3_amd64.deb ...
+2026-10-28T05:57:35.0760736Z Unpacking qt6-declarative-dev:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:35.3296230Z Selecting previously unselected package qt6-gtk-platformtheme:amd64.
+2026-10-28T05:57:35.3442187Z Preparing to unpack .../133-qt6-gtk-platformtheme_6.4.2+dfsg-21.1build5_amd64.deb ...
+2026-10-28T05:57:35.3453661Z Unpacking qt6-gtk-platformtheme:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:35.3648048Z Selecting previously unselected package qt6-image-formats-plugins.
+2026-10-28T05:57:35.3788781Z Preparing to unpack .../134-qt6-image-formats-plugins_6.4.2-5build2_amd64.deb ...
+2026-10-28T05:57:35.3800042Z Unpacking qt6-image-formats-plugins (6.4.2-5build2) ...
+2026-10-28T05:57:35.3986921Z Selecting previously unselected package qt6-translations-l10n.
+2026-10-28T05:57:35.4126885Z Preparing to unpack .../135-qt6-translations-l10n_6.4.2-1_all.deb ...
+2026-10-28T05:57:35.4136149Z Unpacking qt6-translations-l10n (6.4.2-1) ...
+2026-10-28T05:57:35.5361749Z Selecting previously unselected package qt6-wayland:amd64.
+2026-10-28T05:57:35.5502970Z Preparing to unpack .../136-qt6-wayland_6.4.2-5build3_amd64.deb ...
+2026-10-28T05:57:35.5513541Z Unpacking qt6-wayland:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:35.5774136Z Selecting previously unselected package sleuthkit.
+2026-10-28T05:57:35.5918294Z Preparing to unpack .../137-sleuthkit_4.12.1+dfsg-1.1ubuntu2_amd64.deb ...
+2026-10-28T05:57:35.5928094Z Unpacking sleuthkit (4.12.1+dfsg-1.1ubuntu2) ...
+2026-10-28T05:57:35.6268269Z Selecting previously unselected package zbar-tools.
+2026-10-28T05:57:35.6409211Z Preparing to unpack .../138-zbar-tools_0.23.93-4build3_amd64.deb ...
+2026-10-28T05:57:35.6417737Z Unpacking zbar-tools (0.23.93-4build3) ...
+2026-10-28T05:57:35.6755774Z Selecting previously unselected package libc6-dbg:amd64.
+2026-10-28T05:57:35.6895021Z Preparing to unpack .../139-libc6-dbg_2.39-0ubuntu8.9_amd64.deb ...
+2026-10-28T05:57:35.6912726Z Unpacking libc6-dbg:amd64 (2.39-0ubuntu8.9) ...
+2026-10-28T05:57:35.8613962Z Setting up libb2-1:amd64 (0.98.1-1.1build1) ...
+2026-10-28T05:57:35.8673231Z Setting up libwayland-server0:amd64 (1.22.0-2.1build1) ...
+2026-10-28T05:57:35.8692658Z Setting up libmng2:amd64 (2.0.3+dfsg-4build1) ...
+2026-10-28T05:57:35.8716860Z Setting up libdouble-conversion3:amd64 (3.3.0-1build1) ...
+2026-10-28T05:57:35.8737298Z Setting up libproxy1v5:amd64 (0.5.4-4build1) ...
+2026-10-28T05:57:35.8758412Z Setting up libvulkan-dev:amd64 (1.3.275.0-1build1) ...
+2026-10-28T05:57:35.8784298Z Setting up libv4lconvert0t64:amd64 (1.26.1-4build3) ...
+2026-10-28T05:57:35.8805254Z Setting up libwmflite-0.2-7:amd64 (0.2.13-1.1build3) ...
+2026-10-28T05:57:35.8829515Z Setting up libpoppler134:amd64 (24.02.0-1ubuntu9.11) ...
+2026-10-28T05:57:35.8855582Z Setting up libvhdi1:amd64 (20210425-1build5) ...
+2026-10-28T05:57:35.8875284Z Setting up libts0t64:amd64 (1.22-1.1build1) ...
+2026-10-28T05:57:35.8904813Z Setting up libxcb-keysyms1:amd64 (0.4.0-1build4) ...
+2026-10-28T05:57:35.8925630Z Setting up libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:35.8950528Z Setting up libxcb-render-util0:amd64 (0.3.9-1build4) ...
+2026-10-28T05:57:35.8972353Z Setting up libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+2026-10-28T05:57:35.8992725Z Setting up libpthread-stubs0-dev:amd64 (0.4-1build3) ...
+2026-10-28T05:57:35.9016782Z Setting up libsource-highlight-common (3.1.9-4.3build1) ...
+2026-10-28T05:57:35.9036497Z Setting up libopengl0:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:35.9055803Z Setting up ninja-build (1.11.1-2) ...
+2026-10-28T05:57:35.9078254Z Setting up libxcb-util1:amd64 (0.4.0-1build3) ...
+2026-10-28T05:57:35.9097941Z Setting up poppler-data (0.4.12-1) ...
+2026-10-28T05:57:35.9174204Z Setting up libc6-dbg:amd64 (2.39-0ubuntu8.9) ...
+2026-10-28T05:57:35.9196938Z Setting up libxcb-xkb1:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:35.9216779Z Setting up libxcb-image0:amd64 (0.4.0-2build1) ...
+2026-10-28T05:57:35.9239980Z Setting up libafflib0t64:amd64 (3.7.20-1.1ubuntu5) ...
+2026-10-28T05:57:35.9261512Z Setting up qt6-translations-l10n (6.4.2-1) ...
+2026-10-28T05:57:35.9282550Z Setting up xtrans-dev (1.4.0-1) ...
+2026-10-28T05:57:35.9305321Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+2026-10-28T05:57:35.9328685Z Setting up libjxr0t64:amd64 (1.2~git20170615.f752187-5.1ubuntu2) ...
+2026-10-28T05:57:35.9353626Z Setting up libclamav12:amd64 (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:35.9374092Z Setting up libxkbcommon-x11-0:amd64 (1.6.0-1build1) ...
+2026-10-28T05:57:35.9396532Z Setting up libimath-3-1-29t64:amd64 (3.1.9-3.1ubuntu2) ...
+2026-10-28T05:57:35.9418332Z Setting up libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-28T05:57:35.9438392Z Setting up libipt2 (2.0.6-1build1) ...
+2026-10-28T05:57:35.9458274Z Setting up libbabeltrace1:amd64 (1.5.11-3build3) ...
+2026-10-28T05:57:35.9480244Z Setting up libv4l-0t64:amd64 (1.26.1-4build3) ...
+2026-10-28T05:57:35.9503539Z Setting up libmtdev1t64:amd64 (1.1.6-1.1build1) ...
+2026-10-28T05:57:35.9525818Z Setting up librhash0:amd64 (1.4.3-3build1) ...
+2026-10-28T05:57:35.9545260Z Setting up libegl1:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:35.9565348Z Setting up libmd4c0:amd64 (0.4.8-1build1) ...
+2026-10-28T05:57:35.9588089Z Setting up libewf2:amd64 (20140814-1build3) ...
+2026-10-28T05:57:35.9610279Z Setting up xorg-sgml-doctools (1:1.11-1.1) ...
+2026-10-28T05:57:35.9636512Z Setting up cmake-data (3.28.3-1build7) ...
+2026-10-28T05:57:35.9700270Z Setting up poppler-utils (24.02.0-1ubuntu9.11) ...
+2026-10-28T05:57:35.9720197Z Setting up libdjvulibre-text (3.5.28-2ubuntu0.24.04.2) ...
+2026-10-28T05:57:35.9741688Z Setting up libopengl-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:35.9760682Z Setting up libdate-manip-perl (6.95-1) ...
+2026-10-28T05:57:35.9778799Z Setting up libbfio1:amd64 (20170123-6) ...
+2026-10-28T05:57:35.9805954Z Setting up libwacom-common (2.10.0-2) ...
+2026-10-28T05:57:35.9825165Z Setting up clamav-base (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:36.2936234Z Setting up libqt6core6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.2960788Z Setting up libjxr-tools (1.2~git20170615.f752187-5.1ubuntu2) ...
+2026-10-28T05:57:36.2982994Z Setting up libwacom9:amd64 (2.10.0-2) ...
+2026-10-28T05:57:36.3002061Z Setting up libdjvulibre21:amd64 (3.5.28-2ubuntu0.24.04.2) ...
+2026-10-28T05:57:36.3027502Z Setting up libzbar0t64:amd64 (0.23.93-4build3) ...
+2026-10-28T05:57:36.3048072Z Setting up libqt6sql6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.3071871Z Setting up libqt6test6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.3091805Z Setting up libsource-highlight4t64:amd64 (3.1.9-4.3build1) ...
+2026-10-28T05:57:36.3111668Z Setting up libqt6dbus6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.3134000Z Setting up libqt6concurrent6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.3157254Z Setting up libqt6xml6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.3177475Z Setting up libinput-bin (1.25.0-1ubuntu3.7) ...
+2026-10-28T05:57:36.3205387Z Setting up libvmdk1:amd64 (20200926-2build5) ...
+2026-10-28T05:57:36.3226037Z Setting up gdb (15.1-1ubuntu1~24.04.1) ...
+2026-10-28T05:57:36.3258513Z Setting up clamav-freshclam (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:36.8508393Z Setting up libqt6sql6-sqlite:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.8533772Z Setting up libopenexr-3-1-30:amd64 (3.1.5-5.1build3) ...
+2026-10-28T05:57:36.8562764Z Setting up qmake6-bin (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.8584078Z Setting up cmake (3.28.3-1build7) ...
+2026-10-28T05:57:36.8608934Z Setting up libqt6jsonrpc6:amd64 (6.4.2-2build2) ...
+2026-10-28T05:57:36.8631667Z Setting up libmagickcore-6.q16-7-extra:amd64 (8:6.9.12.98+dfsg1-5.2build2) ...
+2026-10-28T05:57:36.8651137Z Setting up libqt6network6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.8676650Z Setting up libtsk19t64:amd64 (4.12.1+dfsg-1.1ubuntu2) ...
+2026-10-28T05:57:36.8704736Z Setting up libinput10:amd64 (1.25.0-1ubuntu3.7) ...
+2026-10-28T05:57:36.8729672Z Setting up qt6-base-dev-tools (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.8753543Z Setting up zbar-tools (0.23.93-4build3) ...
+2026-10-28T05:57:36.8790194Z Setting up libqt6qml6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.8812934Z Setting up libqt6qmlmodels6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.8833400Z Setting up qmake6:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9333542Z Setting up clamav (1.5.4+dfsg-0ubuntu0.24.04.1) ...
+2026-10-28T05:57:36.9360850Z Setting up libqt6qmlworkerscript6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9383094Z Setting up libqt6labsanimation6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9409492Z Setting up libqt6languageserver6:amd64 (6.4.2-2build2) ...
+2026-10-28T05:57:36.9433768Z Setting up libqt6qmlxmllistmodel6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9455151Z Setting up libqt6labsqmlmodels6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9482653Z Setting up sleuthkit (4.12.1+dfsg-1.1ubuntu2) ...
+2026-10-28T05:57:36.9501579Z Setting up libqt6gui6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9524779Z Setting up libqt6labssettings6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9545638Z Setting up qml6-module-qtquick-window:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9569915Z Setting up libqt6qmlcompiler6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9597224Z Setting up libqt6qmlcore6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9616926Z Setting up libqt6qmllocalstorage6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9639387Z Setting up libqt6widgets6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9663459Z Setting up qt6-qpa-plugins:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9682428Z Setting up qt6-image-formats-plugins (6.4.2-5build2) ...
+2026-10-28T05:57:36.9710524Z Setting up libqt6labsfolderlistmodel6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9732413Z Setting up libqt6quickdialogs2utils6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9759214Z Setting up libqt6opengl6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9782758Z Setting up qml6-module-qtqml-workerscript:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9802928Z Setting up libqt6svg6:amd64 (6.4.2-4ubuntu3) ...
+2026-10-28T05:57:36.9828846Z Setting up libqt6waylandclient6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:36.9847863Z Setting up qt6-gtk-platformtheme:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9875461Z Setting up libqt6printsupport6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:36.9897251Z Setting up libqt6quick6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9919962Z Setting up libqt6quickshapes6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9950463Z Setting up qt6-qmllint-plugins:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9972891Z Setting up qt6-qmltooling-plugins:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:36.9997317Z Setting up libqt6wlshellintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:37.0022619Z Setting up qml6-module-qtquick:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0045003Z Setting up libqt6waylandcompositor6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:37.0074477Z Setting up libqt6quicklayouts6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0098152Z Setting up libqt6openglwidgets6t64:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:37.0124356Z Setting up libqt6waylandeglcompositorhwintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:37.0146834Z Setting up libqt6quicktemplates2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0170310Z Setting up libqt6waylandeglclienthwintegration6:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:37.0202951Z Setting up qml6-module-qtquick-templates:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0221682Z Setting up libqt6quickwidgets6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0248064Z Setting up libqt6quickparticles6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0267812Z Setting up libqt6quickcontrols2impl6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0289086Z Setting up libqt6labswavefrontmesh6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0311711Z Setting up libqt6quicktest6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0339755Z Setting up libqt6labssharedimage6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0367742Z Setting up libqt6quickdialogs2quickimpl6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0390272Z Setting up qt6-wayland:amd64 (6.4.2-5build3) ...
+2026-10-28T05:57:37.0413468Z Setting up qml6-module-qtquick-layouts:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0436489Z Setting up libqt6quickcontrols2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0462912Z Setting up qml6-module-qttest:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0491402Z Setting up libqt6quickdialogs2-6:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0521595Z Setting up qt6-declarative-dev-tools (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0541706Z Setting up qml6-module-qtquick-controls:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0572767Z Setting up qml6-module-qtquick-dialogs:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:37.0741637Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-28T05:57:37.0772852Z Not building database; man-db/auto-update is not 'true'.
+2026-10-28T05:57:37.0834660Z Processing triggers for dbus (1.14.10-4ubuntu4.1) ...
+2026-10-28T05:57:37.0923135Z Processing triggers for udev (255.4-1ubuntu8.18) ...
+2026-10-28T05:57:37.8214241Z Processing triggers for sgml-base (1.31) ...
+2026-10-28T05:57:37.8639191Z Setting up x11proto-dev (2023.2-1) ...
+2026-10-28T05:57:37.8668678Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+2026-10-28T05:57:37.9031625Z Setting up libxau-dev:amd64 (1:1.0.9-1build6) ...
+2026-10-28T05:57:37.9059121Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-10-28T05:57:38.1334269Z Setting up libxdmcp-dev:amd64 (1:1.1.3-0ubuntu6) ...
+2026-10-28T05:57:38.1369009Z Setting up libxcb1-dev:amd64 (1.15-1ubuntu2) ...
+2026-10-28T05:57:38.1406068Z Setting up libx11-dev:amd64 (2:1.8.7-1ubuntu0.1) ...
+2026-10-28T05:57:38.1467280Z Setting up libglx-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:38.1507161Z Setting up libgl-dev:amd64 (1.7.0-1build1) ...
+2026-10-28T05:57:38.1566147Z Setting up qt6-base-dev:amd64 (6.4.2+dfsg-21.1build5) ...
+2026-10-28T05:57:38.1612872Z Setting up qt6-declarative-dev:amd64 (6.4.2+dfsg-4build3) ...
+2026-10-28T05:57:38.7791313Z 
+2026-10-28T05:57:38.7792748Z Running kernel seems to be up-to-date.
+2026-10-28T05:57:38.7793183Z 
+2026-10-28T05:57:38.7793419Z No services need to be restarted.
+2026-10-28T05:57:38.7793691Z 
+2026-10-28T05:57:38.7794470Z No containers need to be restarted.
+2026-10-28T05:57:38.7794932Z 
+2026-10-28T05:57:38.7795159Z No user sessions are running outdated binaries.
+2026-10-28T05:57:38.7795571Z 
+2026-10-28T05:57:38.7795888Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-28T05:57:39.7696303Z ##[group]Run echo "MR_SODIUM_ROOT=$RUNNER_TEMP/nexvary-sodium" >> "$GITHUB_ENV"
+2026-10-28T05:57:39.7696956Z [36;1mecho "MR_SODIUM_ROOT=$RUNNER_TEMP/nexvary-sodium" >> "$GITHUB_ENV"[0m
+2026-10-28T05:57:39.7697579Z [36;1mpython3 scripts/prepare_sodium.py --destination "$RUNNER_TEMP/nexvary-sodium"[0m
+2026-10-28T05:57:39.7712875Z shell: /usr/bin/bash -e {0}
+2026-10-28T05:57:39.7713263Z env:
+2026-10-28T05:57:39.7713630Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T05:57:39.7713989Z   QT_QUICK_BACKEND: software
+2026-10-28T05:57:39.7714364Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T05:57:39.7714718Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T05:57:39.7715083Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T05:57:39.7715418Z ##[endgroup]
+2026-10-28T05:58:16.0756186Z {"prepared": "/home/runner/work/_temp/nexvary-sodium", "version": "1.0.22", "archiveSha256": "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349"}
+2026-10-28T05:58:16.0915151Z ##[group]Run mkdir -p build
+2026-10-28T05:58:16.0915607Z [36;1mmkdir -p build[0m
+2026-10-28T05:58:16.0915996Z [36;1mfor name in build-receipt.json build.log; do[0m
+2026-10-28T05:58:16.0916683Z [36;1m  if [ -f "$RUNNER_TEMP/nexvary-sodium/$name" ]; then cp "$RUNNER_TEMP/nexvary-sodium/$name" "build/sodium-$name"; fi[0m
+2026-10-28T05:58:16.0917297Z [36;1mdone[0m
+2026-10-28T05:58:16.0931125Z shell: /usr/bin/bash -e {0}
+2026-10-28T05:58:16.0931682Z env:
+2026-10-28T05:58:16.0931983Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T05:58:16.0932719Z   QT_QUICK_BACKEND: software
+2026-10-28T05:58:16.0933055Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T05:58:16.0933468Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T05:58:16.0933831Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T05:58:16.0934217Z   MR_SODIUM_ROOT: /home/runner/work/_temp/nexvary-sodium
+2026-10-28T05:58:16.0934643Z ##[endgroup]
+2026-10-28T05:58:16.1078405Z ##[group]Run cmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-g -DMR_ENABLE_LAB_OPERATIONS=OFF
+2026-10-28T05:58:16.1079903Z [36;1mcmake -S . -B build -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-g -DMR_ENABLE_LAB_OPERATIONS=OFF[0m
+2026-10-28T05:58:16.1080761Z [36;1mcmake --build build --parallel 2[0m
+2026-10-28T05:58:16.1093841Z shell: /usr/bin/bash -e {0}
+2026-10-28T05:58:16.1094219Z env:
+2026-10-28T05:58:16.1094513Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T05:58:16.1094831Z   QT_QUICK_BACKEND: software
+2026-10-28T05:58:16.1095209Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T05:58:16.1095589Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T05:58:16.1096005Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T05:58:16.1096580Z   MR_SODIUM_ROOT: /home/runner/work/_temp/nexvary-sodium
+2026-10-28T05:58:16.1097029Z ##[endgroup]
+2026-10-28T05:58:19.5729488Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-28T05:58:19.8649363Z -- Detecting CXX compiler ABI info
+2026-10-28T05:58:20.1771542Z -- Detecting CXX compiler ABI info - done
+2026-10-28T05:58:20.1923232Z -- Check for working CXX compiler: /usr/bin/c++ - skipped
+2026-10-28T05:58:20.1989790Z -- Detecting CXX compile features
+2026-10-28T05:58:20.1999204Z -- Detecting CXX compile features - done
+2026-10-28T05:58:20.5215970Z -- Found Python3: /usr/bin/python3.12 (found version "3.12.3") found components: Interpreter
+2026-10-28T05:58:20.5640633Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-28T05:58:21.0859658Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+2026-10-28T05:58:21.0868284Z -- Found Threads: TRUE
+2026-10-28T05:58:21.0883011Z -- Performing Test HAVE_STDATOMIC
+2026-10-28T05:58:21.8361357Z -- Performing Test HAVE_STDATOMIC - Success
+2026-10-28T05:58:21.8370907Z -- Found WrapAtomic: TRUE
+2026-10-28T05:58:21.8980104Z -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+2026-10-28T05:58:21.8990968Z -- Found WrapOpenGL: TRUE
+2026-10-28T05:58:22.6574673Z -- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+2026-10-28T05:58:22.7246826Z -- Found WrapVulkanHeaders: /usr/include
+2026-10-28T05:58:22.9602254Z -- Configuring done (6.0s)
+2026-10-28T05:58:23.3031886Z -- Generating done (0.3s)
+2026-10-28T05:58:23.3039070Z -- Build files have been written to: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T05:58:23.3296674Z [0/2] Re-checking globbed directories...
+2026-10-28T05:58:23.3833698Z [1/434] Automatic MOC and UIC for target mr_import_adapters
+2026-10-28T05:58:23.3936232Z [2/434] Building CXX object CMakeFiles/mr_import_adapters.dir/mr_import_adapters_autogen/mocs_compilation.cpp.o
+2026-10-28T05:58:25.5396392Z [3/434] Building CXX object CMakeFiles/mr_core.dir/cpp/src/RepairCore.cpp.o
+2026-10-28T05:58:28.5153011Z [4/434] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/AdbBackupImport.cpp.o
+2026-10-28T05:58:29.1935826Z [5/434] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/ImportAdapters.cpp.o
+2026-10-28T05:58:29.2822910Z [6/434] Linking CXX static library libmr_import_adapters.a
+2026-10-28T05:58:29.2987689Z [7/434] Automatic MOC and UIC for target mr_evidence_import_worker
+2026-10-28T05:58:29.3085624Z [8/434] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/mr_evidence_import_worker_autogen/mocs_compilation.cpp.o
+2026-10-28T05:58:29.5149926Z [9/434] Building CXX object CMakeFiles/mr_user_protection.dir/cpp/src/CaseVault.cpp.o
+2026-10-28T05:58:29.5918209Z [10/434] Linking CXX static library libmr_core.a
+2026-10-28T05:58:29.6633327Z [11/434] Linking CXX static library libmr_user_protection.a
+2026-10-28T05:58:29.6657607Z [12/434] Generating NexvaryMR/qml/GovernmentNetworkPanel.qml
+2026-10-28T05:58:29.6678408Z [13/434] Generating NexvaryMR/qml/LawRetentionPage.qml
+2026-10-28T05:58:29.6699439Z [14/434] Generating NexvaryMR/qml/GovernmentAnalysisPage.qml
+2026-10-28T05:58:29.6719105Z [15/434] Generating NexvaryMR/qml/GovernmentArtifactPanel.qml
+2026-10-28T05:58:29.6739690Z [16/434] Generating NexvaryMR/qml/IdentityPanel.qml
+2026-10-28T05:58:29.6758876Z [17/434] Generating NexvaryMR/qml/LawCaseBrowser.qml
+2026-10-28T05:58:29.6778683Z [18/434] Generating NexvaryMR/qml/LawCaseDevices.qml
+2026-10-28T05:58:29.6798527Z [19/434] Generating NexvaryMR/qml/LawCaseForm.qml
+2026-10-28T05:58:29.6818957Z [20/434] Generating NexvaryMR/qml/LawEnforcementPage.qml
+2026-10-28T05:58:29.6839155Z [21/434] Generating NexvaryMR/qml/LawTrainingPage.qml
+2026-10-28T05:58:29.6861685Z [22/434] Generating NexvaryMR/qml/LawEvidencePage.qml
+2026-10-28T05:58:29.6881391Z [23/434] Generating NexvaryMR/qml/ResearchCenter.qml
+2026-10-28T05:58:29.6900533Z [24/434] Generating NexvaryMR/qml/DesignTokens.qml
+2026-10-28T05:58:29.6920444Z [25/434] Generating NexvaryMR/qml/LegacyPalette.qml
+2026-10-28T05:58:29.6939816Z [26/434] Generating NexvaryMR/qml/StateBadge.qml
+2026-10-28T05:58:29.6959977Z [27/434] Generating NexvaryMR/qml/ActionCard.qml
+2026-10-28T05:58:29.6982823Z [28/434] Generating NexvaryMR/qml/EmptyState.qml
+2026-10-28T05:58:29.7004687Z [29/434] Generating NexvaryMR/qml/NavigationItem.qml
+2026-10-28T05:58:29.7026473Z [30/434] Generating NexvaryMR/qml/Sidebar.qml
+2026-10-28T05:58:29.7048387Z [31/434] Generating NexvaryMR/qml/TopBar.qml
+2026-10-28T05:58:29.7070197Z [32/434] Generating NexvaryMR/qml/OperationProgress.qml
+2026-10-28T05:58:29.7092061Z [33/434] Generating NexvaryMR/qml/DeviceInspector.qml
+2026-10-28T05:58:29.7111608Z [34/434] Generating NexvaryMR/qml/AppShell.qml
+2026-10-28T05:58:29.7133135Z [35/434] Generating NexvaryMR/qml/WorkflowStrip.qml
+2026-10-28T05:58:29.7153018Z [36/434] Generating NexvaryMR/qml/DashboardPage.qml
+2026-10-28T05:58:29.7172980Z [37/434] Generating NexvaryMR/qml/ReportsPage.qml
+2026-10-28T05:58:29.7192625Z [38/434] Generating NexvaryMR/qml/HelpPage.qml
+2026-10-28T05:58:29.7212139Z [39/434] Generating NexvaryMR/qml/NeonCheckBox.qml
+2026-10-28T05:58:29.7231292Z [40/434] Generating NexvaryMR/qml/NeonComboBox.qml
+2026-10-28T05:58:29.7250556Z [41/434] Generating NexvaryMR/qml/GlossSurface.qml
+2026-10-28T05:58:29.7271172Z [42/434] Generating NexvaryMR/qml/NavIcon.qml
+2026-10-28T05:58:29.7291785Z [43/434] Generating NexvaryMR/qml/Main.qml
+2026-10-28T05:58:29.7311945Z [44/434] Generating NexvaryMR/qml/Panel.qml
+2026-10-28T05:58:29.7331361Z [45/434] Generating NexvaryMR/qml/ActionButton.qml
+2026-10-28T05:58:29.7350806Z [46/434] Generating NexvaryMR/qml/BoardWorkspace.qml
+2026-10-28T05:58:29.7370673Z [47/434] Generating NexvaryMR/qml/WorkshopPage.qml
+2026-10-28T05:58:29.7389948Z [48/434] Generating NexvaryMR/qml/WorkshopHub.qml
+2026-10-28T05:58:29.7409538Z [49/434] Generating NexvaryMR/qml/InventoryPage.qml
+2026-10-28T05:58:29.7429117Z [50/434] Generating NexvaryMR/qml/DeviceIntelligencePanel.qml
+2026-10-28T05:58:29.7448289Z [51/434] Generating NexvaryMR/qml/DevicesPage.qml
+2026-10-28T05:58:29.7467592Z [52/434] Generating NexvaryMR/qml/DeviceHub.qml
+2026-10-28T05:58:29.7487138Z [53/434] Generating NexvaryMR/qml/DeviceServicesPage.qml
+2026-10-28T05:58:29.7506457Z [54/434] Generating NexvaryMR/qml/DeviceCompatibilityPanel.qml
+2026-10-28T05:58:29.7525949Z [55/434] Generating NexvaryMR/qml/SupportedDevicesPage.qml
+2026-10-28T05:58:29.7545135Z [56/434] Generating NexvaryMR/qml/DiagnosisPage.qml
+2026-10-28T05:58:29.7563835Z [57/434] Generating NexvaryMR/qml/DiagnosticHub.qml
+2026-10-28T05:58:29.7583247Z [58/434] Generating NexvaryMR/qml/SecurityPage.qml
+2026-10-28T05:58:29.7603152Z [59/434] Generating NexvaryMR/qml/UsbDoctorPanel.qml
+2026-10-28T05:58:29.7622937Z [60/434] Generating NexvaryMR/qml/DriverCatalogPage.qml
+2026-10-28T05:58:29.7642109Z [61/434] Generating NexvaryMR/qml/FaultTreePage.qml
+2026-10-28T05:58:29.7661452Z [62/434] Generating NexvaryMR/qml/FirmwarePage.qml
+2026-10-28T05:58:29.7680462Z [63/434] Generating NexvaryMR/qml/SettingsPage.qml
+2026-10-28T05:58:29.7699695Z [64/434] Generating NexvaryMR/qml/RecoveryPage.qml
+2026-10-28T05:58:29.7718910Z [65/434] Generating NexvaryMR/qml/RecoveryAssessment.qml
+2026-10-28T05:58:29.7738128Z [66/434] Generating NexvaryMR/qml/ForensicLabPage.qml
+2026-10-28T05:58:29.7757913Z [67/434] Generating NexvaryMR/qml/ForensicEvidencePage.qml
+2026-10-28T05:58:29.7777536Z [68/434] Generating NexvaryMR/qml/ForensicTimelinePage.qml
+2026-10-28T05:58:29.7796866Z [69/434] Generating NexvaryMR/qml/ForensicToolsPage.qml
+2026-10-28T05:58:29.8684326Z [70/434] Running qmlimportscanner for nexvary_mr
+2026-10-28T05:58:29.8685236Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T05:58:29.8685846Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T05:58:29.8686398Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T05:58:29.8846117Z [71/434] Automatic MOC and UIC for target mr_desktop_resources_1
+2026-10-28T05:58:29.8999417Z [72/434] Automatic MOC and UIC for target mr_desktop_resources_2
+2026-10-28T05:58:29.9150570Z [73/434] Automatic MOC and UIC for target mr_ui_device_fixture
+2026-10-28T05:58:31.3436110Z [74/434] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/cpp/src/import_worker.cpp.o
+2026-10-28T05:58:31.4734358Z [75/434] Linking CXX executable mr_evidence_import_worker
+2026-10-28T05:58:33.1966062Z [76/434] Automatic MOC and UIC for target mr_desktop
+2026-10-28T05:58:33.4867784Z [77/434] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateVerifier.cpp.o
+2026-10-28T05:58:37.5227967Z [78/434] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+2026-10-28T05:58:40.7046000Z [79/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RepairBridge.cpp.o
+2026-10-28T05:58:40.9317337Z [80/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+2026-10-28T05:58:44.1999182Z [81/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+2026-10-28T05:58:47.0686012Z [82/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+2026-10-28T05:58:47.5721374Z [83/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/WorkshopBridge.cpp.o
+2026-10-28T05:58:52.2922886Z [84/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ServiceCatalog.cpp.o
+2026-10-28T05:58:52.9942805Z [85/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+2026-10-28T05:58:57.0263952Z [86/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/BoardBridge.cpp.o
+2026-10-28T05:58:57.8734848Z [87/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/FirmwareBridge.cpp.o
+2026-10-28T05:59:01.0391810Z [88/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryImage.cpp.o
+2026-10-28T05:59:02.9320888Z [89/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+2026-10-28T05:59:05.0045681Z [90/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicRecord.cpp.o
+2026-10-28T05:59:05.4397300Z [91/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+2026-10-28T05:59:13.1745540Z [92/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PolicyAudit.cpp.o
+2026-10-28T05:59:13.8012602Z [93/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/GovernmentOperationPolicy.cpp.o
+2026-10-28T05:59:17.9974874Z [94/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+2026-10-28T05:59:19.8228523Z [95/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+2026-10-28T05:59:22.1645758Z [96/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+2026-10-28T05:59:24.3604966Z [97/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseRetention.cpp.o
+2026-10-28T05:59:26.6894973Z [98/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawRetention.cpp.o
+2026-10-28T05:59:31.3917817Z [99/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ResearchBridge.cpp.o
+2026-10-28T05:59:32.1305576Z [100/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+2026-10-28T05:59:34.4284816Z [101/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+2026-10-28T05:59:36.4491143Z [102/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/AvbMetadata.cpp.o
+2026-10-28T05:59:38.4012162Z [103/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PcapSummary.cpp.o
+2026-10-28T05:59:40.9848231Z [104/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ExifSummary.cpp.o
+2026-10-28T05:59:41.2025211Z [105/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+2026-10-28T05:59:45.7826751Z [106/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceIntelligence.cpp.o
+2026-10-28T05:59:45.8741445Z [107/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ConnectionDiagnosis.cpp.o
+2026-10-28T05:59:48.4234478Z [108/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/EvidenceImportRunner.cpp.o
+2026-10-28T05:59:48.9597568Z [109/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseImports.cpp.o
+2026-10-28T05:59:52.7407061Z [110/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseTimeline.cpp.o
+2026-10-28T05:59:53.7064996Z [111/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseTimeline.cpp.o
+2026-10-28T05:59:58.0496260Z [112/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseArtifacts.cpp.o
+2026-10-28T05:59:58.4208701Z [113/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+2026-10-28T06:00:03.6248879Z [114/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCasePartitions.cpp.o
+2026-10-28T06:00:03.6403392Z [115/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseForensicAdapters.cpp.o
+2026-10-28T06:00:06.6454368Z [116/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DcImagePartitions.cpp.o
+2026-10-28T06:00:08.2386140Z [117/434] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicAdapters.cpp.o
+2026-10-28T06:00:09.6703420Z [118/434] Linking CXX static library libmr_desktop.a
+2026-10-28T06:00:09.7820737Z [119/434] Generating .rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp
+2026-10-28T06:00:09.7992659Z [120/434] Automatic MOC and UIC for target nexvary_mr
+2026-10-28T06:00:09.8018677Z [121/434] Running AUTOMOC file extraction for target nexvary_mr
+2026-10-28T06:00:10.3968223Z [122/434] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateJournal.cpp.o
+2026-10-28T06:00:10.4008264Z [123/434] Running moc --collect-json for target nexvary_mr
+2026-10-28T06:00:10.4346021Z [124/434] Running rcc for resource research_catalog
+2026-10-28T06:00:10.4429723Z [125/434] Running rcc for resource device_catalog
+2026-10-28T06:00:10.4528283Z [126/434] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/mr_ui_device_fixture_autogen/mocs_compilation.cpp.o
+2026-10-28T06:00:12.3218642Z [127/434] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateKeyStore.cpp.o
+2026-10-28T06:00:12.3362651Z [128/434] Building CXX object CMakeFiles/mr_ui_device_fixture.dir/cpp/tests/ui_device_fixture.cpp.o
+2026-10-28T06:00:12.3463905Z [129/434] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/mr_desktop_resources_1_autogen/mocs_compilation.cpp.o
+2026-10-28T06:00:12.3964872Z [130/434] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/build/.rcc/qrc_research_catalog.cpp.o
+2026-10-28T06:00:12.4065136Z [131/434] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/mr_desktop_resources_2_autogen/mocs_compilation.cpp.o
+2026-10-28T06:00:12.4145538Z [132/434] Linking CXX static library libmr_update_verifier.a
+2026-10-28T06:00:12.4324985Z [133/434] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/build/.rcc/qrc_device_catalog.cpp.o
+2026-10-28T06:00:12.4574900Z [134/434] Automatic QML type registration for target nexvary_mr
+2026-10-28T06:00:12.5199478Z [135/434] Linking CXX executable mr_ui_device_fixture
+2026-10-28T06:00:12.5463678Z [136/434] Running qmlimportscanner for mr_ui_tests
+2026-10-28T06:00:12.5464623Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T06:00:12.5465864Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T06:00:12.5466563Z qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+2026-10-28T06:00:12.7359924Z [137/434] Automatic MOC for target mr_update_tests
+2026-10-28T06:00:12.7617120Z [138/434] Automatic MOC for target mr_update_journal_tests
+2026-10-28T06:00:12.7806281Z [139/434] Running rcc for resource samples
+2026-10-28T06:00:12.9424847Z [140/434] Automatic MOC for target mr_update_key_tests
+2026-10-28T06:00:13.3098261Z [141/434] Automatic MOC and UIC for target mr_forensic_adapter_tests
+2026-10-28T06:00:13.4335368Z [142/434] Automatic MOC and UIC for target mr_partition_transaction_tests
+2026-10-28T06:00:13.7907112Z [143/434] Automatic MOC and UIC for target mr_case_transaction_tests
+2026-10-28T06:00:13.9214825Z [144/434] Automatic MOC and UIC for target mr_policy_audit_tests
+2026-10-28T06:00:14.1439071Z [145/434] Automatic MOC and UIC for target mr_artifact_tests
+2026-10-28T06:00:14.2813177Z [146/434] Automatic MOC and UIC for target mr_offline_tests
+2026-10-28T06:00:14.3662339Z [147/434] Automatic MOC and UIC for target mr_timeline_tests
+2026-10-28T06:00:14.5262080Z [148/434] Automatic MOC and UIC for target mr_import_tests
+2026-10-28T06:00:14.5960545Z [149/434] Automatic MOC and UIC for target mr_retention_tests
+2026-10-28T06:00:14.8303312Z [150/434] Automatic MOC and UIC for target mr_law_workspace_tests
+2026-10-28T06:00:15.0171538Z [151/434] Automatic MOC and UIC for target mr_identity_tests
+2026-10-28T06:00:15.0667752Z [152/434] Automatic MOC and UIC for target mr_research_tests
+2026-10-28T06:00:15.2365085Z [153/434] Automatic MOC and UIC for target mr_intelligence_tests
+2026-10-28T06:00:15.2863845Z [154/434] Automatic MOC and UIC for target mr_connection_tests
+2026-10-28T06:00:15.5166069Z [155/434] Automatic MOC and UIC for target mr_barcode_tests
+2026-10-28T06:00:15.7268072Z [156/434] Automatic MOC and UIC for target mr_workshop_tests
+2026-10-28T06:00:16.0171422Z [157/434] Automatic MOC and UIC for target mr_center_tests
+2026-10-28T06:00:16.2116846Z [158/434] Automatic MOC and UIC for target mr_cloud_tests
+2026-10-28T06:00:16.5148268Z [159/434] Automatic MOC and UIC for target mr_security_tests
+2026-10-28T06:00:16.7103349Z [160/434] Automatic MOC and UIC for target mr_catalog_tests
+2026-10-28T06:00:16.7553890Z [161/434] Automatic MOC and UIC for target mr_tool_tests
+2026-10-28T06:00:16.9550878Z [162/434] Automatic MOC and UIC for target mr_service_tests
+2026-10-28T06:00:16.9902568Z [163/434] Automatic MOC and UIC for target mr_mirror_tests
+2026-10-28T06:00:17.1819735Z [164/434] Automatic MOC and UIC for target mr_compatibility_tests
+2026-10-28T06:00:17.2196804Z [165/434] Automatic MOC and UIC for target mr_board_tests
+2026-10-28T06:00:17.4359149Z [166/434] Automatic MOC and UIC for target mr_firmware_tests
+2026-10-28T06:00:17.4698367Z [167/434] Automatic MOC and UIC for target mr_avb_tests
+2026-10-28T06:00:17.6874347Z [168/434] Automatic MOC and UIC for target mr_pcap_tests
+2026-10-28T06:00:17.7210878Z [169/434] Automatic MOC and UIC for target mr_exif_tests
+2026-10-28T06:00:17.9267579Z [170/434] Automatic MOC and UIC for target mr_recovery_tests
+2026-10-28T06:00:17.9607385Z [171/434] Automatic MOC and UIC for target mr_recovery_image_tests
+2026-10-28T06:00:18.1627517Z [172/434] Automatic MOC and UIC for target mr_forensic_tests
+2026-10-28T06:00:18.1788257Z [173/434] Automatic MOC and UIC for target mr_avb_mutation_tests
+2026-10-28T06:00:18.1942619Z [174/434] Automatic MOC and UIC for target mr_pcap_mutation_tests
+2026-10-28T06:00:18.2102591Z [175/434] Automatic MOC and UIC for target mr_exif_mutation_tests
+2026-10-28T06:00:18.2142245Z [176/434] Automatic MOC and UIC for target mr_tsk_tests
+2026-10-28T06:00:18.2189374Z [177/434] Running rcc for resource qmake_NexvaryMR
+2026-10-28T06:00:18.3294679Z [178/434] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp
+2026-10-28T06:00:18.4321828Z [179/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawRetentionPage_qml.cpp
+2026-10-28T06:00:18.4630662Z [180/434] Automatic MOC and UIC for target mr_ui_tests
+2026-10-28T06:00:18.5536852Z [181/434] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentArtifactPanel_qml.cpp
+2026-10-28T06:00:18.6039812Z [182/434] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp
+2026-10-28T06:00:18.6733702Z [183/434] Generating .rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp
+2026-10-28T06:00:18.6804724Z [184/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp
+2026-10-28T06:00:18.7484988Z [185/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp
+2026-10-28T06:00:18.7627645Z [186/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp
+2026-10-28T06:00:18.8355850Z [187/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp
+2026-10-28T06:00:18.9305845Z [188/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp
+2026-10-28T06:00:19.0479180Z [189/434] Generating .rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp
+2026-10-28T06:00:19.0589437Z [190/434] Generating .rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp
+2026-10-28T06:00:19.0933679Z [191/434] Generating .rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp
+2026-10-28T06:00:19.1172676Z [192/434] Generating .rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp
+2026-10-28T06:00:19.1519778Z [193/434] Generating .rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp
+2026-10-28T06:00:19.1865873Z [194/434] Generating .rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp
+2026-10-28T06:00:19.2110183Z [195/434] Generating .rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp
+2026-10-28T06:00:19.2490693Z [196/434] Generating .rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp
+2026-10-28T06:00:19.2833765Z [197/434] Generating .rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp
+2026-10-28T06:00:19.3280962Z [198/434] Generating .rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp
+2026-10-28T06:00:19.3614288Z [199/434] Generating .rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp
+2026-10-28T06:00:19.4037773Z [200/434] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp
+2026-10-28T06:00:19.4628936Z [201/434] Generating .rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp
+2026-10-28T06:00:19.4708628Z [202/434] Generating .rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp
+2026-10-28T06:00:19.5517597Z [203/434] Generating .rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp
+2026-10-28T06:00:19.5656497Z [204/434] Generating .rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp
+2026-10-28T06:00:19.6230569Z [205/434] Generating .rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp
+2026-10-28T06:00:19.6262993Z [206/434] Generating .rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp
+2026-10-28T06:00:19.6858644Z [207/434] Generating .rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp
+2026-10-28T06:00:19.6863399Z [208/434] Generating .rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp
+2026-10-28T06:00:19.7300542Z [209/434] Generating .rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp
+2026-10-28T06:00:19.7944482Z [210/434] Generating .rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp
+2026-10-28T06:00:19.8542299Z [211/434] Generating .rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp
+2026-10-28T06:00:20.0062334Z [212/434] Generating .rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp
+2026-10-28T06:00:20.1492032Z [213/434] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp
+2026-10-28T06:00:20.3401907Z [214/434] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp
+2026-10-28T06:00:20.4266544Z [215/434] Generating .rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp
+2026-10-28T06:00:20.5123467Z [216/434] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp
+2026-10-28T06:00:20.6521466Z [217/434] Generating .rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp
+2026-10-28T06:00:20.7533351Z [218/434] Generating .rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp
+2026-10-28T06:00:20.8535634Z [219/434] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp
+2026-10-28T06:00:20.9082860Z [220/434] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp
+2026-10-28T06:00:20.9258814Z [221/434] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp
+2026-10-28T06:00:20.9995482Z [222/434] Generating .rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp
+2026-10-28T06:00:21.0240727Z [223/434] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp
+2026-10-28T06:00:21.1266368Z [224/434] Generating .rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp
+2026-10-28T06:00:21.1663642Z [225/434] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp
+2026-10-28T06:00:21.2092904Z [226/434] Generating .rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp
+2026-10-28T06:00:21.2575853Z [227/434] Generating .rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp
+2026-10-28T06:00:21.3010346Z [228/434] Generating .rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp
+2026-10-28T06:00:21.3825192Z [229/434] Generating .rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp
+2026-10-28T06:00:21.4187559Z [230/434] Generating .rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp
+2026-10-28T06:00:21.5063708Z [231/434] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp
+2026-10-28T06:00:21.5479674Z [232/434] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp
+2026-10-28T06:00:21.6610460Z [233/434] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp
+2026-10-28T06:00:21.7270644Z [234/434] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp
+2026-10-28T06:00:21.7347356Z [235/434] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp
+2026-10-28T06:00:21.8353579Z [236/434] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp
+2026-10-28T06:00:21.8693859Z [237/434] Running rcc for resource nexvary_mr_raw_qml_0
+2026-10-28T06:00:22.1557933Z [238/434] Building CXX object CMakeFiles/mr_policy_tests.dir/cpp/tests/policy_tests.cpp.o
+2026-10-28T06:00:22.6904768Z [239/434] Building CXX object CMakeFiles/mr_core_tests.dir/cpp/tests/core_tests.cpp.o
+2026-10-28T06:00:22.7026664Z [240/434] Building CXX object CMakeFiles/nexvary_mr.dir/nexvary_mr_autogen/mocs_compilation.cpp.o
+2026-10-28T06:00:25.1404211Z [241/434] Building CXX object CMakeFiles/mr_law_enforcement_case_tests.dir/cpp/tests/law_enforcement_case_tests.cpp.o
+2026-10-28T06:00:26.7478907Z [242/434] Building CXX object CMakeFiles/nexvary_mr.dir/nexvary_mr_qmltyperegistrations.cpp.o
+2026-10-28T06:00:26.7693281Z [243/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_qmake_NexvaryMR.cpp.o
+2026-10-28T06:00:29.2068809Z [244/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp.o
+2026-10-28T06:00:29.3735908Z [245/434] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+2026-10-28T06:00:31.1563591Z [246/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp.o
+2026-10-28T06:00:31.2065109Z [247/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawRetentionPage_qml.cpp.o
+2026-10-28T06:00:33.0099624Z [248/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentArtifactPanel_qml.cpp.o
+2026-10-28T06:00:33.0193363Z [249/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp.o
+2026-10-28T06:00:34.8025287Z [250/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp.o
+2026-10-28T06:00:35.1050204Z [251/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp.o
+2026-10-28T06:00:36.6078139Z [252/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp.o
+2026-10-28T06:00:37.0080775Z [253/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp.o
+2026-10-28T06:00:38.8341399Z [254/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp.o
+2026-10-28T06:00:39.6932788Z [255/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp.o
+2026-10-28T06:00:40.6369102Z [256/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp.o
+2026-10-28T06:00:42.1871775Z [257/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp.o
+2026-10-28T06:00:42.8488061Z [258/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp.o
+2026-10-28T06:00:43.9641966Z [259/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp.o
+2026-10-28T06:00:44.5891715Z [260/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp.o
+2026-10-28T06:00:45.8454941Z [261/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp.o
+2026-10-28T06:00:46.4122395Z [262/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp.o
+2026-10-28T06:00:47.6464538Z [263/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp.o
+2026-10-28T06:00:48.2407511Z [264/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp.o
+2026-10-28T06:00:49.4760254Z [265/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp.o
+2026-10-28T06:00:50.0340804Z [266/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp.o
+2026-10-28T06:00:51.2957522Z [267/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp.o
+2026-10-28T06:00:51.9820230Z [268/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp.o
+2026-10-28T06:00:53.0865036Z [269/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp.o
+2026-10-28T06:00:54.1958182Z [270/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp.o
+2026-10-28T06:00:54.8570542Z [271/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp.o
+2026-10-28T06:00:55.9978747Z [272/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp.o
+2026-10-28T06:00:56.6563383Z [273/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp.o
+2026-10-28T06:00:57.8982149Z [274/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp.o
+2026-10-28T06:00:58.6100022Z [275/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp.o
+2026-10-28T06:00:59.7169067Z [276/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp.o
+2026-10-28T06:01:00.8010819Z [277/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp.o
+2026-10-28T06:01:01.9722686Z [278/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp.o
+2026-10-28T06:01:02.6984382Z [279/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp.o
+2026-10-28T06:01:04.7923204Z [280/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp.o
+2026-10-28T06:01:05.0520847Z [281/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp.o
+2026-10-28T06:01:06.8760683Z [282/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp.o
+2026-10-28T06:01:07.0050830Z [283/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp.o
+2026-10-28T06:01:08.6797754Z [284/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp.o
+2026-10-28T06:01:08.9849311Z [285/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp.o
+2026-10-28T06:01:10.4197368Z [286/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp.o
+2026-10-28T06:01:11.3556961Z [287/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp.o
+2026-10-28T06:01:12.1711377Z [288/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp.o
+2026-10-28T06:01:13.5022228Z [289/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp.o
+2026-10-28T06:01:14.3120946Z [290/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp.o
+2026-10-28T06:01:15.3795788Z [291/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp.o
+2026-10-28T06:01:16.2332948Z [292/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp.o
+2026-10-28T06:01:17.2001948Z [293/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp.o
+2026-10-28T06:01:18.0080847Z [294/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp.o
+2026-10-28T06:01:19.3242501Z [295/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp.o
+2026-10-28T06:01:20.2815969Z [296/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp.o
+2026-10-28T06:01:21.4849289Z [297/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp.o
+2026-10-28T06:01:22.9245600Z [298/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp.o
+2026-10-28T06:01:23.4109799Z [299/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp.o
+2026-10-28T06:01:24.8677637Z [300/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp.o
+2026-10-28T06:01:25.5952464Z [301/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp.o
+2026-10-28T06:01:27.0445286Z [302/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp.o
+2026-10-28T06:01:27.3414964Z [303/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+2026-10-28T06:01:27.4113902Z [304/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_samples.cpp.o
+2026-10-28T06:01:27.4218385Z [305/434] Building CXX object CMakeFiles/mr_update_tests.dir/mr_update_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:27.7636421Z [306/434] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp.o
+2026-10-28T06:01:27.7738923Z [307/434] Building CXX object CMakeFiles/mr_update_journal_tests.dir/mr_update_journal_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:32.4847520Z [308/434] Building CXX object CMakeFiles/mr_update_tests.dir/cpp/tests/update_tests.cpp.o
+2026-10-28T06:01:32.4954209Z [309/434] Building CXX object CMakeFiles/mr_update_key_tests.dir/mr_update_key_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:32.6317007Z [310/434] Building CXX object CMakeFiles/mr_update_journal_tests.dir/cpp/tests/update_journal_tests.cpp.o
+2026-10-28T06:01:32.6419389Z [311/434] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/mr_forensic_adapter_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:34.8340924Z [312/434] Building CXX object CMakeFiles/mr_update_key_tests.dir/cpp/tests/update_key_tests.cpp.o
+2026-10-28T06:01:34.8446328Z [313/434] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:39.1168823Z [314/434] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/cpp/tests/forensic_adapter_tests.cpp.o
+2026-10-28T06:01:39.1276345Z [315/434] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/mr_case_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:41.4116146Z [316/434] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+2026-10-28T06:01:41.4220377Z [317/434] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/mr_policy_audit_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:45.6163979Z [318/434] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/cpp/tests/case_transaction_tests.cpp.o
+2026-10-28T06:01:45.6266685Z [319/434] Building CXX object CMakeFiles/mr_offline_tests.dir/mr_offline_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:47.9926602Z [320/434] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/cpp/tests/policy_audit_tests.cpp.o
+2026-10-28T06:01:48.0029075Z [321/434] Building CXX object CMakeFiles/mr_artifact_tests.dir/mr_artifact_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:52.6075296Z [322/434] Building CXX object CMakeFiles/mr_offline_tests.dir/cpp/tests/offline_tests.cpp.o
+2026-10-28T06:01:52.6179279Z [323/434] Building CXX object CMakeFiles/mr_timeline_tests.dir/mr_timeline_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:55.0022296Z [324/434] Building CXX object CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o
+2026-10-28T06:01:55.0123195Z [325/434] Building CXX object CMakeFiles/mr_import_tests.dir/mr_import_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:01:57.7862334Z [326/434] Building CXX object CMakeFiles/mr_timeline_tests.dir/cpp/tests/timeline_tests.cpp.o
+2026-10-28T06:01:57.7963255Z [327/434] Building CXX object CMakeFiles/mr_retention_tests.dir/mr_retention_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:00.0500673Z [328/434] Building CXX object CMakeFiles/mr_import_tests.dir/cpp/tests/import_tests.cpp.o
+2026-10-28T06:02:00.0605975Z [329/434] Building CXX object CMakeFiles/mr_identity_tests.dir/mr_identity_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:02.8043597Z [330/434] Building CXX object CMakeFiles/mr_retention_tests.dir/cpp/tests/retention_tests.cpp.o
+2026-10-28T06:02:02.8150278Z [331/434] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/mr_law_workspace_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:05.7538725Z [332/434] Building CXX object CMakeFiles/mr_identity_tests.dir/cpp/tests/identity_tests.cpp.o
+2026-10-28T06:02:05.7640747Z [333/434] Building CXX object CMakeFiles/mr_research_tests.dir/mr_research_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:08.9785596Z [334/434] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+2026-10-28T06:02:08.9889775Z [335/434] Building CXX object CMakeFiles/mr_intelligence_tests.dir/mr_intelligence_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:10.1899781Z [336/434] Building CXX object CMakeFiles/mr_research_tests.dir/cpp/tests/research_tests.cpp.o
+2026-10-28T06:02:10.2004293Z [337/434] Building CXX object CMakeFiles/mr_connection_tests.dir/mr_connection_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:13.5787277Z [338/434] Building CXX object CMakeFiles/mr_intelligence_tests.dir/cpp/tests/intelligence_tests.cpp.o
+2026-10-28T06:02:13.5891457Z [339/434] Building CXX object CMakeFiles/mr_workshop_tests.dir/mr_workshop_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:14.9348240Z [340/434] Building CXX object CMakeFiles/mr_connection_tests.dir/cpp/tests/connection_tests.cpp.o
+2026-10-28T06:02:14.9450352Z [341/434] Building CXX object CMakeFiles/mr_barcode_tests.dir/mr_barcode_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:18.9870636Z [342/434] Building CXX object CMakeFiles/mr_barcode_tests.dir/cpp/tests/barcode_tests.cpp.o
+2026-10-28T06:02:19.0034389Z [343/434] Building CXX object CMakeFiles/mr_center_tests.dir/mr_center_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:19.1657630Z [344/434] Building CXX object CMakeFiles/mr_workshop_tests.dir/cpp/tests/workshop_tests.cpp.o
+2026-10-28T06:02:19.1764416Z [345/434] Building CXX object CMakeFiles/mr_cloud_tests.dir/mr_cloud_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:23.9316157Z [346/434] Building CXX object CMakeFiles/mr_center_tests.dir/cpp/tests/center_tests.cpp.o
+2026-10-28T06:02:23.9421490Z [347/434] Building CXX object CMakeFiles/mr_security_tests.dir/mr_security_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:24.9608088Z [348/434] Building CXX object CMakeFiles/mr_cloud_tests.dir/cpp/tests/cloud_tests.cpp.o
+2026-10-28T06:02:24.9714128Z [349/434] Building CXX object CMakeFiles/mr_catalog_tests.dir/mr_catalog_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:29.7012687Z [350/434] Building CXX object CMakeFiles/mr_security_tests.dir/cpp/tests/security_tests.cpp.o
+2026-10-28T06:02:29.7116982Z [351/434] Building CXX object CMakeFiles/mr_tool_tests.dir/mr_tool_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:30.0999472Z [352/434] Building CXX object CMakeFiles/mr_catalog_tests.dir/cpp/tests/catalog_tests.cpp.o
+2026-10-28T06:02:30.1103646Z [353/434] Building CXX object CMakeFiles/mr_service_tests.dir/mr_service_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:36.4801691Z [354/434] Building CXX object CMakeFiles/mr_tool_tests.dir/cpp/tests/tool_tests.cpp.o
+2026-10-28T06:02:36.4907464Z [355/434] Building CXX object CMakeFiles/mr_mirror_tests.dir/mr_mirror_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:40.0568635Z [356/434] Building CXX object CMakeFiles/mr_service_tests.dir/cpp/tests/service_tests.cpp.o
+2026-10-28T06:02:40.0673098Z [357/434] Building CXX object CMakeFiles/mr_compatibility_tests.dir/mr_compatibility_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:41.7190001Z [358/434] Building CXX object CMakeFiles/mr_mirror_tests.dir/cpp/tests/mirror_tests.cpp.o
+2026-10-28T06:02:41.7296833Z [359/434] Building CXX object CMakeFiles/mr_board_tests.dir/mr_board_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:46.0292677Z [360/434] Building CXX object CMakeFiles/mr_compatibility_tests.dir/cpp/tests/compatibility_tests.cpp.o
+2026-10-28T06:02:46.0397728Z [361/434] Building CXX object CMakeFiles/mr_firmware_tests.dir/mr_firmware_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:46.2614604Z [362/434] Building CXX object CMakeFiles/mr_board_tests.dir/cpp/tests/board_tests.cpp.o
+2026-10-28T06:02:46.2719868Z [363/434] Building CXX object CMakeFiles/mr_avb_tests.dir/mr_avb_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:50.7984470Z [364/434] Building CXX object CMakeFiles/mr_avb_tests.dir/cpp/tests/avb_tests.cpp.o
+2026-10-28T06:02:50.8089449Z [365/434] Building CXX object CMakeFiles/mr_pcap_tests.dir/mr_pcap_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:51.4493894Z [366/434] Building CXX object CMakeFiles/mr_firmware_tests.dir/cpp/tests/firmware_tests.cpp.o
+2026-10-28T06:02:51.4597642Z [367/434] Building CXX object CMakeFiles/mr_exif_tests.dir/mr_exif_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:54.4964891Z [368/434] Building CXX object CMakeFiles/mr_pcap_tests.dir/cpp/tests/pcap_tests.cpp.o
+2026-10-28T06:02:54.5068414Z [369/434] Building CXX object CMakeFiles/mr_recovery_tests.dir/mr_recovery_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:55.1243966Z [370/434] Building CXX object CMakeFiles/mr_exif_tests.dir/cpp/tests/exif_tests.cpp.o
+2026-10-28T06:02:55.1369369Z [371/434] Building CXX object CMakeFiles/mr_recovery_image_tests.dir/mr_recovery_image_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:02:59.4381308Z [372/434] Building CXX object CMakeFiles/mr_recovery_image_tests.dir/cpp/tests/recovery_image_tests.cpp.o
+2026-10-28T06:02:59.4484687Z [373/434] Building CXX object CMakeFiles/mr_forensic_tests.dir/mr_forensic_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:00.3740142Z [374/434] Building CXX object CMakeFiles/mr_recovery_tests.dir/cpp/tests/recovery_tests.cpp.o
+2026-10-28T06:03:00.3843509Z [375/434] Building CXX object CMakeFiles/mr_tsk_tests.dir/mr_tsk_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:03.2602649Z [376/434] Building CXX object CMakeFiles/mr_forensic_tests.dir/cpp/tests/forensic_tests.cpp.o
+2026-10-28T06:03:03.2704043Z [377/434] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/mr_avb_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:04.7517088Z [378/434] Building CXX object CMakeFiles/mr_tsk_tests.dir/cpp/tests/tsk_tests.cpp.o
+2026-10-28T06:03:05.0709270Z [379/434] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/tests/avb_mutation_tests.cpp.o
+2026-10-28T06:03:05.0807273Z [380/434] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/mr_pcap_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:06.7799918Z [381/434] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/src/AvbMetadata.cpp.o
+2026-10-28T06:03:06.9019876Z [382/434] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/tests/pcap_mutation_tests.cpp.o
+2026-10-28T06:03:06.9120970Z [383/434] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/mr_exif_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:08.7441637Z [384/434] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/src/PcapSummary.cpp.o
+2026-10-28T06:03:08.7659658Z [385/434] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/tests/exif_mutation_tests.cpp.o
+2026-10-28T06:03:08.7762814Z [386/434] Building CXX object CMakeFiles/mr_ui_tests.dir/mr_ui_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:03:11.3404443Z [387/434] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/src/ExifSummary.cpp.o
+2026-10-28T06:03:11.4109132Z [388/434] Building CXX object CMakeFiles/mr_ui_tests.dir/build/.rcc/qrc_samples.cpp.o
+2026-10-28T06:03:11.4628943Z [389/434] Linking CXX executable mr_policy_tests
+2026-10-28T06:03:11.5179416Z [390/434] Linking CXX executable mr_core_tests
+2026-10-28T06:03:11.5735779Z [391/434] Linking CXX executable mr_law_enforcement_case_tests
+2026-10-28T06:03:11.7085623Z [392/434] Linking CXX executable mr_update_tests
+2026-10-28T06:03:11.8492111Z [393/434] Linking CXX executable mr_update_journal_tests
+2026-10-28T06:03:11.9887001Z [394/434] Linking CXX executable mr_update_key_tests
+2026-10-28T06:03:12.8818811Z [395/434] Linking CXX executable nexvary_mr
+2026-10-28T06:03:13.5269867Z [396/434] Linking CXX executable mr_forensic_adapter_tests
+2026-10-28T06:03:14.1743403Z [397/434] Linking CXX executable mr_partition_transaction_tests
+2026-10-28T06:03:14.8199941Z [398/434] Linking CXX executable mr_case_transaction_tests
+2026-10-28T06:03:15.4775929Z [399/434] Linking CXX executable mr_policy_audit_tests
+2026-10-28T06:03:15.6684707Z [400/434] Building CXX object CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o
+2026-10-28T06:03:16.1375678Z [401/434] Linking CXX executable mr_offline_tests
+2026-10-28T06:03:16.3182933Z [402/434] Linking CXX executable mr_artifact_tests
+2026-10-28T06:03:16.7876786Z [403/434] Linking CXX executable mr_timeline_tests
+2026-10-28T06:03:16.9644708Z [404/434] Linking CXX executable mr_import_tests
+2026-10-28T06:03:17.4361727Z [405/434] Linking CXX executable mr_retention_tests
+2026-10-28T06:03:17.6152883Z [406/434] Linking CXX executable mr_identity_tests
+2026-10-28T06:03:18.0900161Z [407/434] Linking CXX executable mr_law_workspace_tests
+2026-10-28T06:03:18.2331528Z [408/434] Linking CXX executable mr_intelligence_tests
+2026-10-28T06:03:18.2600305Z [409/434] Linking CXX executable mr_research_tests
+2026-10-28T06:03:18.3868406Z [410/434] Linking CXX executable mr_connection_tests
+2026-10-28T06:03:18.9065065Z [411/434] Linking CXX executable mr_workshop_tests
+2026-10-28T06:03:19.0275496Z [412/434] Linking CXX executable mr_barcode_tests
+2026-10-28T06:03:19.5460905Z [413/434] Linking CXX executable mr_center_tests
+2026-10-28T06:03:19.6754597Z [414/434] Linking CXX executable mr_cloud_tests
+2026-10-28T06:03:20.1994651Z [415/434] Linking CXX executable mr_security_tests
+2026-10-28T06:03:20.3268790Z [416/434] Linking CXX executable mr_catalog_tests
+2026-10-28T06:03:20.8522455Z [417/434] Linking CXX executable mr_tool_tests
+2026-10-28T06:03:20.9820253Z [418/434] Linking CXX executable mr_service_tests
+2026-10-28T06:03:21.5082501Z [419/434] Linking CXX executable mr_mirror_tests
+2026-10-28T06:03:21.6303155Z [420/434] Linking CXX executable mr_compatibility_tests
+2026-10-28T06:03:22.1538635Z [421/434] Linking CXX executable mr_board_tests
+2026-10-28T06:03:22.2787846Z [422/434] Linking CXX executable mr_firmware_tests
+2026-10-28T06:03:22.7985835Z [423/434] Linking CXX executable mr_avb_tests
+2026-10-28T06:03:22.9383875Z [424/434] Linking CXX executable mr_pcap_tests
+2026-10-28T06:03:23.4462986Z [425/434] Linking CXX executable mr_exif_tests
+2026-10-28T06:03:23.6505629Z [426/434] Linking CXX executable mr_recovery_tests
+2026-10-28T06:03:23.6537902Z [427/434] Linking CXX executable mr_recovery_image_tests
+2026-10-28T06:03:24.3041377Z [428/434] Linking CXX executable mr_tsk_tests
+2026-10-28T06:03:24.3142082Z [429/434] Linking CXX executable mr_forensic_tests
+2026-10-28T06:03:24.4230572Z [430/434] Linking CXX executable mr_avb_mutation_tests
+2026-10-28T06:03:24.4322631Z [431/434] Linking CXX executable mr_pcap_mutation_tests
+2026-10-28T06:03:24.5393342Z [432/434] Linking CXX executable mr_exif_mutation_tests
+2026-10-28T06:03:25.1249948Z [433/434] Linking CXX executable mr_ui_tests
+2026-10-28T06:03:25.1300401Z ##[group]Run python3 scripts/diagnose_ui_failure.py --build build
+2026-10-28T06:03:25.1300902Z [36;1mpython3 scripts/diagnose_ui_failure.py --build build[0m
+2026-10-28T06:03:25.1302255Z [36;1mctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt[0m
+2026-10-28T06:03:25.1316066Z shell: /usr/bin/bash -e {0}
+2026-10-28T06:03:25.1316320Z env:
+2026-10-28T06:03:25.1316566Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T06:03:25.1316814Z   QT_QUICK_BACKEND: software
+2026-10-28T06:03:25.1317063Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T06:03:25.1317329Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T06:03:25.1317600Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T06:03:25.1317903Z   MR_SODIUM_ROOT: /home/runner/work/_temp/nexvary-sodium
+2026-10-28T06:03:25.1318220Z ##[endgroup]
+2026-10-28T06:03:25.8455294Z Internal ctest changing into directory: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T06:03:25.9619730Z Test project /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T06:03:26.0450577Z       Start  1: mr_research_data_validation
+2026-10-28T06:03:26.0799990Z  1/51 Test  #1: mr_research_data_validation ........   Passed    0.03 sec
+2026-10-28T06:03:26.0800610Z       Start  2: mr_policy_tests
+2026-10-28T06:03:26.0814865Z  2/51 Test  #2: mr_policy_tests ....................   Passed    0.00 sec
+2026-10-28T06:03:26.0815392Z       Start  3: mr_core_tests
+2026-10-28T06:03:26.0835152Z  3/51 Test  #3: mr_core_tests ......................   Passed    0.00 sec
+2026-10-28T06:03:26.0835699Z       Start  4: mr_law_enforcement_case_tests
+2026-10-28T06:03:26.0855682Z  4/51 Test  #4: mr_law_enforcement_case_tests ......   Passed    0.00 sec
+2026-10-28T06:03:26.0856184Z       Start  5: mr_update_tests
+2026-10-28T06:03:26.6037909Z  5/51 Test  #5: mr_update_tests ....................   Passed    0.52 sec
+2026-10-28T06:03:26.6087048Z       Start  6: mr_update_journal_tests
+2026-10-28T06:03:30.7784081Z  6/51 Test  #6: mr_update_journal_tests ............   Passed    4.17 sec
+2026-10-28T06:03:30.7784618Z       Start  7: mr_update_key_tests
+2026-10-28T06:03:30.7819714Z  7/51 Test  #7: mr_update_key_tests ................   Passed    0.00 sec
+2026-10-28T06:03:30.7820255Z       Start  8: mr_forensic_adapter_tests
+2026-10-28T06:03:33.0115263Z  8/51 Test  #8: mr_forensic_adapter_tests ..........   Passed    2.23 sec
+2026-10-28T06:03:33.0115698Z       Start  9: mr_partition_transaction_tests
+2026-10-28T06:04:15.0456221Z  9/51 Test  #9: mr_partition_transaction_tests .....   Passed   42.03 sec
+2026-10-28T06:04:15.0456656Z       Start 10: mr_case_transaction_tests
+2026-10-28T06:04:31.0569044Z 10/51 Test #10: mr_case_transaction_tests ..........   Passed   16.01 sec
+2026-10-28T06:04:31.0569594Z       Start 11: mr_policy_audit_tests
+2026-10-28T06:04:43.1630318Z 11/51 Test #11: mr_policy_audit_tests ..............   Passed   12.11 sec
+2026-10-28T06:04:43.1630848Z       Start 12: mr_offline_tests
+2026-10-28T06:05:07.8308174Z 12/51 Test #12: mr_offline_tests ...................   Passed   24.67 sec
+2026-10-28T06:05:07.8308608Z       Start 13: mr_artifact_tests
+2026-10-28T06:05:09.2781496Z 13/51 Test #13: mr_artifact_tests ..................   Passed    1.45 sec
+2026-10-28T06:05:09.2781921Z       Start 14: mr_timeline_tests
+2026-10-28T06:05:10.3246303Z 14/51 Test #14: mr_timeline_tests ..................   Passed    1.05 sec
+2026-10-28T06:05:10.3246713Z       Start 15: mr_import_tests
+2026-10-28T06:05:17.6262270Z 15/51 Test #15: mr_import_tests ....................   Passed    7.30 sec
+2026-10-28T06:05:17.6262727Z       Start 16: mr_retention_tests
+2026-10-28T06:05:18.6492082Z 16/51 Test #16: mr_retention_tests .................   Passed    1.02 sec
+2026-10-28T06:05:18.6492633Z       Start 17: mr_identity_tests
+2026-10-28T06:05:23.6450875Z 17/51 Test #17: mr_identity_tests ..................   Passed    5.00 sec
+2026-10-28T06:05:23.6453906Z       Start 18: mr_law_workspace_tests
+2026-10-28T06:05:25.2712460Z 18/51 Test #18: mr_law_workspace_tests .............   Passed    1.63 sec
+2026-10-28T06:05:25.2713061Z       Start 19: mr_research_tests
+2026-10-28T06:05:25.3124309Z 19/51 Test #19: mr_research_tests ..................   Passed    0.04 sec
+2026-10-28T06:05:25.3124896Z       Start 20: mr_intelligence_tests
+2026-10-28T06:05:25.3186635Z 20/51 Test #20: mr_intelligence_tests ..............   Passed    0.01 sec
+2026-10-28T06:05:25.3187047Z       Start 21: mr_connection_tests
+2026-10-28T06:05:25.3265244Z 21/51 Test #21: mr_connection_tests ................   Passed    0.01 sec
+2026-10-28T06:05:25.3265832Z       Start 22: mr_workshop_tests
+2026-10-28T06:05:27.2903140Z 22/51 Test #22: mr_workshop_tests ..................   Passed    1.96 sec
+2026-10-28T06:05:27.2903551Z       Start 23: mr_barcode_tests
+2026-10-28T06:05:28.0746847Z 23/51 Test #23: mr_barcode_tests ...................   Passed    0.78 sec
+2026-10-28T06:05:28.0747379Z       Start 24: mr_center_tests
+2026-10-28T06:05:28.1489190Z 24/51 Test #24: mr_center_tests ....................   Passed    0.07 sec
+2026-10-28T06:05:28.1489735Z       Start 25: mr_cloud_tests
+2026-10-28T06:05:39.6356405Z 25/51 Test #25: mr_cloud_tests .....................   Passed   11.49 sec
+2026-10-28T06:05:39.6356816Z       Start 26: mr_security_tests
+2026-10-28T06:05:48.7188297Z 26/51 Test #26: mr_security_tests ..................   Passed    9.08 sec
+2026-10-28T06:05:48.7188831Z       Start 27: mr_catalog_tests
+2026-10-28T06:05:48.7448774Z 27/51 Test #27: mr_catalog_tests ...................   Passed    0.03 sec
+2026-10-28T06:05:48.7449382Z       Start 28: mr_tool_tests
+2026-10-28T06:06:16.8087582Z 28/51 Test #28: mr_tool_tests ......................   Passed   28.06 sec
+2026-10-28T06:06:16.8088110Z       Start 29: mr_service_tests
+2026-10-28T06:06:20.6947877Z 29/51 Test #29: mr_service_tests ...................   Passed    3.89 sec
+2026-10-28T06:06:20.6948440Z       Start 30: mr_mirror_tests
+2026-10-28T06:06:33.9069835Z 30/51 Test #30: mr_mirror_tests ....................   Passed   13.21 sec
+2026-10-28T06:06:33.9070465Z       Start 31: mr_compatibility_tests
+2026-10-28T06:06:33.9213255Z 31/51 Test #31: mr_compatibility_tests .............   Passed    0.01 sec
+2026-10-28T06:06:33.9213810Z       Start 32: mr_board_tests
+2026-10-28T06:06:33.9426181Z 32/51 Test #32: mr_board_tests .....................   Passed    0.02 sec
+2026-10-28T06:06:33.9426590Z       Start 33: mr_firmware_tests
+2026-10-28T06:06:33.9646135Z 33/51 Test #33: mr_firmware_tests ..................   Passed    0.02 sec
+2026-10-28T06:06:33.9646742Z       Start 34: mr_avb_tests
+2026-10-28T06:06:33.9923538Z 34/51 Test #34: mr_avb_tests .......................   Passed    0.03 sec
+2026-10-28T06:06:33.9923932Z       Start 35: mr_pcap_tests
+2026-10-28T06:06:34.2798278Z 35/51 Test #35: mr_pcap_tests ......................   Passed    0.29 sec
+2026-10-28T06:06:34.2798821Z       Start 36: mr_exif_tests
+2026-10-28T06:06:34.5559730Z 36/51 Test #36: mr_exif_tests ......................   Passed    0.28 sec
+2026-10-28T06:06:34.5560331Z       Start 37: mr_recovery_tests
+2026-10-28T06:06:44.3641811Z 37/51 Test #37: mr_recovery_tests ..................   Passed    9.81 sec
+2026-10-28T06:06:44.3642241Z       Start 38: mr_recovery_image_tests
+2026-10-28T06:06:44.3804470Z 38/51 Test #38: mr_recovery_image_tests ............   Passed    0.02 sec
+2026-10-28T06:06:44.3804876Z       Start 39: mr_forensic_tests
+2026-10-28T06:06:44.9119764Z 39/51 Test #39: mr_forensic_tests ..................   Passed    0.53 sec
+2026-10-28T06:06:44.9120475Z       Start 40: mr_tsk_tests
+2026-10-28T06:06:51.4234369Z 40/51 Test #40: mr_tsk_tests .......................   Passed    6.51 sec
+2026-10-28T06:06:51.4234924Z       Start 41: mr_policy_audit_interop
+2026-10-28T06:06:54.7953026Z 41/51 Test #41: mr_policy_audit_interop ............   Passed    3.37 sec
+2026-10-28T06:06:54.7953584Z       Start 42: mr_evidence_package_interop
+2026-10-28T06:06:54.9062156Z 42/51 Test #42: mr_evidence_package_interop ........   Passed    0.11 sec
+2026-10-28T06:06:54.9063077Z       Start 43: mr_artifact_reference_validation
+2026-10-28T06:06:54.9369847Z 43/51 Test #43: mr_artifact_reference_validation ...   Passed    0.03 sec
+2026-10-28T06:06:54.9370459Z       Start 44: mr_adb_backup_interop
+2026-10-28T06:06:55.4483361Z 44/51 Test #44: mr_adb_backup_interop ..............   Passed    0.51 sec
+2026-10-28T06:06:55.4483774Z       Start 45: mr_avb_mutation_tests
+2026-10-28T06:06:55.6060269Z 45/51 Test #45: mr_avb_mutation_tests ..............   Passed    0.16 sec
+2026-10-28T06:06:55.6060843Z       Start 46: mr_pcap_mutation_tests
+2026-10-28T06:06:55.8077106Z 46/51 Test #46: mr_pcap_mutation_tests .............   Passed    0.20 sec
+2026-10-28T06:06:55.8077564Z       Start 47: mr_exif_mutation_tests
+2026-10-28T06:06:55.8489792Z 47/51 Test #47: mr_exif_mutation_tests .............   Passed    0.04 sec
+2026-10-28T06:06:55.8490328Z       Start 48: mr_ui_tests
+2026-10-28T06:08:02.1393720Z 48/51 Test #48: mr_ui_tests ........................   Passed   66.29 sec
+2026-10-28T06:08:02.1394171Z       Start 49: mr_ui_scale_1.25
+2026-10-28T06:08:42.2970171Z 49/51 Test #49: mr_ui_scale_1.25 ...................   Passed   40.16 sec
+2026-10-28T06:08:42.2970744Z       Start 50: mr_ui_scale_1.5
+2026-10-28T06:09:27.6459211Z 50/51 Test #50: mr_ui_scale_1.5 ....................   Passed   45.35 sec
+2026-10-28T06:09:27.6459794Z       Start 51: mr_gui_smoke
+2026-10-28T06:09:46.6829641Z 51/51 Test #51: mr_gui_smoke .......................   Passed   19.04 sec
+2026-10-28T06:09:46.6835327Z 
+2026-10-28T06:09:46.6837647Z 100% tests passed, 0 tests failed out of 51
+2026-10-28T06:09:46.6837872Z 
+2026-10-28T06:09:46.6837975Z Total Test time (real) = 380.72 sec
+2026-10-28T06:09:46.9105677Z Internal ctest changing into directory: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T06:09:46.9107700Z Test project /home/runner/work/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T06:09:46.9120120Z     Start 51: mr_gui_smoke
+2026-10-28T06:10:05.9311417Z     Test #51: mr_gui_smoke .....................   Passed   19.02 sec
+2026-10-28T06:10:05.9311978Z     Start 51: mr_gui_smoke
+2026-10-28T06:10:25.2155213Z     Test #51: mr_gui_smoke .....................   Passed   19.28 sec
+2026-10-28T06:10:25.2155608Z     Start 51: mr_gui_smoke
+2026-10-28T06:10:44.6264668Z 1/1 Test #51: mr_gui_smoke .....................   Passed   19.41 sec
+2026-10-28T06:10:44.6270484Z 
+2026-10-28T06:10:44.6270763Z 100% tests passed, 0 tests failed out of 1
+2026-10-28T06:10:44.6271253Z 
+2026-10-28T06:10:44.6271405Z Total Test time (real) =  57.72 sec
+2026-10-28T06:10:44.6331833Z ##[group]Run cmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug
+2026-10-28T06:10:44.6333041Z [36;1mcmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug[0m
+2026-10-28T06:10:44.6334995Z [36;1mcmake --build build-avb-sanitized --target mr_forensic_adapter_tests mr_partition_transaction_tests mr_case_transaction_tests mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2[0m
+2026-10-28T06:10:44.6337666Z [36;1mUBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|forensic_adapter|partition_transaction|case_transaction|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml[0m
+2026-10-28T06:10:44.6352451Z shell: /usr/bin/bash -e {0}
+2026-10-28T06:10:44.6352709Z env:
+2026-10-28T06:10:44.6352925Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T06:10:44.6353174Z   QT_QUICK_BACKEND: software
+2026-10-28T06:10:44.6353426Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T06:10:44.6353688Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T06:10:44.6353955Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T06:10:44.6354254Z   MR_SODIUM_ROOT: /home/runner/work/_temp/nexvary-sodium
+2026-10-28T06:10:44.6354559Z ##[endgroup]
+2026-10-28T06:10:44.6936179Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-28T06:10:44.7010928Z -- Detecting CXX compiler ABI info
+2026-10-28T06:10:44.7564540Z -- Detecting CXX compiler ABI info - done
+2026-10-28T06:10:44.7716392Z -- Check for working CXX compiler: /usr/bin/c++ - skipped
+2026-10-28T06:10:44.7719307Z -- Detecting CXX compile features
+2026-10-28T06:10:44.7725339Z -- Detecting CXX compile features - done
+2026-10-28T06:10:44.9237800Z -- Found Python3: /usr/bin/python3.12 (found version "3.12.3") found components: Interpreter
+2026-10-28T06:10:44.9322719Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-28T06:10:44.9966220Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+2026-10-28T06:10:44.9975157Z -- Found Threads: TRUE
+2026-10-28T06:10:44.9989425Z -- Performing Test HAVE_STDATOMIC
+2026-10-28T06:10:45.1155327Z -- Performing Test HAVE_STDATOMIC - Success
+2026-10-28T06:10:45.1165836Z -- Found WrapAtomic: TRUE
+2026-10-28T06:10:45.1623196Z -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+2026-10-28T06:10:45.1633200Z -- Found WrapOpenGL: TRUE
+2026-10-28T06:10:45.1741223Z -- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+2026-10-28T06:10:45.2349697Z -- Found WrapVulkanHeaders: /usr/include
+2026-10-28T06:10:45.4707027Z -- Configuring done (0.8s)
+2026-10-28T06:10:45.6629463Z -- Generating done (0.2s)
+2026-10-28T06:10:45.6639414Z -- Build files have been written to: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build-avb-sanitized
+2026-10-28T06:10:45.6859888Z [0/2] Re-checking globbed directories...
+2026-10-28T06:10:45.7055660Z [1/147] Automatic MOC and UIC for target mr_import_adapters
+2026-10-28T06:10:45.7223278Z [2/147] Building CXX object CMakeFiles/mr_import_adapters.dir/mr_import_adapters_autogen/mocs_compilation.cpp.o
+2026-10-28T06:10:46.7854076Z [3/147] Building CXX object CMakeFiles/mr_core.dir/cpp/src/RepairCore.cpp.o
+2026-10-28T06:10:49.6286016Z [4/147] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/AdbBackupImport.cpp.o
+2026-10-28T06:10:49.7877249Z [5/147] Building CXX object CMakeFiles/mr_import_adapters.dir/cpp/src/ImportAdapters.cpp.o
+2026-10-28T06:10:49.8887219Z [6/147] Linking CXX static library libmr_import_adapters.a
+2026-10-28T06:10:49.9052583Z [7/147] Automatic MOC and UIC for target mr_evidence_import_worker
+2026-10-28T06:10:49.9192178Z [8/147] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/mr_evidence_import_worker_autogen/mocs_compilation.cpp.o
+2026-10-28T06:10:50.5978802Z [9/147] Building CXX object CMakeFiles/mr_user_protection.dir/cpp/src/CaseVault.cpp.o
+2026-10-28T06:10:50.6775063Z [10/147] Linking CXX static library libmr_core.a
+2026-10-28T06:10:50.7531423Z [11/147] Linking CXX static library libmr_user_protection.a
+2026-10-28T06:10:52.0762307Z [12/147] Building CXX object CMakeFiles/mr_evidence_import_worker.dir/cpp/src/import_worker.cpp.o
+2026-10-28T06:10:52.6859321Z [13/147] Linking CXX executable mr_evidence_import_worker
+2026-10-28T06:10:53.7100263Z [14/147] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateVerifier.cpp.o
+2026-10-28T06:10:54.5255326Z [15/147] Automatic MOC and UIC for target mr_desktop
+2026-10-28T06:10:56.8555837Z [16/147] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateJournal.cpp.o
+2026-10-28T06:10:57.0439646Z [17/147] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateKeyStore.cpp.o
+2026-10-28T06:11:00.8885835Z [18/147] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+2026-10-28T06:11:03.5730202Z [19/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+2026-10-28T06:11:03.8156331Z [20/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RepairBridge.cpp.o
+2026-10-28T06:11:07.0754561Z [21/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+2026-10-28T06:11:08.8701872Z [22/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/WorkshopBridge.cpp.o
+2026-10-28T06:11:09.9181309Z [23/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+2026-10-28T06:11:13.7576432Z [24/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ServiceCatalog.cpp.o
+2026-10-28T06:11:14.2885072Z [25/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+2026-10-28T06:11:17.6093391Z [26/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/BoardBridge.cpp.o
+2026-10-28T06:11:18.4365279Z [27/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/FirmwareBridge.cpp.o
+2026-10-28T06:11:21.2543523Z [28/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryImage.cpp.o
+2026-10-28T06:11:22.5556284Z [29/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+2026-10-28T06:11:24.3377150Z [30/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicRecord.cpp.o
+2026-10-28T06:11:24.9132819Z [31/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+2026-10-28T06:11:29.5093669Z [32/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PolicyAudit.cpp.o
+2026-10-28T06:11:30.9829052Z [33/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/GovernmentOperationPolicy.cpp.o
+2026-10-28T06:11:33.4762035Z [34/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+2026-10-28T06:11:35.3532975Z [35/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+2026-10-28T06:11:36.9130289Z [36/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+2026-10-28T06:11:38.6082927Z [37/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseRetention.cpp.o
+2026-10-28T06:11:39.9152814Z [38/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawRetention.cpp.o
+2026-10-28T06:11:43.9143711Z [39/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ResearchBridge.cpp.o
+2026-10-28T06:11:44.8378960Z [40/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+2026-10-28T06:11:46.9628780Z [41/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+2026-10-28T06:11:48.8770334Z [42/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/AvbMetadata.cpp.o
+2026-10-28T06:11:50.8214178Z [43/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PcapSummary.cpp.o
+2026-10-28T06:11:52.1475943Z [44/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+2026-10-28T06:11:53.2560292Z [45/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ExifSummary.cpp.o
+2026-10-28T06:11:56.1350718Z [46/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ConnectionDiagnosis.cpp.o
+2026-10-28T06:11:56.7483617Z [47/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceIntelligence.cpp.o
+2026-10-28T06:11:58.7984641Z [48/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/EvidenceImportRunner.cpp.o
+2026-10-28T06:11:59.6255138Z [49/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseImports.cpp.o
+2026-10-28T06:12:02.1057895Z [50/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseTimeline.cpp.o
+2026-10-28T06:12:03.6928130Z [51/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseTimeline.cpp.o
+2026-10-28T06:12:06.2705167Z [52/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CaseArtifacts.cpp.o
+2026-10-28T06:12:07.8254637Z [53/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+2026-10-28T06:12:10.6636362Z [54/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCasePartitions.cpp.o
+2026-10-28T06:12:12.0645976Z [55/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseForensicAdapters.cpp.o
+2026-10-28T06:12:14.4479335Z [56/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ForensicAdapters.cpp.o
+2026-10-28T06:12:14.5488721Z [57/147] Linking CXX static library libmr_update_verifier.a
+2026-10-28T06:12:14.5653937Z [58/147] Automatic MOC and UIC for target mr_desktop_resources_1
+2026-10-28T06:12:14.5804610Z [59/147] Automatic MOC and UIC for target mr_desktop_resources_2
+2026-10-28T06:12:14.7960802Z [60/147] Automatic MOC for target mr_update_tests
+2026-10-28T06:12:15.0164941Z [61/147] Automatic MOC for target mr_update_journal_tests
+2026-10-28T06:12:15.0545167Z [62/147] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DcImagePartitions.cpp.o
+2026-10-28T06:12:15.2264949Z [63/147] Automatic MOC for target mr_update_key_tests
+2026-10-28T06:12:15.2427809Z [64/147] Automatic MOC and UIC for target mr_avb_mutation_tests
+2026-10-28T06:12:15.2584915Z [65/147] Automatic MOC and UIC for target mr_pcap_mutation_tests
+2026-10-28T06:12:15.2740859Z [66/147] Automatic MOC and UIC for target mr_exif_mutation_tests
+2026-10-28T06:12:15.2988186Z [67/147] Running rcc for resource research_catalog
+2026-10-28T06:12:15.3073591Z [68/147] Running rcc for resource device_catalog
+2026-10-28T06:12:15.4508716Z [69/147] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/mr_desktop_resources_1_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:15.6042058Z [70/147] Building CXX object CMakeFiles/mr_desktop_resources_1.dir/build-avb-sanitized/.rcc/qrc_research_catalog.cpp.o
+2026-10-28T06:12:15.6718778Z [71/147] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/mr_desktop_resources_2_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:15.7457513Z [72/147] Building CXX object CMakeFiles/mr_desktop_resources_2.dir/build-avb-sanitized/.rcc/qrc_device_catalog.cpp.o
+2026-10-28T06:12:15.9224335Z [73/147] Building CXX object CMakeFiles/mr_update_tests.dir/mr_update_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:16.9207622Z [74/147] Linking CXX static library libmr_desktop.a
+2026-10-28T06:12:17.4572059Z [75/147] Automatic MOC and UIC for target mr_forensic_adapter_tests
+2026-10-28T06:12:17.9557914Z [76/147] Automatic MOC and UIC for target mr_partition_transaction_tests
+2026-10-28T06:12:18.4539581Z [77/147] Automatic MOC and UIC for target mr_case_transaction_tests
+2026-10-28T06:12:18.9451227Z [78/147] Automatic MOC and UIC for target mr_policy_audit_tests
+2026-10-28T06:12:19.4658796Z [79/147] Automatic MOC and UIC for target mr_offline_tests
+2026-10-28T06:12:19.6818359Z [80/147] Automatic MOC and UIC for target mr_artifact_tests
+2026-10-28T06:12:19.8981747Z [81/147] Automatic MOC and UIC for target mr_timeline_tests
+2026-10-28T06:12:20.1390264Z [82/147] Automatic MOC and UIC for target mr_import_tests
+2026-10-28T06:12:20.3531734Z [83/147] Automatic MOC and UIC for target mr_retention_tests
+2026-10-28T06:12:20.6781521Z [84/147] Building CXX object CMakeFiles/mr_update_tests.dir/cpp/tests/update_tests.cpp.o
+2026-10-28T06:12:20.8446190Z [85/147] Automatic MOC and UIC for target mr_identity_tests
+2026-10-28T06:12:20.9001533Z [86/147] Automatic MOC and UIC for target mr_law_workspace_tests
+2026-10-28T06:12:21.0732426Z [87/147] Automatic MOC and UIC for target mr_tool_tests
+2026-10-28T06:12:21.0882181Z [88/147] Building CXX object CMakeFiles/mr_update_journal_tests.dir/mr_update_journal_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:21.1307301Z [89/147] Automatic MOC and UIC for target mr_mirror_tests
+2026-10-28T06:12:21.1478335Z [90/147] Building CXX object CMakeFiles/mr_update_key_tests.dir/mr_update_key_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:23.6540061Z [91/147] Building CXX object CMakeFiles/mr_update_key_tests.dir/cpp/tests/update_key_tests.cpp.o
+2026-10-28T06:12:23.6683533Z [92/147] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/mr_forensic_adapter_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:25.0882436Z [93/147] Building CXX object CMakeFiles/mr_update_journal_tests.dir/cpp/tests/update_journal_tests.cpp.o
+2026-10-28T06:12:25.1028718Z [94/147] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:29.4959238Z [95/147] Building CXX object CMakeFiles/mr_forensic_adapter_tests.dir/cpp/tests/forensic_adapter_tests.cpp.o
+2026-10-28T06:12:29.5107189Z [96/147] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/mr_case_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:31.2376772Z [97/147] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+2026-10-28T06:12:31.2523002Z [98/147] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/mr_policy_audit_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:35.4208136Z [99/147] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/cpp/tests/case_transaction_tests.cpp.o
+2026-10-28T06:12:35.4351748Z [100/147] Building CXX object CMakeFiles/mr_offline_tests.dir/mr_offline_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:37.2028533Z [101/147] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/cpp/tests/policy_audit_tests.cpp.o
+2026-10-28T06:12:37.2174658Z [102/147] Building CXX object CMakeFiles/mr_artifact_tests.dir/mr_artifact_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:41.1597671Z [103/147] Building CXX object CMakeFiles/mr_offline_tests.dir/cpp/tests/offline_tests.cpp.o
+2026-10-28T06:12:41.1744474Z [104/147] Building CXX object CMakeFiles/mr_timeline_tests.dir/mr_timeline_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:43.1485234Z [105/147] Building CXX object CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o
+2026-10-28T06:12:43.1632045Z [106/147] Building CXX object CMakeFiles/mr_import_tests.dir/mr_import_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:46.1661514Z [107/147] Building CXX object CMakeFiles/mr_timeline_tests.dir/cpp/tests/timeline_tests.cpp.o
+2026-10-28T06:12:46.1805723Z [108/147] Building CXX object CMakeFiles/mr_retention_tests.dir/mr_retention_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:48.0594794Z [109/147] Building CXX object CMakeFiles/mr_import_tests.dir/cpp/tests/import_tests.cpp.o
+2026-10-28T06:12:48.0740812Z [110/147] Building CXX object CMakeFiles/mr_identity_tests.dir/mr_identity_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:50.5857753Z [111/147] Building CXX object CMakeFiles/mr_retention_tests.dir/cpp/tests/retention_tests.cpp.o
+2026-10-28T06:12:50.6003110Z [112/147] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/mr_law_workspace_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:53.2668872Z [113/147] Building CXX object CMakeFiles/mr_identity_tests.dir/cpp/tests/identity_tests.cpp.o
+2026-10-28T06:12:53.2815009Z [114/147] Building CXX object CMakeFiles/mr_tool_tests.dir/mr_tool_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:55.5775654Z [115/147] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+2026-10-28T06:12:55.5929942Z [116/147] Building CXX object CMakeFiles/mr_mirror_tests.dir/mr_mirror_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:12:59.2209378Z [117/147] Building CXX object CMakeFiles/mr_tool_tests.dir/cpp/tests/tool_tests.cpp.o
+2026-10-28T06:12:59.2351724Z [118/147] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/mr_avb_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:13:00.7314980Z [119/147] Building CXX object CMakeFiles/mr_mirror_tests.dir/cpp/tests/mirror_tests.cpp.o
+2026-10-28T06:13:01.1113063Z [120/147] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/tests/avb_mutation_tests.cpp.o
+2026-10-28T06:13:01.1253219Z [121/147] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/mr_pcap_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:13:02.6567280Z [122/147] Building CXX object CMakeFiles/mr_avb_mutation_tests.dir/cpp/src/AvbMetadata.cpp.o
+2026-10-28T06:13:02.9760098Z [123/147] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/tests/pcap_mutation_tests.cpp.o
+2026-10-28T06:13:02.9907147Z [124/147] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/mr_exif_mutation_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:13:04.6128327Z [125/147] Building CXX object CMakeFiles/mr_pcap_mutation_tests.dir/cpp/src/PcapSummary.cpp.o
+2026-10-28T06:13:04.8120314Z [126/147] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/tests/exif_mutation_tests.cpp.o
+2026-10-28T06:13:04.9732416Z [127/147] Linking CXX executable mr_update_tests
+2026-10-28T06:13:05.1276347Z [128/147] Linking CXX executable mr_update_journal_tests
+2026-10-28T06:13:05.2777629Z [129/147] Linking CXX executable mr_update_key_tests
+2026-10-28T06:13:06.3078676Z [130/147] Linking CXX executable mr_forensic_adapter_tests
+2026-10-28T06:13:07.0463799Z [131/147] Building CXX object CMakeFiles/mr_exif_mutation_tests.dir/cpp/src/ExifSummary.cpp.o
+2026-10-28T06:13:07.3770225Z [132/147] Linking CXX executable mr_partition_transaction_tests
+2026-10-28T06:13:08.1218952Z [133/147] Linking CXX executable mr_case_transaction_tests
+2026-10-28T06:13:08.4662274Z [134/147] Linking CXX executable mr_policy_audit_tests
+2026-10-28T06:13:09.2138798Z [135/147] Linking CXX executable mr_offline_tests
+2026-10-28T06:13:09.5481169Z [136/147] Linking CXX executable mr_artifact_tests
+2026-10-28T06:13:10.2774201Z [137/147] Linking CXX executable mr_timeline_tests
+2026-10-28T06:13:10.6209345Z [138/147] Linking CXX executable mr_import_tests
+2026-10-28T06:13:11.3097930Z [139/147] Linking CXX executable mr_retention_tests
+2026-10-28T06:13:11.6488057Z [140/147] Linking CXX executable mr_identity_tests
+2026-10-28T06:13:12.3620089Z [141/147] Linking CXX executable mr_law_workspace_tests
+2026-10-28T06:13:12.6867621Z [142/147] Linking CXX executable mr_tool_tests
+2026-10-28T06:13:12.7984380Z [143/147] Linking CXX executable mr_avb_mutation_tests
+2026-10-28T06:13:12.9133882Z [144/147] Linking CXX executable mr_pcap_mutation_tests
+2026-10-28T06:13:13.0314738Z [145/147] Linking CXX executable mr_exif_mutation_tests
+2026-10-28T06:13:13.4273231Z [146/147] Linking CXX executable mr_mirror_tests
+2026-10-28T06:13:13.4305105Z Internal ctest changing into directory: /home/runner/work/NEXVARY-MR/NEXVARY-MR/build-avb-sanitized
+2026-10-28T06:13:13.4307299Z Test project /home/runner/work/NEXVARY-MR/NEXVARY-MR/build-avb-sanitized
+2026-10-28T06:13:13.4319924Z       Start  5: mr_update_tests
+2026-10-28T06:13:14.2275543Z  1/20 Test  #5: mr_update_tests ..................   Passed    0.80 sec
+2026-10-28T06:13:14.2276100Z       Start  6: mr_update_journal_tests
+2026-10-28T06:13:14.6708731Z  2/20 Test  #6: mr_update_journal_tests ..........   Passed    0.44 sec
+2026-10-28T06:13:14.6709154Z       Start  7: mr_update_key_tests
+2026-10-28T06:13:14.6892609Z  3/20 Test  #7: mr_update_key_tests ..............   Passed    0.02 sec
+2026-10-28T06:13:14.6893332Z       Start  8: mr_forensic_adapter_tests
+2026-10-28T06:13:17.6077723Z  4/20 Test  #8: mr_forensic_adapter_tests ........   Passed    2.92 sec
+2026-10-28T06:13:17.6078646Z       Start  9: mr_partition_transaction_tests
+2026-10-28T06:14:14.4258747Z  5/20 Test  #9: mr_partition_transaction_tests ...***Failed   56.82 sec
+2026-10-28T06:14:14.4259500Z ********* Start testing of PartitionTransactionTests *********
+2026-10-28T06:14:14.4260381Z Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+2026-10-28T06:14:14.4266965Z PASS   : PartitionTransactionTests::initTestCase()
+2026-10-28T06:14:14.4267508Z PASS   : PartitionTransactionTests::verifiedCaseAndOriginalApproval()
+2026-10-28T06:14:14.4268018Z PASS   : PartitionTransactionTests::candidateBindingAndNoReplay()
+2026-10-28T06:14:14.4268493Z PASS   : PartitionTransactionTests::authorityEnds(cancel)
+2026-10-28T06:14:14.4269267Z PASS   : PartitionTransactionTests::authorityEnds(logout)
+2026-10-28T06:14:14.4269659Z PASS   : PartitionTransactionTests::authorityEnds(revoke)
+2026-10-28T06:14:14.4270078Z PASS   : PartitionTransactionTests::authorityEnds(case-close)
+2026-10-28T06:14:14.4270491Z PASS   : PartitionTransactionTests::authorityEnds(revision)
+2026-10-28T06:14:14.4271495Z FAIL!  : PartitionTransactionTests::authorityEnds(expiry) 'f.law.analyzePartitions(f.evidence,QCoreApplication::applicationFilePath(),true)' returned FALSE. ()
+2026-10-28T06:14:14.4272371Z    Loc: [/home/runner/work/NEXVARY-MR/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp(112)]
+2026-10-28T06:14:14.4273023Z PASS   : PartitionTransactionTests::changedCaseAfterPreparePreventsDispatch()
+2026-10-28T06:14:14.4273613Z PASS   : PartitionTransactionTests::revocationAfterCandidatePreventsCaseWrite()
+2026-10-28T06:14:14.4274160Z PASS   : PartitionTransactionTests::logoutAfterReceiptWithholdsVisibleSuccess()
+2026-10-28T06:14:14.4274714Z PASS   : PartitionTransactionTests::newApprovalCannotAuthorizeOldOperation()
+2026-10-28T06:14:14.4275162Z PASS   : PartitionTransactionTests::rejectedWorker(error)
+2026-10-28T06:14:14.4275545Z PASS   : PartitionTransactionTests::rejectedWorker(oversize)
+2026-10-28T06:14:14.4275951Z PASS   : PartitionTransactionTests::rejectedWorker(wrong-version)
+2026-10-28T06:14:14.4276428Z PASS   : PartitionTransactionTests::productionRecoveryLabelCannotDispatch()
+2026-10-28T06:14:14.4276855Z PASS   : PartitionTransactionTests::realMmls()
+2026-10-28T06:14:14.4277245Z PASS   : PartitionTransactionTests::interruptedWrites(before-prepare)
+2026-10-28T06:14:14.4277697Z PASS   : PartitionTransactionTests::interruptedWrites(during-prepare)
+2026-10-28T06:14:14.4278143Z PASS   : PartitionTransactionTests::interruptedWrites(after-prepare)
+2026-10-28T06:14:14.4278595Z PASS   : PartitionTransactionTests::interruptedWrites(during-candidate)
+2026-10-28T06:14:14.4279054Z PASS   : PartitionTransactionTests::interruptedWrites(after-candidate)
+2026-10-28T06:14:14.4279496Z PASS   : PartitionTransactionTests::interruptedWrites(during-case)
+2026-10-28T06:14:14.4279920Z PASS   : PartitionTransactionTests::interruptedWrites(after-case)
+2026-10-28T06:14:14.4280352Z PASS   : PartitionTransactionTests::interruptedWrites(during-terminal)
+2026-10-28T06:14:14.4280796Z PASS   : PartitionTransactionTests::interruptedWrites(after-terminal)
+2026-10-28T06:14:14.4281461Z PASS   : PartitionTransactionTests::cleanupTestCase()
+2026-10-28T06:14:14.4281839Z Totals: 27 passed, 1 failed, 0 skipped, 0 blacklisted, 56679ms
+2026-10-28T06:14:14.4282236Z ********* Finished testing of PartitionTransactionTests *********
+2026-10-28T06:14:14.4282475Z 
+2026-10-28T06:14:14.4282588Z       Start 10: mr_case_transaction_tests
+2026-10-28T06:14:33.2830157Z  6/20 Test #10: mr_case_transaction_tests ........   Passed   18.86 sec
+2026-10-28T06:14:33.2832632Z       Start 11: mr_policy_audit_tests
+2026-10-28T06:14:46.3272021Z  7/20 Test #11: mr_policy_audit_tests ............   Passed   13.04 sec
+2026-10-28T06:14:46.3272488Z       Start 12: mr_offline_tests
+2026-10-28T06:15:20.3342724Z  8/20 Test #12: mr_offline_tests .................   Passed   34.01 sec
+2026-10-28T06:15:20.3343362Z       Start 13: mr_artifact_tests
+2026-10-28T06:15:26.0761939Z  9/20 Test #13: mr_artifact_tests ................   Passed    5.74 sec
+2026-10-28T06:15:26.0762867Z       Start 14: mr_timeline_tests
+2026-10-28T06:15:29.4546053Z 10/20 Test #14: mr_timeline_tests ................   Passed    3.38 sec
+2026-10-28T06:15:29.4546635Z       Start 15: mr_import_tests
+2026-10-28T06:15:37.5616512Z 11/20 Test #15: mr_import_tests ..................   Passed    8.11 sec
+2026-10-28T06:15:37.5616962Z       Start 16: mr_retention_tests
+2026-10-28T06:15:39.4397030Z 12/20 Test #16: mr_retention_tests ...............   Passed    1.88 sec
+2026-10-28T06:15:39.4397681Z       Start 17: mr_identity_tests
+2026-10-28T06:15:44.9829018Z 13/20 Test #17: mr_identity_tests ................   Passed    5.54 sec
+2026-10-28T06:15:44.9829914Z       Start 18: mr_law_workspace_tests
+2026-10-28T06:15:47.8810045Z 14/20 Test #18: mr_law_workspace_tests ...........   Passed    2.90 sec
+2026-10-28T06:15:47.8810570Z       Start 28: mr_tool_tests
+2026-10-28T06:16:18.6130790Z 15/20 Test #28: mr_tool_tests ....................   Passed   30.73 sec
+2026-10-28T06:16:18.6131562Z       Start 30: mr_mirror_tests
+2026-10-28T06:16:38.7446594Z 16/20 Test #30: mr_mirror_tests ..................   Passed   20.13 sec
+2026-10-28T06:16:38.7447133Z       Start 44: mr_adb_backup_interop
+2026-10-28T06:16:40.3944257Z 17/20 Test #44: mr_adb_backup_interop ............   Passed    1.65 sec
+2026-10-28T06:16:40.3944860Z       Start 45: mr_avb_mutation_tests
+2026-10-28T06:16:41.5759478Z 18/20 Test #45: mr_avb_mutation_tests ............   Passed    1.18 sec
+2026-10-28T06:16:41.5760116Z       Start 46: mr_pcap_mutation_tests
+2026-10-28T06:16:43.1266061Z 19/20 Test #46: mr_pcap_mutation_tests ...........   Passed    1.55 sec
+2026-10-28T06:16:43.1266663Z       Start 47: mr_exif_mutation_tests
+2026-10-28T06:16:43.4933566Z 20/20 Test #47: mr_exif_mutation_tests ...........   Passed    0.37 sec
+2026-10-28T06:16:43.4938676Z 
+2026-10-28T06:16:43.4938931Z 95% tests passed, 1 tests failed out of 20
+2026-10-28T06:16:43.4939124Z 
+2026-10-28T06:16:43.4939224Z Total Test time (real) = 210.06 sec
+2026-10-28T06:16:43.4939398Z 
+2026-10-28T06:16:43.4939503Z The following tests FAILED:
+2026-10-28T06:16:43.4942527Z 	  9 - mr_partition_transaction_tests (Failed)
+2026-10-28T06:16:43.4950899Z Errors while running CTest
+2026-10-28T06:16:43.4973414Z ##[error]Process completed with exit code 8.
+2026-10-28T06:16:43.5057534Z ##[group]Run actions/upload-artifact@v4
+2026-10-28T06:16:43.5057824Z with:
+2026-10-28T06:16:43.5058106Z   name: NEXVARY-MR-Linux-production-integration-evidence
+2026-10-28T06:16:43.5060489Z   path: build/linux-qt-results.xml
+build/gui-repeat-results.xml
+build/gui-repeat-console.txt
+build/full-suite-last-test.log
+build/full-suite-failed-tests.log
+build/*-gdb.txt
+build/ui-crash-diagnostics.json
+build/ui-crash-diagnostic-error.txt
+build/*-results.txt
+build/policy-audit-interop-results.json
+build/adb-backup-interop-results.json
+build/**/smoke*.png
+build/Testing/Temporary/LastTest.log
+build/sodium-build-receipt.json
+build/sodium-build.log
+build-avb-sanitized/avb-sanitizer-results.xml
+build-avb-sanitized/adb-backup-interop-results.json
+build-avb-sanitized/Testing/Temporary/LastTest.log
+
+2026-10-28T06:16:43.5062965Z   if-no-files-found: warn
+2026-10-28T06:16:43.5063213Z   compression-level: 6
+2026-10-28T06:16:43.5063435Z   overwrite: false
+2026-10-28T06:16:43.5063714Z   include-hidden-files: false
+2026-10-28T06:16:43.5063957Z env:
+2026-10-28T06:16:43.5064161Z   QT_QPA_PLATFORM: offscreen
+2026-10-28T06:16:43.5064406Z   QT_QUICK_BACKEND: software
+2026-10-28T06:16:43.5064650Z   MR_TSK_MMLS_PATH: /usr/bin/mmls
+2026-10-28T06:16:43.5064925Z   MR_CLAMSCAN_PATH: /usr/bin/clamscan
+2026-10-28T06:16:43.5065201Z   MR_REQUIRE_BARCODE_DECODER: 1
+2026-10-28T06:16:43.5065507Z   MR_SODIUM_ROOT: /home/runner/work/_temp/nexvary-sodium
+2026-10-28T06:16:43.5065828Z ##[endgroup]
+2026-10-28T06:16:43.6801959Z (node:27620) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T06:16:43.6802696Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T06:16:43.9945020Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-28T06:16:43.9947623Z The least common ancestor is /home/runner/work/NEXVARY-MR/NEXVARY-MR. This will be the root directory of the artifact
+2026-10-28T06:16:43.9948475Z With the provided path, there will be 484 files uploaded
+2026-10-28T06:16:43.9953911Z Artifact name is valid!
+2026-10-28T06:16:43.9954429Z Root directory input is valid!
+2026-10-28T06:16:44.3178843Z Beginning upload of artifact content to blob storage
+2026-10-28T06:16:44.6887133Z (node:27620) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-28T06:16:45.5476170Z Uploaded bytes 8388608
+2026-10-28T06:16:45.8010625Z Uploaded bytes 16777216
+2026-10-28T06:16:45.9602106Z Uploaded bytes 25165824
+2026-10-28T06:16:46.1132478Z Uploaded bytes 33554432
+2026-10-28T06:16:46.4041283Z Uploaded bytes 41943040
+2026-10-28T06:16:46.7759716Z Uploaded bytes 50331648
+2026-10-28T06:16:46.9999908Z Uploaded bytes 58720256
+2026-10-28T06:16:47.3590755Z Uploaded bytes 67108864
+2026-10-28T06:16:47.6384479Z Uploaded bytes 75497472
+2026-10-28T06:16:48.0109114Z Uploaded bytes 83886080
+2026-10-28T06:16:49.1572460Z Uploaded bytes 86623834
+2026-10-28T06:16:49.6360696Z Finished uploading artifact content to blob storage!
+2026-10-28T06:16:49.6364178Z SHA256 digest of uploaded artifact zip is d44ef1057260c04fef482ee68475b5ba16ef026ab8a18747094964985f1d342c
+2026-10-28T06:16:49.6365757Z Finalizing artifact upload
+2026-10-28T06:16:50.2005177Z Artifact NEXVARY-MR-Linux-production-integration-evidence.zip successfully finalized. Artifact ID 12796670295
+2026-10-28T06:16:50.2006667Z Artifact NEXVARY-MR-Linux-production-integration-evidence has been successfully uploaded! Final size is 86623834 bytes. Artifact ID is 12796670295
+2026-10-28T06:16:50.2014252Z Artifact download URL: https://github.com/nexvary/NEXVARY-MR/actions/runs/40640872215/artifacts/12796670295
+2026-10-28T06:16:50.2374482Z Post job cleanup.
+2026-10-28T06:16:50.3287278Z [command]/usr/bin/git version
+2026-10-28T06:16:50.3327573Z git version 2.56.0
+2026-10-28T06:16:50.3365576Z Temporarily overriding HOME='/home/runner/work/_temp/b7e56f96-9d18-4a58-b052-56080a27ec17' before making global git config changes
+2026-10-28T06:16:50.3368855Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T06:16:50.3371347Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/NEXVARY-MR/NEXVARY-MR
+2026-10-28T06:16:50.3413955Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T06:16:50.3449693Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T06:16:50.3746740Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T06:16:50.3770540Z http.https://github.com/.extraheader
+2026-10-28T06:16:50.3785395Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T06:16:50.3862766Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T06:16:50.4118093Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T06:16:50.4159580Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T06:16:50.4670951Z Cleaning up orphan processes
+2026-10-28T06:16:50.4982347Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

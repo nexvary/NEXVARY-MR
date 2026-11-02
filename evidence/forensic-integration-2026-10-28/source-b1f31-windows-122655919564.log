@@ -1,0 +1,783 @@
+﻿2026-10-28T05:48:02.4885809Z Current runner version: '2.338.0'
+2026-10-28T05:48:02.5093161Z ##[group]Runner Image Provisioner
+2026-10-28T05:48:02.5094161Z Hosted Compute Agent
+2026-10-28T05:48:02.5094744Z Version: 20261021.618
+2026-10-28T05:48:02.5095357Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T05:48:02.5097010Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T05:48:02.5098009Z Worker ID: {2598fd95-f196-494b-afc0-d6d48880f414}
+2026-10-28T05:48:02.5098777Z Region: westus2
+2026-10-28T05:48:02.5099306Z Cloud: Azure
+2026-10-28T05:48:02.5099821Z ##[endgroup]
+2026-10-28T05:48:02.5101393Z ##[group]Operating System
+2026-10-28T05:48:02.5102064Z Microsoft Windows Server 2022
+2026-10-28T05:48:02.5102690Z 10.0.20348
+2026-10-28T05:48:02.5103181Z Datacenter
+2026-10-28T05:48:02.5103661Z ##[endgroup]
+2026-10-28T05:48:02.5104195Z ##[group]Runner Image
+2026-10-28T05:48:02.5104761Z Image: windows-2022
+2026-10-28T05:48:02.5105298Z Version: 20261022.344.1
+2026-10-28T05:48:02.5106940Z Included Software: https://github.com/actions/runner-images/blob/win22/20261022.344/images/windows/Windows2022-Readme.md
+2026-10-28T05:48:02.5108782Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261022.344
+2026-10-28T05:48:02.5109875Z ##[endgroup]
+2026-10-28T05:48:02.5111047Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T05:48:02.5113102Z Contents: read
+2026-10-28T05:48:02.5113751Z Metadata: read
+2026-10-28T05:48:02.5114300Z ##[endgroup]
+2026-10-28T05:48:02.5116474Z Secret source: Actions
+2026-10-28T05:48:02.5117395Z Cache mode: write
+2026-10-28T05:48:02.5118074Z Prepare workflow directory
+2026-10-28T05:48:02.6101760Z Prepare all required actions
+2026-10-28T05:48:02.6150079Z Getting action download info
+2026-10-28T05:48:03.0409973Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-28T05:48:03.2113181Z Download action repository 'jurplel/install-qt-action@v4' (SHA:b344308e4483fc892e0d27b3cd1b173ebdd95f06)
+2026-10-28T05:48:07.0489654Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-28T05:48:07.2426354Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-28T05:48:07.8530927Z Getting action download info
+2026-10-28T05:48:08.0215805Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-28T05:48:08.7462306Z Complete job name: qt (laboratory)
+2026-10-28T05:48:09.5697696Z ##[group]Run actions/checkout@v4
+2026-10-28T05:48:09.5698398Z with:
+2026-10-28T05:48:09.5698611Z   repository: nexvary/NEXVARY-MR
+2026-10-28T05:48:09.5701130Z   token: ***
+2026-10-28T05:48:09.5701315Z   ssh-strict: true
+2026-10-28T05:48:09.5701496Z   ssh-user: git
+2026-10-28T05:48:09.5701694Z   persist-credentials: true
+2026-10-28T05:48:09.5701915Z   clean: true
+2026-10-28T05:48:09.5702106Z   sparse-checkout-cone-mode: true
+2026-10-28T05:48:09.5702344Z   fetch-depth: 1
+2026-10-28T05:48:09.5702551Z   fetch-tags: false
+2026-10-28T05:48:09.5702734Z   show-progress: true
+2026-10-28T05:48:09.5702917Z   lfs: false
+2026-10-28T05:48:09.5703084Z   submodules: false
+2026-10-28T05:48:09.5703278Z   set-safe-directory: true
+2026-10-28T05:48:09.5703500Z   allow-unsafe-pr-checkout: false
+2026-10-28T05:48:09.5703913Z env:
+2026-10-28T05:48:09.5704091Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:09.5704303Z ##[endgroup]
+2026-10-28T05:48:09.7619848Z Syncing repository: nexvary/NEXVARY-MR
+2026-10-28T05:48:09.7621066Z ##[group]Getting Git version info
+2026-10-28T05:48:09.7621409Z Working directory is 'D:\a\NEXVARY-MR\NEXVARY-MR'
+2026-10-28T05:48:09.8499736Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T05:48:10.1087865Z git version 2.56.0.windows.3
+2026-10-28T05:48:10.1142965Z ##[endgroup]
+2026-10-28T05:48:10.1254865Z Temporarily overriding HOME='D:\a\_temp\1201103e-39d9-4476-ad3e-4cad3f21c6c1' before making global git config changes
+2026-10-28T05:48:10.1256154Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T05:48:10.1305625Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T05:48:10.1682602Z Deleting the contents of 'D:\a\NEXVARY-MR\NEXVARY-MR'
+2026-10-28T05:48:10.1687857Z ##[group]Initializing the repository
+2026-10-28T05:48:10.1697067Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T05:48:10.2387585Z Initialized empty Git repository in D:/a/NEXVARY-MR/NEXVARY-MR/.git/
+2026-10-28T05:48:10.2429355Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/nexvary/NEXVARY-MR
+2026-10-28T05:48:10.2953249Z ##[endgroup]
+2026-10-28T05:48:10.2953706Z ##[group]Disabling automatic garbage collection
+2026-10-28T05:48:10.2962678Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-28T05:48:10.3247692Z ##[endgroup]
+2026-10-28T05:48:10.3248349Z ##[group]Setting up auth
+2026-10-28T05:48:10.3260626Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T05:48:10.3588660Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T05:48:11.5315234Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T05:48:11.5601991Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T05:48:12.0144502Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T05:48:12.0435334Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T05:48:12.5176080Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-28T05:48:12.5471998Z ##[endgroup]
+2026-10-28T05:48:12.5472432Z ##[group]Fetching the repository
+2026-10-28T05:48:12.5563695Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +42d6431c899587b416e239d0ab0d50e45bc218d4:refs/remotes/pull/17/merge
+2026-10-28T05:48:14.5760825Z From https://github.com/nexvary/NEXVARY-MR
+2026-10-28T05:48:14.5761767Z  * [new ref]         42d6431c899587b416e239d0ab0d50e45bc218d4 -> pull/17/merge
+2026-10-28T05:48:14.5793660Z ##[endgroup]
+2026-10-28T05:48:14.5794249Z ##[group]Determining the checkout info
+2026-10-28T05:48:14.5797741Z ##[endgroup]
+2026-10-28T05:48:14.5809891Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-28T05:48:14.6215702Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-28T05:48:14.6818660Z ##[group]Checking out the ref
+2026-10-28T05:48:14.6827399Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/17/merge
+2026-10-28T05:48:15.2462964Z Note: switching to 'refs/remotes/pull/17/merge'.
+2026-10-28T05:48:15.2463485Z 
+2026-10-28T05:48:15.2463947Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-28T05:48:15.2464678Z changes and commit them, and you can discard any commits you make in this
+2026-10-28T05:48:15.2465418Z state without impacting any branches by switching back to a branch.
+2026-10-28T05:48:15.2465872Z 
+2026-10-28T05:48:15.2466072Z If you want to create a new branch to retain commits you create, you may
+2026-10-28T05:48:15.2466607Z do so (now or later) by using -c with the switch command. Example:
+2026-10-28T05:48:15.2466866Z 
+2026-10-28T05:48:15.2543941Z   git switch -c <new-branch-name>
+2026-10-28T05:48:15.2544153Z 
+2026-10-28T05:48:15.2544250Z Or undo this operation with:
+2026-10-28T05:48:15.2544609Z 
+2026-10-28T05:48:15.2544774Z   git switch -
+2026-10-28T05:48:15.2544970Z 
+2026-10-28T05:48:15.2545341Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-28T05:48:15.2545812Z 
+2026-10-28T05:48:15.2546234Z HEAD is now at 42d6431 Merge b1f31a4e00b2bf5a0b2f5d0e69da524a4f732346 into eb2322140956a55a50ee7494570f35573a1ce0c0
+2026-10-28T05:48:15.2597312Z ##[endgroup]
+2026-10-28T05:48:15.2988446Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-28T05:48:15.3245740Z 42d6431c899587b416e239d0ab0d50e45bc218d4
+2026-10-28T05:48:15.5039551Z ##[group]Run $ErrorActionPreference = 'Stop'
+2026-10-28T05:48:15.5040055Z [36;1m$ErrorActionPreference = 'Stop'[0m
+2026-10-28T05:48:15.5040517Z [36;1mNew-Item -ItemType Directory -Force dist/evidence | Out-Null[0m
+2026-10-28T05:48:15.5040967Z [36;1m$syntaxFailures = @()[0m
+2026-10-28T05:48:15.5041432Z [36;1mforeach ($sourceFile in (Get-ChildItem packaging -Filter '*.ps1' -File)) {[0m
+2026-10-28T05:48:15.5041911Z [36;1m  $parseTokens = $null[0m
+2026-10-28T05:48:15.5042184Z [36;1m  $parseErrors = $null[0m
+2026-10-28T05:48:15.5042873Z [36;1m  [void][System.Management.Automation.Language.Parser]::ParseFile($sourceFile.FullName,[ref]$parseTokens,[ref]$parseErrors)[0m
+2026-10-28T05:48:15.5043625Z [36;1m  foreach ($entry in $parseErrors) {[0m
+2026-10-28T05:48:15.5044170Z [36;1m    $syntaxFailures += [ordered]@{file=$sourceFile.Name;line=$entry.Extent.StartLineNumber;message=$entry.Message}[0m
+2026-10-28T05:48:15.5044668Z [36;1m  }[0m
+2026-10-28T05:48:15.5044860Z [36;1m}[0m
+2026-10-28T05:48:15.5045301Z [36;1mConvertTo-Json -InputObject @($syntaxFailures) -Depth 4 | Set-Content dist/evidence/powershell-syntax.json[0m
+2026-10-28T05:48:15.5046149Z [36;1mif ($syntaxFailures.Count) { $syntaxFailures | Format-Table | Out-String | Write-Host; throw 'Windows deployment script syntax errors' }[0m
+2026-10-28T05:48:15.5304451Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:48:15.5304883Z env:
+2026-10-28T05:48:15.5305103Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:15.5305373Z ##[endgroup]
+2026-10-28T05:48:16.4332107Z ##[group]Run jurplel/install-qt-action@v4
+2026-10-28T05:48:16.4332468Z with:
+2026-10-28T05:48:16.4332652Z   version: 6.8.3
+2026-10-28T05:48:16.4332839Z   arch: win64_msvc2022_64
+2026-10-28T05:48:16.4333057Z   cache: true
+2026-10-28T05:48:16.4333227Z   target: desktop
+2026-10-28T05:48:16.4333411Z   install-deps: true
+2026-10-28T05:48:16.4333635Z   cache-key-prefix: install-qt-action
+2026-10-28T05:48:16.4333885Z   setup-python: true
+2026-10-28T05:48:16.4334083Z   add-tools-to-path: true
+2026-10-28T05:48:16.4334280Z   set-env: true
+2026-10-28T05:48:16.4334454Z   no-qt-binaries: false
+2026-10-28T05:48:16.4334648Z   tools-only: false
+2026-10-28T05:48:16.4334828Z   aqtversion: ==3.3.*
+2026-10-28T05:48:16.4335038Z   py7zrversion: ==1.1.0
+2026-10-28T05:48:16.4335262Z   source: false
+2026-10-28T05:48:16.4335443Z   documentation: false
+2026-10-28T05:48:16.4335630Z   examples: false
+2026-10-28T05:48:16.4335808Z   use-official: false
+2026-10-28T05:48:16.4335986Z env:
+2026-10-28T05:48:16.4336183Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:16.4336394Z ##[endgroup]
+2026-10-28T05:48:16.4393300Z ##[start-action display=Check the existence of built JavaScript action;id=__jurplel_install-qt-action.__run]
+2026-10-28T05:48:16.4507740Z ##[group]Run if [[ -f './action/lib/main.js' ]]; then
+2026-10-28T05:48:16.4508085Z [36;1mif [[ -f './action/lib/main.js' ]]; then[0m
+2026-10-28T05:48:16.4508349Z [36;1m  exit 0[0m
+2026-10-28T05:48:16.4508512Z [36;1mfi[0m
+2026-10-28T05:48:16.4508667Z [36;1m[0m
+2026-10-28T05:48:16.4508869Z [36;1m# Workflow commands must be in one line.[0m
+2026-10-28T05:48:16.4509135Z [36;1mprintf '%s' \[0m
+2026-10-28T05:48:16.4509363Z [36;1m  '::error title=Action not built::' \[0m
+2026-10-28T05:48:16.4509961Z [36;1m  'This TypeScript action cannot be used before building within Node.js environment. ' \[0m
+2026-10-28T05:48:16.4510579Z [36;1m  'Maybe you are currently using non-tagging branches, for example, the "master" branch. ' \[0m
+2026-10-28T05:48:16.4511185Z [36;1m  'Only v* branches have built JavaScript action file. ' \[0m
+2026-10-28T05:48:16.4511680Z [36;1m  'If you would like to test unreleased changes, please refer to the CI workflows ' \[0m
+2026-10-28T05:48:16.4512219Z [36;1m  'in our repository: https://github.com/jurplel/install-qt-action . ' \[0m
+2026-10-28T05:48:16.4512598Z [36;1m  'Exiting... '[0m
+2026-10-28T05:48:16.4512793Z [36;1m[0m
+2026-10-28T05:48:16.4512944Z [36;1mexit 1[0m
+2026-10-28T05:48:16.4525407Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-28T05:48:16.4525794Z env:
+2026-10-28T05:48:16.4525972Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:16.4526191Z ##[endgroup]
+2026-10-28T05:48:16.5974323Z ##[end-action id=__jurplel_install-qt-action.__run;outcome=success;conclusion=success;duration_ms=157]
+2026-10-28T05:48:16.5977109Z ##[start-action display=Check Python version for potential bugs and notify users;id=__jurplel_install-qt-action.__run_2]
+2026-10-28T05:48:16.5995140Z ##[end-action id=__jurplel_install-qt-action.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-28T05:48:16.5997198Z ##[start-action display=Setup Python;id=__jurplel_install-qt-action.__actions_setup-python]
+2026-10-28T05:48:16.6139338Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-28T05:48:16.6139707Z with:
+2026-10-28T05:48:16.6139884Z   python-version: >=3.14.0
+2026-10-28T05:48:16.6140093Z   check-latest: false
+2026-10-28T05:48:16.6142425Z   token: ***
+2026-10-28T05:48:16.6142612Z   update-environment: true
+2026-10-28T05:48:16.6142832Z   allow-prereleases: false
+2026-10-28T05:48:16.6143033Z   freethreaded: false
+2026-10-28T05:48:16.6143210Z env:
+2026-10-28T05:48:16.6143385Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:16.6143597Z ##[endgroup]
+2026-10-28T05:48:16.7636307Z ##[group]Installed versions
+2026-10-28T05:48:16.7789386Z Successfully set up CPython (3.15.1)
+2026-10-28T05:48:16.7790033Z ##[endgroup]
+2026-10-28T05:48:16.7896301Z ##[end-action id=__jurplel_install-qt-action.__actions_setup-python;outcome=success;conclusion=success;duration_ms=189]
+2026-10-28T05:48:16.7898932Z ##[start-action display=Setup and run aqtinstall;id=__jurplel_install-qt-action.aqtinstall]
+2026-10-28T05:48:16.8030226Z ##[group]Run jurplel/install-qt-action/action@v4
+2026-10-28T05:48:16.8030500Z with:
+2026-10-28T05:48:16.8030657Z   version: 6.8.3
+2026-10-28T05:48:16.8030828Z   target: desktop
+2026-10-28T05:48:16.8031006Z   arch: win64_msvc2022_64
+2026-10-28T05:48:16.8031215Z   install-deps: true
+2026-10-28T05:48:16.8031396Z   cache: true
+2026-10-28T05:48:16.8031583Z   cache-key-prefix: install-qt-action
+2026-10-28T05:48:16.8031830Z   add-tools-to-path: true
+2026-10-28T05:48:16.8032041Z   set-env: true
+2026-10-28T05:48:16.8032216Z   no-qt-binaries: false
+2026-10-28T05:48:16.8032406Z   tools-only: false
+2026-10-28T05:48:16.8032581Z   aqtversion: ==3.3.*
+2026-10-28T05:48:16.8032764Z   py7zrversion: ==1.1.0
+2026-10-28T05:48:16.8032955Z   source: false
+2026-10-28T05:48:16.8033126Z   documentation: false
+2026-10-28T05:48:16.8033317Z   examples: false
+2026-10-28T05:48:16.8033492Z   use-official: false
+2026-10-28T05:48:16.8033665Z env:
+2026-10-28T05:48:16.8033828Z   QT_QUICK_BACKEND: software
+2026-10-28T05:48:16.8034112Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:48:16.8034565Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.15.1\x64/lib/pkgconfig
+2026-10-28T05:48:16.8034994Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:48:16.8035374Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:48:16.8035753Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:48:16.8036188Z ##[endgroup]
+2026-10-28T05:48:17.3486433Z ##[group]Install Python dependencies
+2026-10-28T05:48:17.4835977Z [command]C:\hostedtoolcache\windows\Python\3.15.1\x64\python.exe -m pip install setuptools>=70.1.0 py7zr==1.1.0
+2026-10-28T05:48:22.0618881Z Collecting setuptools>=70.1.0
+2026-10-28T05:48:22.0978428Z   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+2026-10-28T05:48:22.1662530Z Collecting py7zr==1.1.0
+2026-10-28T05:48:22.1811907Z   Downloading py7zr-1.1.0-py3-none-any.whl.metadata (17 kB)
+2026-10-28T05:48:22.2405079Z Collecting texttable (from py7zr==1.1.0)
+2026-10-28T05:48:22.2510213Z   Downloading texttable-1.7.2-py2.py3-none-any.whl.metadata (10 kB)
+2026-10-28T05:48:22.3610723Z Collecting pycryptodomex>=3.20.0 (from py7zr==1.1.0)
+2026-10-28T05:48:22.3711293Z   Downloading pycryptodomex-3.24.1-cp37-abi3-win_amd64.whl.metadata (3.5 kB)
+2026-10-28T05:48:22.4543308Z Collecting brotli>=1.2.0 (from py7zr==1.1.0)
+2026-10-28T05:48:22.4651438Z   Downloading brotli-1.2.1-cp315-cp315-win_amd64.whl.metadata (6.3 kB)
+2026-10-28T05:48:22.5625602Z Collecting psutil (from py7zr==1.1.0)
+2026-10-28T05:48:22.5726889Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl.metadata (22 kB)
+2026-10-28T05:48:22.6753972Z Collecting pyppmd>=1.3.1 (from py7zr==1.1.0)
+2026-10-28T05:48:22.6895031Z   Downloading pyppmd-1.3.1.tar.gz (1.4 MB)
+2026-10-28T05:48:22.7364468Z      ---------------------------------------- 1.4/1.4 MB 33.5 MB/s  0:00:00
+2026-10-28T05:48:22.8609987Z   Installing build dependencies: started
+2026-10-28T05:48:25.0237275Z   Installing build dependencies: finished with status 'done'
+2026-10-28T05:48:25.0252860Z   Getting requirements to build wheel: started
+2026-10-28T05:48:26.4663902Z   Getting requirements to build wheel: finished with status 'done'
+2026-10-28T05:48:26.4691016Z   Preparing metadata (pyproject.toml): started
+2026-10-28T05:48:26.8505514Z   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:26.9147285Z Collecting pybcj>=1.0.6 (from py7zr==1.1.0)
+2026-10-28T05:48:26.9252573Z   Downloading pybcj-1.0.8.tar.gz (31 kB)
+2026-10-28T05:48:27.0021974Z   Installing build dependencies: started
+2026-10-28T05:48:28.8632950Z   Installing build dependencies: finished with status 'done'
+2026-10-28T05:48:28.8647262Z   Getting requirements to build wheel: started
+2026-10-28T05:48:29.7396605Z   Getting requirements to build wheel: finished with status 'done'
+2026-10-28T05:48:29.7426004Z   Preparing metadata (pyproject.toml): started
+2026-10-28T05:48:30.1286090Z   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:30.1538200Z Collecting multivolumefile>=0.2.3 (from py7zr==1.1.0)
+2026-10-28T05:48:30.1624626Z   Downloading multivolumefile-0.2.3-py3-none-any.whl.metadata (6.3 kB)
+2026-10-28T05:48:30.2460024Z Collecting inflate64>=1.0.4 (from py7zr==1.1.0)
+2026-10-28T05:48:30.2575062Z   Downloading inflate64-1.0.4.tar.gz (902 kB)
+2026-10-28T05:48:30.2778264Z      ---------------------------------------- 902.5/902.5 kB 37.7 MB/s  0:00:00
+2026-10-28T05:48:30.3762007Z   Installing build dependencies: started
+2026-10-28T05:48:32.2418381Z   Installing build dependencies: finished with status 'done'
+2026-10-28T05:48:32.2433616Z   Getting requirements to build wheel: started
+2026-10-28T05:48:33.4214399Z   Getting requirements to build wheel: finished with status 'done'
+2026-10-28T05:48:33.4241451Z   Preparing metadata (pyproject.toml): started
+2026-10-28T05:48:33.7961009Z   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:33.8123854Z Downloading py7zr-1.1.0-py3-none-any.whl (71 kB)
+2026-10-28T05:48:33.8488559Z Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+2026-10-28T05:48:33.8671382Z Downloading brotli-1.2.1-cp315-cp315-win_amd64.whl (376 kB)
+2026-10-28T05:48:33.8921626Z Downloading multivolumefile-0.2.3-py3-none-any.whl (17 kB)
+2026-10-28T05:48:33.9168229Z Downloading pycryptodomex-3.24.1-cp37-abi3-win_amd64.whl (1.8 MB)
+2026-10-28T05:48:33.9477312Z    ---------------------------------------- 1.8/1.8 MB 55.5 MB/s  0:00:00
+2026-10-28T05:48:33.9573917Z Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+2026-10-28T05:48:33.9782266Z Downloading texttable-1.7.2-py2.py3-none-any.whl (10 kB)
+2026-10-28T05:48:34.0328807Z Building wheels for collected packages: inflate64, pybcj, pyppmd
+2026-10-28T05:48:34.0364085Z   Building wheel for inflate64 (pyproject.toml): started
+2026-10-28T05:48:44.1581901Z   Building wheel for inflate64 (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:44.1655206Z   Created wheel for inflate64: filename=inflate64-1.0.4-cp315-cp315-win_amd64.whl size=36121 sha256=97e80eeff21b783ea083a5724aa81b9d06136a2edadbdaf2c59331381b5294c6
+2026-10-28T05:48:44.1657898Z   Stored in directory: c:\users\runneradmin\appdata\local\pip\cache\wheels\9e\0d\de\c0d754afa658d5bd6ceb1a6451eb296d37c3a54f32d929d0de
+2026-10-28T05:48:44.1706740Z   Building wheel for pybcj (pyproject.toml): started
+2026-10-28T05:48:46.6794667Z   Building wheel for pybcj (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:46.6811705Z   Created wheel for pybcj: filename=pybcj-1.0.8-cp315-cp315-win_amd64.whl size=25065 sha256=cc06a1b6a69e75905c708b005cd77a43815f4699254cdfc533a3ca52f484f3eb
+2026-10-28T05:48:46.6813510Z   Stored in directory: c:\users\runneradmin\appdata\local\pip\cache\wheels\8d\56\56\0cd36d19ac061b6d27292b519a634f83e580bc72806cde286a
+2026-10-28T05:48:46.6876213Z   Building wheel for pyppmd (pyproject.toml): started
+2026-10-28T05:48:50.8350425Z   Building wheel for pyppmd (pyproject.toml): finished with status 'done'
+2026-10-28T05:48:50.8368472Z   Created wheel for pyppmd: filename=pyppmd-1.3.1-cp315-cp315-win_amd64.whl size=47776 sha256=e08df57cfaa2b80247ff5cc7ba3df2a9f77de3693fa5c034d1e75d7de6464037
+2026-10-28T05:48:50.8370334Z   Stored in directory: c:\users\runneradmin\appdata\local\pip\cache\wheels\ce\18\16\b310919b0e82efe606958659e2c189178f7bc6e361dd299d79
+2026-10-28T05:48:50.8434388Z Successfully built inflate64 pybcj pyppmd
+2026-10-28T05:48:50.8821217Z Installing collected packages: texttable, brotli, setuptools, pyppmd, pycryptodomex, pybcj, psutil, multivolumefile, inflate64, py7zr
+2026-10-28T05:48:53.7311488Z 
+2026-10-28T05:48:53.7325090Z Successfully installed brotli-1.2.1 inflate64-1.0.4 multivolumefile-0.2.3 psutil-7.2.2 py7zr-1.1.0 pybcj-1.0.8 pycryptodomex-3.24.1 pyppmd-1.3.1 setuptools-84.2.1 texttable-1.7.2
+2026-10-28T05:48:54.2666544Z [command]C:\hostedtoolcache\windows\Python\3.15.1\x64\python.exe -m pip install aqtinstall==3.3.*
+2026-10-28T05:48:55.2727273Z Collecting aqtinstall==3.3.*
+2026-10-28T05:48:55.3255314Z   Downloading aqtinstall-3.3.0-py3-none-any.whl.metadata (11 kB)
+2026-10-28T05:48:55.3698785Z Collecting bs4 (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.3778536Z   Downloading bs4-0.0.2-py2.py3-none-any.whl.metadata (411 bytes)
+2026-10-28T05:48:55.4362847Z Collecting defusedxml (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.4461383Z   Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+2026-10-28T05:48:55.4951959Z Collecting humanize (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.5032007Z   Downloading humanize-4.16.0-py3-none-any.whl.metadata (8.0 kB)
+2026-10-28T05:48:55.5401740Z Collecting patch-ng (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.5483078Z   Downloading patch_ng-1.19.1-py3-none-any.whl.metadata (3.2 kB)
+2026-10-28T05:48:55.5696788Z Requirement already satisfied: py7zr>=0.22.0 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from aqtinstall==3.3.*) (1.1.0)
+2026-10-28T05:48:55.6014920Z Collecting requests>=2.31.0 (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.6098503Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-10-28T05:48:55.6470107Z Collecting semantic-version (from aqtinstall==3.3.*)
+2026-10-28T05:48:55.6552614Z   Downloading semantic_version-2.10.0-py2.py3-none-any.whl.metadata (9.7 kB)
+2026-10-28T05:48:55.6705170Z Requirement already satisfied: texttable in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from aqtinstall==3.3.*) (1.7.2)
+2026-10-28T05:48:55.6720555Z Requirement already satisfied: pycryptodomex>=3.20.0 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (3.24.1)
+2026-10-28T05:48:55.6727334Z Requirement already satisfied: brotli>=1.2.0 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (1.2.1)
+2026-10-28T05:48:55.6733683Z Requirement already satisfied: psutil in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (7.2.2)
+2026-10-28T05:48:55.6739587Z Requirement already satisfied: pyppmd>=1.3.1 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (1.3.1)
+2026-10-28T05:48:55.6744637Z Requirement already satisfied: pybcj>=1.0.6 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (1.0.8)
+2026-10-28T05:48:55.6749886Z Requirement already satisfied: multivolumefile>=0.2.3 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (0.2.3)
+2026-10-28T05:48:55.6754897Z Requirement already satisfied: inflate64>=1.0.4 in C:\hostedtoolcache\windows\Python\3.15.1\x64\Lib\site-packages (from py7zr>=0.22.0->aqtinstall==3.3.*) (1.0.4)
+2026-10-28T05:48:55.8132155Z Collecting charset_normalizer<4,>=2 (from requests>=2.31.0->aqtinstall==3.3.*)
+2026-10-28T05:48:55.8215967Z   Downloading charset_normalizer-3.5.2-cp315-cp315-win_amd64.whl.metadata (47 kB)
+2026-10-28T05:48:55.8693637Z Collecting idna<4,>=2.5 (from requests>=2.31.0->aqtinstall==3.3.*)
+2026-10-28T05:48:55.8785852Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-28T05:48:55.9274207Z Collecting urllib3<3,>=1.26 (from requests>=2.31.0->aqtinstall==3.3.*)
+2026-10-28T05:48:55.9353384Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-28T05:48:55.9771340Z Collecting certifi>=2023.5.7 (from requests>=2.31.0->aqtinstall==3.3.*)
+2026-10-28T05:48:55.9850923Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-10-28T05:48:56.0281330Z Collecting beautifulsoup4 (from bs4->aqtinstall==3.3.*)
+2026-10-28T05:48:56.0361419Z   Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+2026-10-28T05:48:56.0843226Z Collecting soupsieve>=1.6.1 (from beautifulsoup4->bs4->aqtinstall==3.3.*)
+2026-10-28T05:48:56.0923712Z   Downloading soupsieve-3.0.4-py3-none-any.whl.metadata (4.4 kB)
+2026-10-28T05:48:56.1322234Z Collecting typing-extensions>=4.0.0 (from beautifulsoup4->bs4->aqtinstall==3.3.*)
+2026-10-28T05:48:56.1405403Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-28T05:48:56.1714209Z Downloading aqtinstall-3.3.0-py3-none-any.whl (71 kB)
+2026-10-28T05:48:56.1911520Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-28T05:48:56.2133555Z Downloading charset_normalizer-3.5.2-cp315-cp315-win_amd64.whl (210 kB)
+2026-10-28T05:48:56.2431031Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-28T05:48:56.2651324Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-28T05:48:56.2850423Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-10-28T05:48:56.3566688Z Downloading bs4-0.0.2-py2.py3-none-any.whl (1.2 kB)
+2026-10-28T05:48:56.3778929Z Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+2026-10-28T05:48:56.4003428Z Downloading soupsieve-3.0.4-py3-none-any.whl (42 kB)
+2026-10-28T05:48:56.4207591Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-28T05:48:56.4400806Z Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+2026-10-28T05:48:56.4658006Z Downloading humanize-4.16.0-py3-none-any.whl (137 kB)
+2026-10-28T05:48:56.4866697Z Downloading patch_ng-1.19.1-py3-none-any.whl (17 kB)
+2026-10-28T05:48:56.5056428Z Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+2026-10-28T05:48:56.6294282Z Installing collected packages: urllib3, typing-extensions, soupsieve, semantic-version, patch-ng, idna, humanize, defusedxml, charset_normalizer, certifi, requests, beautifulsoup4, bs4, aqtinstall
+2026-10-28T05:48:59.1677235Z 
+2026-10-28T05:48:59.1697167Z Successfully installed aqtinstall-3.3.0 beautifulsoup4-4.15.0 bs4-0.0.2 certifi-2026.10.23 charset_normalizer-3.5.2 defusedxml-0.7.1 humanize-4.16.0 idna-3.20 patch-ng-1.19.1 requests-2.34.2 semantic-version-2.10.0 soupsieve-3.0.4 typing-extensions-4.16.0 urllib3-2.8.0
+2026-10-28T05:48:59.2408167Z ##[endgroup]
+2026-10-28T05:48:59.3235025Z [command]C:\hostedtoolcache\windows\Python\3.15.1\x64\python.exe -m aqt version
+2026-10-28T05:48:59.7531843Z INFO    : aqtinstall(aqt) v3.3.0 on Python 3.15.1 [CPython MSC v.1951 64 bit (AMD64)]
+2026-10-28T05:48:59.7848448Z ##[group]Resolve available Qt version "6.8.3" with host "windows" and target "desktop"
+2026-10-28T05:48:59.8741119Z [command]C:\hostedtoolcache\windows\Python\3.15.1\x64\python.exe -m aqt list-qt windows desktop --spec 6.8.3 --latest-version
+2026-10-28T05:49:01.1225210Z 6.8.3
+2026-10-28T05:49:01.1582329Z ##[endgroup]
+2026-10-28T05:49:01.1592681Z ##[group]Check and restore cache
+2026-10-28T05:49:01.5454070Z Cache hit for: install-qt-action-windows-10.0.20348-desktop-win64_msvc2022_64-6.8.3-D:\a\NEXVARY-MR\Qt-==1.1.0-==3.3.*
+2026-10-28T05:49:02.8465558Z Received 33554432 of 340337474 (9.9%), 31.9 MBs/sec
+2026-10-28T05:49:03.8781264Z Received 188743680 of 340337474 (55.5%), 88.5 MBs/sec
+2026-10-28T05:49:04.9096081Z Received 340337474 of 340337474 (100.0%), 105.9 MBs/sec
+2026-10-28T05:49:04.9132736Z Cache Size: ~325 MB (340337474 B)
+2026-10-28T05:49:04.9183347Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/86489040-43c2-490e-b2de-1582b9bec331/cache.tzst -P -C D:/a/NEXVARY-MR/NEXVARY-MR --force-local --use-compress-program "zstd -d"
+2026-10-28T05:49:09.6251366Z Cache restored successfully
+2026-10-28T05:49:09.6402707Z Automatic cache hit with key "install-qt-action-windows-10.0.20348-desktop-win64_msvc2022_64-6.8.3-D:\a\NEXVARY-MR\Qt-==1.1.0-==3.3.*"
+2026-10-28T05:49:09.6404188Z ##[endgroup]
+2026-10-28T05:49:09.6475571Z ##[group]Post-process installed Qt
+2026-10-28T05:49:09.6477375Z Setting output "host" = "windows"
+2026-10-28T05:49:09.6481389Z Setting output "target" = "desktop"
+2026-10-28T05:49:09.6484238Z Setting output "version" = "6.8.3"
+2026-10-28T05:49:09.6485075Z Setting output "arch" = "win64_msvc2022_64"
+2026-10-28T05:49:09.6487031Z Setting output "qt-root-dir" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64"
+2026-10-28T05:49:09.6488812Z Setting output "qt-plugin-path" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins"
+2026-10-28T05:49:09.6493255Z Setting output "qml2-import-path" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml"
+2026-10-28T05:49:09.6495174Z Prepending "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\bin" to env "PATH"
+2026-10-28T05:49:09.6498728Z Setting env "QT_ROOT_DIR" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64"
+2026-10-28T05:49:09.6502179Z Setting env "QT_PLUGIN_PATH" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins"
+2026-10-28T05:49:09.6504514Z Setting env "QML2_IMPORT_PATH" = "D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml"
+2026-10-28T05:49:09.6506615Z ##[endgroup]
+2026-10-28T05:49:09.6680617Z ##[end-action id=__jurplel_install-qt-action.aqtinstall;outcome=success;conclusion=success;duration_ms=52878]
+2026-10-28T05:49:09.6860698Z ##[group]Run actions/setup-python@v5
+2026-10-28T05:49:09.6861042Z with:
+2026-10-28T05:49:09.6861243Z   python-version: 3.12
+2026-10-28T05:49:09.6861452Z   check-latest: false
+2026-10-28T05:49:09.6863794Z   token: ***
+2026-10-28T05:49:09.6863994Z   update-environment: true
+2026-10-28T05:49:09.6864223Z   allow-prereleases: false
+2026-10-28T05:49:09.6864436Z   freethreaded: false
+2026-10-28T05:49:09.6864629Z env:
+2026-10-28T05:49:09.6864799Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:09.6865103Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:49:09.6865546Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.15.1\x64/lib/pkgconfig
+2026-10-28T05:49:09.6865986Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:49:09.6866563Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:49:09.6866953Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.15.1\x64
+2026-10-28T05:49:09.6867336Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:09.6867685Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:09.6868051Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:09.6868343Z ##[endgroup]
+2026-10-28T05:49:09.8356851Z ##[group]Installed versions
+2026-10-28T05:49:09.8447539Z (node:1004) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T05:49:09.8448265Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T05:49:09.8449762Z Successfully set up CPython (3.12.10)
+2026-10-28T05:49:09.8450662Z ##[endgroup]
+2026-10-28T05:49:09.8680808Z ##[group]Run python -m pip install cryptography==50.0.2
+2026-10-28T05:49:09.8681287Z [36;1mpython -m pip install cryptography==50.0.2[0m
+2026-10-28T05:49:09.8723317Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:09.8723655Z env:
+2026-10-28T05:49:09.8723837Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:09.8724159Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:09.8724624Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:09.8725076Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:09.8725475Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:09.8725869Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:09.8726230Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:09.8726579Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:09.8726996Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:09.8727305Z ##[endgroup]
+2026-10-28T05:49:13.9904645Z Collecting cryptography==50.0.2
+2026-10-28T05:49:14.1592525Z   Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-10-28T05:49:14.3023387Z Collecting cffi>=2.0.0 (from cryptography==50.0.2)
+2026-10-28T05:49:14.3116279Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl.metadata (2.6 kB)
+2026-10-28T05:49:14.3535145Z Collecting pycparser (from cffi>=2.0.0->cryptography==50.0.2)
+2026-10-28T05:49:14.3613401Z   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+2026-10-28T05:49:14.3935811Z Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl (3.8 MB)
+2026-10-28T05:49:14.6400484Z    ---------------------------------------- 3.8/3.8 MB 19.1 MB/s  0:00:00
+2026-10-28T05:49:14.6495248Z Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+2026-10-28T05:49:14.6712247Z Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+2026-10-28T05:49:14.8862321Z Installing collected packages: pycparser, cffi, cryptography
+2026-10-28T05:49:15.4538842Z 
+2026-10-28T05:49:15.4556447Z Successfully installed cffi-2.1.1 cryptography-50.0.2 pycparser-3.12
+2026-10-28T05:49:15.6163017Z ##[group]Run $ErrorActionPreference = 'Stop'
+2026-10-28T05:49:15.6163444Z [36;1m$ErrorActionPreference = 'Stop'[0m
+2026-10-28T05:49:15.6163991Z [36;1m"MR_SODIUM_ROOT=$env:RUNNER_TEMP/nexvary-sodium" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append[0m
+2026-10-28T05:49:15.6164681Z [36;1mpython scripts/prepare_sodium.py --destination "$env:RUNNER_TEMP/nexvary-sodium"[0m
+2026-10-28T05:49:15.6165277Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Pinned signature dependency preparation failed' }[0m
+2026-10-28T05:49:15.6206810Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:15.6207157Z env:
+2026-10-28T05:49:15.6207337Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:15.6207654Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:15.6208832Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:15.6209317Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:15.6209726Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:15.6210132Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:15.6210493Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:15.6210840Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:15.6211204Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:15.6211505Z ##[endgroup]
+2026-10-28T05:49:22.5139863Z {"prepared": "D:\\a\\_temp\\nexvary-sodium", "version": "1.0.22", "archiveSha256": "3e03a726fac4bc09cb61d8f29d658ef7a5eca0811de59082130414f7ca2e4279"}
+2026-10-28T05:49:22.5996518Z ##[group]Run New-Item -ItemType Directory -Force dist/evidence | Out-Null
+2026-10-28T05:49:22.5997117Z [36;1mNew-Item -ItemType Directory -Force dist/evidence | Out-Null[0m
+2026-10-28T05:49:22.5997593Z [36;1mforeach ($name in @('build-receipt.json','build.log')) {[0m
+2026-10-28T05:49:22.5998022Z [36;1m  $source = Join-Path "$env:RUNNER_TEMP/nexvary-sodium" $name[0m
+2026-10-28T05:49:22.5998524Z [36;1m  if (Test-Path $source) { Copy-Item $source (Join-Path 'dist/evidence' "sodium-$name") }[0m
+2026-10-28T05:49:22.5998943Z [36;1m}[0m
+2026-10-28T05:49:22.6040022Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:22.6040449Z env:
+2026-10-28T05:49:22.6040749Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:22.6041149Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.6041665Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:22.6042254Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.6042756Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.6057991Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.6058649Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:22.6059173Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:22.6059769Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:22.6060259Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-28T05:49:22.6060654Z ##[endgroup]
+2026-10-28T05:49:22.9571556Z ##[group]Run $ErrorActionPreference = 'Stop'
+2026-10-28T05:49:22.9571997Z [36;1m$ErrorActionPreference = 'Stop'[0m
+2026-10-28T05:49:22.9572333Z [36;1m$fontSource = Join-Path $env:SystemRoot 'Fonts'[0m
+2026-10-28T05:49:22.9572760Z [36;1m$fontTarget = Join-Path $env:RUNNER_TEMP 'NEXVARY-MR-test-fonts'[0m
+2026-10-28T05:49:22.9573242Z [36;1mNew-Item -ItemType Directory -Force $fontTarget | Out-Null[0m
+2026-10-28T05:49:22.9573838Z [36;1mforeach ($name in @('segoeui.ttf','segoeuib.ttf','tahoma.ttf','tahomabd.ttf','consola.ttf','consolab.ttf')) {[0m
+2026-10-28T05:49:22.9574389Z [36;1m  $source = Join-Path $fontSource $name[0m
+2026-10-28T05:49:22.9574839Z [36;1m  if (-not (Test-Path $source)) { throw "Required installed test font missing: $name" }[0m
+2026-10-28T05:49:22.9575268Z [36;1m  Copy-Item $source $fontTarget[0m
+2026-10-28T05:49:22.9575514Z [36;1m}[0m
+2026-10-28T05:49:22.9575901Z [36;1m# These OS fonts stay on this runner; they are never uploaded/bundled.[0m
+2026-10-28T05:49:22.9576477Z [36;1m"QT_QPA_FONTDIR=$fontTarget" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append[0m
+2026-10-28T05:49:22.9617757Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:22.9618114Z env:
+2026-10-28T05:49:22.9618296Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:22.9618610Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.9619062Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:22.9619680Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.9620073Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.9620466Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:22.9620841Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:22.9621176Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:22.9621547Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:22.9621865Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-28T05:49:22.9622124Z ##[endgroup]
+2026-10-28T05:49:23.3801985Z ##[group]Run cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=ON
+2026-10-28T05:49:23.3803358Z [36;1mcmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=ON[0m
+2026-10-28T05:49:23.3845804Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:23.3846152Z env:
+2026-10-28T05:49:23.3846338Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:23.3846660Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:23.3847131Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:23.3847586Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:23.3848030Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:23.3848437Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:23.3848796Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:23.3849145Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:23.3849508Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:23.3849837Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-28T05:49:23.3850137Z   QT_QPA_FONTDIR: D:\a\_temp\NEXVARY-MR-test-fonts
+2026-10-28T05:49:23.3850415Z ##[endgroup]
+2026-10-28T05:49:24.0514728Z -- Building for: Visual Studio 17 2022
+2026-10-28T05:49:24.1533608Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+2026-10-28T05:49:30.9411659Z -- The CXX compiler identification is MSVC 19.44.35229.0
+2026-10-28T05:49:31.0742750Z -- Detecting CXX compiler ABI info
+2026-10-28T05:49:31.9998550Z -- Detecting CXX compiler ABI info - done
+2026-10-28T05:49:32.0140095Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+2026-10-28T05:49:32.0151046Z -- Detecting CXX compile features
+2026-10-28T05:49:32.0193774Z -- Detecting CXX compile features - done
+2026-10-28T05:49:32.7871090Z -- Found Python3: C:/hostedtoolcache/windows/Python/3.12.10/x64/python3.exe (found version "3.12.10") found components: Interpreter
+2026-10-28T05:49:32.8264793Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-28T05:49:34.0913518Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+2026-10-28T05:49:34.0915159Z -- Looking for pthread_create in pthreads
+2026-10-28T05:49:34.6846796Z -- Looking for pthread_create in pthreads - not found
+2026-10-28T05:49:34.6847583Z -- Looking for pthread_create in pthread
+2026-10-28T05:49:35.2497490Z -- Looking for pthread_create in pthread - not found
+2026-10-28T05:49:35.2508390Z -- Found Threads: TRUE
+2026-10-28T05:49:35.2538357Z -- Performing Test HAVE_STDATOMIC
+2026-10-28T05:49:36.2810386Z -- Performing Test HAVE_STDATOMIC - Success
+2026-10-28T05:49:36.2822604Z -- Found WrapAtomic: TRUE
+2026-10-28T05:49:36.7191825Z -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
+2026-10-28T05:49:37.2027663Z -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
+2026-10-28T05:49:37.3403952Z CMake Warning (dev) at D:/a/NEXVARY-MR/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake:3409 (message):
+2026-10-28T05:49:37.3405045Z   Qt policy QTP0004 is not set: You need qmldir files for each extra
+2026-10-28T05:49:37.3405607Z   directory that contains .qml files for your module.  Check
+2026-10-28T05:49:37.3406184Z   https://doc.qt.io/qt-6/qt-cmake-policy-qtp0004.html for policy details.
+2026-10-28T05:49:37.3406793Z   Use the qt_policy command to set the policy and suppress this warning.
+2026-10-28T05:49:37.3407160Z 
+2026-10-28T05:49:37.3407276Z Call Stack (most recent call first):
+2026-10-28T05:49:37.3409940Z   D:/a/NEXVARY-MR/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Qml/Qt6QmlMacros.cmake:3520 (__qt_internal_setup_policy)
+2026-10-28T05:49:37.3410916Z   D:/a/NEXVARY-MR/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Qml/Qt6QmlMacros.cmake:916 (qt6_target_qml_sources)
+2026-10-28T05:49:37.3411769Z   D:/a/NEXVARY-MR/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Qml/Qt6QmlMacros.cmake:1254 (qt6_add_qml_module)
+2026-10-28T05:49:37.3412364Z   CMakeLists.txt:148 (qt_add_qml_module)
+2026-10-28T05:49:37.3412843Z This warning is for project developers.  Use -Wno-dev to suppress it.
+2026-10-28T05:49:37.3413204Z 
+2026-10-28T05:49:38.0796775Z -- Configuring done (14.0s)
+2026-10-28T05:49:40.5268071Z -- Generating done (2.4s)
+2026-10-28T05:49:40.5281969Z -- Build files have been written to: D:/a/NEXVARY-MR/NEXVARY-MR/build
+2026-10-28T05:49:40.6534852Z ##[group]Run cmake --build build --config Release --parallel
+2026-10-28T05:49:40.6535357Z [36;1mcmake --build build --config Release --parallel[0m
+2026-10-28T05:49:40.6576369Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:49:40.6576712Z env:
+2026-10-28T05:49:40.6576894Z   QT_QUICK_BACKEND: software
+2026-10-28T05:49:40.6577211Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:40.6577668Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:49:40.6578111Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:40.6578530Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:40.6578950Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:49:40.6579317Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:49:40.6579683Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:49:40.6580044Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:49:40.6580365Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-28T05:49:40.6580673Z   QT_QPA_FONTDIR: D:\a\_temp\NEXVARY-MR-test-fonts
+2026-10-28T05:49:40.6580946Z ##[endgroup]
+2026-10-28T05:49:40.9875382Z MSBuild version 17.14.60+43b635718 for .NET Framework
+2026-10-28T05:49:41.0174073Z 
+2026-10-28T05:49:41.2877390Z   Checking File Globs
+2026-10-28T05:49:41.5119932Z   1>Checking Build System
+2026-10-28T05:49:41.7471015Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:41.7573352Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:41.9151109Z   qrc_research_catalog_init.cpp
+2026-10-28T05:49:41.9164078Z   qrc_device_catalog_init.cpp
+2026-10-28T05:49:42.1642812Z   mr_desktop_resources_1.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\mr_desktop_resources_1.dir\Release\mr_desktop_resources_1.lib
+2026-10-28T05:49:42.1646040Z   mr_desktop_resources_2.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\mr_desktop_resources_2.dir\Release\mr_desktop_resources_2.lib
+2026-10-28T05:49:42.3254888Z   Automatic MOC and UIC for target mr_avb_mutation_tests
+2026-10-28T05:49:42.4114848Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:42.4688292Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:42.4921629Z   Automatic MOC and UIC for target mr_import_adapters
+2026-10-28T05:49:42.6418298Z   avb_mutation_tests.cpp
+2026-10-28T05:49:42.6442619Z   RepairCore.cpp
+2026-10-28T05:49:42.6863390Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:42.7827080Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:42.8099515Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:42.9686914Z   CaseVault.cpp
+2026-10-28T05:49:43.0728863Z   ImportAdapters.cpp
+2026-10-28T05:49:43.2382642Z   build_profile_probe_fixture.cpp
+2026-10-28T05:49:45.9066368Z   Automatic MOC and UIC for target mr_exif_mutation_tests
+2026-10-28T05:49:46.5479662Z   mr_build_profile_fixture.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_build_profile_fixture.exe
+2026-10-28T05:49:46.6257081Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:46.7023033Z   mr_core.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_core.lib
+2026-10-28T05:49:47.0043127Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:47.0050145Z   Automatic MOC and UIC for target mr_pcap_mutation_tests
+2026-10-28T05:49:47.1028874Z   exif_mutation_tests.cpp
+2026-10-28T05:49:47.2853507Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:47.2864646Z   law_enforcement_case_tests.cpp
+2026-10-28T05:49:48.1516978Z   AvbMetadata.cpp
+2026-10-28T05:49:49.1107467Z   AdbBackupImport.cpp
+2026-10-28T05:49:51.6358273Z   policy_tests.cpp
+2026-10-28T05:49:52.1004314Z   ExifSummary.cpp
+2026-10-28T05:49:52.3410574Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:53.1896670Z   mocs_compilation_Release.cpp
+2026-10-28T05:49:53.2160898Z   Generating Code...
+2026-10-28T05:49:53.3602586Z   mr_law_enforcement_case_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_law_enforcement_case_tests.exe
+2026-10-28T05:49:53.5035033Z   mr_user_protection.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_user_protection.lib
+2026-10-28T05:49:53.8315111Z   mr_policy_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_policy_tests.exe
+2026-10-28T05:49:53.9984624Z   pcap_mutation_tests.cpp
+2026-10-28T05:49:54.1054370Z   Automatic MOC and UIC for target mr_ui_device_fixture
+2026-10-28T05:49:54.1462715Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:54.2776594Z   mr_avb_mutation_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_avb_mutation_tests.exe
+2026-10-28T05:49:54.4402942Z   mocs_compilation_Release.cpp
+2026-10-28T05:49:54.4601209Z   Generating Code...
+2026-10-28T05:49:54.4659256Z   Running qmlimportscanner for mr_ui_tests
+2026-10-28T05:49:55.3451779Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:55.4497110Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:55.4920425Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:55.7955411Z   UpdateVerifier.cpp
+2026-10-28T05:49:57.2165961Z   ui_device_fixture.cpp
+2026-10-28T05:49:57.9900903Z   mocs_compilation_Release.cpp
+2026-10-28T05:49:58.0167718Z   Generating Code...
+2026-10-28T05:49:58.5803375Z   mr_import_adapters.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_import_adapters.lib
+2026-10-28T05:49:58.9290420Z   Automatic MOC and UIC for target mr_evidence_import_worker
+2026-10-28T05:49:59.4701921Z   Copying nexvary_mr qml sources into build dir
+2026-10-28T05:49:59.5349001Z   mr_exif_mutation_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_exif_mutation_tests.exe
+2026-10-28T05:49:59.6630167Z   Copying nexvary_mr qml resources into build dir
+2026-10-28T05:49:59.6821546Z   PcapSummary.cpp
+2026-10-28T05:49:59.7120318Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:59.7173583Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:49:59.8519500Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:00.0542976Z   Running qmlimportscanner for nexvary_mr
+2026-10-28T05:50:00.8951012Z   core_tests.cpp
+2026-10-28T05:50:01.3019197Z   import_worker.cpp
+2026-10-28T05:50:01.9035508Z   UpdateJournal.cpp
+2026-10-28T05:50:03.2109443Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:03.4194956Z   Generating Code...
+2026-10-28T05:50:03.8324400Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:04.3555340Z   mr_ui_device_fixture.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_ui_device_fixture.exe
+2026-10-28T05:50:04.4378646Z   mr_core_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_core_tests.exe
+2026-10-28T05:50:04.9808433Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:04.9860359Z   Generating Code...
+2026-10-28T05:50:05.5073980Z   mr_pcap_mutation_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_pcap_mutation_tests.exe
+2026-10-28T05:50:06.4557860Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:06.4630621Z   Generating Code...
+2026-10-28T05:50:06.7707325Z   mr_evidence_import_worker.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_evidence_import_worker.exe
+2026-10-28T05:50:06.7995582Z   Automatic MOC and UIC for target mr_desktop
+2026-10-28T05:50:06.8400917Z   UpdateKeyStore.cpp
+2026-10-28T05:50:08.5710119Z   Running rcc for resource research_catalog
+2026-10-28T05:50:08.5965240Z   Running rcc for resource device_catalog
+2026-10-28T05:50:08.6167851Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:08.7253202Z   ToolBridge.cpp
+2026-10-28T05:50:10.4625781Z   Generating Code...
+2026-10-28T05:50:11.9338785Z   mr_update_verifier.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_update_verifier.lib
+2026-10-28T05:50:11.9876351Z   Automatic MOC for target mr_update_tests
+2026-10-28T05:50:11.9908133Z   Automatic MOC for target mr_update_key_tests
+2026-10-28T05:50:12.3740819Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:12.4283918Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:12.4296833Z   Automatic MOC for target mr_update_journal_tests
+2026-10-28T05:50:12.5373083Z   update_tests.cpp
+2026-10-28T05:50:12.8361255Z   Building Custom Rule D:/a/NEXVARY-MR/NEXVARY-MR/CMakeLists.txt
+2026-10-28T05:50:12.9521342Z   update_journal_tests.cpp
+2026-10-28T05:50:13.0983909Z   update_key_tests.cpp
+2026-10-28T05:50:14.5366557Z   RepairBridge.cpp
+2026-10-28T05:50:18.7885372Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:18.8162794Z   Generating Code...
+2026-10-28T05:50:18.9558696Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:19.0647026Z   Generating Code...
+2026-10-28T05:50:19.1455290Z   WorkshopBridge.cpp
+2026-10-28T05:50:19.2543924Z   mocs_compilation_Release.cpp
+2026-10-28T05:50:19.4575731Z   Generating Code...
+2026-10-28T05:50:20.9570711Z   mr_update_key_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_update_key_tests.exe
+2026-10-28T05:50:21.0376721Z   mr_update_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_update_tests.exe
+2026-10-28T05:50:21.1954737Z   mr_update_journal_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_update_journal_tests.exe
+2026-10-28T05:50:24.1779161Z   TrackingPortal.cpp
+2026-10-28T05:50:27.1314927Z   CloudTracking.cpp
+2026-10-28T05:50:30.8549362Z   SecurityBridge.cpp
+2026-10-28T05:50:35.3478210Z   ServiceCatalog.cpp
+2026-10-28T05:50:38.6269845Z   BoardBridge.cpp
+2026-10-28T05:50:42.0762572Z   FirmwareBridge.cpp
+2026-10-28T05:50:45.8477719Z   RecoveryBridge.cpp
+2026-10-28T05:50:49.8459346Z   RecoveryImage.cpp
+2026-10-28T05:50:53.1175647Z   ForensicRecord.cpp
+2026-10-28T05:50:56.0329171Z   TskImage.cpp
+2026-10-28T05:50:59.3550675Z   PolicyAudit.cpp
+2026-10-28T05:51:03.0419597Z   GovernmentOperationPolicy.cpp
+2026-10-28T05:51:06.7878236Z   IdentityService.cpp
+2026-10-28T05:51:10.0640831Z   LawCaseStore.cpp
+2026-10-28T05:51:13.4992443Z   LawCaseBackup.cpp
+2026-10-28T05:51:16.7336891Z   LawCaseRetention.cpp
+2026-10-28T05:51:19.7238621Z   LawRetention.cpp
+2026-10-28T05:51:22.5834861Z   Generating Code...
+2026-10-28T05:51:43.6641454Z   Compiling...
+2026-10-28T05:51:43.6641889Z   LawCaseBridge.cpp
+2026-10-28T05:51:48.0154639Z   ResearchBridge.cpp
+2026-10-28T05:51:51.7640396Z   MirrorSession.cpp
+2026-10-28T05:51:55.3639939Z   DeviceServices.cpp
+2026-10-28T05:51:59.7035181Z   AvbMetadata.cpp
+2026-10-28T05:52:02.6238117Z   PcapSummary.cpp
+2026-10-28T05:52:05.5279369Z   ExifSummary.cpp
+2026-10-28T05:52:08.4453745Z   ConnectionDiagnosis.cpp
+2026-10-28T05:52:11.6449221Z   DeviceIntelligence.cpp
+2026-10-28T05:52:14.6085575Z   EvidenceImportRunner.cpp
+2026-10-28T05:52:17.8528072Z   LawCaseImports.cpp
+2026-10-28T05:52:20.9891722Z   CaseTimeline.cpp
+2026-10-28T05:52:24.0471228Z   LawCaseTimeline.cpp
+2026-10-28T05:52:28.4677717Z   CaseArtifacts.cpp
+2026-10-28T05:52:31.7150591Z   LawCaseArtifacts.cpp
+2026-10-28T05:52:36.1145962Z   LawCasePartitions.cpp
+2026-10-28T05:52:40.5623328Z   LawCaseForensicAdapters.cpp
+2026-10-28T05:52:45.0456921Z   ForensicAdapters.cpp
+2026-10-28T05:52:47.3954029Z D:\a\NEXVARY-MR\NEXVARY-MR\cpp\src\ForensicAdapters.cpp(42,25): error C2220: the following warning is treated as an error [D:\a\NEXVARY-MR\NEXVARY-MR\build\mr_desktop.vcxproj]
+2026-10-28T05:52:47.3974331Z D:\a\NEXVARY-MR\NEXVARY-MR\cpp\src\ForensicAdapters.cpp(42,25): warning C4996: 'QDateTime::QDateTime': Pass QTimeZone instead [D:\a\NEXVARY-MR\NEXVARY-MR\build\mr_desktop.vcxproj]
+2026-10-28T05:52:48.1637010Z   DcImagePartitions.cpp
+2026-10-28T05:52:50.9337743Z   qrc_research_catalog.cpp
+2026-10-28T05:52:50.9426533Z   Generating Code...
+2026-10-28T05:53:07.0081932Z   Compiling...
+2026-10-28T05:53:07.0082363Z   qrc_device_catalog.cpp
+2026-10-28T05:53:07.0151462Z   mocs_compilation_Release.cpp
+2026-10-28T05:53:12.0937714Z   Generating Code...
+2026-10-28T05:53:13.1459341Z ##[error]Process completed with exit code 1.
+2026-10-28T05:53:13.1684357Z ##[group]Run actions/upload-artifact@v4
+2026-10-28T05:53:13.1684727Z with:
+2026-10-28T05:53:13.1685005Z   name: NEXVARY-MR-Windows-laboratory-validation-evidence
+2026-10-28T05:53:13.1686387Z   path: build/qt-results.xml
+build/gui-repeat-results.xml
+build/gui-repeat-console.txt
+build/full-suite-last-test.log
+build/*-results.txt
+build/policy-audit-interop-results.json
+build/adb-backup-interop-results.json
+build/**/smoke*.png
+build/Testing/Temporary/LastTest.log
+dist/evidence/
+
+2026-10-28T05:53:13.1687615Z   if-no-files-found: warn
+2026-10-28T05:53:13.1687838Z   compression-level: 6
+2026-10-28T05:53:13.1688044Z   overwrite: false
+2026-10-28T05:53:13.1688243Z   include-hidden-files: false
+2026-10-28T05:53:13.1688510Z env:
+2026-10-28T05:53:13.1688686Z   QT_QUICK_BACKEND: software
+2026-10-28T05:53:13.1688997Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:53:13.1689502Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-28T05:53:13.1689960Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:53:13.1690370Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:53:13.1690796Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-28T05:53:13.1691157Z   QT_ROOT_DIR: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64
+2026-10-28T05:53:13.1691513Z   QT_PLUGIN_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\plugins
+2026-10-28T05:53:13.1691893Z   QML2_IMPORT_PATH: D:\a\NEXVARY-MR\Qt\6.8.3\msvc2022_64\qml
+2026-10-28T05:53:13.1692233Z   MR_SODIUM_ROOT: D:\a\_temp/nexvary-sodium
+2026-10-28T05:53:13.1692542Z   QT_QPA_FONTDIR: D:\a\_temp\NEXVARY-MR-test-fonts
+2026-10-28T05:53:13.1692826Z ##[endgroup]
+2026-10-28T05:53:13.3605197Z (node:744) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T05:53:13.3606442Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T05:53:13.6863797Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-28T05:53:13.6867015Z The least common ancestor is D:\a\NEXVARY-MR\NEXVARY-MR. This will be the root directory of the artifact
+2026-10-28T05:53:13.6867856Z With the provided path, there will be 2 files uploaded
+2026-10-28T05:53:13.6873819Z Artifact name is valid!
+2026-10-28T05:53:13.6875586Z Root directory input is valid!
+2026-10-28T05:53:14.0849804Z Beginning upload of artifact content to blob storage
+2026-10-28T05:53:14.1077935Z (node:744) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-28T05:53:14.4067003Z Uploaded bytes 4131
+2026-10-28T05:53:14.4910440Z Finished uploading artifact content to blob storage!
+2026-10-28T05:53:14.4911671Z SHA256 digest of uploaded artifact zip is d369061798b3f106a1b113ae6749c4bf5366d63f9f0bdc95d17e8daee8b5f59c
+2026-10-28T05:53:14.4914349Z Finalizing artifact upload
+2026-10-28T05:53:15.0004997Z Artifact NEXVARY-MR-Windows-laboratory-validation-evidence.zip successfully finalized. Artifact ID 12794954922
+2026-10-28T05:53:15.0007248Z Artifact NEXVARY-MR-Windows-laboratory-validation-evidence has been successfully uploaded! Final size is 4131 bytes. Artifact ID is 12794954922
+2026-10-28T05:53:15.0016127Z Artifact download URL: https://github.com/nexvary/NEXVARY-MR/actions/runs/40639932793/artifacts/12794954922
+2026-10-28T05:53:15.0481378Z Post job cleanup.
+2026-10-28T05:53:15.0486195Z ##[start-action display=Setup Python;id=__a5f784b6-4a98-4fd2-b20c-1ccb9d1e28e4.__actions_setup-python]
+2026-10-28T05:53:15.0488982Z ##[end-action id=__a5f784b6-4a98-4fd2-b20c-1ccb9d1e28e4.__actions_setup-python;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-28T05:53:15.0661204Z Post job cleanup.
+2026-10-28T05:53:15.2740380Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T05:53:15.3012855Z git version 2.56.0.windows.3
+2026-10-28T05:53:15.3075804Z Temporarily overriding HOME='D:\a\_temp\2bd98b9f-424d-409c-8e02-1189bb7b6201' before making global git config changes
+2026-10-28T05:53:15.3076675Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T05:53:15.3087484Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\NEXVARY-MR\NEXVARY-MR
+2026-10-28T05:53:15.3384107Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T05:53:15.3675304Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T05:53:15.7778489Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T05:53:15.8056738Z http.https://github.com/.extraheader
+2026-10-28T05:53:15.8098017Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T05:53:15.8409344Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T05:53:16.2432171Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T05:53:16.2713301Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T05:53:16.7138347Z Cleaning up orphan processes
+2026-10-28T05:53:16.7320815Z Terminate orphan process: pid (7800) (vctip)
+2026-10-28T05:53:16.7624416Z Terminate orphan process: pid (3756) (MSBuild)
+2026-10-28T05:53:16.7697080Z Terminate orphan process: pid (5864) (MSBuild)
+2026-10-28T05:53:16.7849776Z Terminate orphan process: pid (1972) (MSBuild)
+2026-10-28T05:53:16.7975045Z Terminate orphan process: pid (2348) (conhost)
+2026-10-28T05:53:16.8580016Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

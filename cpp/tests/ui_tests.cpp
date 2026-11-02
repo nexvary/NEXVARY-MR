@@ -163,6 +163,39 @@ public slots:
   QFile exifFile(exif);if(!exifFile.open(QIODevice::WriteOnly)||exifFile.write(syntheticExifJpeg())<0)qFatal("Cannot create Exif UI fixture");exifFile.close();
   engine->rootContext()->setContextProperty("syntheticExifPath",exif);
   engine->rootContext()->setContextProperty("exifScreenshotBase",QDir(QCoreApplication::applicationDirPath()).filePath("smoke-exif-ui-"));
+  const auto bookmarksPath=temp.filePath("synthetic-bookmarks.json");QFile bookmarksFile(bookmarksPath);
+  if(!bookmarksFile.open(QIODevice::WriteOnly)||bookmarksFile.write("{\"roots\":{\"bookmark_bar\":{\"type\":\"folder\",\"name\":\"Synthetic lab\",\"children\":[{\"type\":\"url\",\"name\":\"Authorized fixture\",\"url\":\"https://example.invalid/\",\"date_added\":\"13300000000000000\"}]}}}")<0)qFatal("Synthetic bookmarks fixture failed");
+  bookmarksFile.close();engine->rootContext()->setContextProperty("syntheticBookmarksPath",bookmarksPath);
+  QFile payloadInput(bookmarksPath);if(!payloadInput.open(QIODevice::ReadOnly))qFatal("Cannot read manifest fixture payload");
+  const auto payloadHash=QString::fromLatin1(QCryptographicHash::hash(payloadInput.readAll(),QCryptographicHash::Sha256).toHex());
+  const auto manifestPath=temp.filePath("synthetic-manifest.json");QFile manifestFile(manifestPath);
+  const auto manifestBytes=QJsonDocument::fromVariant(QVariantList{QVariantMap{{"path","bookmarks.json"},{"sha256",payloadHash}}}).toJson(QJsonDocument::Compact);
+  if(!manifestFile.open(QIODevice::WriteOnly)||manifestFile.write(manifestBytes)!=manifestBytes.size())qFatal("Cannot create manifest UI fixture");
+  manifestFile.close();engine->rootContext()->setContextProperty("syntheticManifestPath",manifestPath);
+  QFile familyFixture(MR_SQLITE_FAMILY_REFERENCE_PATH);if(!familyFixture.open(QIODevice::ReadOnly))qFatal("Missing SQLite family UI fixture");
+  const auto family=QJsonDocument::fromJson(familyFixture.readAll()).toVariant().toMap();
+  for(const auto &role:QStringList{"main","wal","shm"}){
+   const auto name=temp.filePath("sqlite-"+role);QFile member(name);const auto bytes=QByteArray::fromBase64(family.value(role+"Base64").toString().toLatin1());
+   if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("Cannot create SQLite family UI evidence");
+   member.close();
+   engine->rootContext()->setContextProperty("syntheticSqlite"+role+"Path",name);
+  }
+  QFile historyFile(MR_HISTORY_REFERENCE_PATH);if(!historyFile.open(QIODevice::ReadOnly))qFatal("Missing History fixture");
+  const auto history=QJsonDocument::fromJson(historyFile.readAll()).toVariant().toMap();
+  for(const auto &role:QStringList{"main","wal"}){
+   const auto name=temp.filePath("history-"+role);QFile member(name);const auto bytes=QByteArray::fromBase64(history.value(role+"Base64").toByteArray());
+   if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("History fixture write failed");
+   member.close();engine->rootContext()->setContextProperty("syntheticHistory"+role+"Path",name);
+  }
+
+  QFile downloadsFile(MR_DOWNLOADS_REFERENCE_PATH);if(!downloadsFile.open(QIODevice::ReadOnly))qFatal("Missing downloads fixture");
+  const auto downloads=QJsonDocument::fromJson(downloadsFile.readAll()).toVariant().toMap();
+  for(const auto &role:QStringList{"main","wal","shm"}){
+   const auto name=temp.filePath("downloads-"+role);QFile member(name);const auto bytes=QByteArray::fromBase64(downloads.value(role+"Base64").toByteArray());
+   if(!member.open(QIODevice::WriteOnly)||member.write(bytes)!=bytes.size())qFatal("Downloads fixture write failed");
+   member.close();engine->rootContext()->setContextProperty("syntheticDownloads"+role+"Path",name);
+  }
+
   engine->rootContext()->setContextProperty("syntheticEvidencePath",fixture);
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));

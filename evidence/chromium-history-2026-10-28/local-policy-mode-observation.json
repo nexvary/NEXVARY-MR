@@ -1,0 +1,7 @@
+{
+  "file": "build/mr_policy_audit_tests",
+  "mode": "0o644",
+  "size": 32340408,
+  "sha256": "ab0e8ad3f1dfe0b7a9b99763dfe0242345d29b775ef47fbe9955ef8f9e1de491",
+  "scope": "Generated local ELF had mode0644 after link, CTest refused execution. Only this generated file execute bit restored; no source/test/assertion change."
+}

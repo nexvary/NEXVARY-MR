@@ -109,7 +109,21 @@ private slots:
  void authorityEnds_data(){QTest::addColumn<QString>("reason");for(const auto &name:{"cancel","logout","revoke","case-close","revision","expiry"})QTest::newRow(name)<<QString::fromLatin1(name);}
  void authorityEnds(){
   QFETCH(QString,reason);Fixture f({},reason=="expiry"?1500:600000);QVERIFY(f.approve(f.id));qputenv("MR_SYNTHETIC_PARTITION_TOOL","wait");
-  QVERIFY(f.law.analyzePartitions(f.evidence,QCoreApplication::applicationFilePath(),true));
+  const auto marker=f.root+"/authority-dispatch";qputenv("MR_SYNTHETIC_PARTITION_MARKER",marker.toUtf8());
+  const bool started=f.law.analyzePartitions(f.evidence,QCoreApplication::applicationFilePath(),true);
+  if(!started){
+   const auto request=f.policy.requests().first().toMap();
+   qWarning().noquote()<<"Dispatch refusal"<<reason<<f.law.error()<<"request="<<request.value("status").toString()<<"auditHealthy="<<f.policy.auditStatus().value("healthy").toBool();
+   // Expiry before/during bounded preflight is a valid refusal, not a promise
+   // that an instrumented executable can be hashed within a 1.5-second grant.
+   // The separate ready-handshake test below still requires in-flight expiry.
+   QVERIFY2(reason=="expiry",qPrintable(f.law.error()));QCOMPARE(request.value("status").toString(),QString("expired"));
+   QVERIFY(f.policy.auditStatus().value("healthy").toBool());QVERIFY(!QFile::exists(marker));QVERIFY(!f.law.partitionsBusy());QVERIFY(f.law.partitionsResult().isEmpty());
+   LawCaseStore store(f.root+"/cases.db",true);QVERIFY(store.get(f.id).value("analyses").toList().isEmpty());
+   for(const auto &v:f.policy.caseOperationStates())QVERIFY(v.toMap().value("recoveryState")!="completed");
+   for(const auto &v:f.policy.operationReceipts())QVERIFY(v.toMap().value("status")!="completed");
+   return;
+  }
   if(reason=="cancel")f.law.cancelPartitions();
   else if(reason=="logout")f.identity.logout();
   else if(reason=="revoke")f.policy.revoke("external-analysis");
@@ -119,6 +133,25 @@ private slots:
   QTRY_VERIFY_WITH_TIMEOUT(!f.law.partitionsBusy(),20000);
   QVERIFY(f.law.partitionsResult().isEmpty());LawCaseStore store(f.root+"/cases.db",true);QVERIFY(store.get(f.id).value("analyses").toList().isEmpty());
   const auto states=f.policy.caseOperationStates();QCOMPARE(states.size(),1);QVERIFY(states.first().toMap().value("recoveryState")!="completed");
+ }
+ void expiredBeforeDispatchNeverLaunches(){
+  Fixture f({},1500);QVERIFY(f.approve(f.id));const auto marker=f.root+"/already-expired";qputenv("MR_SYNTHETIC_PARTITION_MARKER",marker.toUtf8());
+  QTest::qWait(1600);QVERIFY(!f.law.analyzePartitions(f.evidence,QCoreApplication::applicationFilePath(),true));
+  QCOMPARE(f.policy.requests().first().toMap().value("status").toString(),QString("expired"));QVERIFY(f.policy.auditStatus().value("healthy").toBool());QVERIFY(!QFile::exists(marker));QVERIFY(!f.law.partitionsBusy());QVERIFY(f.law.partitionsResult().isEmpty());
+  LawCaseStore store(f.root+"/cases.db",true);QVERIFY(store.get(f.id).value("analyses").toList().isEmpty());
+ }
+ void expiryAfterWorkerReadyNeverAcceptsCandidate(){
+  // This is a fixture lifetime, not a change to production grant controls.
+  Fixture f({},10000);QVERIFY(f.approve(f.id));const auto marker=f.root+"/inflight-expiry";qputenv("MR_SYNTHETIC_PARTITION_MARKER",marker.toUtf8());qputenv("MR_SYNTHETIC_PARTITION_TOOL","wait-expiry");
+  QVERIFY2(f.law.analyzePartitions(f.evidence,QCoreApplication::applicationFilePath(),true),qPrintable(f.law.error()));
+  QTRY_VERIFY_WITH_TIMEOUT(QFile::exists(marker+".analysis"),5000);
+  const auto states=f.policy.caseOperationStates();QCOMPARE(states.size(),1);const auto op=states.first().toMap().value("operationId").toString();
+  QVERIFY(f.policy.caseOperationAuthorized(op)); // actual -i child observed while approval is live
+  QTRY_VERIFY_WITH_TIMEOUT(!f.policy.caseOperationAuthorized(op),12000);
+  QCOMPARE(f.policy.requests().first().toMap().value("status").toString(),QString("expired"));
+  QTRY_VERIFY_WITH_TIMEOUT(!f.law.partitionsBusy(),20000);QVERIFY(f.law.partitionsResult().isEmpty());
+  LawCaseStore store(f.root+"/cases.db",true);QVERIFY(store.get(f.id).value("analyses").toList().isEmpty());
+  QVERIFY(f.policy.caseOperationStates().first().toMap().value("recoveryState")!="completed");QCOMPARE(f.policy.operationReceipts().first().toMap().value("status").toString(),QString("expired"));QVERIFY(f.policy.auditStatus().value("healthy").toBool());
  }
  void changedCaseAfterPreparePreventsDispatch(){
   Fixture f;QVERIFY(f.approve(f.id));bool changed=false;
@@ -201,7 +234,12 @@ int main(int argc,char **argv){
   const auto mode=qgetenv("MR_SYNTHETIC_PARTITION_TOOL");if(mode=="wrong-version")std::puts("Unsupported synthetic tool");else std::puts("The Sleuth Kit ver synthetic-fixture");return 0;
  }
  if(args.size()==4 && args[1]=="-i"){
-  const auto mode=qgetenv("MR_SYNTHETIC_PARTITION_TOOL");if(mode=="wait")QThread::msleep(4000);if(mode=="error")return 3;
+  const auto mode=qgetenv("MR_SYNTHETIC_PARTITION_TOOL");
+  if(mode=="wait-expiry"){
+   const auto marker=qEnvironmentVariable("MR_SYNTHETIC_PARTITION_MARKER");QFile ready(marker+".analysis");if(marker.isEmpty()||!ready.open(QIODevice::WriteOnly)||ready.write("analysis-ready")!=14||!ready.flush())return 10;ready.close();QThread::msleep(15000);
+  }
+  if(mode=="wait")QThread::msleep(4000);
+  if(mode=="error")return 3;
   if(mode=="oversize"){const QByteArray bytes(9000,'x');std::fwrite(bytes.constData(),1,size_t(bytes.size()),stdout);}else std::puts("Synthetic partition listing");return 0;
  }
  if(args.size()==4 && args[1]=="--case-crash")return crashFixture(args[2],args[3]);

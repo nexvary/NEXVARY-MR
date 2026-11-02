@@ -1,0 +1,14 @@
+{
+  "testedSource": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+  "testedTree": "13590730417670cb8b95365dda60b1eb104dda92",
+  "prCheckout": "5f709e3830608da9388755c4640a5b1fe23dc0b6",
+  "prCheckoutTree": "13590730417670cb8b95365dda60b1eb104dda92",
+  "implementationAndPRTreesIdentical": true,
+  "checkpointFullTreeIdentical": false,
+  "checkpointOnlyAllowedPaths": [
+    "DEVELOPMENT_STATE.md",
+    "research/forensic-engine-integration.json",
+    "evidence/ntfs-replay-2026-10-28/"
+  ],
+  "scope": "Unshipped evidence/state/research only; app/native regression/build/workflow/packaging/shipped-guide inputs unchanged. Full checkpoint CI separate."
+}

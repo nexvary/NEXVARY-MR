@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "issue": 16,
+  "status": "selected-internal-ntfs-v2-replay-tested-case-integration-pending-broader-integration-in-progress",
+  "sources": [
+    {
+      "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
+      "module": "evidence-adapter",
+      "permission": "read-only",
+      "license_verified": true,
+      "source_sha": "8b35940b1c879e0ce5f5c13e0d6c89aeab023757",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "workbench-export-manifest",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "selected-existing-case-adapters-regression-tested-at-1a4471d; broader-engine-stage-in-progress",
+      "acceptance_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+      "ci_run": 40747698401,
+      "evidence": "evidence/ntfs-replay-2026-10-28/FINAL_CHECKPOINT.md",
+      "content_verification": {
+        "verifier_version": "nexvary-mr-manifest-content/1",
+        "scope": "explicit protected same-case payload bindings; no filesystem path resolution",
+        "tested_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+        "ci_run": 40747698401
+      }
+    },
+    {
+      "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
+      "module": "browser-artifact-adapter",
+      "permission": "read-only",
+      "license_verified": true,
+      "source_sha": "d7754cd8f051d285406403465b6d7daa3bc4b060",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "chromium-bookmarks",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "selected-existing-case-adapters-regression-tested-at-1a4471d; broader-engine-stage-in-progress",
+      "acceptance_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+      "ci_run": 40747698401,
+      "evidence": "evidence/ntfs-replay-2026-10-28/FINAL_CHECKPOINT.md",
+      "additional_adapters": [
+        "browser-sqlite-family",
+        "chromium-history",
+        "chromium-downloads"
+      ],
+      "sqlite_family": {
+        "verifier_version": "nexvary-mr-sqlite-family/1",
+        "state": "selected-slice-tested-broader-stage-in-progress",
+        "scope": "protected offline main/WAL/opaque SHM; bounded checksummed committed page image only; no History or SQL execution",
+        "source_module": "nbf/core.py:CaseManager.snapshot_sqlite_family; MR byte-only WAL validation extension",
+        "tested_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+        "ci_run": 40747698401
+      },
+      "history": {
+        "parser_version": "nexvary-mr-chromium-history/1",
+        "state": "selected-slice-tested-broader-stage-in-progress",
+        "scope": "bounded declared rowid urls+visits, protected committed main/WAL image, original member record extents; no live profiles, urls-only fallback, Downloads/Sessions/decryption",
+        "source_module": "nbf/parsers.py:ChromiumParser.history; MR schema/byte reader/provenance extension",
+        "tested_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+        "ci_run": 40747698401
+      },
+      "downloads": {
+        "parser_version": "nexvary-mr-chromium-downloads/1",
+        "state": "selected-slice-tested-broader-stage-in-progress",
+        "scope": "protected offline downloads and optional ordered rowid URL chains; original byte extents; existing signed case/Findings/Timeline; no path/file/live-profile/SQL access or completion/content inference",
+        "source_module": "nbf/parsers.py:ChromiumParser.downloads; MR shared bounded byte/provenance implementation",
+        "evidence": "evidence/chromium-downloads-2026-10-28/CHECKPOINT.md",
+        "tested_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+        "ci_run": 40747698401
+      }
+    },
+    {
+      "repository": "nexvary/NEXVARY-DC",
+      "module": "disk-image-adapter",
+      "permission": "read-only",
+      "license_verified": true,
+      "source_sha": "d8e2baf61b43d044b33a1dd76a444d093c80023c",
+      "enabled": true,
+      "permission_basis": "LicenseRef-NEXVARY-Owner-Authorized-Integration",
+      "permission_record": "docs/FORENSIC_SOURCE_PERMISSIONS.md",
+      "adapter": "dc-image-partitions",
+      "adapter_version": "nexvary-mr-forensic/1",
+      "scope": "selected original function only; no general upstream license asserted",
+      "verification": "selected-existing-case-adapters-regression-tested-at-1a4471d; broader-engine-stage-in-progress",
+      "acceptance_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+      "ci_run": 40747698401,
+      "evidence": "evidence/ntfs-replay-2026-10-28/FINAL_CHECKPOINT.md",
+      "ntfs_metadata_prerequisite": {
+        "state": "internal-v2-replay-tested-case-integration-pending",
+        "enabled": false,
+        "registered_case_adapter": false,
+        "source_module": "src/core/FilesystemRecovery.cpp:fixup/attributes/ntStream/ntfs selected metadata-only derivative",
+        "scope": "Internal test target; bounded protected-source replay, exact case/evidence labels, MFT map/USA/raw-reconstructed metadata provenance; no authorization, signed retention or recovered file",
+        "accepted_predecessor": {
+          "parser_version": "nexvary-mr-ntfs-metadata/1",
+          "tested_source": "302ec290fbb8c65def0a68b1d69916105fa74ebb",
+          "ci_run": 40738028510,
+          "evidence": "evidence/ntfs-metadata-2026-10-28/FINAL_CHECKPOINT.md"
+        },
+        "parser_version": "nexvary-mr-ntfs-metadata/2",
+        "evidence": "evidence/ntfs-replay-2026-10-28/FINAL_CHECKPOINT.md",
+        "tested_source": "1a4471d89f98d4bf91c03a202b32786cb8e264fa",
+        "ci_run": 40747698401
+      }
+    }
+  ],
+  "stages": [
+    {
+      "id": 1,
+      "name": "upstream inventory",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Inventory all executable payload modules for each of the three pinned commits with file SHA-256, selected workflow overlays and callable capability classification.",
+        "Record allowed, deferred or excluded disposition for every discovered capability; no unclassified executable module."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 2,
+      "name": "license and dependency audit",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Record owner permission and redistribution scope for every migrated module and transitive dependency, with exact version/hash and notice obligations.",
+        "Block any enabled module with unresolved permission or undeclared dependency; negative gate tests pass."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 3,
+      "name": "capability overlap map",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Map each upstream callable capability to an existing MR service or a justified missing function, with one implementation owner.",
+        "Document all deferred/excluded capabilities and test that no duplicate evidence store or updater authority is introduced."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 4,
+      "name": "read-only trust boundaries",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Test allowlisted byte-only entry points against traversal, symlinks, hostile sizes, corrupt evidence, cancellation, timeouts and revoked authority.",
+        "Demonstrate no evidence/device writes or arbitrary commands and fail-closed acceptance after case/session/grant/source changes."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 5,
+      "name": "workbench adapter",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Verify intact, modified and missing manifest payloads by SHA-256 using protected case evidence; reject duplicate/unsafe paths and bound all input/output.",
+        "Preserve per-file provenance, deterministic reports, signed acceptance and restart isolation; review disposition of all remaining Workbench functions."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 6,
+      "name": "browser artifact adapter",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Review original History, Downloads, Sessions, profile and timestamp parsers; migrate only licensed and bounded functions.",
+        "Test coherent protected SQLite main/WAL/SHM families, corruption, truncation, size limits, raw timestamps, timeline provenance, cancellation and revocation without modifying original profiles."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 7,
+      "name": "disk image adapter",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Review original NTFS/exFAT/FAT32/deleted metadata/extents/image verification/carving; migrate a strictly read-only capability allowlist.",
+        "Use known-answer and malformed images to verify bounds, partial versus complete recovery labels, cancellation and authority checks; prove destructive APIs unreachable."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 8,
+      "name": "case provenance integration",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "Every supported finding binds case/evidence IDs, original/working hashes, parser/version, pinned repository, parameters, raw reference, confidence/warnings and signed audit receipt.",
+        "Pass findings/timeline/report integrity, case isolation, revocation, cancellation, crash reconciliation and duplicate-restart acceptance tests for every enabled adapter/mode."
+      ],
+      "verification_evidence": []
+    },
+    {
+      "id": 9,
+      "name": "CI and Windows packaging verification",
+      "state": "in-progress",
+      "acceptance_criteria": [
+        "For the exact implementation tree pass required native/Linux/MSVC-WX/sanitizer/malformed/security/audit groups and AR/EN Qt at DPI 100/125/150.",
+        "Verify actual Windows Portable and Installer executable bytes, manifests, launch/install/uninstall and source provenance; retain original failure logs and scope all exclusions."
+      ],
+      "verification_evidence": []
+    }
+  ]
+}

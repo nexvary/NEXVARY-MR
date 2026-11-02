@@ -1,0 +1,47 @@
+[  0%] Built target mr_sqlite_table_tests_autogen_timestamp_deps
+[ 11%] Built target mr_policy_tests
+[ 23%] Built target mr_core
+[ 35%] Built target mr_law_enforcement_case_tests
+[ 47%] Built target mr_core_tests
+[ 52%] Automatic MOC for target mr_sqlite_table_tests
+[ 58%] Built target mr_sqlite_table_tests_autogen
+[ 94%] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp: In member function ‘void SqliteTableTests::historySchemaJoinOracle()’:
+/workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp:143:46: error: conversion from ‘long int’ to ‘const QVariant’ is ambiguous
+  143 |      q.bindValue(3,QVariant{});q.bindValue(4,-2147483648);QVERIFY(q.exec());
+      |                                              ^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtCore/QVariant:1,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtCore/qvariantmap.h:14,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtCore/QVariantMap:1,
+                 from /workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/src/ForensicAdapters.hpp:4,
+                 from /workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/src/SqliteTableReader.hpp:2,
+                 from /workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:147:5: note: candidate: ‘QVariant::QVariant(float)’
+  147 |     QVariant(float f);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:146:5: note: candidate: ‘QVariant::QVariant(double)’
+  146 |     QVariant(double d);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:145:5: note: candidate: ‘QVariant::QVariant(bool)’
+  145 |     QVariant(bool b);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:144:5: note: candidate: ‘QVariant::QVariant(qulonglong)’
+  144 |     QVariant(qulonglong ull);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:143:5: note: candidate: ‘QVariant::QVariant(qlonglong)’
+  143 |     QVariant(qlonglong ll);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:142:5: note: candidate: ‘QVariant::QVariant(uint)’
+  142 |     QVariant(uint ui);
+      |     ^~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:141:5: note: candidate: ‘QVariant::QVariant(int)’
+  141 |     QVariant(int i);
+      |     ^~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtSql/QSqlQuery:1,
+                 from /workspace/scratch/63146b1e5274/NEXVARY-MR/cpp/tests/sqlite_table_tests.cpp:8:
+/usr/include/x86_64-linux-gnu/qt6/QtSql/qsqlquery.h:87:45: note:   initializing argument 2 of ‘void QSqlQuery::bindValue(int, const QVariant&, QSql::ParamType)’
+   87 |     void bindValue(int pos, const QVariant& val, QSql::ParamType type = QSql::In);
+      |                             ~~~~~~~~~~~~~~~~^~~
+gmake[2]: *** [CMakeFiles/mr_sqlite_table_tests.dir/build.make:90: CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:876: CMakeFiles/mr_sqlite_table_tests.dir/all] Error 2
+gmake: *** [Makefile:101: all] Error 2

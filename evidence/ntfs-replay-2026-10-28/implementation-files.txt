@@ -1,0 +1,17 @@
+DEVELOPMENT_STATE.md
+cpp/src/NtfsMetadata.cpp
+cpp/src/NtfsMetadata.hpp
+cpp/tests/ntfs_metadata_tests.cpp
+docs/NTFS_METADATA_PREREQUISITE.md
+evidence/ntfs-replay-2026-10-28/CHECKPOINT.md
+evidence/ntfs-replay-2026-10-28/asan-build.log
+evidence/ntfs-replay-2026-10-28/asan-console.log
+evidence/ntfs-replay-2026-10-28/asan57-no-local-leak-inspection.log
+evidence/ntfs-replay-2026-10-28/build.log
+evidence/ntfs-replay-2026-10-28/ctest5.log
+evidence/ntfs-replay-2026-10-28/initial-asan-default-diagnostic.log
+evidence/ntfs-replay-2026-10-28/initial-asan-default-tests.log
+evidence/ntfs-replay-2026-10-28/ntfs57.log
+evidence/ntfs-replay-2026-10-28/python60.log
+evidence/ntfs-replay-2026-10-28/source-sha256.json
+research/forensic-engine-integration.json

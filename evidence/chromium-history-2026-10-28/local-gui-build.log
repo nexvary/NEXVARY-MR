@@ -1,0 +1,19 @@
+[0/2] Re-checking globbed directories...
+[1/19] Automatic MOC and UIC for target mr_desktop
+[2/18] Automatic MOC for target mr_sqlite_table_tests
+[3/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/mr_sqlite_table_tests_autogen/mocs_compilation.cpp.o
+[4/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SqliteTableReader.cpp.o
+[5/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteTableReader.cpp.o
+[6/18] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ChromiumHistory.cpp.o
+[7/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/tests/sqlite_table_tests.cpp.o
+[8/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ChromiumHistory.cpp.o
+[9/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/SqliteEvidenceFamily.cpp.o
+[10/18] Linking CXX static library libmr_desktop.a
+[11/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/ForensicAdapters.cpp.o
+[12/18] Linking CXX executable mr_policy_audit_tests
+[13/18] Linking CXX executable mr_forensic_adapter_tests
+[14/18] Building CXX object CMakeFiles/mr_sqlite_table_tests.dir/cpp/src/DcImagePartitions.cpp.o
+[15/18] Linking CXX executable mr_sqlite_table_tests
+[16/18] Linking CXX executable mr_artifact_tests
+[17/18] Linking CXX executable mr_timeline_tests
+[18/18] Linking CXX executable mr_ui_tests

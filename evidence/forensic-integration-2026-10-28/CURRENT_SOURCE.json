@@ -1,0 +1,50 @@
+{
+  "acceptanceSource": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+  "acceptanceTree": "88e348ddd3442c726ef08a907df64f87d6b8dc34",
+  "prCheckout": "4fa473d33a596bb4de2e0db87641346871e176f8",
+  "runtimeImplementation": "ec8ff812beb914cbea71c6ad79cc5cada0befb84",
+  "governmentParent": "eb2322140956a55a50ee7494570f35573a1ce0c0",
+  "status": "selected-native-slice-tested; broader-integration-in-progress",
+  "ciRun": 40644129202,
+  "ciAttempt": 1,
+  "jobsPassed": 7,
+  "jobsFailed": 0,
+  "profileGroupsPassedEach": 51,
+  "sanitizerGroupsPassed": 20,
+  "nativeAdaptersPassed": 15,
+  "caseTransactionCasesPassed": 37,
+  "partitionLinuxPassed": 30,
+  "partitionWindowsPassed": 29,
+  "partitionWindowsSkipped": 1,
+  "qmlPassed": 55,
+  "dpiGroupsPerProfilePassed": 2,
+  "guiRepeatPassesPerProfile": 3,
+  "signedInteropCasesPassed": 73,
+  "rootPythonLocalPassed": 51,
+  "physicalFinalPortable": {
+    "source": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+    "buildCommit": "4fa473d33a596bb4de2e0db87641346871e176f8",
+    "executableSha256": "f623145a559fad770383e7589259a8865b26eee01cd9aad357cc513365950e4c",
+    "workerSha256": "79b364222ff62978303d1709e9e5c2f0b39f46375e9011310dd972d158b78d89",
+    "os": "Windows10 Home10.0.19045 x64 existing connected host",
+    "mode": "direct native portable; synthetic data; software renderer; Qt SDK excluded from child PATH",
+    "exitCode": 0,
+    "independentAuditEvents": 23,
+    "defaultDeniedCategories": 6,
+    "offlineAfterRevoke": true,
+    "existingInstallationUntouched": true,
+    "powerShellScriptExecution": "OS policy refused; policy unchanged; no PowerShell script executed",
+    "installerOnThisHost": "not performed: existing MR uninstall registration",
+    "limitations": [
+      "not a clean machine",
+      "no hardware-renderer/flicker/Windows11/phone test",
+      "new forensic engines covered in CI native/QML tests, not this packaged smoke"
+    ]
+  },
+  "limitations": [
+    "Broader nine integration stages in-progress",
+    "Original audit-store divergence, process-tree containment and Qt root cause remain open",
+    "No clean physical installer/Win11/hardware/agency acceptance",
+    "Unsigned evaluation artifacts; selected owner-permission is not general redistribution license"
+  ]
+}

@@ -1,0 +1,20 @@
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/077476f00950/NEXVARY-MR/qml/tests/tst_navigation.qml produced 4 error(s):
+    /workspace/scratch/077476f00950/NEXVARY-MR/qml/tests/tst_navigation.qml:11,2: Type MR.Main unavailable
+    /workspace/scratch/077476f00950/NEXVARY-MR/qml/Main.qml:133,5: Type DeviceHub unavailable
+    /workspace/scratch/077476f00950/NEXVARY-MR/qml/DeviceHub.qml:15,3: Type DeviceServicesPage unavailable
+    /workspace/scratch/077476f00950/NEXVARY-MR/qml/DeviceServicesPage.qml:4,1: module "QtQuick.Dialogs" is not installed
+  Working directory: /workspace/scratch/077476f00950/NEXVARY-MR
+  Import paths:
+    '/workspace/scratch/077476f00950/NEXVARY-MR/build'
+    'qrc:/qt-project.org/imports'
+    '/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() Type MR.Main unavailable
+   Loc: [/workspace/scratch/077476f00950/NEXVARY-MR/qml/tests/tst_navigation.qml(11)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 4ms
+********* Finished testing of mr_ui *********

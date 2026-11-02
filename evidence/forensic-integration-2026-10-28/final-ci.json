@@ -1,0 +1,1480 @@
+{
+  "acceptanceSource": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+  "prCheckout": "4fa473d33a596bb4de2e0db87641346871e176f8",
+  "tree": "88e348ddd3442c726ef08a907df64f87d6b8dc34",
+  "governmentParent": "eb2322140956a55a50ee7494570f35573a1ce0c0",
+  "run": {
+    "id": 40644129202,
+    "name": "C++20 and Qt Windows",
+    "node_id": "WFR_kwLOVL-Wls8AAAAJdpQxsg",
+    "head_branch": "integration/forensic-engines-audit",
+    "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+    "path": ".github/workflows/cpp-qt.yml",
+    "display_title": "Government: native forensic adapters, pinned source audit and case transactions (#16)",
+    "run_number": 254,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 386460899,
+    "check_suite_id": 110164378262,
+    "check_suite_node_id": "CS_kwDOVL-Wls8AAAAZpk8Clg",
+    "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+    "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202",
+    "pull_requests": [
+      {
+        "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/pulls/17",
+        "id": 5039778823,
+        "number": 17,
+        "head": {
+          "ref": "integration/forensic-engines-audit",
+          "sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+          "repo": {
+            "id": 1421842070,
+            "url": "https://api.github.com/repos/nexvary/NEXVARY-MR",
+            "name": "NEXVARY-MR"
+          }
+        },
+        "base": {
+          "ref": "feature/government-operations",
+          "sha": "eb2322140956a55a50ee7494570f35573a1ce0c0",
+          "repo": {
+            "id": 1421842070,
+            "url": "https://api.github.com/repos/nexvary/NEXVARY-MR",
+            "name": "NEXVARY-MR"
+          }
+        }
+      }
+    ],
+    "created_at": "2026-10-28T06:29:08Z",
+    "updated_at": "2026-10-28T06:50:55Z",
+    "actor": {
+      "login": "nexvary",
+      "id": 325503741,
+      "node_id": "U_kgDOE2bK_Q",
+      "avatar_url": "https://avatars.githubusercontent.com/u/325503741?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nexvary",
+      "html_url": "https://github.com/nexvary",
+      "followers_url": "https://api.github.com/users/nexvary/followers",
+      "following_url": "https://api.github.com/users/nexvary/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nexvary/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nexvary/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nexvary/subscriptions",
+      "organizations_url": "https://api.github.com/users/nexvary/orgs",
+      "repos_url": "https://api.github.com/users/nexvary/repos",
+      "events_url": "https://api.github.com/users/nexvary/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nexvary/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-10-28T06:29:08Z",
+    "triggering_actor": {
+      "login": "nexvary",
+      "id": 325503741,
+      "node_id": "U_kgDOE2bK_Q",
+      "avatar_url": "https://avatars.githubusercontent.com/u/325503741?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nexvary",
+      "html_url": "https://github.com/nexvary",
+      "followers_url": "https://api.github.com/users/nexvary/followers",
+      "following_url": "https://api.github.com/users/nexvary/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nexvary/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nexvary/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nexvary/subscriptions",
+      "organizations_url": "https://api.github.com/users/nexvary/orgs",
+      "repos_url": "https://api.github.com/users/nexvary/repos",
+      "events_url": "https://api.github.com/users/nexvary/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nexvary/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202/jobs",
+    "logs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202/logs",
+    "check_suite_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-suites/110164378262",
+    "artifacts_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202/artifacts",
+    "cancel_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202/cancel",
+    "rerun_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/workflows/386460899",
+    "head_commit": {
+      "id": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "tree_id": "88e348ddd3442c726ef08a907df64f87d6b8dc34",
+      "message": "Prove partition expiry before dispatch and after observed worker readiness\n\nRetain the short-grant row and all authority/case/audit postconditions. Accept a refused expiry start only with a healthy journal, an actually expired request and zero launch/results/completed receipts. Add deterministic no-launch and live-worker-ready expiry cases. No production policy or timeout changes; preserve the original sanitizer failure and local LSan limitation.",
+      "timestamp": "2026-10-28T06:29:01Z",
+      "author": {
+        "name": "NEXVARY Inc",
+        "email": "325503741+nexvary@users.noreply.github.com"
+      },
+      "committer": {
+        "name": "NEXVARY Inc",
+        "email": "325503741+nexvary@users.noreply.github.com"
+      }
+    },
+    "repository": {
+      "id": 1421842070,
+      "node_id": "R_kgDOVL-Wlg",
+      "name": "NEXVARY-MR",
+      "full_name": "nexvary/NEXVARY-MR",
+      "private": false,
+      "owner": {
+        "login": "nexvary",
+        "id": 325503741,
+        "node_id": "U_kgDOE2bK_Q",
+        "avatar_url": "https://avatars.githubusercontent.com/u/325503741?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/nexvary",
+        "html_url": "https://github.com/nexvary",
+        "followers_url": "https://api.github.com/users/nexvary/followers",
+        "following_url": "https://api.github.com/users/nexvary/following{/other_user}",
+        "gists_url": "https://api.github.com/users/nexvary/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/nexvary/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/nexvary/subscriptions",
+        "organizations_url": "https://api.github.com/users/nexvary/orgs",
+        "repos_url": "https://api.github.com/users/nexvary/repos",
+        "events_url": "https://api.github.com/users/nexvary/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/nexvary/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/nexvary/NEXVARY-MR",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR",
+      "forks_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/forks",
+      "keys_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/teams",
+      "hooks_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/hooks",
+      "issue_events_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/events",
+      "assignees_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/tags",
+      "blobs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/languages",
+      "stargazers_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/stargazers",
+      "contributors_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/contributors",
+      "subscribers_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/subscribers",
+      "subscription_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/subscription",
+      "commits_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/merges",
+      "archive_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/downloads",
+      "issues_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/labels{/name}",
+      "releases_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/deployments"
+    },
+    "head_repository": {
+      "id": 1421842070,
+      "node_id": "R_kgDOVL-Wlg",
+      "name": "NEXVARY-MR",
+      "full_name": "nexvary/NEXVARY-MR",
+      "private": false,
+      "owner": {
+        "login": "nexvary",
+        "id": 325503741,
+        "node_id": "U_kgDOE2bK_Q",
+        "avatar_url": "https://avatars.githubusercontent.com/u/325503741?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/nexvary",
+        "html_url": "https://github.com/nexvary",
+        "followers_url": "https://api.github.com/users/nexvary/followers",
+        "following_url": "https://api.github.com/users/nexvary/following{/other_user}",
+        "gists_url": "https://api.github.com/users/nexvary/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/nexvary/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/nexvary/subscriptions",
+        "organizations_url": "https://api.github.com/users/nexvary/orgs",
+        "repos_url": "https://api.github.com/users/nexvary/repos",
+        "events_url": "https://api.github.com/users/nexvary/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/nexvary/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/nexvary/NEXVARY-MR",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR",
+      "forks_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/forks",
+      "keys_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/teams",
+      "hooks_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/hooks",
+      "issue_events_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/events",
+      "assignees_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/tags",
+      "blobs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/languages",
+      "stargazers_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/stargazers",
+      "contributors_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/contributors",
+      "subscribers_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/subscribers",
+      "subscription_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/subscription",
+      "commits_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/merges",
+      "archive_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/downloads",
+      "issues_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/labels{/name}",
+      "releases_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/deployments"
+    }
+  },
+  "jobs": [
+    {
+      "id": 122668884903,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6Kjpw",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668884903",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668884903",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:10Z",
+      "completed_at": "2026-10-28T06:29:21Z",
+      "name": "core (ubuntu-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:11Z",
+          "completed_at": "2026-10-28T06:29:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:14Z"
+        },
+        {
+          "name": "Configure C++ core",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:14Z",
+          "completed_at": "2026-10-28T06:29:15Z"
+        },
+        {
+          "name": "Build core and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:15Z",
+          "completed_at": "2026-10-28T06:29:17Z"
+        },
+        {
+          "name": "Run core tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:29:17Z",
+          "completed_at": "2026-10-28T06:29:18Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:29:18Z",
+          "completed_at": "2026-10-28T06:29:19Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-28T06:29:19Z",
+          "completed_at": "2026-10-28T06:29:20Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T06:29:20Z",
+          "completed_at": "2026-10-28T06:29:20Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668884903",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000026117,
+      "runner_name": "GitHub Actions 1000026117",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885169,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KksQ",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885169",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885169",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:44:46Z",
+      "name": "linux-forensic-integration (laboratory)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:13Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:13Z",
+          "completed_at": "2026-10-28T06:29:19Z"
+        },
+        {
+          "name": "Install Qt and separately packaged TSK for synthetic integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:19Z",
+          "completed_at": "2026-10-28T06:29:57Z"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:57Z",
+          "completed_at": "2026-10-28T06:30:49Z"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:30:49Z",
+          "completed_at": "2026-10-28T06:30:49Z"
+        },
+        {
+          "name": "Configure and build native GUI and fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:30:49Z",
+          "completed_at": "2026-10-28T06:36:37Z"
+        },
+        {
+          "name": "Run Qt, recovery and real mmls synthetic-image integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T06:36:37Z",
+          "completed_at": "2026-10-28T06:44:39Z"
+        },
+        {
+          "name": "Instrument parser, identity and signed-update regressions",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-10-28T06:44:39Z",
+          "completed_at": "2026-10-28T06:44:39Z"
+        },
+        {
+          "name": "Native Qt client through real Gunicorn and verified Caddy TLS",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-28T06:44:39Z",
+          "completed_at": "2026-10-28T06:44:39Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T06:44:39Z",
+          "completed_at": "2026-10-28T06:44:44Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-28T06:44:44Z",
+          "completed_at": "2026-10-28T06:44:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-28T06:44:44Z",
+          "completed_at": "2026-10-28T06:44:44Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885169",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000026120,
+      "runner_name": "GitHub Actions 1000026120",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885180,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KkvA",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885180",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885180",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:49:17Z",
+      "name": "qt (laboratory)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:16Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:16Z",
+          "completed_at": "2026-10-28T06:29:23Z"
+        },
+        {
+          "name": "Parse Windows deployment scripts before building",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:23Z",
+          "completed_at": "2026-10-28T06:29:23Z"
+        },
+        {
+          "name": "Run jurplel/install-qt-action@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:23Z",
+          "completed_at": "2026-10-28T06:30:23Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:30:23Z",
+          "completed_at": "2026-10-28T06:30:23Z"
+        },
+        {
+          "name": "Install independent policy audit verifier",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:30:23Z",
+          "completed_at": "2026-10-28T06:30:31Z"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T06:30:31Z",
+          "completed_at": "2026-10-28T06:30:35Z"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-28T06:30:35Z",
+          "completed_at": "2026-10-28T06:30:35Z"
+        },
+        {
+          "name": "Supply installed Windows fonts to offscreen Qt tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-28T06:30:35Z",
+          "completed_at": "2026-10-28T06:30:36Z"
+        },
+        {
+          "name": "Configure GUI and Qt integration tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T06:30:36Z",
+          "completed_at": "2026-10-28T06:31:03Z"
+        },
+        {
+          "name": "Build GUI",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-28T06:31:03Z",
+          "completed_at": "2026-10-28T06:39:25Z"
+        },
+        {
+          "name": "Verify bounded GUI profile probe and production packaging guard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-28T06:39:25Z",
+          "completed_at": "2026-10-28T06:39:26Z"
+        },
+        {
+          "name": "Prepare verified standalone ClamAV for synthetic Windows integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T06:39:26Z",
+          "completed_at": "2026-10-28T06:39:30Z"
+        },
+        {
+          "name": "Run CTest suite",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-28T06:39:30Z",
+          "completed_at": "2026-10-28T06:49:07Z"
+        },
+        {
+          "name": "Verify read-only Windows USB inventory",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-28T06:49:07Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Assemble portable Qt runtime",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Verify portable in isolated path with spaces",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Build per-user Windows installer",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Verify installer installation and deployed runtime",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Record artifact checksums",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:09Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-10-28T06:49:09Z",
+          "completed_at": "2026-10-28T06:49:13Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-10-28T06:49:13Z",
+          "completed_at": "2026-10-28T06:49:14Z"
+        },
+        {
+          "name": "Post Run jurplel/install-qt-action@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-10-28T06:49:14Z",
+          "completed_at": "2026-10-28T06:49:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 46,
+          "started_at": "2026-10-28T06:49:14Z",
+          "completed_at": "2026-10-28T06:49:15Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 47,
+          "started_at": "2026-10-28T06:49:15Z",
+          "completed_at": "2026-10-28T06:49:16Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885180",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000026119,
+      "runner_name": "GitHub Actions 1000026119",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885181,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KkvQ",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885181",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885181",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:29:48Z",
+      "name": "core (windows-2022)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:13Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:13Z",
+          "completed_at": "2026-10-28T06:29:20Z"
+        },
+        {
+          "name": "Configure C++ core",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:20Z",
+          "completed_at": "2026-10-28T06:29:34Z"
+        },
+        {
+          "name": "Build core and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:34Z",
+          "completed_at": "2026-10-28T06:29:41Z"
+        },
+        {
+          "name": "Run core tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:29:41Z",
+          "completed_at": "2026-10-28T06:29:42Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:29:42Z",
+          "completed_at": "2026-10-28T06:29:44Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-28T06:29:44Z",
+          "completed_at": "2026-10-28T06:29:46Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T06:29:46Z",
+          "completed_at": "2026-10-28T06:29:46Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885181",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000026118,
+      "runner_name": "GitHub Actions 1000026118",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885249,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KlAQ",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885249",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885249",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:49:03Z",
+      "name": "linux-forensic-integration (production)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:13Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:13Z",
+          "completed_at": "2026-10-28T06:29:17Z"
+        },
+        {
+          "name": "Install Qt and separately packaged TSK for synthetic integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:17Z",
+          "completed_at": "2026-10-28T06:30:04Z"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:30:04Z",
+          "completed_at": "2026-10-28T06:30:49Z"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:30:49Z",
+          "completed_at": "2026-10-28T06:30:49Z"
+        },
+        {
+          "name": "Configure and build native GUI and fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:30:49Z",
+          "completed_at": "2026-10-28T06:35:59Z"
+        },
+        {
+          "name": "Run Qt, recovery and real mmls synthetic-image integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T06:35:59Z",
+          "completed_at": "2026-10-28T06:42:57Z"
+        },
+        {
+          "name": "Instrument parser, identity and signed-update regressions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-28T06:42:57Z",
+          "completed_at": "2026-10-28T06:48:48Z"
+        },
+        {
+          "name": "Native Qt client through real Gunicorn and verified Caddy TLS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-28T06:48:48Z",
+          "completed_at": "2026-10-28T06:48:56Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T06:48:56Z",
+          "completed_at": "2026-10-28T06:49:01Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-28T06:49:01Z",
+          "completed_at": "2026-10-28T06:49:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-28T06:49:01Z",
+          "completed_at": "2026-10-28T06:49:01Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885249",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000026123,
+      "runner_name": "GitHub Actions 1000026123",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885306,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KlOg",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885306",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885306",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:30:25Z",
+      "name": "tracking-server",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:11Z",
+          "completed_at": "2026-10-28T06:29:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:14Z"
+        },
+        {
+          "name": "Test portal, validate and bundle single-file server installer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:14Z",
+          "completed_at": "2026-10-28T06:29:14Z"
+        },
+        {
+          "name": "Install, upgrade, back up, restore and rotate on disposable systemd VM",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:14Z",
+          "completed_at": "2026-10-28T06:30:23Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:30:23Z",
+          "completed_at": "2026-10-28T06:30:24Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T06:30:24Z",
+          "completed_at": "2026-10-28T06:30:24Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-28T06:30:24Z",
+          "completed_at": "2026-10-28T06:30:24Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885306",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000026124,
+      "runner_name": "GitHub Actions 1000026124",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 122668885364,
+      "run_id": 40644129202,
+      "workflow_name": "C++20 and Qt Windows",
+      "head_branch": "integration/forensic-engines-audit",
+      "run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/runs/40644129202",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVL-Wls8AAAAcj6KldA",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/122668885364",
+      "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40644129202/job/122668885364",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-28T06:29:09Z",
+      "started_at": "2026-10-28T06:29:11Z",
+      "completed_at": "2026-10-28T06:50:55Z",
+      "name": "qt (production)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T06:29:12Z",
+          "completed_at": "2026-10-28T06:29:16Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T06:29:16Z",
+          "completed_at": "2026-10-28T06:29:22Z"
+        },
+        {
+          "name": "Parse Windows deployment scripts before building",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T06:29:22Z",
+          "completed_at": "2026-10-28T06:29:23Z"
+        },
+        {
+          "name": "Run jurplel/install-qt-action@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T06:29:23Z",
+          "completed_at": "2026-10-28T06:30:22Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T06:30:22Z",
+          "completed_at": "2026-10-28T06:30:22Z"
+        },
+        {
+          "name": "Install independent policy audit verifier",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T06:30:22Z",
+          "completed_at": "2026-10-28T06:30:29Z"
+        },
+        {
+          "name": "Prepare pinned signed-manifest verification dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T06:30:29Z",
+          "completed_at": "2026-10-28T06:30:34Z"
+        },
+        {
+          "name": "Retain signature dependency provenance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-28T06:30:34Z",
+          "completed_at": "2026-10-28T06:30:34Z"
+        },
+        {
+          "name": "Supply installed Windows fonts to offscreen Qt tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-28T06:30:34Z",
+          "completed_at": "2026-10-28T06:30:35Z"
+        },
+        {
+          "name": "Configure GUI and Qt integration tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T06:30:35Z",
+          "completed_at": "2026-10-28T06:30:55Z"
+        },
+        {
+          "name": "Build GUI",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-28T06:30:55Z",
+          "completed_at": "2026-10-28T06:39:23Z"
+        },
+        {
+          "name": "Verify bounded GUI profile probe and production packaging guard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-28T06:39:23Z",
+          "completed_at": "2026-10-28T06:39:24Z"
+        },
+        {
+          "name": "Prepare verified standalone ClamAV for synthetic Windows integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T06:39:24Z",
+          "completed_at": "2026-10-28T06:39:28Z"
+        },
+        {
+          "name": "Run CTest suite",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-28T06:39:28Z",
+          "completed_at": "2026-10-28T06:49:08Z"
+        },
+        {
+          "name": "Verify read-only Windows USB inventory",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-28T06:49:08Z",
+          "completed_at": "2026-10-28T06:49:10Z"
+        },
+        {
+          "name": "Assemble portable Qt runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-28T06:49:10Z",
+          "completed_at": "2026-10-28T06:49:19Z"
+        },
+        {
+          "name": "Verify portable in isolated path with spaces",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-28T06:49:19Z",
+          "completed_at": "2026-10-28T06:49:46Z"
+        },
+        {
+          "name": "Build per-user Windows installer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-28T06:49:46Z",
+          "completed_at": "2026-10-28T06:50:11Z"
+        },
+        {
+          "name": "Verify installer installation and deployed runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-28T06:50:11Z",
+          "completed_at": "2026-10-28T06:50:40Z"
+        },
+        {
+          "name": "Record artifact checksums",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-28T06:50:40Z",
+          "completed_at": "2026-10-28T06:50:41Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-28T06:50:41Z",
+          "completed_at": "2026-10-28T06:50:44Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-10-28T06:50:44Z",
+          "completed_at": "2026-10-28T06:50:46Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-10-28T06:50:46Z",
+          "completed_at": "2026-10-28T06:50:51Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-10-28T06:50:51Z",
+          "completed_at": "2026-10-28T06:50:51Z"
+        },
+        {
+          "name": "Post Run jurplel/install-qt-action@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-10-28T06:50:51Z",
+          "completed_at": "2026-10-28T06:50:51Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 46,
+          "started_at": "2026-10-28T06:50:51Z",
+          "completed_at": "2026-10-28T06:50:53Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 47,
+          "started_at": "2026-10-28T06:50:53Z",
+          "completed_at": "2026-10-28T06:50:53Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/check-runs/122668885364",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000026125,
+      "runner_name": "GitHub Actions 1000026125",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ],
+  "otherSourceRuns": [
+    {
+      "id": 40644129323,
+      "name": "Public history safety",
+      "event": "pull_request",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 40644129221,
+      "name": "Python checks",
+      "event": "pull_request",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 40644129202,
+      "name": "C++20 and Qt Windows",
+      "event": "pull_request",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 40644123425,
+      "name": "Public history safety",
+      "event": "push",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    },
+    {
+      "id": 40644123392,
+      "name": "Python checks",
+      "event": "push",
+      "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12798260147,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size_in_bytes": 86612243,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798260147",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798260147/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:49:01Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:49:01Z",
+      "digest": "sha256:cf81cb328e8c429207234621273608547147648723fec00df5a0b1d3f8d66705",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12798255603,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33260549,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798255603",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798255603/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:50:46Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:50:46Z",
+      "digest": "sha256:78d5180e6d8422340af87067a8cf55e17abdbb7ccd4c4862bf791c02df35f790",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12798225660,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 71040766,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798225660",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798225660/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:50:51Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:50:51Z",
+      "digest": "sha256:859c68c2de51eaceec5b1ae4c964b470ab4a670096b91c56ff1e81cfbc41e0b5",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12798175757,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 49173875,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798175757",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12798175757/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:50:43Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:50:43Z",
+      "digest": "sha256:0be711da48ec496bc3517f0fdc588a5be5705dac63aaf90487f56c5d1084d3e9",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12797970063,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size_in_bytes": 86702146,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797970063",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797970063/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:44:43Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:44:43Z",
+      "digest": "sha256:ffa4e16655d522d62ec97aea79566b405121275248aa4860efff4b736fc40868",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12797571848,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size_in_bytes": 65386251,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797571848",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797571848/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:49:13Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:49:13Z",
+      "digest": "sha256:cae9c71f6c7a064c6b6d072afdc95865afcb8d86bc98f93129561f630273574f",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12797335514,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size_in_bytes": 18562,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797335514",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797335514/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:30:23Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:30:23Z",
+      "digest": "sha256:eb76809f3a16fc8d1bf172cb215e21c4d952905c728c01fd4365de881c4d907d",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12797256180,
+      "name": "core-test-results-ubuntu-latest",
+      "size_in_bytes": 648,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797256180",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797256180/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:29:19Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:29:19Z",
+      "digest": "sha256:8454a53f99cc277a6dcb475e34dd2b4ac6879fef9611299384ab5b228772a436",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    },
+    {
+      "id": 12797251251,
+      "name": "core-test-results-windows-2022",
+      "size_in_bytes": 658,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797251251",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12797251251/zip",
+      "expired": false,
+      "created_at": "2026-10-28T06:29:44Z",
+      "expires_at": "2027-01-26T06:29:08Z",
+      "updated_at": "2026-10-28T06:29:44Z",
+      "digest": "sha256:dc9c7c546fdaffd3a2ff4125e268e904d1477252ae4c5c758b7796401b208a16",
+      "workflow_run": {
+        "id": 40644129202,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "integration/forensic-engines-audit",
+        "head_sha": "1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3"
+      }
+    }
+  ]
+}

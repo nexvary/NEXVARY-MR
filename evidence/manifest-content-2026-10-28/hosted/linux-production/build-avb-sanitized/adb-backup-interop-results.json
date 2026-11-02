@@ -1,0 +1,268 @@
+{
+  "schema": "nexvary-adb-interop-results/v1",
+  "checks": [
+    {
+      "name": "populated-python-ustar",
+      "passed": true,
+      "sourceSha256": "9f656440be782266bb2d7f07df5929aa3ae882cd63083c39a8666efc35f35db8"
+    },
+    {
+      "name": "deterministic-repeat",
+      "passed": true,
+      "sourceSha256": "9f656440be782266bb2d7f07df5929aa3ae882cd63083c39a8666efc35f35db8"
+    },
+    {
+      "name": "wrong-magic",
+      "passed": true,
+      "sourceSha256": "e89f2f5321c963312a6001173a6f75cb435c70e6590fdcec57dea18eee9c337d"
+    },
+    {
+      "name": "older-version",
+      "passed": true,
+      "sourceSha256": "13bd8a9def5f3fc0a869ff9e3a8b54eb175065849db3e51b0d7feadaed6a2bef"
+    },
+    {
+      "name": "compressed",
+      "passed": true,
+      "sourceSha256": "303d1b12beaaa530306e245640be8562963bf1f6177cbc1535f4d6b5a0d3ebf7"
+    },
+    {
+      "name": "encrypted",
+      "passed": true,
+      "sourceSha256": "4d39e2aa808794f2d73d8dae8639c53f08c368cd20a5283516c1cbf142d62d85"
+    },
+    {
+      "name": "checksum",
+      "passed": true,
+      "sourceSha256": "ce3e2ddc781f36797b3f22b91558649678ed8ffd4982df5a73702caaefb45687"
+    },
+    {
+      "name": "size-overflow",
+      "passed": true,
+      "sourceSha256": "0176bc6bd4894e9fb1030dacceb218021769dd0265fc63fc6a6d4c8b80206da6"
+    },
+    {
+      "name": "base256-size",
+      "passed": true,
+      "sourceSha256": "f4789dd5ccd6f9f60b3d4f3180a6e860817e8f3f91f0f8f2bc3e1cd8f6ac1457"
+    },
+    {
+      "name": "bad-octal",
+      "passed": true,
+      "sourceSha256": "89db8ee5b6ab0d78bcbf3d33a180ddc57cde1d802470e178506bae3f8d272f26"
+    },
+    {
+      "name": "gnu-magic",
+      "passed": true,
+      "sourceSha256": "50e7976a9cb143202d3b77721ac2de009aa84a93e63fa0581faa2c0384971481"
+    },
+    {
+      "name": "nonzero-padding",
+      "passed": true,
+      "sourceSha256": "e9c7fbbdc9915020cab8a2e2745e4cdcf6c75b5132a146251a52d7dbb363d3b4"
+    },
+    {
+      "name": "truncated-payload",
+      "passed": true,
+      "sourceSha256": "cee6ceffb9f23995a1e3e8be0fd27e3370343c5ab1e6ac46aabf75349b989a89"
+    },
+    {
+      "name": "missing-end-blocks",
+      "passed": true,
+      "sourceSha256": "17151d6bf211d7770cc9e0ee14f60f76b36f242307b27b97200c1f13defb93a2"
+    },
+    {
+      "name": "single-end-block",
+      "passed": true,
+      "sourceSha256": "5520327a25a72204db9de202cfe292a4eeb321bb67b3457e032708ff5df0e46a"
+    },
+    {
+      "name": "trailing-payload",
+      "passed": true,
+      "sourceSha256": "7437cd556bb837e497e1fc1cee595fa118f204f8e93ed124fcf461079a56b488"
+    },
+    {
+      "name": "hidden-name-suffix",
+      "passed": true,
+      "sourceSha256": "4126f4806fad2c99fc9bb532253e960cc1338c3ea191b736b3caecde28a58072"
+    },
+    {
+      "name": "invalid-utf8-name",
+      "passed": true,
+      "sourceSha256": "0299e58f5a70c10860e29b01570ee278d748bf94880cd8d7cd0d1a385b654fe8"
+    },
+    {
+      "name": "incomplete-utf8-name",
+      "passed": true,
+      "sourceSha256": "b470ee5a0c42374060667481fd59aee60f43434a6bbfeaa73c113ee44ecd34b7"
+    },
+    {
+      "name": "empty-archive",
+      "passed": true,
+      "sourceSha256": "09f8919f53bd786652aaef2113f160bdf09dd9a9b007a3f1f6282775f980fd68"
+    },
+    {
+      "name": "no-block-alignment",
+      "passed": true,
+      "sourceSha256": "5ee6bb7393cd21885886c0e5c32932edd13042d163c5545b436d32ec66a7d213"
+    },
+    {
+      "name": "unsafe-path-'../escape'",
+      "passed": true,
+      "sourceSha256": "54dbc27b608f3b3dd6fd53df25fa3b2b2440e904e14cad1c1877ad16db518c47"
+    },
+    {
+      "name": "unsafe-path-'/apps/com.nexvary.synthetic/f/x'",
+      "passed": true,
+      "sourceSha256": "952ac6eb2748141ac8ba264523357fce935270ea8518c0eff02fb8181c03bb29"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/../x'",
+      "passed": true,
+      "sourceSha256": "2468d62b76a211f946fef9702b2fb0fc7f0f808c71ba112ec36a8eec2b19cd86"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f//x'",
+      "passed": true,
+      "sourceSha256": "6b5ba24ded50bd2e0aa655ea6b2f5969ee311343db83bb9049c09d363bdb8951"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/./x'",
+      "passed": true,
+      "sourceSha256": "df8726f1f906a00f9f2705b1f40af3433050c4ca1c29d9ebe805852699ac9ec8"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/C:x'",
+      "passed": true,
+      "sourceSha256": "7ecac98a1e9b7a6113aa1e29dce9fd0bf8fc357c4fd5e264d6475cd1d7bcec18"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/a\\\\b'",
+      "passed": true,
+      "sourceSha256": "07476496ccdbc002bc450d5ded5332eeb7d03508c2576a75773390c3d83e4e1a"
+    },
+    {
+      "name": "unsafe-path-'shared/0/x'",
+      "passed": true,
+      "sourceSha256": "e2198713e06b03bf335f919d2d56d898028ae7b7079c0a1ff431f67bcf6ace14"
+    },
+    {
+      "name": "unsafe-path-'apps/bad-package/f/x'",
+      "passed": true,
+      "sourceSha256": "c62af942ca3f8ddb15ec1b8a99c963a7bef52d98b64455e28ab26a862163681d"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/unknown'",
+      "passed": true,
+      "sourceSha256": "13370759936de5c39b3561e721256ec247ea779ccf4a5811f840e445f6f915d9"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/\\u202ex'",
+      "passed": true,
+      "sourceSha256": "cf1a1f906a5058ed46330a713db84a058107acfcfe1f644b346584223c376de0"
+    },
+    {
+      "name": "unsafe-path-'apps/com.nexvary.synthetic/f/\\x01x'",
+      "passed": true,
+      "sourceSha256": "fe264fdf1932cd7697d4d9368ae9c1acaf1c818a17e895696569df08154f9bb6"
+    },
+    {
+      "name": "unsupported-type-b'2'",
+      "passed": true,
+      "sourceSha256": "61735e6725e7e1846d674d62961eb043a6292d1e3455abf3daa4a9efd2af4b1b"
+    },
+    {
+      "name": "unsupported-type-b'1'",
+      "passed": true,
+      "sourceSha256": "d3295ab5cd1a10bc2abc94aaf65f78cefede14733f15821e81dabc8f5a8b7cd9"
+    },
+    {
+      "name": "unsupported-type-b'6'",
+      "passed": true,
+      "sourceSha256": "4cf175d22a34b56ab966b9cea4ddbde9139c21a9b31387a6395a88760753e763"
+    },
+    {
+      "name": "unsupported-type-b'3'",
+      "passed": true,
+      "sourceSha256": "0b1891fcc2e341368fb53741f472bba54183d244083ab63e13ee48cc0bcbde04"
+    },
+    {
+      "name": "unsupported-type-b'4'",
+      "passed": true,
+      "sourceSha256": "0a19710fb585e0b4951b6d9f84fc423fa7cb4716b54f198965390e8e5abe2850"
+    },
+    {
+      "name": "unsupported-type-b'x'",
+      "passed": true,
+      "sourceSha256": "3997f553efdc515a4824b5c0317a8976ab3e5c1bd07a5e1a62f681a506026d10"
+    },
+    {
+      "name": "unsupported-type-b'g'",
+      "passed": true,
+      "sourceSha256": "bc41008208285de75702b733dd9cfd0dd2acb22be77776e09d22d67502b4ea4a"
+    },
+    {
+      "name": "unsupported-type-b'L'",
+      "passed": true,
+      "sourceSha256": "ae7f14110c7307b8f9a2dcbc2eecf2e124f07c81469aad65de2324abc9724810"
+    },
+    {
+      "name": "unsupported-type-b'S'",
+      "passed": true,
+      "sourceSha256": "9728d888327b8d87de8b4e97a6795b31db8cfb501b51c2f5103ecfdcb1b5149c"
+    },
+    {
+      "name": "duplicate-member",
+      "passed": true,
+      "sourceSha256": "b3ebd2d116c7215fa525b51520ae24395c4c88c3544b3a0063b62b28e6f159a3"
+    },
+    {
+      "name": "file-ancestor",
+      "passed": true,
+      "sourceSha256": "84713ae99b6b340ee934b4b8ec144cbbd6d752d84a47690fe9d5e053939a7b87"
+    },
+    {
+      "name": "nonempty-directory",
+      "passed": true,
+      "sourceSha256": "8fe68cf905b3ad275186c380b8e825806942d3dbdc7c8b4f6534f82499ba8ece"
+    },
+    {
+      "name": "bounded-findings-full-scan",
+      "passed": true,
+      "sourceSha256": "27934b31381ee41fe3c06bf4c09f73b1d467a3da424414162f4bb43bc9e3fd36"
+    },
+    {
+      "name": "malformed-after-retention-limit",
+      "passed": true,
+      "sourceSha256": "3190f716441383f2af4464939648734cb41b460948bd125d21f4aa26beb70bd8"
+    },
+    {
+      "name": "header-member-limit",
+      "passed": true,
+      "sourceSha256": "b106ec33a0411276737f07b753201d43b1d156a00b2fde4a47dc72adb41baee1"
+    },
+    {
+      "name": "exact-header-limit",
+      "passed": true,
+      "sourceSha256": "261d9937627cc8215fccc4da2f13279a5f8d1cfe0a9d9eb5ebdc9aa3530e4198"
+    },
+    {
+      "name": "unicode-or-ustar-prefix-apps/com.nexvary.synthetic/f/\u062f\u0644\u064a\u0644.txt",
+      "passed": true,
+      "sourceSha256": "4bc6a07f99604fea2a7354dbc94c59b5e8a55a6215e201afa547ab41d2cf97ca"
+    },
+    {
+      "name": "unicode-or-ustar-prefix-apps/com.nexvary.synthetic/f/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/leaf.txt",
+      "passed": true,
+      "sourceSha256": "da4e68dc3100fc6ee1e02d8dfb6291271e7e05c62438fef532ccabebe3b76e27"
+    },
+    {
+      "name": "input-byte-limit",
+      "passed": true,
+      "sourceSha256": "046374f1603d1ee059b2976badda0d96c9a3b15f761ffc81276b475f8e2bdba6"
+    }
+  ],
+  "passed": 52,
+  "failed": 0,
+  "scope": "Synthetic Python/native inventory interoperability; no hardware, app decoding or forensic accreditation"
+}

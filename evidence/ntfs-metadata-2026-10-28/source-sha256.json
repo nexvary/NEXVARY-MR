@@ -1,0 +1,11 @@
+{
+  ".github/workflows/cpp-qt.yml": "f3bce5acd39948306ac2c242eefca90b5ba89670fdd96047f780cbc4454f57e0",
+  "CMakeLists.txt": "8b9c6b1d3e7acbbac4d6dfa5edf66facc928a2faa2ed9c661c2b424dccbd409e",
+  "cpp/src/NtfsMetadata.cpp": "02e2ef6f3cbe6d2ed8560f87d385e59e2d0306c3191ddcf2f0a0aa7d68abb60c",
+  "cpp/src/NtfsMetadata.hpp": "003854c4fde5cdc9142e45a5cd48064f74f99e82b4e8a1756d1bd4b053db87ab",
+  "cpp/tests/ntfs_metadata_tests.cpp": "57576a647bce0b274f82c07640813292330fef2c52c605b96ee6ec517fcb53f0",
+  "samples/ntfs-metadata/generate_reference.py": "5da600cf65d7ed155709de5b67a7ebcb3018bd30e3713186dd0d6ac33a9defb9",
+  "samples/ntfs-metadata/reference.json": "1a311cc47d4267f42d217bc04eb316cc90d4f7905c0f8fad3c843bbce5cf74ba",
+  "samples/ntfs-metadata/ntfs3g-reference.json": "f205e6367532b04d3bbdecbc137bf766e4da28864d26e2ba8642858b01b8b878",
+  "tests/test_ntfs_metadata_reference.py": "6225a3ed5fa57fa76ffa5157528189490c330d25cb767841b6030f87a408d141"
+}

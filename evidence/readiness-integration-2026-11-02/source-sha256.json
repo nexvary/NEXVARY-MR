@@ -1,0 +1,16 @@
+{
+  "governmentParent": "453725e7708e8032aa4664c9571bb263446d1ebc",
+  "integrationParent": "41bb9f3590ea17dac6173d2d345c6abdcdfaec78",
+  "files": {
+    "CMakeLists.txt": "a3a06bf70d0b378f8d5f080fdbf0867c231b8df5b2c7de6f0f467cdf7335ee44",
+    "cpp/src/GovernmentOperationPolicy.cpp": "5650527d103828a9867582ebb5cccdfa44538345ead7d754c7ade89e9cb47666",
+    "cpp/src/GovernmentOperationPolicy.hpp": "8ad454217b6871bd2a066bda586621ddc5b4c7a4c0e6fc2c78342013c65a4991",
+    "cpp/src/LawCaseBackup.cpp": "9859fb0fcc919184e12e078c05759e4ea53f4869f8df946456329f4eea8c057a",
+    "cpp/src/LawCaseBridge.cpp": "fc6da8ec260eb36b2245a03dea2370a93347033f6f2d770a0cbec03176813738",
+    "cpp/src/LawCaseBridge.hpp": "95431ccc76ee13fea8a48cd97525c82abed2c78c3567b99ed82a89cc1839feb8",
+    "cpp/src/LawCaseStore.cpp": "d75b22cda76c1acd464527dc3daceed135247b1685e0732596f1f0dee6d3e5d4",
+    "cpp/src/LawCaseStore.hpp": "172f1b5ddc2b30b3d802e224f1ee85b9e968803499606b8edfd23d82475d1072",
+    "cpp/tests/case_transaction_tests.cpp": "b08cf0b9c5a96477cce3200b7eff90a32a5e379573ff9ae1f33d66a36316f8b5",
+    "cpp/tests/readiness_benchmark.cpp": "aed1c5ad82a2105971ee13570843314eef20cb9c238f585f4781297fdc424348"
+  }
+}

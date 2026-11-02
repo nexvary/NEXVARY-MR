@@ -1,0 +1,417 @@
+Start testing: Oct 28 04:45 EDT
+----------------------------------------------------------
+7/48 Testing: mr_case_transaction_tests
+7/48 Test: mr_case_transaction_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_case_transaction_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/case_transaction-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_case_transaction_tests" start time: Oct 28 04:45 EDT
+Output:
+----------------------------------------------------------
+********* Start testing of CaseTransactionTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CaseTransactionTests::initTestCase()
+PASS   : CaseTransactionTests::replacedSnapshotMustReadBackBeforeAcknowledgement()
+PASS   : CaseTransactionTests::authenticatedBridgeUsesSignedIntent()
+PASS   : CaseTransactionTests::verifiedMembershipRevisionAndDigest()
+PASS   : CaseTransactionTests::terminalBindingAndIdempotency()
+PASS   : CaseTransactionTests::changedCaseIsUnknown()
+PASS   : CaseTransactionTests::missingEvidenceIsNeverSuccess()
+PASS   : CaseTransactionTests::tamperedJournalStopsRecovery()
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/before-intent-write)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/inside-intent-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/after-intent)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/inside-case)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/after-case)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/inside-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(classic-pcap/after-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/before-intent-write)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/inside-intent-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/after-intent)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/inside-case)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/after-case)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/inside-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(workbench-export-manifest/after-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/before-intent-write)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/inside-intent-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/after-intent)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/inside-case)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/after-case)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/inside-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(chromium-bookmarks/after-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/before-intent-write)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/inside-intent-replacement)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/after-intent)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/inside-case)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/after-case)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/inside-terminal)
+PASS   : CaseTransactionTests::interruptedWrites(dc-image-partitions/after-terminal)
+PASS   : CaseTransactionTests::cleanupTestCase()
+Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 16805ms
+********* Finished testing of CaseTransactionTests *********
+<end of output>
+Test time =  16.82 sec
+----------------------------------------------------------
+Test Passed.
+"mr_case_transaction_tests" end time: Oct 28 04:45 EDT
+"mr_case_transaction_tests" time elapsed: 00:00:16
+----------------------------------------------------------
+
+8/48 Testing: mr_policy_audit_tests
+8/48 Test: mr_policy_audit_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_policy_audit_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/policy_audit-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_policy_audit_tests" start time: Oct 28 04:45 EDT
+Output:
+----------------------------------------------------------
+********* Start testing of PolicyAuditTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PolicyAuditTests::initTestCase()
+PASS   : PolicyAuditTests::operationResultLifecycle()
+PASS   : PolicyAuditTests::operationExpiryAndRestart()
+PASS   : PolicyAuditTests::requestInputsAndRoles()
+PASS   : PolicyAuditTests::separatedReviewAndOneTimeActivation()
+PASS   : PolicyAuditTests::rejectionAndPendingRevocation()
+PASS   : PolicyAuditTests::monotonicExpiryAndLogout()
+PASS   : PolicyAuditTests::reviewerDisableInvalidatesApprovalAndActiveUse()
+PASS   : PolicyAuditTests::exportVerificationAndMutation()
+PASS   : PolicyAuditTests::outsideWriterChangeFailsClosed()
+PASS   : PolicyAuditTests::competingWriterNeverOverwrites()
+PASS   : PolicyAuditTests::lockedJournalRefusesAppendAndRequiresRestart()
+PASS   : PolicyAuditTests::symlinkJournalNeverChangesTarget()
+PASS   : PolicyAuditTests::crashRestartRetainsSignedClosure()
+PASS   : PolicyAuditTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 12430ms
+********* Finished testing of PolicyAuditTests *********
+<end of output>
+Test time =  12.45 sec
+----------------------------------------------------------
+Test Passed.
+"mr_policy_audit_tests" end time: Oct 28 04:45 EDT
+"mr_policy_audit_tests" time elapsed: 00:00:12
+----------------------------------------------------------
+
+10/48 Testing: mr_artifact_tests
+10/48 Test: mr_artifact_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_artifact_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/artifact-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_artifact_tests" start time: Oct 28 04:45 EDT
+Output:
+----------------------------------------------------------
+********* Start testing of ArtifactTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ArtifactTests::initTestCase()
+QINFO  : ArtifactTests::independentTruthAndDeterminism() Structural truth corpus: 20 true edges, 0 false links, 0 missed links; excludes people/events
+PASS   : ArtifactTests::independentTruthAndDeterminism()
+PASS   : ArtifactTests::literalArabicSearchAndScope()
+PASS   : ArtifactTests::corruption(hash)
+PASS   : ArtifactTests::corruption(wrong-evidence)
+PASS   : ArtifactTests::corruption(wrong-source)
+PASS   : ArtifactTests::corruption(size)
+PASS   : ArtifactTests::corruption(duplicate-run)
+PASS   : ArtifactTests::corruption(device)
+PASS   : ArtifactTests::corruption(duplicate-device)
+PASS   : ArtifactTests::corruption(duplicate-evidence)
+PASS   : ArtifactTests::corruption(provenance-case)
+PASS   : ArtifactTests::corruption(provenance-device)
+PASS   : ArtifactTests::corruption(provenance-evidence)
+PASS   : ArtifactTests::corruption(schema)
+PASS   : ArtifactTests::corruption(adapter)
+PASS   : ArtifactTests::corruption(version)
+PASS   : ArtifactTests::corruption(findings)
+PASS   : ArtifactTests::corruption(count)
+PASS   : ArtifactTests::corruption(truncation)
+PASS   : ArtifactTests::corruption(kind)
+PASS   : ArtifactTests::corruption(value)
+PASS   : ArtifactTests::corruption(member-hash)
+PASS   : ArtifactTests::corruption(duplicate-key)
+PASS   : ArtifactTests::corruption(malformed-json)
+PASS   : ArtifactTests::corruption(report-limit)
+QINFO  : ArtifactTests::boundsFullScanAndBenchmark() Synthetic artifact index: 12800 retained observations; 574 ms
+PASS   : ArtifactTests::boundsFullScanAndBenchmark()
+PASS   : ArtifactTests::adbDigestAndUnsupportedScopes()
+PASS   : ArtifactTests::caseIsolation()
+PASS   : ArtifactTests::nativePersistenceCancellationAndRoles()
+PASS   : ArtifactTests::nativeGrantRevocation()
+PASS   : ArtifactTests::cleanupTestCase()
+Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 1932ms
+********* Finished testing of ArtifactTests *********
+<end of output>
+Test time =   1.95 sec
+----------------------------------------------------------
+Test Passed.
+"mr_artifact_tests" end time: Oct 28 04:45 EDT
+"mr_artifact_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+11/48 Testing: mr_timeline_tests
+11/48 Test: mr_timeline_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_timeline_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/timeline-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_timeline_tests" start time: Oct 28 04:45 EDT
+Output:
+----------------------------------------------------------
+********* Start testing of TimelineTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : TimelineTests::initTestCase()
+PASS   : TimelineTests::normalization(egypt-offset)
+PASS   : TimelineTests::normalization(previous-day)
+PASS   : TimelineTests::normalization(negative-offset)
+PASS   : TimelineTests::normalization(leap-valid)
+PASS   : TimelineTests::normalization(millisecond)
+PASS   : TimelineTests::normalization(max-offset)
+PASS   : TimelineTests::normalization(no-zone)
+PASS   : TimelineTests::normalization(no-year-zero)
+PASS   : TimelineTests::normalization(bad-date)
+PASS   : TimelineTests::normalization(bad-hour)
+PASS   : TimelineTests::normalization(leap-second)
+PASS   : TimelineTests::normalization(unknown-offset)
+PASS   : TimelineTests::normalization(no-rounding)
+PASS   : TimelineTests::normalization(bad-offset)
+PASS   : TimelineTests::normalization(bad-offset-minutes)
+PASS   : TimelineTests::normalization(embedded)
+PASS   : TimelineTests::normalization(date-only)
+PASS   : TimelineTests::normalization(lowercase)
+PASS   : TimelineTests::normalization(utc-underflow)
+PASS   : TimelineTests::deterministicOrderingProvenanceAndSearch()
+PASS   : TimelineTests::integrityAndBounds()
+QINFO  : TimelineTests::boundedCollectionBenchmark() Synthetic timeline: 12800 observations; elapsed 379 ms
+PASS   : TimelineTests::boundedCollectionBenchmark()
+PASS   : TimelineTests::nativePersistenceCancellationAndRoles()
+PASS   : TimelineTests::nativeGrantRevocation()
+PASS   : TimelineTests::cleanupTestCase()
+Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 1209ms
+********* Finished testing of TimelineTests *********
+<end of output>
+Test time =   1.22 sec
+----------------------------------------------------------
+Test Passed.
+"mr_timeline_tests" end time: Oct 28 04:45 EDT
+"mr_timeline_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+14/48 Testing: mr_identity_tests
+14/48 Test: mr_identity_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_identity_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/identity-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_identity_tests" start time: Oct 28 04:45 EDT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of IdentityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : IdentityTests::initTestCase()
+PASS   : IdentityTests::bootstrapAndCredentials()
+PASS   : IdentityTests::rolesGrantsAndRevocation()
+PASS   : IdentityTests::evidenceExportsRequireCurrentCaseGrant()
+PASS   : IdentityTests::signaturesAndDisabledSigner()
+PASS   : IdentityTests::passwordRotationPreservesSignatures()
+PASS   : IdentityTests::failedAttemptsPersist()
+PASS   : IdentityTests::independentResearchReview()
+PASS   : IdentityTests::retainedAnchorDetectsRollback()
+PASS   : IdentityTests::protectedRestoreRetainsOwnershipAndDetectsNewerAnchorFork()
+PASS   : IdentityTests::productionFailsClosed()
+PASS   : IdentityTests::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 5116ms
+********* Finished testing of IdentityTests *********
+<end of output>
+Test time =   5.14 sec
+----------------------------------------------------------
+Test Passed.
+"mr_identity_tests" end time: Oct 28 04:46 EDT
+"mr_identity_tests" time elapsed: 00:00:05
+----------------------------------------------------------
+
+15/48 Testing: mr_law_workspace_tests
+15/48 Test: mr_law_workspace_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_law_workspace_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/law_workspace-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_law_workspace_tests" start time: Oct 28 04:46 EDT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of LawWorkspaceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : LawWorkspaceTests::initTestCase()
+PASS   : LawWorkspaceTests::createSearchReopenAndDevice()
+PASS   : LawWorkspaceTests::permissionsAreNativeAndFailClosed()
+PASS   : LawWorkspaceTests::staleWriterAndArchivedState()
+PASS   : LawWorkspaceTests::metadataAndProfileValidation()
+PASS   : LawWorkspaceTests::evidenceCustodyAndPdf()
+PASS   : LawWorkspaceTests::caseBoundAnalysisIsReproducibleAndProtected()
+PASS   : LawWorkspaceTests::assessmentDistinguishesReportsFromValidatedCapabilities()
+PASS   : LawWorkspaceTests::workingCopyIntegrityAndAudit()
+PASS   : LawWorkspaceTests::workingCopyPermissionsStaleRevisionAndClosedCase()
+PASS   : LawWorkspaceTests::protectedBackupRoundTripAndOverwriteDenial()
+PASS   : LawWorkspaceTests::protectedBackupRejectsCorruptionMissingBlobsAndLimits()
+PASS   : LawWorkspaceTests::protectedRestoreRollsBackConflictingEvidenceAndBackupWriteFailure()
+PASS   : LawWorkspaceTests::protectedBackupStatusRolesStaleWriterAndAggregateLimit()
+PASS   : LawWorkspaceTests::corruptionCannotBeSilentlyOpened()
+PASS   : LawWorkspaceTests::evidenceCorruptionAndSizeLimit()
+PASS   : LawWorkspaceTests::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 1359ms
+********* Finished testing of LawWorkspaceTests *********
+<end of output>
+Test time =   1.38 sec
+----------------------------------------------------------
+Test Passed.
+"mr_law_workspace_tests" end time: Oct 28 04:46 EDT
+"mr_law_workspace_tests" time elapsed: 00:00:01
+----------------------------------------------------------
+
+45/48 Testing: mr_ui_tests
+45/48 Test: mr_ui_tests
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_ui_tests" "-o" "-,txt" "-o" "/workspace/scratch/077476f00950/NEXVARY-MR/build/ui-results.txt,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_ui_tests" start time: Oct 28 04:46 EDT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+PASS   : mr_ui::WorkstationNavigation::test_cloudTrackingConsent()
+PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+PASS   : mr_ui::WorkstationNavigation::test_createOrder()
+PASS   : mr_ui::WorkstationNavigation::test_deviceBackgroundRefreshIsQuiet()
+PASS   : mr_ui::WorkstationNavigation::test_deviceIntelligenceProvenance()
+PASS   : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent()
+PASS   : mr_ui::WorkstationNavigation::test_diagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_exitCancel()
+PASS   : mr_ui::WorkstationNavigation::test_firmwarePackageStructure()
+PASS   : mr_ui::WorkstationNavigation::test_fontGlyphCoverage()
+PASS   : mr_ui::WorkstationNavigation::test_forensicCaptureWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicExifWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicLabNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_forensicWorkspace()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentForensicEngines()
+PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentManifestContent()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentPartitionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentSummaryLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_language()
+PASS   : mr_ui::WorkstationNavigation::test_lawCaseAndResearchWorkspaces()
+PASS   : mr_ui::WorkstationNavigation::test_minimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_mirrorConsentAndNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_modernCompatibilityPanel()
+PASS   : mr_ui::WorkstationNavigation::test_navigation()
+PASS   : mr_ui::WorkstationNavigation::test_newWorkspaceMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryConsent()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryWizard()
+PASS   : mr_ui::WorkstationNavigation::test_savedDiagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_securityAndFaultTree()
+PASS   : mr_ui::WorkstationNavigation::test_serviceHistoryDetailsArePlainText()
+PASS   : mr_ui::WorkstationNavigation::test_serviceMinimumSizeOutputAndHistory()
+PASS   : mr_ui::WorkstationNavigation::test_shellDeviceStates()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::test_shellRoutesAndCollapse()
+PASS   : mr_ui::WorkstationNavigation::test_themeAndNarrowForensicTabs()
+PASS   : mr_ui::WorkstationNavigation::test_usbDoctorInterpretation()
+PASS   : mr_ui::WorkstationNavigation::test_workshopBarcodeCard()
+PASS   : mr_ui::WorkstationNavigation::test_yLocalIdentity()
+PASS   : mr_ui::WorkstationNavigation::test_z_exitAccept()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 72044ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  73.17 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_tests" end time: Oct 28 04:47 EDT
+"mr_ui_tests" time elapsed: 00:01:13
+----------------------------------------------------------
+
+46/48 Testing: mr_ui_scale_1.25
+46/48 Test: mr_ui_scale_1.25
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_ui_tests" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentPartitionControls" "WorkstationNavigation::test_governmentForensicEngines" "WorkstationNavigation::test_governmentManifestContent" "WorkstationNavigation::test_governmentSummaryLifetime" "WorkstationNavigation::test_governmentImportLayoutLifetime" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_ui_scale_1.25" start time: Oct 28 04:47 EDT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentForensicEngines()
+PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentManifestContent()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentPartitionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentSummaryLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 44885ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  46.05 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.25" end time: Oct 28 04:48 EDT
+"mr_ui_scale_1.25" time elapsed: 00:00:46
+----------------------------------------------------------
+
+47/48 Testing: mr_ui_scale_1.5
+47/48 Test: mr_ui_scale_1.5
+Command: "/workspace/scratch/077476f00950/NEXVARY-MR/build/mr_ui_tests" "WorkstationNavigation::test_shellResponsive" "WorkstationNavigation::test_governmentNavigationAndWorkingCopies" "WorkstationNavigation::test_governmentNetworkPolicyControls" "WorkstationNavigation::test_governmentOperationReceipts" "WorkstationNavigation::test_governmentProtectedBackupControls" "WorkstationNavigation::test_governmentRetentionControls" "WorkstationNavigation::test_governmentAuthorizedImportControls" "WorkstationNavigation::test_governmentAdbBackupControls" "WorkstationNavigation::test_governmentPartitionControls" "WorkstationNavigation::test_governmentForensicEngines" "WorkstationNavigation::test_governmentManifestContent" "WorkstationNavigation::test_governmentSummaryLifetime" "WorkstationNavigation::test_governmentImportLayoutLifetime" "WorkstationNavigation::test_governmentArtifactControls" "WorkstationNavigation::test_governmentTimelineControls" "-o" "-,txt"
+Directory: /workspace/scratch/077476f00950/NEXVARY-MR/build
+"mr_ui_scale_1.5" start time: Oct 28 04:48 EDT
+Output:
+----------------------------------------------------------
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentForensicEngines()
+PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentManifestContent()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNetworkPolicyControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentOperationReceipts()
+PASS   : mr_ui::WorkstationNavigation::test_governmentPartitionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentSummaryLifetime()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 52369ms
+********* Finished testing of mr_ui *********
+<end of output>
+Test time =  53.59 sec
+----------------------------------------------------------
+Test Passed.
+"mr_ui_scale_1.5" end time: Oct 28 04:48 EDT
+"mr_ui_scale_1.5" time elapsed: 00:00:53
+----------------------------------------------------------
+
+End testing: Oct 28 04:48 EDT

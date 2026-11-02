@@ -1,0 +1,19 @@
+********* Start testing of PolicyAuditTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PolicyAuditTests::initTestCase()
+PASS   : PolicyAuditTests::operationResultLifecycle()
+PASS   : PolicyAuditTests::operationExpiryAndRestart()
+PASS   : PolicyAuditTests::requestInputsAndRoles()
+PASS   : PolicyAuditTests::separatedReviewAndOneTimeActivation()
+PASS   : PolicyAuditTests::rejectionAndPendingRevocation()
+PASS   : PolicyAuditTests::monotonicExpiryAndLogout()
+PASS   : PolicyAuditTests::reviewerDisableInvalidatesApprovalAndActiveUse()
+PASS   : PolicyAuditTests::exportVerificationAndMutation()
+PASS   : PolicyAuditTests::outsideWriterChangeFailsClosed()
+PASS   : PolicyAuditTests::competingWriterNeverOverwrites()
+PASS   : PolicyAuditTests::lockedJournalRefusesAppendAndRequiresRestart()
+PASS   : PolicyAuditTests::symlinkJournalNeverChangesTarget()
+PASS   : PolicyAuditTests::crashRestartRetainsSignedClosure()
+PASS   : PolicyAuditTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 12382ms
+********* Finished testing of PolicyAuditTests *********

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "build/mr_connection_tests",
+    "size": 219768,
+    "sha256": "1161d2aa12b32ef5f489e87848646f1dfe6aa29bf9315db66d4809c96eb5ee87",
+    "stage": "generated-binary-preflight"
+  },
+  {
+    "path": "build/mr_service_tests",
+    "size": 4283264,
+    "sha256": "6dccbdddb7e35db352f0a042534ab4e98e417b4b2a30199465ffff0df213c5d7",
+    "stage": "generated-binary-preflight"
+  }
+]

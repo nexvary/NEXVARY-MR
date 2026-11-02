@@ -1,0 +1,25 @@
+2026-10-28T06:29:15.7397065Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +4fa473d33a596bb4de2e0db87641346871e176f8:refs/remotes/pull/17/merge
+2026-10-28T06:29:17.2183690Z  * [new ref]         4fa473d33a596bb4de2e0db87641346871e176f8 -> pull/17/merge
+2026-10-28T06:29:17.3970318Z HEAD is now at 4fa473d Merge 1d40b09d21c513b4bd1f4e8c73af342ebe5d20b3 into eb2322140956a55a50ee7494570f35573a1ce0c0
+2026-10-28T06:29:17.4022829Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T06:29:17.4050184Z 4fa473d33a596bb4de2e0db87641346871e176f8
+2026-10-28T06:32:43.7018045Z [140/434] Automatic MOC and UIC for target mr_partition_transaction_tests
+2026-10-28T06:34:07.8386533Z [313/434] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:34:14.9165145Z [316/434] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+2026-10-28T06:35:48.8716041Z [397/434] Linking CXX executable mr_partition_transaction_tests
+2026-10-28T06:36:02.5487100Z       Start  9: mr_partition_transaction_tests
+2026-10-28T06:36:51.2968413Z  9/51 Test  #9: mr_partition_transaction_tests .....   Passed   48.75 sec
+2026-10-28T06:42:00.8545702Z 100% tests passed, 0 tests failed out of 51
+2026-10-28T06:42:00.8546279Z Total Test time (real) = 360.86 sec
+2026-10-28T06:42:57.9769379Z 100% tests passed, 0 tests failed out of 1
+2026-10-28T06:42:57.9770056Z Total Test time (real) =  57.07 sec
+2026-10-28T06:42:57.9827954Z [36;1mcmake --build build-avb-sanitized --target mr_forensic_adapter_tests mr_partition_transaction_tests mr_case_transaction_tests mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2[0m
+2026-10-28T06:42:57.9830971Z [36;1mUBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|forensic_adapter|partition_transaction|case_transaction|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml[0m
+2026-10-28T06:44:33.1238047Z [76/147] Automatic MOC and UIC for target mr_partition_transaction_tests
+2026-10-28T06:44:40.0387062Z [94/147] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+2026-10-28T06:44:46.5483826Z [97/147] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+2026-10-28T06:45:22.7987451Z [132/147] Linking CXX executable mr_partition_transaction_tests
+2026-10-28T06:45:31.7552103Z       Start  9: mr_partition_transaction_tests
+2026-10-28T06:46:32.4754052Z  5/20 Test  #9: mr_partition_transaction_tests ...   Passed   60.72 sec
+2026-10-28T06:48:48.0082338Z 100% tests passed, 0 tests failed out of 20
+2026-10-28T06:48:48.0082805Z Total Test time (real) = 199.80 sec

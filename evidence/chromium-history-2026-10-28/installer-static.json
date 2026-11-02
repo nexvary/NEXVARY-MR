@@ -1,0 +1,8 @@
+{
+  "providerSha256": "b831e1c38018351f8733e547628a0b312bf9c3dbe5a1bc0dd89036fc315a87b4",
+  "setupSha256": "43819fe7cb8a4ee5c142f6645d8e7653d0be9507d97c54c6e86f765b6f0e711e",
+  "portableZipSha256": "6287230f6cece5e937fb3da8d1d57156034af7886153f27d9bcba04d51ec6317",
+  "checksumSetMatched": true,
+  "actualSetupPEVerified": true,
+  "scope": "Static actual setup bytes; hosted install/launch/uninstall receipts retained separately"
+}

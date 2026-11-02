@@ -87,7 +87,7 @@ def case_intent_record(r, old, actor, role, result):
             or any(not isinstance(r[k], str) or not re.fullmatch(r"[0-9a-f]{64}", r[k]) for k in digests)
             or (external and state == "prepared" and r["reportSha256"] != "")
             or type(r["expectedRevision"]) is not int or not 1 <= r["expectedRevision"] < 10000
-            or r["kind"] not in ({"partition-analysis"} if external else {"classic-pcap", "jpeg-exif"})
+            or r["kind"] not in ({"partition-analysis"} if external else {"classic-pcap", "jpeg-exif", "workbench-export-manifest", "chromium-bookmarks", "dc-image-partitions", "browser-sqlite-family", "chromium-history", "chromium-downloads"})
             or r["requesterRole"] not in {"reviewer", "investigator"}
             or state not in ({"prepared", "candidate", "completed", "failed", "unknown"} if external else {"prepared", "completed", "failed", "unknown"})
             or not isinstance(r["preparedUtc"], str) or not r["preparedUtc"].endswith("Z")

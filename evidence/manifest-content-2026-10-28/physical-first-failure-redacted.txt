@@ -1,0 +1,26 @@
+[Reading 23 lines from line 1 (total: 24 lines, 0 remaining)]
+
+  "providerSha256": "ffa189f90b3c3c16e22604c4b200643bd686910d421414f1e40424e0bd05ec0e",
+  "portableZipSha256": "d1d808aaa4d1cfe5359fc420868603af03ad64653710eccd88be1f3b8ab80748",
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "720ccea8b17db1ea062bd14b817279529a069f91",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "manifestFilesVerified": 1419,
+  "spdxFilesVerified": 1418,
+  "executables": {
+    "NEXVARY-MR.exe": "e6d92fadda8ddce9de9b6631fccf415dd587b634bf56c63824d8e3eb64ebce06",
+    "mr_evidence_import_worker.exe": "a5f3cc324ed1e5a0b670c25f3d00522ffaffe2a8bb308ce1f2652c6002b84e2b"
+  },
+  "peMachine": "AMD64",
+  "scope": "Static full manifest/file-set/SPDX/PE verification; launch acceptance is separate"
+}
+Traceback (most recent call last):
+  File "<isolated-temp>\run_physical_portable.py", line 10, in <module>
+    env=dict(os.environ);env['PATH']=str(bundle)+';'+env['SystemRoot']+'\\System32;'+env['SystemRoot'];env['QT_QUICK_BACKEND']='software'
+                                                     ~~~^^^^^^^^^^^^^^
+KeyError: 'SystemRoot'
+✅ Process completed with exit code 1 (runtime: 5.21s)
