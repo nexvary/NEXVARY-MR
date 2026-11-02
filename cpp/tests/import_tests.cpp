@@ -100,7 +100,10 @@ private slots:
   QTemporaryDir t;const auto path=t.filePath("cases.db");LawCaseBridge b(path,nullptr,true);const auto id=b.createCase(meta());const auto e=evidence(b,t.filePath("bad.bin"),"not valid input");QVERIFY(imported(b,e,adapter,false));QCOMPARE(b.audit().last().toMap().value("event").toString(),QString("evidence-import-rejected"));QVERIFY(b.verifyEvidence(e));QVERIFY(b.verifyAudit());
   LawCaseBridge auditor(path,nullptr,true,nexvary::law::Role::Auditor);QVERIFY(auditor.openCase(id));QVERIFY(!auditor.importEvidence(e,adapter,"Synthetic",true));
   const auto valid=evidence(b,t.filePath("valid.bin"),adapter=="json"?QByteArray("{}"):adbFixture());QVERIFY(!valid.isEmpty());
-  QSignalSpy done(&b,&LawCaseBridge::importCompleted);QVERIFY(b.importEvidence(valid,adapter,"Synthetic",true));b.cancelImport();QVERIFY(done.wait(8000));QCOMPARE(done.last()[0].toBool(),false);QVERIFY(b.verifyAudit());
+  const auto beforeCancel=b.activeCase();
+  QSignalSpy done(&b,&LawCaseBridge::importCompleted);QVERIFY(b.importEvidence(valid,adapter,"Synthetic",true));b.cancelImport();QVERIFY(done.wait(8000));QCOMPARE(done.last()[0].toBool(),false);
+  QVERIFY(b.importResult().isEmpty());QCOMPARE(b.activeCase(),beforeCancel);
+  LawCaseBridge cancelledOnDisk(path,nullptr,true);QVERIFY(cancelledOnDisk.openCase(id));QCOMPARE(cancelledOnDisk.activeCase(),beforeCancel);QVERIFY(b.verifyAudit());
   QVERIFY(b.importEvidence(valid,adapter,"Synthetic",true));b.closeWorkspace();QTRY_VERIFY_WITH_TIMEOUT(!b.importBusy(),8000);QVERIFY(b.activeCase().isEmpty());QVERIFY(b.importResult().isEmpty());
  }
  void staleRevisionAndRevocation_data(){lifecycleData();}

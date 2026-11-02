@@ -7,7 +7,13 @@
 bool LawCaseBridge::importBusy()const{return importer_&&importer_->busy();}
 QVariantMap LawCaseBridge::importProcessCleanup()const{return importer_?importer_->processCleanup():QVariantMap();}
 void LawCaseBridge::resetImport(){cancelArtifacts();cancelTimeline();if(importer_)importer_->cancel();importContext_.clear();importResult_.clear();emit importChanged();}
-void LawCaseBridge::cancelImport(){if(importer_)importer_->cancel();}
+void LawCaseBridge::cancelImport(){
+ // Invalidate the original persistence authority before requesting shutdown.
+ // A late cancellation/error callback must not create a retained rejection.
+ if(importer_&&importer_->busy()){
+  importContext_.clear();importResult_.clear();importer_->cancel();emit importChanged();
+ }
+}
 void LawCaseBridge::initImports(){
  importer_=std::make_unique<EvidenceImportRunner>();
  connect(importer_.get(),&EvidenceImportRunner::changed,this,&LawCaseBridge::importChanged);

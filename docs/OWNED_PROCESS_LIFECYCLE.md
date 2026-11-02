@@ -1,10 +1,11 @@
 # Owned worker lifecycle — 2026-11-02
 
-This candidate addresses controlled detached descendants of product-launched
+This mechanism addresses controlled detached descendants of product-launched
 workers. It is not a process/network sandbox or hostile same-user isolation.
 The source was reconstructed from recorded edits after the local execution
-environment became unavailable. Exact-source CI is required; preceding local
-observations and older Windows packages are not acceptance of this candidate.
+environment became unavailable. Exact-source results and package-source pins
+are recorded separately in DEVELOPMENT_STATE.md; preceding local observations
+and older Windows packages do not accept later source changes.
 
 ## Product boundary
 
@@ -62,6 +63,11 @@ This mechanism does not discover arbitrary pre-existing processes on restart.
 
 Cancel, logout, session close/expiry and permission withdrawal keep their native
 propagation and original-request binding. New grants do not authorize old work.
+Explicit case-import cancellation invalidates its persistence context before
+requesting worker shutdown: a late callback retains neither a successful result
+nor a rejected parser report. Ordinary parser rejection during an authorized
+request remains auditable. Tests compare both live and freshly reopened case
+snapshots, including revision, analyses and audit, before/after cancellation.
 A native shortened identity lifetime applies solely to synthetic storage fixtures;
 production remains fixed at 15 minutes. Synthetic expiry exercises the actual
 checkSession/timer path, not a real 15-minute field-session acceptance claim.
@@ -76,6 +82,12 @@ detached child, repeat use, failed launch and actual product-parent SIGKILL.
 OfflineTests separately exercises real policy revoke/cancel/logout, approved
 grant expiry and synthetic identity session expiry, signed terminal status and
 zero retained-result assertions.
+
+Isolated Linux deployment probes copy the test executable into a fresh directory
+and cover absent, non-executable, symlinked and zero-exit/no-receipt supervisors.
+Each refuses cleanup proof and must not launch the marker worker. The build's
+shared helper is never renamed or modified. Windows uses creation-time Jobs,
+so these Linux sibling-deployment rows are explicitly excluded there.
 
 On Linux, a hostile worker with the same user identity can kill its supervisor
 and leave a detached descendant. A retained negative requires cleanupComplete=false

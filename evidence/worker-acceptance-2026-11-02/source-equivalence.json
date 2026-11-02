@@ -1,0 +1,9 @@
+{
+  "governmentHead": "a23c9d8d40e2d01f39cfbb18264c7135d3f865b6",
+  "governmentPrCheckout": "58f5cde5581e43e83e06398667b19bdd5a3e5ac3",
+  "governmentBothTree": "2205758452529b089947b0aa5dfcf7476aff718d",
+  "integrationHead": "5a4efc9bd549d7347b4952f6a10f3f659b12fae3",
+  "integrationPrCheckoutAndPackage": "37bda8f772836bfe1caeeb5469f3dbfb36ff177f",
+  "integrationBothTree": "c2299204791d495c746539a5ea198caeddacb964",
+  "scope": "Fetched commit metadata and actual package profile; distinct refs with equal source trees. Package does not include later cancellation correction."
+}

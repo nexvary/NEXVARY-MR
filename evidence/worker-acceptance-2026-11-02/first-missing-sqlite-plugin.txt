@@ -1,0 +1,14 @@
+********* Start testing of ImportTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ImportTests::initTestCase()
+QWARN  : ImportTests::rejectionAuditPermissionsAndCancellation(json) QSqlDatabase: QSQLITE driver not loaded
+QWARN  : ImportTests::rejectionAuditPermissionsAndCancellation(json) QSqlDatabase: available drivers: 
+FAIL!  : ImportTests::rejectionAuditPermissionsAndCancellation(json) 'imported(b,e,adapter,false)' returned FALSE. ()
+   Loc: [/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/import_tests.cpp(100)]
+QWARN  : ImportTests::rejectionAuditPermissionsAndCancellation(adb-v5) QSqlDatabase: QSQLITE driver not loaded
+QWARN  : ImportTests::rejectionAuditPermissionsAndCancellation(adb-v5) QSqlDatabase: available drivers: 
+FAIL!  : ImportTests::rejectionAuditPermissionsAndCancellation(adb-v5) 'imported(b,e,adapter,false)' returned FALSE. ()
+   Loc: [/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/import_tests.cpp(100)]
+PASS   : ImportTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of ImportTests *********

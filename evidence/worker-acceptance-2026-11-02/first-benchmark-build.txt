@@ -1,0 +1,18 @@
+[0/2] Re-checking globbed directories...
+[1/13] Automatic MOC and UIC for target mr_process_ownership
+[2/11] Automatic MOC and UIC for target mr_evidence_import_worker
+[3/9] Automatic MOC and UIC for target mr_desktop
+[4/7] Automatic MOC and UIC for target mr_case_workload_benchmark
+[5/7] Building CXX object CMakeFiles/mr_case_workload_benchmark.dir/mr_case_workload_benchmark_autogen/mocs_compilation.cpp.o
+[6/7] Building CXX object CMakeFiles/mr_case_workload_benchmark.dir/cpp/tests/case_workload_benchmark.cpp.o
+FAILED: CMakeFiles/mr_case_workload_benchmark.dir/cpp/tests/case_workload_benchmark.cpp.o 
+/usr/bin/c++ -DMR_ENABLE_LAB_OPERATIONS=0 -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -I/workspace/scratch/0a23b6e6d71c/mr-build/mr_case_workload_benchmark_autogen/include -I/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/src -I/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/include -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6 -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /workspace/scratch/b7798f8da44e/sodium/include -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /workspace/scratch/b7798f8da44e/qt-env/usr/include/x86_64-linux-gnu/qt6/QtNetwork -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_case_workload_benchmark.dir/cpp/tests/case_workload_benchmark.cpp.o -MF CMakeFiles/mr_case_workload_benchmark.dir/cpp/tests/case_workload_benchmark.cpp.o.d -o CMakeFiles/mr_case_workload_benchmark.dir/cpp/tests/case_workload_benchmark.cpp.o -c /workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/case_workload_benchmark.cpp
+/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/case_workload_benchmark.cpp: In function ‘int main(int, char**)’:
+/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/case_workload_benchmark.cpp:74:3: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   74 |   if(!bridge->ready()||!bridge->openCase(id))return 15;const auto reopenUs=timer.nsecsElapsed()/1000;
+      |   ^~
+/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/case_workload_benchmark.cpp:74:56: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   74 |   if(!bridge->ready()||!bridge->openCase(id))return 15;const auto reopenUs=timer.nsecsElapsed()/1000;
+      |                                                        ^~~~~
+cc1plus: all warnings being treated as errors
+ninja: build stopped: subcommand failed.

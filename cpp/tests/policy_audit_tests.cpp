@@ -83,10 +83,88 @@ int fixture(const QString &root, bool crash) {
   p.revoke("device-tools");
   return 0;
 }
+int storageCrashFixture(const QString &root,const QString &stage){
+  PolicyAudit journal(root+"/journal",true);
+  if(!journal.healthy())return 70;
+  for(int n=0;n<135;++n)
+    if(!journal.append("policy-rejection",{{"reason",QString("synthetic-boundary-%1").arg(n)}},"denied"))return 71;
+  // Public prefix only: never export the protected snapshot or signing key.
+  if(!write(root+"/prefix.json",journal.exportBytes())||!write(root+"/anchor.json",json(journal.anchor())))return 72;
+  for(int n=135;n<138;++n)
+    if(!journal.append("policy-rejection",{{"reason",QString("synthetic-boundary-%1").arg(n)}},"denied"))return 73;
+  if(stage=="before-write")std::_Exit(86);
+  if(stage=="before-replace")journal.setSyntheticWriteCheckpoint([]{std::_Exit(86);});
+  if(stage=="after-replace")journal.setSyntheticPostReplaceCheckpoint([]{std::_Exit(86);});
+  if(!journal.append("policy-rejection",{{"reason","synthetic-boundary-138"}},"denied"))return 74;
+  if(stage=="acknowledged"&&(!write(root+"/ack.json",json(journal.anchor()))||!write(root+"/ack-export.json",journal.exportBytes())))return 75;
+  std::_Exit(86);
+}
 } // namespace
 class PolicyAuditTests final : public QObject {
   Q_OBJECT
 private slots:
+  void atomicSnapshotCrashBoundary_data(){
+    QTest::addColumn<QString>("stage");QTest::addColumn<int>("expected");
+    QTest::newRow("before-write")<<QString("before-write")<<138;
+    QTest::newRow("before-replace")<<QString("before-replace")<<138;
+    QTest::newRow("after-replace-before-memory-ack")<<QString("after-replace")<<139;
+    QTest::newRow("after-acknowledgement")<<QString("acknowledged")<<139;
+  }
+  void atomicSnapshotCrashBoundary(){
+    QFETCH(QString,stage);QFETCH(int,expected);QTemporaryDir t;QVERIFY(t.isValid());
+    QProcess child;child.start(QCoreApplication::applicationFilePath(),{"--storage-crash-fixture",t.path(),stage});
+    QVERIFY(child.waitForFinished(30000));QCOMPARE(child.exitCode(),86);
+    const auto retained=PolicyAudit::parseAnchor(bytes(t.filePath("anchor.json")));
+    QCOMPARE(retained.value("sequence").toInt(),135);
+    QString error;
+    QVERIFY2(PolicyAudit::verifyExport(bytes(t.filePath("prefix.json")),retained.value("publicKey").toString(),retained,error),qPrintable(error));
+    PolicyAudit recovered(t.filePath("journal"),true);QVERIFY2(recovered.healthy(),qPrintable(recovered.error()));
+    QCOMPARE(recovered.events().size(),expected);
+    QVERIFY2(PolicyAudit::verifyExport(recovered.exportBytes(),retained.value("publicKey").toString(),retained,error),qPrintable(error));
+    if(stage=="acknowledged"){
+      QCOMPARE(PolicyAudit::parseAnchor(bytes(t.filePath("ack.json"))),recovered.anchor());
+      QCOMPARE(bytes(t.filePath("ack-export.json")),recovered.exportBytes());
+    }
+    // Recovery does not replay the interrupted append; a new explicit append
+    // extends precisely the recovered prefix and is observed by another reader.
+    QVERIFY(recovered.append("policy-rejection",{{"reason","synthetic-explicit-after-restart"}},"denied"));
+    PolicyAudit second(t.filePath("journal"),true);QVERIFY(second.healthy());
+    QCOMPARE(second.events().size(),expected+1);QCOMPARE(second.exportBytes(),recovered.exportBytes());
+  }
+  void acknowledgedSnapshotsMatchFreshReaders(){
+    QTemporaryDir t;QVERIFY(t.isValid());const auto path=t.filePath("journal");
+    PolicyAudit writer(path,true);QVERIFY(writer.healthy());
+    for(int n=0;n<150;++n){
+      QVERIFY2(writer.append("policy-rejection",{{"reason",QString("synthetic-snapshot-%1").arg(n)}},"denied"),qPrintable(writer.error()));
+      PolicyAudit reader(path,true);QVERIFY2(reader.healthy(),qPrintable(reader.error()));
+      QCOMPARE(writer.events().size(),n+1);QCOMPARE(reader.anchor(),writer.anchor());
+      QCOMPARE(reader.exportBytes(),writer.exportBytes());QVERIFY(writer.check());
+    }
+  }
+  void directoryPermissionRevokedBeforeReplacement(){
+#ifdef Q_OS_LINUX
+    QTemporaryDir t;QVERIFY(t.isValid());
+    const auto writable=QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner;
+    const auto readOnly=QFileDevice::ReadOwner|QFileDevice::ExeOwner;
+    QVERIFY(QFile::setPermissions(t.path(),readOnly));
+    QFile probe(t.filePath("permission-probe"));const bool override=probe.open(QIODevice::WriteOnly|QIODevice::NewOnly);probe.close();
+    QVERIFY(QFile::setPermissions(t.path(),writable));
+    if(override)QSKIP("Host overrides directory write denial; cannot test a real permission transition here.");
+    const auto path=t.filePath("journal");PolicyAudit journal(path,true);QVERIFY(journal.healthy());
+    QVERIFY(journal.append("policy-rejection",{{"reason","synthetic-before-permission-change"}},"denied"));
+    const auto before=bytes(path);const auto retained=journal.anchor();
+    journal.setSyntheticWriteCheckpoint([&]{if(!QFile::setPermissions(t.path(),readOnly))qFatal("Synthetic directory permission transition failed");});
+    const bool accepted=journal.append("policy-rejection",{{"reason","synthetic-revoked-before-replace"}},"denied");
+    QVERIFY(QFile::setPermissions(t.path(),writable));
+    QVERIFY(!accepted);QVERIFY(!journal.healthy());QVERIFY(journal.error().contains("(replace)"));
+    QCOMPARE(bytes(path),before);QCOMPARE(journal.anchor(),retained);
+    journal.setSyntheticWriteCheckpoint({});
+    QVERIFY(!journal.append("policy-rejection",{{"reason","synthetic-no-silent-retry"}},"denied"));
+    PolicyAudit restarted(path,true);QVERIFY(restarted.healthy());QCOMPARE(restarted.anchor(),retained);
+#else
+    QSKIP("POSIX directory write transition; Windows ACL transition needs a separate native fixture.");
+#endif
+  }
   void operationResultLifecycle() {
     QTemporaryDir t;
     IdentityService i(t.filePath("identity"), true);
@@ -469,6 +547,7 @@ private slots:
 int main(int argc, char **argv) {
   QCoreApplication app(argc, argv);
   const auto a = app.arguments();
+  if(a.size()==4&&a[1]=="--storage-crash-fixture")return storageCrashFixture(a[2],a[3]);
   if (a.size() == 3 &&
       (a[1] == "--export-fixture" || a[1] == "--crash-fixture"))
     return fixture(a[2], a[1] == "--crash-fixture");

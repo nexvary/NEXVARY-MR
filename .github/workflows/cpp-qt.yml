@@ -76,6 +76,11 @@ jobs:
         run: |
           python3 scripts/diagnose_ui_failure.py --build build
           ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
+      - name: Measure bounded synthetic case services
+        if: matrix.profile == 'production'
+        run: |
+          cmake --build build --target mr_case_workload_benchmark --parallel 2
+          QT_QPA_PLATFORM=offscreen build/mr_case_workload_benchmark > build/case-workload-benchmark.json
       - name: Instrument parser, identity and signed-update regressions
         if: matrix.profile == 'production'
         run: |
@@ -103,6 +108,7 @@ jobs:
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json
+            build/case-workload-benchmark.json
             build/**/smoke*.png
             build/Testing/Temporary/LastTest.log
             build/sodium-build-receipt.json
@@ -245,6 +251,15 @@ jobs:
           $inventory = $raw | ConvertFrom-Json
           if ($inventory.schemaVersion -ne 1 -or $null -eq $inventory.devices) { throw 'Invalid USB inventory schema' }
           "USB inventory schema validated; device count: $($inventory.devices.Count). No phone binding asserted."
+      - name: Measure bounded synthetic case services
+        if: matrix.profile == 'production'
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --target mr_case_workload_benchmark --parallel 2
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $env:QT_QPA_PLATFORM = 'offscreen'
+          & build/Release/mr_case_workload_benchmark.exe > build/case-workload-benchmark.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Assemble portable Qt runtime
         id: portable
         if: ${{ !cancelled() && matrix.profile == 'production' && steps.native_build.outcome == 'success' && steps.tests.outcome == 'success' && steps.usb_inventory.outcome == 'success' }}
@@ -332,5 +347,6 @@ jobs:
             build/**/smoke*.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/
+            build/case-workload-benchmark.json
           if-no-files-found: warn
 
