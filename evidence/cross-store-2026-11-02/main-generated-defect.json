@@ -1,0 +1,14 @@
+{
+  "build/nexvary_mr": {
+    "size": 5403368,
+    "sha256": "130affc3ccfcde8dc80db31803258349ea44332509e91facb803e61e43b0079a"
+  },
+  "build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "build/CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o": {
+    "size": 952,
+    "sha256": "2573850e4d87e51bc8245b23b3dbdbfd6dd40338037b82e2e240050ecb9e930b"
+  }
+}

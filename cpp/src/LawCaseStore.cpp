@@ -235,6 +235,8 @@ QString LawCaseStore::reconcileAnalysis(const QVariantMap &intent) {
   if(a.value("operationId")!=intent.value("operationId"))return "unknown";
   auto binding=intent;binding.remove("recoveryState");
   if(a.contains("operationBinding") && a.value("operationBinding").toMap()!=binding)return "unknown";
+  const auto size=a.value("sourceSize");
+  if(size.metaType().id()==QMetaType::QString || size.metaType().id()==QMetaType::Bool || size.toDouble()!=static_cast<double>(source.size()) || a.value("synthetic").metaType().id()!=QMetaType::Bool || a.value("synthetic").toBool()!=synthetic_)return "unknown";
   const auto reportBytes=a.value("reportJson").toString().toUtf8();
   if(reportBytes.size()>64*1024)return "unknown";
   QJsonParseError parse;const auto report=QJsonDocument::fromJson(reportBytes,&parse);

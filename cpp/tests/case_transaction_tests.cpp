@@ -138,7 +138,7 @@ private slots:
  }
  void retainedResultTampering_data(){
   QTest::addColumn<QString>("field");
-  for(const auto &name:{"missing","duplicate","operationId","id","evidenceId","parser","actor","sourceSha256","reportJson","requestId","requesterRole","expectedRevision"})QTest::newRow(name)<<QString(name);
+  for(const auto &name:{"missing","duplicate","operationId","id","evidenceId","parser","actor","sourceSha256","sourceSize","synthetic","reportJson","requestId","requesterRole","expectedRevision"})QTest::newRow(name)<<QString(name);
  }
  void retainedResultTampering(){
   QFETCH(QString,field);Fixture f;commitAnalysis(f);
