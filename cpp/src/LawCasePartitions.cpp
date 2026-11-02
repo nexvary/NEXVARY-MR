@@ -21,7 +21,7 @@ void LawCaseBridge::initPartitions(){
   if(!retained.isEmpty() && (retained.value("caseId")!=active_.value("id") || retained.value(partitionsActive_?"expectedRevision":"caseRevision")!=active_.value("revision")))cancelPartitions();
  });
  connect(partitions_.get(),&QFutureWatcher<QVariantMap>::finished,this,[this]{
-  partitionsActive_=false;auto intent=partitionsContext_;const auto report=partitions_->result();partitionsContext_.clear();partitionsResult_.clear();
+  partitionsActive_=false;auto intent=partitionsContext_;auto report=partitions_->result();partitionsProcessCleanup_=report.take("_processCleanup").toList();partitionsContext_.clear();partitionsResult_.clear();
   const auto id=intent.value("caseId").toString(),op=intent.value("operationId").toString();
   // Keep original context across synchronous logout/revocation signals. A new
   // approval cannot authorize a worker launched under an older approval.
@@ -61,6 +61,7 @@ void LawCaseBridge::initPartitions(){
 }
 bool LawCaseBridge::analyzePartitions(const QString &evidence,const QString &executable,bool consent){
  if(partitionsActive_)return fail("A case partition analysis is already running.");
+ partitionsProcessCleanup_.clear();
  partitionsResult_.clear();emit partitionsChanged();
  if(!consent || !identity_ || !operationPolicy_ || !permit(nexvary::law::Action::AnalyzeEvidence) || active_.isEmpty())return fail("Confirm authorized registered evidence and a trusted separate mmls tool in an authenticated case.");
  const auto id=active_.value("id").toString();const auto revision=active_.value("revision").toLongLong();
@@ -93,10 +94,11 @@ bool LawCaseBridge::analyzePartitions(const QString &evidence,const QString &exe
   image.close();
   mr::forensic::TskLimits limits;limits.maximumImage=16*1024*1024;limits.maximumOutput=8192;
   const auto scan=mr::forensic::analyzePartitions(image.fileName(),tool,token,{},limits);
-  if(!dir.remove())return error("Private partition staging cleanup failed; preserve temporary storage for review.");
-  if(!scan.error.isEmpty())return error(scan.error);
+  const auto failure=[&](const QString &message){auto report=error(message);report.insert("_processCleanup",scan.processCleanup);return report;};
+  if(!dir.remove())return failure("Private partition staging cleanup failed; preserve temporary storage for review.");
+  if(!scan.error.isEmpty())return failure(scan.error);
   if(!scan.sourceUnchanged || scan.toolSha256!=toolHash)return error("Prepared tool/source integrity verification failed.");
-  return QVariantMap{{"schema","nexvary-case-partitions/v1"},{"sourceSha256",QString::fromLatin1(scan.sourceSha256.toHex())},{"toolSha256",QString::fromLatin1(scan.toolSha256.toHex())},{"tool","mmls"},{"version",scan.version},{"output",scan.output},{"sourceUnchanged",true},{"limitations","Raw partition listing only; separate process is not an OS sandbox. No device authenticity, complete descendant containment or network isolation established."}};
+  return QVariantMap{{"_processCleanup",scan.processCleanup},{"schema","nexvary-case-partitions/v1"},{"sourceSha256",QString::fromLatin1(scan.sourceSha256.toHex())},{"toolSha256",QString::fromLatin1(scan.toolSha256.toHex())},{"tool","mmls"},{"version",scan.version},{"output",scan.output},{"sourceUnchanged",true},{"limitations","Raw partition listing only; separate process is not an OS sandbox. No device authenticity, complete descendant containment or network isolation established."}};
  }));
  emit partitionsChanged();return true;
 }

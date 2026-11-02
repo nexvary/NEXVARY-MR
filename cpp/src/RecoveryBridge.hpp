@@ -27,6 +27,7 @@ class RecoveryBridge final:public QObject {
  Q_PROPERTY(QVariantList audit READ audit NOTIFY changed)
  Q_PROPERTY(QVariantMap device READ device NOTIFY changed)
  Q_PROPERTY(QVariantMap operationReceipt READ operationReceipt NOTIFY changed)
+ Q_PROPERTY(QVariantList processCleanup READ processCleanup NOTIFY changed)
  Q_PROPERTY(QString lossKind READ lossKind NOTIFY changed)
  Q_PROPERTY(QString encryptionKind READ encryptionKind NOTIFY changed)
 public:
@@ -51,6 +52,7 @@ public:
  QVariantList audit() const;
  QVariantMap device() const;
  QVariantMap operationReceipt() const{return operationReceipt_;}
+ QVariantList processCleanup()const{return processCleanup_;}
  QString lossKind()const{return document_.value("loss").toString();}
  QString encryptionKind()const{return document_.value("encryption").toString();}
  Q_INVOKABLE QString assess(const QString &loss,const QString &encryption,bool external,bool backup,bool arabic) const;
@@ -78,7 +80,7 @@ signals:
  void changed();
 private:
  GovernmentOperationPolicy *policy_=nullptr;
- struct JobResult {QJsonObject document;QString error;};
+ struct JobResult {QJsonObject document;QString error;QVariantList processCleanup={};};
  using Job=std::function<JobResult(const QJsonObject &,const std::shared_ptr<std::atomic_bool> &)>;
  bool start(Job job,const QString &destination=QString());
  bool fail(const QString &message);
@@ -90,6 +92,7 @@ private:
  QJsonObject document_;
  QString operationId_;
  QVariantMap operationReceipt_;
+ QVariantList processCleanup_;
  bool synthetic_=false,running_=false,externalAnalysis_=false;
  double progress_=0;
  std::shared_ptr<std::atomic_bool> cancelled_;

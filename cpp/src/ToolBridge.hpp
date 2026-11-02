@@ -3,7 +3,7 @@
 #include <QObject>
 class GovernmentOperationPolicy;
 #include "MirrorSession.hpp"
-#include <QProcess>
+#include "OwnedProcess.hpp"
 #include <QTimer>
 #include <QMap>
 #include <QVariantList>
@@ -28,6 +28,7 @@ class ToolBridge final : public QObject {
   Q_PROPERTY(bool backgroundRefreshing READ backgroundRefreshing NOTIFY backgroundRefreshChanged)
   Q_PROPERTY(bool laboratoryBuild READ laboratoryBuild CONSTANT)
   Q_PROPERTY(QString status READ status NOTIFY statusChanged)
+  Q_PROPERTY(QVariantMap processCleanup READ processCleanup NOTIFY busyChanged)
   Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
   Q_PROPERTY(QVariantList forensicTools READ forensicTools NOTIFY toolsChanged)
   Q_PROPERTY(QVariantList tools READ tools NOTIFY toolsChanged)
@@ -56,6 +57,7 @@ public:
   QString activeOperation()const;
   bool backgroundRefreshing()const{return polling_;}
   QString status() const { return status_; }
+  QVariantMap processCleanup()const{return {{"foreground",process_.cancellationReceipt()},{"discovery",pollProcess_.cancellationReceipt()},{"screenView",mirror_.processCleanup()}};}
   bool busy() const { return active_ || serviceRunning_ || mirror_.active(); }
   QVariantList tools() const;
   QVariantList forensicTools() const;
@@ -138,13 +140,13 @@ private:
   void finishPoll(int exitCode,QProcess::ExitStatus exitStatus);
   void cancelPoll();
   void publishDeviceIntelligence();
-  QProcess pollProcess_;
+  OwnedProcess pollProcess_;
   QTimer pollDeadline_;
   QByteArray pollOutput_;
   qsizetype pollErrorBytes_=0;
   bool polling_=false,pollSuperseded_=false,pollOverflow_=false;
   QVariantMap lastIntelligence_;
-  QProcess process_;
+  OwnedProcess process_;
   QTimer timeoutTimer_;
   QTimer pollTimer_;
   bool active_ = false;

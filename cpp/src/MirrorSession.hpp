@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 class GovernmentOperationPolicy;
-#include <QProcess>
+#include "OwnedProcess.hpp"
 #include <QTimer>
 #include <QVariantMap>
 
@@ -18,6 +18,7 @@ public:
  QString status()const{return status_;}
  QString output()const{return QString::fromUtf8(viewOutput_);}
  QString version()const{return version_;}
+ QVariantMap processCleanup()const{return {{"preflight",check_.cancellationReceipt()},{"viewer",viewer_.cancellationReceipt()}};}
  bool start(const QString &scrcpy,const QString &adb,const QString &serial,
             const QVariantMap &identity,bool ownerApproved,bool componentApproved);
  void stop(const QString &reason=QStringLiteral("Screen-view process stopped by operator."));
@@ -36,7 +37,7 @@ private:
  void end(const QString &reason,bool failed);
  void finalize();
  void message(const QString &text);
- QProcess check_,viewer_;
+ OwnedProcess check_,viewer_;
  QTimer deadline_,monitor_,kill_;
  QByteArray checkOutput_,viewOutput_;
  QString scrcpy_,adb_,serial_,state_=QStringLiteral("idle"),status_,version_;

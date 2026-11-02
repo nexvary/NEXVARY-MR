@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include <QProcess>
+#include "OwnedProcess.hpp"
 #include <QTimer>
 #include <QTemporaryDir>
 #include <QVariantMap>
@@ -13,13 +13,14 @@ public:
  bool busy()const{return active_;}
  bool start(const QByteArray &bytes,const QString &expectedSha256,const QString &adapter);
  void cancel();
+ QVariantMap processCleanup()const{return process_.cancellationReceipt();}
 signals:
  void changed();
  void completed(const QVariantMap &report,const QString &errorCode);
 private:
  void collect();
  void finish(int code,QProcess::ExitStatus status);
- QProcess process_;
+ OwnedProcess process_;
  QTimer deadline_;
  std::unique_ptr<QTemporaryDir> directory_;
  QByteArray output_;

@@ -5,7 +5,7 @@
 #include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
-#include <QProcess>
+#include "OwnedProcess.hpp"
 #include <QTemporaryDir>
 #include <QScopeGuard>
 namespace mr::forensic {
@@ -25,12 +25,13 @@ QByteArray hashFile(const QString &path,qint64 maximum,QString &error,const std:
  if(count!=before.size()||after.size()!=before.size()||after.lastModified()!=before.lastModified()){error="Source changed while hashing.";return {};}
  return hash.result();
 }
-QString run(const QString &exe,const QStringList &args,const QString &directory,const std::shared_ptr<std::atomic_bool> &token,const TskLimits &limits,QString &error){
+QString run(const QString &exe,const QStringList &args,const QString &directory,const std::shared_ptr<std::atomic_bool> &token,const TskLimits &limits,QString &error,QVariantList &receipts){
  if(token&&token->load()){error="Cancelled before external child launch.";return {};}
- QProcess process;process.setProgram(exe);process.setArguments(args);process.setWorkingDirectory(directory);process.setProcessChannelMode(QProcess::MergedChannels);process.start();
- if(!process.waitForStarted(3000)){error="Could not start the selected mmls executable.";return {};}
+ OwnedProcess process;process.setProgram(exe);process.setArguments(args);process.setWorkingDirectory(directory);process.setProcessChannelMode(QProcess::MergedChannels);process.start();
+ if(!process.waitForStarted(3000)){error="Could not start the selected mmls executable with owned process containment.";receipts.append(process.cancellationReceipt());return {};}
+ const auto cleanup=qScopeGuard([&]{if(process.state()!=QProcess::NotRunning){process.stop(error.contains("timed out")?"timeout":"cancel-or-refusal");process.waitForFinished(3000);}receipts.append(process.cancellationReceipt());});
  process.closeWriteChannel();QElapsedTimer timer;timer.start();QByteArray output;
- auto collect=[&]{const auto room=qMax<qsizetype>(0,limits.maximumOutput-output.size());output+=process.read(room+1);if(output.size()>limits.maximumOutput){error="Tool output exceeded the bounded capture limit.";process.kill();}};
+ auto collect=[&]{const auto room=qMax<qsizetype>(0,limits.maximumOutput-output.size());output+=process.read(room+1);if(output.size()>limits.maximumOutput){error="Tool output exceeded the bounded capture limit.";process.stop("output-limit");}};
  QObject::connect(&process,&QProcess::readyReadStandardOutput,&process,collect);
  while(process.state()!=QProcess::NotRunning){
   process.waitForFinished(50);collect();
@@ -39,8 +40,9 @@ QString run(const QString &exe,const QStringList &args,const QString &directory,
   if(output.size()>limits.maximumOutput){error="Tool output exceeded the bounded capture limit.";break;}
   if(timer.elapsed()>limits.processTimeoutMs){error="Tool execution timed out.";break;}
  }
- if(!error.isEmpty()){process.kill();process.waitForFinished(3000);return {};}
+ if(!error.isEmpty()){process.stop(error.contains("timed out")?"timeout":cancelled(token)?"cancel":"result-refusal");process.waitForFinished(3000);return {};}
  collect();
+ if(!process.cleanupComplete()){error="Worker tree cleanup is unproved; no result committed.";return {};}
  if(output.size()>limits.maximumOutput){error="Tool output exceeded the bounded capture limit.";return {};}
  if(process.exitStatus()!=QProcess::NormalExit||process.exitCode()!=0){error=QStringLiteral("mmls failed with exit code %1; no result committed.").arg(process.exitCode());return {};}
  return QString::fromUtf8(output).trimmed();
@@ -89,10 +91,10 @@ TskResult analyzePartitions(const QString &image,const QString &executable,const
  input.close();staged.close();staged.setPermissions(QFileDevice::ReadOwner);result.sourceSha256=hash.result();
  const auto stageHash=hashFile(stagedPath,limits.maximumImage,result.error,token,[&](qint64 done){if(progress)progress(source.size()+done,total);});
  if(!result.error.isEmpty()||stageHash!=result.sourceSha256){if(result.error.isEmpty())result.error="Working-copy SHA256 mismatch.";return stop();}
- result.version=run(executable,{QStringLiteral("-V")},work.path(),token,limits,result.error);
+ result.version=run(executable,{QStringLiteral("-V")},work.path(),token,limits,result.error,result.processCleanup);
  if(!result.error.isEmpty())return stop();
  if(!result.version.startsWith(QStringLiteral("The Sleuth Kit ver "))||result.version.size()>240){result.error="The selected executable did not report a supported mmls version.";return stop();}
- result.output=run(executable,{QStringLiteral("-i"),QStringLiteral("raw"),stagedPath},work.path(),token,limits,result.error);
+ result.output=run(executable,{QStringLiteral("-i"),QStringLiteral("raw"),stagedPath},work.path(),token,limits,result.error,result.processCleanup);
  if(!result.error.isEmpty())return stop();
  if(result.output.isEmpty()){result.error="mmls returned an empty partition report.";return stop();}
  const auto finalStage=hashFile(stagedPath,limits.maximumImage,result.error,token);

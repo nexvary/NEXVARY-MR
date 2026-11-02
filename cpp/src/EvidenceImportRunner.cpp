@@ -12,13 +12,13 @@ QString hash(const QByteArray &b){return QString::fromLatin1(QCryptographicHash:
 }
 EvidenceImportRunner::EvidenceImportRunner(QObject *parent,const QString &testWorker):QObject(parent),testWorker_(testWorker){
  deadline_.setSingleShot(true);deadline_.setInterval(5000);
- connect(&deadline_,&QTimer::timeout,this,[this]{terminal_="deadline";process_.kill();});
+ connect(&deadline_,&QTimer::timeout,this,[this]{terminal_="deadline";process_.stop("timeout");});
  connect(&process_,&QProcess::readyReadStandardOutput,this,&EvidenceImportRunner::collect);
  connect(&process_,&QProcess::readyReadStandardError,this,&EvidenceImportRunner::collect);
  connect(&process_,&QProcess::finished,this,&EvidenceImportRunner::finish);
  connect(&process_,&QProcess::errorOccurred,this,[this](QProcess::ProcessError e){if(e==QProcess::FailedToStart)finish(-1,QProcess::CrashExit);});
 }
-EvidenceImportRunner::~EvidenceImportRunner(){process_.disconnect(this);deadline_.stop();if(process_.state()!=QProcess::NotRunning){process_.kill();process_.waitForFinished(1000);}if(directory_)QFile::setPermissions(directory_->filePath("working.bin"),QFileDevice::ReadOwner|QFileDevice::WriteOwner);}
+EvidenceImportRunner::~EvidenceImportRunner(){process_.disconnect(this);deadline_.stop();if(process_.state()!=QProcess::NotRunning){process_.stop("owner-destruction");process_.waitForFinished(3000);}if(directory_)QFile::setPermissions(directory_->filePath("working.bin"),QFileDevice::ReadOwner|QFileDevice::WriteOwner);}
 bool EvidenceImportRunner::start(const QByteArray &bytes,const QString &expectedSha256,const QString &adapter){
  if(active_||bytes.isEmpty()||bytes.size()>mr::forensic::importInputLimit||hash(bytes)!=expectedSha256||!mr::forensic::importAdapterSupported(adapter))return false;
  const auto temporaryRoot=mr::recovery::localFilePath(QDir::tempPath());
@@ -42,13 +42,14 @@ bool EvidenceImportRunner::start(const QByteArray &bytes,const QString &expected
 }
 void EvidenceImportRunner::collect(){
  const auto out=process_.readAllStandardOutput(),err=process_.readAllStandardError();
- if(out.size()+err.size()>64*1024-output_.size()-errorBytes_){terminal_="output-limit";process_.kill();return;}
+ if(out.size()+err.size()>64*1024-output_.size()-errorBytes_){terminal_="output-limit";process_.stop("output-limit");return;}
  output_+=out;errorBytes_+=err.size();
 }
-void EvidenceImportRunner::cancel(){if(active_){terminal_="cancelled";process_.kill();}}
+void EvidenceImportRunner::cancel(){if(active_){terminal_="cancelled";process_.stop("cancel-or-authority-ended");}}
 void EvidenceImportRunner::finish(int code,QProcess::ExitStatus status){
  if(!active_)return;
  deadline_.stop();collect();QVariantMap report;
+ if(!process_.cleanupComplete())terminal_="worker-cleanup-unproved";
  if(terminal_.isEmpty()&&status==QProcess::NormalExit&&code==0){
   QJsonParseError parse;const auto doc=QJsonDocument::fromJson(output_,&parse);report=doc.object().toVariantMap();
   if(parse.error!=QJsonParseError::NoError||report.value("schema")!="nexvary-authorized-import/v1"||report.value("status")!="imported"||report.value("adapter")!=adapter_||report.value("sourceSha256")!=hash_||report.value("sourceSize").toLongLong()!=sourceSize_||!doc.object().value("findings").isArray()||report.value("findings").toList().size()>mr::forensic::importFindingLimit||output_.size()>mr::forensic::importReportLimit)terminal_="invalid-worker-report";

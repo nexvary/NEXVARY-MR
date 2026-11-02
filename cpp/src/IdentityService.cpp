@@ -23,7 +23,9 @@ bool passwordValid(const QString &s){return s.size()>=14&&s.toUtf8().size()<=256
 QVariantMap publicAccount(QVariantMap a){for(const auto *key:{"passwordHash","salt","nonce","secret","failed","blockedUntil"})a.remove(key);return a;}
 QByteArray signedBytes(const QVariantMap &m){return QByteArray("NEXVARY-MR/local-attestation/v1\0",32)+json(m);}
 }
-IdentityService::IdentityService(const QString &path,bool synthetic,QObject *parent):QObject(parent),path_(mr::recovery::localFilePath(path)),synthetic_(synthetic){
+IdentityService::IdentityService(const QString &path,bool synthetic,QObject *parent,int syntheticSessionLifetimeMs):QObject(parent),path_(mr::recovery::localFilePath(path)),synthetic_(synthetic){
+ // Native synthetic fixture only; production remains fixed at 15 minutes.
+ if(synthetic_)sessionLifetimeMs_=qBound(1,syntheticSessionLifetimeMs,15*60*1000);
  if(sodium_init()<0||path_.isEmpty()||(!synthetic_&&!mr::recovery::vaultAvailable())){fail("Local identities require Windows protected storage (synthetic tests excepted).");return;}
  ready_=read();
  auto *timer=new QTimer(this);timer->setInterval(1000);connect(timer,&QTimer::timeout,this,[this]{if(authenticated())checkSession();});timer->start();
@@ -116,7 +118,7 @@ bool IdentityService::changePassword(const QString &currentPassword,const QStrin
 bool IdentityService::checkSession(){
  if(!authenticated())return false;
  const auto before=sessionAccount_;
- const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>15*60*1000||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
+ const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
  return true;
 }
 bool IdentityService::administrator(){return checkSession()&&account(userId_).value("role")=="administrator";}

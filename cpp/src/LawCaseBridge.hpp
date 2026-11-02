@@ -28,6 +28,8 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
  Q_PROPERTY(bool partitionsBusy READ partitionsBusy NOTIFY partitionsChanged)
  Q_PROPERTY(QVariantMap partitionsResult READ partitionsResult NOTIFY partitionsChanged)
+ Q_PROPERTY(QVariantList partitionsProcessCleanup READ partitionsProcessCleanup NOTIFY partitionsChanged)
+ Q_PROPERTY(QVariantMap importProcessCleanup READ importProcessCleanup NOTIFY importChanged)
  Q_PROPERTY(bool artifactsBusy READ artifactsBusy NOTIFY artifactsChanged)
  Q_PROPERTY(QVariantMap artifactsResult READ artifactsResult NOTIFY artifactsChanged)
  Q_PROPERTY(bool timelineBusy READ timelineBusy NOTIFY timelineChanged)
@@ -64,6 +66,8 @@ public:
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
  bool partitionsBusy()const{return partitionsActive_;}
  QVariantMap partitionsResult()const{return partitionsResult_;}
+ QVariantList partitionsProcessCleanup()const{return partitionsProcessCleanup_;}
+ QVariantMap importProcessCleanup()const;
  Q_INVOKABLE bool analyzePartitions(const QString &evidence,const QString &executable,bool consent);
  Q_INVOKABLE void cancelPartitions();
  bool artifactsBusy()const;
@@ -117,6 +121,7 @@ private:
  std::unique_ptr<QFutureWatcher<QVariantMap>> partitions_;
  std::shared_ptr<std::atomic_bool> partitionsCancel_;
  QVariantMap partitionsContext_,partitionsResult_;
+ QVariantList partitionsProcessCleanup_;
  bool partitionsActive_=false;
  QMetaObject::Connection partitionsPolicyConnection_;
  void initArtifacts();

@@ -9,7 +9,7 @@
 #include <QDir>
 #include <QSaveFile>
 #include <QTemporaryDir>
-#include <QProcess>
+#include "OwnedProcess.hpp"
 #include <QElapsedTimer>
 #include <QDateTime>
 #include <QJsonDocument>
@@ -30,21 +30,22 @@ QByteArray digest(const QString &p,qint64 limit,const std::shared_ptr<std::atomi
  while(!f.atEnd()){if(cancel&&cancel->load())return {};const auto b=f.read(1024*1024);size+=b.size();if((b.isEmpty()&&f.error()!=QFileDevice::NoError)||size>limit)return {};hash.addData(b);}
  return hash.result().toHex();
 }
-struct ProcessResult {QByteArray out;int exit=-1;QString error;};
+struct ProcessResult {QByteArray out;int exit=-1;QString error;QVariantMap cleanup={};};
 ProcessResult run(const QString &engine,const QStringList &args,const QString &work,const std::shared_ptr<std::atomic_bool> &cancel,const SecurityLimits &limits){
- ProcessResult r;if(cancel&&cancel->load()){r.error="Cancelled before child launch; no scan verdict.";return r;}QProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);
+ ProcessResult r;if(cancel&&cancel->load()){r.error="Cancelled before child launch; no scan verdict.";return r;}OwnedProcess p;p.setProgram(engine);p.setArguments(args);p.setWorkingDirectory(work);p.setProcessChannelMode(QProcess::MergedChannels);
  const int budget=qMax(1,limits.timeoutMs);QElapsedTimer timer;timer.start();p.start();
- auto stop=[&]{if(p.state()!=QProcess::NotRunning){p.kill();p.waitForFinished(3000);}};
- if(!p.waitForStarted(qMin(3000,budget))){r.error=timer.elapsed()>=budget?QStringLiteral("Scanner timed out; no scan verdict."):QStringLiteral("Cannot start the selected ClamAV executable.");stop();return r;}
+ auto stop=[&]{if(p.state()!=QProcess::NotRunning){p.stop(r.error.contains("timed out")?"timeout":"cancel-or-refusal");p.waitForFinished(3000);}};
+ if(!p.waitForStarted(qMin(3000,budget))){r.error=timer.elapsed()>=budget?QStringLiteral("Scanner timed out; no scan verdict."):QStringLiteral("Cannot start the selected ClamAV executable.");stop();r.cleanup=p.cancellationReceipt();return r;}
  p.closeWriteChannel();
- auto collect=[&]{r.out+=p.read(qMax<qsizetype>(0,limits.maximumOutput-r.out.size())+1);if(r.out.size()>limits.maximumOutput){r.error="Scanner output limit exceeded.";p.kill();}};
+ auto collect=[&]{r.out+=p.read(qMax<qsizetype>(0,limits.maximumOutput-r.out.size())+1);if(r.out.size()>limits.maximumOutput){r.error="Scanner output limit exceeded.";p.stop("output-limit");}};
  auto check=[&]{if(!r.error.isEmpty())return;if(cancel&&cancel->load())r.error="Cancelled; no scan verdict.";else if(timer.elapsed()>=budget)r.error="Scanner timed out; no scan verdict.";};
  QObject::connect(&p,&QProcess::readyReadStandardOutput,&p,collect);
  // The clock includes startup and is checked even if the child has already
  // exited before the parent resumes; a late result must not become a verdict.
  check();
  while(r.error.isEmpty()&&p.state()!=QProcess::NotRunning){p.waitForFinished(50);collect();check();}
- collect();check();if(!r.error.isEmpty()){stop();return r;}
+ collect();check();if(!r.error.isEmpty()){stop();r.cleanup=p.cancellationReceipt();return r;}
+ r.cleanup=p.cancellationReceipt();if(!p.cleanupComplete()){r.error="Scanner worker tree cleanup is unproved; no scan verdict.";return r;}
  if(p.exitStatus()!=QProcess::NormalExit)r.error="Scanner crashed; no scan verdict.";
  r.exit=p.exitCode();return r;
 }
@@ -78,11 +79,12 @@ QVariantMap scanSecurityFile(const QString &source,const QString &engine,const Q
  // budget must not accidentally test Windows DLL startup instead of scanning.
  auto versionLimits=limits;versionLimits.timeoutMs=qBound(1,limits.versionTimeoutMs,3000);
  const auto version=run(engine,{"--version"},work.path(),cancel,versionLimits);
+ r.insert("processCleanup",QVariantList{version.cleanup});
  if(!version.error.isEmpty())return fail("ClamAV version check: "+version.error);
  if(version.exit!=0||!version.out.trimmed().startsWith("ClamAV ")||version.out.size()>1000)return fail("Selected executable did not return a ClamAV version.");
  r.insert("engineVersion",QString::fromUtf8(version.out).trimmed());
  const QStringList args={"--stdout","--database="+database,"--recursive=no","--max-filesize=128M","--max-scansize=256M","--max-files=1000","--max-recursion=16","--max-scantime=60000","--alert-exceeds-max=yes","--alert-encrypted=yes","--bytecode=no","--fail-if-cvd-older-than=7","--",copy};
- const auto result=run(engine,args,work.path(),cancel,limits);if(!result.error.isEmpty())return fail(result.error);r.insert("output",QString::fromUtf8(result.out));
+ const auto result=run(engine,args,work.path(),cancel,limits);r.insert("processCleanup",QVariantList{version.cleanup,result.cleanup});if(!result.error.isEmpty())return fail(result.error);r.insert("output",QString::fromUtf8(result.out));
  if(digest(source,limits.maximumFile,cancel)!=sourceHash||digest(copy,limits.maximumFile,cancel)!=sourceHash||digest(engine,256LL*1024*1024,cancel)!=engineHash)return fail("Source, working copy or scanner changed during the scan; verdict refused.");
  const auto after=databaseFiles(database);if(after.size()!=files.size())return fail("Signatures changed during the scan; retry after database update completes.");
  for(int i=0;i<after.size();++i)if(after[i].fileName()!=files[i].fileName()||digest(after[i].absoluteFilePath(),512LL*1024*1024,cancel)!=manifest[i].toMap().value("sha256").toString().toLatin1())return fail("Signature database changed during the scan; verdict refused.");
@@ -116,10 +118,12 @@ QVariantMap updateSecurityDatabase(const QString &updater,const QString &databas
  config.close();
  SecurityLimits limits;limits.timeoutMs=3000;
  const auto version=run(updater,{"--version"},work.path(),cancel,limits);
+ report.insert("processCleanup",QVariantList{version.cleanup});
  if(!version.error.isEmpty())return fail("FreshClam version check: "+version.error);
  if(version.exit!=0||!version.out.trimmed().startsWith("ClamAV ")||version.out.size()>1000)return fail("Selected updater did not return a ClamAV version.");
  report.insert("updaterVersion",QString::fromUtf8(version.out).trimmed());limits.timeoutMs=qBound(1,timeoutMs,600000);
  const auto result=run(updater,{"--stdout","--config-file="+configuration,"--datadir="+database},work.path(),cancel,limits);
+ report.insert("processCleanup",QVariantList{version.cleanup,result.cleanup});
  report.insert("output",QString::fromUtf8(result.out));report.insert("exitCode",result.exit);
  if(!result.error.isEmpty())return fail("Update incomplete: "+result.error+" Retry before scanning; already replaced databases are not rolled back.");
  if(result.exit!=0)return fail("FreshClam update failed. Review its log for network, permissions, signature or CDN rate-limit errors; no automatic retry was scheduled.");

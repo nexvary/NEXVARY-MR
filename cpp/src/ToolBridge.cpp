@@ -116,7 +116,7 @@ ToolBridge::ToolBridge(QObject *parent) : QObject(parent) {
   initServices();
 }
 ToolBridge::~ToolBridge() {
-  cancelPoll();pollProcess_.disconnect(this);if(pollProcess_.state()!=QProcess::NotRunning)pollProcess_.waitForFinished(1000);
+  cancelPoll();pollProcess_.disconnect(this);if(pollProcess_.state()!=QProcess::NotRunning)pollProcess_.waitForFinished(3000);
   mirror_.shutdown();
   shutdownServices();
   pollTimer_.stop();
@@ -124,7 +124,7 @@ ToolBridge::~ToolBridge() {
   timeoutTimer_.stop();
   if (process_.state() != QProcess::NotRunning) {
     process_.kill();
-    process_.waitForFinished(1000);
+    process_.waitForFinished(3000);
   }
 }
 QVariantList ToolBridge::tools() const {
@@ -364,6 +364,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
   collectOutput();
   timeoutTimer_.stop();
   if(policy_&&!policy_->permit("device-tools"))terminalReason_=policy_->error();
+  if(!process_.cleanupComplete())terminalReason_=QStringLiteral("Worker tree cleanup is unproved; result refused.");
   bool success = terminalReason_.isEmpty() && exitStatus == QProcess::NormalExit && exitCode == 0;
   const QString output = QString::fromUtf8(output_).trimmed();
   if (operation_ == Operation::Service) {
@@ -594,7 +595,7 @@ void ToolBridge::finishPoll(int code,QProcess::ExitStatus exit){
  const bool ignore=pollSuperseded_||busy()||!autoRefresh();
  polling_=false;emit backgroundRefreshChanged();
  if(ignore)return;
- const bool ok=!pollOverflow_&&exit==QProcess::NormalExit&&code==0;
+ const bool ok=pollProcess_.cleanupComplete()&&!pollOverflow_&&exit==QProcess::NormalExit&&code==0;
  replaceDevices(ok?parseAdbDevices(QString::fromUtf8(pollOutput_)):QVariantList(),"adb",true);
  recordConnectionObservation(Operation::AdbScan,ok?"ok":"failed");
  if(!ok){setStatus(QStringLiteral("Auto refresh failed; verify USB/ADB and retry / فشل تحديث الاتصال؛ راجع USB وADB"));emit operationFinished(false);}
