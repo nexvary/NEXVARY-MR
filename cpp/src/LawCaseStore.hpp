@@ -32,6 +32,7 @@ public:
  QVariantMap partitionCandidate(const QVariantMap &intent,const QVariantMap &report);
  bool analysisSnapshotCurrent(const QVariantMap &intent);
  QString reconcileAnalysis(const QVariantMap &intent);
+ bool verifyOperationLinks(const QVariantList &intents,QString &storesSha256);
  QVariantMap exportProtectedBackup(const QString &id,qint64 revision,const QString &path,const QString &actor);
  QString restoreProtectedBackup(const QString &path,const QString &expectedSha256,const QString &actor,const std::function<bool(const QVariantMap&)> &authorize);
  bool retentionOperation(const QString &id,qint64 revision,const QString &operation,const QVariantMap &fields,const QString &actor);

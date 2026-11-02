@@ -22,6 +22,7 @@
 #include <QFontDatabase>
 #include <QDateTime>
 #include <utility>
+#include <QScopedValueRollback>
 #include <QFutureWatcher>
 namespace {
 QString utc(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);}
@@ -42,7 +43,11 @@ LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheti
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
 }
 LawCaseBridge::~LawCaseBridge(){if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
-bool LawCaseBridge::ready()const{return transactionsReady_&&store_->ready()&&(identity_?identity_->authenticated():synthetic_);}
+bool LawCaseBridge::ready()const{
+ if(!transactionsReady_ || !store_->ready() || linkCheckActive_)return false;
+ if(operationPolicy_ && !const_cast<LawCaseBridge*>(this)->verifyOperationLinks())return false;
+ return identity_?identity_->authenticated():synthetic_;
+}
 nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
 bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}
 QString LawCaseBridge::protection()const {
@@ -356,14 +361,34 @@ void LawCaseBridge::setOperationPolicy(GovernmentOperationPolicy *policy) {
  if(policy)partitionsPolicyConnection_=connect(policy,&GovernmentOperationPolicy::changed,this,[this]{if(partitionsActive_ && partitionsCancel_ && !partitionsCancel_->load() && !operationPolicy_->caseOperationAuthorized(partitionsContext_.value("operationId").toString()))cancelPartitions();});
  if(!policy){transactionsReady_=!identity_;return;}
  const auto states=policy->caseOperationStates();
- transactionsReady_=policy->caseOperationHistoryHealthy();
+ bool recovered=policy->caseOperationHistoryHealthy();
+ transactionsReady_=false;
  for(const auto &value:states){
   auto r=value.toMap();
   if(r.value("recoveryState")=="prepared" || r.value("recoveryState")=="candidate"){
    r.insert("recoveryState",store_->reconcileAnalysis(r));
-   if(!policy->recordCaseOperation(r))transactionsReady_=false;
+   if(!policy->recordCaseOperation(r))recovered=false;
   }
-  if(r.value("recoveryState")=="unknown")transactionsReady_=false;
+  if(r.value("recoveryState")=="unknown")recovered=false;
  }
+ transactionsReady_=recovered;
+ if(transactionsReady_)verifyOperationLinks();
  if(!transactionsReady_)fail("Case operation recovery is unknown or its audit is unavailable; preserve stores for review.");
+}
+
+bool LawCaseBridge::verifyOperationLinks() {
+ if(!operationPolicy_)return transactionsReady_;
+ if(linkCheckActive_)return false;
+ const QScopedValueRollback<bool> checking(linkCheckActive_,true);
+ const auto states=operationPolicy_->caseOperationStates();
+ if(!operationPolicy_->caseOperationHistoryHealthy() || operationPolicy_->caseReconciliationBlocked())transactionsReady_=false;
+ if(transactionsReady_){
+  QString storesSha256;
+  if(!store_->verifyOperationLinks(states,storesSha256)){
+   transactionsReady_=false;
+   operationPolicy_->recordCaseReconciliation(storesSha256);
+  }
+ }
+ if(!transactionsReady_){cancelPartitions();return fail("Case operation proof is unknown; preserve stores for review.");}
+ return true;
 }

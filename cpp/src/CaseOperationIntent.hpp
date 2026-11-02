@@ -6,6 +6,12 @@
 #include <QStringList>
 
 namespace mr::law {
+inline bool caseReconciliation(const QVariantMap &r) {
+ return r.keys()==QStringList{"outcome","schema","storesSha256"} &&
+  r.value("schema")=="nexvary-case-reconciliation/v1" && r.value("outcome")=="unknown" &&
+  r.value("storesSha256").metaType().id()==QMetaType::QString &&
+  QRegularExpression("^[0-9a-f]{64}$").match(r.value("storesSha256").toString()).hasMatch();
+}
 inline bool caseIntent(const QVariantMap &r) {
  QStringList keys{"schema","operationId","requestId","caseId","evidenceId","expectedRevision","sourceSha256","caseBeforeSha256","reportSha256","analysisId","kind","preparedUtc","requester","requesterRole","recoveryState"};
  const bool external=r.value("schema")=="nexvary-case-operation/v2";

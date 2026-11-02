@@ -1,0 +1,9 @@
+{
+  "artifact": "local build/mr_catalog_tests",
+  "size": 3260411,
+  "sha256": "aeb51e75c86901f62434e58d3046c1e8800af3d6c46aba86e466121c956647db",
+  "mode": "0o644",
+  "headerHex": "00000000000000000000000000000000",
+  "symptom": "CTest permission denied / file reports data; no runtime test executed",
+  "scope": "local generated artifact defect, no common Audit/Qt cause established"
+}

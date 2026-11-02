@@ -65,6 +65,8 @@ public:
   bool recordCaseOperation(const QVariantMap &record);
   void setSyntheticAuditWriteCheckpoint(std::function<void()> callback);
   QVariantList caseOperationStates();
+  bool caseReconciliationBlocked();
+  bool recordCaseReconciliation(const QString &storesSha256);
   bool caseOperationHistoryHealthy() const { return caseHistoryHealthy_; }
 signals:
   void changed();

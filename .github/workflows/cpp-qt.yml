@@ -1,7 +1,7 @@
 name: C++20 and Qt Windows
 on:
   push:
-    branches: [main, dev/cpp-qt-foundation, feature/government-operations]
+    branches: [main, dev/cpp-qt-foundation, feature/government-operations, integration/forensic-engines-audit]
   pull_request:
   workflow_dispatch:
 permissions:

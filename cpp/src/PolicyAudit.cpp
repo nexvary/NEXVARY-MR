@@ -362,6 +362,7 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
   QMap<QString, QVariantMap> states;
   QMap<QString, QString> principalKeys;
   QMap<QString, QVariantMap> decisions, operations, caseOperations;
+  bool reconciliationSeen=false;
   QMap<QString, QString> closures;
 
   if (!retained.isEmpty() &&
@@ -544,6 +545,9 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
                       "attribution rejected.");
       if(!mr::law::caseIntentReceipt(r,caseOperations.value(opId)))return reject("Case operation receipt digest/outcome mismatch.");
       operations.insert(opId, r);
+    } else if(action=="case-reconciliation") {
+      if(reconciliationSeen || !mr::law::caseReconciliation(r) || !actor.isEmpty() || role!="system-observation" || p.value("result")!="unknown")return reject("Case reconciliation observation rejected.");
+      reconciliationSeen=true;
     } else if (action != "operation-allowed" && action != "operation-denied" &&
                action != "browser-result" && action != "audit-verification" &&
                action != "policy-rejection")

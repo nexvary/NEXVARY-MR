@@ -1,0 +1,19 @@
+{
+  "baselineRuntime": "eb2322140956a55a50ee7494570f35573a1ce0c0",
+  "profile": "Release; MR_BUILD_GUI=ON; MR_WARNINGS_AS_ERRORS=ON; production-read-only; synthetic fixtures",
+  "environment": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "files": {
+    ".github/workflows/cpp-qt.yml": "db3ee09e6ea33076f32c0263d6868eb8a9ec9ea0ed76618f49f2729f39aa5bb8",
+    "cpp/src/CaseOperationIntent.hpp": "65f0fbb0fca271f1d4db13ea5dbf44f73c6bdde523982e3b8511567174b41e6a",
+    "cpp/src/GovernmentOperationPolicy.cpp": "1cc402d223c78ed42ef1e204655d108891feb1003e810cb2392d34ede7aece65",
+    "cpp/src/GovernmentOperationPolicy.hpp": "0f0ee518c54e18b73b67ae90d6dee1e2909fea8de8e3793be6c70b4eccc19d1d",
+    "cpp/src/LawCaseBridge.cpp": "c522f1184c61e844b033d302b6719ff788d79e255b9e46c462d9f1e1b9dd7fd7",
+    "cpp/src/LawCaseBridge.hpp": "93cc2a30f8a4b3e35916a4115b9797dd5d462afece920421dfe9adfbbc2c7c91",
+    "cpp/src/LawCaseStore.cpp": "f172d6867a931b0c55bf7a30896a2bd9d76effd1ab7c90ed5aafec88352130ef",
+    "cpp/src/LawCaseStore.hpp": "9ca13331d7ae75d791447f624daaf3c91b659e06c335361f4823911aab1abf6a",
+    "cpp/src/PolicyAudit.cpp": "c77e947de15ad76ceabf6ff176d66bdcfd3179532417ae335418334e29cfb5de",
+    "cpp/tests/case_transaction_tests.cpp": "d90c8e217483687b2066e855954957f76356da6c4cbba311a4f7ef291fe208ee",
+    "scripts/check_policy_audit_interop.py": "c23536b46a8d88d07acdb9d9f0c8264448f2bdd2aaefc19579fd7322080b5cad",
+    "scripts/verify_policy_audit.py": "4fcb906287613d1feb756e4c6e163477d318ed8bfb716efe29dd6f7a240d8840"
+  }
+}

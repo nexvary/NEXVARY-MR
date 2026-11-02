@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="bcfdb673725e"
+	time="0"
+	timestamp="2026-11-02T06:00:11"
+	>
+	<testcase name="mr_catalog_tests" classname="mr_catalog_tests" time="0.043408" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CatalogTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CatalogTests::initTestCase()
+PASS   : CatalogTests::dataCatalogUpdatesCannotGrantCapabilities()
+PASS   : CatalogTests::exactMatchAndValidation()
+PASS   : CatalogTests::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 12ms
+********* Finished testing of CatalogTests *********
+</system-out>
+	</testcase>
+</testsuite>

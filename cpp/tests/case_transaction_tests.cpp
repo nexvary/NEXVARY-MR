@@ -1,4 +1,6 @@
 #include "CaseOperationIntent.hpp"
+#include "CaseVault.hpp"
+#include <QJsonArray>
 #include "GovernmentOperationPolicy.hpp"
 #include "IdentityService.hpp"
 #include "LawCaseBridge.hpp"
@@ -38,6 +40,40 @@ struct Fixture {
   if(intent.isEmpty())qFatal("Preparation fixture failed");
  }
 };
+void rewriteCase(Fixture &f,const std::function<void(QVariantMap&)> &change){
+ const QString connection="synthetic-rewrite";
+ {
+  auto db=QSqlDatabase::addDatabase("QSQLITE",connection);db.setDatabaseName(f.dir.filePath("cases.db"));
+  if(!db.open())qFatal("Cannot open synthetic rewrite");
+  QSqlQuery q(db);q.prepare("SELECT payload FROM law_cases WHERE id=?");q.addBindValue(f.id);
+  if(!q.exec()||!q.next())qFatal("Cannot read synthetic rewrite");
+  QString error;const auto bytes=mr::recovery::openCaseBytes(q.value(0).toByteArray(),true,error);
+  auto r=QJsonDocument::fromJson(bytes).object().toVariantMap();change(r);
+  auto events=r.value("audit").toList();auto last=events.takeLast().toMap();last.remove("hash");
+  auto state=r;state.remove("audit");
+  last.insert("stateSha256",sha(QJsonDocument(QJsonObject::fromVariantMap(state)).toJson(QJsonDocument::Compact)));
+  last.insert("hash",sha(QJsonDocument(QJsonObject::fromVariantMap(last)).toJson(QJsonDocument::Compact)));
+  events.append(last);r.insert("audit",events);
+  const auto sealed=mr::recovery::sealCase(QJsonDocument(QJsonObject::fromVariantMap(r)).toJson(QJsonDocument::Compact),true,error);
+  q.prepare("UPDATE law_cases SET payload=? WHERE id=?");q.addBindValue(sealed);q.addBindValue(f.id);
+  if(!q.exec())qFatal("Cannot write synthetic rewrite");
+  db.close();
+ }
+ QSqlDatabase::removeDatabase(connection);
+}
+void commitAnalysis(Fixture &f){
+ if(!f.policy.recordCaseOperation(f.intent)||f.store.recordAnalysis(f.id,3,f.evidence,"classic-pcap",f.report,f.identity.actor(),f.intent).isEmpty())qFatal("Cannot commit synthetic analysis");
+ auto completed=f.intent;completed.insert("recoveryState","completed");
+ if(!f.policy.recordCaseOperation(completed))qFatal("Cannot finish synthetic analysis");
+}
+int recoverOrphanFixture(const QString &root,const QString &stage){
+ IdentityService identity(root+"/identity",true);GovernmentOperationPolicy policy(&identity);
+ if(stage=="before")std::_Exit(86);
+ if(stage=="during")policy.setSyntheticAuditWriteCheckpoint([]{std::_Exit(86);});
+ LawCaseBridge bridge(root+"/cases.db",nullptr,true);bridge.setOperationPolicy(&policy);
+ if(bridge.ready())return 1;
+ std::_Exit(86);
+}
 int crashFixture(const QString &root,const QString &stage){
  IdentityService identity(root+"/identity",true);
  if(!identity.bootstrap("admin","Synthetic crash admin",password)||!identity.login("admin",password)||identity.createUser("investigator","Synthetic investigator","investigator",password).isEmpty()||!identity.login("investigator",password))return 1;
@@ -76,6 +112,90 @@ private slots:
   QVERIFY(!journal.healthy());QVERIFY(journal.error().contains("(readback)"));QCOMPARE(journal.events().size(),0);
   journal.setSyntheticPostReplaceCheckpoint({});QVERIFY(!journal.append("policy-rejection",{{"reason","Refused writer stays closed"}},"denied"));
   PolicyAudit restarted(path,true);QVERIFY(restarted.healthy());QCOMPARE(restarted.events().size(),0);
+ }
+ void validSignedJournalRollbackMustBlockOrphanResult(){
+  Fixture f;
+  QFile journal(f.identity.policyJournalPath());QVERIFY(journal.open(QIODevice::ReadOnly));
+  const auto older=journal.readAll();journal.close();
+  QVERIFY(f.policy.recordCaseOperation(f.intent));
+  QVERIFY(!f.store.recordAnalysis(f.id,3,f.evidence,"classic-pcap",f.report,f.identity.actor(),f.intent).isEmpty());
+  auto completed=f.intent;completed.insert("recoveryState","completed");QVERIFY(f.policy.recordCaseOperation(completed));
+  QVERIFY(journal.open(QIODevice::WriteOnly|QIODevice::Truncate));QCOMPARE(journal.write(older),older.size());journal.close();
+  IdentityService restartedIdentity(f.dir.filePath("identity"),true);
+  GovernmentOperationPolicy restartedPolicy(&restartedIdentity);
+  QVERIFY(restartedPolicy.caseOperationStates().isEmpty());QVERIFY(restartedPolicy.caseOperationHistoryHealthy());
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&restartedPolicy);
+  QVERIFY2(!bridge.ready(),"A correctly signed old journal must not validate an orphan committed analysis");
+  QCOMPARE(f.store.get(f.id).value("analyses").toList().size(),1);
+ }
+ void laterLegitimateRevisionsRemainVerified(){
+  Fixture f;commitAnalysis(f);
+  QVERIFY(f.store.update(f.id,4,{{"caseNumber","Legitimate later metadata"}},f.identity.actor()));
+  QCOMPARE(f.store.reconcileAnalysis(f.intent),QString("completed"));
+  QString snapshot;QVERIFY(f.store.verifyOperationLinks(f.policy.caseOperationStates(),snapshot));
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY2(bridge.ready(),qPrintable(bridge.error()));
+  const auto anchor=f.policy.auditStatus();bridge.setOperationPolicy(&f.policy);QCOMPARE(f.policy.auditStatus(),anchor);
+ }
+ void retainedResultTampering_data(){
+  QTest::addColumn<QString>("field");
+  for(const auto &name:{"missing","duplicate","operationId","id","evidenceId","parser","actor","sourceSha256","reportJson","requestId","requesterRole","expectedRevision"})QTest::newRow(name)<<QString(name);
+ }
+ void retainedResultTampering(){
+  QFETCH(QString,field);Fixture f;commitAnalysis(f);
+  rewriteCase(f,[&](QVariantMap &r){
+   auto analyses=r.value("analyses").toList();auto a=analyses.first().toMap();
+   if(field=="missing")analyses.clear();
+   else if(field=="duplicate")analyses.append(a);
+   else {
+    if(field=="requestId"||field=="requesterRole"||field=="expectedRevision"){
+     auto binding=a.value("operationBinding").toMap();binding.insert(field,field=="expectedRevision"?QVariant(2):QVariant("changed"));a.insert("operationBinding",binding);
+    }else if(field=="reportJson"){
+     const auto bytes=QByteArray("{\"sourceSha256\":\"changed\"}");a.insert("reportJson",QString::fromUtf8(bytes));a.insert("reportSha256",sha(bytes));
+    }else a.insert(field,"changed");
+    analyses[0]=a;
+   }
+   r.insert("analyses",analyses);
+  });
+  QVERIFY(f.store.verifyAudit(f.id)); // The attacker recomputed the ordinary case hashes.
+  QString snapshot;QVERIFY(!f.store.verifyOperationLinks(f.policy.caseOperationStates(),snapshot));
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(!bridge.ready());
+  QVERIFY(f.policy.caseReconciliationBlocked());const auto anchor=f.policy.auditStatus();
+  bridge.setOperationPolicy(&f.policy);QCOMPARE(f.policy.auditStatus(),anchor);
+  IdentityService secondIdentity(f.dir.filePath("identity"),true);GovernmentOperationPolicy secondPolicy(&secondIdentity);
+  LawCaseBridge second(f.dir.filePath("cases.db"),nullptr,true);second.setOperationPolicy(&secondPolicy);QVERIFY(!second.ready());QCOMPARE(secondPolicy.auditStatus(),anchor);
+ }
+ void legacyUnlinkedIsNotUpgraded(){
+  Fixture f;QVERIFY(!f.store.recordAnalysis(f.id,3,f.evidence,"classic-pcap",f.report,f.identity.actor()).isEmpty());
+  QString snapshot;QVERIFY(f.store.verifyOperationLinks({},snapshot));QVERIFY(f.policy.caseOperationStates().isEmpty());
+  QVERIFY(!f.store.get(f.id).value("analyses").toList().first().toMap().contains("operationId"));
+ }
+ void runtimeGateRechecksCommittedResults(){
+  Fixture f;commitAnalysis(f);LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(bridge.ready());
+  rewriteCase(f,[](QVariantMap &r){r.insert("analyses",QVariantList());});
+  QVERIFY(!bridge.ready());QVERIFY(!bridge.searchCases());QVERIFY(f.policy.caseReconciliationBlocked());
+ }
+ void completedSourceBytesMustStillVerify(){
+  Fixture f;commitAnalysis(f);
+  {
+   auto db=QSqlDatabase::addDatabase("QSQLITE","synthetic-source-replacement");db.setDatabaseName(f.dir.filePath("cases.db"));QVERIFY(db.open());
+   QString error;const auto bytes=mr::recovery::sealCase("Changed protected source",true,error);
+   {QSqlQuery q(db);q.prepare("UPDATE law_evidence SET payload=? WHERE id=?");q.addBindValue(bytes);q.addBindValue(f.evidence);QVERIFY(q.exec());}db.close();
+  }
+  QSqlDatabase::removeDatabase("synthetic-source-replacement");
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&f.policy);QVERIFY(!bridge.ready());QVERIFY(f.policy.caseReconciliationBlocked());
+ }
+ void recoveryDecisionInterruption_data(){
+  QTest::addColumn<QString>("stage");for(const auto &stage:{"before","during","after"})QTest::newRow(stage)<<QString(stage);
+ }
+ void recoveryDecisionInterruption(){
+  QFETCH(QString,stage);Fixture f;
+  QFile journal(f.identity.policyJournalPath());QVERIFY(journal.open(QIODevice::ReadOnly));const auto older=journal.readAll();journal.close();
+  commitAnalysis(f);QVERIFY(journal.open(QIODevice::WriteOnly|QIODevice::Truncate));QCOMPARE(journal.write(older),older.size());journal.close();
+  QProcess child;child.start(QCoreApplication::applicationFilePath(),{"--recover-orphan",f.dir.path(),stage});QVERIFY(child.waitForFinished(20000));QCOMPARE(child.exitCode(),86);
+  IdentityService identity(f.dir.filePath("identity"),true);GovernmentOperationPolicy policy(&identity);
+  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&policy);QVERIFY(!bridge.ready());QVERIFY(policy.caseReconciliationBlocked());
+  const auto anchor=policy.auditStatus();bridge.setOperationPolicy(&policy);QCOMPARE(policy.auditStatus(),anchor);
+  QCOMPARE(f.store.get(f.id).value("analyses").toList().size(),1);
  }
  void authenticatedBridgeUsesSignedIntent(){
   QTemporaryDir dir;IdentityService identity(dir.filePath("identity"),true);
@@ -173,5 +293,5 @@ private slots:
   const auto record=cases.first().toMap();QCOMPARE(record.value("analyses").toList().size(),analyses);QCOMPARE(record.value("revision").toInt(),3+analyses);QVERIFY(store.verifyAudit(record.value("id").toString()));
  }
 };
-int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto args=app.arguments();if(args.size()==4 && args[1]=="--crash-fixture")return crashFixture(args[2],args[3]);CaseTransactionTests test;return QTest::qExec(&test,argc,argv);}
+int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto args=app.arguments();if(args.size()==4 && args[1]=="--recover-orphan")return recoverOrphanFixture(args[2],args[3]);if(args.size()==4 && args[1]=="--crash-fixture")return crashFixture(args[2],args[3]);CaseTransactionTests test;return QTest::qExec(&test,argc,argv);}
 #include "case_transaction_tests.moc"

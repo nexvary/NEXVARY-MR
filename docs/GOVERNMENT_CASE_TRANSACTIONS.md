@@ -36,7 +36,7 @@ examines unresolved intents and reads/verifies the actual case audit/evidence.
 | Observation | Recovery state |
 |---|---|
 | Exact original revision and complete pre-write case digest, verified source | `failed`: the local case mutation was not committed |
-| Exactly expected revision + 1, one matching operation/analysis UUID, source/parser/report digest and exact stored report bytes | `completed`: that local case mutation is present |
+| At least expected revision + 1, original analysis audit position/actor, one matching operation/analysis UUID, source/parser/report digest and exact stored report bytes | `completed`: that local case mutation is present |
 | Missing/corrupt case, evidence mismatch, different revision, missing/duplicate analysis or other ambiguity | `unknown`; case workspace blocked for review |
 
 No recovery reruns a parser, copies evidence, regenerates a report, restores an
@@ -65,8 +65,9 @@ per case, 10,000 case audit entries, at most 64 unfinished case intents, policy 
 capacity/read/write failure refuses new preparation and acceptance. A terminal
 write failure blocks the workspace until restart/review. A cryptographically
 valid whole-store rollback still requires independently retained anchors to
-identify. A later changed case is conservatively unknown if its terminal receipt
-was never written. No automatic unknown-resolution override is introduced.
+identify. A later changed case with no matching retained result is conservatively unknown
+if its terminal receipt was never written; a matching retained result can survive
+later legitimate revisions under the bidirectional proof gate below. No automatic unknown-resolution override is introduced.
 
 Windows production DPAPI is still required; Linux/native crash fixtures are
 synthetic. Institutional identity, external key/time custody, independent review,
@@ -139,3 +140,62 @@ restores a valid older snapshot in the synthetic-only post-replace hook and
 proves fail-closed refusal, no retry/overwrite and no false acknowledged event.
 This gate detects immediate post-replace divergence; it cannot prevent or repair
 a later external rollback or prove power-loss durability.
+
+## Bidirectional retained proof gate — 2026-11-02
+
+Startup now reconciles unfinished operations and then walks **both** the signed
+terminal intent inventory and the protected case inventory. The native readiness
+gate repeats that check before exposing readiness or permitting case actions.
+Each operation-linked analysis requires a completed signed intent, unique operation
+and allocated analysis identifiers, the same actual case/evidence/parser/requester,
+verified protected source bytes and SHA-256, and the exact bounded stored report
+bytes/digest. Partition reports also retain the signed executable digest. New
+results retain the immutable intent bindings inside protected case state; the
+signed intent remains the authority, never caller labels or a later grant.
+
+A completed intent must have exactly one matching retained result. Duplicate,
+missing, rebound or changed results, unreadable cases and lower/conflicting
+revisions fail closed. Later legitimate metadata/custody/retention revisions are
+allowed: reconciliation checks the original analysis audit position and actor,
+the retained analysis and current source/report integrity; it no longer requires
+the *current* revision to equal the prepared revision plus one. Unfinished intents
+without a committed result retain conservative pre-state/unknown decisions.
+Unlinked legacy analyses remain unlinked and are **not** retroactively verified.
+
+A mismatch with an otherwise usable signed journal records one strict
+`case-reconciliation` system observation, schema
+`nexvary-case-reconciliation/v1`, containing only the aggregate stores SHA-256 and
+`outcome: unknown`. It authenticates a mismatch observation, not the orphan's
+successful execution or the completeness of the stores. Native and separate
+Python verifiers reject extra fields, false success, bad digests, human attribution
+and duplicate reconciliation observations. The workspace stays blocked while an
+unknown observation exists. Repeated startup adds no new result/event and never
+replays a tool, changes a previous terminal, deletes a result, restores either
+store or invents an intent. There is no automatic unknown-resolution override.
+If the journal itself cannot be verified/written, readiness remains blocked;
+a signed decision cannot be promised when the signing store is unavailable.
+
+Retention currently records holds/archive/disposal review **without physical
+source or analysis deletion**. Approval is not a tombstone: a missing completed
+result is therefore unknown even after an approved disposal review. A future
+physical deletion protocol must introduce separately verified, signed retention
+proof before relaxing this rule. Case-only restores with missing corresponding
+journal history must be reviewed, not silently accepted.
+
+The inventory reads at most 1000 cases, one bounded record at a time (4 MiB input,
+existing 3 MiB writer limit, 100 analyses/case). Oversized SQL payloads are refused
+before loading them. Source reads keep the existing 8 MiB local / 16 MiB partition
+limits and 64 KiB report bound. No aggregate case/evidence corpus is materialized.
+Full readiness scans have a CPU/I/O cost that is not yet benchmarked for large
+corpora; these limits are not measured throughput/latency claims.
+
+The reproduced pre-fix counterexample is an old **correctly signed** journal
+snapshot that omits a committed case analysis's intent. Its baseline failure is
+preserved under `evidence/cross-store-2026-11-02/`. Process interruptions around
+preparation, case/candidate/terminal writes and the new mismatch-decision write
+remain tested. These are process exits, not power-loss/storage-controller tests.
+Rolling **both** stores back to an older mutually consistent state still needs an
+independently retained trusted anchor to detect; the aggregate observation digest
+is not that external anchor. This change does not resolve the historical Audit
+Store lag, detached descendants, GUI root cause, NTFS case integration or any
+institutional acceptance gate.
