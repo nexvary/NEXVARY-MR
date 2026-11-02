@@ -76,6 +76,7 @@ RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfil
  status_=QStringLiteral("No recovery case is open. Assess write impact before installing any phone agent.");
  connect(&watcher_,&QFutureWatcher<JobResult>::finished,this,[this]{
   auto result=watcher_.result();
+  processCleanup_=result.processCleanup;
   if(!operationId_.isEmpty()){
    // Audited partition jobs produce a candidate only. Recheck on the GUI
    // thread before either case persistence or a completed result is exposed.
@@ -462,6 +463,7 @@ bool RecoveryBridge::exportTimeline(const QString &value,bool confirmed){
 }
 
 bool RecoveryBridge::analyzePartitions(const QString &image,const QString &executable,bool consent){
+ processCleanup_.clear();
  if(policy_&&!synthetic_)return fail(QStringLiteral("Government partition analysis requires registered evidence in the Government Analysis workspace; a recovery case label is insufficient."));
  if(policy_&&!policy_->permit("external-analysis"))return fail(policy_->error());
  if(busy())return fail(QStringLiteral("A recovery operation is already running."));
@@ -479,6 +481,7 @@ bool RecoveryBridge::analyzePartitions(const QString &image,const QString &execu
    if(p-last<0.005&&done!=total){return;}
    last=p;QMetaObject::invokeMethod(this,[this,p]{progress_=p;emit changed();},Qt::QueuedConnection);
   });
+  result.processCleanup=scan.processCleanup;
   if(!scan.error.isEmpty()||!scan.sourceUnchanged||scan.cancelled){result.error=scan.error.isEmpty()?QStringLiteral("External analysis was not verified; no result committed."):scan.error;return result;}
   const auto sourceHash=QString::fromLatin1(scan.sourceSha256.toHex());
   const QJsonObject provenance{{"schema","nexvary-tsk-partitions/v1"},{"tool","mmls"},{"version",scan.version},{"executable",tool},{"executableSha256",QString::fromLatin1(scan.toolSha256.toHex())},

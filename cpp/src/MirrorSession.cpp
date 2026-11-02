@@ -37,8 +37,9 @@ MirrorSession::MirrorSession(QObject *parent):QObject(parent){
  });
  connect(&viewer_,&QProcess::finished,this,[this](int code,QProcess::ExitStatus exit){
   collectView();if(!active_)return;
+  if(!viewer_.cleanupComplete()){failed_=true;message("Screen-view worker tree cleanup is unproved; review required.");}
   if(state_=="stopping"){finalize();return;}
-  end(exit==QProcess::NormalExit&&code==0?"scrcpy window closed; no automatic restart.":"scrcpy exited with an error. Review local output and USB authorization.",exit!=QProcess::NormalExit||code!=0);
+  end(exit==QProcess::NormalExit&&code==0&&viewer_.cleanupComplete()?"scrcpy window closed; no automatic restart.":"scrcpy exited with an error or unproved worker cleanup. Review local output and USB authorization.",exit!=QProcess::NormalExit||code!=0||!viewer_.cleanupComplete());
  });
  connect(&viewer_,&QProcess::errorOccurred,this,[this](QProcess::ProcessError error){if(active_&&state_!="stopping"&&error==QProcess::FailedToStart)end("Could not start the selected scrcpy executable.",true);});
 }
@@ -85,7 +86,7 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
  if(state_=="stopping"){finalize();return;}
  collectCheck();if(state_=="stopping"||!active_)return;
  deadline_.stop();
- if(exit!=QProcess::NormalExit||code!=0){end("Screen-view version/ADB check failed or device disconnected.",true);return;}
+ if(exit!=QProcess::NormalExit||code!=0||!check_.cleanupComplete()){end("Screen-view version/ADB check failed, worker cleanup unproved or device disconnected.",true);return;}
  const auto text=QString::fromUtf8(checkOutput_).trimmed();
  if(state_=="version"){
   if(!supportedVersion(text)){end("Unreviewed scrcpy CLI version; this integration accepts official 5.0.1 only.",true);return;}
@@ -133,6 +134,6 @@ void MirrorSession::finalize(){
 void MirrorSession::stop(const QString &reason){end(reason,false);}
 void MirrorSession::shutdown(){
  deadline_.stop();monitor_.stop();kill_.stop();check_.disconnect(this);viewer_.disconnect(this);
- for(auto *process:{&check_,&viewer_})if(process->state()!=QProcess::NotRunning){process->terminate();if(!process->waitForFinished(500)){process->kill();process->waitForFinished(1000);}}
+ for(auto *process:{&check_,&viewer_})if(process->state()!=QProcess::NotRunning){process->terminate();if(!process->waitForFinished(500)){process->kill();process->waitForFinished(2500);}}
  active_=false;
 }

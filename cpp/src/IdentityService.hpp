@@ -15,7 +15,7 @@ class IdentityService final:public QObject {
  Q_PROPERTY(QVariantMap session READ session NOTIFY changed)
  Q_PROPERTY(QVariantList users READ users NOTIFY changed)
 public:
- explicit IdentityService(const QString &path,bool synthetic=false,QObject *parent=nullptr);
+ explicit IdentityService(const QString &path,bool synthetic=false,QObject *parent=nullptr,int syntheticSessionLifetimeMs=15*60*1000);
  ~IdentityService() override;
  bool ready()const{return ready_;}
  bool needsSetup()const{return ready_&&state_.value("users").toList().isEmpty();}
@@ -55,6 +55,7 @@ private:
  bool synthetic_=false,ready_=false;
  QVariantMap state_;
  QElapsedTimer lifetime_;
+ int sessionLifetimeMs_=15*60*1000;
  unsigned char *secret_=nullptr;
  QVariantMap sessionAccount_;
 };

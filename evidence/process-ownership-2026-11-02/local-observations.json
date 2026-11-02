@@ -1,0 +1,101 @@
+{
+  "schema": "nexvary-recovered-session-observations/v1",
+  "baseline": {
+    "source": "cc23ccbcf9d32c55ac2ffade7cde50e4b2447ea1",
+    "runtimeTskSource": "5e0ac5b9c07daca4a46949f145c3eed09b21daa2",
+    "method": "Recorded native probe linked directly to unchanged published TskImage.cpp before edits",
+    "stdout": "cancelled=1 error=Operation cancelled. detachedSurvived=1",
+    "sourceReconstruction": "baseline_probe.cpp recovered from recorded creation command, not recovered original binary"
+  },
+  "predecessorComponent": {
+    "first": {
+      "passed": 3,
+      "failed": 8,
+      "skipped": 0,
+      "cause": "Incorrect assumptions about procfs PID namespace and unavailable task children file; original failure retained as observation"
+    },
+    "afterNamespaceFix": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 18985,
+      "sourceScope": "Before final signal/EOF and hostile-supervisor negative additions"
+    }
+  },
+  "predecessorProduct": {
+    "groupsPassed": 9,
+    "groupsFailed": 0,
+    "elapsedSeconds": 76.65,
+    "totals": {
+      "owned_process": [
+        11,
+        0,
+        0
+      ],
+      "case_transaction": [
+        41,
+        0,
+        0
+      ],
+      "partition_transaction": [
+        27,
+        0,
+        1
+      ],
+      "offline": [
+        22,
+        0,
+        0
+      ],
+      "import": [
+        36,
+        0,
+        0
+      ],
+      "security": [
+        13,
+        0,
+        1
+      ],
+      "tool": [
+        24,
+        0,
+        0
+      ],
+      "mirror": [
+        22,
+        0,
+        0
+      ],
+      "tsk": [
+        7,
+        0,
+        1
+      ]
+    },
+    "skips": [
+      "Separately installed mmls unavailable in this local environment",
+      "Separately installed ClamAV unavailable locally"
+    ],
+    "sourceScope": "Before final explicit terminal-status assertions, signal/EOF setup and hostile-supervisor negative. Not acceptance of reconstructed commit."
+  },
+  "environment": {
+    "os": "Ubuntu24.04 cloud Linux",
+    "compiler": "GCC13.3",
+    "qt": "6.4.2 official Ubuntu packages extracted to private prefix after system package installation was unavailable",
+    "cgroupRootWritable": false,
+    "cgroupCreated": false
+  },
+  "unavailable": {
+    "localEnvironment": "Became unavailable during final 12-group CTest/Python/ASan collection",
+    "finalResults": "Not recovered or claimed",
+    "originalRawLocalLogsAndBinaries": "Currently inaccessible, not represented by these recovered observations",
+    "candidate": "Reconstructed via connector from published source plus recorded edits; fresh exact-source CI required"
+  },
+  "limits": [
+    "No private keys or real case inputs used/published",
+    "Unsigned runtime observations, not separate durable signed forensic evidence",
+    "No full hostile process or network isolation",
+    "No physical Windows10/11 or institutional acceptance"
+  ]
+}

@@ -5,6 +5,7 @@
 #include "nexvary/LawEnforcementCase.hpp"
 
 bool LawCaseBridge::importBusy()const{return importer_&&importer_->busy();}
+QVariantMap LawCaseBridge::importProcessCleanup()const{return importer_?importer_->processCleanup():QVariantMap();}
 void LawCaseBridge::resetImport(){cancelArtifacts();cancelTimeline();if(importer_)importer_->cancel();importContext_.clear();importResult_.clear();emit importChanged();}
 void LawCaseBridge::cancelImport(){if(importer_)importer_->cancel();}
 void LawCaseBridge::initImports(){

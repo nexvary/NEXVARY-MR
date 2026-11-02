@@ -198,19 +198,31 @@ private slots:
  void partitionStoreFailure_data(){
   QTest::addColumn<bool>("caseStore");QTest::newRow("case-write-and-restore-failure")<<true;QTest::newRow("policy-journal-corruption")<<false;
  }
+ void externalAnalyzerDescendantBoundary_data(){
+  QTest::addColumn<QString>("trigger");
+  for(const auto &value:{"permission-revocation","cancel","logout","grant-expiry","session-expiry"})QTest::newRow(value)<<QString::fromLatin1(value);
+ }
  void externalAnalyzerDescendantBoundary(){
-  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
+  QFETCH(QString,trigger);
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true,nullptr,trigger=="session-expiry"?2000:900000);admin(identity);GovernmentOperationPolicy policy(&identity,nullptr,trigger=="grant-expiry"?2000:600000);
   RecoveryBridge recovery(t.filePath("cases"),true);recovery.setOperationPolicy(&policy);
   QVERIFY(recovery.createCase("Synthetic descendant boundary","Lab","Lab","No phone","","backup","unknown",true));QVERIFY(recovery.recordOperator("Synthetic operator","Bounded marker-only fixture",true));
   const auto image=t.filePath("image.dd");QVERIFY(write(image,QByteArray(4096,'x')));QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic descendant observation",password));
   qputenv("MR_OFFLINE_MODE","descendant");qputenv("MR_OFFLINE_DESCENDANT_DIR",t.path().toUtf8());
   QVERIFY(recovery.analyzePartitions(image,QCoreApplication::applicationFilePath(),true));QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(t.filePath("descendant-ready")),5000);
-  policy.revoke("external-analysis");QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("revoked"));QCOMPARE(recovery.evidence().size(),0);
+  if(trigger=="permission-revocation")policy.revoke("external-analysis");
+  else if(trigger=="cancel")recovery.cancel();
+  else if(trigger=="logout")identity.logout();
+  QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),8000);QCOMPARE(recovery.evidence().size(),0);
+  QCOMPARE(recovery.operationReceipt().value("status").toString(),trigger=="permission-revocation"?QString("revoked"):trigger=="grant-expiry"?QString("expired"):QString("cancelled"));
+  if(trigger=="session-expiry"){QVERIFY(!identity.authenticated());QCOMPARE(recovery.operationReceipt().value("failureClass").toString(),QString("session-ended"));}
+  QVERIFY(!recovery.processCleanup().isEmpty());
+  for(const auto &receipt:recovery.processCleanup())QVERIFY2(receipt.toMap().value("cleanupComplete").toBool(),QJsonDocument::fromVariant(receipt).toJson().constData());
   // The descendant waits for this marker, so its later write proves survival
   // beyond native worker termination/refusal. No network traffic or payload.
   QVERIFY(write(t.filePath("parent-revoked"),"synthetic parent worker has returned"));
-  QTRY_VERIFY_WITH_TIMEOUT(QFileInfo::exists(t.filePath("descendant-after-revoke")),3000);
-  qInfo("Boundary observation: controlled detached descendant survived revoked external analyzer; application gate is not process-tree containment.");
+  QTest::qWait(200);QVERIFY(!QFileInfo::exists(t.filePath("descendant-after-revoke")));
+  qInfo("Controlled detached worker stopped; raw QProcess escape retained in OwnedProcessTests and published baseline. No network or hostile same-user isolation claim.");
  }
  void partitionStoreFailure(){
   QFETCH(bool,caseStore);
