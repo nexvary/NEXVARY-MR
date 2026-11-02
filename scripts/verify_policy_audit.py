@@ -181,6 +181,7 @@ def verify(data, anchor):
     states, actions, principals = {}, {}, {}
     decisions, operations, closures = {}, {}, {}
     case_operations = {}
+    reconciliation_seen = False
     for sequence, event in enumerate(rows, 1):
         raw, sig = un64(event["payload"]), un64(event["signature"])
         if not 0 < len(raw) <= 32 * 1024:
@@ -264,6 +265,15 @@ def verify(data, anchor):
             if case.get("schema") == "nexvary-case-operation/v2" and r["status"] == "completed" and (case["recoveryState"] != "completed" or r["sourceSha256"] != case["sourceSha256"] or r["outputSha256"] != case["reportSha256"]):
                 raise ValueError("Case operation receipt digest/outcome mismatch")
             operations[r["operationId"]] = r
+        elif action == "case-reconciliation":
+            if (reconciliation_seen or set(r) != {"schema", "storesSha256", "outcome"}
+                    or r["schema"] != "nexvary-case-reconciliation/v1"
+                    or r["outcome"] != "unknown" or p["result"] != "unknown"
+                    or actor or role != "system-observation"
+                    or not isinstance(r["storesSha256"], str)
+                    or not re.fullmatch(r"[0-9a-f]{64}", r["storesSha256"])):
+                raise ValueError("Case reconciliation observation rejected")
+            reconciliation_seen = True
         elif action not in {"operation-allowed", "operation-denied", "browser-result", "audit-verification", "policy-rejection"}:
             raise ValueError("Unknown event action")
         if action in {"operation-allowed", "browser-result"} and (not old or r != old or status != "active" or role != "system-observation"):
@@ -277,6 +287,7 @@ def verify(data, anchor):
         if sequence == floor and previous != anchor["hash"]:
             raise ValueError("Retained history prefix mismatch")
     return {"valid": True, "events": len(rows), "requests": len(states), "actions": actions,
+            "caseReconciliation": "unknown" if reconciliation_seen else "no unknown observation in this history; case bytes not inspected",
             "caseOperations": {k: sum(v["recoveryState"] == k for v in case_operations.values()) for k in {v["recoveryState"] for v in case_operations.values()}},
             "head": previous, "retainedPrefixVerified": floor,
             "identityScope": "local keys/declared roles; not agency identity or independent people",

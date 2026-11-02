@@ -45,7 +45,7 @@ bool LawCaseStore::valid(const QVariantMap &r) {
 }
 QVariantMap LawCaseStore::get(const QString &id) {
  error_.clear();if(!ready_||id.size()>128){fail("Case storage unavailable or invalid identifier.");return {};}
- QSqlQuery q(db_);q.prepare("SELECT revision,payload FROM law_cases WHERE id=?");q.addBindValue(id);
+ QSqlQuery q(db_);q.prepare("SELECT revision,payload FROM law_cases WHERE id=? AND length(payload)<=4194304");q.addBindValue(id);
  if(!q.exec()||!q.next()){fail("Case not found or database unreadable.");return {};}
  const auto blob=q.value(1).toByteArray();if(blob.size()>4*1024*1024){fail("Case record exceeds limit.");return {};}
  const auto bytes=mr::recovery::openCaseBytes(blob,synthetic_,error_);if(bytes.isEmpty())return {};
@@ -153,7 +153,10 @@ QVariantMap LawCaseStore::recordAnalysis(const QString &id,qint64 revision,const
   result={{"id",intent.isEmpty()?uuid():intent.value("analysisId").toString()},{"evidenceId",evidence},{"parser",parser},{"implementationVersion","nexvary-mr/0.4.0"},
    {"sourceSha256",item.value("sha256")},{"sourceSize",item.value("size")},{"reportSha256",digest(json)},{"reportJson",QString::fromUtf8(json)},
    {"atUtc",now()},{"actor",actor},{"synthetic",synthetic_}};
-  if(!intent.isEmpty())result.insert("operationId",intent.value("operationId"));
+  if(!intent.isEmpty()){
+   result.insert("operationId",intent.value("operationId"));
+   auto binding=intent;binding.remove("recoveryState");result.insert("operationBinding",binding);
+  }
   runs.append(result);r.insert("analyses",runs);return true;
  });return ok?result:QVariantMap();
 }
@@ -224,13 +227,65 @@ QString LawCaseStore::reconcileAnalysis(const QVariantMap &intent) {
  if(r.isEmpty() || source.isEmpty() || source.size()>(intent.value("schema")=="nexvary-case-operation/v2"?16:8)*1024*1024 || digest(source)!=intent.value("sourceSha256"))return "unknown";
  const auto revision=intent.value("expectedRevision").toLongLong();
  if(r.value("revision").toLongLong()==revision && digest(encode(r))==intent.value("caseBeforeSha256"))return "failed";
- if(r.value("revision").toLongLong()!=revision+1)return "unknown";
+ if(r.value("revision").toLongLong()<revision+1)return "unknown";
  int found=0;
  for(const auto &value:r.value("analyses").toList()){
   const auto a=value.toMap();
-  if(a.value("operationId")!=intent.value("operationId"))continue;
+  if(a.value("operationId")!=intent.value("operationId") && a.value("id")!=intent.value("analysisId"))continue;
+  if(a.value("operationId")!=intent.value("operationId"))return "unknown";
+  auto binding=intent;binding.remove("recoveryState");
+  if(a.contains("operationBinding") && a.value("operationBinding").toMap()!=binding)return "unknown";
+  const auto size=a.value("sourceSize");
+  if(size.metaType().id()==QMetaType::QString || size.metaType().id()==QMetaType::Bool || size.toDouble()!=static_cast<double>(source.size()) || a.value("synthetic").metaType().id()!=QMetaType::Bool || a.value("synthetic").toBool()!=synthetic_)return "unknown";
+  const auto reportBytes=a.value("reportJson").toString().toUtf8();
+  if(reportBytes.size()>64*1024)return "unknown";
+  QJsonParseError parse;const auto report=QJsonDocument::fromJson(reportBytes,&parse);
+  if(parse.error!=QJsonParseError::NoError || !report.isObject() || report.object().value("sourceSha256").toString()!=intent.value("sourceSha256"))return "unknown";
+  if(intent.value("schema")=="nexvary-case-operation/v2" && report.object().value("toolSha256").toString()!=intent.value("toolSha256"))return "unknown";
+  const auto events=r.value("audit").toList();
+  if(revision>=events.size() || events[revision].toMap().value("actor")!=a.value("actor") || events[revision].toMap().value("event")!="evidence-analyzed")return "unknown";
   if(!a.value("actor").toString().startsWith(intent.value("requester").toString()+" / ") || a.value("id")!=intent.value("analysisId") || a.value("evidenceId")!=evidence || a.value("parser")!=intent.value("kind") || a.value("sourceSha256")!=intent.value("sourceSha256") || a.value("reportSha256")!=intent.value("reportSha256") || digest(a.value("reportJson").toString().toUtf8())!=intent.value("reportSha256"))return "unknown";
   ++found;
  }
  return found==1?QString("completed"):QString("unknown");
+}
+
+// Walk bounded records individually: never materialize 1000 protected cases or
+// evidence payloads at once. Signed intents are bounded by the policy event cap.
+bool LawCaseStore::verifyOperationLinks(const QVariantList &intents,QString &storesSha256) {
+ error_.clear();storesSha256.clear();
+ QMap<QString,QVariantMap> byOperation;QSet<QString> analysisIds,seen;
+ bool healthy=ready_;
+ QCryptographicHash snapshot(QCryptographicHash::Sha256);
+ snapshot.addData(encode({{"schema","nexvary-cross-store-snapshot/v1"},{"intents",intents}}));
+ for(const auto &v:intents){
+  const auto r=v.toMap();const auto op=r.value("operationId").toString(),analysis=r.value("analysisId").toString();
+  if(!mr::law::caseIntent(r) || byOperation.contains(op) || analysisIds.contains(analysis))healthy=false;
+  byOperation.insert(op,r);analysisIds.insert(analysis);
+  if(r.value("recoveryState")=="unknown")healthy=false;
+ }
+ QSqlQuery q(db_);
+ if(!q.exec("SELECT id,revision,length(payload) FROM law_cases ORDER BY id LIMIT 1001"))return fail("Cross-store case inventory unavailable.");
+ int count=0;
+ while(q.next()){
+  if(++count>1000){healthy=false;break;}
+  snapshot.addData(encode({{"id",q.value(0)},{"revision",q.value(1)},{"payloadSize",q.value(2)}}));
+  if(q.value(2).toLongLong()>4*1024*1024){healthy=false;break;}
+  const auto r=get(q.value(0).toString());
+  if(r.isEmpty()){healthy=false;continue;}
+  snapshot.addData(encode({{"caseSha256",digest(encode(r))}}));
+  const auto analyses=r.value("analyses").toList();if(analyses.size()>100){healthy=false;continue;}
+  for(const auto &v:analyses){
+   const auto a=v.toMap();
+   // Unlinked legacy results are not retroactively verified or granted intent.
+   if(!a.contains("operationId"))continue;
+   const auto op=a.value("operationId").toString();const auto intent=byOperation.value(op);
+   if(intent.isEmpty() || intent.value("recoveryState")!="completed" || intent.value("caseId")!=r.value("id") || seen.contains(op) || reconcileAnalysis(intent)!="completed")healthy=false;
+   seen.insert(op);
+  }
+ }
+ if(q.lastError().isValid())healthy=false;
+ for(const auto &r:byOperation)if(r.value("recoveryState")=="completed" && !seen.contains(r.value("operationId").toString()))healthy=false;
+ storesSha256=QString::fromLatin1(snapshot.result().toHex());
+ return healthy || fail("Cross-store operation proof is unknown; preserve both stores for review.");
 }

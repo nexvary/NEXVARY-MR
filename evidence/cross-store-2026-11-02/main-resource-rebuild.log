@@ -1,0 +1,4 @@
+[0/2] Re-checking globbed directories...
+[1/3] Running rcc for resource nexvary_mr_raw_qml_0
+[2/3] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[3/3] Linking CXX executable nexvary_mr

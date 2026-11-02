@@ -786,3 +786,20 @@ bool GovernmentOperationPolicy::recordCaseOperation(const QVariantMap &r) {
 void GovernmentOperationPolicy::setSyntheticAuditWriteCheckpoint(std::function<void()> callback) {
  if(audit_)audit_->setSyntheticWriteCheckpoint(std::move(callback));
 }
+
+bool GovernmentOperationPolicy::caseReconciliationBlocked() {
+ if(!available())return true;
+ for(const auto &v:audit_->events()){
+  const auto p=QJsonDocument::fromJson(QByteArray::fromBase64(v.toMap().value("payload").toString().toLatin1())).object();
+  if(p.value("action")=="case-reconciliation")return true;
+ }
+ return false;
+}
+bool GovernmentOperationPolicy::recordCaseReconciliation(const QString &storesSha256) {
+ // An unknown decision remains open. Restart cannot silently clear it or append
+ // another observation. No case content, actor names, paths or keys are copied.
+ if(caseReconciliationBlocked())return false;
+ const QVariantMap r{{"schema","nexvary-case-reconciliation/v1"},{"storesSha256",storesSha256},{"outcome","unknown"}};
+ if(!mr::law::caseReconciliation(r))return false;
+ return audit("case-reconciliation",r,"unknown",false);
+}

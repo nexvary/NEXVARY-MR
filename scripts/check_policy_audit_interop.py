@@ -52,7 +52,7 @@ def independent_history(change=None):
     for sequence, (action, r, actor, role) in enumerate(operations, 1):
         if action in {"operation-start","operation-result"} and r["decisionHash"] == "__decision__":
             r = {**r, "decisionHash": events[2]["hash"]}
-        body = {"action": action, "record": r, "result": r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
+        body = {"action": action, "record": r, "result": r["outcome"] if action == "case-reconciliation" else r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
                 "principalId": ids[actor] if actor is not None else "", "principalRole": role}
         proof = {}
         if actor is not None:
@@ -321,6 +321,23 @@ def main():
             intent = {**rows[6][1], "recoveryState": "unknown"}
             return rows[:7] + [rows[-1], ("case-operation", intent, None, "system-observation")]
         protocol("registered partition interrupted external outcome stays unknown", unknown_external, expected=True)
+
+        observation = {"schema": "nexvary-case-reconciliation/v1", "storesSha256": "a" * 64, "outcome": "unknown"}
+        def reconciliation(rows, ids):
+            return rows + [("case-reconciliation", observation, None, "system-observation")]
+        protocol("cross-store unknown observation accepted by both verifiers", reconciliation, expected=True)
+        unknown_data, unknown_anchor = independent_history(reconciliation)
+        assert verify(unknown_data, unknown_anchor)["caseReconciliation"] == "unknown"
+        protocol("cross-store observation cannot be duplicated", lambda rows, ids: reconciliation(rows, ids) + [("case-reconciliation", observation, None, "system-observation")])
+        for name, changed in {
+            "private fields": {**observation, "path": "synthetic-private"},
+            "false success": {**observation, "outcome": "completed"},
+            "invalid digest": {**observation, "storesSha256": "z" * 64},
+            "nonstring digest": {**observation, "storesSha256": 123},
+            "missing digest": {k: v for k, v in observation.items() if k != "storesSha256"},
+        }.items():
+            protocol("cross-store observation rejects " + name, lambda rows, ids, changed=changed: rows + [("case-reconciliation", changed, None, "system-observation")])
+        protocol("cross-store observation cannot impersonate a human", lambda rows, ids: rows + [("case-reconciliation", observation, 0, "administrator")])
 
     report = {"schema": "nexvary-policy-audit-interop/v1", "checks": results, "passed": len(results), "scope": "Internally authored synthetic interoperability corpus, not independent institutional review"}
     Path("policy-audit-interop-results.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

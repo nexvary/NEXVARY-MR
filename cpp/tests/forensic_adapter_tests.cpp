@@ -296,7 +296,13 @@ private slots:
   QVERIFY(start());identity.logout();QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
   IdentityService administrator(dir.filePath("identity"),true);QVERIFY(administrator.login("admin",password));QVERIFY(administrator.setCaseGrant(id,peer,true));QVERIFY(identity.login("peer",password));QVERIFY(law.openCase(id));QVERIFY(start());QVERIFY(administrator.setCaseGrant(id,peer,false));QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());
   QVERIFY(identity.login("owner",password));QVERIFY(law.openCase(id));QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
-  QFile journal(identity.policyJournalPath());QVERIFY(journal.open(QIODevice::Append));journal.write("X");journal.close();QVERIFY(start());QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
+  // Keep the late-corruption negative: launch with a healthy journal, corrupt
+  // before delivering the queued result, and require refusal at acceptance.
+  QVERIFY(start());
+  QFile journal(identity.policyJournalPath());QVERIFY(journal.open(QIODevice::Append));journal.write("X");journal.close();
+  QTRY_VERIFY(!law.forensicBusy());QVERIFY(law.forensicResult().isEmpty());QCOMPARE(law.activeCase().value("analyses").toList().size(),0);
+  // The stronger readiness gate must also refuse a new dispatch immediately.
+  QVERIFY(!start());QVERIFY(!law.ready());QVERIFY(!law.forensicBusy());
  }
  void cancellationLogoutAndCrossCaseRefuseAcceptance(){
   QTemporaryDir dir;LawCaseBridge law(dir.filePath("cases.db"),nullptr,true);const auto id=law.createCase(metadata());QVERIFY(!id.isEmpty());const auto dev=law.addDevice({{"model","Synthetic"},{"custodian","A"}});QFile f(dir.filePath("Bookmarks"));QVERIFY(f.open(QIODevice::WriteOnly));f.write(bookmarks);f.close();const auto e=law.addEvidence(dev,f.fileName(),"Synthetic bookmarks","A",true);QVERIFY(!e.isEmpty());
