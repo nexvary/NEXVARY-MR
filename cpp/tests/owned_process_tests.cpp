@@ -16,6 +16,14 @@ bool write(const QString &p,const QByteArray &bytes){QFile f(p);return f.open(QI
 bool waitFile(const QString &p,int ms=5000){QElapsedTimer t;t.start();while(!QFile::exists(p)&&t.elapsed()<ms)QThread::msleep(10);return QFile::exists(p);}
 int fixture(const QStringList &args){
  const auto root=args.value(1);
+ if(args.value(0)=="--helper-probe"){
+  OwnedProcess worker;
+  worker.start(QCoreApplication::applicationFilePath(),{"--leaf",root});
+  const bool started=worker.waitForStarted(3000);
+  if(started&&!worker.waitForFinished(3500)){worker.stop("probe-timeout");worker.waitForFinished(3000);return 87;}
+  // A substitute which exits zero is still not a cleanup witness.
+  return !worker.cleanupComplete()&&!QFile::exists(root+"/ready")?0:88;
+ }
  if(args.value(0)=="--leaf"){
   if(!write(root+"/ready","synthetic marker-only detached child"))return 80;
   if(waitFile(root+"/release",10000))return write(root+"/survived","synthetic child responded after cleanup")?0:81;
@@ -42,6 +50,35 @@ int fixture(const QStringList &args){
 class OwnedProcessTests final:public QObject {
  Q_OBJECT
 private slots:
+ void invalidSupervisor_data(){
+#ifdef Q_OS_LINUX
+  QTest::addColumn<QString>("kind");
+  for(const auto &kind:{"missing","not-executable","symlink","zero-exit-without-receipt"})QTest::newRow(kind)<<QString::fromLatin1(kind);
+#endif
+ }
+ void invalidSupervisor(){
+#ifdef Q_OS_LINUX
+  QFETCH(QString,kind);QTemporaryDir dir;QVERIFY(dir.isValid());
+  // Copy the actual test binary to a separate deployment directory so that the
+  // exact sibling lookup is exercised without mutating a shared build helper.
+  const auto probe=dir.filePath("owned-probe");
+  QVERIFY(QFile::copy(QCoreApplication::applicationFilePath(),probe));
+  QVERIFY(QFile::setPermissions(probe,QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner));
+  const auto helper=dir.filePath("mr_process_supervisor");
+  if(kind=="not-executable")QVERIFY(write(helper,"#!/bin/sh\nexit 0\n"));
+  if(kind=="symlink")QVERIFY(QFile::link("/bin/true",helper));
+  if(kind=="zero-exit-without-receipt"){
+   QVERIFY(QFile::copy("/bin/true",helper));
+   QVERIFY(QFile::setPermissions(helper,QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner));
+  }
+  QProcess child;child.start(probe,{"--helper-probe",dir.path()});
+  QVERIFY(child.waitForStarted(3000));QVERIFY(child.waitForFinished(8000));
+  QCOMPARE(child.exitStatus(),QProcess::NormalExit);
+  QCOMPARE(child.exitCode(),0);QVERIFY(!QFile::exists(dir.filePath("ready")));
+#else
+  QSKIP("Linux sibling supervisor deployment boundary; Windows uses creation-time Jobs.");
+#endif
+ }
  void directKillNegativeIsRetained(){
   QTemporaryDir dir;QVERIFY(dir.isValid());QProcess raw;
   raw.start(QCoreApplication::applicationFilePath(),{"--child",dir.path(),"hang"});QVERIFY(raw.waitForStarted(3000));QVERIFY(waitFile(dir.filePath("ready")));
