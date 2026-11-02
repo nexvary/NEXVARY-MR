@@ -45,7 +45,7 @@ LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheti
 LawCaseBridge::~LawCaseBridge(){if(forensicCancel_)forensicCancel_->store(true);if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
 bool LawCaseBridge::ready()const{
  if(!transactionsReady_ || !store_->ready() || linkCheckActive_)return false;
- if(operationPolicy_ && !const_cast<LawCaseBridge*>(this)->verifyOperationLinks())return false;
+ if(operationPolicy_ && !const_cast<LawCaseBridge*>(this)->verifyOperationLinks(false))return false;
  return identity_?identity_->authenticated():synthetic_;
 }
 nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
@@ -67,6 +67,7 @@ bool LawCaseBridge::permit(nexvary::law::Action action,bool caseBound) {
  if(identity_&&!identity_->checkSession())return fail(QStringLiteral("Sign in with a permitted local account."));
  if(caseBound&&!active_.isEmpty()&&!caseAllowed(active_))return fail(QStringLiteral("This account has no grant for the active case."));
  if(!nexvary::law::allows(currentRole(),action))return fail(QStringLiteral("This session role does not permit this action."));
+ if(operationPolicy_ && transactionsReady_ && !verifyOperationLinks(true))return false;
  if(!ready())return fail(QStringLiteral("Protected case storage is unavailable on this host."));
  return true;
 }
@@ -360,6 +361,7 @@ QVariantMap LawCaseBridge::verifyArchive(const QString &archiveId) {
 
 void LawCaseBridge::setOperationPolicy(GovernmentOperationPolicy *policy) {
  disconnect(partitionsPolicyConnection_);
+ verifiedCaseVersion_.clear();verifiedPolicyVersion_.clear();
  operationPolicy_=policy;
  if(policy)partitionsPolicyConnection_=connect(policy,&GovernmentOperationPolicy::changed,this,[this]{if(partitionsActive_ && partitionsCancel_ && !partitionsCancel_->load() && !operationPolicy_->caseOperationAuthorized(partitionsContext_.value("operationId").toString()))cancelPartitions();});
  if(!policy){transactionsReady_=!identity_;return;}
@@ -379,19 +381,26 @@ void LawCaseBridge::setOperationPolicy(GovernmentOperationPolicy *policy) {
  if(!transactionsReady_)fail("Case operation recovery is unknown or its audit is unavailable; preserve stores for review.");
 }
 
-bool LawCaseBridge::verifyOperationLinks() {
+bool LawCaseBridge::verifyOperationLinks(bool force) {
  if(!operationPolicy_)return transactionsReady_;
  if(linkCheckActive_)return false;
  const QScopedValueRollback<bool> checking(linkCheckActive_,true);
+ const auto caseVersion=store_->operationVersion(),policyVersion=operationPolicy_->caseOperationVersion();
+ if(caseVersion.isEmpty() || policyVersion.isEmpty()){
+  transactionsReady_=false;resetImport();cancelForensicAnalysis();cancelPartitions();return fail("Case operation change detection unavailable; preserve stores for review.");
+ }
+ if(!force && transactionsReady_ && caseVersion==verifiedCaseVersion_ && policyVersion==verifiedPolicyVersion_)return true;
  const auto states=operationPolicy_->caseOperationStates();
  if(!operationPolicy_->caseOperationHistoryHealthy() || operationPolicy_->caseReconciliationBlocked())transactionsReady_=false;
  if(transactionsReady_){
   QString storesSha256;
-  if(!store_->verifyOperationLinks(states,storesSha256)){
+  if(!store_->verifyOperationLinks(states,storesSha256) || store_->operationVersion()!=caseVersion || operationPolicy_->caseOperationVersion()!=policyVersion){
    transactionsReady_=false;
    operationPolicy_->recordCaseReconciliation(storesSha256);
+  }else{
+   verifiedCaseVersion_=caseVersion;verifiedPolicyVersion_=policyVersion;
   }
  }
- if(!transactionsReady_){cancelForensicAnalysis();cancelPartitions();return fail("Case operation proof is unknown; preserve stores for review.");}
+ if(!transactionsReady_){resetImport();cancelForensicAnalysis();cancelPartitions();return fail("Case operation proof is unknown; preserve stores for review.");}
  return true;
 }

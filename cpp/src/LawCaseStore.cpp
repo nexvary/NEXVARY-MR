@@ -73,6 +73,7 @@ bool LawCaseStore::save(QVariantMap r,qint64 expected) {
  if(expected==0){q.prepare("INSERT INTO law_cases(id,revision,payload) VALUES(?,?,?)");q.addBindValue(r.value("id"));q.addBindValue(1);q.addBindValue(sealed);}
  else {q.prepare("UPDATE law_cases SET revision=?,payload=? WHERE id=? AND revision=?");q.addBindValue(expected+1);q.addBindValue(sealed);q.addBindValue(r.value("id"));q.addBindValue(expected);}
  if(!q.exec()||q.numRowsAffected()!=1)return fail("Case changed in another session or write failed. Reopen before editing.");
+ ++mutationGeneration_;
  if(synthetic_ && writeCheckpoint_)writeCheckpoint_();
  return true;
 }
@@ -288,4 +289,11 @@ bool LawCaseStore::verifyOperationLinks(const QVariantList &intents,QString &sto
  for(const auto &r:byOperation)if(r.value("recoveryState")=="completed" && !seen.contains(r.value("operationId").toString()))healthy=false;
  storesSha256=QString::fromLatin1(snapshot.result().toHex());
  return healthy || fail("Cross-store operation proof is unknown; preserve both stores for review.");
+}
+
+QString LawCaseStore::operationVersion() {
+ if(!ready_)return {};
+ QSqlQuery q(db_);
+ if(!q.exec("PRAGMA data_version") || !q.next()){fail("Case change detection unavailable.");return {};}
+ return QString::number(mutationGeneration_)+":"+QString::number(q.value(0).toULongLong());
 }

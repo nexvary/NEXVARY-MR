@@ -154,7 +154,8 @@ private:
  ToolBridge *tools_=nullptr;
  IdentityService *identity_=nullptr;
  GovernmentOperationPolicy *operationPolicy_=nullptr;
- bool verifyOperationLinks();
+ bool verifyOperationLinks(bool force=true);
+ QString verifiedCaseVersion_,verifiedPolicyVersion_;
  bool linkCheckActive_=false;
  bool transactionsReady_=true;
  bool synthetic_=false;

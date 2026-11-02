@@ -803,3 +803,10 @@ bool GovernmentOperationPolicy::recordCaseReconciliation(const QString &storesSh
  if(!mr::law::caseReconciliation(r))return false;
  return audit("case-reconciliation",r,"unknown",false);
 }
+
+QString GovernmentOperationPolicy::caseOperationVersion() {
+ // check() compares the exact protected on-disk snapshot digest, not mtime.
+ // A valid old replacement is still an outside write and closes this instance.
+ if(!available())return {};
+ return QString::fromUtf8(QJsonDocument::fromVariant(audit_->anchor()).toJson(QJsonDocument::Compact));
+}
