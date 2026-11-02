@@ -1,0 +1,22 @@
+[
+  {
+    "id": 41427093621,
+    "event": "push",
+    "head_sha": "b3113a49a85ff0574c07e7e6386a3d185f6faf7f",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41427093621",
+    "created_at": "2026-11-02T10:13:47Z",
+    "updated_at": "2026-11-02T10:37:51Z"
+  },
+  {
+    "id": 41427103049,
+    "event": "pull_request",
+    "head_sha": "b3113a49a85ff0574c07e7e6386a3d185f6faf7f",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41427103049",
+    "created_at": "2026-11-02T10:13:52Z",
+    "updated_at": "2026-11-02T10:43:33Z"
+  }
+]

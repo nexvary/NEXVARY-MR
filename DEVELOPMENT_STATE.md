@@ -1,3 +1,10 @@
+# Verified delivery / evidence-only continuation — 2026-11-02
+
+- Runtime/package source `b3113a49a85ff0574c07e7e6386a3d185f6faf7f`: independent Push C++41427093621 and PR C++41427103049 completed success. Downloaded archives matched provider digests; all inner checksums/SPDX entries, actual portable/installed main+worker bytes, pinned guides/verifier and installer lifecycle verified. Windows CTest 53 groups passed; native/Python interop 84. Exact hashes, counts and intentional exclusions: evidence/cross-store-final-2026-11-02/.
+- This subsequent commit changes only DEVELOPMENT_STATE.md and unshipped evidence; it does not relabel those source-specific packages or inherit exact-head acceptance. PR15/17 remain draft; no main merge/deletion or Guardian/upstream change. No runtime/workflow/package/shipped-guide input changed.
+- Original Audit Store prefix cause, local125%DPI timeout/root, long UI soak/full performance, process-tree containment, NTFS product binding and external institutional/physical/signing/security/legal/retention gates remain open. Earlier transient private original synthetic fixtures/binaries are unavailable after environment reset; preserved sanitized published observations remain separate.
+- Next executable task: retained detached-worker reproduction and product-owned process-tree supervision/cancellation receipts on government first, then preserved integration transfer. Do not announce tree/network isolation from direct-process kill or CI.
+
 # Offline benchmark guide included in final integration bundle — 2026-11-02
 
 - Merge parents: integration9fcb46730f41882f5addb20c08cc61cd271c429a and Government5e0ac5b9c07daca4a46949f145c3eed09b21daa2. Existing runtime sources453725e/9fcb467 completed separate Push/PR C++ workflows successfully, plus Python/public-history. This follow-up changes only package-windows.ps1 and this state file.
