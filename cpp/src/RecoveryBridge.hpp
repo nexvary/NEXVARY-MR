@@ -88,8 +88,8 @@ private:
  static bool validate(const QJsonObject &document,QString &error);
  static bool persist(const QJsonObject &document,const QString &path,bool synthetic,QString &error);
  static void addAudit(QJsonObject &document,const QString &operation,const QString &outcome);
- QString directory_,path_,pendingPath_,error_,status_;
- QJsonObject document_;
+ QString directory_,path_,pendingPath_,pendingSourcePath_,error_,status_;
+ QJsonObject document_,pendingSnapshot_;
  QString operationId_;
  QVariantMap operationReceipt_;
  QVariantList processCleanup_;

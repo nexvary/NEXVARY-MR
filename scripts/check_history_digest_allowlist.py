@@ -80,6 +80,43 @@ def main():
                 raise RuntimeError("Source hashes escaped exact path restriction")
     print("Real scanner: three source manifests verified against pinned Git bytes; "
           "twelve changed values and three unreviewed paths detected.")
+    # The scanner interprets the public fixture filename "duplicate-key" as a
+    # credential label. Verify these exact public bytes before permitting only
+    # their SHA256 at one manifest path, retaining all mutation/path negatives.
+    evaluation_source = "63e43f8bfa1a2c6557f6761d10e436a11334190a"
+    source_path = "samples/government-evaluation/duplicate-key.json"
+    relative = Path("evidence/evaluation-freeze-2026-11-02/implementation-sha256.json")
+    original = json.loads((repo / relative).read_text(encoding="utf-8"))
+    pinned = subprocess.run(["git", "show", evaluation_source + ":" + source_path],
+                            cwd=repo, capture_output=True, check=True, timeout=30)
+    expected = "a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c"
+    if hashlib.sha256(pinned.stdout).hexdigest() != expected or original[source_path] != expected:
+        raise RuntimeError("Evaluation public negative-fixture digest differs")
+    with tempfile.TemporaryDirectory(prefix="mr-evaluation-digest-") as folder:
+        root = Path(folder)
+        receipt = root / relative
+        receipt.parent.mkdir(parents=True)
+        def scan_evaluation(value):
+            receipt.write_text(json.dumps(value, indent=2), encoding="utf-8")
+            return subprocess.run(
+                [str(Path(args.gitleaks).resolve()), "dir", "--config",
+                 str(repo / ".gitleaks.toml"), "--ignore-gitleaks-allow",
+                 "--redact=100", "--no-banner", str(root)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                timeout=30).returncode
+        if scan_evaluation(original) != 0:
+            raise RuntimeError("Reviewed evaluation public digest refused")
+        changed = dict(original)
+        changed[source_path] = hashlib.sha256(b"SYNTHETIC changed evaluation negative").hexdigest()
+        if scan_evaluation(changed) != 1:
+            raise RuntimeError("Changed evaluation digest escaped detection")
+        receipt.write_text(json.dumps(original, indent=2), encoding="utf-8")
+        (root / "unreviewed-evaluation-manifest.json").write_text(
+            json.dumps(original, indent=2), encoding="utf-8")
+        if scan_evaluation(original) != 1:
+            raise RuntimeError("Evaluation digest escaped exact path restriction")
+    print("Real scanner: evaluation negative-fixture digest verified against pinned "
+          "Git bytes; changed digest and unreviewed path detected.")
     return 0
 
 

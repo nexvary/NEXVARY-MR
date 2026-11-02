@@ -3,9 +3,11 @@
 #include "RecoveryBridge.hpp"
 #include <QCryptographicHash>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QTemporaryDir>
 #include <QTest>
+#include <QThreadPool>
 #include <limits>
 namespace {
 QByteArray read(const QString &path){QFile f(path);return f.open(QIODevice::ReadOnly)?f.readAll():QByteArray();}
@@ -67,6 +69,32 @@ private slots:
   QByteArray many=QByteArray::fromHex("ffd8");for(int i=0;i<4097;++i)many+=QByteArray::fromHex("ff01");many+=QByteArray::fromHex("ffd9");
   QCOMPARE(mr::forensic::summarizeExif(many).error,QString("jpeg-segment-limit"));
   auto cancelled=std::make_shared<std::atomic_bool>(true);QCOMPARE(mr::forensic::summarizeExif(b,cancelled).error,QString("cancelled"));
+ }
+ void completedWorkerCancellationLeavesCaseUntouched_data(){
+  QTest::addColumn<bool>("attemptExport");
+  QTest::newRow("cancel-after-computation")<<false;
+  QTest::newRow("export-refused-while-completion-queued")<<true;
+ }
+ void completedWorkerCancellationLeavesCaseUntouched(){
+  QFETCH(bool,attemptExport);
+  QTemporaryDir dir;QVERIFY(dir.isValid());RecoveryBridge bridge(dir.filePath("cases"),true);
+  const auto path=dir.filePath("synthetic.jpg");QVERIFY(write(path,syntheticExifJpeg()));
+  QVERIFY(bridge.createCase("Synthetic queued cancellation","Fixture owner","Synthetic","No phone","","backup","none",true));
+  QVERIFY(bridge.recordOperator("Synthetic operator","Synthetic cancellation only",true));
+  const auto before=read(bridge.casePath());const auto evidence=bridge.evidence();const auto audit=bridge.audit();
+  QVERIFY(bridge.analyzeExif(path,true));
+  // Finish computation without delivering the queued GUI acceptance callback.
+  QVERIFY(QThreadPool::globalInstance()->waitForDone(5000));QVERIFY(bridge.busy());
+  QCOMPARE(read(bridge.casePath()),before);
+  if(attemptExport){const auto output=dir.filePath("synthetic-export.json");QVERIFY(!bridge.exportReport(output,true));QVERIFY(!QFileInfo::exists(output));}
+  bridge.cancel();
+  const auto acceptedBeforeCallback=read(bridge.casePath());const auto acceptedAudit=bridge.audit();
+  QCOMPARE(acceptedBeforeCallback,before);QCOMPARE(acceptedAudit,audit);
+  QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),5000);
+  QVERIFY(!bridge.error().isEmpty());QCOMPARE(bridge.evidence(),evidence);QCOMPARE(bridge.audit(),acceptedAudit);
+  QCOMPARE(read(bridge.casePath()),acceptedBeforeCallback);
+  RecoveryBridge fresh(dir.filePath("fresh"),true);QVERIFY(fresh.openCase(bridge.casePath()));
+  QTRY_VERIFY_WITH_TIMEOUT(!fresh.busy(),5000);QVERIFY(fresh.error().isEmpty());QCOMPARE(fresh.evidence(),evidence);
  }
  void caseWorkflow(){
   QTemporaryDir dir;QVERIFY(dir.isValid());RecoveryBridge bridge(dir.filePath("cases"),true);

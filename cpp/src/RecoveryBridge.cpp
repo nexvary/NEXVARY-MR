@@ -77,13 +77,31 @@ RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfil
  connect(&watcher_,&QFutureWatcher<JobResult>::finished,this,[this]{
   auto result=watcher_.result();
   processCleanup_=result.processCleanup;
+  const bool contextUnchanged = path_ == pendingSourcePath_ && document_ == pendingSnapshot_;
+  if(operationId_.isEmpty()) {
+   const bool opening = !pendingPath_.isEmpty();
+   const bool cancelled = cancelled_ && cancelled_->load();
+   const auto target = opening ? pendingPath_ : path_;
+   if(cancelled || !contextUnchanged) {
+    result.error = QStringLiteral("Operation cancelled or case changed; no result committed.");
+    result.document = {};
+   } else {
+    // Workers return candidates only. This GUI-thread acceptance point shares
+    // ordering with cancel(), so a queued completion cannot persist first.
+    if(result.error.isEmpty() && !persist(result.document,target,synthetic_,result.error))result.document={};
+    if(!result.error.isEmpty() && !opening && !document_.isEmpty()) {
+     result.document=document_;addAudit(result.document,"operation-failed",result.error);QString auditError;
+     if(!persist(result.document,target,synthetic_,auditError)){result.document={};result.error+=QStringLiteral(" Audit update failed: ")+auditError;}
+    }
+   }
+  }
   if(!operationId_.isEmpty()){
    // Audited partition jobs produce a candidate only. Recheck on the GUI
    // thread before either case persistence or a completed result is exposed.
    const auto snapshot=document_;
    const bool permitted=policy_->permit("external-analysis");
    const bool cancelled=cancelled_&&cancelled_->load();
-   if(!permitted||cancelled)result.error=QStringLiteral("Cancelled or permission ended; partition result refused.");
+   if(!permitted||cancelled||!contextUnchanged)result.error=QStringLiteral("Cancelled or permission ended; partition result refused.");
    QString sourceDigest,outputDigest;
    if(result.error.isEmpty()){
     const auto entries=result.document.value("evidence").toArray();
@@ -112,7 +130,7 @@ RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfil
   running_=false;externalAnalysis_=false;
   if(result.error.isEmpty()){document_=result.document;if(!pendingPath_.isEmpty())path_=pendingPath_;error_.clear();progress_=1;status_=QStringLiteral("Completed. Review the evidence and limitations before exporting.");}
   else {if(pendingPath_.isEmpty()&&!result.document.isEmpty())document_=result.document;error_=result.error;status_=result.error;}
-  pendingPath_.clear();
+  pendingPath_.clear();pendingSourcePath_.clear();pendingSnapshot_={};
   emit changed();
  });
 }
@@ -225,10 +243,9 @@ bool RecoveryBridge::start(Job job,const QString &destination){
  const QString target=destination.isEmpty()?path_:destination;
  if(target.isEmpty())return fail(QStringLiteral("Open a case first."));
  const auto snapshot=document_;
- const bool synthetic=synthetic_,opening=!destination.isEmpty();
- const bool deferred=!operationId_.isEmpty();
+ const bool opening=!destination.isEmpty();
  operationReceipt_.clear();
- pendingPath_=destination;
+ pendingPath_=destination;pendingSourcePath_=path_;pendingSnapshot_=snapshot;
  cancelled_=std::make_shared<std::atomic_bool>(false);
  const auto cancelled=cancelled_;
  running_=true;
@@ -236,7 +253,7 @@ bool RecoveryBridge::start(Job job,const QString &destination){
  error_.clear();
  status_=QStringLiteral("Reading authorized source; original bytes are not modified.");
  emit changed();
- watcher_.setFuture(QtConcurrent::run([job,snapshot,target,synthetic,cancelled,opening,deferred]{
+ watcher_.setFuture(QtConcurrent::run([job,snapshot,cancelled,opening]{
   auto result=job(snapshot,cancelled);
   if(result.error.isEmpty()&&!opening) {
    auto entries=result.document.value("evidence").toArray();
@@ -244,11 +261,6 @@ bool RecoveryBridge::start(Job job,const QString &destination){
    result.document.insert("evidence",entries);
   }
   if(cancelled->load())result.error=QStringLiteral("Operation cancelled; no result committed.");
-  if(!deferred&&result.error.isEmpty()&&!persist(result.document,target,synthetic,result.error))result.document={};
-  if(!deferred&&!result.error.isEmpty()&&!opening&&!snapshot.isEmpty()){
-   result.document=snapshot;addAudit(result.document,"operation-failed",result.error);QString auditError;
-   if(!persist(result.document,target,synthetic,auditError)){result.document={};result.error+=QStringLiteral(" Audit update failed: ")+auditError;}
-  }
   return result;
  }));
  // Set only a new open destination, never a source image or export path.

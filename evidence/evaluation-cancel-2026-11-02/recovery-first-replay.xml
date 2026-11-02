@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="6"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="60b4cd82d502"
+	time="23"
+	timestamp="2026-11-02T15:48:15"
+	>
+	<testcase name="mr_cloud_tests" classname="mr_cloud_tests" time="12.115" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of CloudTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CloudTests::initTestCase()
+PASS   : CloudTests::governmentGateBlocksSavedCredentialsAndRevokesSync()
+PASS   : CloudTests::snapshotSyncAndRevocation()
+PASS   : CloudTests::rejectsPlainHttpAndRedirects()
+PASS   : CloudTests::rejectsWrongApiKey()
+SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+   Loc: [/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/cloud_tests.cpp(89)]
+PASS   : CloudTests::identityAndPersistence()
+PASS   : CloudTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 12092ms
+********* Finished testing of CloudTests *********
+</system-out>
+	</testcase>
+	<testcase name="mr_pcap_tests" classname="mr_pcap_tests" time="0.395197" status="run">
+		<properties/>
+		<system-out>********* Start testing of PcapTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PcapTests::initTestCase()
+PASS   : PcapTests::endianAndResolution(LE-us)
+PASS   : PcapTests::endianAndResolution(BE-us)
+PASS   : PcapTests::endianAndResolution(LE-ns)
+PASS   : PcapTests::endianAndResolution(BE-ns)
+PASS   : PcapTests::hostileRecords(snap-zero)
+PASS   : PcapTests::hostileRecords(snap-huge)
+PASS   : PcapTests::hostileRecords(fraction)
+PASS   : PcapTests::hostileRecords(cap-overflow)
+PASS   : PcapTests::hostileRecords(wire-smaller)
+PASS   : PcapTests::truncationAndFormats()
+PASS   : PcapTests::clocksAndPartialCapture()
+PASS   : PcapTests::networkScope()
+PASS   : PcapTests::cancellationAndRecordBound()
+PASS   : PcapTests::caseConsentPersistenceAndSourcePreservation()
+PASS   : PcapTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 342ms
+********* Finished testing of PcapTests ********...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_exif_tests" classname="mr_exif_tests" time="0" status="fail">
+		<failure message="BAD_COMMAND"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="mr_recovery_tests" classname="mr_recovery_tests" time="10.4409" status="run">
+		<properties/>
+		<system-out>********* Start testing of RecoveryTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : RecoveryTests::initTestCase()
+PASS   : RecoveryTests::vaultRoundtripAndTamperResistance()
+PASS   : RecoveryTests::consentValidationAndProductionPlatformBoundary()
+PASS   : RecoveryTests::visibleFilePersistenceExportAndDeletion()
+PASS   : RecoveryTests::failedCaseOpenCannotRetargetActiveVaultOrOverwriteInput()
+PASS   : RecoveryTests::agentValidStates(unavailable)
+PASS   : RecoveryTests::agentValidStates(permission-required)
+PASS   : RecoveryTests::agentValidStates(denied)
+PASS   : RecoveryTests::agentValidStates(shell)
+PASS   : RecoveryTests::agentValidStates(root-refused-with-no-exported-root-uid)
+PASS   : RecoveryTests::agentInvalidProtocol(wrong-schema)
+PASS   : RecoveryTests::agentInvalidProtocol(missing-consent)
+PASS   : RecoveryTests::agentInvalidProtocol(wrong-consent-scope)
+PASS   : RecoveryTests::agentInvalidPro...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_recovery_image_tests" classname="mr_recovery_image_tests" time="0.0175782" status="run">
+		<properties/>
+		<system-out>********* Start testing of RecoveryImageTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : RecoveryImageTests::initTestCase()
+PASS   : RecoveryImageTests::exactOffsetsHashesAndChunkBoundaries()
+PASS   : RecoveryImageTests::invalidAndTruncatedCandidates()
+PASS   : RecoveryImageTests::jpegExifWithoutJfifIsDecodedByteExactly()
+PASS   : RecoveryImageTests::rejectsContainersAndDevicePaths()
+PASS   : RecoveryImageTests::resourceLimits()
+PASS   : RecoveryImageTests::openedDescriptorMustBeRegular()
+PASS   : RecoveryImageTests::cancellationAndSourceMutationDiscardEverything()
+PASS   : RecoveryImageTests::oversizedDimensionsAreNotDecoded()
+PASS   : RecoveryImageTests::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 8ms
+********* Finished testing of RecoveryImageTests *********
+</system-out>
+	</testcase>
+	<testcase name="mr_forensic_tests" classname="mr_forensic_tests" time="0.54968" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of ForensicTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ForensicTests::initTestCase()
+PASS   : ForensicTests::auditDetectsEditsAndReordering()
+PASS   : ForensicTests::oldCasesUpgradeWithoutInventingIdentity()
+PASS   : ForensicTests::caseAcquisitionCustodyTimelineAndReports()
+PASS   : ForensicTests::reopeningNeverAttributesLegacyEvidenceToAnotherCaseOperator()
+PASS   : ForensicTests::modifiedSealedAuditIsRefusedWithoutReplacingOpenCase()
+PASS   : ForensicTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 528ms
+********* Finished testing of ForensicTests *********
+</system-out>
+	</testcase>
+</testsuite>

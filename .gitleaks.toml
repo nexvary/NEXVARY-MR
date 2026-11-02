@@ -34,3 +34,10 @@ regexes = [
   '''^0a0711aea54f68584360988e83e24a818c4641a4a61f8d67c971c917e77e788f$''',
   '''^b8fd40b818cc4c1adb4e7339b07770f7315f042b7b0dba0b08484a7f11359b85$''',
 ]
+
+[[rules.allowlists]]
+description = "One verified public negative-fixture SHA-256 in the exact evaluation source manifest"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''(^|/)evidence/evaluation-freeze-2026-11-02/implementation-sha256\.json$''']
+regexes = ['''^a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c$''']
