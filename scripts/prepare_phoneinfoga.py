@@ -33,7 +33,7 @@ def main():
     # Extract Git's stored bytes directly: checkout-index may reuse cached
     # worktree files despite a different autocrlf setting on Windows.
     with tempfile.TemporaryFile() as snapshot:
-        subprocess.run(["git", "archive", "--format=tar", "HEAD"], cwd=source,
+        subprocess.run(["git", "-c", "core.autocrlf=false", "-c", "core.eol=lf", "archive", "--format=tar", "HEAD"], cwd=source,
                        stdout=snapshot, check=True)
         snapshot.seek(0)
         with tarfile.open(fileobj=snapshot, mode="r:") as archive:
