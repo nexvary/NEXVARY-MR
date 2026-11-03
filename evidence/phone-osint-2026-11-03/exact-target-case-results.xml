@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="9ac0f46643cf"
+	time="8"
+	timestamp="2026-11-03T14:48:35"
+	>
+	<testcase name="mr_phone_osint_case_tests" classname="mr_phone_osint_case_tests" time="8.91112" status="run">
+		<properties/>
+		<system-out>********* Start testing of PhoneOsintCaseTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PhoneOsintCaseTests::initTestCase()
+PASS   : PhoneOsintCaseTests::caseAndNumberBoundApproval()
+PASS   : PhoneOsintCaseTests::retainProtectedEvidenceAndConsumeApproval()
+PASS   : PhoneOsintCaseTests::cancelWithoutCaseWrite(cancel)
+PASS   : PhoneOsintCaseTests::cancelWithoutCaseWrite(revoke)
+PASS   : PhoneOsintCaseTests::cancelWithoutCaseWrite(logout)
+PASS   : PhoneOsintCaseTests::cancelWithoutCaseWrite(workspace)
+PASS   : PhoneOsintCaseTests::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 8891ms
+********* Finished testing of PhoneOsintCaseTests *********
+</system-out>
+	</testcase>
+</testsuite>

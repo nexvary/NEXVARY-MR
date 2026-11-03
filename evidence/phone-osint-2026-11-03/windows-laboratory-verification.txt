@@ -1,0 +1,16 @@
+2026-11-03T12:51:52.9525304Z   Automatic MOC and UIC for target mr_phone_osint_bad_mock
+2026-11-03T12:51:53.4521921Z   Automatic MOC and UIC for target mr_phone_osint_mock
+2026-11-03T12:52:00.7759678Z   mr_phone_osint_bad_mock.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_phone_osint_bad_mock.exe
+2026-11-03T12:52:01.7232102Z   mr_phone_osint_mock.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_phone_osint_mock.exe
+2026-11-03T12:54:16.3062878Z   Automatic MOC and UIC for target mr_phone_osint_case_tests
+2026-11-03T12:54:16.8007312Z   Automatic MOC and UIC for target mr_phone_osint_tests
+2026-11-03T12:54:25.2960359Z   mr_phone_osint_case_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_phone_osint_case_tests.exe
+2026-11-03T12:55:12.1390644Z   mr_phone_osint_tests.vcxproj -> D:\a\NEXVARY-MR\NEXVARY-MR\build\Release\mr_phone_osint_tests.exe
+2026-11-03T13:06:02.8743916Z       Start 53: mr_phone_osint_tests
+2026-11-03T13:06:19.6199508Z 53/54 Test #53: mr_phone_osint_tests .................   Passed   16.75 sec
+2026-11-03T13:06:19.6201671Z       Start 54: mr_phone_osint_case_tests
+2026-11-03T13:06:29.7852319Z 54/54 Test #54: mr_phone_osint_case_tests ............   Passed   10.16 sec
+2026-11-03T13:06:29.7858200Z 100% tests passed, 0 tests failed out of 54
+2026-11-03T13:06:29.7858530Z Total Test time (real) = 543.37 sec
+2026-11-03T13:07:34.9250904Z 100% tests passed, 0 tests failed out of 1
+2026-11-03T13:07:34.9251256Z Total Test time (real) =  64.86 sec

@@ -1,0 +1,9 @@
+2026-11-03T13:08:29.2999697Z 53/54 Test #53: mr_phone_osint_tests .................   Passed   16.72 sec
+2026-11-03T13:08:40.6032864Z 54/54 Test #54: mr_phone_osint_case_tests ............   Passed   11.30 sec
+2026-11-03T13:08:40.6039271Z 100% tests passed, 0 tests failed out of 54
+2026-11-03T13:08:40.7159060Z Total Test time (real) = 580.92 sec
+2026-11-03T13:09:49.0244731Z 100% tests passed, 0 tests failed out of 1
+2026-11-03T13:09:49.0245092Z Total Test time (real) =  68.15 sec
+2026-11-03T13:11:36.1762875Z Artifact download URL: https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232519086
+2026-11-03T13:11:39.2939362Z Artifact download URL: https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232583870
+2026-11-03T13:11:43.6275639Z Artifact download URL: https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232737661

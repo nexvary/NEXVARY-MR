@@ -1,0 +1,151 @@
+{
+  "productCommit": "a9652a4b0ce789ff0a6ac629a0945e4db58827cc",
+  "sourceTree": "6c6e4518996047b1f472f30039e91222bd86d37b",
+  "prMergeCommit": "823b5bcd9fa85a5d6e40869c80d0a195955af28d",
+  "prMergeTreeEquivalent": true,
+  "fullWorkflow": {
+    "id": 41638917548,
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 125927421581,
+        "name": "linux-forensic-integration (production)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421707,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421788,
+        "name": "qt (production)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421836,
+        "name": "qt (laboratory)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421885,
+        "name": "tracking-server",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421918,
+        "name": "linux-forensic-integration (laboratory)",
+        "conclusion": "success"
+      },
+      {
+        "id": 125927421945,
+        "name": "core (windows-2022)",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "engineWorkflow": {
+    "id": 41638905805,
+    "conclusion": "success"
+  },
+  "windowsEngineReceipt": {
+    "schema": "nexvary-phoneinfoga-build/v1",
+    "upstreamCommit": "55807b05b753dab7bc6fe67403ca385668dda179",
+    "goVersion": "go version go1.26.10 windows/amd64",
+    "patchSha256": "090bcb6ae6ba1fdb5b778aa455379124e244c9b03b114b4bd73ae9eef0e7dbbc",
+    "moduleManifestSha256": "53c7e16974bcb62260076bd1e70bdeaaaf86af109d5d1aefeace130c4ca86afb",
+    "executableSha256": "d7dc4d8de3d5d351c67ba9bd8725a0ddbca8a96c8197317b2c0bb149e035e6cc",
+    "sourceArchiveSha256": "a2a4a1b9ecc3eb44bb90e5662661f5bbae6f1280b239ae1f5b69d384a8ea3bd5",
+    "securityScan": "govulncheck passed; not a guarantee of absence of vulnerabilities",
+    "license": "GPL-3.0",
+    "binary": "phoneinfoga.exe"
+  },
+  "artifacts": [
+    {
+      "id": 13232937456,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size": 64309493,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232937456"
+    },
+    {
+      "id": 13232782027,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size": 85314811,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232782027"
+    },
+    {
+      "id": 13232737661,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size": 69997202,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232737661"
+    },
+    {
+      "id": 13232583870,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size": 33274819,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232583870"
+    },
+    {
+      "id": 13232519086,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size": 49195779,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232519086"
+    },
+    {
+      "id": 13232414230,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size": 85230710,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232414230"
+    },
+    {
+      "id": 13232300712,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size": 18561,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232300712"
+    },
+    {
+      "id": 13232290859,
+      "name": "core-test-results-ubuntu-latest",
+      "size": 647,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13232290859"
+    },
+    {
+      "id": 13231813186,
+      "name": "core-test-results-windows-2022",
+      "size": 655,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638917548/artifacts/13231813186"
+    }
+  ],
+  "engineArtifacts": [
+    {
+      "id": 13232635063,
+      "name": "PhoneInfoga-reviewed-engine-ubuntu-24.04",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13232635063"
+    },
+    {
+      "id": 13232445703,
+      "name": "Phone-OSINT-provider-tests-ubuntu-24.04",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13232445703"
+    },
+    {
+      "id": 13231957170,
+      "name": "PhoneInfoga-build-diagnostics-ubuntu-24.04",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13231957170"
+    },
+    {
+      "id": 13231778856,
+      "name": "PhoneInfoga-reviewed-engine-windows-2022",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13231778856"
+    },
+    {
+      "id": 13231679156,
+      "name": "PhoneInfoga-build-diagnostics-windows-2022",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13231679156"
+    },
+    {
+      "id": 13231639513,
+      "name": "Phone-OSINT-provider-tests-windows-2022",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805/artifacts/13231639513"
+    }
+  ]
+}

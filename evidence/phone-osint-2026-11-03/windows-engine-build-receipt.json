@@ -1,0 +1,12 @@
+{
+  "schema": "nexvary-phoneinfoga-build/v1",
+  "upstreamCommit": "55807b05b753dab7bc6fe67403ca385668dda179",
+  "goVersion": "go version go1.26.10 windows/amd64",
+  "patchSha256": "090bcb6ae6ba1fdb5b778aa455379124e244c9b03b114b4bd73ae9eef0e7dbbc",
+  "moduleManifestSha256": "53c7e16974bcb62260076bd1e70bdeaaaf86af109d5d1aefeace130c4ca86afb",
+  "executableSha256": "d7dc4d8de3d5d351c67ba9bd8725a0ddbca8a96c8197317b2c0bb149e035e6cc",
+  "sourceArchiveSha256": "a2a4a1b9ecc3eb44bb90e5662661f5bbae6f1280b239ae1f5b69d384a8ea3bd5",
+  "securityScan": "govulncheck passed; not a guarantee of absence of vulnerabilities",
+  "license": "GPL-3.0",
+  "binary": "phoneinfoga.exe"
+}

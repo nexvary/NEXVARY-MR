@@ -1,0 +1,6 @@
+{
+  "lib/output/testdata/console_empty.txt": "143037d1094d82eafbdf761533619a19b5aa9ad8379090ace9a47a54300fdec7",
+  "lib/output/testdata/console_valid.txt": "da919f8e987193853b9106f3a6c4c77c38dbd69c7542d2e5a13dbc55b00f22b0",
+  "lib/output/testdata/console_valid_recursive.txt": "adf772c3ea69af8994a834e80d0fcb39295c035708e8fe9636e09e674de77acc",
+  "lib/output/testdata/console_valid_with_errors.txt": "fd97fff25c6686b0f48423233388c953b1ca51452caa68b3207fae62146594bb"
+}

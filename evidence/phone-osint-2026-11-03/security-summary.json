@@ -3,5 +3,7 @@
   "goVersion": "1.26.10",
   "findings": [],
   "reportSha256": "08c3be65025d6cf165d0d12c9580ba7dc75feeadce21af6e84b7ce73466646c4",
-  "note": "Full raw report and corresponding source ship in reviewed-engine CI artifact. Zero findings are not a security guarantee."
+  "note": "Full raw report and corresponding source ship in reviewed-engine CI artifact. Zero findings are not a security guarantee.",
+  "windowsEngineSha256": "d7dc4d8de3d5d351c67ba9bd8725a0ddbca8a96c8197317b2c0bb149e035e6cc",
+  "engineCI": "https://github.com/nexvary/NEXVARY-MR/actions/runs/41638905805"
 }

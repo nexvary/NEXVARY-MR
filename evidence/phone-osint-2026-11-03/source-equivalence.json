@@ -1,0 +1,9 @@
+{
+  "productCommit": "a9652a4b0ce789ff0a6ac629a0945e4db58827cc",
+  "localTree": "6c6e4518996047b1f472f30039e91222bd86d37b",
+  "nativeSuites": 51,
+  "nativeFailures": 0,
+  "exactTargetGuard": "ASCII numeric prefixes and Unicode digit suffixes rejected",
+  "fullNativeDurationSeconds": 230.55,
+  "realEngineIntegration": "Passed locally and on Windows/Linux CI"
+}
