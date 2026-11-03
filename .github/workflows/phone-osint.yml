@@ -50,6 +50,13 @@ jobs:
           name: Phone-OSINT-provider-tests-${{ matrix.os }}
           path: build-osint/osint-results.xml
       - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: PhoneInfoga-build-diagnostics-${{ matrix.os }}
+          path: |
+            engine-dist/*.txt
+            engine-dist/*.json
+      - uses: actions/upload-artifact@v4
         with:
           name: PhoneInfoga-reviewed-engine-${{ matrix.os }}
           path: engine-dist/
