@@ -71,7 +71,8 @@ QVariantMap classifyResponse(const QString &scanner,int status,const QByteArray 
  else if(status<200||status>=300)error="scanner-http-failure";
  else if(!document.isObject()||!object.contains("result")||object.value("result").isNull()||object.value("success")==false||object.contains("error"))error="invalid-or-failed-response";
  const bool ok=error.isEmpty();
- return {{"scanner",scanner},{"source","https://github.com/sundowndev/phoneinfoga"},{"retrievedUtc",utc()},
+ const QVariantMap origins{{"local","https://github.com/nyaruka/phonenumbers"},{"googlesearch","https://www.google.com/search"},{"ovh","https://api.ovh.com/1.0/telephony/number/detailedZones"},{"numverify","https://numverify.com/"},{"googlecse","https://customsearch.googleapis.com/customsearch/v1"}};
+ return {{"scanner",scanner},{"source",origins.value(scanner,"https://github.com/sundowndev/phoneinfoga")},{"adapterSource","https://github.com/sundowndev/phoneinfoga"},{"providerError",object.value("error").toString().left(1024)},{"retrievedUtc",utc()},
   {"status",ok?"completed":error=="scanner-unavailable"?"unavailable":"failed"},{"error",error},
   {"classification",ok?(scanner=="googlesearch"?"generated-search-links":scanner=="local"?"numbering-plan-metadata":"unverified-public-source"):"no-finding"},
   {"httpStatus",status},{"responseSha256",hash(body)},

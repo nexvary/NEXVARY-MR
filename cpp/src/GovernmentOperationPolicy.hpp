@@ -1,6 +1,7 @@
 #pragma once
 #include <QElapsedTimer>
 #include <QMap>
+#include <QSet>
 #include <QObject>
 #include <QTimer>
 #include <QVariantList>
@@ -101,5 +102,6 @@ private:
   QMap<QString, QVariantMap> requests_;
   QVariantMap verification_;
   QMap<QString, QVariantMap> operations_;
+  QSet<QString> consumedOsintApprovals_;
   QMap<QString, QString> operationClosures_;
 };

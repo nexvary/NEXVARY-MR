@@ -22,7 +22,9 @@ int main(int argc,char **argv){
    const auto token=qgetenv("NEXVARY_PHONEINFOGA_TOKEN");QByteArray body="{\"result\":{\"country\":\"Synthetic fixture\"}}",status="200 OK",headers;
    if(bytes.startsWith("GET /api/ ")){
     auto proof=QMessageAuthenticationCode::hash(challenge,token,QCryptographicHash::Sha256).toHex();
-    if(QFileInfo(app.applicationFilePath()).baseName().contains("wrong-proof"))proof="invalid";
+    #ifdef MR_OSINT_WRONG_PROOF
+    proof="invalid";
+#endif
     headers="X-Nexvary-Proof: "+proof+"\r\n";body="{}";
    }else if(auth!="Bearer "+token){status="403 Forbidden";body="{}";}
    else if(bytes.contains("/ovh/")){return;} // Intentional hanging scanner.

@@ -25,6 +25,13 @@ TestCase {
   artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
   return id
  }
+ function test_phoneOsintBilingualBoundary(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
+  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;
+  const number=findChild(panel,"osintNumber"),run=findChild(panel,"osintRun");
+  for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
+  page.showOsint=false
+ }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
   const id=uiEvidence.recordSyntheticOperation("security-scan");verify(id.length>0)

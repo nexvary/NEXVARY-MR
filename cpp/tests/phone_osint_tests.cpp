@@ -35,7 +35,17 @@ private slots:
   QVERIFY(result.value("processCleanup").toMap().value("cleanupComplete").toBool());
   QVERIFY(!rows[0].toMap().value("verifiedIdentity").toBool());QVERIFY(!rows[0].toMap().value("retrievedUtc").toString().isEmpty());
  }
- void cancellation(){PhoneInfoga p;auto cancel=std::make_shared<std::atomic_bool>(false);std::thread t([cancel]{std::this_thread::sleep_for(std::chrono::milliseconds(500));cancel->store(true);});const auto result=p.run(input({"ovh"}),cancel);t.join();QVERIFY(result.contains("error"));QVERIFY(result.value("processCleanup").toMap().value("cleanupComplete").toBool());}
+ void authenticationRefusesUntrustedListener(){
+  auto r=input();r.executable=QString::fromLocal8Bit(qgetenv("MR_OSINT_BAD_MOCK"));QFile f(r.executable);QVERIFY(f.open(QIODevice::ReadOnly));r.executableSha256=QString::fromLatin1(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Sha256).toHex());
+  PhoneInfoga p;const auto result=p.run(r,std::make_shared<std::atomic_bool>(false));QCOMPARE(result.value("error").toString(),QString("engine-authentication-failed"));QVERIFY(result.value("processCleanup").toMap().value("cleanupComplete").toBool());
+ }
+ void scannerTimeout(){PhoneInfoga p;const auto result=p.run(input({"ovh"}),std::make_shared<std::atomic_bool>(false));QVERIFY(!result.contains("error"));QCOMPARE(result.value("scanners").toList().first().toMap().value("error").toString(),QString("timeout"));QVERIFY(result.value("processCleanup").toMap().value("cleanupComplete").toBool());}
+ void realEngine(){
+  const auto path=QString::fromLocal8Bit(qgetenv("MR_OSINT_REAL_ENGINE"));if(path.isEmpty())QSKIP("Real upstream-engine path was not supplied; no live finding is simulated.");
+  auto r=input({"local","googlesearch"});r.executable=path;QFile f(path);QVERIFY(f.open(QIODevice::ReadOnly));r.executableSha256=QString::fromLatin1(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Sha256).toHex());
+  PhoneInfoga p;const auto result=p.run(r,std::make_shared<std::atomic_bool>(false));QVERIFY2(!result.contains("error"),qPrintable(result.value("error").toString()));const auto rows=result.value("scanners").toList();QCOMPARE(rows.size(),2);for(const auto &row:rows)QCOMPARE(row.toMap().value("status").toString(),QString("completed"));
+ }
+ void cancellation(){PhoneInfoga p;auto cancel=std::make_shared<std::atomic_bool>(false);std::thread t([cancel]{std::this_thread::sleep_for(std::chrono::milliseconds(500));cancel->store(true);});const auto result=p.run(input({"ovh"}),cancel);t.join();QCOMPARE(result.value("error").toString(),QString("cancelled"));QVERIFY(result.value("processCleanup").toMap().value("cleanupComplete").toBool());}
 };
 QTEST_GUILESS_MAIN(PhoneOsintTests)
 #include "phone_osint_tests.moc"

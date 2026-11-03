@@ -13,21 +13,43 @@ jobs:
       matrix:
         os: [ubuntu-24.04, windows-2022]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.3'
           cache: true
+      - uses: actions/checkout@v4
+        with:
+          repository: sundowndev/phoneinfoga
+          ref: 55807b05b753dab7bc6fe67403ca385668dda179
+          path: _phoneinfoga
+          persist-credentials: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.10'
+          cache: false
+      - name: Install pinned dependency security analyzer
+        run: go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
+      - name: Build GPL engine with dependency and security gates
+        shell: bash
+        run: python scripts/prepare_phoneinfoga.py --source _phoneinfoga --output engine-dist --govulncheck "$(go env GOPATH)/bin/govulncheck${{ runner.os == 'Windows' && '.exe' || '' }}"
       - name: Configure provider contract suite
         run: cmake -S . -B build-osint -DMR_BUILD_OSINT_TESTS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release
       - name: Build native provider and local mock engine
         run: cmake --build build-osint --config Release --parallel 2
       - name: Verify process lifecycle, cancellation and scanner contracts
-        run: ctest --test-dir build-osint -C Release --output-on-failure --output-junit osint-results.xml
+        shell: bash
+        run: |
+          export MR_OSINT_REAL_ENGINE="$PWD/engine-dist/phoneinfoga${{ runner.os == 'Windows' && '.exe' || '' }}"
+          ctest --test-dir build-osint -C Release --output-on-failure --output-junit osint-results.xml
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Phone-OSINT-provider-tests-${{ matrix.os }}
           path: build-osint/osint-results.xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PhoneInfoga-reviewed-engine-${{ matrix.os }}
+          path: engine-dist/

@@ -651,9 +651,10 @@ QVariantMap GovernmentOperationPolicy::beginCaseOsint(const QString &caseId,cons
  if(request.value("caseRef")!=caseId || number.isEmpty() || !request.value("reason").toString().contains(number)){
   fail("OSINT requires a reviewed exception for this case UUID and the exact normalized international number in its reason.");return {};
  }
- for(const auto &operation:operations_)if(operation.value("requestId")==request.value("id") && operation.value("kind")=="phone-osint"){
+ if(consumedOsintApprovals_.contains(request.value("id").toString())){
   fail("This OSINT approval has already been used; request a new single-number review.");return {};
  }
+ consumedOsintApprovals_.insert(request.value("id").toString());
  return operations_.value(beginOperation("external-analysis","phone-osint"));
 }
 bool GovernmentOperationPolicy::caseOperationAuthorized(const QString &id) {

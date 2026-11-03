@@ -33,7 +33,7 @@ Primary references:
 - https://www.gnu.org/licenses/gpl-faq.en.html#MereAggregation
 - https://www.gnu.org/licenses/gpl-3.0.html#section6
 
-Do not bundle an upstream release fetched as an opaque executable. Build from the pinned source plus patch, retain a source archive/module list/build receipt, run Go dependency vulnerability analysis and native lifecycle tests, then review any reachable vulnerabilities before distribution. Old Go module versions are not a security clearance. The patch does not remediate all upstream dependency vulnerabilities. No engine binary is included by this change until those gates are verified.
+Do not bundle an upstream release fetched as an opaque executable. Build from the pinned source plus patch, retain a source archive/module list/build receipt, run Go dependency vulnerability analysis and native lifecycle tests, then review any reachable vulnerabilities before distribution. Old Go module versions are not a security clearance. The engine module overlay pins updated dependencies and Go 1.26.10. `scripts/prepare_phoneinfoga.py` fails closed on scanner/session test failures, module verification failures and govulncheck findings; it retains a complete vendored corresponding-source archive, GPL license, build logs and binary/source digests. API-only packaging excludes the browser bundle. A clean vulnerability result is not a guarantee of security.
 
 ## Verification
 
@@ -43,4 +43,4 @@ Do not bundle an upstream release fetched as an opaque executable. Build from th
 
 `ctest --test-dir build-osint -C Release --output-on-failure`
 
-The focused provider suite uses a **clearly synthetic native localhost fixture**, never fabricated investigative findings. The existing full Qt workflow must also pass on Windows/Linux in production/laboratory profiles. Real upstream-engine integration, bilingual rendering, authority revocation and protected case retention must be verified separately before promotion from draft.
+The focused provider suite uses a **clearly synthetic native localhost fixture**, never fabricated investigative findings. The existing full Qt workflow must also pass on Windows/Linux in production/laboratory profiles. Real upstream-engine integration, bilingual rendering, authority revocation and protected case retention have dedicated tests; their exact-commit CI results and Windows packaging still control promotion from draft.

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Panel {
  id:panel
+ objectName:"phoneOsintPanel"
  property var app
  readonly property var report:lawCaseBridge.osintResult.report||({})
  title:app.trx("استخبارات المصادر المفتوحة — أرقام الهاتف","OSINT Intelligence — Phone numbers")
@@ -12,7 +13,7 @@ Panel {
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("يلزم فتح قضية وتسجيل جهاز، ثم اعتماد استثناء external-analysis يشير إلى UUID القضية ويتضمن الرقم الدولي كاملًا في سبب الطلب. كل اعتماد يسمح ببحث واحد فقط.","Open a case and register a device, then approve an external-analysis exception referencing the case UUID and the exact international number in its reason. Each approval permits one search.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.danger;text:panel.app.trx("النتائج غير متحققة: لا تثبت هوية المشترك أو الموقع الحي أو سجلات الاتصالات. روابط Google المقترحة ليست نتائج بحث. PhoneInfoga غير مُصان.","Unverified results: no confirmed subscriber identity, live location or telecom records. Generated Google links are not search hits. PhoneInfoga is unmaintained.")}
  ComboBox {id:device;objectName:"osintDevice";Layout.fillWidth:true;model:lawCaseBridge.devices;textRole:"model";enabled:!lawCaseBridge.osintBusy}
- TextField {id:number;objectName:"osintNumber";Layout.fillWidth:true;maximumLength:64;selectByMouse:true;layoutDirection:Qt.LeftToRight;horizontalAlignment:TextInput.AlignLeft;enabled:!lawCaseBridge.osintBusy;placeholderText:panel.app.trx("رقم دولي واحد مثل ‎+201xxxxxxxxx","One international number, e.g. +201xxxxxxxxx")}
+ TextField {id:number;objectName:"osintNumber";Layout.fillWidth:true;maximumLength:64;selectByMouse:true;LayoutMirroring.enabled:false;horizontalAlignment:TextInput.AlignLeft;enabled:!lawCaseBridge.osintBusy;placeholderText:panel.app.trx("رقم دولي واحد مثل ‎+201xxxxxxxxx","One international number, e.g. +201xxxxxxxxx")}
  Flow {Layout.fillWidth:true;spacing:12
   CheckBox {id:local;checked:true;text:panel.app.trx("بيانات خطة الترقيم المحلية","Offline numbering plan");enabled:!lawCaseBridge.osintBusy}
   CheckBox {id:google;text:panel.app.trx("روابط بحث مقترحة","Generated search links");enabled:!lawCaseBridge.osintBusy}
@@ -31,7 +32,7 @@ Panel {
  }
  Column {id:rows;Layout.fillWidth:true;spacing:8
   Repeater {model:panel.report.scanners||[];delegate:Panel {required property var modelData;width:rows.width;title:modelData.scanner;iconName:"document_text"
-   Label {Layout.fillWidth:true;textFormat:Text.PlainText;color:panel.app.design.text;wrapMode:Text.WrapAnywhere;text:modelData.status+" · "+modelData.classification+"\n"+modelData.retrievedUtc+"\n"+modelData.source+(modelData.error?"\n"+modelData.error:"")}
+   Label {Layout.fillWidth:true;textFormat:Text.PlainText;color:panel.app.design.text;wrapMode:Text.WrapAnywhere;text:modelData.status+" · "+modelData.classification+"\n"+modelData.retrievedUtc+"\n"+modelData.source+(modelData.error?"\n"+modelData.error:"")+(modelData.providerError?"\n"+modelData.providerError:"")}
    TextArea {Layout.fillWidth:true;readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify(modelData.result,null,2)||""}
   }}
  }
