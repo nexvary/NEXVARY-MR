@@ -24,6 +24,7 @@ public:
  QVariantList audit(const QString &id);
  bool verifyAudit(const QString &id);
  QString addEvidence(const QString &id,qint64 revision,const QString &device,const QString &path,const QString &description,const QString &custodian,const QString &actor);
+ QString registerOsint(const QString &id,qint64 revision,const QString &device,const QVariantMap &report,const QString &actor);
  bool transfer(const QString &id,qint64 revision,const QString &evidence,const QString &from,const QString &to,const QString &reason,const QString &actor);
  QByteArray readEvidence(const QString &id,const QString &evidence);
  QVariantMap recordAnalysis(const QString &id,qint64 revision,const QString &evidence,const QString &parser,const QVariantMap &report,const QString &actor,const QVariantMap &intent={});

@@ -26,6 +26,8 @@ class LawCaseBridge final:public QObject {
  Q_PROPERTY(QVariantList scenarios READ scenarios NOTIFY changed)
  Q_PROPERTY(QVariantList trainingAttempts READ trainingAttempts NOTIFY trainingChanged)
  Q_PROPERTY(QVariantList accessAssessment READ assessDeviceAccess NOTIFY accessChanged)
+ Q_PROPERTY(bool osintBusy READ osintBusy NOTIFY osintChanged)
+ Q_PROPERTY(QVariantMap osintResult READ osintResult NOTIFY osintChanged)
  Q_PROPERTY(bool partitionsBusy READ partitionsBusy NOTIFY partitionsChanged)
  Q_PROPERTY(QVariantMap partitionsResult READ partitionsResult NOTIFY partitionsChanged)
  Q_PROPERTY(QVariantList partitionsProcessCleanup READ partitionsProcessCleanup NOTIFY partitionsChanged)
@@ -64,6 +66,10 @@ public:
  Q_INVOKABLE QString addEvidence(const QString &device,const QString &path,const QString &description,const QString &custodian,bool consent);
  Q_INVOKABLE bool transferCustody(const QString &evidence,const QString &from,const QString &to,const QString &reason);
  Q_INVOKABLE QVariantMap analyzeEvidence(const QString &evidence,const QString &parser);
+ bool osintBusy()const{return osintActive_;}
+ QVariantMap osintResult()const{return osintResult_;}
+ Q_INVOKABLE bool runPhoneOsint(const QString &number,const QStringList &scanners,const QString &engine,const QString &engineSha256,const QString &device,bool consent);
+ Q_INVOKABLE void cancelOsint();
  bool partitionsBusy()const{return partitionsActive_;}
  QVariantMap partitionsResult()const{return partitionsResult_;}
  QVariantList partitionsProcessCleanup()const{return partitionsProcessCleanup_;}
@@ -96,6 +102,7 @@ public:
  Q_INVOKABLE bool exportTrainingReport(const QString &path,bool consent);
  Q_INVOKABLE bool exportCasePdf(const QString &path,bool arabic,bool consent);
 signals:
+ void osintChanged();
  void partitionsChanged();
  void partitionsCompleted(bool success);
  void artifactsChanged();
@@ -117,6 +124,11 @@ private:
  QString actor()const;
  std::unique_ptr<LawCaseStore> store_;
  std::unique_ptr<EvidenceImportRunner> importer_;
+ void initOsint();
+ std::unique_ptr<QFutureWatcher<QVariantMap>> osint_;
+ std::shared_ptr<std::atomic_bool> osintCancel_;
+ QVariantMap osintContext_,osintResult_;
+ bool osintActive_=false;
  void initPartitions();
  std::unique_ptr<QFutureWatcher<QVariantMap>> partitions_;
  std::shared_ptr<std::atomic_bool> partitionsCancel_;

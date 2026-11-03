@@ -36,13 +36,13 @@ bool newOutput(const QString &input,QFile &file) {
 }
 LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
  :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
- initImports();initTimeline();initArtifacts();initPartitions();
+ initImports();initTimeline();initArtifacts();initPartitions();initOsint();
  if(identity_)connect(identity_,&IdentityService::changed,this,[this]{resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();
 }
-LawCaseBridge::~LawCaseBridge(){if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
+LawCaseBridge::~LawCaseBridge(){if(osintCancel_)osintCancel_->store(true);if(artifactsCancel_)artifactsCancel_->store(true);if(timelineCancel_)timelineCancel_->store(true);if(partitionsCancel_)partitionsCancel_->store(true);}
 bool LawCaseBridge::ready()const{
  if(!transactionsReady_ || !store_->ready() || linkCheckActive_)return false;
  if(operationPolicy_ && !const_cast<LawCaseBridge*>(this)->verifyOperationLinks(false))return false;

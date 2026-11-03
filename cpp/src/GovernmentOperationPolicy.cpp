@@ -645,6 +645,17 @@ QVariantMap GovernmentOperationPolicy::beginCasePartitions(const QString &caseId
  const auto id=beginOperation("external-analysis","partition-analysis");
  return operations_.value(id);
 }
+QVariantMap GovernmentOperationPolicy::beginCaseOsint(const QString &caseId,const QString &number) {
+ if(!permit("external-analysis") || caseId.isEmpty())return {};
+ const auto request=requests_.value(grants_.value("external-analysis").id);
+ if(request.value("caseRef")!=caseId || number.isEmpty() || !request.value("reason").toString().contains(number)){
+  fail("OSINT requires a reviewed exception for this case UUID and the exact normalized international number in its reason.");return {};
+ }
+ for(const auto &operation:operations_)if(operation.value("requestId")==request.value("id") && operation.value("kind")=="phone-osint"){
+  fail("This OSINT approval has already been used; request a new single-number review.");return {};
+ }
+ return operations_.value(beginOperation("external-analysis","phone-osint"));
+}
 bool GovernmentOperationPolicy::caseOperationAuthorized(const QString &id) {
  refresh();
  if(!available() || !granted("external-analysis"))return false;

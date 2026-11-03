@@ -56,6 +56,7 @@ public:
   // Native consumers only. No caller-controlled labels, paths or case content.
   QString beginOperation(const QString &capability, const QString &kind);
   QVariantMap beginCasePartitions(const QString &caseId);
+  QVariantMap beginCaseOsint(const QString &caseId,const QString &number);
   bool caseOperationAuthorized(const QString &id);
   QVariantMap finishOperation(const QString &id, const QString &status,
                               const QString &sourceDigest = {},
