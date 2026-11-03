@@ -39,8 +39,11 @@ def main():
 
     def run(command, log):
         with (output / log).open("wb") as stream:
-            subprocess.run(command, cwd=source, env=environment, stdout=stream,
-                           stderr=subprocess.STDOUT, check=True, timeout=600)
+            result = subprocess.run(command, cwd=source, env=environment, stdout=stream,
+                                    stderr=subprocess.STDOUT, timeout=600)
+        if result.returncode:
+            print((output / log).read_text(encoding="utf-8", errors="replace")[-16000:], file=sys.stderr)
+            raise subprocess.CalledProcessError(result.returncode, command)
 
     run(["go", "mod", "verify"], "module-verification.txt")
     run(["go", "test", "./lib/...", "./web/v2/api/..."], "upstream-scanner-tests.txt")
