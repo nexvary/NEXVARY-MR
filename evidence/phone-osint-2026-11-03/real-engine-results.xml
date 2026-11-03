@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="9ac0f46643cf"
+	time="16"
+	timestamp="2026-11-03T14:26:04"
+	>
+	<testcase name="mr_phone_osint_tests" classname="mr_phone_osint_tests" time="16.6043" status="run">
+		<properties/>
+		<system-out>********* Start testing of PhoneOsintTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PhoneOsintTests::initTestCase()
+PASS   : PhoneOsintTests::normalization()
+PASS   : PhoneOsintTests::classification()
+PASS   : PhoneOsintTests::disabledCommercialProvider()
+PASS   : PhoneOsintTests::rejectBeforeLaunch()
+PASS   : PhoneOsintTests::mockLifecycle()
+PASS   : PhoneOsintTests::authenticationRefusesUntrustedListener()
+PASS   : PhoneOsintTests::scannerTimeout()
+PASS   : PhoneOsintTests::realEngine()
+PASS   : PhoneOsintTests::cancellation()
+PASS   : PhoneOsintTests::cleanupTestCase()
+Totals: 11 passed, 0 failed, 0 skipped, 0 blacklisted, 16586ms
+********* Finished testing of PhoneOsintTests *********
+</system-out>
+	</testcase>
+</testsuite>

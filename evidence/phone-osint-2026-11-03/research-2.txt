@@ -1,0 +1,7 @@
+test_initial_registry (test_research.RegistryTests.test_initial_registry) ... ok
+test_invalid_source_is_rejected (test_research.RegistryTests.test_invalid_source_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+OK
