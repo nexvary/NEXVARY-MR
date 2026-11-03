@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import tempfile
 
 UPSTREAM = "55807b05b753dab7bc6fe67403ca385668dda179"
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,8 +30,22 @@ def main():
     overlay = ROOT / "third_party" / "phoneinfoga"
     # Preserve upstream fixture bytes on Windows too; CRLF checkout conversion
     # changes golden outputs and must not be disguised by relaxed assertions.
-    subprocess.run(["git", "-c", "core.autocrlf=false", "checkout-index", "--all", "--force"],
-                   cwd=source, check=True)
+    # Extract Git's stored bytes directly: checkout-index may reuse cached
+    # worktree files despite a different autocrlf setting on Windows.
+    with tempfile.TemporaryFile() as snapshot:
+        subprocess.run(["git", "archive", "--format=tar", "HEAD"], cwd=source,
+                       stdout=snapshot, check=True)
+        snapshot.seek(0)
+        with tarfile.open(fileobj=snapshot, mode="r:") as archive:
+            archive.extractall(source, filter="data")
+    fixtures = {}
+    for path in sorted((source / "lib/output/testdata").glob("console_*.txt")):
+        relative = path.relative_to(source).as_posix()
+        expected = subprocess.check_output(["git", "show", "HEAD:" + relative], cwd=source)
+        if path.read_bytes() != expected:
+            raise RuntimeError("Upstream golden fixture bytes changed: " + relative)
+        fixtures[relative] = hashlib.sha256(expected).hexdigest()
+    (output / "golden-fixture-sha256.json").write_text(json.dumps(fixtures, indent=2) + "\n", encoding="utf-8")
     patch = output / "applied-localhost-session.patch"
     patch.write_bytes((overlay / "localhost-session.patch").read_bytes().replace(b"\r\n", b"\n"))
     subprocess.run(["git", "apply", "--check", str(patch)], cwd=source, check=True)
