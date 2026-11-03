@@ -27,11 +27,18 @@ def main():
         raise RuntimeError("Use a clean dedicated engine checkout")
     output.mkdir(parents=True, exist_ok=False)
     overlay = ROOT / "third_party" / "phoneinfoga"
-    patch = overlay / "localhost-session.patch"
+    # Preserve upstream fixture bytes on Windows too; CRLF checkout conversion
+    # changes golden outputs and must not be disguised by relaxed assertions.
+    subprocess.run(["git", "-c", "core.autocrlf=false", "checkout-index", "--all", "--force"],
+                   cwd=source, check=True)
+    patch = output / "applied-localhost-session.patch"
+    patch.write_bytes((overlay / "localhost-session.patch").read_bytes().replace(b"\r\n", b"\n"))
     subprocess.run(["git", "apply", "--check", str(patch)], cwd=source, check=True)
     subprocess.run(["git", "apply", str(patch)], cwd=source, check=True)
     for name in ("mod", "sum"):
-        shutil.copyfile(overlay / ("engine.go." + name), source / ("go." + name))
+        (source / ("go." + name)).write_text(
+            (overlay / ("engine.go." + name)).read_text(encoding="utf-8"),
+            encoding="utf-8", newline="\n")
     environment = dict(os.environ, GOTOOLCHAIN="local", CGO_ENABLED="0")
     go_version = subprocess.check_output(["go", "version"], env=environment, text=True).strip()
     if "go1.26.10 " not in go_version:
