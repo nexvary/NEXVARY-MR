@@ -1,4 +1,5 @@
 #include "GovernmentOperationPolicy.hpp"
+#include <QRegularExpression>
 #include "IdentityService.hpp"
 #include "OperationReceipt.hpp"
 #include "CaseOperationIntent.hpp"
@@ -648,7 +649,7 @@ QVariantMap GovernmentOperationPolicy::beginCasePartitions(const QString &caseId
 QVariantMap GovernmentOperationPolicy::beginCaseOsint(const QString &caseId,const QString &number) {
  if(!permit("external-analysis") || caseId.isEmpty())return {};
  const auto request=requests_.value(grants_.value("external-analysis").id);
- if(request.value("caseRef")!=caseId || number.isEmpty() || !request.value("reason").toString().contains(number)){
+ if(request.value("caseRef")!=caseId || number.isEmpty() || !QRegularExpression("(?<![+\\p{Nd}])"+QRegularExpression::escape(number)+"(?!\\p{Nd})").match(request.value("reason").toString()).hasMatch()){
   fail("OSINT requires a reviewed exception for this case UUID and the exact normalized international number in its reason.");return {};
  }
  if(consumedOsintApprovals_.contains(request.value("id").toString())){

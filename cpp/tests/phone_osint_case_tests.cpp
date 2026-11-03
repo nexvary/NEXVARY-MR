@@ -40,6 +40,9 @@ private slots:
  void caseAndNumberBoundApproval(){
   Fixture f;QVERIFY(!f.run());QVERIFY(f.approve("00000000-0000-4000-8000-000000000079"));QVERIFY(!f.run());f.policy.revoke("external-analysis");
   QVERIFY(f.approve(f.id,"Synthetic wrong number +12025550101"));QVERIFY(!f.run());QVERIFY(f.policy.operationReceipts().isEmpty());
+  f.policy.revoke("external-analysis");QVERIFY(f.approve(f.id,"Synthetic longer target +120255501001"));QVERIFY(!f.run());
+  f.policy.revoke("external-analysis");QVERIFY(f.approve(f.id,QString::fromUtf8("Synthetic suffixed target +12025550100١")));QVERIFY(!f.run());
+  QVERIFY(f.policy.operationReceipts().isEmpty());
  }
  void retainProtectedEvidenceAndConsumeApproval(){
   Fixture f;QVERIFY(f.approve(f.id));QVERIFY2(f.run(),qPrintable(f.law.error()));
