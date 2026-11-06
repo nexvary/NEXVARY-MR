@@ -2,6 +2,7 @@
 // NEXVARY-MR: provider-neutral commercial OSINT contract.
 // No vendor credentials, network calls, or paid lookups are performed here.
 #include <cstdint>
+#include <string_view>
 #include <optional>
 #include <string>
 #include <vector>
@@ -45,15 +46,20 @@ struct QueryResult {
     std::string errorCode;
     std::string providerRequestId;
 };
+inline bool hasVisibleText(std::string_view value) {
+    return value.find_first_not_of(" \\t\\r\\n") != std::string_view::npos;
+}
 inline bool maySubmit(const QueryRequest& request, const PriceEstimate& estimate,
                       bool credentialsConfigured, bool contractPermitsIntegration) {
     return credentialsConfigured && contractPermitsIntegration
-        && !request.selector.empty()
-        && !request.authorization.caseId.empty()
-        && !request.authorization.authorizationReference.empty()
-        && !request.authorization.operatorId.empty()
+        && hasVisibleText(request.selector)
+        && hasVisibleText(request.authorization.caseId)
+        && hasVisibleText(request.authorization.authorizationReference)
+        && hasVisibleText(request.authorization.operatorId)
         && request.authorization.approvedForExternalDisclosure
         && request.operatorConfirmedCost
+        && hasVisibleText(estimate.currency)
+        && hasVisibleText(estimate.unit)
         && estimate.confirmedByProvider
         && estimate.minorUnits.has_value()
         && *estimate.minorUnits >= 0;
