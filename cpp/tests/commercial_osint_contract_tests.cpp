@@ -38,5 +38,17 @@ int main() {
     if (!(maySubmit(q, price, true, true))) { std::cerr << "Contract check failed at line " << __LINE__ << "\n"; return EXIT_FAILURE; }
     q.provider = Provider::Lampyre;
     if (!(maySubmit(q, price, true, true))) { std::cerr << "Contract check failed at line " << __LINE__ << "\n"; return EXIT_FAILURE; }
+    q.selector = "   ";
+    if (maySubmit(q, price, true, true)) return EXIT_FAILURE;
+    q.selector = "+15551234567";
+    q.authorization.caseId = "  ";
+    if (maySubmit(q, price, true, true)) return EXIT_FAILURE;
+    q.authorization.caseId = "CASE-TEST";
+    price.currency = " ";
+    if (maySubmit(q, price, true, true)) return EXIT_FAILURE;
+    price.currency = "GBP";
+    price.unit = "\t";
+    if (maySubmit(q, price, true, true)) return EXIT_FAILURE;
+    price.unit = "credit";
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
