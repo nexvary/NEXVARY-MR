@@ -119,6 +119,13 @@ int main() {
     plan.sourceId = "exiftool";
     plan.approvedForExternalDisclosure = false;
     if (!mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.caseId = "  ";
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.caseId = "CASE-TEST";
+    plan.executablePath = "/trusted/tool\
+other";
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.executablePath = "/trusted/subfinder";
     plan.sourceId = "lampyre";
     if (mayLaunchProcess(plan)) return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
