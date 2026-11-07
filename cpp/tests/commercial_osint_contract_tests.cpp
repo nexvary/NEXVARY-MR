@@ -1,5 +1,6 @@
 #include "../src/osint/CommercialProviderContract.hpp"
 #include "../src/osint/CommercialProviderMock.hpp"
+#include "../src/osint/OsintSourceRegistry.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace mr::osint;
@@ -65,6 +66,20 @@ int main() {
         mismatch.errorCode != "PROVIDER_MISMATCH") return EXIT_FAILURE;
     q.provider = Provider::Lampyre;
     if (lampyre.execute(q, price, true, true).state != QueryState::Completed)
+        return EXIT_FAILURE;
+    if (kSourceRegistry.size() != 8 || findSource("exiftool") == nullptr ||
+        findSource("subfinder") == nullptr || findSource("sherlock") == nullptr ||
+        findSource("maigret") == nullptr || findSource("spiderfoot") == nullptr ||
+        findSource("phoneinfoga") == nullptr ||
+        findSource("osint-industries") == nullptr ||
+        findSource("lampyre") == nullptr || findSource("unknown") != nullptr)
+        return EXIT_FAILURE;
+    for (const auto& source : kSourceRegistry) {
+        if (source.enabledByDefault || !source.requiresCaseAuthorization)
+            return EXIT_FAILURE;
+    }
+    if (findSource("exiftool")->externalDisclosure ||
+        !findSource("subfinder")->externalDisclosure)
         return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
