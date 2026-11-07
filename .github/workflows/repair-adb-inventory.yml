@@ -29,6 +29,9 @@ jobs:
       - name: Run parser test (Linux)
         if: runner.os == 'Linux'
         run: ./adb_inventory_tests
+      - name: Configure MSVC environment
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Compile parser test (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
