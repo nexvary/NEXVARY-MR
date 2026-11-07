@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <utility>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -44,7 +45,8 @@ inline AdbInventoryResult parseAdbDeviceInventory(std::string_view input) {
         if (!line.empty() && line.back() == '\r') line.remove_suffix(1);
         cursor = end == std::string_view::npos ? input.size() : end + 1;
         if (line.empty() || line.starts_with("List of devices attached") ||
-            line.starts_with("* daemon") || line.starts_with("adb server")) continue;
+            line.starts_with("* daemon") || line.starts_with("adb server") ||
+            line.starts_with("* failed to start daemon")) continue;
         const auto sep = line.find_first_of(" \t");
         if (sep == std::string_view::npos || !adbSafeField(line.substr(0, sep))) {
             out.error = "invalid-device-line"; out.devices.clear(); return out;
@@ -54,7 +56,7 @@ inline AdbInventoryResult parseAdbDeviceInventory(std::string_view input) {
         auto pos = line.find_first_not_of(" \t", sep);
         if (pos == std::string_view::npos) { out.error = "missing-state"; out.devices.clear(); return out; }
         auto stop = line.find_first_of(" \t", pos);
-        const auto state = line.substr(pos, stop == std::string_view::npos ? stop : stop - pos);
+        const auto state = line.substr(pos, stop == std::string_view::npos ? line.size() - pos : stop - pos);
         item.state = adbState(state);
         if (item.state == AdbConnectionState::Unknown) {
             out.error = "unknown-device-state"; out.devices.clear(); return out;
