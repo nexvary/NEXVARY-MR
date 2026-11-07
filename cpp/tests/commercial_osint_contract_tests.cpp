@@ -1,6 +1,7 @@
 #include "../src/osint/CommercialProviderContract.hpp"
 #include "../src/osint/CommercialProviderMock.hpp"
 #include "../src/osint/OsintSourceRegistry.hpp"
+#include "../src/osint/OsintEvidenceRecord.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace mr::osint;
@@ -81,5 +82,15 @@ int main() {
     if (findSource("exiftool")->externalDisclosure ||
         !findSource("subfinder")->externalDisclosure)
         return EXIT_FAILURE;
+    EvidenceRecord evidence{"CASE-TEST", "exiftool", "local-fixture",
+                            "2026-11-07T00:00:00Z", std::string(64, 'a'),
+                            "Synthetic test record"};
+    if (!evidenceHasRequiredProvenance(evidence) ||
+        evidence.status != EvidenceStatus::UnverifiedLead) return EXIT_FAILURE;
+    evidence.sha256Hex = "not-a-hash";
+    if (evidenceHasRequiredProvenance(evidence)) return EXIT_FAILURE;
+    evidence.sha256Hex = std::string(64, 'a');
+    evidence.sourceReference.clear();
+    if (evidenceHasRequiredProvenance(evidence)) return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
