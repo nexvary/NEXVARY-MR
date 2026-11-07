@@ -29,8 +29,8 @@ inline bool validSha256Hex(std::string_view value) {
 inline bool mayLaunchProcess(const ProcessLaunchPlan& plan) {
     const auto* source = findSource(plan.sourceId);
     if (!source || source->mode != IntegrationMode::LocalExecutable ||
-        !source->requiresCaseAuthorization || plan.caseId.empty() ||
-        plan.executablePath.empty() || !validSha256Hex(plan.executableSha256) ||
+        !source->requiresCaseAuthorization || plan.caseId.empty() || plan.caseId.find_first_not_of(" \t\r\n") == std::string::npos ||
+        plan.executablePath.empty() || plan.executablePath.find_first_of("\r\n") != std::string::npos || !validSha256Hex(plan.executableSha256) ||
         plan.timeoutSeconds == 0 || plan.timeoutSeconds > 120 ||
         plan.maximumOutputBytes == 0 || plan.maximumOutputBytes > 1024 * 1024 ||
         plan.arguments.size() > 32 ||
