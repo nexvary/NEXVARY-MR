@@ -27,7 +27,7 @@ inline AdapterResult parseExifToolJson(const QByteArray& data) {
     for (const auto& item : items) {
         if (!item.isObject()) { out.error = "invalid-exiftool-record"; out.findings.clear(); return out; }
         const auto obj = item.toObject();
-        if (!obj.value("SourceFile").isString()) {
+        if (!obj.value("SourceFile").isString() || obj.value("SourceFile").toString().isEmpty()) {
             out.error = "missing-source-file"; out.findings.clear(); return out;
         }
         QVariantMap record;
@@ -58,7 +58,8 @@ inline AdapterResult runExifTool(const ProcessLaunchPlan& plan, const std::atomi
     if (plan.sourceId != "exiftool") { out.error = "provider-mismatch"; return out; }
     if (plan.arguments.size() != 3 || plan.arguments[0] != "-json" ||
         plan.arguments[1] != "--" || plan.arguments[2].empty() ||
-        plan.arguments[2][0] == '-') {
+        plan.arguments[2][0] == '-' ||
+        !QFileInfo(QString::fromStdString(plan.arguments[2])).isAbsolute()) {
         out.error = "unexpected-arguments"; return out;
     }
     const auto run = runPinnedTool(plan, cancelled);
