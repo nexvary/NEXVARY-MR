@@ -7,6 +7,13 @@ int main() {
         "List of devices attached\n"
         "SERIAL123 device product:foo model:CPH2577 transport_id:1\n"
         "SERIAL456 unauthorized\n");
+    if (mr::adbDiagnosticReadiness(mr::AdbConnectionState::Device) != mr::AdbDiagnosticReadiness::Ready ||
+        mr::adbDiagnosticReadiness(mr::AdbConnectionState::Unauthorized) != mr::AdbDiagnosticReadiness::NeedsOwnerAuthorization ||
+        mr::adbDiagnosticReadiness(mr::AdbConnectionState::Offline) != mr::AdbDiagnosticReadiness::ReconnectRequired ||
+        mr::adbDiagnosticReadiness(mr::AdbConnectionState::Recovery) != mr::AdbDiagnosticReadiness::RecoveryOnly ||
+        mr::adbDiagnosticReadiness(mr::AdbConnectionState::Sideload) != mr::AdbDiagnosticReadiness::SideloadOnly ||
+        mr::adbDiagnosticReadiness(mr::AdbConnectionState::Bootloader) != mr::AdbDiagnosticReadiness::UnsupportedState)
+        return EXIT_FAILURE;
     if (!good.error.empty() || good.devices.size() != 2 ||
         good.devices[0].model != "CPH2577" ||
         good.devices[0].state != mr::AdbConnectionState::Device ||
