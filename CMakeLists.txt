@@ -314,3 +314,12 @@ if(BUILD_TESTING AND MR_BUILD_GUI)
  add_test(NAME mr_phone_osint_case_tests COMMAND mr_phone_osint_case_tests)
  set_tests_properties(mr_phone_osint_case_tests PROPERTIES TIMEOUT 120)
 endif()
+
+# Repair device inventory: deterministic offline parser test.
+if(BUILD_TESTING)
+ add_executable(mr_adb_inventory_tests cpp/tests/adb_inventory_tests.cpp)
+ target_include_directories(mr_adb_inventory_tests PRIVATE cpp/include)
+ mr_warnings(mr_adb_inventory_tests)
+ add_test(NAME mr_adb_inventory_tests COMMAND mr_adb_inventory_tests)
+ set_tests_properties(mr_adb_inventory_tests PROPERTIES TIMEOUT 10)
+endif()
