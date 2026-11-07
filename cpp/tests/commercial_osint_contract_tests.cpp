@@ -1,4 +1,5 @@
 #include "../src/osint/CommercialProviderContract.hpp"
+#include "../src/osint/CommercialProviderMock.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace mr::osint;
@@ -50,5 +51,20 @@ int main() {
     price.unit = "\t";
     if (maySubmit(q, price, true, true)) return EXIT_FAILURE;
     price.unit = "credit";
+    CommercialProviderMock industries(Provider::OsintIndustries);
+    CommercialProviderMock lampyre(Provider::Lampyre);
+    auto denied = industries.execute(q, price, false, true);
+    if (denied.state != QueryState::AwaitingAuthorization ||
+        denied.errorCode != "POLICY_DENIED" || !denied.findings.empty()) return EXIT_FAILURE;
+    auto completed = industries.execute(q, price, true, true);
+    if (completed.state != QueryState::Completed ||
+        completed.providerRequestId != "MOCK-NO-NETWORK" ||
+        !completed.findings.empty()) return EXIT_FAILURE;
+    auto mismatch = lampyre.execute(q, price, true, true);
+    if (mismatch.state != QueryState::Failed ||
+        mismatch.errorCode != "PROVIDER_MISMATCH") return EXIT_FAILURE;
+    q.provider = Provider::Lampyre;
+    if (lampyre.execute(q, price, true, true).state != QueryState::Completed)
+        return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
