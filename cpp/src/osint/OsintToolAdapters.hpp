@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QVariantList>
+#include <QVariantMap>
 
 namespace mr::osint {
 struct AdapterResult {
@@ -55,6 +56,11 @@ inline AdapterResult parseSubfinderOutput(const QByteArray& data, const QString&
 inline AdapterResult runExifTool(const ProcessLaunchPlan& plan, const std::atomic_bool& cancelled) {
     AdapterResult out;
     if (plan.sourceId != "exiftool") { out.error = "provider-mismatch"; return out; }
+    if (plan.arguments.size() != 3 || plan.arguments[0] != "-json" ||
+        plan.arguments[1] != "--" || plan.arguments[2].empty() ||
+        plan.arguments[2][0] == '-') {
+        out.error = "unexpected-arguments"; return out;
+    }
     const auto run = runPinnedTool(plan, cancelled);
     if (!run.completed) { out.error = run.error; return out; }
     return parseExifToolJson(run.standardOutput);
