@@ -22,6 +22,8 @@ int main(int argc, char** argv) {
     if (mr::osint::parseExifToolJson(R"([{"FileType":"JPEG"}])").completed)
         return EXIT_FAILURE;
     if (mr::osint::parseExifToolJson("not-json").completed) return EXIT_FAILURE;
+    if (mr::osint::parseExifToolJson(R"([{"SourceFile":""}])").completed)
+        return EXIT_FAILURE;
     const auto domains = mr::osint::parseSubfinderOutput(
         "api.example.org\n", "example.org");
     if (!domains.completed || domains.findings.size() != 1) return EXIT_FAILURE;
