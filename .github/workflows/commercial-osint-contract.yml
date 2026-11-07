@@ -1,0 +1,27 @@
+name: Commercial OSINT offline contract
+on:
+  push:
+    branches: [feature/osint-commercial-providers]
+  pull_request:
+    paths:
+      - 'cpp/src/osint/**'
+      - 'cpp/tests/commercial_osint_contract_tests.cpp'
+      - 'CMakeLists.txt'
+      - '.github/workflows/commercial-osint-contract.yml'
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build-commercial -DMR_BUILD_GUI=OFF -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
+      - name: Build
+        run: cmake --build build-commercial --config Release --target mr_commercial_osint_contract_tests
+      - name: Test
+        run: ctest --test-dir build-commercial -C Release --output-on-failure -R "^mr_commercial_osint_contract_tests$"

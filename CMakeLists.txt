@@ -314,3 +314,23 @@ if(BUILD_TESTING AND MR_BUILD_GUI)
  add_test(NAME mr_phone_osint_case_tests COMMAND mr_phone_osint_case_tests)
  set_tests_properties(mr_phone_osint_case_tests PROPERTIES TIMEOUT 120)
 endif()
+
+# Commercial OSINT contract tests: no Qt, credentials, or network required.
+if(BUILD_TESTING)
+ add_executable(mr_commercial_osint_contract_tests cpp/tests/commercial_osint_contract_tests.cpp)
+ mr_warnings(mr_commercial_osint_contract_tests)
+ add_test(NAME mr_commercial_osint_contract_tests COMMAND mr_commercial_osint_contract_tests)
+ set_tests_properties(mr_commercial_osint_contract_tests PROPERTIES TIMEOUT 10)
+endif()
+
+# Qt process runner smoke test (optional when Qt Core is installed).
+if(BUILD_TESTING)
+ find_package(Qt6 6.4 COMPONENTS Core QUIET)
+ if(Qt6Core_FOUND)
+  add_executable(mr_osint_qt_process_tests cpp/tests/osint_qt_process_tests.cpp)
+  target_link_libraries(mr_osint_qt_process_tests PRIVATE Qt6::Core)
+  mr_warnings(mr_osint_qt_process_tests)
+  add_test(NAME mr_osint_qt_process_tests COMMAND mr_osint_qt_process_tests)
+  set_tests_properties(mr_osint_qt_process_tests PROPERTIES TIMEOUT 15)
+ endif()
+endif()
