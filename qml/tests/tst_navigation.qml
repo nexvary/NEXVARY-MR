@@ -25,6 +25,14 @@ TestCase {
   artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
   return id
  }
+ function test_adbReadinessStatusExists(){
+  app.setWorkspace(false);
+  app.navigateSection(1);
+  verify(renderedFrame());
+  const status=findChild(app,"adbReadinessStatus");
+  verify(status!==null,"Device page must expose accessible ADB readiness guidance");
+  verify(status.text.length>0,"Readiness guidance must not be empty");
+ }
  function test_phoneOsintBilingualBoundary(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
   const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;
