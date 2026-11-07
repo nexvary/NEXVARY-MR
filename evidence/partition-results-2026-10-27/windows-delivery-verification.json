@@ -1,0 +1,18 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "downloadedProviderDigestsVerified": {
+    "portable": "62bc3bf0320295f20b2d9d3cf333dd3cba9bc4607476364ef721c295e5d22a53",
+    "installer": "924ee9ac58a36e173a806f0379123f3307f1c924c2b9f726d07137e48070d02e",
+    "evidence": "3b0100a2cc96f4ec637568a1b4780e85a6155c96629ea1027f7c73e8eee8d610"
+  },
+  "portableZipSha256": "e5aa9eab37e82769e597c163e885bdd7da92f72e1a635eec67fe162691d55cd7",
+  "setupSha256": "cb94961ed19232b4adea53d5768de4128a219212214c7e666afea188cefe6524",
+  "testedExecutableSha256": "bf38b4780fff6ed6102926aa69d27061dcddea35b84dc539f891f252c517af9e",
+  "testedImportWorkerSha256": "84e589ffac759beeee6dc9600108cb8743cf1d34c71f8777daf158318767a3e5",
+  "bundleManifestFilesVerified": 1418,
+  "portableAndInstalledReceiptsMatch": true,
+  "installerLifecycleVerified": true,
+  "canonicalLfShippedGuidesAndVerifierMatched": true,
+  "signed": false,
+  "scope": "Read-only downloaded byte/receipt checks completed before cloud runtime loss; not reproducible-build, publisher signing, clean-machine or institutional proof."
+}

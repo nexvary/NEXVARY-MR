@@ -1,0 +1,344 @@
+{
+  "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+  "mergeProof": {
+    "merge": "7c8e707c084cc40b189a93e6f2270e2d4c5512b7",
+    "mergeTree": "b557aaf5684cb3a47cfc03b502ef21c0a713b101",
+    "head": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+    "headTree": "b557aaf5684cb3a47cfc03b502ef21c0a713b101",
+    "sameTree": true
+  },
+  "runs": [
+    {
+      "id": 40500306364,
+      "name": "Python checks",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500306364"
+    },
+    {
+      "id": 40500306659,
+      "name": "C++20 and Qt Windows",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500306659"
+    },
+    {
+      "id": 40500306376,
+      "name": "Public history safety",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500306376"
+    },
+    {
+      "id": 40500300649,
+      "name": "Python checks",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500300649"
+    },
+    {
+      "id": 40500300497,
+      "name": "Public history safety",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500300497"
+    },
+    {
+      "id": 40500300494,
+      "name": "C++20 and Qt Windows",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "attempt": 1,
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40500300494"
+    }
+  ],
+  "nativeJobs": [
+    {
+      "event": "push",
+      "run": 40500300494,
+      "jobs": [
+        {
+          "id": 122176035387,
+          "name": "linux-forensic-integration (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035694,
+          "name": "core (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035802,
+          "name": "core (windows-2022)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035808,
+          "name": "qt (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035822,
+          "name": "qt (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035840,
+          "name": "linux-forensic-integration (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176035867,
+          "name": "tracking-server",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "event": "pull_request",
+      "run": 40500306659,
+      "jobs": [
+        {
+          "id": 122176220745,
+          "name": "core (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176220847,
+          "name": "linux-forensic-integration (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176220954,
+          "name": "tracking-server",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176220965,
+          "name": "core (windows-2022)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176221001,
+          "name": "qt (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176221187,
+          "name": "qt (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122176221292,
+          "name": "linux-forensic-integration (production)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifactMetadata": [
+    {
+      "id": 12733601914,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "size_in_bytes": 61899615,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733601914",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733601914/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:17:18Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:17:18Z",
+      "digest": "sha256:c8f6a6e07e9c23a18b56ae7dcf9c07cb0ebaf54e2fb2eceeca3ed32e94b94b05",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12733167963,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 67567472,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733167963",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733167963/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:18:54Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:18:54Z",
+      "digest": "sha256:587f9d8d65c67be0063736613d1e54c8422eaa050f64cbeebec8c2a45b9fde92",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12733125056,
+      "name": "core-test-results-windows-2022",
+      "size_in_bytes": 658,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733125056",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733125056/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:00:18Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:00:18Z",
+      "digest": "sha256:872af5df599eeacf721c19f3c6e344d680e51be2db83618061e22ea75f229636",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12733083275,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33177464,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733083275",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12733083275/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:18:49Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:18:49Z",
+      "digest": "sha256:80104b64190085dbc20e7e1024d8b86d738c1a3be8c2745d3b9c64de3420cadb",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12732988421,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 49057991,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732988421",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732988421/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:18:47Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:18:47Z",
+      "digest": "sha256:233fefbfa6cb2fb6057a814208f3e08d6fad553e42ab2e415fd7156bac8dc803",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12732987566,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "size_in_bytes": 81998617,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732987566",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732987566/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:13:59Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:13:59Z",
+      "digest": "sha256:593f4db4245d9ca8d0df064fa3c365c513b64de3f768ac18217adec2b223527c",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12732728254,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "size_in_bytes": 82023833,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732728254",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12732728254/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:13:07Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:13:07Z",
+      "digest": "sha256:a35850124d0ebfb8c43d2b7549558bcb0b30388fb03bacdc3d561881b4a57006",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12731919228,
+      "name": "core-test-results-ubuntu-latest",
+      "size_in_bytes": 648,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12731919228",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12731919228/zip",
+      "expired": false,
+      "created_at": "2026-10-27T11:59:54Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T11:59:54Z",
+      "digest": "sha256:ab6df14f3d6e105c4a42cd2fc9222b2ca88feda067ec62dbfd8b1c410497410a",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    },
+    {
+      "id": 12731629886,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "size_in_bytes": 18564,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12731629886",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12731629886/zip",
+      "expired": false,
+      "created_at": "2026-10-27T12:01:01Z",
+      "expires_at": "2027-01-25T11:59:44Z",
+      "updated_at": "2026-10-27T12:01:01Z",
+      "digest": "sha256:0461ee5dd12248e6de037d62c8f8e6381528af036655deba84f825cb369bcb4f",
+      "workflow_run": {
+        "id": 40500300494,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "62251a02a37b560fafc92f892ce8b51764d5dc82"
+      }
+    }
+  ],
+  "claim": "First-attempt hosted verification of the candidate mitigation. Original source-fabe and source-2c45 failures retained; this is not proof of the precise originating delegate/upstream defect or final institutional acceptance."
+}

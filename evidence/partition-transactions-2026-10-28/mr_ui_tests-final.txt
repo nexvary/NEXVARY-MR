@@ -1,0 +1,19 @@
+CTest passing-output excerpt; default CTest truncation applies.
+Source: full-final-observation.xml. Not a complete per-case count.
+
+		
+		QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not pe...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+
+	

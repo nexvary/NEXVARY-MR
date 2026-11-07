@@ -1,0 +1,28 @@
+Source: 8c9ac4db2b1301f6b81cbc9b9557f6afb1ce1d14
+Push: 40497317603 / job 122165926459
+PR: 40497323726 / job 122165946597
+Platform: Windows, Python 3.12.10
+
+ERROR: test_timeout_kills_only_the_owned_group (test_ui_failure_diagnostics.UiFailureDiagnosticsTests.test_timeout_kills_only_the_owned_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\a\NEXVARY-MR\NEXVARY-MR\tests\test_ui_failure_diagnostics.py", line 52, in test_timeout_kills_only_the_owned_group
+    with patch.object(diagnostics.subprocess, "Popen") as popen, patch.object(diagnostics.os, "killpg") as kill:
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\unittest\mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\unittest\mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'os' (frozen)> does not have the attribute 'killpg'
+
+----------------------------------------------------------------------
+Ran 42 tests in 5.579s
+
+FAILED (errors=1)
+
+Root cause: the unit-test mock assumed os.killpg exists on Windows. The
+Linux-only helper was not being executed by Windows; creation of the mock
+failed before assertions. Correct the test by explicitly providing mocked
+POSIX killpg and SIGKILL APIs on every test platform. Keep the timeout test
+enabled; no runtime expectation, coverage or failure gate is removed.

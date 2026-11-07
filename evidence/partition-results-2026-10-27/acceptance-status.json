@@ -1,0 +1,61 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "pushRun": {
+    "id": 40454580495,
+    "result": "success",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 122024888216,
+        "name": "linux-forensic-integration (laboratory)",
+        "result": "success"
+      },
+      {
+        "id": 122024888468,
+        "name": "qt (production)",
+        "result": "success"
+      },
+      {
+        "id": 122024888531,
+        "name": "core (ubuntu-latest)",
+        "result": "success"
+      },
+      {
+        "id": 122024888540,
+        "name": "core (windows-2022)",
+        "result": "success"
+      },
+      {
+        "id": 122024888632,
+        "name": "qt (laboratory)",
+        "result": "success"
+      },
+      {
+        "id": 122024888692,
+        "name": "tracking-server",
+        "result": "success"
+      },
+      {
+        "id": 122024888697,
+        "name": "linux-forensic-integration (production)",
+        "result": "success"
+      }
+    ]
+  },
+  "pullRequestRun": {
+    "id": 40454584507,
+    "result": "failure",
+    "failedJob": 122024938764,
+    "test": "mr_ui_scale_1.25",
+    "profile": "Linux laboratory, Qt 6.4.2",
+    "failure": "SIGSEGV after governmentAdbBackupControls; no stack/core available",
+    "firstFailureRetained": true,
+    "retryRequested": false
+  },
+  "mergeTreeIdenticalToPush": true,
+  "mergeTree": "2d10f77ed36d1db8d9e8303044486d6226c6f385",
+  "reliabilityAccepted": false,
+  "mergeReady": false,
+  "evidenceOnlyCheckpoint": true,
+  "scope": "Unchanged runtime; an evidence-only commit never clears the original PR failure or establishes acceptance."
+}

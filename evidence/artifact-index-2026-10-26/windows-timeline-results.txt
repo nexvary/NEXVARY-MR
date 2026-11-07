@@ -1,0 +1,31 @@
+********* Start testing of TimelineTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : TimelineTests::initTestCase()
+PASS   : TimelineTests::normalization(egypt-offset)
+PASS   : TimelineTests::normalization(previous-day)
+PASS   : TimelineTests::normalization(negative-offset)
+PASS   : TimelineTests::normalization(leap-valid)
+PASS   : TimelineTests::normalization(millisecond)
+PASS   : TimelineTests::normalization(max-offset)
+PASS   : TimelineTests::normalization(no-zone)
+PASS   : TimelineTests::normalization(no-year-zero)
+PASS   : TimelineTests::normalization(bad-date)
+PASS   : TimelineTests::normalization(bad-hour)
+PASS   : TimelineTests::normalization(leap-second)
+PASS   : TimelineTests::normalization(unknown-offset)
+PASS   : TimelineTests::normalization(no-rounding)
+PASS   : TimelineTests::normalization(bad-offset)
+PASS   : TimelineTests::normalization(bad-offset-minutes)
+PASS   : TimelineTests::normalization(embedded)
+PASS   : TimelineTests::normalization(date-only)
+PASS   : TimelineTests::normalization(lowercase)
+PASS   : TimelineTests::normalization(utc-underflow)
+PASS   : TimelineTests::deterministicOrderingProvenanceAndSearch()
+PASS   : TimelineTests::integrityAndBounds()
+QINFO  : TimelineTests::boundedCollectionBenchmark() Synthetic timeline: 12800 observations; elapsed 166 ms
+PASS   : TimelineTests::boundedCollectionBenchmark()
+PASS   : TimelineTests::nativePersistenceCancellationAndRoles()
+PASS   : TimelineTests::nativeGrantRevocation()
+PASS   : TimelineTests::cleanupTestCase()
+Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 1439ms
+********* Finished testing of TimelineTests *********

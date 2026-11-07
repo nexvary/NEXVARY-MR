@@ -1,0 +1,8 @@
+[
+  {
+    "test": "mr_ui_scale_1.25",
+    "diagnosticExit": 255,
+    "log": "mr_ui_scale_1.25-gdb.txt",
+    "clearsOriginalFailure": false
+  }
+]

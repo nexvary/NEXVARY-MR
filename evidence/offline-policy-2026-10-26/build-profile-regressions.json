@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "expectedProfile": "production",
+  "results": [
+    {
+      "name": "GUI child in path with spaces succeeds with unset LASTEXITCODE",
+      "passed": true
+    },
+    {
+      "name": "Laboratory profile is read accurately",
+      "passed": true
+    },
+    {
+      "name": "Laboratory cannot enter production package",
+      "passed": true
+    },
+    {
+      "name": "Nonzero GUI exit cannot claim production",
+      "passed": true
+    },
+    {
+      "name": "Empty profile rejected",
+      "passed": true
+    },
+    {
+      "name": "Multiple profiles rejected",
+      "passed": true
+    },
+    {
+      "name": "Oversized response rejected",
+      "passed": true
+    },
+    {
+      "name": "Error stream rejected",
+      "passed": true
+    },
+    {
+      "name": "Hung child terminated",
+      "passed": true
+    },
+    {
+      "name": "No timed-out profile child remains",
+      "passed": true
+    },
+    {
+      "name": "Missing executable rejected",
+      "passed": true
+    },
+    {
+      "name": "Actual production application profile verified",
+      "passed": true
+    },
+    {
+      "name": "Actual production application passes packaging profile gate",
+      "passed": true
+    }
+  ]
+}

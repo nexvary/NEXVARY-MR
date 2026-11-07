@@ -1,0 +1,17 @@
+{
+  "parent": "27c15d654f63095469171a70ab07619e74dad089",
+  "environment": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "files": {
+    "CMakeLists.txt": "f165f15a3cde51e00d953174a061e33ac5917134b446c9aadd8c0b4baa02a31d",
+    "cpp/src/GovernmentOperationPolicy.cpp": "5650527d103828a9867582ebb5cccdfa44538345ead7d754c7ade89e9cb47666",
+    "cpp/src/GovernmentOperationPolicy.hpp": "8ad454217b6871bd2a066bda586621ddc5b4c7a4c0e6fc2c78342013c65a4991",
+    "cpp/src/LawCaseBackup.cpp": "9859fb0fcc919184e12e078c05759e4ea53f4869f8df946456329f4eea8c057a",
+    "cpp/src/LawCaseBridge.cpp": "098aa8504dca242819402e3d2a67dfd9be2ad4ecdaf7b8cec04495fdbd45b736",
+    "cpp/src/LawCaseBridge.hpp": "0bf4367aa8aa598d07a8c302d16989f89ee53c10fbcdb43b799e1bf51d05327e",
+    "cpp/src/LawCaseStore.cpp": "d75b22cda76c1acd464527dc3daceed135247b1685e0732596f1f0dee6d3e5d4",
+    "cpp/src/LawCaseStore.hpp": "172f1b5ddc2b30b3d802e224f1ee85b9e968803499606b8edfd23d82475d1072",
+    "cpp/tests/case_transaction_tests.cpp": "f916c8366d55702d1c0eb54876aa5d901f4661f67294f201761c2f0337d7a6c4",
+    "cpp/tests/readiness_benchmark.cpp": "aed1c5ad82a2105971ee13570843314eef20cb9c238f585f4781297fdc424348"
+  },
+  "benchmarkBinarySha256": "e17897cc807d1228607dc33cd4280cd122deeb7a610a50dbda43b17428a6bac5"
+}

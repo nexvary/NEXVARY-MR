@@ -1,0 +1,28 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "cryptographyVersion": "50.0.2",
+  "isolatedTemporaryVerifier": true,
+  "globalPythonModified": false,
+  "result": {
+    "actions": {
+      "activate": 1,
+      "approve": 1,
+      "operation-allowed": 4,
+      "operation-denied": 7,
+      "policy-rejection": 7,
+      "request": 1,
+      "review": 1,
+      "session-close": 1
+    },
+    "events": 23,
+    "head": "6f6dedd79e58845ed4f7388b76709d381f01004211ca2ac0240b8b225650b9b3",
+    "identityScope": "local keys/declared roles; not agency identity or independent people",
+    "operationScope": "signed native worker receipts for integrated kinds; no external OS/tool truth or universal completion proof",
+    "operations": {},
+    "requests": 1,
+    "retainedPrefixVerified": 23,
+    "timeScope": "recorded local UTC; no external trusted time",
+    "valid": true
+  },
+  "scope": "23 synthetic portal-policy events, same-process retained anchor, no security/partition worker operations in this smoke; no institutional identity/time/custody certification."
+}

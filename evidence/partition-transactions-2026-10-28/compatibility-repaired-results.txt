@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /workspace/scratch/700fbf4aabb3/NEXVARY-MR/build
+Test project /workspace/scratch/700fbf4aabb3/NEXVARY-MR/build
+    Start 30: mr_compatibility_tests
+1/1 Test #30: mr_compatibility_tests ...........   Passed    0.03 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.03 sec

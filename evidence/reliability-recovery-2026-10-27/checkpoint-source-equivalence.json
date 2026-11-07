@@ -1,0 +1,37 @@
+{
+  "testedCodeSource": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+  "checkpointScope": "state/evidence only; no new executable build or inherited different-source verdict",
+  "runtimeTestWorkflowPackagingGuideChanges": [],
+  "trackedCheckpointChanges": [
+    "DEVELOPMENT_STATE.md"
+  ],
+  "newEvidencePaths": [
+    "evidence/reliability-recovery-2026-10-27/FINAL_CHECKPOINT.md",
+    "evidence/reliability-recovery-2026-10-27/candidate-ci-final.json",
+    "evidence/reliability-recovery-2026-10-27/candidate-pr-linux-laboratory-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-pr-linux-production-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-pr-windows-production-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-push-linux-production-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-push-windows-laboratory-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-push-windows-production-excerpt.txt",
+    "evidence/reliability-recovery-2026-10-27/candidate-push-windows-production-qt-results.xml",
+    "evidence/reliability-recovery-2026-10-27/candidate-windows-adb-ar.png",
+    "evidence/reliability-recovery-2026-10-27/candidate-windows-adb-en.png",
+    "evidence/reliability-recovery-2026-10-27/candidate-windows-byte-verification.json",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-adb-ar.png",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-adb-en.png",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-full-last-test.log",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-full.xml",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-gui-repeat.txt",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-gui-repeat.xml",
+    "evidence/reliability-recovery-2026-10-27/layout-candidate-local-summary.json"
+  ],
+  "unchangedRuntimeSources": {
+    "CMakeLists.txt": "1bc31aae9e44f7b94aa3f916aeeee4a06ecd54ebfab3911db0bcc7af97146788",
+    "qml/GovernmentAnalysisPage.qml": "66bc1afda9893254bafda2de82919fe9f1c7eabf4e4f17b685bf6778ac6f7329",
+    "qml/tests/tst_navigation.qml": "8f9897dafde48f9729b54c86db60813d68439489e5139a6c323fac39e7d58b62",
+    "scripts/diagnose_ui_failure.py": "8bd8bf78d614c35712f708ea56415dca709b18676c8e4387384a53b8cbdfcb63",
+    "packaging/package-windows.ps1": "432446a55adc4c05d096ae72b04ca5ac60c22677441531241dc3fce88f7b574f",
+    "packaging/smoke-windows.ps1": "91ac80d66a5465c953811bd1824fc4b9b65e13c3c83e162d02b8dffdc0061657"
+  }
+}

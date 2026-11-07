@@ -1,0 +1,18 @@
+{
+  "pr11": {
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "head": "8fb9b38f771da91c60f3b85a2084868b16fe95d4",
+    "base": "integration/gate-1-stages-08-60"
+  },
+  "pr15": {
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "head": "bc8fb86ee5b145d2877c40c8cd7ed241fc09f3da",
+    "base": "feature/law-enforcement-case-foundation"
+  },
+  "foundationIsAncestor": true,
+  "changeScope": "Device UI, consented viewer, original official tools packaging and regression checks. Existing case/backup/retention/research/USB/NPSE engines preserved. No Guardian change."
+}

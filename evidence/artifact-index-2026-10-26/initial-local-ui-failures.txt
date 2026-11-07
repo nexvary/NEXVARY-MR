@@ -1,0 +1,127 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start  8: mr_artifact_tests
+1/5 Test  #8: mr_artifact_tests ..................   Passed    1.72 sec
+    Start 37: mr_artifact_reference_validation
+2/5 Test #37: mr_artifact_reference_validation ...   Passed    0.04 sec
+    Start 42: mr_ui_tests
+3/5 Test #42: mr_ui_tests ........................***Failed   61.33 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+PASS   : mr_ui::WorkstationNavigation::test_cloudTrackingConsent()
+PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+PASS   : mr_ui::WorkstationNavigation::test_createOrder()
+PASS   : mr_ui::WorkstationNavigation::test_deviceBackgroundRefreshIsQuiet()
+PASS   : mr_ui::WorkstationNavigation::test_deviceIntelligenceProvenance()
+PASS   : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent()
+PASS   : mr_ui::WorkstationNavigation::test_diagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_exitCancel()
+PASS   : mr_ui::WorkstationNavigation::test_firmwarePackageStructure()
+PASS   : mr_ui::WorkstationNavigation::test_fontGlyphCoverage()
+PASS   : mr_ui::WorkstationNavigation::test_forensicCaptureWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicExifWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicLabNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_forensicWorkspace()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentArtifactControls() property resultPage
+   Actual   (): 1
+   Expected (): 0
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(90)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies() Uncaught exception: Cannot read property 'length' of undefined
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(39)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_language()
+PASS   : mr_ui::WorkstationNavigation::test_lawCaseAndResearchWorkspaces()
+PASS   : mr_ui::WorkstationNavigation::test_minimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_mirrorConsentAndNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_modernCompatibilityPanel()
+PASS   : mr_ui::WorkstationNavigation::test_navigation()
+PASS   : mr_ui::WorkstationNavigation::test_newWorkspaceMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryConsent()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryWizard()
+PASS   : mr_ui::WorkstationNavigation::test_savedDiagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_securityAndFaultTree()
+PASS   : mr_ui::WorkstationNavigation::test_serviceHistoryDetailsArePlainText()
+PASS   : mr_ui::WorkstationNavigation::test_serviceMinimumSizeOutputAndHistory()
+PASS   : mr_ui::WorkstationNavigation::test_shellDeviceStates()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::test_shellRoutesAndCollapse()
+PASS   : mr_ui::WorkstationNavigation::test_themeAndNarrowForensicTabs()
+PASS   : mr_ui::WorkstationNavigation::test_usbDoctorInterpretation()
+PASS   : mr_ui::WorkstationNavigation::test_workshopBarcodeCard()
+PASS   : mr_ui::WorkstationNavigation::test_yLocalIdentity()
+PASS   : mr_ui::WorkstationNavigation::test_z_exitAccept()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 47 passed, 2 failed, 0 skipped, 0 blacklisted, 59977ms
+********* Finished testing of mr_ui *********
+
+    Start 43: mr_ui_scale_1.25
+4/5 Test #43: mr_ui_scale_1.25 ...................***Failed   34.25 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentArtifactControls() property resultPage
+   Actual   (): 1
+   Expected (): 0
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(90)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies() Uncaught exception: Cannot read property 'length' of undefined
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(39)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 8 passed, 2 failed, 0 skipped, 0 blacklisted, 32896ms
+********* Finished testing of mr_ui *********
+
+    Start 44: mr_ui_scale_1.5
+5/5 Test #44: mr_ui_scale_1.5 ....................***Failed   40.00 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentArtifactControls() property resultPage
+   Actual   (): 1
+   Expected (): 0
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(90)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentAuthorizedImportControls()
+FAIL!  : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies() Uncaught exception: Cannot read property 'length' of undefined
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/tests/tst_navigation.qml(39)]
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentTimelineControls()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 8 passed, 2 failed, 0 skipped, 0 blacklisted, 38595ms
+********* Finished testing of mr_ui *********
+
+
+40% tests passed, 3 tests failed out of 5
+
+Total Test time (real) = 137.34 sec
+
+The following tests FAILED:
+	 42 - mr_ui_tests (Failed)
+	 43 - mr_ui_scale_1.25 (Failed)
+	 44 - mr_ui_scale_1.5 (Failed)
+Errors while running CTest

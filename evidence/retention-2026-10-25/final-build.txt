@@ -1,0 +1,14 @@
+[0/2] Re-checking globbed directories...
+[1/10] Generating NexvaryMR/qml/LawRetentionPage.qml
+[2/10] Generating NexvaryMR/qml/LawEnforcementPage.qml
+[3/10] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[4/10] Running rcc for resource nexvary_mr_raw_qml_0
+[5/10] Generating .rcc/qmlcache/nexvary_mr_qml/LawRetentionPage_qml.cpp
+[6/10] Generating .rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp
+[7/10] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[8/10] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawRetentionPage_qml.cpp.o
+[9/10] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp.o
+[10/10] Linking CXX executable nexvary_mr

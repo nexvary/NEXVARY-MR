@@ -1,0 +1,18 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]

@@ -1,0 +1,108 @@
+Internal ctest changing into directory: /workspace/scratch/b91b82a596d9/NEXVARY-MR/build
+Test project /workspace/scratch/b91b82a596d9/NEXVARY-MR/build
+    Start  2: mr_policy_tests
+1/7 Test  #2: mr_policy_tests ..................   Passed    0.02 sec
+    Start 12: mr_intelligence_tests
+2/7 Test #12: mr_intelligence_tests ............   Passed    0.04 sec
+    Start 13: mr_connection_tests
+3/7 Test #13: mr_connection_tests ..............   Passed    0.04 sec
+    Start 20: mr_tool_tests
+4/7 Test #20: mr_tool_tests ....................***Failed   25.68 sec
+********* Start testing of ToolTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ToolTests::initTestCase()
+FAIL!  : ToolTests::diagnosisUsesCompletedDiscoveryAndInvalidatesFailures() '!has(bridge.connectionDiagnosis(),"adb-failed")' returned FALSE. ()
+   Loc: [/workspace/scratch/b91b82a596d9/NEXVARY-MR/cpp/tests/tool_tests.cpp(68)]
+PASS   : ToolTests::usbSerialAndParentCorrelation()
+PASS   : ToolTests::usbAmbiguityAndMalformedInventory()
+PASS   : ToolTests::configureToolsAndPersistence()
+PASS   : ToolTests::rejectUnsafeToolConfiguration()
+PASS   : ToolTests::serialValidation()
+PASS   : ToolTests::parseDevicesAndPermissions()
+PASS   : ToolTests::duplicateBeyondDisplayLimitRemainsAmbiguous()
+PASS   : ToolTests::propertyPrivacyAndMalformedInput()
+PASS   : ToolTests::ambiguousSerialCannotReadPropertiesOrLogs()
+PASS   : ToolTests::backgroundRefreshDoesNotPulseForegroundOrRebuildIdentity()
+PASS   : ToolTests::explicitReadSupersedesSlowBackgroundWithoutFailure()
+PASS   : ToolTests::backgroundFailuresInvalidateStaleTarget()
+PASS   : ToolTests::missingToolAndNoSelection()
+PASS   : ToolTests::asynchronousReadOnlyFlowAndDisconnect()
+PASS   : ToolTests::cancellationAndOutputLimit()
+PASS   : ToolTests::failedStartDoesNotLeaveBusy()
+PASS   : ToolTests::timeoutStopsUnresponsiveChild()
+PASS   : ToolTests::completedCommandCannotTimeoutNextCommand()
+PASS   : ToolTests::cleanupTestCase()
+Totals: 20 passed, 1 failed, 0 skipped, 0 blacklisted, 25606ms
+********* Finished testing of ToolTests *********
+
+    Start 21: mr_service_tests
+5/7 Test #21: mr_service_tests .................   Passed   12.86 sec
+    Start 22: mr_mirror_tests
+6/7 Test #22: mr_mirror_tests ..................   Passed   17.92 sec
+    Start 37: mr_ui_tests
+7/7 Test #37: mr_ui_tests ......................***Failed  163.42 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_avbReportExportConsent()
+PASS   : mr_ui::WorkstationNavigation::test_avbScopeAndMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_backNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_boardMeasurement()
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: mr_ui::WorkstationNavigation::test_centerProfilesAndTracking() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : mr_ui::WorkstationNavigation::test_centerProfilesAndTracking()
+PASS   : mr_ui::WorkstationNavigation::test_cloudTrackingConsent()
+PASS   : mr_ui::WorkstationNavigation::test_compiledBuildProfileIsVisible()
+PASS   : mr_ui::WorkstationNavigation::test_createOrder()
+FAIL!  : mr_ui::WorkstationNavigation::test_deviceBackgroundRefreshIsQuiet() Uncaught exception: Cannot read property 'parent' of null
+   Loc: [/workspace/scratch/b91b82a596d9/NEXVARY-MR/qml/tests/tst_navigation.qml(169)]
+PASS   : mr_ui::WorkstationNavigation::test_deviceIntelligenceProvenance()
+PASS   : mr_ui::WorkstationNavigation::test_deviceServiceNavigationAndConsent()
+PASS   : mr_ui::WorkstationNavigation::test_diagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_exitCancel()
+PASS   : mr_ui::WorkstationNavigation::test_firmwarePackageStructure()
+PASS   : mr_ui::WorkstationNavigation::test_fontGlyphCoverage()
+PASS   : mr_ui::WorkstationNavigation::test_forensicCaptureWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicExifWorkflow()
+PASS   : mr_ui::WorkstationNavigation::test_forensicLabNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_forensicWorkspace()
+PASS   : mr_ui::WorkstationNavigation::test_governmentNavigationAndWorkingCopies()
+PASS   : mr_ui::WorkstationNavigation::test_governmentProtectedBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentRetentionControls()
+PASS   : mr_ui::WorkstationNavigation::test_language()
+PASS   : mr_ui::WorkstationNavigation::test_lawCaseAndResearchWorkspaces()
+PASS   : mr_ui::WorkstationNavigation::test_minimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_mirrorConsentAndNavigation()
+PASS   : mr_ui::WorkstationNavigation::test_modernCompatibilityPanel()
+PASS   : mr_ui::WorkstationNavigation::test_navigation()
+PASS   : mr_ui::WorkstationNavigation::test_newWorkspaceMinimumSize()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryConsent()
+PASS   : mr_ui::WorkstationNavigation::test_recoveryWizard()
+PASS   : mr_ui::WorkstationNavigation::test_savedDiagnosis()
+PASS   : mr_ui::WorkstationNavigation::test_securityAndFaultTree()
+PASS   : mr_ui::WorkstationNavigation::test_serviceHistoryDetailsArePlainText()
+PASS   : mr_ui::WorkstationNavigation::test_serviceMinimumSizeOutputAndHistory()
+PASS   : mr_ui::WorkstationNavigation::test_shellDeviceStates()
+PASS   : mr_ui::WorkstationNavigation::test_shellResponsive()
+PASS   : mr_ui::WorkstationNavigation::test_shellRoutesAndCollapse()
+PASS   : mr_ui::WorkstationNavigation::test_themeAndNarrowForensicTabs()
+PASS   : mr_ui::WorkstationNavigation::test_usbDoctorInterpretation()
+PASS   : mr_ui::WorkstationNavigation::test_workshopBarcodeCard()
+PASS   : mr_ui::WorkstationNavigation::test_yLocalIdentity()
+PASS   : mr_ui::WorkstationNavigation::test_z_exitAccept()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 44 passed, 1 failed, 0 skipped, 0 blacklisted, 155968ms
+********* Finished testing of mr_ui *********
+
+
+71% tests passed, 2 tests failed out of 7
+
+Total Test time (real) = 220.00 sec
+
+The following tests FAILED:
+	 20 - mr_tool_tests (Failed)
+	 37 - mr_ui_tests (Failed)
+Errors while running CTest

@@ -1,0 +1,20 @@
+[0/2] Re-checking globbed directories...
+[1/11] Automatic MOC and UIC for target mr_desktop
+[2/10] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[3/10] Linking CXX static library libmr_desktop.a
+[4/10] Linking CXX executable mr_identity_tests
+[5/10] Linking CXX executable nexvary_mr
+[6/10] Automatic MOC and UIC for target mr_law_workspace_tests
+[7/9] Linking CXX executable mr_ui_tests
+[8/9] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+FAILED: CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o 
+/usr/bin/c++ -DMR_ENABLE_LAB_OPERATIONS=0 -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/0bbaffc90eb6/NEXVARY-MR\" -DQT_TESTLIB_LIB -I/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build/mr_law_workspace_tests_autogen/include -I/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/src -I/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/include -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6 -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /workspace/scratch/4e45fba54133/sodium/include -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtNetwork -isystem /workspace/scratch/4e45fba54133/qt-runtime/usr/include/x86_64-linux-gnu/qt6/QtTest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o -MF CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o.d -o CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o -c /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/tests/law_workspace_tests.cpp
+/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/tests/law_workspace_tests.cpp: In member function ‘void LawWorkspaceTests::protectedBackupRejectsCorruptionMissingBlobsAndLimits()’:
+/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/tests/law_workspace_tests.cpp:117:4: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+  117 |    if(kind==9)envelope.insert("createdAtUtc",QStringLiteral("2026-10-25T00:00:00"));envelope.insert("evidence",blobs);
+      |    ^~
+/workspace/scratch/0bbaffc90eb6/NEXVARY-MR/cpp/tests/law_workspace_tests.cpp:117:85: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  117 |    if(kind==9)envelope.insert("createdAtUtc",QStringLiteral("2026-10-25T00:00:00"));envelope.insert("evidence",blobs);
+      |                                                                                     ^~~~~~~~
+cc1plus: all warnings being treated as errors
+ninja: build stopped: subcommand failed.

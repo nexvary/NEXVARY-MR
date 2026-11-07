@@ -1,0 +1,43 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup
+    Start 8: mr_offline_tests
+Could not find executable /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+Looked in the following places:
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Release/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Release/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Debug/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Debug/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/MinSizeRel/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/MinSizeRel/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/RelWithDebInfo/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/RelWithDebInfo/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Deployment/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Deployment/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Development/mr_offline_tests
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Development/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Release/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Release/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Debug/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Debug/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/MinSizeRel/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/MinSizeRel/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/RelWithDebInfo/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/RelWithDebInfo/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Deployment/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Deployment/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Development/mr_offline_tests
+workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/Development/mr_offline_tests
+Unable to find executable: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/mr_offline_tests
+1/1 Test #8: mr_offline_tests .................***Not Run   0.00 sec
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
+
+The following tests FAILED:
+	  8 - mr_offline_tests (Not Run)
+Errors while running CTest

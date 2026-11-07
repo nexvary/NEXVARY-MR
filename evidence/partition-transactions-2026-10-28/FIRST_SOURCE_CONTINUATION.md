@@ -1,0 +1,16 @@
+Historical pre-correction checkpoint for source7dc5fa9. Not current acceptance.
+
+# Current exact-source continuation (pending hosted completion)
+
+- Branch feature/government-operations, source/remote HEAD7dc5fa913c678372c46d6f7a0373b27233b7edde.
+- Source tree0cb3f929304731eb7e9ebd76a81879e33bfd8b1c.
+- PR15 open/draft, base feature/law-enforcement-case-foundation. Actual merge checkout4699bacef14ceebb63ff6862435db4e87d593990 has identical tree (verified GitHub API).
+- Push CI40588628600; PR CI40588636137; both attempt1 and still running at this checkpoint. Python/public-history workflows passed separately for both events. Do not label native/Windows acceptance before logs/jobs/artifacts are inspected.
+- Final targeted partition28/28, nine crash stages, real Linux mmls MBR fixture, source/case/tool/approval binding and original approval revocation/session tests.
+- Independent Python-authored native/Python signed corpus69/69; Python42/42. Raw results retained.
+- First local full47/50 (bad test-reference fixture and two zero-byte generated executables); final-source full49/50 (compatibility Not Run, generated zero-byte executable), targeted compatibility1/1 after relink. Neither full run is relabelled green. Final GUI smoke passed, then3 repeats passed21.88/22.41/23.17s.
+- Current screenshots qt-registered-partition-ar.png/en.png are actual Qt captures at150%, visually inspected. Static capture/control regression, not proof of long-term/hardware flicker repair.
+- Original audit transient cause OPEN; these smoke observations did not reproduce it. Existing synthetic private originals remain separate; no private journal/key/database is added to public Git.
+- Product descendant containment remains OPEN; existing marker-only survivor counterexamples are unchanged. Next executable stage: shared owned-process backend for TskImage::run and SecurityBridge::run before broadening to other process owners. Windows launch must eliminate the pre-job assignment spawn race, use kill-on-last-job-handle-close with noninherited job ownership and bounded observed cleanup. Linux must distinguish process groups from actually delegated cgroups and report unknown/uncontained descendants. Do not claim a group kills escaped sessions or survives parent death without proof. Preserve negative/baseline cases and test cancel/logout/expiry/revoke/crash/detach/timeout; add cancellation-result receipts separately from operation status.
+- Primary design references reviewed2026-10-28 (not implementation evidence): https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects ; https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information ; https://doc.qt.io/qt-6/qprocess.html ; https://docs.kernel.org/admin-guide/cgroup-v2.html . Current docs contain newer Qt APIs; retain project Qt6.4 minimum and Qt6.8.3 Windows pin or version-guard any newer API.
+- Once source CI is complete, retain exact logs/job metadata, verify PR checkout/source tree, Windows portable/installer/archive manifests and actual deployment receipts/frames. Update DEVELOPMENT_STATE.md and final checkpoint in a documentation/evidence-only [skip ci] commit. Do not change shipped guide/code/test/workflow/package inputs under that checkpoint claim.

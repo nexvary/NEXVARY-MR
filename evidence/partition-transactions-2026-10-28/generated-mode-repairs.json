@@ -1,0 +1,20 @@
+[
+  {
+    "path": "build/mr_policy_audit_tests",
+    "size": 3623496,
+    "before": "0o644",
+    "after": "0o755"
+  },
+  {
+    "path": "build/mr_mirror_tests",
+    "size": 3593920,
+    "before": "0o644",
+    "after": "0o755"
+  },
+  {
+    "path": "build/mr_intelligence_tests",
+    "size": 202944,
+    "before": "0o644",
+    "after": "0o755"
+  }
+]

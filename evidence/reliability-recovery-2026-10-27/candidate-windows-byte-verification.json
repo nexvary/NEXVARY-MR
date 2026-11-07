@@ -1,0 +1,61 @@
+{
+  "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+  "pushRun": 40500300494,
+  "outerArtifactDigestsVerified": {
+    "12733167963": "587f9d8d65c67be0063736613d1e54c8422eaa050f64cbeebec8c2a45b9fde92",
+    "12733083275": "80104b64190085dbc20e7e1024d8b86d738c1a3be8c2745d3b9c64de3420cadb",
+    "12732988421": "233fefbfa6cb2fb6057a814208f3e08d6fad553e42ab2e415fd7156bac8dc803"
+  },
+  "portableManifestEntriesVerified": 1418,
+  "portableFileSetMatchesManifest": true,
+  "profile": {
+    "schemaVersion": 1,
+    "commit": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+    "buildProfile": "production-read-only",
+    "signed": false,
+    "qtVersion": "6.8.3"
+  },
+  "executableSha256": "8c2e6202a6f5f251b5d93379188e7fe9908f32e467f1726a33d7966a16efb89e",
+  "importWorkerSha256": "92eec59e4c54a1c116907f4ec53060c38f992503e6cc8f75365db0b3b1616b66",
+  "innerPortableZipSha256": "cd683c4c7a0fe2bad64161c1826e438c3ddab172bf3b80ffb29977309aac5f0f",
+  "setupExeSha256": "b6e3f3b31b5a870f78343a743426375bcd25d5355a4f7c797b9f423a3c1ce1eb",
+  "shippedGuidesCanonicalSourceMatched": {
+    "GOVERNMENT_OPERATION_RESULTS.md": "cb9ff642039aa61db2df4e43f589f20f8480c155b4aa3dd4e1dcf543270073c0",
+    "GOVERNMENT_POLICY_AUDIT.md": "4f7ad7fea44a3d6b52c26c693531d15281d5c5a5b2000f1e5dc52409121eae65",
+    "GOVERNMENT_OFFLINE_POLICY.md": "aa5c24cc6157b2f5c4680f6764e44a149747a0bb1d0f9c03235a2aa61a9931be"
+  },
+  "shippedIndependentVerifierCanonicalSourceMatched": true,
+  "portableAndInstalledReceiptsMatchedDownloadedBytes": {
+    "portable": {
+      "mode": "isolated-copy",
+      "executableSha256": "8c2e6202a6f5f251b5d93379188e7fe9908f32e467f1726a33d7966a16efb89e",
+      "sourceCommit": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "importWorkerSha256": "92eec59e4c54a1c116907f4ec53060c38f992503e6cc8f75365db0b3b1616b66",
+      "exitCode": 0,
+      "qtSdkExcludedFromPath": true,
+      "testFontOverrideCleared": true
+    },
+    "installed": {
+      "mode": "installed-in-place",
+      "executableSha256": "8c2e6202a6f5f251b5d93379188e7fe9908f32e467f1726a33d7966a16efb89e",
+      "sourceCommit": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+      "importWorkerSha256": "92eec59e4c54a1c116907f4ec53060c38f992503e6cc8f75365db0b3b1616b66",
+      "exitCode": 0,
+      "qtSdkExcludedFromPath": true,
+      "testFontOverrideCleared": true
+    }
+  },
+  "installerLifecycle": {
+    "schemaVersion": 1,
+    "installExit": 0,
+    "launchMode": "installed-in-place",
+    "uninstallExit": 0,
+    "installedExecutableRemoved": true,
+    "perUserUninstallRegistrationRemoved": true
+  },
+  "performedLocally": "download/archive/digest/source/receipt verification only; did not execute Windows binaries here",
+  "fieldAcceptance": false,
+  "institutionalAcceptance": false,
+  "governmentReady": false,
+  "remaining": "Audit transient root, prepared-intent/case-journal crash reconciliation, product process-tree/egress and independent acceptance remain open."
+}

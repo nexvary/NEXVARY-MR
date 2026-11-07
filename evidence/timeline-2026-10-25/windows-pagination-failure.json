@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "source": "b60d20fdca871b7fd169d3c17023977e4e9e7ed7",
+  "runId": 40222114350,
+  "passedJobs": 6,
+  "windowsProduction": {
+    "ctest": "41/42 passed",
+    "ui": "46 passed / 1 failed",
+    "failure": "Timeline pagination enabled-state assertion at qml/tests/tst_navigation.qml:63",
+    "context": "Windows laboratory and both complete production DPI groups passed the same control test. Initial test clicked Previous immediately after changing page size without revealing/waiting for the new layout.",
+    "correction": "Explicit rendered-frame/reveal barriers and page-index waits for both directions; assertions retained."
+  },
+  "unchangedExecutableInputs": true,
+  "productionEvidenceArtifact": 12609823419,
+  "verifiedProviderZipSha256": "3a5ed1d1096e8150ecc07875618059751dc525172bf854b6d5a1606f3e08b313",
+  "rawReports": "Downloaded and inspected actual ui/timeline/import reports and Windows 125% AR/EN captures.",
+  "nativeTimeline": "26/26 passed",
+  "imports": "32/32 passed",
+  "superiorityEstablished": false
+}

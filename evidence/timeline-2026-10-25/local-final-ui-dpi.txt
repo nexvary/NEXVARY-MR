@@ -1,0 +1,12 @@
+Internal ctest changing into directory: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build
+Test project /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build
+    Start 39: mr_ui_tests
+1/3 Test #39: mr_ui_tests ......................   Passed   47.89 sec
+    Start 40: mr_ui_scale_1.25
+2/3 Test #40: mr_ui_scale_1.25 .................   Passed   21.60 sec
+    Start 41: mr_ui_scale_1.5
+3/3 Test #41: mr_ui_scale_1.5 ..................   Passed   25.20 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Total Test time (real) =  94.69 sec

@@ -1,0 +1,11 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::NativeReportReview::initTestCase()
+QDEBUG : mr_ui::NativeReportReview::test_generate() qml: BACKUP-QA f0c03b90834668ec19ac6cf221853e457e404e05d9d2cf0938efaa91ea6c88d8
+QDEBUG : mr_ui::NativeReportReview::test_generate() qml: REPORT-QA SOURCE d59e284cb25c9d029529b4af8ab91000c80bd38aa6dc47bac6b76098cafe3c4d REPORT d26dd60010e656859fb05a4986e33d3ba534201954a6e4e6e986190386bddaf9 MANIFEST 3293bc57cd25a44cc345cb674777629f64073db1f60685b7085612e8f0f1bc7c
+PASS   : mr_ui::NativeReportReview::test_generate()
+PASS   : mr_ui::NativeReportReview::cleanupTestCase()
+Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 255ms
+********* Finished testing of mr_ui *********

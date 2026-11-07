@@ -1,0 +1,4 @@
+# Evaluation references are byte-addressed evidence, independent of checkout settings.
+samples/government-evaluation/evidence.json -text
+samples/government-evaluation/duplicate-key.json -text
+samples/government-evaluation/ground-truth.json -text

@@ -1,0 +1,17 @@
+{
+  "source": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e",
+  "downloadedProviderDigestsVerified": {
+    "portable": "ac9bafd34eb835845729b8a18eca20d69254dea591cbe2336780cb336c3a7ec0",
+    "installer": "7df503220ee6bb9c1d71ed40229a37b228458303cb58d76d8ec9cd74c8f17812",
+    "evidence": "96426bbc0a4a11aeb001e5cf6ed9de46423d03ec9ebd092905df277a1b03c78f"
+  },
+  "portableZipSha256": "3cfb5269dfde942983438f26fe4868e1fe3d7800aa5553174d633422406a4cd3",
+  "setupSha256": "76b6f7be96e2a3a32ff93c787fdd1cbe6889c97160545b945f65ef87b53b421a",
+  "testedExecutableSha256": "5bbede44f688cbaccac2f635fa58a7f009c65543cea797be1829cb6631c18118",
+  "testedImportWorkerSha256": "3620f23e5227807d1c5954ec410b9719163575ddc0f77de87a095f729cf15d0a",
+  "bundleManifestFilesVerified": 1417,
+  "portableAndInstalledReceiptsMatch": true,
+  "installerLifecycleVerified": true,
+  "signed": false,
+  "scope": "Downloaded unsigned CI evaluation artifacts; supplied provider digests and source metadata, byte integrity and receipt consistency. No publisher signature, reproducible-build, clean physical Windows or institutional accreditation proof."
+}

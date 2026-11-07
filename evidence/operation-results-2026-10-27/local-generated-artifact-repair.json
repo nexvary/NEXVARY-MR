@@ -1,0 +1,24 @@
+{
+  "source": "6d63b4d76a82f2ca5f4943429b6fce166ecc47f7",
+  "changes": [
+    {
+      "file": "mr_center_tests",
+      "size": 0,
+      "reason": "not ELF",
+      "repair": "remove generated output and relink"
+    },
+    {
+      "file": "mr_import_tests",
+      "size": 3405776,
+      "reason": "missing executable mode",
+      "repair": "restore generated executable mode"
+    },
+    {
+      "file": "mr_security_tests",
+      "size": 0,
+      "reason": "not ELF",
+      "repair": "remove generated output and relink"
+    }
+  ],
+  "scope": "Generated build outputs only; no source defect or mechanism established. Build/test sequenced in one invocation for follow-up."
+}

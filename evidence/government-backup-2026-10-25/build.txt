@@ -1,0 +1,73 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build
+[0/2] Re-checking globbed directories...
+[1/222] Automatic MOC for target mr_update_tests
+[2/220] Automatic MOC for target mr_update_journal_tests
+[3/218] Automatic MOC for target mr_update_key_tests
+[4/216] Automatic MOC and UIC for target mr_desktop
+[5/215] Automatic MOC and UIC for target mr_desktop_resources_1
+[6/214] Automatic MOC and UIC for target mr_desktop_resources_2
+[7/213] Automatic MOC and UIC for target mr_avb_mutation_tests
+[8/211] Automatic MOC and UIC for target mr_pcap_mutation_tests
+[9/209] Automatic MOC and UIC for target mr_exif_mutation_tests
+[10/207] Automatic MOC and UIC for target mr_ui_device_fixture
+[11/205] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[12/205] Linking CXX static library libmr_desktop.a
+[13/205] Automatic MOC and UIC for target nexvary_mr
+[14/204] Running AUTOMOC file extraction for target nexvary_mr
+[15/91] Automatic MOC and UIC for target mr_identity_tests
+[16/90] Linking CXX executable mr_identity_tests
+[17/90] Linking CXX executable nexvary_mr
+[18/90] Automatic MOC and UIC for target mr_research_tests
+[19/89] Automatic MOC and UIC for target mr_law_workspace_tests
+[20/88] Linking CXX executable mr_research_tests
+[21/88] Automatic MOC and UIC for target mr_intelligence_tests
+[22/87] Linking CXX executable mr_intelligence_tests
+[23/87] Automatic MOC and UIC for target mr_connection_tests
+[24/86] Linking CXX executable mr_connection_tests
+[25/86] Automatic MOC and UIC for target mr_workshop_tests
+[26/85] Linking CXX executable mr_workshop_tests
+[27/85] Automatic MOC and UIC for target mr_barcode_tests
+[28/84] Linking CXX executable mr_barcode_tests
+[29/84] Automatic MOC and UIC for target mr_center_tests
+[30/83] Linking CXX executable mr_center_tests
+[31/83] Automatic MOC and UIC for target mr_cloud_tests
+[32/82] Linking CXX executable mr_cloud_tests
+[33/82] Automatic MOC and UIC for target mr_security_tests
+[34/81] Linking CXX executable mr_security_tests
+[35/81] Automatic MOC and UIC for target mr_catalog_tests
+[36/80] Linking CXX executable mr_catalog_tests
+[37/80] Automatic MOC and UIC for target mr_tool_tests
+[38/79] Linking CXX executable mr_tool_tests
+[39/79] Automatic MOC and UIC for target mr_service_tests
+[40/78] Linking CXX executable mr_service_tests
+[41/78] Automatic MOC and UIC for target mr_mirror_tests
+[42/77] Linking CXX executable mr_mirror_tests
+[43/77] Automatic MOC and UIC for target mr_compatibility_tests
+[44/76] Linking CXX executable mr_compatibility_tests
+[45/76] Automatic MOC and UIC for target mr_board_tests
+[46/75] Linking CXX executable mr_board_tests
+[47/75] Automatic MOC and UIC for target mr_firmware_tests
+[48/74] Building CXX object CMakeFiles/mr_law_workspace_tests.dir/cpp/tests/law_workspace_tests.cpp.o
+[49/74] Linking CXX executable mr_firmware_tests
+[50/74] Automatic MOC and UIC for target mr_avb_tests
+[51/73] Linking CXX executable mr_law_workspace_tests
+[52/73] Automatic MOC and UIC for target mr_pcap_tests
+[53/72] Linking CXX executable mr_avb_tests
+[54/72] Automatic MOC and UIC for target mr_exif_tests
+[55/71] Linking CXX executable mr_pcap_tests
+[56/71] Automatic MOC and UIC for target mr_recovery_tests
+[57/70] Linking CXX executable mr_exif_tests
+[58/70] Automatic MOC and UIC for target mr_recovery_image_tests
+[59/69] Linking CXX executable mr_recovery_tests
+[60/69] Automatic MOC and UIC for target mr_forensic_tests
+[61/68] Linking CXX executable mr_recovery_image_tests
+[62/68] Automatic MOC and UIC for target mr_tsk_tests
+[63/67] Linking CXX executable mr_forensic_tests
+[64/67] Automatic MOC and UIC for target mr_ui_tests
+[65/66] Linking CXX executable mr_tsk_tests
+[66/66] Linking CXX executable mr_ui_tests

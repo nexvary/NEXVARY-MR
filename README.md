@@ -6,7 +6,7 @@ Native **C++20 / Qt 6 Quick** Windows workstation for authorized phone diagnosti
 
 - Arabic RTL / English desktop workspace with ten preserved workspaces and device-service/catalog tabs, keyboard navigation and explicit exit confirmation.
 - Async bounded ADB / Fastboot discovery, explicit device selection, read-only properties, 200-line logcat and evidence-based text-pattern indicators, Windows PnP inspection, optional polling and cancellation. Tools can be selected using a native file picker and persisted locally without editing PATH.
-- Optional separately installed official scrcpy, launched only on request for an authorized selected device.
+- Official scrcpy 5.0.1 (bundled in Windows evaluation packages), launched only with explicit owner/component consent for a selected authorized device.
 - Native component/net board viewer: zoom, pan, search, component/net highlighting, manual measurements, reference comparisons, text/photo annotations and atomic session files. Imports require declared license metadata and explicit permission. The bundled CC0 training board is fictional.
 - SQLite v1 migration: customers, devices, repair orders, repair status, technicians, inventory, atomic stock allocation/restocking with historical prices preserved, exact integer monetary values, operation history, CSV export, PDF invoices/printing through a PDF reader, backups and validated restoration with pre-restore snapshots.
 - Firmware preflight: exact device brand/model metadata match and cancellable local SHA-256 hash. A matching untrusted manifest **does not authenticate a firmware package**. Native preflight does not authenticate OEM signatures. Reviewed ZIP transfer to an already compatible ADB sideload recovery is available separately; transfer completion is not proof of successful flashing.
@@ -59,8 +59,8 @@ phones. Device changes (including reboot, Settings activities, APK installation,
 sideload and erase) cannot be enabled through the UI or configuration.
 `MR_ENABLE_LAB_OPERATIONS=ON` creates a separate experimental Laboratory binary
 and default data directory; model-specific physical acceptance is still pending.
-Screen mirroring has an owned, consent-gated Laboratory lifecycle for reviewed
-scrcpy 5.0.1; production denies it. Physical frame delivery, device cleanup and
+Screen mirroring has an owned, consent-gated lifecycle for reviewed
+scrcpy 5.0.1 through a dedicated consented screen-view policy in both profiles; other generic writes remain Laboratory-only. Physical frame delivery, device cleanup and
 exact-model acceptance remain pending.
 See [the current development checkpoint](docs/release/DEVELOPMENT_CHECKPOINT_2026-10-23.md).
 

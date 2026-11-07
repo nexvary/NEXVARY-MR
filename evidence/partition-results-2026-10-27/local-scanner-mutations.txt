@@ -1,0 +1,2 @@
+Real scanner: reviewed receipt accepted; seven changed values and an unreviewed path detected.
+Real scanner: three source manifests verified against pinned Git bytes; twelve changed values and three unreviewed paths detected.

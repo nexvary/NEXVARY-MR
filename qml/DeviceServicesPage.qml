@@ -30,7 +30,7 @@ Item {
    NavIcon {kind:1;Layout.preferredWidth:32;Layout.preferredHeight:32}
    Label {text:app.trx("خدمات الجهاز حسب قدراته","Capability-based device services");font.bold:true;font.pixelSize:19;color:app.tone("#edf4ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
    NeonComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:190}
-   ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:Qt.openUrlExternally(page.driverSource.url)}
+   ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:app.openExternal(page.driverSource.url)}
   }
   Label {objectName:"serviceBuildProfile";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:toolBridge.laboratoryBuild?"#FF465C":"#39FF14";text:toolBridge.laboratoryBuild?app.trx("نسخة المختبر التجريبية — عمليات تغيير الجهاز تحتاج تفويضًا واختبارًا فعليًا لكل موديل.","Experimental Laboratory build — device changes require authorization and per-model physical testing."):app.trx("نسخة الإنتاج: قراءة وتشخيص فقط. عمليات تغيير الجهاز غير متاحة.","Production build: read-only diagnostics. Device-changing operations are unavailable.")}
   Label {objectName:"serviceWorkflow";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}

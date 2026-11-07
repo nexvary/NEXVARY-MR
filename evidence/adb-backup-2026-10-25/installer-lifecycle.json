@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "installationDirectory": "D:\\a\\_temp\\NEXVARY MR install test",
+  "installExit": 0,
+  "launchMode": "installed-in-place",
+  "uninstallExit": 0,
+  "installedExecutableRemoved": true,
+  "perUserUninstallRegistrationRemoved": true
+}

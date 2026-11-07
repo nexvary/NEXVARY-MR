@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "sourceParent": "a123da537ef4ee14ed9d5506ba5c23325645461d",
+  "changedInputsSinceParent": [
+    "qml/GovernmentAnalysisPage.qml",
+    "qml/tests/tst_navigation.qml"
+  ],
+  "nativeInputsUnchangedSince": "02324429ffd0c33f5838d076556966a6a2b7ea5a",
+  "inputs": [
+    {
+      "path": "cpp/src/CaseTimeline.cpp",
+      "sha256": "7be75e6e21025ddbc30f59f24de6f7123fd2043f1b7d54a77de19635f0ec1016"
+    },
+    {
+      "path": "cpp/src/LawCaseTimeline.cpp",
+      "sha256": "43503c43ea180eb26410a1c7af98e461a72c0aaf62c64c2e969a7a88c9d37044"
+    },
+    {
+      "path": "cpp/tests/timeline_tests.cpp",
+      "sha256": "7f63808ca0d339bc3e06fd7d6c71ce9871422e0a0cf79922de71205c87f7b06b"
+    },
+    {
+      "path": "cpp/tests/ui_tests.cpp",
+      "sha256": "924278619088a16f3203e4cf9370bc8ec27209f2ca24b395ef6cb96852f389dd"
+    },
+    {
+      "path": "qml/GovernmentAnalysisPage.qml",
+      "sha256": "6a7aeb1d862efee0899472e56f4106a4702207e2101b97f475e779d06ca9da7c"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "sha256": "2f39fd295da7c7c49d68ad7c3b2dce59fe33310734125df0cd42b956b3c6b482"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "058d252d01129db8b9a89c310f05da15945cd35c76660939d085ccadb4f81817"
+    },
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "94ac6a6df0e879a623197f620d9d2c3a575105ff5f615abdc4d9872140441022"
+    }
+  ],
+  "visualReview": {
+    "runtime": "Linux Qt 6.4.2 offscreen/software; actual rendered application, synthetic fixture data",
+    "finding": "Arabic adjacent UUID digits were visually reordered; display-only Unicode isolation fixes them without changing stored data. Wrapped scope receives minimum height/padding; geometry regressions cover scope/search overlap and header invariance.",
+    "reviewedCaptures": [
+      {
+        "path": "timeline-ar-1366.png",
+        "gitBlobSha": "d1ee1014ff79aecc774b69fb45e63c223522e5de",
+        "width": 1366,
+        "height": 768
+      },
+      {
+        "path": "timeline-en-840.png",
+        "gitBlobSha": "498a0233a6d3a45884d5508800fd9be78f44e6a5",
+        "width": 840,
+        "height": 480
+      }
+    ],
+    "captureNote": "Reviewed PNG byte blobs are retained unchanged; later test captures can have different synthetic UUIDs. These two images are local Linux captures, not Windows or real-case screenshots."
+  },
+  "localValidation": {
+    "nativeTimeline": "26/26 passed; exact native inputs unchanged",
+    "python": "38/38 passed",
+    "allCTest": "36/42 in initial full invocation; identity/security/UI/app generated zero-byte outputs prevented six groups from starting",
+    "repair": "identity/security and GUI smoke subsequently passed; initial UI/DPI rerun exposed delegate lookup failure",
+    "uiAfterDelegateFix": "47/47 plus 1.25/1.5 DPI groups passed before final display isolation/minimum-height change",
+    "finalVisualControls": "focused complete AR/EN, 840/1366/1536 and DPI 1/1.25/1.5; raw receipts retained",
+    "fullFinalSourceLocal42of42Claimed": false
+  },
+  "hostedVerification": "Pending exact source CI for commit containing this receipt.",
+  "acceptance": "No physical device, clean Windows 10/11, independent laboratory/institutional acceptance or comparative superiority is claimed."
+}

@@ -1,0 +1,5 @@
+{
+  "exitCode": 7,
+  "seconds": 23.134302014999776,
+  "stderr": "QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'\nCould not create AF_NETLINK socket (Operation not permitted)\nCould not create AF_NETLINK socket (Operation not permitted)\nCould not create AF_NETLINK socket (Operation not permitted)\nCould not create AF_NETLINK socket (Operation not permitted)\n"
+}

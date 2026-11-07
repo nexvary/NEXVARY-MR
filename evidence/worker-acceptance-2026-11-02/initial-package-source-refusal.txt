@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/evidence/cross-store-final-2026-11-02/verify_delivery.py", line 40, in <module>
+    profile=json.loads(z.read(prefix+'BUILD_PROFILE.json').decode('utf-8-sig'));require(profile['commit']==a.sha and profile['buildProfile']=='production-read-only' and profile['signed'] is False,'source/profile mismatch')
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/evidence/cross-store-final-2026-11-02/verify_delivery.py", line 5, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: source/profile mismatch

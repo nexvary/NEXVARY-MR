@@ -1,0 +1,20 @@
+********* Start testing of OwnedProcessTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : OwnedProcessTests::initTestCase()
+PASS   : OwnedProcessTests::invalidSupervisor(missing)
+PASS   : OwnedProcessTests::invalidSupervisor(not-executable)
+PASS   : OwnedProcessTests::invalidSupervisor(symlink)
+PASS   : OwnedProcessTests::invalidSupervisor(zero-exit-without-receipt)
+PASS   : OwnedProcessTests::directKillNegativeIsRetained()
+PASS   : OwnedProcessTests::shutdown(cancel)
+PASS   : OwnedProcessTests::shutdown(logout)
+PASS   : OwnedProcessTests::shutdown(session-expiry)
+PASS   : OwnedProcessTests::shutdown(permission-revocation)
+PASS   : OwnedProcessTests::shutdown(worker-timeout)
+PASS   : OwnedProcessTests::shutdown(root-exit-with-detached-child)
+PASS   : OwnedProcessTests::parentCrash()
+PASS   : OwnedProcessTests::hostileSameUserSupervisorKillRemainsUnknown()
+PASS   : OwnedProcessTests::repeatedUseAndLaunchFailure()
+PASS   : OwnedProcessTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 18959ms
+********* Finished testing of OwnedProcessTests *********

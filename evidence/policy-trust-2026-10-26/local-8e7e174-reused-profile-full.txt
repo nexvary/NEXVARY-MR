@@ -1,0 +1,141 @@
+Internal ctest changing into directory: /workspace/scratch/48432bb85957/NEXVARY-MR/build
+Test project /workspace/scratch/48432bb85957/NEXVARY-MR/build
+      Start  1: mr_research_data_validation
+ 1/48 Test  #1: mr_research_data_validation ........   Passed    0.02 sec
+      Start  2: mr_policy_tests
+ 2/48 Test  #2: mr_policy_tests ....................   Passed    0.00 sec
+      Start  3: mr_core_tests
+ 3/48 Test  #3: mr_core_tests ......................   Passed    0.00 sec
+      Start  4: mr_law_enforcement_case_tests
+ 4/48 Test  #4: mr_law_enforcement_case_tests ......   Passed    0.00 sec
+      Start  5: mr_update_tests
+ 5/48 Test  #5: mr_update_tests ....................   Passed    0.43 sec
+      Start  6: mr_update_journal_tests
+ 6/48 Test  #6: mr_update_journal_tests ............   Passed    0.19 sec
+      Start  7: mr_update_key_tests
+ 7/48 Test  #7: mr_update_key_tests ................   Passed    0.00 sec
+      Start  8: mr_policy_audit_tests
+ 8/48 Test  #8: mr_policy_audit_tests ..............   Passed    9.40 sec
+      Start  9: mr_offline_tests
+ 9/48 Test  #9: mr_offline_tests ...................   Passed    7.14 sec
+      Start 10: mr_artifact_tests
+10/48 Test #10: mr_artifact_tests ..................   Passed    1.33 sec
+      Start 11: mr_timeline_tests
+11/48 Test #11: mr_timeline_tests ..................   Passed    1.14 sec
+      Start 12: mr_import_tests
+12/48 Test #12: mr_import_tests ....................   Passed    7.39 sec
+      Start 13: mr_retention_tests
+13/48 Test #13: mr_retention_tests .................   Passed    0.92 sec
+      Start 14: mr_identity_tests
+14/48 Test #14: mr_identity_tests ..................   Passed    5.10 sec
+      Start 15: mr_law_workspace_tests
+15/48 Test #15: mr_law_workspace_tests .............   Passed    1.34 sec
+      Start 16: mr_research_tests
+16/48 Test #16: mr_research_tests ..................   Passed    0.04 sec
+      Start 17: mr_intelligence_tests
+17/48 Test #17: mr_intelligence_tests ..............   Passed    0.01 sec
+      Start 18: mr_connection_tests
+18/48 Test #18: mr_connection_tests ................   Passed    0.01 sec
+      Start 19: mr_workshop_tests
+19/48 Test #19: mr_workshop_tests ..................   Passed    1.70 sec
+      Start 20: mr_barcode_tests
+20/48 Test #20: mr_barcode_tests ...................   Passed    0.26 sec
+      Start 21: mr_center_tests
+21/48 Test #21: mr_center_tests ....................   Passed    0.13 sec
+      Start 22: mr_cloud_tests
+22/48 Test #22: mr_cloud_tests .....................   Passed   11.63 sec
+      Start 23: mr_security_tests
+23/48 Test #23: mr_security_tests ..................   Passed    1.31 sec
+      Start 24: mr_catalog_tests
+24/48 Test #24: mr_catalog_tests ...................   Passed    0.03 sec
+      Start 25: mr_tool_tests
+25/48 Test #25: mr_tool_tests ......................   Passed   28.13 sec
+      Start 26: mr_service_tests
+26/48 Test #26: mr_service_tests ...................   Passed    5.03 sec
+      Start 27: mr_mirror_tests
+27/48 Test #27: mr_mirror_tests ....................   Passed   13.10 sec
+      Start 28: mr_compatibility_tests
+28/48 Test #28: mr_compatibility_tests .............   Passed    0.02 sec
+      Start 29: mr_board_tests
+29/48 Test #29: mr_board_tests .....................   Passed    0.03 sec
+      Start 30: mr_firmware_tests
+30/48 Test #30: mr_firmware_tests ..................   Passed    0.02 sec
+      Start 31: mr_avb_tests
+31/48 Test #31: mr_avb_tests .......................   Passed    0.03 sec
+      Start 32: mr_pcap_tests
+32/48 Test #32: mr_pcap_tests ......................   Passed    0.29 sec
+      Start 33: mr_exif_tests
+33/48 Test #33: mr_exif_tests ......................   Passed    0.27 sec
+      Start 34: mr_recovery_tests
+34/48 Test #34: mr_recovery_tests ..................   Passed    8.24 sec
+      Start 35: mr_recovery_image_tests
+35/48 Test #35: mr_recovery_image_tests ............   Passed    0.02 sec
+      Start 36: mr_forensic_tests
+36/48 Test #36: mr_forensic_tests ..................   Passed    0.52 sec
+      Start 37: mr_tsk_tests
+37/48 Test #37: mr_tsk_tests .......................   Passed    1.54 sec
+      Start 38: mr_policy_audit_interop
+38/48 Test #38: mr_policy_audit_interop ............   Passed    1.20 sec
+      Start 39: mr_evidence_package_interop
+39/48 Test #39: mr_evidence_package_interop ........   Passed    0.10 sec
+      Start 40: mr_artifact_reference_validation
+40/48 Test #40: mr_artifact_reference_validation ...   Passed    0.03 sec
+      Start 41: mr_adb_backup_interop
+41/48 Test #41: mr_adb_backup_interop ..............   Passed    0.51 sec
+      Start 42: mr_avb_mutation_tests
+42/48 Test #42: mr_avb_mutation_tests ..............   Passed    0.15 sec
+      Start 43: mr_pcap_mutation_tests
+43/48 Test #43: mr_pcap_mutation_tests .............   Passed    0.18 sec
+      Start 44: mr_exif_mutation_tests
+44/48 Test #44: mr_exif_mutation_tests .............   Passed    0.04 sec
+      Start 45: mr_ui_tests
+45/48 Test #45: mr_ui_tests ........................   Passed   60.62 sec
+      Start 46: mr_ui_scale_1.25
+46/48 Test #46: mr_ui_scale_1.25 ...................   Passed   33.19 sec
+      Start 47: mr_ui_scale_1.5
+47/48 Test #47: mr_ui_scale_1.5 ....................   Passed   37.80 sec
+      Start 48: mr_gui_smoke
+48/48 Test #48: mr_gui_smoke .......................***Failed   17.08 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+
+
+98% tests passed, 1 tests failed out of 48
+
+Total Test time (real) = 257.70 sec
+
+The following tests FAILED:
+	 48 - mr_gui_smoke (Failed)
+Errors while running CTest

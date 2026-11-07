@@ -1,0 +1,13 @@
+********* Start testing of CloudTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CloudTests::initTestCase()
+PASS   : CloudTests::governmentGateBlocksSavedCredentialsAndRevokesSync()
+PASS   : CloudTests::snapshotSyncAndRevocation()
+PASS   : CloudTests::rejectsPlainHttpAndRedirects()
+PASS   : CloudTests::rejectsWrongApiKey()
+SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+   Loc: [/workspace/scratch/1df17bb48a7d/NEXVARY-MR/cpp/tests/cloud_tests.cpp(88)]
+PASS   : CloudTests::identityAndPersistence()
+PASS   : CloudTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 10736ms
+********* Finished testing of CloudTests *********

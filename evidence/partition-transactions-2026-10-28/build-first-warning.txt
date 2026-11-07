@@ -1,0 +1,81 @@
+[0/2] Re-checking globbed directories...
+[1/300] Automatic MOC and UIC for target mr_import_adapters
+[2/298] Automatic MOC and UIC for target mr_desktop_resources_1
+[3/297] Automatic MOC and UIC for target mr_desktop_resources_2
+[4/296] Generating NexvaryMR/qml/GovernmentAnalysisPage.qml
+[5/296] Automatic MOC and UIC for target mr_avb_mutation_tests
+[6/294] Automatic MOC and UIC for target mr_pcap_mutation_tests
+[7/292] Automatic MOC and UIC for target mr_exif_mutation_tests
+[8/290] Automatic MOC and UIC for target mr_ui_device_fixture
+[9/288] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[10/288] Automatic MOC and UIC for target mr_evidence_import_worker
+[11/286] Automatic MOC and UIC for target mr_desktop
+[12/286] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateKeyStore.cpp.o
+[13/286] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateVerifier.cpp.o
+[14/286] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateJournal.cpp.o
+[15/286] Linking CXX static library libmr_update_verifier.a
+[16/286] Building CXX object CMakeFiles/mr_desktop.dir/mr_desktop_autogen/mocs_compilation.cpp.o
+[17/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TrackingPortal.cpp.o
+[18/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/CloudTracking.cpp.o
+[19/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/RecoveryBridge.cpp.o
+[20/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/SecurityBridge.cpp.o
+[21/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/TskImage.cpp.o
+[22/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/ToolBridge.cpp.o
+[23/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/IdentityService.cpp.o
+[24/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseStore.cpp.o
+[25/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBackup.cpp.o
+[26/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseRetention.cpp.o
+[27/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/PolicyAudit.cpp.o
+[28/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/GovernmentOperationPolicy.cpp.o
+[29/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/MirrorSession.cpp.o
+[30/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseImports.cpp.o
+[31/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[32/286] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseArtifacts.cpp.o
+[33/286] Automatic MOC for target mr_update_tests
+[34/285] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseTimeline.cpp.o
+[35/285] Automatic MOC for target mr_update_journal_tests
+[36/284] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/DeviceServices.cpp.o
+[37/284] Automatic MOC for target mr_update_key_tests
+[38/283] Linking CXX executable mr_update_key_tests
+[39/283] Building CXX object CMakeFiles/mr_update_tests.dir/cpp/tests/update_tests.cpp.o
+[40/283] Linking CXX executable mr_update_tests
+[41/283] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCasePartitions.cpp.o
+[42/283] Linking CXX static library libmr_desktop.a
+[43/283] Automatic MOC and UIC for target nexvary_mr
+[44/282] Running AUTOMOC file extraction for target nexvary_mr
+[45/165] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp
+[46/165] Running rcc for resource nexvary_mr_raw_qml_0
+[47/165] Automatic MOC and UIC for target mr_case_transaction_tests
+[48/164] Automatic MOC and UIC for target mr_partition_transaction_tests
+[49/164] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o
+[50/164] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/mr_partition_transaction_tests_autogen/mocs_compilation.cpp.o
+[51/164] Building CXX object CMakeFiles/mr_update_journal_tests.dir/cpp/tests/update_journal_tests.cpp.o
+[52/164] Linking CXX executable mr_update_journal_tests
+[53/164] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp.o
+[54/164] Automatic MOC and UIC for target mr_policy_audit_tests
+[55/163] Building CXX object CMakeFiles/mr_case_transaction_tests.dir/cpp/tests/case_transaction_tests.cpp.o
+[56/163] Linking CXX executable mr_case_transaction_tests
+[57/163] Automatic MOC and UIC for target mr_offline_tests
+[58/162] Building CXX object CMakeFiles/mr_policy_audit_tests.dir/cpp/tests/policy_audit_tests.cpp.o
+[59/162] Linking CXX executable mr_policy_audit_tests
+[60/162] Building CXX object CMakeFiles/nexvary_mr.dir/cpp/src/main.cpp.o
+[61/162] Automatic MOC and UIC for target mr_artifact_tests
+[62/161] Linking CXX executable nexvary_mr
+[63/161] Building CXX object CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o
+FAILED: CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o 
+/usr/bin/c++ -DMR_ENABLE_LAB_OPERATIONS=0 -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_TESTCASE_BUILDDIR=\"/workspace/scratch/700fbf4aabb3/NEXVARY-MR/build\" -DQT_TESTCASE_SOURCEDIR=\"/workspace/scratch/700fbf4aabb3/NEXVARY-MR\" -DQT_TESTLIB_LIB -I/workspace/scratch/700fbf4aabb3/NEXVARY-MR/build/mr_partition_transaction_tests_autogen/include -I/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/src -I/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtSql -isystem /tmp/mr-sodium/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtConcurrent -isystem /usr/include/x86_64-linux-gnu/qt6/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt6/QtTest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -fPIC -MD -MT CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o -MF CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o.d -o CMakeFiles/mr_partition_transaction_tests.dir/cpp/tests/partition_transaction_tests.cpp.o -c /workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp
+/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp: In constructor ‘{anonymous}::Fixture::Fixture(const QString&, int)’:
+/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp:36:3: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
+   36 |   if(!source.open(QIODevice::WriteOnly)||source.write(data)!=data.size())qFatal("Source fixture failed");source.close();
+      |   ^~
+/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp:36:106: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   36 |   if(!source.open(QIODevice::WriteOnly)||source.write(data)!=data.size())qFatal("Source fixture failed");source.close();
+      |                                                                                                          ^~~~~~
+cc1plus: all warnings being treated as errors
+[64/161] Automatic MOC and UIC for target mr_timeline_tests
+[65/160] Building CXX object CMakeFiles/mr_offline_tests.dir/cpp/tests/offline_tests.cpp.o
+[66/160] Building CXX object CMakeFiles/mr_artifact_tests.dir/cpp/tests/artifact_tests.cpp.o
+ninja: build stopped: subcommand failed.

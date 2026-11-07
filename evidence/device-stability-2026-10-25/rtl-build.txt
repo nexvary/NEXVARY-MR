@@ -1,0 +1,10 @@
+[0/2] Re-checking globbed directories...
+[1/9] Generating NexvaryMR/qml/DeviceIntelligencePanel.qml
+[2/9] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[3/9] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp
+[4/9] Running rcc for resource nexvary_mr_raw_qml_0
+[5/9] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp.o
+[6/9] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_nexvary_mr_raw_qml_0.cpp.o

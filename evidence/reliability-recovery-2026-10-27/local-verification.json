@@ -1,0 +1,107 @@
+{
+  "testedNativeSource": "a1facce5d8f19b1cd9b24d0ef500401d49da7ba6",
+  "nativeRuntimeChangeSinceFabe": false,
+  "nativeEnvironment": {
+    "os": "Ubuntu 24.04",
+    "qt": "6.4.2",
+    "compiler": "GCC13.3.0",
+    "profile": "laboratory",
+    "buildType": "RelWithDebInfo",
+    "renderer": "offscreen/software",
+    "differsFromOriginalReleaseFlags": true
+  },
+  "localFull": {
+    "passed": 48,
+    "total": 48,
+    "seconds": 330.49
+  },
+  "localPolicy": {
+    "passed": 15,
+    "total": 15
+  },
+  "qml": {
+    "passed": 51,
+    "total": 51
+  },
+  "dpi125": {
+    "passed": 12,
+    "total": 12
+  },
+  "dpi150": {
+    "passed": 12,
+    "total": 12
+  },
+  "guiRepeats": {
+    "passed": 3,
+    "total": 3,
+    "seconds": 59.55
+  },
+  "python": {
+    "passed": 42,
+    "total": 42,
+    "includesLaterOwnedDiagnosticGroupCleanup": true
+  },
+  "laboratoryAsanPair": {
+    "passed": 4,
+    "total": 4,
+    "leakChecksDisabledOnlyLocally": true,
+    "requiredCiLeakChecksChanged": false
+  },
+  "gdb": {
+    "version": "15.1",
+    "available": true,
+    "ptracePermitted": false,
+    "stackAvailable": false
+  },
+  "aggressiveGcExperiment": {
+    "source": "surviving source-fabe production ASan binary",
+    "result": "intentionally interrupted before QtTest init completed; no passing/failing test inference",
+    "exit": 130
+  },
+  "sigsegv": {
+    "reproduced": false,
+    "rootCauseFound": false,
+    "fixed": false,
+    "status": "BLOCKED / exact hosted diagnostic reproduction pending"
+  },
+  "auditStoreTransient": {
+    "reproducedThisBatch": false,
+    "rootCauseFound": false,
+    "fixed": false
+  },
+  "generatedObjects": {
+    "firstLaboratoryLink": "empty generated main.cpp.o; retained then rebuilt without source changes",
+    "laboratoryAsanLink": "empty generated ConnectionDiagnosis.cpp.o; retained then rebuilt without source changes",
+    "runtimeCauseInferred": false
+  },
+  "remaining": [
+    "case/journal crash-atomic linkage and prepared intent",
+    "product descendant containment",
+    "independent complete egress",
+    "visual top overlay root cause",
+    "independent institutional and comparative acceptance"
+  ],
+  "files": {
+    "lab-asan-pair.txt": "0d89123cae723ebe23817d9e4e8323e26311e893cb89d309442c6ca1f5bd92b3",
+    "local-lab-full.xml": "29eaee2f5e2aeb8673d1e2007af063b8213dd524e28f90c139a27373c2c6c387",
+    "prior-production-asan-pair.txt": "e0c928cfddad1d0c96ac667588919fd9e3737527e47555cc4b10b453c6cdc144",
+    "local-gui-repeat.xml": "7b29bd606f4394bef2186f143a8514ec464d46d638ce205d8bfb0a53762f2a96",
+    "local-lab-asan-dpi.xml": "32b83c5dde49248176cc05d3dd79b224c991401106df369ffda14c5944a78af0",
+    "local-lab-receipts-en.png": "323469ea308a2ae1165047d66409dca310c8a3c7587ad5bbc1305d77e06a1439",
+    "initial-lock-fixture-failure.xml": "eef63ae98ad0eaca56dbd67bc05c3a006e92bd42037215a9de5e410b0924cbc9",
+    "python-results.txt": "4886e8903e77826bac9384a1752f4d761c4588018b9a0b9fe320ae8af52a7193",
+    "local-lab-asan-dpi-last-test.log": "9fef0a3a238db86e8d905ecd158a07ed807117dbff57e7f92fc82cac5c720e1d",
+    "local-lab-receipts-ar.png": "641801ab8b3c528bacc028b8caf931b9673f347b87da8a473e4c325b8d426bc5",
+    "local-gui-repeat.txt": "cb3b0e0563b96ccfbfb85776c8a1d082ebaa9a7f9c377a7b869ecb22591957d3",
+    "README.md": "203fef16574575d633a5609000092d57b0053ab71b20e8649d5deeed3361a1b1",
+    "local-gdb-capability.txt": "b5202d07e0006530755949b382d55d9c0a8e98f95d07726e6237a4a3b689d600",
+    "local-lab-full-last-test.log": "0f35aaea1f4476fbfc6676c82244ffa471f9f19afa82f38df38926507d9c7b03"
+  },
+  "laboratoryAsanDpi125": {
+    "passed": 12,
+    "total": 12,
+    "ctestGroupsPassed": 1,
+    "seconds": 46.02,
+    "leakChecksDisabledOnlyLocally": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "nexvary-private-audit-observation/v1",
+  "scope": "Synthetic diagnostic resources; no keys or journal content published",
+  "memorySequenceFromDiagnostic": 139,
+  "diskEventCount": 135,
+  "diskBytes": 205894,
+  "diskSha256": "933daf54569e59ae9bf5f7832a6130800c4b2396a0fddace7713e167c2431853",
+  "wrapperValid": true,
+  "publicSignatureLifecycleValid": true,
+  "mechanism": "unresolved; immediate readback is not proof against later divergence"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+  "downloadedProviderDigestsVerified": {
+    "portable": "a7bd7e07bfd9f1b0f1a6573a891784a45b60844b949db192b4fe541652b16374",
+    "installer": "04ece269a8fa9bc1b834053a7b64bd43ddd5bc9f14a890765f6bce8b7c17cecc",
+    "evidence": "52d836e5a034b98c2ae2a508ae72b4acceff5c9f12bf5fb78618ae7109411907"
+  },
+  "portableZipSha256": "9ccaaa3922b7a3a7fa7bbde89a486180adb62784ab816c1352e45f5bebb069f9",
+  "setupSha256": "cb456a4d16a7f781593a96d63d963c67c3942e57e7caef6dffd06166e215d6ad",
+  "testedExecutableSha256": "30dcbfdc401ac968d7282789a6010fef8492eb8360c8b81c4b376348780faca2",
+  "testedImportWorkerSha256": "3d2ff92436a4afbd294f665f73fc7fd890295c1be96475871335d87dbb04c533",
+  "bundleManifestFilesVerified": 1418,
+  "portableAndInstalledReceiptsMatch": true,
+  "installerLifecycleVerified": true,
+  "signed": false,
+  "verifier": "evidence/policy-trust-2026-10-26/verify_windows_delivery.py",
+  "scope": "Downloaded unsigned CI evaluation artifacts, independently checked before local execution environment disconnected; provider/inner hashes, source/profile and tested-byte receipt consistency. Not publisher signing, reproducible-build proof, clean-machine or institutional acceptance."
+}

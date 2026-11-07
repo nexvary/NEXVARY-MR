@@ -1,0 +1,10 @@
+********* Start testing of ExifTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ExifTests::initTestCase()
+FAIL!  : ExifTests::completedWorkerCancellationLeavesCaseUntouched() Compared values are not the same
+   Actual   (read(bridge.casePath())): "NMR-SYNTHETIC-ONLY-1\n6880f8d6f3c062102962b55de58f7968f0fac9dcb6047de0a898ef8cc899112e\n{\"audit\":[{\"atUtc\":\"2026-11-02T15:46:46.092Z\",\"entryHash\":\"3e3df7ae2620e2acf4756e463e367ff3b72060ccecac58ffdee04d2f73c4bf16\",\"operation\":\"case-cr"...
+   Expected (before)                 : "NMR-SYNTHETIC-ONLY-1\n58f2fe5e41f9876d7c3b3cbe2aae47103881de062c7f2d6ce92110f69c40c6da\n{\"audit\":[{\"atUtc\":\"2026-11-02T15:46:46.092Z\",\"entryHash\":\"3e3df7ae2620e2acf4756e463e367ff3b72060ccecac58ffdee04d2f73c4bf16\",\"operation\":\"case-cr"...
+   Loc: [/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/cpp/tests/exif_tests.cpp(81)]
+PASS   : ExifTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 4ms
+********* Finished testing of ExifTests *********

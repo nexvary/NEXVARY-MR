@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/700fbf4aabb3/NEXVARY-MR/scripts/check_policy_audit_interop.py", line 318, in <module>
+    main()
+  File "/workspace/scratch/700fbf4aabb3/NEXVARY-MR/scripts/check_policy_audit_interop.py", line 74, in main
+    subprocess.run([sys.argv[1], "--export-fixture", str(root)], check=True, timeout=40)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: 'build/mr_policy_audit_tests'

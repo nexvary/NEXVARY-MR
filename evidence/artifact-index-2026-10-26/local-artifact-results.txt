@@ -1,0 +1,38 @@
+********* Start testing of ArtifactTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : ArtifactTests::initTestCase()
+QINFO  : ArtifactTests::independentTruthAndDeterminism() Structural truth corpus: 20 true edges, 0 false links, 0 missed links; excludes people/events
+PASS   : ArtifactTests::independentTruthAndDeterminism()
+PASS   : ArtifactTests::literalArabicSearchAndScope()
+PASS   : ArtifactTests::corruption(hash)
+PASS   : ArtifactTests::corruption(wrong-evidence)
+PASS   : ArtifactTests::corruption(wrong-source)
+PASS   : ArtifactTests::corruption(size)
+PASS   : ArtifactTests::corruption(duplicate-run)
+PASS   : ArtifactTests::corruption(device)
+PASS   : ArtifactTests::corruption(duplicate-device)
+PASS   : ArtifactTests::corruption(duplicate-evidence)
+PASS   : ArtifactTests::corruption(provenance-case)
+PASS   : ArtifactTests::corruption(provenance-device)
+PASS   : ArtifactTests::corruption(provenance-evidence)
+PASS   : ArtifactTests::corruption(schema)
+PASS   : ArtifactTests::corruption(adapter)
+PASS   : ArtifactTests::corruption(version)
+PASS   : ArtifactTests::corruption(findings)
+PASS   : ArtifactTests::corruption(count)
+PASS   : ArtifactTests::corruption(truncation)
+PASS   : ArtifactTests::corruption(kind)
+PASS   : ArtifactTests::corruption(value)
+PASS   : ArtifactTests::corruption(member-hash)
+PASS   : ArtifactTests::corruption(duplicate-key)
+PASS   : ArtifactTests::corruption(malformed-json)
+PASS   : ArtifactTests::corruption(report-limit)
+QINFO  : ArtifactTests::boundsFullScanAndBenchmark() Synthetic artifact index: 12800 retained observations; 563 ms
+PASS   : ArtifactTests::boundsFullScanAndBenchmark()
+PASS   : ArtifactTests::adbDigestAndUnsupportedScopes()
+PASS   : ArtifactTests::caseIsolation()
+PASS   : ArtifactTests::nativePersistenceCancellationAndRoles()
+PASS   : ArtifactTests::nativeGrantRevocation()
+PASS   : ArtifactTests::cleanupTestCase()
+Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 2543ms
+********* Finished testing of ArtifactTests *********

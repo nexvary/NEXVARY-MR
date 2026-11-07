@@ -1,0 +1,31 @@
+********* Start testing of PartitionTransactionTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : PartitionTransactionTests::initTestCase()
+FAIL!  : PartitionTransactionTests::verifiedCaseAndOriginalApproval() 'f.approve("text is not case ownership")' returned FALSE. ()
+   Loc: [/workspace/scratch/700fbf4aabb3/NEXVARY-MR/cpp/tests/partition_transaction_tests.cpp(76)]
+PASS   : PartitionTransactionTests::candidateBindingAndNoReplay()
+PASS   : PartitionTransactionTests::authorityEnds(cancel)
+PASS   : PartitionTransactionTests::authorityEnds(logout)
+PASS   : PartitionTransactionTests::authorityEnds(revoke)
+PASS   : PartitionTransactionTests::authorityEnds(case-close)
+PASS   : PartitionTransactionTests::authorityEnds(revision)
+PASS   : PartitionTransactionTests::authorityEnds(expiry)
+PASS   : PartitionTransactionTests::revocationAfterCandidatePreventsCaseWrite()
+PASS   : PartitionTransactionTests::newApprovalCannotAuthorizeOldOperation()
+PASS   : PartitionTransactionTests::rejectedWorker(error)
+PASS   : PartitionTransactionTests::rejectedWorker(oversize)
+PASS   : PartitionTransactionTests::rejectedWorker(wrong-version)
+PASS   : PartitionTransactionTests::productionRecoveryLabelCannotDispatch()
+PASS   : PartitionTransactionTests::realMmls()
+PASS   : PartitionTransactionTests::interruptedWrites(before-prepare)
+PASS   : PartitionTransactionTests::interruptedWrites(during-prepare)
+PASS   : PartitionTransactionTests::interruptedWrites(after-prepare)
+PASS   : PartitionTransactionTests::interruptedWrites(during-candidate)
+PASS   : PartitionTransactionTests::interruptedWrites(after-candidate)
+PASS   : PartitionTransactionTests::interruptedWrites(during-case)
+PASS   : PartitionTransactionTests::interruptedWrites(after-case)
+PASS   : PartitionTransactionTests::interruptedWrites(during-terminal)
+PASS   : PartitionTransactionTests::interruptedWrites(after-terminal)
+PASS   : PartitionTransactionTests::cleanupTestCase()
+Totals: 25 passed, 1 failed, 0 skipped, 0 blacklisted, 37925ms
+********* Finished testing of PartitionTransactionTests *********

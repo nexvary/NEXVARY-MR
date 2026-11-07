@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "producer": "Native NEXVARY-MR Qt export, Linux Qt 6.4.2",
+  "pages": 4,
+  "visualReview": "All four rendered pages inspected; readable Arabic labels, LTR indented technical JSON, repeating table captions and complete digest values. No clipped/overlapping content.",
+  "pdfSha256": "2161912a8fb687e4b41d7d4373f75a0ccedc121c3e06c57518c7db97f9699323",
+  "sourceSha256Complete": true,
+  "analysisSha256Complete": true,
+  "manifestSha256Complete": true
+}

@@ -1,0 +1,11 @@
+{
+  "source": "cf2a93caa8c5dd5402c9afa8e6dd743d889d2322",
+  "initialCtest": {
+    "passed": 48,
+    "total": 48
+  },
+  "correctedPolicyCases": 11,
+  "interopChecks": 26,
+  "currentFollowUp": "Force eager QStringDecoder UTF-8 conversion; current-source full/hosted verification pending",
+  "scope": "Synthetic/local interoperability; no independent institutional/OS or competitor proof"
+}

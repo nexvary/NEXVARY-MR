@@ -1,4 +1,5 @@
 #include "CloudTracking.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "WorkshopBridge.hpp"
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -33,7 +34,7 @@ QByteArray protect(const QByteArray &bytes,bool encrypt){
 CloudTracking::CloudTracking(WorkshopBridge *w,const QString &storage,bool localTest,QObject *parent):QObject(parent),workshop_(w),storage_(storage),network_(this),localTest_(localTest){
  periodic_.setInterval(30000);debounce_.setInterval(750);debounce_.setSingleShot(true);
  connect(&periodic_,&QTimer::timeout,this,&CloudTracking::syncNow);connect(&debounce_,&QTimer::timeout,this,&CloudTracking::syncNow);
- connect(w,&WorkshopBridge::changed,this,[this]{++generation_;dirty_=true;emit changed();if(configured())debounce_.start();});
+ connect(w,&WorkshopBridge::changed,this,[this]{++generation_;dirty_=true;emit changed();if(configured()&&(!policy_||policy_->granted("cloud-publish")))debounce_.start();});
  QFile file(storage_);if(file.size()<=32768&&file.open(QIODevice::ReadOnly)){const auto data=file.readAll();if(data.startsWith("MRREMOTE1\n"))applyCredentials(protect(data.mid(10),false),false);}
  if(configured()){periodic_.start();debounce_.start();}
 }
@@ -50,21 +51,26 @@ bool CloudTracking::applyCredentials(const QByteArray &bytes,bool save){
  url_=url.adjusted(QUrl::StripTrailingSlash).toString();key_=o.value("apiKey").toString();source_=o.value("sourceId").toString();dirty_=true;lastSync_.clear();error_.clear();return true;
 }
 bool CloudTracking::importCredentials(const QString &path,bool approved){
+ if(policy_&&!policy_->permit("cloud-publish")){fail(policy_->error());return false;}
  if(busy_)return false;
  QFile file(WorkshopBridge::localPath(path));if(!approved||!QFileInfo(file).isFile()||QFileInfo(file).isSymLink()||file.size()>16384||!file.open(QIODevice::ReadOnly)){error_=QStringLiteral("Choose the server credentials file and explicitly approve uploading public tracking fields only.");emit changed();return false;}
  if(!applyCredentials(file.readAll(),true)){return false;}
  periodic_.start();emit changed();debounce_.start();return true;
 }
 bool CloudTracking::syncNow(){
+ if(policy_&&!policy_->permit("cloud-publish")){fail(policy_->error());return false;}
+ periodic_.start();
  if(!configured()||busy_||!workshop_->ready())return false;
  busy_=true;error_.clear();emit changed();request(QStringLiteral("/api/v1/state"));return true;
 }
 void CloudTracking::request(const QString &endpoint,const QByteArray &body,qint64 revision){
+ if(policy_&&!policy_->permit("cloud-publish")){fail(policy_->error());return;}
  QNetworkRequest req{QUrl(url_+endpoint)};req.setRawHeader("Authorization","Bearer "+key_.toLatin1());req.setAttribute(QNetworkRequest::RedirectPolicyAttribute,QNetworkRequest::ManualRedirectPolicy);req.setTransferTimeout(12000);
  QNetworkReply *reply=nullptr;if(body.isEmpty())reply=network_.get(req);else{req.setHeader(QNetworkRequest::ContentTypeHeader,QStringLiteral("application/json"));reply=network_.post(req,body);}reply_=reply;reply->setReadBufferSize(16384);
  const auto captured=std::make_shared<QByteArray>();
  connect(reply,&QNetworkReply::readyRead,this,[reply,captured]{captured->append(reply->read(qMax<qsizetype>(0,8192-captured->size())+1));if(captured->size()>8192)reply->abort();});
  connect(reply,&QNetworkReply::finished,this,[this,reply,captured,revision]{
+  if(policy_&&!policy_->permit("cloud-publish")){reply->deleteLater();reply_.clear();fail(policy_->error());return;}
   captured->append(reply->read(qMax<qsizetype>(0,8193-captured->size())));const int code=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();const bool ok=reply->error()==QNetworkReply::NoError&&code==200&&captured->size()<=8192;const auto doc=QJsonDocument::fromJson(*captured);reply->deleteLater();reply_.clear();
   if(!ok||!doc.isObject()){fail(QStringLiteral("Server sync failed (%1). Remote links may still show the last published state; no TLS/redirect bypass was attempted.").arg(code));return;}
   const auto o=doc.object();
@@ -80,12 +86,23 @@ void CloudTracking::request(const QString &endpoint,const QByteArray &body,qint6
  });
 }
 QString CloudTracking::issueLink(int id,int days,bool approved){
+ if(policy_&&!policy_->permit("cloud-publish")){fail(policy_->error());return {};}
  if(!configured()){error_=QStringLiteral("Import server credentials first.");emit changed();return {};}
  const auto token=workshop_->issueTrackingToken(id,days,approved);if(token.isEmpty()){error_=workshop_->error();emit changed();return {};}debounce_.start();return url_+QStringLiteral("/t/")+token;
 }
-bool CloudTracking::copyLink(const QString &url){if(!inSync()||!url.startsWith(url_+QStringLiteral("/t/")))return false;QGuiApplication::clipboard()->setText(url);return true;}
+bool CloudTracking::copyLink(const QString &url){if(policy_&&!policy_->permit("cloud-publish")){fail(policy_->error());return false;}if(!inSync()||!url.startsWith(url_+QStringLiteral("/t/")))return false;QGuiApplication::clipboard()->setText(url);return true;}
 bool CloudTracking::disconnectServer(bool confirmed){
  if(!confirmed||busy_)return false;
  if(QFileInfo::exists(storage_)&&!QFile::remove(storage_)){error_=QStringLiteral("Could not remove saved server credentials.");emit changed();return false;}
  periodic_.stop();debounce_.stop();url_.clear();key_.fill(QChar::Null);key_.clear();source_.clear();lastSync_.clear();dirty_=true;error_.clear();emit changed();return true;
+}
+
+void CloudTracking::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;
+ auto apply=[this]{if(policy_&&!policy_->granted("cloud-publish")){
+  periodic_.stop();debounce_.stop();
+  if(reply_){reply_->disconnect(this);reply_->abort();reply_->deleteLater();reply_.clear();}
+  busy_=false;dirty_=true;lastSync_.clear();error_=QStringLiteral("Government offline policy: cloud publishing stopped; remote copies already published are not withdrawn.");emit changed();
+ }};
+ connect(policy,&GovernmentOperationPolicy::changed,this,apply);apply();
 }

@@ -1,4 +1,5 @@
 #include "RecoveryBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "CaseVault.hpp"
 #include "RecoveryImage.hpp"
 #include "RecoveryFile.hpp"
@@ -74,15 +75,68 @@ QJsonObject evidenceRecord(const QByteArray &bytes,const QString &name,const QSt
 RecoveryBridge::RecoveryBridge(const QString &directory,bool syntheticTestProfile,QObject *parent):QObject(parent),directory_(local(directory)),synthetic_(syntheticTestProfile){
  status_=QStringLiteral("No recovery case is open. Assess write impact before installing any phone agent.");
  connect(&watcher_,&QFutureWatcher<JobResult>::finished,this,[this]{
-  const auto result=watcher_.result();running_=false;
+  auto result=watcher_.result();
+  processCleanup_=result.processCleanup;
+  const bool contextUnchanged = path_ == pendingSourcePath_ && document_ == pendingSnapshot_;
+  if(operationId_.isEmpty()) {
+   const bool opening = !pendingPath_.isEmpty();
+   const bool cancelled = cancelled_ && cancelled_->load();
+   const auto target = opening ? pendingPath_ : path_;
+   if(cancelled || !contextUnchanged) {
+    result.error = QStringLiteral("Operation cancelled or case changed; no result committed.");
+    result.document = {};
+   } else {
+    // Workers return candidates only. This GUI-thread acceptance point shares
+    // ordering with cancel(), so a queued completion cannot persist first.
+    if(result.error.isEmpty() && !persist(result.document,target,synthetic_,result.error))result.document={};
+    if(!result.error.isEmpty() && !opening && !document_.isEmpty()) {
+     result.document=document_;addAudit(result.document,"operation-failed",result.error);QString auditError;
+     if(!persist(result.document,target,synthetic_,auditError)){result.document={};result.error+=QStringLiteral(" Audit update failed: ")+auditError;}
+    }
+   }
+  }
+  if(!operationId_.isEmpty()){
+   // Audited partition jobs produce a candidate only. Recheck on the GUI
+   // thread before either case persistence or a completed result is exposed.
+   const auto snapshot=document_;
+   const bool permitted=policy_->permit("external-analysis");
+   const bool cancelled=cancelled_&&cancelled_->load();
+   if(!permitted||cancelled||!contextUnchanged)result.error=QStringLiteral("Cancelled or permission ended; partition result refused.");
+   QString sourceDigest,outputDigest;
+   if(result.error.isEmpty()){
+    const auto entries=result.document.value("evidence").toArray();
+    if(entries.size()!=snapshot.value("evidence").toArray().size()+1)
+     result.error=QStringLiteral("Partition result structure rejected.");
+    else {
+     const auto entry=entries.last().toObject();
+     sourceDigest=entry.value("sourceSha256").toString();
+     outputDigest=entry.value("sha256").toString();
+     persist(result.document,path_,synthetic_,result.error);
+    }
+   }
+   operationReceipt_=policy_->finishOperation(operationId_,cancelled?"cancelled":result.error.isEmpty()?"completed":"failed",sourceDigest,outputDigest);
+   operationId_.clear();
+   if(operationReceipt_.isEmpty()||operationReceipt_.value("status")!="completed"){
+    if(result.error.isEmpty())result.error=QStringLiteral("Signed partition result could not be accepted; result refused.");
+    // Case and journal are separate stores. Best-effort restore also records
+    // the failure; a failed restore is reported, never presented as rollback.
+    result.document=snapshot;addAudit(result.document,"operation-failed",result.error);
+    QString restoreError;
+    if(!persist(result.document,path_,synthetic_,restoreError)){
+     result.document={};result.error+=QStringLiteral(" Case restore/audit failed; secure the case store.");
+    }
+   }
+  }
+  running_=false;externalAnalysis_=false;
   if(result.error.isEmpty()){document_=result.document;if(!pendingPath_.isEmpty())path_=pendingPath_;error_.clear();progress_=1;status_=QStringLiteral("Completed. Review the evidence and limitations before exporting.");}
   else {if(pendingPath_.isEmpty()&&!result.document.isEmpty())document_=result.document;error_=result.error;status_=result.error;}
-  pendingPath_.clear();
+  pendingPath_.clear();pendingSourcePath_.clear();pendingSnapshot_={};
   emit changed();
  });
 }
 RecoveryBridge::~RecoveryBridge(){if(cancelled_)cancelled_->store(true);
  watcher_.waitForFinished();
+ if(policy_&&!operationId_.isEmpty())policy_->finishOperation(operationId_,"cancelled");
  }
 bool RecoveryBridge::vaultReady()const{return mr::recovery::vaultAvailable()||synthetic_;
  }
@@ -176,6 +230,7 @@ bool RecoveryBridge::createCase(const QString &title,const QString &owner,const 
  QString e;
  if(QFileInfo::exists(destination)||!persist(doc,destination,synthetic_,e))return fail(e.isEmpty()?QStringLiteral("Case filename already exists."):e);
  document_=doc;
+ operationReceipt_.clear();
  path_=destination;
  error_.clear();
  status_=QStringLiteral("Case saved locally. Choose an explicitly authorized source.");
@@ -188,8 +243,9 @@ bool RecoveryBridge::start(Job job,const QString &destination){
  const QString target=destination.isEmpty()?path_:destination;
  if(target.isEmpty())return fail(QStringLiteral("Open a case first."));
  const auto snapshot=document_;
- const bool synthetic=synthetic_,opening=!destination.isEmpty();
- pendingPath_=destination;
+ const bool opening=!destination.isEmpty();
+ operationReceipt_.clear();
+ pendingPath_=destination;pendingSourcePath_=path_;pendingSnapshot_=snapshot;
  cancelled_=std::make_shared<std::atomic_bool>(false);
  const auto cancelled=cancelled_;
  running_=true;
@@ -197,7 +253,7 @@ bool RecoveryBridge::start(Job job,const QString &destination){
  error_.clear();
  status_=QStringLiteral("Reading authorized source; original bytes are not modified.");
  emit changed();
- watcher_.setFuture(QtConcurrent::run([job,snapshot,target,synthetic,cancelled,opening]{
+ watcher_.setFuture(QtConcurrent::run([job,snapshot,cancelled,opening]{
   auto result=job(snapshot,cancelled);
   if(result.error.isEmpty()&&!opening) {
    auto entries=result.document.value("evidence").toArray();
@@ -205,11 +261,6 @@ bool RecoveryBridge::start(Job job,const QString &destination){
    result.document.insert("evidence",entries);
   }
   if(cancelled->load())result.error=QStringLiteral("Operation cancelled; no result committed.");
-  if(result.error.isEmpty()&&!persist(result.document,target,synthetic,result.error))result.document={};
-  if(!result.error.isEmpty()&&!opening&&!snapshot.isEmpty()){
-   result.document=snapshot;addAudit(result.document,"operation-failed",result.error);QString auditError;
-   if(!persist(result.document,target,synthetic,auditError)){result.document={};result.error+=QStringLiteral(" Audit update failed: ")+auditError;}
-  }
   return result;
  }));
  // Set only a new open destination, never a source image or export path.
@@ -332,6 +383,7 @@ bool RecoveryBridge::deleteCase(bool confirmed){
  error_.clear();
  progress_=0;
  status_=QStringLiteral("Case container deleted. Original sources and exported copies remain. Secure media erasure is not claimed.");
+ operationReceipt_.clear();
  emit changed();
  return true;
 }
@@ -346,6 +398,7 @@ bool RecoveryBridge::closeCase(){
  error_.clear();
  progress_=0;
  status_=QStringLiteral("Case closed. Its saved container remains on disk.");
+ operationReceipt_.clear();
  emit changed();
  return true;
 }
@@ -422,8 +475,17 @@ bool RecoveryBridge::exportTimeline(const QString &value,bool confirmed){
 }
 
 bool RecoveryBridge::analyzePartitions(const QString &image,const QString &executable,bool consent){
+ processCleanup_.clear();
+ if(policy_&&!synthetic_)return fail(QStringLiteral("Government partition analysis requires registered evidence in the Government Analysis workspace; a recovery case label is insufficient."));
+ if(policy_&&!policy_->permit("external-analysis"))return fail(policy_->error());
+ if(busy())return fail(QStringLiteral("A recovery operation is already running."));
  if(!active()||!consent||caseOperator().isEmpty())return fail(QStringLiteral("Open a case, record the operator, and authorize the raw image and trusted mmls executable."));
  const auto path=local(image),tool=local(executable);if(path.isEmpty()||tool.isEmpty()||path==path_)return fail(QStringLiteral("Choose separate local raw-image and tool files."));
+ if(policy_){
+  operationId_=policy_->beginOperation("external-analysis","partition-analysis");
+  if(operationId_.isEmpty())return fail(QStringLiteral("Partition operation start receipt could not be committed."));
+ }
+ externalAnalysis_=true;
  return start([this,path,tool](const QJsonObject &snapshot,const auto &cancelled){
   JobResult result{snapshot,{}};double last=-1;
   const auto scan=mr::forensic::analyzePartitions(path,tool,cancelled,[this,&last](qint64 done,qint64 total){
@@ -431,6 +493,7 @@ bool RecoveryBridge::analyzePartitions(const QString &image,const QString &execu
    if(p-last<0.005&&done!=total){return;}
    last=p;QMetaObject::invokeMethod(this,[this,p]{progress_=p;emit changed();},Qt::QueuedConnection);
   });
+  result.processCleanup=scan.processCleanup;
   if(!scan.error.isEmpty()||!scan.sourceUnchanged||scan.cancelled){result.error=scan.error.isEmpty()?QStringLiteral("External analysis was not verified; no result committed."):scan.error;return result;}
   const auto sourceHash=QString::fromLatin1(scan.sourceSha256.toHex());
   const QJsonObject provenance{{"schema","nexvary-tsk-partitions/v1"},{"tool","mmls"},{"version",scan.version},{"executable",tool},{"executableSha256",QString::fromLatin1(scan.toolSha256.toHex())},
@@ -492,5 +555,12 @@ bool RecoveryBridge::analyzeExif(const QString &value,bool consent){
   result.document.insert("sources",sources);
   addAudit(result.document,"exif-summary-analysis","Selected-file consent; source SHA256 checked twice; allowlisted raw declarations only; GPS values and identity-sensitive tags omitted; no inferred capture timeline.");
   return result;
+ });
+}
+
+void RecoveryBridge::setOperationPolicy(GovernmentOperationPolicy *policy){
+ policy_=policy;
+ connect(policy,&GovernmentOperationPolicy::changed,this,[this]{
+  if(externalAnalysis_&&!policy_->granted("external-analysis"))cancel();
  });
 }

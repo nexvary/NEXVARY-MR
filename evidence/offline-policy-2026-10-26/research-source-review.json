@@ -1,0 +1,40 @@
+{
+  "reviewDate": "2026-10-26",
+  "method": "Public official sources only; dated/versioned claims separated from runtime verification. No licensed competitor executable, leaked code or user evidence used.",
+  "sources": [
+    {
+      "product": "Cellebrite Inseyets",
+      "source": "https://media.cellebrite.com/wp-content/uploads/2024/10/Cellebrite-Inseyets-FAQ.pdf",
+      "sourceDate": "2024-10",
+      "location": "FAQ page 3, connectivity/security question",
+      "access": "PDF retrieved; text extraction reverses word order. Same scoped connectivity statement appears in official indexed product FAQ. Current product page direct open returned HTTP 403.",
+      "evidenceClass": "Officially Claimed",
+      "claim": "The historical FAQ offers an offline configuration and describes network connectivity for full functionality.",
+      "limits": "Not a current-version licensing/egress test; no independent packet capture or complete air-gap assurance inferred.",
+      "comparison": "NEXVARY application gating is not evidence of a unique offline capability or superiority."
+    },
+    {
+      "product": "MSAB XAMN Viewer 8.1",
+      "source": "https://www.msab.com/updates/xry-11-0-xamn-8-1-unify-25-3-xec-7-13-and-kte-11-0/",
+      "sourceDate": "2025-03-20",
+      "location": "Offline Maps support in XAMN Viewer",
+      "access": "Official release page retrieved",
+      "evidenceClass": "Officially Claimed",
+      "claim": "The named Viewer release adds offline map support.",
+      "limits": "Feature-specific historical release statement, not a test of all XRY/XAMN licensing, updates, DNS or egress.",
+      "comparison": "NEXVARY has no implemented offline geographic-map analysis; application gating does not fill that gap."
+    },
+    {
+      "product": "Magnet AXIOM 8.6 / Copilot early access",
+      "source": "https://www.magnetforensics.com/blog/making-magnet-copilots-ai-capabilities-available-offline/",
+      "sourceDate": "2024-10-24",
+      "location": "Offline Q&A/image classification; video section and getting started",
+      "access": "Official dated feature page retrieved",
+      "evidenceClass": "Officially Claimed",
+      "claim": "The named early-access release describes local Q&A and image deepfake classification, while its described Medex video analysis sends metadata online.",
+      "limits": "Historical feature-specific description, not current-version whole-product offline/egress validation or independent classifier accuracy.",
+      "comparison": "NEXVARY semantic Q&A/deepfake classification remains Unsupported; no comparative test was run."
+    }
+  ],
+  "superiority": "Not established"
+}

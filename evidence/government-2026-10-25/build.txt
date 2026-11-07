@@ -1,0 +1,79 @@
+[0/2] Re-checking globbed directories...
+[1/361] Building CXX object CMakeFiles/mr_policy_tests.dir/cpp/tests/policy_tests.cpp.o
+[2/361] Linking CXX executable mr_policy_tests
+[3/361] Building CXX object CMakeFiles/mr_core_tests.dir/cpp/tests/core_tests.cpp.o
+[4/361] Building CXX object CMakeFiles/mr_core.dir/cpp/src/RepairCore.cpp.o
+[5/361] Linking CXX static library libmr_core.a
+[6/361] Linking CXX executable mr_core_tests
+[7/361] Building CXX object CMakeFiles/mr_user_protection.dir/cpp/src/CaseVault.cpp.o
+[8/361] Linking CXX static library libmr_user_protection.a
+[9/361] Building CXX object CMakeFiles/mr_law_enforcement_case_tests.dir/cpp/tests/law_enforcement_case_tests.cpp.o
+[10/361] Linking CXX executable mr_law_enforcement_case_tests
+[11/361] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateVerifier.cpp.o
+[12/361] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateJournal.cpp.o
+[13/361] Automatic MOC and UIC for target mr_desktop_resources_1
+[14/361] Automatic MOC and UIC for target mr_desktop_resources_2
+[15/361] Generating NexvaryMR/qml/IdentityPanel.qml
+[16/361] Generating NexvaryMR/qml/LawCaseBrowser.qml
+[17/361] Generating NexvaryMR/qml/LawCaseDevices.qml
+[18/361] Generating NexvaryMR/qml/LawCaseForm.qml
+[19/361] Generating NexvaryMR/qml/LawEnforcementPage.qml
+[20/361] Generating NexvaryMR/qml/LawTrainingPage.qml
+[21/361] Generating NexvaryMR/qml/LawEvidencePage.qml
+[22/361] Generating NexvaryMR/qml/ResearchCenter.qml
+[23/361] Generating NexvaryMR/qml/DesignTokens.qml
+[24/361] Generating NexvaryMR/qml/LegacyPalette.qml
+[25/361] Generating NexvaryMR/qml/StateBadge.qml
+[26/361] Generating NexvaryMR/qml/ActionCard.qml
+[27/361] Generating NexvaryMR/qml/EmptyState.qml
+[28/361] Generating NexvaryMR/qml/NavigationItem.qml
+[29/361] Generating NexvaryMR/qml/Sidebar.qml
+[30/361] Generating NexvaryMR/qml/TopBar.qml
+[31/361] Generating NexvaryMR/qml/OperationProgress.qml
+[32/361] Generating NexvaryMR/qml/DeviceInspector.qml
+[33/361] Generating NexvaryMR/qml/AppShell.qml
+[34/361] Generating NexvaryMR/qml/WorkflowStrip.qml
+[35/361] Generating NexvaryMR/qml/DashboardPage.qml
+[36/361] Generating NexvaryMR/qml/ReportsPage.qml
+[37/361] Generating NexvaryMR/qml/HelpPage.qml
+[38/361] Generating NexvaryMR/qml/NeonCheckBox.qml
+[39/361] Generating NexvaryMR/qml/NeonComboBox.qml
+[40/361] Generating NexvaryMR/qml/GlossSurface.qml
+[41/361] Generating NexvaryMR/qml/NavIcon.qml
+[42/361] Generating NexvaryMR/qml/Main.qml
+[43/361] Generating NexvaryMR/qml/Panel.qml
+[44/361] Generating NexvaryMR/qml/ActionButton.qml
+[45/361] Generating NexvaryMR/qml/BoardWorkspace.qml
+[46/361] Generating NexvaryMR/qml/WorkshopPage.qml
+[47/361] Generating NexvaryMR/qml/WorkshopHub.qml
+[48/361] Generating NexvaryMR/qml/InventoryPage.qml
+[49/361] Generating NexvaryMR/qml/DeviceIntelligencePanel.qml
+[50/361] Generating NexvaryMR/qml/DevicesPage.qml
+[51/361] Generating NexvaryMR/qml/DeviceHub.qml
+[52/361] Generating NexvaryMR/qml/DeviceServicesPage.qml
+[53/361] Generating NexvaryMR/qml/DeviceCompatibilityPanel.qml
+[54/361] Generating NexvaryMR/qml/SupportedDevicesPage.qml
+[55/361] Generating NexvaryMR/qml/DiagnosisPage.qml
+[56/361] Generating NexvaryMR/qml/DiagnosticHub.qml
+[57/361] Generating NexvaryMR/qml/SecurityPage.qml
+[58/361] Generating NexvaryMR/qml/UsbDoctorPanel.qml
+[59/361] Generating NexvaryMR/qml/DriverCatalogPage.qml
+[60/361] Generating NexvaryMR/qml/FaultTreePage.qml
+[61/361] Generating NexvaryMR/qml/FirmwarePage.qml
+[62/361] Generating NexvaryMR/qml/SettingsPage.qml
+[63/361] Generating NexvaryMR/qml/RecoveryPage.qml
+[64/361] Generating NexvaryMR/qml/RecoveryAssessment.qml
+[65/361] Generating NexvaryMR/qml/ForensicLabPage.qml
+[66/361] Generating NexvaryMR/qml/ForensicEvidencePage.qml
+[67/361] Generating NexvaryMR/qml/ForensicTimelinePage.qml
+[68/361] Generating NexvaryMR/qml/ForensicToolsPage.qml
+[69/361] Building CXX object CMakeFiles/mr_update_verifier.dir/cpp/src/UpdateKeyStore.cpp.o
+[70/361] Linking CXX static library libmr_update_verifier.a
+[71/361] Automatic MOC and UIC for target mr_avb_mutation_tests
+[72/361] Automatic MOC and UIC for target mr_pcap_mutation_tests
+[73/361] Automatic MOC and UIC for target mr_exif_mutation_tests
+[74/361] Automatic MOC and UIC for target mr_ui_device_fixture
+[75/361] Running qmlimportscanner for mr_ui_tests
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"

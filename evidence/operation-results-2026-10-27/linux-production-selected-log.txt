@@ -1,0 +1,18 @@
+Source 9f2438d8c1e1367834fe75526b7f9f3cee0e3846
+Run 40414566542; selected public gate/timing lines; complete logs at the linked run.
+2026-10-26T22:43:35.7577693Z Fetched 71.6 MB in 12s (5944 kB/s)
+2026-10-26T22:46:57.1365961Z [36;1mctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt[0m
+2026-10-26T22:50:23.2192488Z       Start 48: mr_gui_smoke
+2026-10-26T22:50:41.2463767Z 48/48 Test #48: mr_gui_smoke .......................   Passed   18.03 sec
+2026-10-26T22:50:41.2467775Z 100% tests passed, 0 tests failed out of 48
+2026-10-26T22:50:41.2467964Z Total Test time (real) = 223.67 sec
+2026-10-26T22:50:41.2927297Z     Start 48: mr_gui_smoke
+2026-10-26T22:50:59.4226192Z     Test #48: mr_gui_smoke .....................   Passed   18.13 sec
+2026-10-26T22:50:59.4226581Z     Start 48: mr_gui_smoke
+2026-10-26T22:51:17.7458015Z     Test #48: mr_gui_smoke .....................   Passed   18.32 sec
+2026-10-26T22:51:17.7458590Z     Start 48: mr_gui_smoke
+2026-10-26T22:51:36.2356584Z 1/1 Test #48: mr_gui_smoke .....................   Passed   18.49 sec
+2026-10-26T22:51:36.2361518Z 100% tests passed, 0 tests failed out of 1
+2026-10-26T22:51:36.2361727Z Total Test time (real) =  54.94 sec
+2026-10-26T22:54:48.9486779Z 100% tests passed, 0 tests failed out of 17
+2026-10-26T22:54:48.9487053Z Total Test time (real) =  95.43 sec

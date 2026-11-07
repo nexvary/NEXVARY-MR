@@ -1,0 +1,21 @@
+Source 9f2438d8c1e1367834fe75526b7f9f3cee0e3846
+Run 40414566542; selected public gate/timing lines; complete logs at the linked run.
+2026-10-26T22:49:09.5461021Z [36;1mctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt[0m
+2026-10-26T22:53:56.9850267Z       Start 48: mr_gui_smoke
+2026-10-26T22:54:18.1312886Z 48/48 Test #48: mr_gui_smoke .......................   Passed   21.15 sec
+2026-10-26T22:54:18.1319438Z 100% tests passed, 0 tests failed out of 48
+2026-10-26T22:54:18.1319663Z Total Test time (real) = 307.78 sec
+2026-10-26T22:54:18.2178624Z Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 1413ms
+2026-10-26T22:54:18.2542395Z Totals: 11 passed, 0 failed, 0 skipped, 0 blacklisted, 13276ms
+2026-10-26T22:54:18.2569571Z Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 11837ms
+2026-10-26T22:54:18.2775788Z Totals: 51 passed, 0 failed, 0 skipped, 0 blacklisted, 59561ms
+2026-10-26T22:54:18.3064836Z     Start 48: mr_gui_smoke
+2026-10-26T22:54:38.9449508Z     Test #48: mr_gui_smoke .....................   Passed   20.64 sec
+2026-10-26T22:54:38.9451239Z     Start 48: mr_gui_smoke
+2026-10-26T22:54:59.8110114Z     Test #48: mr_gui_smoke .....................   Passed   20.87 sec
+2026-10-26T22:54:59.8110634Z     Start 48: mr_gui_smoke
+2026-10-26T22:55:20.5377114Z 1/1 Test #48: mr_gui_smoke .....................   Passed   20.73 sec
+2026-10-26T22:55:20.5391649Z 100% tests passed, 0 tests failed out of 1
+2026-10-26T22:55:20.5392157Z Total Test time (real) =  62.23 sec
+2026-10-26T22:55:52.4359510Z portable GUI smoke passed: mode=isolated-copy; exit=0
+2026-10-26T22:56:34.9288962Z installed GUI smoke passed: mode=installed-in-place; exit=0

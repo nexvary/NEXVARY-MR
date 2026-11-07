@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "label": "installed",
+  "mode": "installed-in-place",
+  "executable": "D:\\a\\_temp\\NEXVARY MR install test\\NEXVARY-MR.exe",
+  "exitCode": 0,
+  "screenshot": "D:\\a\\NEXVARY-MR\\NEXVARY-MR\\dist\\evidence\\installed.png",
+  "dataDirectory": "D:\\a\\_temp\\NEXVARY MR isolated installed af05da9aa51e4f1d96b0cd02e76a6b2f\\test data",
+  "qtSdkExcludedFromPath": true,
+  "testFontOverrideCleared": true
+}

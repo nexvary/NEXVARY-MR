@@ -1,0 +1,129 @@
+{
+  "schema": "nexvary-policy-trust-verification/v1",
+  "source": "8e7e17467dd6a6ea34d01115d396e5c19b9f6f6e",
+  "runId": 40356252239,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40356252239",
+  "overall": "success",
+  "jobs": [
+    {
+      "id": 121690298015,
+      "name": "tracking-server",
+      "result": "success"
+    },
+    {
+      "id": 121690298552,
+      "name": "qt (laboratory)",
+      "result": "success"
+    },
+    {
+      "id": 121690298597,
+      "name": "linux-forensic-integration (laboratory)",
+      "result": "success"
+    },
+    {
+      "id": 121690298690,
+      "name": "core (ubuntu-latest)",
+      "result": "success"
+    },
+    {
+      "id": 121690298761,
+      "name": "linux-forensic-integration (production)",
+      "result": "success"
+    },
+    {
+      "id": 121690299074,
+      "name": "core (windows-2022)",
+      "result": "success"
+    },
+    {
+      "id": 121690299118,
+      "name": "qt (production)",
+      "result": "success"
+    }
+  ],
+  "hostedCtest": {
+    "windowsProduction": 48,
+    "windowsLaboratory": 48,
+    "linuxProduction": 48,
+    "linuxLaboratory": 48,
+    "productionAsanUbsan": 17
+  },
+  "nativeCases": {
+    "policyAudit": 11,
+    "offline": 10,
+    "qtQuick": 50,
+    "independentInterop": 26
+  },
+  "local": {
+    "targetedCtest": "3/3",
+    "python": "38/38",
+    "initialFullRun": "47/48; reused synthetic smoke profile failed; initial XML/log and profile retained",
+    "freshSmokeExit": 0,
+    "repeatedFreshSmokeExit": 0,
+    "finalIsolatedFullRun": "47/48; GUI failed again under full CTest, including a new profile. Exact command run directly afterward exited 0; fresh/repeated standalone smoke also exited 0. Cause not established; no local full 48/48 claim.",
+    "directExactCtestCommandExit": 0,
+    "isolatedCtestGui": "1/1 passed; same source and command after the full-run failures"
+  },
+  "artifacts": [
+    {
+      "id": 12667847127,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "digest": "sha256:96426bbc0a4a11aeb001e5cf6ed9de46423d03ec9ebd092905df277a1b03c78f",
+      "expired": false
+    },
+    {
+      "id": 12667492217,
+      "name": "NEXVARY-MR-Windows-laboratory-validation-evidence",
+      "digest": "sha256:b12d123c9f03222f1ba41c4487ca4ee5c7e128036bd9fc4f492b9564e8851743",
+      "expired": false
+    },
+    {
+      "id": 12667027083,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "digest": "sha256:7df503220ee6bb9c1d71ed40229a37b228458303cb58d76d8ec9cd74c8f17812",
+      "expired": false
+    },
+    {
+      "id": 12666732305,
+      "name": "NEXVARY-MR-Linux-production-integration-evidence",
+      "digest": "sha256:0a2341db3d21edc7ab716cbbcc03c7dff93e28ea8ba4eae40fdfd80e0a6c7b10",
+      "expired": false
+    },
+    {
+      "id": 12666447327,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "digest": "sha256:ac9bafd34eb835845729b8a18eca20d69254dea591cbe2336780cb336c3a7ec0",
+      "expired": false
+    },
+    {
+      "id": 12666446607,
+      "name": "NEXVARY-MR-Linux-laboratory-integration-evidence",
+      "digest": "sha256:37083d4ba8c46c688d7c385f945d66df2a950b65b1e048db118a3a16e8c4d625",
+      "expired": false
+    },
+    {
+      "id": 12665747575,
+      "name": "core-test-results-windows-2022",
+      "digest": "sha256:79813386c68171efdc802dc4b30c6a449fb2d4174c7e092dece58c526c40af52",
+      "expired": false
+    },
+    {
+      "id": 12665283576,
+      "name": "NEXVARY-Portal-Server-Installer",
+      "digest": "sha256:abfbe510564b83215eda6e6fbe32fe0343487bc0fe15b23eacd6fd06394d3852",
+      "expired": false
+    },
+    {
+      "id": 12664654411,
+      "name": "core-test-results-ubuntu-latest",
+      "digest": "sha256:0dff54d10ef29f0fea29770b012e97678a50087fcc816a72ad6c45139c2401d8",
+      "expired": false
+    }
+  ],
+  "trustedScope": "Downloaded provider ZIP digest and inner-file integrity/receipt consistency; unsigned development-evaluation build. No independent institutional identity/time/people, reproducible-build, OS air-gap, physical Windows 10/11/phone or comparative competitor acceptance.",
+  "syscallObserver": {
+    "status": "External Gate: PTRACE_TRACEME/PTRACE_SETOPTIONS denied",
+    "usableCapture": false
+  },
+  "rawPolicyExportPublication": "Automatic review rejected publishing raw signed policy history to source due to possible sensitive identities/reasons/operational details. Public evidence retains hash/result receipts; raw histories remain in downloaded validation artifacts."
+}

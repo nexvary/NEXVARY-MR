@@ -1,0 +1,7 @@
+{
+  "cpp/src/RecoveryBridge.cpp": "fcd37e0aedd6161dd7a2990ebcc38b49cf2c5376a65cbdb91cee80a8ea97cd15",
+  "cpp/src/RecoveryBridge.hpp": "4b4e8ab6bfb176c90b124edb7909f6a55490cc8f90dde1e31afa38a32258a849",
+  "cpp/tests/exif_tests.cpp": "d14a33674dc833ac5269eed966dca3124417a2a4d7e29b05496eb4c116bd7eb1",
+  ".gitleaks.toml": "f6da884daa99ec6257944c5b2b2af4b1ecfa10320f8f4192674b9fdf5f0e590d",
+  "scripts/check_history_digest_allowlist.py": "55558a78cce27f16bed3be571c9a579efe7df6a639adf83ed1f751bc483af6dd"
+}

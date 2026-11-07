@@ -1,4 +1,5 @@
 #include "MirrorSession.hpp"
+#include "GovernmentOperationPolicy.hpp"
 #include "ToolBridge.hpp"
 #include "ServiceOperationPolicy.hpp"
 #include <QFileInfo>
@@ -36,8 +37,9 @@ MirrorSession::MirrorSession(QObject *parent):QObject(parent){
  });
  connect(&viewer_,&QProcess::finished,this,[this](int code,QProcess::ExitStatus exit){
   collectView();if(!active_)return;
+  if(!viewer_.cleanupComplete()){failed_=true;message("Screen-view worker tree cleanup is unproved; review required.");}
   if(state_=="stopping"){finalize();return;}
-  end(exit==QProcess::NormalExit&&code==0?"scrcpy window closed; no automatic restart.":"scrcpy exited with an error. Review local output and USB authorization.",exit!=QProcess::NormalExit||code!=0);
+  end(exit==QProcess::NormalExit&&code==0&&viewer_.cleanupComplete()?"scrcpy window closed; no automatic restart.":"scrcpy exited with an error or unproved worker cleanup. Review local output and USB authorization.",exit!=QProcess::NormalExit||code!=0||!viewer_.cleanupComplete());
  });
  connect(&viewer_,&QProcess::errorOccurred,this,[this](QProcess::ProcessError error){if(active_&&state_!="stopping"&&error==QProcess::FailedToStart)end("Could not start the selected scrcpy executable.",true);});
 }
@@ -50,9 +52,10 @@ bool MirrorSession::supportedVersion(const QString &output){
  return QRegularExpression("^scrcpy 5\\.0\\.1(?: <https://github\\.com/Genymobile/scrcpy>)?$").match(first).hasMatch();
 }
 bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString &serial,const QVariantMap &identity,bool owner,bool component){
+ if(policy_&&!policy_->permit("device-tools")){message(policy_->error());return false;}
  if(active_)return false;
- if(!mr::service::operationAllowed("mirror")||!owner||!component||!ToolBridge::isValidSerial(serial)){
-  message("Screen view requires Laboratory build, explicit owner authorization and device-component consent.");return false;
+ if(!mr::service::screenViewAllowed()||!owner||!component||!ToolBridge::isValidSerial(serial)){
+  message("Screen view requires explicit owner authorization and device-component consent.");return false;
  }
  for(const auto &field:{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"})if(identity.value(field).toString().isEmpty()){
   message("Read complete manufacturer, model and build fingerprint before screen view.");return false;
@@ -68,6 +71,7 @@ bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString
  query({"--version"},"version");return true;
 }
 void MirrorSession::query(const QStringList &arguments,const QString &state){
+ if(policy_&&!policy_->permit("device-tools")){end(policy_->error(),true);return;}
  if(!active_||check_.state()!=QProcess::NotRunning)return;
  state_=state;checkOutput_.clear();check_.setProgram(state=="version"?scrcpy_:adb_);check_.setArguments(arguments);deadline_.start();emit changed();check_.start();
 }
@@ -82,7 +86,7 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
  if(state_=="stopping"){finalize();return;}
  collectCheck();if(state_=="stopping"||!active_)return;
  deadline_.stop();
- if(exit!=QProcess::NormalExit||code!=0){end("Screen-view version/ADB check failed or device disconnected.",true);return;}
+ if(exit!=QProcess::NormalExit||code!=0||!check_.cleanupComplete()){end("Screen-view version/ADB check failed, worker cleanup unproved or device disconnected.",true);return;}
  const auto text=QString::fromUtf8(checkOutput_).trimmed();
  if(state_=="version"){
   if(!supportedVersion(text)){end("Unreviewed scrcpy CLI version; this integration accepts official 5.0.1 only.",true);return;}
@@ -103,9 +107,10 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
  launchView();
 }
 void MirrorSession::launchView(){
- if(!active_||!mr::service::operationAllowed("mirror")){end("Screen view denied by compiled operation policy.",true);return;}
+ if(policy_&&!policy_->permit("device-tools")){end(policy_->error(),true);return;}
+ if(!active_||!mr::service::screenViewAllowed()){end("Screen view denied by compiled operation policy.",true);return;}
  state_="starting";viewer_.setProgram(scrcpy_);
- viewer_.setArguments({"--serial",serial_,"--no-control","--no-audio","--no-clipboard-autosync","--no-power-on","--max-size=1600","--max-fps=30","--verbosity=warn","--window-title=NEXVARY MR Laboratory"});
+ viewer_.setArguments({"--serial",serial_,"--no-control","--no-audio","--no-clipboard-autosync","--no-power-on","--max-size=1600","--max-fps=30","--verbosity=warn","--window-title=NEXVARY MR Screen View"});
  deadline_.start();emit changed();viewer_.start();
 }
 void MirrorSession::collectView(){
@@ -129,6 +134,6 @@ void MirrorSession::finalize(){
 void MirrorSession::stop(const QString &reason){end(reason,false);}
 void MirrorSession::shutdown(){
  deadline_.stop();monitor_.stop();kill_.stop();check_.disconnect(this);viewer_.disconnect(this);
- for(auto *process:{&check_,&viewer_})if(process->state()!=QProcess::NotRunning){process->terminate();if(!process->waitForFinished(500)){process->kill();process->waitForFinished(1000);}}
+ for(auto *process:{&check_,&viewer_})if(process->state()!=QProcess::NotRunning){process->terminate();if(!process->waitForFinished(500)){process->kill();process->waitForFinished(2500);}}
  active_=false;
 }

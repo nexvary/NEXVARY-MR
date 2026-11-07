@@ -1,0 +1,8 @@
+{
+  "checkedDate": "2026-10-26",
+  "source": "Read-only Desktop Commander account device inventory",
+  "result": "No connected devices",
+  "physicalWindows10Or11TestPerformed": false,
+  "physicalPhoneTestPerformed": false,
+  "interpretation": "No authorized remote device was available through this connection. This does not assert that the user owns no devices or prove field readiness."
+}

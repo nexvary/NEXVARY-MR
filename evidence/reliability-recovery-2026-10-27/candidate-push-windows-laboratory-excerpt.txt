@@ -1,0 +1,43 @@
+Source: 62251a02a37b560fafc92f892ce8b51764d5dc82
+Push run: 40500300494, Windows Laboratory
+2026-10-27T12:16:03.8707506Z 48/48 Test #48: mr_gui_smoke .......................   Passed   23.37 sec
+2026-10-27T12:16:03.8716814Z 100% tests passed, 0 tests failed out of 48
+2026-10-27T12:16:03.8717569Z Total Test time (real) = 398.29 sec
+2026-10-27T12:16:03.9965039Z Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 2292ms
+2026-10-27T12:16:04.0018291Z Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 34ms
+2026-10-27T12:16:04.0057552Z Totals: 11 passed, 0 failed, 2 skipped, 0 blacklisted, 1294ms
+2026-10-27T12:16:04.0084073Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 60ms
+2026-10-27T12:16:04.0103367Z Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 29ms
+2026-10-27T12:16:04.0124933Z Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 740ms
+2026-10-27T12:16:04.0152121Z Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 13272ms
+2026-10-27T12:16:04.0191528Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms
+2026-10-27T12:16:04.0279938Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 8ms
+2026-10-27T12:16:04.0312463Z Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 338ms
+2026-10-27T12:16:04.0350690Z Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 32ms
+2026-10-27T12:16:04.0374467Z Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 670ms
+2026-10-27T12:16:04.0406696Z Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 6297ms
+2026-10-27T12:16:04.0480502Z Totals: 36 passed, 0 failed, 0 skipped, 0 blacklisted, 10443ms
+2026-10-27T12:16:04.0687917Z Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 5ms
+2026-10-27T12:16:04.0728908Z Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 8377ms
+2026-10-27T12:16:04.0775478Z Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 25740ms
+2026-10-27T12:16:04.0820668Z Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 23228ms
+2026-10-27T12:16:04.0859611Z Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 410ms
+2026-10-27T12:16:04.0890440Z SKIP   : PolicyAuditTests::symlinkJournalNeverChangesTarget() POSIX symlink regression; QFile::link creates a Windows shortcut.
+2026-10-27T12:16:04.0896690Z Totals: 14 passed, 0 failed, 1 skipped, 0 blacklisted, 15036ms
+2026-10-27T12:16:04.0923817Z Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 22ms
+2026-10-27T12:16:04.0986244Z Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 17776ms
+2026-10-27T12:16:04.1011863Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 138ms
+2026-10-27T12:16:04.1037398Z Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 2420ms
+2026-10-27T12:16:04.1071015Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 2233ms
+2026-10-27T12:16:04.1173507Z Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 20707ms
+2026-10-27T12:16:04.1229876Z Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 1853ms
+2026-10-27T12:16:04.1280298Z Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 29267ms
+2026-10-27T12:16:04.1306768Z Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2196ms
+2026-10-27T12:16:04.1353632Z PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+2026-10-27T12:16:04.1395869Z Totals: 52 passed, 0 failed, 0 skipped, 0 blacklisted, 81421ms
+2026-10-27T12:16:04.1467920Z Totals: 42 passed, 0 failed, 0 skipped, 0 blacklisted, 1765ms
+2026-10-27T12:16:04.1490903Z Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 239ms
+2026-10-27T12:16:04.1569193Z Totals: 40 passed, 0 failed, 0 skipped, 0 blacklisted, 535ms
+2026-10-27T12:16:04.1600648Z Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 5895ms
+2026-10-27T12:17:12.9559976Z 100% tests passed, 0 tests failed out of 1
+2026-10-27T12:17:12.9560323Z Total Test time (real) =  68.77 sec

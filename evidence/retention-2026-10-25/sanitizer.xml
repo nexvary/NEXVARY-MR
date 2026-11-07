@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="5e9c9aa70cd2"
+	time="28"
+	timestamp="2026-10-25T10:27:03"
+	>
+	<testcase name="mr_retention_tests" classname="mr_retention_tests" time="6.63911" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of RetentionTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : RetentionTests::initTestCase()
+PASS   : RetentionTests::legacyMigrationAndProtectedRoundTrip()
+PASS   : RetentionTests::malformedExtensionsFailClosed()
+PASS   : RetentionTests::exactExpiryAndPreservationBoundaries()
+PASS   : RetentionTests::validationStaleWritesAndPermissions()
+PASS   : RetentionTests::legalHoldReleaseAndClosedArchive()
+PASS   : RetentionTests::independentReviewRechecksHoldAndRevokedGrant()
+PASS   : RetentionTests::corruptedArchiveAndAtomicRollback()
+PASS   : RetentionTests::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 6506ms
+********* Finished testing of RetentionTests *********
+</system-out>
+	</testcase>
+	<testcase name="mr_identity_tests" classname="mr_identity_tests" time="13.3826" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of IdentityTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : IdentityTests::initTestCase()
+PASS   : IdentityTests::bootstrapAndCredentials()
+PASS   : IdentityTests::rolesGrantsAndRevocation()
+PASS   : IdentityTests::evidenceExportsRequireCurrentCaseGrant()
+PASS   : IdentityTests::signaturesAndDisabledSigner()
+PASS   : IdentityTests::passwordRotationPreservesSignatures()
+PASS   : IdentityTests::failedAttemptsPersist()
+PASS   : IdentityTests::independentResearchReview()
+PASS   : IdentityTests::retainedAnchorDetectsRollback()
+PASS   : IdentityTests::protectedRestoreRetainsOwnershipAndDetectsNewerAnchorFork()
+PASS   : IdentityTests::productionFailsClosed()
+PASS   : IdentityTests::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 13244ms
+********* Finished testing of IdentityTests *******...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_law_workspace_tests" classname="mr_law_workspace_tests" time="8.58778" status="run">
+		<properties/>
+		<system-out>QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+********* Start testing of LawWorkspaceTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : LawWorkspaceTests::initTestCase()
+PASS   : LawWorkspaceTests::createSearchReopenAndDevice()
+PASS   : LawWorkspaceTests::permissionsAreNativeAndFailClosed()
+PASS   : LawWorkspaceTests::staleWriterAndArchivedState()
+PASS   : LawWorkspaceTests::metadataAndProfileValidation()
+PASS   : LawWorkspaceTests::evidenceCustodyAndPdf()
+PASS   : LawWorkspaceTests::caseBoundAnalysisIsReproducibleAndProtected()
+PASS   : LawWorkspaceTests::assessmentDistinguishesReportsFromValidatedCapabilities()
+PASS   : LawWorkspaceTests::workingCopyIntegrityAndAudit()
+PASS   : LawWorkspaceTests::workingCopyPermissionsStaleRevisionAndClosedCase()
+PASS   : LawWorkspaceTests::protectedBackupRoundTripAndOverwriteDenial()
+PASS   : LawWorkspaceTests::protectedBackupRejectsCorrup...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,14 @@
+Source: 62251a02a37b560fafc92f892ce8b51764d5dc82 (PR merge 7c8e707 has identical tree)
+Job: 122176035808
+2026-10-27T12:16:06.9503265Z 48/48 Test #48: mr_gui_smoke .......................   Passed   23.09 sec
+2026-10-27T12:16:06.9512214Z 100% tests passed, 0 tests failed out of 48
+2026-10-27T12:16:06.9512772Z Total Test time (real) = 386.50 sec
+2026-10-27T12:16:07.1728165Z Totals: 14 passed, 0 failed, 1 skipped, 0 blacklisted, 15154ms
+2026-10-27T12:16:07.2216864Z PASS   : mr_ui::WorkstationNavigation::test_governmentImportLayoutLifetime()
+2026-10-27T12:16:07.2260197Z Totals: 52 passed, 0 failed, 0 skipped, 0 blacklisted, 79700ms
+2026-10-27T12:17:15.2018098Z 100% tests passed, 0 tests failed out of 1
+2026-10-27T12:17:15.2018613Z Total Test time (real) =  67.93 sec
+2026-10-27T12:17:52.8269344Z portable GUI smoke passed: mode=isolated-copy; exit=0
+2026-10-27T12:18:15.8671187Z [36;1m  schemaVersion=1; installationDirectory=$destination; installExit=$result.ExitCode[0m
+2026-10-27T12:18:15.8671741Z [36;1m  launchMode='installed-in-place'; uninstallExit=$uninstall.ExitCode[0m
+2026-10-27T12:18:44.1076523Z installed GUI smoke passed: mode=installed-in-place; exit=0

@@ -1,0 +1,8 @@
+********* Start testing of CaseTransactionTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : CaseTransactionTests::initTestCase()
+FAIL!  : CaseTransactionTests::validSignedJournalRollbackMustBlockOrphanResult() '!bridge.ready()' returned FALSE. (A correctly signed old journal must not validate an orphan committed analysis)
+   Loc: [/workspace/scratch/b7798f8da44e/NEXVARY-MR/cpp/tests/case_transaction_tests.cpp(92)]
+PASS   : CaseTransactionTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 569ms
+********* Finished testing of CaseTransactionTests *********

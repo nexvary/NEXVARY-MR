@@ -2,6 +2,7 @@
 #include <iostream>
 int main() {
     using namespace mr::service;
+    if(!screenViewAllowed())return 4;
     for (const auto read : {"probe", "unlock_ability"})
         if (!operationAllowed(read)) return 1;
     for (const auto write : {"reboot_normal", "reboot_recovery", "reboot_bootloader", "reboot_sideload",

@@ -1,0 +1,50 @@
+## qt (production) (job 121159582181)
+
+2026-10-25T11:47:35.3903311Z Cache restored successfully
+2026-10-25T11:47:35.6258674Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Pinned signature dependency preparation failed' }[0m
+2026-10-25T11:58:50.7370982Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T11:58:50.7371436Z Total Test time (real) = 253.66 sec
+2026-10-25T11:58:50.9148300Z PASS   : MirrorTests::ownedProcessAndPinnedEnvironment()
+2026-10-25T11:58:50.9181734Z Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 22926ms
+2026-10-25T11:58:50.9787601Z Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 29187ms
+2026-10-25T11:58:50.9903192Z Totals: 45 passed, 0 failed, 0 skipped, 0 blacklisted, 59405ms
+2026-10-25T11:58:54.5620191Z {"prepared": "dist\\NEXVARY-MR\\tools\\scrcpy", "version": "5.0.1", "archiveSha256": "b12a2c4ee8be317422451fc7dcf8ee20a71b5ea7ef9ad73ddd825a25316227a5"}
+2026-10-25T11:59:23.6372894Z [36;1m$compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue[0m
+2026-10-25T11:59:23.6373464Z [36;1m$iscc = if ($compiler) { $compiler.Source } else { "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe" }[0m
+2026-10-25T11:59:23.6374997Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }[0m
+2026-10-25T11:59:46.3853801Z [36;1mif ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }[0m
+2026-10-25T12:00:14.4823001Z Artifact NEXVARY-MR-Windows-x64-portable-unsigned.zip successfully finalized. Artifact ID 12597977041
+2026-10-25T12:00:14.4824368Z Artifact NEXVARY-MR-Windows-x64-portable-unsigned has been successfully uploaded! Final size is 48754206 bytes. Artifact ID is 12597977041
+2026-10-25T12:00:16.5290853Z Artifact NEXVARY-MR-Windows-x64-installer-unsigned.zip successfully finalized. Artifact ID 12597992089
+2026-10-25T12:00:16.5292130Z Artifact NEXVARY-MR-Windows-x64-installer-unsigned has been successfully uploaded! Final size is 32984010 bytes. Artifact ID is 12597992089
+2026-10-25T12:00:20.0113024Z Artifact NEXVARY-MR-Windows-production-validation-evidence.zip successfully finalized. Artifact ID 12597977051
+2026-10-25T12:00:20.0114313Z Artifact NEXVARY-MR-Windows-production-validation-evidence has been successfully uploaded! Final size is 52747865 bytes. Artifact ID is 12597977051
+
+## qt (laboratory) (job 121159582230)
+
+2026-10-25T11:47:39.3223681Z Cache restored successfully
+2026-10-25T11:47:40.1577246Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Pinned signature dependency preparation failed' }[0m
+2026-10-25T11:57:16.5592849Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T11:57:16.5593336Z Total Test time (real) = 249.82 sec
+2026-10-25T11:57:16.7079403Z PASS   : MirrorTests::ownedProcessAndPinnedEnvironment()
+2026-10-25T11:57:16.7101749Z Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 22585ms
+2026-10-25T11:57:16.7386657Z Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 29070ms
+2026-10-25T11:57:16.7472474Z Totals: 45 passed, 0 failed, 0 skipped, 0 blacklisted, 53747ms
+2026-10-25T11:57:21.6636851Z Artifact NEXVARY-MR-Windows-laboratory-validation-evidence.zip successfully finalized. Artifact ID 12598096517
+2026-10-25T11:57:21.6638294Z Artifact NEXVARY-MR-Windows-laboratory-validation-evidence has been successfully uploaded! Final size is 47724231 bytes. Artifact ID is 12598096517
+
+## linux-forensic-integration (laboratory) (job 121159582258)
+
+2026-10-25T11:54:00.1702859Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T11:54:00.1703709Z Total Test time (real) = 178.41 sec
+2026-10-25T11:54:03.6740952Z Artifact NEXVARY-MR-Linux-laboratory-integration-evidence.zip successfully finalized. Artifact ID 12598250796
+2026-10-25T11:54:03.6742452Z Artifact NEXVARY-MR-Linux-laboratory-integration-evidence has been successfully uploaded! Final size is 61624264 bytes. Artifact ID is 12598250796
+
+## linux-forensic-integration (production) (job 121159582375)
+
+2026-10-25T11:54:10.5077491Z 100% tests passed, 0 tests failed out of 40
+2026-10-25T11:54:10.5077897Z Total Test time (real) = 174.97 sec
+2026-10-25T11:56:41.6585457Z 100% tests passed, 0 tests failed out of 11
+2026-10-25T11:56:41.6585952Z Total Test time (real) =  60.54 sec
+2026-10-25T11:56:54.0247788Z Artifact NEXVARY-MR-Linux-production-integration-evidence.zip successfully finalized. Artifact ID 12598410949
+2026-10-25T11:56:54.0249361Z Artifact NEXVARY-MR-Linux-production-integration-evidence has been successfully uploaded! Final size is 61563780 bytes. Artifact ID is 12598410949

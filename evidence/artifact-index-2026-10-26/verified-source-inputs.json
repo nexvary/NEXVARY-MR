@@ -1,0 +1,98 @@
+{
+  "source": "da857f96349d0e7e90b75924642f93239d350f7d",
+  "inputs": [
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "69fa657ea5e5abe318457676668acad6cb6443828cee18e466e23e9df94edb14"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "22501aaf37b0cea3f3ea8a4f2b950a06db50606af5ffc758a53d729b1caf79ca"
+    },
+    {
+      "path": "cpp/src/CaseArtifacts.cpp",
+      "sha256": "2f05744d282f924628dc558183035e8eff47cbdfb1e980da13dcecf88a1fe928"
+    },
+    {
+      "path": "cpp/src/CaseArtifacts.hpp",
+      "sha256": "eb8f9485c7780982986eccc6db653e56996c5de49f830d98da0fe56f8a56e37c"
+    },
+    {
+      "path": "cpp/src/LawCaseArtifacts.cpp",
+      "sha256": "b701a451afd568b1eb2fa84099c8e98871fdf25f14c354f9d35e31e73e098389"
+    },
+    {
+      "path": "cpp/src/LawCaseBridge.cpp",
+      "sha256": "8735ad4e0411bdb56c9dffdab693df8c071329957b3801615469f1fad3fc01c9"
+    },
+    {
+      "path": "cpp/src/LawCaseBridge.hpp",
+      "sha256": "b3875cdf18ec050c39041d6cdf3b3708a208c0836a0a962681c846bafd88d4d2"
+    },
+    {
+      "path": "cpp/src/LawCaseImports.cpp",
+      "sha256": "823506067598be37b7a5f4004597bf43f96cab0920f6c0d3945f0b5b68ae99db"
+    },
+    {
+      "path": "cpp/src/main.cpp",
+      "sha256": "87442b460233be6c6e204c56be4e80ea65ca4b6e6e001a22495d95efb87dae9e"
+    },
+    {
+      "path": "cpp/tests/artifact_tests.cpp",
+      "sha256": "54740decfc564ee9e02b2e53998d82cce23638b66f5fc4628c4c2f144b912086"
+    },
+    {
+      "path": "cpp/tests/ui_tests.cpp",
+      "sha256": "a35b14d9c3a5db8db2836c9536e26f6628e761bb0c4a51d801585f1a474a79e3"
+    },
+    {
+      "path": "docs/CASE_ARTIFACT_INDEX.md",
+      "sha256": "427da01573d5a4bdfd8b0a12089f5fca7ea69f82fee6ae47765c28ddfcff0ab2"
+    },
+    {
+      "path": "docs/GOVERNMENT_OPERATIONS.md",
+      "sha256": "fda90e0d9ab89fcb5623825542b61766be92849a322ad3a31e202745246def87"
+    },
+    {
+      "path": "packaging/package-windows.ps1",
+      "sha256": "ac9accc5c2e8528cabcb8d7ea2666998e05aa990d26f4f18407cb86e2d24cec8"
+    },
+    {
+      "path": "packaging/smoke-windows.ps1",
+      "sha256": "5fb4ccd1ba33b34a9aee7c092b2951902efd589a7a9ccc9fdd45b0b000e2203d"
+    },
+    {
+      "path": "qml/AppShell.qml",
+      "sha256": "97007e6abd1279fe8b6c3506759ae9a52f8c533a34ae7fbbf15a2a74d6f10c48"
+    },
+    {
+      "path": "qml/GovernmentAnalysisPage.qml",
+      "sha256": "27d9a19581646ba0528cb95acd3df5b4d843db8d0da90e741beeae8cfd9e811b"
+    },
+    {
+      "path": "qml/GovernmentArtifactPanel.qml",
+      "sha256": "35535de7b28d0c93319c5c156b68193c456c63a57c1c05af9ee6ebdeecd2db90"
+    },
+    {
+      "path": "qml/Main.qml",
+      "sha256": "0525f6743424358fcb8105b8922633bc494b22c02bb446f31758b04e11f656cc"
+    },
+    {
+      "path": "qml/OperationProgress.qml",
+      "sha256": "a2e178c41a320ba083f89102bd9aa1d8a53a3faa4cf46b8358dca4a566f27e95"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "sha256": "64b94841802448721f1c326cfa92a3bbdd77b30d81fe3523eaa9be4c873a9e44"
+    },
+    {
+      "path": "samples/artifact-index/reference.json",
+      "sha256": "b88bfd6e5eede3565367b73195e5badabf348f01912ed8ba1ed0a5ee59fa68a4"
+    },
+    {
+      "path": "scripts/check_artifact_reference.py",
+      "sha256": "8fe25f5c082bcb15f3ffc0073c4b0314dd5523ac0ac2b061b716a398659befdc"
+    }
+  ],
+  "scope": "Changed executable/test/build/workflow/packaging/shipped-guide inputs; later receipts must not alter them"
+}

@@ -1,0 +1,30 @@
+{
+  "sourceTree": "6f8ec6c0e984da536fe9bdbc936942a2e7b99cf5",
+  "observation": "Generated zero-byte non-executables prevented six CTest groups from starting; 36/42 groups passed. No source/test assertion failure is inferred from BAD_COMMAND.",
+  "outputs": [
+    {
+      "path": "build/mr_identity_tests",
+      "size": 0,
+      "mode": "0o644",
+      "header": ""
+    },
+    {
+      "path": "build/mr_security_tests",
+      "size": 2936288,
+      "mode": "0o644",
+      "header": "00000000000000000000000000000000"
+    },
+    {
+      "path": "build/mr_ui_tests",
+      "size": 0,
+      "mode": "0o644",
+      "header": ""
+    },
+    {
+      "path": "build/nexvary_mr",
+      "size": 0,
+      "mode": "0o644",
+      "header": ""
+    }
+  ]
+}

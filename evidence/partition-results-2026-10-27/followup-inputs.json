@@ -1,0 +1,12 @@
+{
+  "parent": "0b8cc755116cbdba8fc674d3c5c04e60a978769c",
+  "sha256": {
+    "cpp/src/RecoveryBridge.cpp": "ad25c80d64c109fe4a3cc3bf9e702796b7810964e4dbd466bacb2e5bd2c68d90",
+    "cpp/src/OperationReceipt.hpp": "094680beceb7962670219d737687d6df299c4e8bb5bfd51e3c5f03c1b0e9b2b6",
+    "cpp/src/PolicyAudit.cpp": "8a203a35e3528942121e41c9bb5e4f5fbd65ac03c7e7f7154b37bc4483809a30",
+    "cpp/src/main.cpp": "2603c8c4f411d338baf11eb8f8287e6b2f3a8891e04616619dd3ac82390f68a1",
+    "cpp/tests/offline_tests.cpp": "bba21b033beefb3246d8d1ec838287914e192e53ba4dcdd72ce337dd9fd5c489",
+    "docs/GOVERNMENT_OFFLINE_POLICY.md": "50e47bf831d9d70db33d46f636318c4178699becb1b9e2f34433b20242431601"
+  },
+  "scope": "Final targeted tests passed; diagnostic GUI experiment and hosted verification pending."
+}

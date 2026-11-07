@@ -1,0 +1,27 @@
+{
+  "baselineSource": "6e399f29c6bf0c77bfcabd5696793ed933b4508e",
+  "retainedWorkspaceAvailable": true,
+  "exactHistoricalRuntimeSnapshotAvailable": false,
+  "baselineCtest": {
+    "name": "Linux-c++",
+    "tests": "48",
+    "failures": "0",
+    "disabled": "0",
+    "skipped": "0",
+    "hostname": "08e60b466f9a",
+    "time": "293",
+    "timestamp": "2026-10-26T22:39:56"
+  },
+  "baselineGuiRepeat": {
+    "consecutivePasses": 3,
+    "retryUntilPass": false
+  },
+  "historicalFailureResolved": false,
+  "observer": {
+    "command": "strace -e trace=network /bin/true",
+    "result": "PTRACE_TRACEME/PTRACE_SETOPTIONS not permitted",
+    "usableTrace": false
+  },
+  "firstCorrection": "Restart with an unfinished operation has unknown completion: process-interrupted failure takes priority over earlier authorization closure; both verifiers enforce the same classification. Initial failed test retained. No success/authorization check weakened.",
+  "scope": "Synthetic local/CI development evaluation; no clean physical Windows, phone, institutional review or competitor execution."
+}

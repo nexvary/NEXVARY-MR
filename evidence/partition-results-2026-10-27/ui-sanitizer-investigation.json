@@ -1,0 +1,20 @@
+{
+  "source": "fabe1b469ad0f7092b0654b76bc2e79d69eeeb06",
+  "attemptedProfile": "Local production debug, Qt 6.4.2, software, 125%, ASan/UBSan; differs from failed hosted laboratory profile",
+  "firstRun": {
+    "selected": [
+      "governmentAdbBackupControls",
+      "governmentArtifactControls"
+    ],
+    "exit": 1,
+    "result": "Imports rejected; LeakSanitizer fatal process-inspection error; no useful original SIGSEGV stack"
+  },
+  "addressOnlyAlternative": {
+    "attempted": true,
+    "completedResultAvailable": false,
+    "reason": "Cloud exec-server transport disconnected before a verified run result"
+  },
+  "requiredCiLeakChecksChanged": false,
+  "rootCauseFound": false,
+  "scope": "Neither a passing UI sanitizer gate nor reproduction/resolution of the PR segmentation fault. Original PR run was not retried."
+}

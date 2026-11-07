@@ -1,0 +1,11 @@
+{
+  "cpp/src/LawCaseImports.cpp": "eca8c2f2d8bd3224c7de812bf6524c063a8ca9cddee4d62914589a640a2983fa",
+  "cpp/tests/import_tests.cpp": "a2bf790fdb2cad5d68db67fa16c23cd062d8979c76c305e91d193c960ac9e025",
+  "cpp/tests/policy_audit_tests.cpp": "7e81d630a0cf7f454b30ad3dac924d7129189c5926a3b2ad3c944c32dc52cc0b",
+  "cpp/tests/case_workload_benchmark.cpp": "ef25097099eb64e032421a4a9c74f6bcce17a383125a3a5d7d1d1c7bc882828c",
+  "CMakeLists.txt": "9fa3f62a216935026dbbcf5e384675f7770b16d6db1cc84759248a7c7c834a6a",
+  ".github/workflows/cpp-qt.yml": "3dcc6992d07bd5794004e60822da6f189f7b189d1e12507e3322f4728402fc81",
+  "docs/OWNED_PROCESS_LIFECYCLE.md": "9c1546bb8237609395f4b9c7325ec62390ea6a56ceba517da2491daacff71b41",
+  "docs/CASE_WORKLOAD_BENCHMARK.md": "99a41fab6c8eb2bf47af6c161294704453283d72d5007ea480e80e324209f6ff",
+  "packaging/package-windows.ps1": "e0ec0c32a746db8926d52f5b88ab465f767b1c6394fd812f52654e78cd759f46"
+}

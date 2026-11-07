@@ -1,6 +1,9 @@
 #include "TskImage.hpp"
 #include "RecoveryBridge.hpp"
 #include "ToolBridge.hpp"
+#include "GovernmentOperationPolicy.hpp"
+#include "IdentityService.hpp"
+#include "SyntheticPolicyExercise.hpp"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QFile>
@@ -86,6 +89,16 @@ private slots:
   const auto original=read(source);auto token=std::make_shared<std::atomic_bool>(false);const auto result=mr::forensic::analyzePartitions(source,real,token);
   QVERIFY2(result.error.isEmpty(),qPrintable(result.error));QVERIFY(result.sourceUnchanged);QCOMPARE(read(source),original);QVERIFY(result.output.contains("DOS Partition Table"));QVERIFY(result.output.contains("Linux (0x83)"));
   qInfo("Real installed mmls integration succeeded: %s",qPrintable(result.version));
+  const QString password="Synthetic real mmls audit fixture 2026!";
+  IdentityService identity(temp.filePath("real-tsk-identity"),true);QVERIFY(identity.bootstrap("real-tsk-admin","Synthetic operator",password));QVERIFY(identity.login("real-tsk-admin",password));
+  GovernmentOperationPolicy policy(&identity);RecoveryBridge bridge(temp.filePath("real-tsk-cases"),true);bridge.setOperationPolicy(&policy);
+  QVERIFY(bridge.createCase("Synthetic signed real TSK","Lab only","Lab","No phone","","backup","unknown",true));QVERIFY(bridge.recordOperator("Synthetic operator","Reference MBR only",true));
+  QVERIFY(performSyntheticReviewedException(identity,policy,"external-analysis","Synthetic real mmls known-answer image",password));
+  QVERIFY(bridge.analyzePartitions(source,real,true));QTRY_VERIFY_WITH_TIMEOUT(!bridge.busy(),15000);QVERIFY2(bridge.error().isEmpty(),qPrintable(bridge.error()));
+  QCOMPARE(bridge.operationReceipt().value("status").toString(),QString("completed"));QCOMPARE(bridge.operationReceipt().value("sourceSha256").toString(),QString::fromLatin1(result.sourceSha256.toHex()));
+  QVERIFY(bridge.previewEvidence(0).contains("Linux (0x83)"));
+  const auto exported=temp.filePath("real-partition-report.json");QVERIFY(bridge.exportEvidence(0,exported,true));
+  QCOMPARE(bridge.operationReceipt().value("outputSha256").toString(),QString::fromLatin1(QCryptographicHash::hash(read(exported),QCryptographicHash::Sha256).toHex()));
  }
 };
 int main(int argc,char **argv){QCoreApplication app(argc,argv);const auto args=app.arguments().mid(1);if(args==QStringList{"-V"}||args.value(0)=="-i")return fakeTool(args);TskTests test;return QTest::qExec(&test,argc,argv);}

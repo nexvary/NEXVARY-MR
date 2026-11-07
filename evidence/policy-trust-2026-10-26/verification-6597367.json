@@ -1,0 +1,61 @@
+{
+  "source": "6597367c36b91ed4595ab9dec3bc3a5028a85a03",
+  "runId": 40354190085,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40354190085",
+  "event": "push",
+  "overall": "in_progress",
+  "jobs": [
+    {
+      "id": 121682091739,
+      "name": "tracking-server",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121682092070,
+      "name": "qt (production)",
+      "status": "in_progress",
+      "result": null
+    },
+    {
+      "id": 121682092198,
+      "name": "linux-forensic-integration (production)",
+      "status": "in_progress",
+      "result": null
+    },
+    {
+      "id": 121682092220,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121682092221,
+      "name": "qt (laboratory)",
+      "status": "in_progress",
+      "result": null
+    },
+    {
+      "id": 121682092295,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "result": "success"
+    },
+    {
+      "id": 121682092626,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "result": "success"
+    }
+  ],
+  "packagingFix": "PowerShell Application lookup returned two Python executables. Select the first resolved executable before isolating PATH; keep standalone cryptographic validation mandatory.",
+  "local": {
+    "cmakeBuild": "passed; existing exact native inputs, no work to do",
+    "targetedCtest": "3/3 policy_audit/offline/interop passed",
+    "python": "38/38 passed",
+    "unchangedInputsFrom8e6c759": 266,
+    "changedInput": "packaging/smoke-windows.ps1"
+  },
+  "rawAuditPublication": "Raw deployed signed history and anchor are retained in downloaded validation files only. Public receipt records hashes and verifier result. Automatic review rejected publishing raw history due to potential sensitive operational details.",
+  "scope": "No OS containment, institutional accreditation, trusted time/identity or competitor parity proof."
+}

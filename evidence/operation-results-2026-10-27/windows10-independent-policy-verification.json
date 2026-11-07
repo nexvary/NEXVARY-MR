@@ -1,0 +1,28 @@
+{
+  "source": "9f2438d8c1e1367834fe75526b7f9f3cee0e3846",
+  "cryptographyVersion": "50.0.2",
+  "isolatedTemporaryEnvironment": true,
+  "globalPythonModified": false,
+  "result": {
+    "actions": {
+      "activate": 1,
+      "approve": 1,
+      "operation-allowed": 4,
+      "operation-denied": 7,
+      "policy-rejection": 7,
+      "request": 1,
+      "review": 1,
+      "session-close": 1
+    },
+    "events": 23,
+    "head": "520b5e20f6277fcf3a18db211f1aabd4309d84093bc3b5a9af8dd2cf1aa94ad4",
+    "identityScope": "local keys/declared roles; not agency identity or independent people",
+    "operationScope": "signed native worker receipts for integrated kinds; no external OS/tool truth or universal completion proof",
+    "operations": {},
+    "requests": 1,
+    "retainedPrefixVerified": 23,
+    "timeScope": "recorded local UTC; no external trusted time",
+    "valid": true
+  },
+  "scope": "Separate Python implementation on the existing Windows host verifies the synthetic portal smoke history and same-process retained anchor; operations is empty in this smoke. Not institutional anchor custody, independent human identities or validation of a physical event. Signed operation-result adversarial corpus is separately tested 35/35 in CI."
+}

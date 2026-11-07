@@ -1,0 +1,57 @@
+{
+  "schema": "nexvary-government-ground-truth/v1",
+  "syntheticOnly": true,
+  "caseNumber": "EVAL-2026-001",
+  "adapter": "json",
+  "sourceSha256": "de3235cb237a5ad62f28e60f9fccddf75a91ae60f4b3403519f0838e30eba762",
+  "sourceSize": 267,
+  "expectedStatus": "imported",
+  "expectedFindings": [
+    {
+      "reference": "/0/id",
+      "kind": "string",
+      "value": "SYNTHETIC-ALPHA"
+    },
+    {
+      "reference": "/0/message",
+      "kind": "string",
+      "value": "تجربة Alpha"
+    },
+    {
+      "reference": "/0/time",
+      "kind": "string",
+      "value": "2026-11-02T10:00:00Z"
+    },
+    {
+      "reference": "/0/verified",
+      "kind": "boolean",
+      "value": "true"
+    },
+    {
+      "reference": "/1/id",
+      "kind": "string",
+      "value": "SYNTHETIC-BETA"
+    },
+    {
+      "reference": "/1/message",
+      "kind": "string",
+      "value": "تجربة Beta"
+    },
+    {
+      "reference": "/1/time",
+      "kind": "string",
+      "value": "2026-11-02T12:05:00+02:00"
+    },
+    {
+      "reference": "/1/verified",
+      "kind": "boolean",
+      "value": "false"
+    }
+  ],
+  "expectedUtcTimes": [
+    "2026-11-02T10:00:00Z",
+    "2026-11-02T10:05:00Z"
+  ],
+  "negativeSha256": "a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c",
+  "limits": "Exact parser truth only. Case bindings, UI, search, timeline, PDF and restart require their own product tests. No human/device identity or event authenticity."
+}

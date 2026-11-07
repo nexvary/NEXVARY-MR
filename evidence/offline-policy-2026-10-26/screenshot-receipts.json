@@ -1,0 +1,41 @@
+[
+  {
+    "name": "windows-portable-policy-ar.png",
+    "bytes": 72707,
+    "size": [
+      1028,
+      749
+    ],
+    "sha256": "091bd4e1f427566798f2fca086ca6c667d9cc56dcd9c201b567287d953890eea",
+    "kind": "Actual portable EXE",
+    "synthetic": true,
+    "host": "Windows Server 2022 hosted virtual desktop; not physical Windows 10/11 acceptance",
+    "visuallyInspected": true
+  },
+  {
+    "name": "windows-installed-policy-en.png",
+    "bytes": 75818,
+    "size": [
+      1028,
+      749
+    ],
+    "sha256": "451febb6f774e15a72d80d3a59673090c283eb74e2057aacde2a55cfa3760c34",
+    "kind": "Actual installed EXE",
+    "synthetic": true,
+    "host": "Windows Server 2022 hosted virtual desktop; not physical Windows 10/11 acceptance",
+    "visuallyInspected": true
+  },
+  {
+    "name": "windows-policy-exception-ui-ar.png",
+    "bytes": 120316,
+    "size": [
+      1536,
+      980
+    ],
+    "sha256": "98b9690ab3d73fe39b53b128ba2fac7ef949ba7def2130d52304f69ad150573d",
+    "kind": "Qt Quick Main.qml/native identity-policy controller component test; existing engine fixtures are separate",
+    "synthetic": true,
+    "host": "Windows Server 2022 hosted virtual desktop; not physical Windows 10/11 acceptance",
+    "visuallyInspected": true
+  }
+]

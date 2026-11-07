@@ -1,0 +1,150 @@
+{
+  "schema": "nexvary-case-artifact-index-hosted-validation/v1",
+  "sourceCommit": "da857f96349d0e7e90b75924642f93239d350f7d",
+  "initialImplementation": "40ed778a6104def4ca5aaa6e1fbe1cb1b7d18b59",
+  "runId": 40261921553,
+  "runUrl": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40261921553",
+  "jobs": [
+    {
+      "id": 121376158692,
+      "name": "tracking-server",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376158818,
+      "name": "qt (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376158825,
+      "name": "linux-forensic-integration (laboratory)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376158830,
+      "name": "linux-forensic-integration (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376158890,
+      "name": "core (windows-2022)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376159083,
+      "name": "qt (production)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121376159753,
+      "name": "core (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "tests": {
+    "profiles": "Windows/Linux production/laboratory each 45/45 CTest",
+    "productionSanitizers": "15/15 ASan/UBSan including native artifact tests; leak checking not disabled",
+    "artifact": "32/32",
+    "qtQuick": "49/49 plus complete 125%/150% DPI subsets",
+    "import": "36/36",
+    "timeline": "26/26",
+    "python": "38/38, workflow 40261921555 success",
+    "publicHistory": "40261921670 success",
+    "structuralTruth": "6 findings, 19 nodes, 20 expected typed edges; 0 false/missed edges and 2 correct digest groups on this synthetic topology only. Equal names do not imply identity.",
+    "boundary": "Existing intentional unrelated native platform/profile subcase exclusions remain visible in raw reports. No independent lab/field/institutional verification implied."
+  },
+  "summaries": {
+    "linuxProduction": [
+      "2026-10-26T03:09:10.5397972Z 100% tests passed, 0 tests failed out of 45",
+      "2026-10-26T03:09:10.5398281Z Total Test time (real) = 199.88 sec",
+      "2026-10-26T03:12:03.6717707Z 100% tests passed, 0 tests failed out of 15",
+      "2026-10-26T03:12:03.6718102Z Total Test time (real) =  75.10 sec"
+    ],
+    "linuxLaboratory": [
+      "2026-10-26T03:10:20.1518831Z 100% tests passed, 0 tests failed out of 45",
+      "2026-10-26T03:10:20.1519179Z Total Test time (real) = 225.00 sec"
+    ],
+    "windowsProduction": [
+      "2026-10-26T03:13:36.7699922Z 100% tests passed, 0 tests failed out of 45",
+      "2026-10-26T03:13:36.7701644Z Total Test time (real) = 281.05 sec",
+      "2026-10-26T03:14:11.3251720Z portable GUI smoke passed: mode=isolated-copy; exit=0",
+      "2026-10-26T03:14:57.9017763Z installed GUI smoke passed: mode=installed-in-place; exit=0"
+    ],
+    "windowsLaboratory": [
+      "2026-10-26T03:16:07.5919956Z 100% tests passed, 0 tests failed out of 45",
+      "2026-10-26T03:16:07.5920844Z Total Test time (real) = 311.07 sec"
+    ]
+  },
+  "deliveryArtifacts": [
+    {
+      "id": 12625806134,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 48925213,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625806134",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625806134/zip",
+      "expired": false,
+      "created_at": "2026-10-26T03:15:02Z",
+      "expires_at": "2027-01-24T03:00:43Z",
+      "updated_at": "2026-10-26T03:15:02Z",
+      "digest": "sha256:4c260da0c6c007ee8c4dd3122b47c617aff24d3704db16420ae216adef0e50cd",
+      "workflow_run": {
+        "id": 40261921553,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "da857f96349d0e7e90b75924642f93239d350f7d"
+      }
+    },
+    {
+      "id": 12625686643,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 62165647,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625686643",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625686643/zip",
+      "expired": false,
+      "created_at": "2026-10-26T03:15:09Z",
+      "expires_at": "2027-01-24T03:00:43Z",
+      "updated_at": "2026-10-26T03:15:09Z",
+      "digest": "sha256:30034cbcc5e95ca22b32e73cfd6454ce537ea15e1a08790eb5229717180c1aef",
+      "workflow_run": {
+        "id": 40261921553,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "da857f96349d0e7e90b75924642f93239d350f7d"
+      }
+    },
+    {
+      "id": 12625686633,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33092443,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625686633",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12625686633/zip",
+      "expired": false,
+      "created_at": "2026-10-26T03:15:05Z",
+      "expires_at": "2027-01-24T03:00:43Z",
+      "updated_at": "2026-10-26T03:15:05Z",
+      "digest": "sha256:8ee2a7215ecc63ca3d6f379c4a5e0e37685f0f1dd5cfcbbc385351969a408d67",
+      "workflow_run": {
+        "id": 40261921553,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "da857f96349d0e7e90b75924642f93239d350f7d"
+      }
+    }
+  ],
+  "downloadVerification": "All three provider ZIP digests verified. Inner portable/setup digests matched SHA256SUMS. Shipped guide matched canonical LF source; raw Windows CRLF bytes retained.",
+  "deployedIndex": "Actual portable and installed EXEs created a synthetic case, invoked the deployed parser child, built Arabic query results, checked fixture SHA-256 38593cb1d8a2a40cd2efa222256edfad201f615fdba4c65770bd8d130fc2e851, 1 retained match, 6 nodes/5 edges and a 5-node path. Receipts and actual AR/EN captures retained. SDK/PATH isolation and install/uninstall/cleanup passed.",
+  "benchmark": "Windows native worker synthetic 12,800-observation test logged 287 ms; retained 2,048. Not a UI/acquisition/case-store/competitor or general long-session throughput measurement.",
+  "fieldBoundary": "No Desktop Commander devices connected during read-only inventory. No actual Windows 10/11 or authorized phone/OPPO display field tests. Hosted Windows Server 2022/Qt 6.8.3 synthetic validation only.",
+  "scope": "Bounded in-memory retained-import index and recorded provenance/digest graph. No current evidence-byte reread, persistent/full-text/semantic index, people/event/ownership inference, signed index review/export or enforced OS/offline sandbox.",
+  "releaseBoundary": "Unsigned development evaluation; no competitive superiority or governmental accreditation/readiness claim. Guardian unchanged; main unmerged."
+}

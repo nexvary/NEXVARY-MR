@@ -1,0 +1,70 @@
+{
+  "sourceCommit": "ef86c995ebf93bcf47e0d25ff7e8353cb117046e",
+  "inputs": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "fc641b78675e42f032f07c40fd712a335df857ca081e7d55f084c468c7e61980"
+    },
+    {
+      "path": ".github/workflows/cpp-qt.yml",
+      "sha256": "4fc748c3f6ce20a495774906d40aa8c1a6f5f4cefc0ca6f02a18dbc432fb0e14"
+    },
+    {
+      "path": "packaging/package-windows.ps1",
+      "sha256": "d6d63be79aea703742a2ba08f557b671c1c7376232f2419934f32fb91405ece8"
+    },
+    {
+      "path": "packaging/smoke-windows.ps1",
+      "sha256": "e5e067857870fadbe0dd0f97ae4e1b20d6f600469387336e535e5ea3d0067016"
+    },
+    {
+      "path": "docs/LEGACY_ADB_BACKUP_IMPORT.md",
+      "sha256": "4527baf3dae02ed37de4ae7b5ac08bfdb3dc4652b7b5e27f81ef2b0aacbe1822"
+    },
+    {
+      "path": "docs/AUTHORIZED_IMPORT.md",
+      "sha256": "a1fda09008f587fabafafee33fe241691fd846ec89013d456f9616821965bb4a"
+    },
+    {
+      "path": "docs/GOVERNMENT_OPERATIONS.md",
+      "sha256": "a07cbd3924a04d49ff2cd5200f495ca7357c60678670fed63679bc69e0b61f2e"
+    },
+    {
+      "path": "cpp/src/AdbBackupImport.cpp",
+      "sha256": "cb3bc84538b0ad10220c4ebf07e5c05b1c14bb1defc9821e55c17777324116a0"
+    },
+    {
+      "path": "cpp/src/AdbBackupImport.hpp",
+      "sha256": "f08a1f088c7127726d2b6ff3da1b0744aeafa96d0434cf6d282cc33cb2436e45"
+    },
+    {
+      "path": "cpp/src/ImportAdapters.cpp",
+      "sha256": "b5d9663af7506f0ccca9116c8d736b9a3c01d93b4e2a3e8fffee3e1dd3935264"
+    },
+    {
+      "path": "cpp/tests/import_tests.cpp",
+      "sha256": "36601eb44d3fee997fbe8d70ec412c1ca0a79baf2fde39bdb17fe061616f9262"
+    },
+    {
+      "path": "cpp/tests/ui_tests.cpp",
+      "sha256": "0d3223a3c54ce59ce2ea17027981357a15dee7ebaf4a6df50a5481bea81cc919"
+    },
+    {
+      "path": "qml/GovernmentAnalysisPage.qml",
+      "sha256": "1ecbc41037c68c611465a20e8d533b17377cdf0ba94d6bc476b2d81f99417db8"
+    },
+    {
+      "path": "qml/tests/tst_navigation.qml",
+      "sha256": "e6d46618fe2a3fe5ed533ccb49101a7175f878a326b4b190ecaa0014efcdf44c"
+    },
+    {
+      "path": "samples/authorized-import/adb-v5-reference.json",
+      "sha256": "f58a3ecc754939c8f32444a88331618921a124da2b86667fb0f4ae25776be176"
+    },
+    {
+      "path": "scripts/check_adb_backup_interop.py",
+      "sha256": "b92a6a9c4d4203aa436a5670f503c3110b6cf7b682502604b56b45d7566954f8"
+    }
+  ],
+  "note": "Native/QML/test/build/workflow/packaging and shipped adapter-guide inputs are unchanged by the later documentation/evidence receipt."
+}

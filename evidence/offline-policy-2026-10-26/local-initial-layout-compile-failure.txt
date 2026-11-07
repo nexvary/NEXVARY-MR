@@ -1,0 +1,13 @@
+[0/2] Re-checking globbed directories...
+[1/132] Generating NexvaryMR/qml/GovernmentNetworkPanel.qml
+[2/132] Automatic MOC and UIC for target nexvary_mr
+[3/131] Running AUTOMOC file extraction for target nexvary_mr
+[4/14] Running qmlimportscanner for nexvary_mr
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml:19:Unexpected token `;'
+/workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/NexvaryMR/qml/GovernmentNetworkPanel.qml:19:Unexpected token `;'
+[5/14] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp
+FAILED: .rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp 
+cd /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup && /workspace/scratch/1df17bb48a7d/runtime/usr/bin/cmake -E make_directory /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/qmlcache/nexvary_mr_qml && /workspace/scratch/1df17bb48a7d/runtime/usr/lib/qt6/libexec/qmlcachegen --bare --resource-path /NexvaryMR/qml/GovernmentNetworkPanel.qml -I /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup -I /workspace/scratch/1df17bb48a7d/runtime/usr/lib/x86_64-linux-gnu/qt6/qml -i /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/NexvaryMR/qmldir --resource /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/qmake_NexvaryMR.qrc --resource /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/nexvary_mr_raw_qml_0.qrc --resource /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/samples.qrc -o /workspace/scratch/1df17bb48a7d/NEXVARY-MR/build-backup/.rcc/qmlcache/nexvary_mr_qml/GovernmentNetworkPanel_qml.cpp /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml
+Error compiling qml file: /workspace/scratch/1df17bb48a7d/NEXVARY-MR/qml/GovernmentNetworkPanel.qml:19:302: error: Unexpected token `;'
+[6/14] Automatic MOC and UIC for target mr_offline_tests
+ninja: build stopped: subcommand failed.

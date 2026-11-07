@@ -1,0 +1,48 @@
+{
+  "source": "62251a02a37b560fafc92f892ce8b51764d5dc82",
+  "fullNative": {
+    "passed": 48,
+    "total": 48,
+    "seconds": 331.22,
+    "buildType": "RelWithDebInfo",
+    "profile": "Laboratory"
+  },
+  "policyAudit": {
+    "passed": 15,
+    "total": 15
+  },
+  "qml": {
+    "passed": 52,
+    "total": 52
+  },
+  "dpiGroups": {
+    "1.25": {
+      "passed": 13,
+      "total": 13
+    },
+    "1.5": {
+      "passed": 13,
+      "total": 13
+    }
+  },
+  "asanUbsanDpi125": {
+    "passed": 13,
+    "total": 13,
+    "seconds": 55.95,
+    "leakChecksDisabledOnlyLocally": true
+  },
+  "strictGuiRepeats": {
+    "passedRuns": 3,
+    "totalRuns": 3,
+    "seconds": 61.51
+  },
+  "candidateFramesInspected": [
+    "layout-candidate-adb-ar.png",
+    "layout-candidate-adb-en.png",
+    "candidate-windows-adb-ar.png",
+    "candidate-windows-adb-en.png"
+  ],
+  "rootCauseClosed": false,
+  "hostedCandidateVerification": "Push40500300494 and PR40500306659 all7/7, attempt1, source62251a0; see candidate-ci-final.json",
+  "baselinePrFailureStillRetained": true
+}

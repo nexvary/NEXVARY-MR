@@ -129,7 +129,7 @@ private slots:
     auto consent=approval(true);consent.insert("file",package());consent.insert("compatible",true);
     QVERIFY(!b.startService(id,"TEST42",consent));QVERIFY(!b.busy());QCOMPARE(journal(),before);
    }
-   b.startMirror();QCOMPARE(journal(),before);QVERIFY(b.status().contains("Laboratory"));
+   QVERIFY(!b.startMirror());QCOMPARE(journal(),before);
   }
   for(const auto &id:{"unknown","frp","lockscreen","shell","bootloader_unlock"})
    QVERIFY(!b.startService(id,"TEST42",approval(true)));

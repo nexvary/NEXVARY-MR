@@ -1,0 +1,20 @@
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 (found version "3.12.14") found components: Interpreter 
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE  
+-- Found OpenGL: /workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/libOpenGL.so   
+-- Found WrapOpenGL: TRUE  
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Found WrapVulkanHeaders: /workspace/scratch/4e45fba54133/qt-runtime/usr/include  
+-- Configuring done (1.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build

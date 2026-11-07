@@ -1,0 +1,21 @@
+Original PR run 40454584507 / job 122024938764; no rerun requested.
+mr_ui_scale_1.25 ...................***Exception: SegFault  3.29 sec
+2026-10-27T05:25:21.4190815Z ********* Start testing of mr_ui *********
+2026-10-27T05:25:21.4191613Z Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+2026-10-27T05:25:21.4197363Z PASS   : mr_ui::WorkstationNavigation::initTestCase()
+2026-10-27T05:25:21.4197747Z PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+2026-10-27T05:25:21.4198002Z 
+2026-10-27T05:25:21.4198082Z       Start 47: mr_ui_scale_1.5
+2026-10-27T05:25:51.9360858Z 47/48 Test #47: mr_ui_scale_1.5 ....................   Passed   30.52 sec
+2026-10-27T05:25:51.9362372Z       Start 48: mr_gui_smoke
+2026-10-27T05:26:09.9368862Z 48/48 Test #48: mr_gui_smoke .......................   Passed   18.00 sec
+2026-10-27T05:26:09.9372254Z 
+2026-10-27T05:26:09.9372687Z 98% tests passed, 1 tests failed out of 48
+2026-10-27T05:26:09.9372869Z 
+2026-10-27T05:26:09.9372952Z Total Test time (real) = 199.03 sec
+2026-10-27T05:26:09.9373100Z 
+2026-10-27T05:26:09.9373186Z The following tests FAILED:
+2026-10-27T05:26:09.9373402Z 	 46 - mr_ui_scale_1.25 (SEGFAULT)
+2026-10-27T05:26:09.9439611Z Errors while running CTest
+2026-10-27T05:26:09.9751252Z ##[error]Process completed with exit code 8.
+2026-10-27T05:26:09.9807712Z ##[group]

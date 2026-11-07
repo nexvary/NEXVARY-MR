@@ -1,0 +1,32 @@
+[
+  {
+    "fixtureIndex": 0,
+    "canonicalBytes": 267,
+    "beforeCheckoutBytes": 281,
+    "beforeIdentical": false,
+    "afterCheckoutBytes": 267,
+    "afterIdentical": true,
+    "canonicalDigest": "de3235cb237a5ad62f28e60f9fccddf75a91ae60f4b3403519f0838e30eba762",
+    "afterDigest": "de3235cb237a5ad62f28e60f9fccddf75a91ae60f4b3403519f0838e30eba762"
+  },
+  {
+    "fixtureIndex": 1,
+    "canonicalBytes": 22,
+    "beforeCheckoutBytes": 23,
+    "beforeIdentical": false,
+    "afterCheckoutBytes": 22,
+    "afterIdentical": true,
+    "canonicalDigest": "a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c",
+    "afterDigest": "a6e82fbce5f66a9c6d703bc025daba75e4e4bd8dd478adb5544b843fc192421c"
+  },
+  {
+    "fixtureIndex": 2,
+    "canonicalBytes": 1451,
+    "beforeCheckoutBytes": 1508,
+    "beforeIdentical": false,
+    "afterCheckoutBytes": 1451,
+    "afterIdentical": true,
+    "canonicalDigest": "6c720b0927f31b0de9435053208fbfc9963053bd33fb3118df57b9b5519ff920",
+    "afterDigest": "6c720b0927f31b0de9435053208fbfc9963053bd33fb3118df57b9b5519ff920"
+  }
+]

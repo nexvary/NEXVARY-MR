@@ -1,0 +1,231 @@
+{
+  "schema": "nexvary-synthetic-artifact-truth/v1",
+  "synthetic": true,
+  "scope": "Hand-labelled structural provenance/digest truth over synthetic retained reports; not parser, identity or device validation",
+  "snapshot": {
+    "id": "case-truth",
+    "revision": 7,
+    "synthetic": true,
+    "devices": [
+      {
+        "id": "d1",
+        "model": "Same label"
+      },
+      {
+        "id": "d2",
+        "model": "Same label"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "deviceId": "d1",
+        "name": "same-name.sqlite",
+        "sha256": "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883",
+        "size": 25
+      },
+      {
+        "id": "e2",
+        "deviceId": "d1",
+        "name": "same-name.sqlite",
+        "sha256": "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883",
+        "size": 25
+      },
+      {
+        "id": "e3",
+        "deviceId": "d2",
+        "name": "same-name.sqlite",
+        "sha256": "f2291bcb77427bf6440ccd76893ab11e8c5b66e5c6f9102608384a072896cb61",
+        "size": 28
+      }
+    ],
+    "analyses": [
+      {
+        "id": "r1",
+        "parser": "authorized-import/sqlite",
+        "evidenceId": "e1",
+        "sourceSha256": "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883",
+        "sourceSize": 25,
+        "reportJson": "{\"adapter\":\"sqlite\",\"findings\":[{\"kind\":\"sqlite-value\",\"reference\":\"table/names/rowid/1/column/name\",\"value\":\"أحمد\",\"valueTruncated\":false},{\"kind\":\"sqlite-blob-sha256\",\"reference\":\"table/blobs/rowid/1/column/data\",\"value\":\"5a9988867141cdefa9273ad325a501700c99bc73bfb1789144794e4d1948fe30\",\"valueTruncated\":false}],\"findingsTruncated\":false,\"observedCount\":2,\"parserVersion\":1,\"provenance\":{\"caseId\":\"case-truth\",\"deviceId\":\"d1\",\"evidenceId\":\"e1\"},\"schema\":\"nexvary-authorized-import/v1\",\"sourceSha256\":\"2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883\",\"sourceSize\":25,\"status\":\"imported\"}",
+        "reportSha256": "312c073291df205cfd6edd318d25bdef918e29409e3e0448f94ff068a94f7996"
+      },
+      {
+        "id": "r2",
+        "parser": "authorized-import/sqlite",
+        "evidenceId": "e2",
+        "sourceSha256": "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883",
+        "sourceSize": 25,
+        "reportJson": "{\"adapter\":\"sqlite\",\"findings\":[{\"kind\":\"sqlite-value\",\"reference\":\"table/names/rowid/1/column/name\",\"value\":\"أحمد\",\"valueTruncated\":false},{\"kind\":\"sqlite-blob-sha256\",\"reference\":\"table/blobs/rowid/1/column/data\",\"value\":\"5a9988867141cdefa9273ad325a501700c99bc73bfb1789144794e4d1948fe30\",\"valueTruncated\":false}],\"findingsTruncated\":false,\"observedCount\":2,\"parserVersion\":1,\"provenance\":{\"caseId\":\"case-truth\",\"deviceId\":\"d1\",\"evidenceId\":\"e2\"},\"schema\":\"nexvary-authorized-import/v1\",\"sourceSha256\":\"2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883\",\"sourceSize\":25,\"status\":\"imported\"}",
+        "reportSha256": "4cd395c74c98db1a466b420f5c6e4349dcfa32e27c77d89d0b99e0389a3bdab5"
+      },
+      {
+        "id": "r3",
+        "parser": "authorized-import/sqlite",
+        "evidenceId": "e3",
+        "sourceSha256": "f2291bcb77427bf6440ccd76893ab11e8c5b66e5c6f9102608384a072896cb61",
+        "sourceSize": 28,
+        "reportJson": "{\"adapter\":\"sqlite\",\"findings\":[{\"kind\":\"sqlite-value\",\"reference\":\"table/names/rowid/1/column/name\",\"value\":\"أحمد\",\"valueTruncated\":false},{\"kind\":\"sqlite-blob-sha256\",\"reference\":\"table/blobs/rowid/1/column/data\",\"value\":\"8306028de4d092dc91b4f784707243597b714b1bf102e6d2044004702ee315ad\",\"valueTruncated\":false}],\"findingsTruncated\":false,\"observedCount\":2,\"parserVersion\":1,\"provenance\":{\"caseId\":\"case-truth\",\"deviceId\":\"d2\",\"evidenceId\":\"e3\"},\"schema\":\"nexvary-authorized-import/v1\",\"sourceSha256\":\"f2291bcb77427bf6440ccd76893ab11e8c5b66e5c6f9102608384a072896cb61\",\"sourceSize\":28,\"status\":\"imported\"}",
+        "reportSha256": "b4d928ee9864c21cf9c84eded9e3cd142fa131ea4913696341f806e4f96c2fc4"
+      }
+    ]
+  },
+  "expected": {
+    "rows": 6,
+    "nodes": 19,
+    "edges": [
+      [
+        "analysis",
+        "r1",
+        "reports-finding",
+        "finding",
+        "r1:0"
+      ],
+      [
+        "analysis",
+        "r1",
+        "reports-finding",
+        "finding",
+        "r1:1"
+      ],
+      [
+        "analysis",
+        "r2",
+        "reports-finding",
+        "finding",
+        "r2:0"
+      ],
+      [
+        "analysis",
+        "r2",
+        "reports-finding",
+        "finding",
+        "r2:1"
+      ],
+      [
+        "analysis",
+        "r3",
+        "reports-finding",
+        "finding",
+        "r3:0"
+      ],
+      [
+        "analysis",
+        "r3",
+        "reports-finding",
+        "finding",
+        "r3:1"
+      ],
+      [
+        "case",
+        "case-truth",
+        "registers-device",
+        "device",
+        "d1"
+      ],
+      [
+        "case",
+        "case-truth",
+        "registers-device",
+        "device",
+        "d2"
+      ],
+      [
+        "device",
+        "d1",
+        "registers-evidence",
+        "evidence",
+        "e1"
+      ],
+      [
+        "device",
+        "d1",
+        "registers-evidence",
+        "evidence",
+        "e2"
+      ],
+      [
+        "device",
+        "d2",
+        "registers-evidence",
+        "evidence",
+        "e3"
+      ],
+      [
+        "evidence",
+        "e1",
+        "input-to-analysis",
+        "analysis",
+        "r1"
+      ],
+      [
+        "evidence",
+        "e1",
+        "records-sha256",
+        "recorded-sha256",
+        "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883"
+      ],
+      [
+        "evidence",
+        "e2",
+        "input-to-analysis",
+        "analysis",
+        "r2"
+      ],
+      [
+        "evidence",
+        "e2",
+        "records-sha256",
+        "recorded-sha256",
+        "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883"
+      ],
+      [
+        "evidence",
+        "e3",
+        "input-to-analysis",
+        "analysis",
+        "r3"
+      ],
+      [
+        "evidence",
+        "e3",
+        "records-sha256",
+        "recorded-sha256",
+        "f2291bcb77427bf6440ccd76893ab11e8c5b66e5c6f9102608384a072896cb61"
+      ],
+      [
+        "finding",
+        "r1:1",
+        "records-sha256",
+        "recorded-sha256",
+        "5a9988867141cdefa9273ad325a501700c99bc73bfb1789144794e4d1948fe30"
+      ],
+      [
+        "finding",
+        "r2:1",
+        "records-sha256",
+        "recorded-sha256",
+        "5a9988867141cdefa9273ad325a501700c99bc73bfb1789144794e4d1948fe30"
+      ],
+      [
+        "finding",
+        "r3:1",
+        "records-sha256",
+        "recorded-sha256",
+        "8306028de4d092dc91b4f784707243597b714b1bf102e6d2044004702ee315ad"
+      ]
+    ],
+    "digestGroups": {
+      "2a86621305bb5d9f3d9e1e06aee76c5cd31d52d70876479d2de886bd075f8883": [
+        "evidence/e1",
+        "evidence/e2"
+      ],
+      "5a9988867141cdefa9273ad325a501700c99bc73bfb1789144794e4d1948fe30": [
+        "finding/r1:1",
+        "finding/r2:1"
+      ]
+    },
+    "arabicLiteralMatches": 3,
+    "nameBasedEdges": 0,
+    "crossCaseEdges": 0
+  }
+}

@@ -1,0 +1,30 @@
+[0/2] Re-checking globbed directories...
+[1/30] Automatic MOC and UIC for target mr_desktop
+[2/29] Building CXX object CMakeFiles/mr_desktop.dir/cpp/src/LawCaseBridge.cpp.o
+[3/29] Linking CXX static library libmr_desktop.a
+[4/29] Linking CXX executable mr_identity_tests
+[5/29] Linking CXX executable nexvary_mr
+[6/29] Linking CXX executable mr_law_workspace_tests
+[7/29] Linking CXX executable mr_research_tests
+[8/29] Linking CXX executable mr_intelligence_tests
+[9/29] Linking CXX executable mr_connection_tests
+[10/29] Linking CXX executable mr_workshop_tests
+[11/29] Linking CXX executable mr_barcode_tests
+[12/29] Linking CXX executable mr_center_tests
+[13/29] Linking CXX executable mr_cloud_tests
+[14/29] Linking CXX executable mr_security_tests
+[15/29] Linking CXX executable mr_catalog_tests
+[16/29] Linking CXX executable mr_tool_tests
+[17/29] Linking CXX executable mr_service_tests
+[18/29] Linking CXX executable mr_mirror_tests
+[19/29] Linking CXX executable mr_compatibility_tests
+[20/29] Linking CXX executable mr_board_tests
+[21/29] Linking CXX executable mr_firmware_tests
+[22/29] Linking CXX executable mr_avb_tests
+[23/29] Linking CXX executable mr_pcap_tests
+[24/29] Linking CXX executable mr_exif_tests
+[25/29] Linking CXX executable mr_recovery_tests
+[26/29] Linking CXX executable mr_recovery_image_tests
+[27/29] Linking CXX executable mr_forensic_tests
+[28/29] Linking CXX executable mr_tsk_tests
+[29/29] Linking CXX executable mr_ui_tests

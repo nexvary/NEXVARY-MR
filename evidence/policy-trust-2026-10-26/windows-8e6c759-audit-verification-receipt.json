@@ -1,0 +1,18 @@
+{
+  "schema": "nexvary-policy-artifact-check/v1",
+  "source": "8e6c759a9c896486eda24fa0db94f23a5ca0f8f3",
+  "artifactId": 12648610995,
+  "providerZipSha256": "ed2d3397866d4292c1e844e6bb8b136fee5c4d3d9871db724c1dd6978fabd619",
+  "actualDownloadedDigestMatched": true,
+  "policyFilesSha256": {
+    "portable-government-policy-audit.json": "0f4512ea4f58714129041b16ed86b1d3709f6a864e6985dc8659945f01b60e3c",
+    "portable-government-policy-anchor.json": "0bbb7767bdb600725c7b3c462fddd8ec69651eb823962bfafff99e1043c88043"
+  },
+  "separatePythonVerification": {
+    "valid": true,
+    "events": 23,
+    "retainedPrefixVerified": 23,
+    "head": "c7733cc888bc38fa1b4b509d85a1dbcc7458fbfd22bb80b320fb48e2880cf980"
+  },
+  "scope": "Synthetic Windows EXE smoke; signatures/sequence/retained prefix only. Public receipt omits raw history and anchor. No external trusted time or institutional identity."
+}

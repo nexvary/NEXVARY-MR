@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "source": "3c23960bc0ed22aac1796fa20f3e9a056da7899d",
+  "runId": 40203548197,
+  "failedGuiProfiles": [
+    "Windows production",
+    "Windows laboratory",
+    "Linux production",
+    "Linux laboratory"
+  ],
+  "diagnostics": {
+    "linux": "cpp/tests/ui_tests.cpp:112 -Werror=misleading-indentation",
+    "windows": "cpp/src/CaseTimeline.cpp:35 warning C4996 QDateTime: Pass QTimeZone instead; C2220 /WX"
+  },
+  "passed": [
+    "Windows core",
+    "Linux core",
+    "tracking-server",
+    "Python checks 40203548203",
+    "Public history safety 40203548210"
+  ],
+  "interpretation": "Compilation failed before timeline/GUI tests; not a passing timeline validation."
+}

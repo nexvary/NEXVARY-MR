@@ -1,0 +1,54 @@
+{
+    "defaultDeniedCategories": 6,
+    "explicitSyntheticPortalGrant": true,
+    "offlineAfterRevoke": true,
+    "permissions": [
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "cloud-publish",
+            "expiresUtc": "",
+            "reason": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "tracking-portal",
+            "expiresUtc": "",
+            "reason": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "signature-update",
+            "expiresUtc": "",
+            "reason": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "device-tools",
+            "expiresUtc": "",
+            "reason": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "external-analysis",
+            "expiresUtc": "",
+            "reason": ""
+        },
+        {
+            "actor": "",
+            "allowed": false,
+            "capability": "external-links",
+            "expiresUtc": "",
+            "reason": ""
+        }
+    ],
+    "portalStoppedAfterRevoke": true,
+    "schema": "nexvary-deployed-operation-policy/v1",
+    "scope": "Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance",
+    "startupBoundaryDenials": true,
+    "synthetic": true
+}

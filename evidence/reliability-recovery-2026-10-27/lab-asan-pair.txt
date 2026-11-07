@@ -1,0 +1,8 @@
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : mr_ui::WorkstationNavigation::initTestCase()
+PASS   : mr_ui::WorkstationNavigation::test_governmentAdbBackupControls()
+PASS   : mr_ui::WorkstationNavigation::test_governmentArtifactControls()
+PASS   : mr_ui::WorkstationNavigation::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 8322ms
+********* Finished testing of mr_ui *********

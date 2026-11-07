@@ -1,0 +1,41 @@
+{
+  "run": 40098038007,
+  "checkedSource": "03da82d981e4e192b20dcf12af4aeddac16d71e0",
+  "jobs": [
+    {
+      "id": 120884500708,
+      "name": "linux-forensic-integration (laboratory)",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500826,
+      "name": "qt (production)",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500832,
+      "name": "linux-forensic-integration (production)",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500884,
+      "name": "core (ubuntu-latest)",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500890,
+      "name": "tracking-server",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500904,
+      "name": "qt (laboratory)",
+      "conclusion": "success"
+    },
+    {
+      "id": 120884500934,
+      "name": "core (windows-2022)",
+      "conclusion": "success"
+    }
+  ]
+}

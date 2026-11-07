@@ -1,0 +1,14 @@
+[
+  {
+    "id": "SYNTHETIC-ALPHA",
+    "message": "تجربة Alpha",
+    "time": "2026-11-02T10:00:00Z",
+    "verified": true
+  },
+  {
+    "id": "SYNTHETIC-BETA",
+    "message": "تجربة Beta",
+    "time": "2026-11-02T12:05:00+02:00",
+    "verified": false
+  }
+]

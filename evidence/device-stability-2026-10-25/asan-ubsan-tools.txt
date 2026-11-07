@@ -1,0 +1,10 @@
+Internal ctest changing into directory: /workspace/scratch/b91b82a596d9/NEXVARY-MR/build-sanitized
+Test project /workspace/scratch/b91b82a596d9/NEXVARY-MR/build-sanitized
+    Start 20: mr_tool_tests
+1/2 Test #20: mr_tool_tests ....................   Passed   29.30 sec
+    Start 22: mr_mirror_tests
+2/2 Test #22: mr_mirror_tests ..................   Passed   15.05 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =  44.35 sec

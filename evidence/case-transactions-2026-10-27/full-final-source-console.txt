@@ -1,0 +1,120 @@
+Internal ctest changing into directory: /workspace/scratch/700fbf4aabb3/NEXVARY-MR/build
+Test project /workspace/scratch/700fbf4aabb3/NEXVARY-MR/build
+      Start  1: mr_research_data_validation
+ 1/49 Test  #1: mr_research_data_validation ........   Passed    0.03 sec
+      Start  2: mr_policy_tests
+ 2/49 Test  #2: mr_policy_tests ....................   Passed    0.00 sec
+      Start  3: mr_core_tests
+ 3/49 Test  #3: mr_core_tests ......................   Passed    0.00 sec
+      Start  4: mr_law_enforcement_case_tests
+ 4/49 Test  #4: mr_law_enforcement_case_tests ......   Passed    0.00 sec
+      Start  5: mr_update_tests
+ 5/49 Test  #5: mr_update_tests ....................   Passed    0.49 sec
+      Start  6: mr_update_journal_tests
+ 6/49 Test  #6: mr_update_journal_tests ............   Passed    0.17 sec
+      Start  7: mr_update_key_tests
+ 7/49 Test  #7: mr_update_key_tests ................   Passed    0.00 sec
+      Start  8: mr_case_transaction_tests
+ 8/49 Test  #8: mr_case_transaction_tests ..........   Passed    6.47 sec
+      Start  9: mr_policy_audit_tests
+ 9/49 Test  #9: mr_policy_audit_tests ..............   Passed   12.78 sec
+      Start 10: mr_offline_tests
+10/49 Test #10: mr_offline_tests ...................   Passed   18.81 sec
+      Start 11: mr_artifact_tests
+11/49 Test #11: mr_artifact_tests ..................   Passed    1.46 sec
+      Start 12: mr_timeline_tests
+12/49 Test #12: mr_timeline_tests ..................   Passed    1.02 sec
+      Start 13: mr_import_tests
+13/49 Test #13: mr_import_tests ....................   Passed    7.60 sec
+      Start 14: mr_retention_tests
+14/49 Test #14: mr_retention_tests .................   Passed    1.07 sec
+      Start 15: mr_identity_tests
+15/49 Test #15: mr_identity_tests ..................   Passed    5.82 sec
+      Start 16: mr_law_workspace_tests
+16/49 Test #16: mr_law_workspace_tests .............   Passed    1.42 sec
+      Start 17: mr_research_tests
+17/49 Test #17: mr_research_tests ..................   Passed    0.05 sec
+      Start 18: mr_intelligence_tests
+18/49 Test #18: mr_intelligence_tests ..............   Passed    0.01 sec
+      Start 19: mr_connection_tests
+19/49 Test #19: mr_connection_tests ................   Passed    0.01 sec
+      Start 20: mr_workshop_tests
+20/49 Test #20: mr_workshop_tests ..................   Passed    1.63 sec
+      Start 21: mr_barcode_tests
+21/49 Test #21: mr_barcode_tests ...................   Passed    0.58 sec
+      Start 22: mr_center_tests
+22/49 Test #22: mr_center_tests ....................   Passed    0.09 sec
+      Start 23: mr_cloud_tests
+23/49 Test #23: mr_cloud_tests .....................   Passed   11.79 sec
+      Start 24: mr_security_tests
+24/49 Test #24: mr_security_tests ..................   Passed    1.48 sec
+      Start 25: mr_catalog_tests
+25/49 Test #25: mr_catalog_tests ...................   Passed    0.04 sec
+      Start 26: mr_tool_tests
+26/49 Test #26: mr_tool_tests ......................   Passed   27.97 sec
+      Start 27: mr_service_tests
+27/49 Test #27: mr_service_tests ...................   Passed    5.02 sec
+      Start 28: mr_mirror_tests
+28/49 Test #28: mr_mirror_tests ....................   Passed   13.75 sec
+      Start 29: mr_compatibility_tests
+29/49 Test #29: mr_compatibility_tests .............   Passed    0.03 sec
+      Start 30: mr_board_tests
+30/49 Test #30: mr_board_tests .....................   Passed    0.02 sec
+      Start 31: mr_firmware_tests
+31/49 Test #31: mr_firmware_tests ..................   Passed    0.04 sec
+      Start 32: mr_avb_tests
+32/49 Test #32: mr_avb_tests .......................   Passed    0.03 sec
+      Start 33: mr_pcap_tests
+33/49 Test #33: mr_pcap_tests ......................   Passed    0.30 sec
+      Start 34: mr_exif_tests
+34/49 Test #34: mr_exif_tests ......................   Passed    0.28 sec
+      Start 35: mr_recovery_tests
+35/49 Test #35: mr_recovery_tests ..................   Passed    9.21 sec
+      Start 36: mr_recovery_image_tests
+36/49 Test #36: mr_recovery_image_tests ............   Passed    0.03 sec
+      Start 37: mr_forensic_tests
+37/49 Test #37: mr_forensic_tests ..................   Passed    0.54 sec
+      Start 38: mr_tsk_tests
+38/49 Test #38: mr_tsk_tests .......................   Passed    2.92 sec
+      Start 39: mr_policy_audit_interop
+39/49 Test #39: mr_policy_audit_interop ............   Passed    2.64 sec
+      Start 40: mr_evidence_package_interop
+40/49 Test #40: mr_evidence_package_interop ........   Passed    0.11 sec
+      Start 41: mr_artifact_reference_validation
+41/49 Test #41: mr_artifact_reference_validation ...   Passed    0.05 sec
+      Start 42: mr_adb_backup_interop
+42/49 Test #42: mr_adb_backup_interop ..............   Passed    0.60 sec
+      Start 43: mr_avb_mutation_tests
+43/49 Test #43: mr_avb_mutation_tests ..............   Passed    0.15 sec
+      Start 44: mr_pcap_mutation_tests
+44/49 Test #44: mr_pcap_mutation_tests .............   Passed    0.20 sec
+      Start 45: mr_exif_mutation_tests
+45/49 Test #45: mr_exif_mutation_tests .............   Passed    0.04 sec
+      Start 46: mr_ui_tests
+46/49 Test #46: mr_ui_tests ........................   Passed   73.43 sec
+      Start 47: mr_ui_scale_1.25
+47/49 Test #47: mr_ui_scale_1.25 ...................   Passed   41.91 sec
+      Start 48: mr_ui_scale_1.5
+48/49 Test #48: mr_ui_scale_1.5 ....................   Passed   45.48 sec
+      Start 49: mr_gui_smoke
+49/49 Test #49: mr_gui_smoke .......................***Failed    0.93 sec
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Could not create AF_NETLINK socket (Operation not permitted)
+Synthetic GUI smoke check failed: stage=synthetic-reviewed-portal-exception
+Synthetic GUI smoke exit: stage=policy-reviewed-setup code=15
+
+
+98% tests passed, 1 tests failed out of 49
+
+Total Test time (real) = 298.51 sec
+
+The following tests FAILED:
+	 49 - mr_gui_smoke (Failed)
+Errors while running CTest

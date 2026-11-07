@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="2"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="6d349920fa01"
+	time="15"
+	timestamp="2026-10-25T21:19:28"
+	>
+	<testcase name="mr_offline_tests" classname="mr_offline_tests" time="3.32447" status="run">
+		<properties/>
+		<system-out>********* Start testing of OfflineTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : OfflineTests::initTestCase()
+PASS   : OfflineTests::defaultDenyAndExplicitAdministrator()
+PASS   : OfflineTests::expiryAndExternalAccountRevocation()
+PASS   : OfflineTests::restartDoesNotRestoreExceptions()
+QCRITICAL: OfflineTests::portalDefaultDenyAndClientAbort() Could not create AF_NETLINK socket (Operation not permitted)
+QCRITICAL: OfflineTests::portalDefaultDenyAndClientAbort() Could not create AF_NETLINK socket (Operation not permitted)
+PASS   : OfflineTests::portalDefaultDenyAndClientAbort()
+PASS   : OfflineTests::deviceChildDeniedPermittedAndRevoked()
+PASS   : OfflineTests::externalAnalyzersAndUpdaterAreSeparatePermissions()
+PASS   : OfflineTests::externalPartitionChildPermissionAndRevoke()
+PASS   : OfflineTests::browserHandoffBlockedAndProtocolsRestricted()
+PASS   : OfflineTests::cleanupTestCase()
+Totals: 10 pas...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="mr_mirror_tests" classname="mr_mirror_tests" time="12.2965" status="run">
+		<properties/>
+		<system-out>********* Start testing of MirrorTests *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+PASS   : MirrorTests::initTestCase()
+PASS   : MirrorTests::governmentPermissionStopsOwnedViewerAndDoesNotResume()
+PASS   : MirrorTests::versionBoundary()
+PASS   : MirrorTests::consentRefusesBeforeProcess()
+PASS   : MirrorTests::ownedProcessAndPinnedEnvironment()
+PASS   : MirrorTests::cancelDuringVersionStartsNoViewer()
+PASS   : MirrorTests::cleanWindowClose()
+PASS   : MirrorTests::preflightFailure(bad-version)
+PASS   : MirrorTests::preflightFailure(version-timeout)
+PASS   : MirrorTests::preflightFailure(duplicate)
+PASS   : MirrorTests::preflightFailure(offline)
+PASS   : MirrorTests::preflightFailure(disconnected)
+PASS   : MirrorTests::preflightFailure(identity-changed)
+PASS   : MirrorTests::disconnectAndIdentityDuringView(disconnected)
+PASS   : MirrorTests::disconnectAndIdentityDuringView(identity-changed)
+PASS   : MirrorTests::di...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

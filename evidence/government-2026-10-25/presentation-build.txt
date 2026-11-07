@@ -1,0 +1,24 @@
+[0/2] Re-checking globbed directories...
+[1/65] Generating NexvaryMR/qml/GovernmentAnalysisPage.qml
+[2/65] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[3/65] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp
+[4/65] Running rcc for resource nexvary_mr_raw_qml_0
+[5/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qrc_qmake_NexvaryMR.cpp.o
+[6/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp.o
+[7/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp.o
+[8/65] Building CXX object CMakeFiles/mr_ui_tests.dir/cpp/tests/ui_tests.cpp.o
+[9/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp.o
+[10/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp.o
+[11/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp.o
+[12/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp.o
+[13/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp.o
+[14/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp.o
+[15/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp.o
+[16/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp.o
+[17/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp.o
+[18/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp.o
+[19/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp.o
+[20/65] Building CXX object CMakeFiles/nexvary_mr.dir/build/.rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp.o

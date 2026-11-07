@@ -1,14 +1,16 @@
 #pragma once
 #include <QObject>
-#include <QProcess>
+class GovernmentOperationPolicy;
+#include "OwnedProcess.hpp"
 #include <QTimer>
 #include <QVariantMap>
 
-// Owned, fixed-argument Laboratory screen-view process. No detached launch,
+// Owned, fixed-argument consented screen-view process. No detached launch,
 // recording, control, arbitrary flags or automatic reconnection to another phone.
 class MirrorSession final:public QObject {
  Q_OBJECT
 public:
+ void setOperationPolicy(GovernmentOperationPolicy *policy){policy_=policy;}
  explicit MirrorSession(QObject *parent=nullptr);
  ~MirrorSession() override;
  bool active()const{return active_;}
@@ -16,6 +18,7 @@ public:
  QString status()const{return status_;}
  QString output()const{return QString::fromUtf8(viewOutput_);}
  QString version()const{return version_;}
+ QVariantMap processCleanup()const{return {{"preflight",check_.cancellationReceipt()},{"viewer",viewer_.cancellationReceipt()}};}
  bool start(const QString &scrcpy,const QString &adb,const QString &serial,
             const QVariantMap &identity,bool ownerApproved,bool componentApproved);
  void stop(const QString &reason=QStringLiteral("Screen-view process stopped by operator."));
@@ -25,6 +28,7 @@ signals:
  void changed();
  void finished(bool processStoppedWithoutError);
 private:
+ GovernmentOperationPolicy *policy_=nullptr;
  void query(const QStringList &arguments,const QString &state);
  void collectCheck();
  void checkFinished(int code,QProcess::ExitStatus exit);
@@ -33,7 +37,7 @@ private:
  void end(const QString &reason,bool failed);
  void finalize();
  void message(const QString &text);
- QProcess check_,viewer_;
+ OwnedProcess check_,viewer_;
  QTimer deadline_,monitor_,kill_;
  QByteArray checkOutput_,viewOutput_;
  QString scrcpy_,adb_,serial_,state_=QStringLiteral("idle"),status_,version_;

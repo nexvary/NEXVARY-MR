@@ -1,0 +1,182 @@
+{
+  "source": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+  "sourceTree": "e00050af34e2a3d71566d76660e80cf89eeaf1b6",
+  "sourceEquivalence": {
+    "head": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+    "mergeSha": "3efe5f9f48c0581bae4d89a43c209920345e13e4",
+    "mergeTree": "e00050af34e2a3d71566d76660e80cf89eeaf1b6",
+    "sourceTree": "e00050af34e2a3d71566d76660e80cf89eeaf1b6",
+    "identical": true
+  },
+  "runs": [
+    {
+      "id": 40569670742,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "headSha": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40569670742",
+      "started": "2026-10-27T19:30:07Z",
+      "updated": "2026-10-27T19:49:52Z",
+      "jobs": [
+        {
+          "id": 122420223589,
+          "name": "tracking-server",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420223925,
+          "name": "linux-forensic-integration (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420223931,
+          "name": "qt (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420223987,
+          "name": "qt (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420223998,
+          "name": "core (windows-2022)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420224022,
+          "name": "core (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420224075,
+          "name": "linux-forensic-integration (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 40569681905,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "headSha": "7844f01bd1427a4f37c702dfc63c50ea74247f94",
+      "url": "https://github.com/nexvary/NEXVARY-MR/actions/runs/40569681905",
+      "started": "2026-10-27T19:30:11Z",
+      "updated": "2026-10-27T19:48:23Z",
+      "jobs": [
+        {
+          "id": 122420260438,
+          "name": "linux-forensic-integration (production)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420260872,
+          "name": "core (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420261025,
+          "name": "linux-forensic-integration (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420261047,
+          "name": "core (windows-2022)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420261055,
+          "name": "tracking-server",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420261084,
+          "name": "qt (laboratory)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 122420261218,
+          "name": "qt (production)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "downloadedAndByteVerifiedArtifacts": [
+    {
+      "id": 12766010091,
+      "name": "NEXVARY-MR-Windows-production-validation-evidence",
+      "size_in_bytes": 67579770,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12766010091",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12766010091/zip",
+      "expired": false,
+      "created_at": "2026-10-27T19:46:10Z",
+      "expires_at": "2027-01-25T19:30:11Z",
+      "updated_at": "2026-10-27T19:46:10Z",
+      "digest": "sha256:1f5dc025ada99b78f78bcdd0666eae690cfdc678f6ce70ae3727cf2c61aa2f21",
+      "workflow_run": {
+        "id": 40569681905,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "7844f01bd1427a4f37c702dfc63c50ea74247f94"
+      }
+    },
+    {
+      "id": 12765890247,
+      "name": "NEXVARY-MR-Windows-x64-installer-unsigned",
+      "size_in_bytes": 33193761,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12765890247",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12765890247/zip",
+      "expired": false,
+      "created_at": "2026-10-27T19:46:06Z",
+      "expires_at": "2027-01-25T19:30:11Z",
+      "updated_at": "2026-10-27T19:46:06Z",
+      "digest": "sha256:df753653d63afbcecd99076a7c775de867584bf65d1d83ffdf254939cedd4926",
+      "workflow_run": {
+        "id": 40569681905,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "7844f01bd1427a4f37c702dfc63c50ea74247f94"
+      }
+    },
+    {
+      "id": 12764269447,
+      "name": "NEXVARY-MR-Windows-x64-portable-unsigned",
+      "size_in_bytes": 49085548,
+      "url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12764269447",
+      "archive_download_url": "https://api.github.com/repos/nexvary/NEXVARY-MR/actions/artifacts/12764269447/zip",
+      "expired": false,
+      "created_at": "2026-10-27T19:46:03Z",
+      "expires_at": "2027-01-25T19:30:11Z",
+      "updated_at": "2026-10-27T19:46:03Z",
+      "digest": "sha256:36a3fc6f88f18a112ad11715743cb747cfde454abe65ecdd52eeb15e370e4aa0",
+      "workflow_run": {
+        "id": 40569681905,
+        "repository_id": 1421842070,
+        "head_repository_id": 1421842070,
+        "head_branch": "feature/government-operations",
+        "head_sha": "7844f01bd1427a4f37c702dfc63c50ea74247f94"
+      }
+    }
+  ]
+}

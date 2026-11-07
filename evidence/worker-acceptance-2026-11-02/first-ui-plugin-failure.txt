@@ -1,0 +1,17 @@
+********* Start testing of mr_ui *********
+Config: Using QtTest library 6.4.2, Qt 6.4.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 13.2.0), ubuntu 24.04
+QWARN  : mr_ui::tst_navigation::compile() 
+  /workspace/scratch/0a23b6e6d71c/NEXVARY-MR/qml/tests/tst_navigation.qml produced 1 error(s):
+    /workspace/scratch/0a23b6e6d71c/NEXVARY-MR/qml/tests/tst_navigation.qml:2,1: module "QtQuick.Controls" plugin "qtquickcontrols2plugin" not found
+  Working directory: /workspace/scratch/0a23b6e6d71c/mr-build
+  Import paths:
+    '/workspace/scratch/0a23b6e6d71c/mr-build'
+    'qrc:/qt-project.org/imports'
+    '/workspace/scratch/b7798f8da44e/qt-env/usr/lib/x86_64-linux-gnu/qt6/qml'
+  Plugin paths:
+    '.'
+
+FAIL!  : mr_ui::tst_navigation::compile() module "QtQuick.Controls" plugin "qtquickcontrols2plugin" not found
+   Loc: [/workspace/scratch/0a23b6e6d71c/NEXVARY-MR/qml/tests/tst_navigation.qml(2)]
+Totals: 0 passed, 1 failed, 0 skipped, 0 blacklisted, 1ms
+********* Finished testing of mr_ui *********

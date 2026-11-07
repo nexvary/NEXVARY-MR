@@ -1,0 +1,26 @@
+diff --git a/cpp/tests/case_transaction_tests.cpp b/cpp/tests/case_transaction_tests.cpp
+index c98f0df..07bc39f 100644
+--- a/cpp/tests/case_transaction_tests.cpp
++++ b/cpp/tests/case_transaction_tests.cpp
+@@ -77,6 +77,21 @@ private slots:
+   journal.setSyntheticPostReplaceCheckpoint({});QVERIFY(!journal.append("policy-rejection",{{"reason","Refused writer stays closed"}},"denied"));
+   PolicyAudit restarted(path,true);QVERIFY(restarted.healthy());QCOMPARE(restarted.events().size(),0);
+  }
++ void validSignedJournalRollbackMustBlockOrphanResult(){
++  Fixture f;
++  QFile journal(f.identity.policyJournalPath());QVERIFY(journal.open(QIODevice::ReadOnly));
++  const auto older=journal.readAll();journal.close();
++  QVERIFY(f.policy.recordCaseOperation(f.intent));
++  QVERIFY(!f.store.recordAnalysis(f.id,3,f.evidence,"classic-pcap",f.report,f.identity.actor(),f.intent).isEmpty());
++  auto completed=f.intent;completed.insert("recoveryState","completed");QVERIFY(f.policy.recordCaseOperation(completed));
++  QVERIFY(journal.open(QIODevice::WriteOnly|QIODevice::Truncate));QCOMPARE(journal.write(older),older.size());journal.close();
++  IdentityService restartedIdentity(f.dir.filePath("identity"),true);
++  GovernmentOperationPolicy restartedPolicy(&restartedIdentity);
++  QVERIFY(restartedPolicy.caseOperationStates().isEmpty());QVERIFY(restartedPolicy.caseOperationHistoryHealthy());
++  LawCaseBridge bridge(f.dir.filePath("cases.db"),nullptr,true);bridge.setOperationPolicy(&restartedPolicy);
++  QVERIFY2(!bridge.ready(),"A correctly signed old journal must not validate an orphan committed analysis");
++  QCOMPARE(f.store.get(f.id).value("analyses").toList().size(),1);
++ }
+  void authenticatedBridgeUsesSignedIntent(){
+   QTemporaryDir dir;IdentityService identity(dir.filePath("identity"),true);
+   QVERIFY(identity.bootstrap("admin","Synthetic admin",password));QVERIFY(identity.login("admin",password));QVERIFY(!identity.createUser("investigator","Synthetic investigator","investigator",password).isEmpty());QVERIFY(identity.login("investigator",password));

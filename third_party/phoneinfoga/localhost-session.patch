@@ -1,0 +1,255 @@
+diff --git a/cmd/serve.go b/cmd/serve.go
+index f3679cc..aadcfb8 100644
+--- a/cmd/serve.go
++++ b/cmd/serve.go
+@@ -70,7 +70,10 @@ func NewServeCmd(opts *ServeCmdOptions) *cobra.Command {
+ 				log.Fatal(err)
+ 			}
+ 
+-			addr := fmt.Sprintf(":%d", opts.HttpPort)
++			if len(os.Getenv("NEXVARY_PHONEINFOGA_TOKEN")) != 64 {
++                log.Fatal("NEXVARY private session token required")
++            }
++            addr := fmt.Sprintf("127.0.0.1:%d", opts.HttpPort)
+ 			fmt.Printf("Listening on %s\n", addr)
+ 			if err := srv.ListenAndServe(addr); err != nil && err != http.ErrServerClosed {
+ 				log.Fatalf("listen: %s\n", err)
+diff --git a/lib/remote/googlecse_scanner_test.go b/lib/remote/googlecse_scanner_test.go
+index e06a62e..f0086c3 100644
+--- a/lib/remote/googlecse_scanner_test.go
++++ b/lib/remote/googlecse_scanner_test.go
+@@ -315,7 +315,18 @@ func TestGoogleCSEScanner_Scan_Success(t *testing.T) {
+ 
+ 			got, errs := remote.Scan(tt.number, tt.opts)
+ 			if len(tt.wantErrors) > 0 {
+-				assert.Equal(t, tt.wantErrors, errs)
++				// NEXVARY: compare public error semantics, not SDK-private wrappers.
++                assert.Len(t, errs, len(tt.wantErrors))
++                for key, expected := range tt.wantErrors {
++                    actual := errs[key]
++                    if assert.Error(t, actual) { assert.EqualError(t, actual, expected.Error()) }
++                    var expectedAPI, actualAPI *googleapi.Error
++                    if errors.As(expected, &expectedAPI) && assert.True(t, errors.As(actual, &actualAPI)) {
++                        assert.Equal(t, expectedAPI.Code, actualAPI.Code)
++                        assert.Equal(t, expectedAPI.Message, actualAPI.Message)
++                        assert.Equal(t, expectedAPI.Body, actualAPI.Body)
++                    }
++                }
+ 			} else {
+ 				assert.Len(t, errs, 0)
+ 			}
+diff --git a/lib/remote/scanner_test.go b/lib/remote/scanner_test.go
+index c277351..d8ed360 100644
+--- a/lib/remote/scanner_test.go
++++ b/lib/remote/scanner_test.go
+@@ -1,20 +1,13 @@
+ package remote
+ 
+ import (
+-	"fmt"
+ 	"os"
+-	"path/filepath"
+ 	"testing"
+ 
+ 	"github.com/stretchr/testify/assert"
+ )
+ 
+ func Test_ValidatePlugin_Errors(t *testing.T) {
+-	invalidPluginAbsPath, err := filepath.Abs("testdata/invalid.so")
+-	if err != nil {
+-		assert.FailNow(t, "failed to get the absolute path of test file: %v", err)
+-	}
+-
+ 	testcases := []struct {
+ 		name    string
+ 		path    string
+@@ -28,14 +21,15 @@ func Test_ValidatePlugin_Errors(t *testing.T) {
+ 		{
+ 			name:    "test with invalid plugin",
+ 			path:    "testdata/invalid.so",
+-			wantErr: fmt.Sprintf("given plugin testdata/invalid.so is not valid: plugin.Open(\"testdata/invalid.so\"): %s: file too short", invalidPluginAbsPath),
++			wantErr: "given plugin testdata/invalid.so is not valid:",
+ 		},
+ 	}
+ 
+ 	for _, tt := range testcases {
+ 		t.Run(tt.name, func(t *testing.T) {
+ 			err := OpenPlugin(tt.path)
+-			assert.EqualError(t, err, tt.wantErr)
++			// NEXVARY: plugin failure details differ with CGO/platform; rejection must remain.
++			assert.ErrorContains(t, err, tt.wantErr)
+ 		})
+ 	}
+ }
+diff --git a/web/client.go b/web/client.go
+index ce43901..9033002 100644
+--- a/web/client.go
++++ b/web/client.go
+@@ -1,22 +1,13 @@
++// NEXVARY modification: API-only build; no embedded browser dependencies.
+ package web
+-
+ import (
+-	"embed"
+-	"fmt"
+-	"github.com/gin-gonic/gin"
+-	"io/ioutil"
+-	"mime"
+-	"net/http"
+-	"path"
+-	"strings"
+-)
+-
+-//go:embed client/dist/*
+-var clientFS embed.FS
+-
+-const (
+-	staticPath = "/"
++ "fmt"
++ "mime"
++ "net/http"
++ "strings"
++ "github.com/gin-gonic/gin"
+ )
++func registerClientRoutes(_ *gin.Engine) error { return fmt.Errorf("NEXVARY engine supports --no-client only") }
+ 
+ func detectContentType(path string, data []byte) string {
+ 	arr := strings.Split(path, ".")
+@@ -29,44 +20,3 @@ func detectContentType(path string, data []byte) string {
+ 	return http.DetectContentType(data)
+ }
+ 
+-func walkEmbededClient(dir string, router *gin.Engine) error {
+-	files, err := clientFS.ReadDir(dir)
+-	if err != nil {
+-		return err
+-	}
+-	for _, file := range files {
+-		if file.IsDir() {
+-			err := walkEmbededClient(path.Join(dir, file.Name()), router)
+-			if err != nil {
+-				return err
+-			}
+-			continue
+-		}
+-
+-		assetPath := strings.ReplaceAll(path.Join(dir, file.Name()), "client/dist/", staticPath)
+-		f, err := clientFS.Open(path.Join(dir, file.Name()))
+-		if err != nil {
+-			return err
+-		}
+-		data, err := ioutil.ReadAll(f)
+-		if err != nil {
+-			return err
+-		}
+-
+-		if assetPath == staticPath+"index.html" {
+-			assetPath = staticPath
+-		}
+-
+-		router.GET(assetPath, func(c *gin.Context) {
+-			c.Header("Content-Type", detectContentType(assetPath, data))
+-			c.Writer.WriteHeader(http.StatusOK)
+-			_, _ = c.Writer.Write(data)
+-			c.Abort()
+-		})
+-	}
+-	return nil
+-}
+-
+-func registerClientRoutes(router *gin.Engine) error {
+-	return walkEmbededClient("client/dist", router)
+-}
+diff --git a/web/nexvary_session_test.go b/web/nexvary_session_test.go
+new file mode 100644
+index 0000000..d2c8157
+--- /dev/null
++++ b/web/nexvary_session_test.go
+@@ -0,0 +1,30 @@
++package web
++import (
++ "crypto/hmac"
++ "crypto/sha256"
++ "encoding/hex"
++ "net/http/httptest"
++ "strings"
++ "testing"
++ "github.com/gin-gonic/gin"
++)
++func TestNexvarySession(t *testing.T) {
++ gin.SetMode(gin.TestMode)
++ token := strings.Repeat("a",64)
++ router := gin.New(); router.Use(nexvarySession(token))
++ router.POST("/api/v2/scanners/local/run",func(c *gin.Context){c.Status(204)})
++ router.GET("/api/",func(c *gin.Context){c.Status(500)})
++ for _, tc := range []struct{method,path,auth,origin string; status int}{
++  {"POST","/api/v2/scanners/local/run","","",403},
++  {"POST","/api/v2/scanners/local/run","Bearer wrong","",403},
++  {"POST","/api/v2/scanners/local/run","Bearer "+token,"https://example.invalid",403},
++  {"POST","/api/v2/scanners/local/run","Bearer "+token,"",204},
++  {"GET","/api/numbers/12025550100/scan/local","Bearer "+token,"",404},
++ } {
++  req:=httptest.NewRequest(tc.method,tc.path,nil);req.Header.Set("Authorization",tc.auth);req.Header.Set("Origin",tc.origin)
++  w:=httptest.NewRecorder();router.ServeHTTP(w,req);if w.Code!=tc.status{t.Fatalf("%s: got %d want %d",tc.path,w.Code,tc.status)}
++ }
++ challenge:=strings.Repeat("b",32);req:=httptest.NewRequest("GET","/api/",nil);req.Header.Set("X-Nexvary-Challenge",challenge)
++ w:=httptest.NewRecorder();router.ServeHTTP(w,req);mac:=hmac.New(sha256.New,[]byte(token));mac.Write([]byte(challenge))
++ if w.Code!=200 || w.Header().Get("X-Nexvary-Proof")!=hex.EncodeToString(mac.Sum(nil)){t.Fatal("engine proof rejected")}
++}
+diff --git a/web/server.go b/web/server.go
+index 65f98c5..15990f5 100644
+--- a/web/server.go
++++ b/web/server.go
+@@ -7,6 +7,11 @@ import (
+ 	"github.com/gin-gonic/gin"
+ 	v2 "github.com/sundowndev/phoneinfoga/v2/web/v2/api/server"
+ 	"net/http"
++ "os"
++ "fmt"
++ "crypto/hmac"
++ "crypto/sha256"
++ "encoding/hex"
+ )
+ 
+ // @title PhoneInfoga REST API
+@@ -24,9 +29,12 @@ type Server struct {
+ 
+ func NewServer(disableClient bool) (*Server, error) {
+ 	s := &Server{
+-		router: gin.Default(),
++		router: gin.New(),
+ 	}
+-	if err := s.registerRoutes(disableClient); err != nil {
++	token := os.Getenv("NEXVARY_PHONEINFOGA_TOKEN")
++ if len(token) != 64 { return nil, fmt.Errorf("private session token required") }
++ s.router.Use(gin.Recovery(), nexvarySession(token))
++ if err := s.registerRoutes(disableClient); err != nil {
+ 		return s, err
+ 	}
+ 	return s, nil
+@@ -73,3 +81,25 @@ func (s *Server) ListenAndServe(addr string) error {
+ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+ 	s.router.ServeHTTP(w, r)
+ }
++
++// NEXVARY modification: localhost session authentication before route handlers.
++func nexvarySession(token string) gin.HandlerFunc {
++ return func(c *gin.Context) {
++  if c.GetHeader("Origin") != "" { c.AbortWithStatus(403); return }
++  if c.Request.Method == "GET" && c.Request.URL.Path == "/api/" {
++   challenge := c.GetHeader("X-Nexvary-Challenge")
++   if len(challenge) != 32 { c.AbortWithStatus(403); return }
++   mac := hmac.New(sha256.New, []byte(token)); mac.Write([]byte(challenge))
++   c.Header("X-Nexvary-Proof", hex.EncodeToString(mac.Sum(nil)))
++   c.JSON(200, gin.H{"engine":"nexvary-phoneinfoga-session/v1"}); c.Abort(); return
++  }
++  if !hmac.Equal([]byte(c.GetHeader("Authorization")), []byte("Bearer " + token)) { c.AbortWithStatus(403); return }
++  allowed := c.Request.Method == "GET" && c.Request.URL.Path == "/api/v2/scanners"
++  for _, scanner := range []string{"local","googlesearch","ovh","numverify","googlecse"} {
++   if c.Request.Method == "POST" && c.Request.URL.Path == "/api/v2/scanners/"+scanner+"/run" { allowed = true }
++  }
++  if !allowed { c.AbortWithStatus(404); return }
++  c.Request.Body = http.MaxBytesReader(c.Writer,c.Request.Body,4096)
++  c.Next()
++ }
++}

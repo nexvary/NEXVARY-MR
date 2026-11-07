@@ -1,0 +1,13 @@
+********* Start testing of CloudTests *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by MSVC 2022), windows server2022
+PASS   : CloudTests::initTestCase()
+PASS   : CloudTests::governmentGateBlocksSavedCredentialsAndRevokesSync()
+PASS   : CloudTests::snapshotSyncAndRevocation()
+PASS   : CloudTests::rejectsPlainHttpAndRedirects()
+PASS   : CloudTests::rejectsWrongApiKey()
+SKIP   : CloudTests::realServerIntegration() Run server TLS integration with its temporary CA and credentials fixture.
+D:\a\NEXVARY-MR\NEXVARY-MR\cpp\tests\cloud_tests.cpp(88) : failure location
+PASS   : CloudTests::identityAndPersistence()
+PASS   : CloudTests::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 12219ms
+********* Finished testing of CloudTests *********

@@ -40,8 +40,8 @@ App-local deployment preserves portable and per-user installation without requir
 
 ## Optional external tools
 
-- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; detected as a separate user-installed application; controlled screen-view launch is experimental and Laboratory-only, with explicit owner/component consent and an exact reviewed 5.0.1 CLI boundary. Production refuses launch. Physical display/cleanup and Windows acceptance remain pending. Its dependency notices apply to its own package.
-- [Android SDK platform-tools](https://developer.android.com/tools/releases/platform-tools): Google SDK terms; obtain directly from Google. No binary redistribution is performed here.
+- [scrcpy](https://github.com/Genymobile/scrcpy): Apache-2.0; the unchanged official win64 5.0.1 distribution is bundled for explicitly consented screen viewing in both profiles. The pinned archive and complete file inventory are retained in SOURCE_PROVENANCE.json; upstream LICENSE.txt stays unchanged. Its FFmpeg runtime identifies LGPL-2.1-or-later (text included), with additional SDL, libusb and dav1d dependencies. Matching source/build recipes, provenance, limitations and pending license review are listed in [SCREEN_VIEW.md](SCREEN_VIEW.md). Generic service writes remain Laboratory-only. Physical display/cleanup and clean Windows acceptance remain pending.
+- [Android SDK platform-tools](https://developer.android.com/tools/releases/platform-tools): ADB and its Windows DLLs are retained as included in that official scrcpy archive. Their upstream terms/notices and redistribution obligations require independent review before final distribution; this development package is not a completed legal acceptance gate.
 - OpenBoardView and TRACE Boardviewer are researched, separately licensed products. No source, executable, icons or file parsers from them are bundled.
 
 See [INTEGRATIONS.md](INTEGRATIONS.md) for pinned upstream revisions and the rejected/ambiguous candidates. Reviewing a repository does not mean it has been integrated.

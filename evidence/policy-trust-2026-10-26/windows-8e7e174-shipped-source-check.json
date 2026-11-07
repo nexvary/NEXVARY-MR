@@ -1,0 +1,20 @@
+[
+  {
+    "source": "docs/GOVERNMENT_POLICY_AUDIT.md",
+    "deployed": "NEXVARY-MR/GOVERNMENT_POLICY_AUDIT.md",
+    "deployedSha256": "45ed3cf4f67e5023b5b9cac50e94e8402f69f9c1acac6dc2952367fe1c960650",
+    "canonicalLfMatchesSource": true
+  },
+  {
+    "source": "docs/GOVERNMENT_OFFLINE_POLICY.md",
+    "deployed": "NEXVARY-MR/GOVERNMENT_OFFLINE_POLICY.md",
+    "deployedSha256": "84b67bfaa93ca709cf77ce3773074ef4a4f288fa963862d97537334db254dedb",
+    "canonicalLfMatchesSource": true
+  },
+  {
+    "source": "scripts/verify_policy_audit.py",
+    "deployed": "NEXVARY-MR/verification/verify_policy_audit.py",
+    "deployedSha256": "917bddc8c926cc91a3e9f647dbeb8da2855c9625a5d83add0b5fdd78dfdf3f1e",
+    "canonicalLfMatchesSource": true
+  }
+]

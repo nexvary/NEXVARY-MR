@@ -1,0 +1,7 @@
+Source 6d63b4d76a82f2ca5f4943429b6fce166ecc47f7
+Run 40409018621, original job 121874234410, attempt 1. No compilation/tests ran in that job.
+2026-10-26T22:00:34.7116105Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 poppler-data all 0.4.12-1 [2060 kB]
+2026-10-26T22:01:37.5728543Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libclamav12 amd64 1.5.4+dfsg-0ubuntu0.24.04.1 [8110 kB]
+2026-10-26T22:04:46.9189057Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 clamav amd64 1.5.4+dfsg-0ubuntu0.24.04.1 [7324 kB]
+2026-10-26T22:08:22.8891959Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake amd64 3.28.3-1build7 [11.2 MB]
+2026-10-26T22:10:39.8983353Z ##[error]The action 'Install Qt and separately packaged TSK for synthetic integration' has timed out after 10 minutes.

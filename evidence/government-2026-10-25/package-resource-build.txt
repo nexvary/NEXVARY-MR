@@ -1,0 +1,107 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/0bbaffc90eb6/NEXVARY-MR/build
+[0/2] Re-checking globbed directories...
+[1/230] Automatic MOC for target mr_update_journal_tests
+[2/228] Automatic MOC for target mr_update_tests
+[3/226] Automatic MOC for target mr_update_key_tests
+[4/224] Automatic MOC and UIC for target mr_desktop
+[5/222] Automatic MOC and UIC for target mr_desktop_resources_1
+[6/221] Automatic MOC and UIC for target mr_desktop_resources_2
+[7/220] Generating NexvaryMR/qml/GovernmentAnalysisPage.qml
+[8/220] Generating NexvaryMR/qml/LawEvidencePage.qml
+[9/220] Automatic MOC and UIC for target mr_avb_mutation_tests
+[10/218] Automatic MOC and UIC for target mr_pcap_mutation_tests
+[11/216] Automatic MOC and UIC for target mr_exif_mutation_tests
+[12/214] Automatic MOC and UIC for target mr_ui_device_fixture
+[13/212] Generating .rcc/qmlcache/nexvary_mr_qmlcache_loader.cpp
+[14/212] Automatic MOC and UIC for target mr_identity_tests
+[15/210] Automatic MOC and UIC for target mr_law_workspace_tests
+[16/208] Running qmlimportscanner for nexvary_mr
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+qmldir file not found at "/workspace/scratch/4e45fba54133/qt-runtime/usr/lib/x86_64-linux-gnu/qt6/qml/QtQml"
+[17/208] Automatic MOC and UIC for target mr_research_tests
+[18/206] Automatic MOC and UIC for target mr_intelligence_tests
+[19/204] Automatic MOC and UIC for target mr_connection_tests
+[20/202] Automatic MOC and UIC for target mr_workshop_tests
+[21/200] Automatic MOC and UIC for target mr_barcode_tests
+[22/198] Automatic MOC and UIC for target mr_center_tests
+[23/196] Automatic MOC and UIC for target mr_cloud_tests
+[24/194] Automatic MOC and UIC for target mr_security_tests
+[25/192] Automatic MOC and UIC for target mr_catalog_tests
+[26/190] Automatic MOC and UIC for target mr_tool_tests
+[27/188] Automatic MOC and UIC for target mr_service_tests
+[28/186] Automatic MOC and UIC for target mr_mirror_tests
+[29/184] Automatic MOC and UIC for target mr_compatibility_tests
+[30/182] Automatic MOC and UIC for target mr_board_tests
+[31/180] Automatic MOC and UIC for target mr_firmware_tests
+[32/178] Automatic MOC and UIC for target mr_avb_tests
+[33/176] Automatic MOC and UIC for target mr_pcap_tests
+[34/174] Automatic MOC and UIC for target mr_exif_tests
+[35/172] Automatic MOC and UIC for target mr_recovery_tests
+[36/170] Automatic MOC and UIC for target mr_recovery_image_tests
+[37/168] Automatic MOC and UIC for target mr_forensic_tests
+[38/166] Automatic MOC and UIC for target mr_tsk_tests
+[39/164] Automatic MOC and UIC for target nexvary_mr
+[40/163] Running AUTOMOC file extraction for target nexvary_mr
+[41/160] Running rcc for resource qmake_NexvaryMR
+[42/160] Automatic MOC and UIC for target mr_ui_tests
+[43/159] Generating .rcc/qmlcache/nexvary_mr_qml/GovernmentAnalysisPage_qml.cpp
+[44/159] Generating .rcc/qmlcache/nexvary_mr_qml/IdentityPanel_qml.cpp
+[45/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseBrowser_qml.cpp
+[46/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseDevices_qml.cpp
+[47/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawCaseForm_qml.cpp
+[48/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawTrainingPage_qml.cpp
+[49/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawEnforcementPage_qml.cpp
+[50/159] Generating .rcc/qmlcache/nexvary_mr_qml/LawEvidencePage_qml.cpp
+[51/159] Generating .rcc/qmlcache/nexvary_mr_qml/DesignTokens_qml.cpp
+[52/159] Generating .rcc/qmlcache/nexvary_mr_qml/LegacyPalette_qml.cpp
+[53/159] Generating .rcc/qmlcache/nexvary_mr_qml/ResearchCenter_qml.cpp
+[54/159] Generating .rcc/qmlcache/nexvary_mr_qml/StateBadge_qml.cpp
+[55/159] Generating .rcc/qmlcache/nexvary_mr_qml/ActionCard_qml.cpp
+[56/159] Generating .rcc/qmlcache/nexvary_mr_qml/EmptyState_qml.cpp
+[57/159] Generating .rcc/qmlcache/nexvary_mr_qml/NavigationItem_qml.cpp
+[58/159] Generating .rcc/qmlcache/nexvary_mr_qml/Sidebar_qml.cpp
+[59/159] Generating .rcc/qmlcache/nexvary_mr_qml/TopBar_qml.cpp
+[60/159] Generating .rcc/qmlcache/nexvary_mr_qml/OperationProgress_qml.cpp
+[61/159] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceInspector_qml.cpp
+[62/159] Generating .rcc/qmlcache/nexvary_mr_qml/WorkflowStrip_qml.cpp
+[63/159] Generating .rcc/qmlcache/nexvary_mr_qml/AppShell_qml.cpp
+[64/159] Generating .rcc/qmlcache/nexvary_mr_qml/ReportsPage_qml.cpp
+[65/159] Generating .rcc/qmlcache/nexvary_mr_qml/DashboardPage_qml.cpp
+[66/159] Generating .rcc/qmlcache/nexvary_mr_qml/HelpPage_qml.cpp
+[67/159] Generating .rcc/qmlcache/nexvary_mr_qml/NeonCheckBox_qml.cpp
+[68/159] Generating .rcc/qmlcache/nexvary_mr_qml/GlossSurface_qml.cpp
+[69/159] Generating .rcc/qmlcache/nexvary_mr_qml/NeonComboBox_qml.cpp
+[70/159] Generating .rcc/qmlcache/nexvary_mr_qml/NavIcon_qml.cpp
+[71/159] Generating .rcc/qmlcache/nexvary_mr_qml/Panel_qml.cpp
+[72/159] Generating .rcc/qmlcache/nexvary_mr_qml/ActionButton_qml.cpp
+[73/159] Generating .rcc/qmlcache/nexvary_mr_qml/BoardWorkspace_qml.cpp
+[74/159] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopPage_qml.cpp
+[75/159] Generating .rcc/qmlcache/nexvary_mr_qml/WorkshopHub_qml.cpp
+[76/159] Generating .rcc/qmlcache/nexvary_mr_qml/InventoryPage_qml.cpp
+[77/159] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceIntelligencePanel_qml.cpp
+[78/159] Generating .rcc/qmlcache/nexvary_mr_qml/Main_qml.cpp
+[79/159] Generating .rcc/qmlcache/nexvary_mr_qml/DevicesPage_qml.cpp
+[80/159] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceHub_qml.cpp
+[81/159] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceCompatibilityPanel_qml.cpp
+[82/159] Generating .rcc/qmlcache/nexvary_mr_qml/DeviceServicesPage_qml.cpp
+[83/159] Generating .rcc/qmlcache/nexvary_mr_qml/SupportedDevicesPage_qml.cpp
+[84/159] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosisPage_qml.cpp
+[85/159] Generating .rcc/qmlcache/nexvary_mr_qml/SecurityPage_qml.cpp
+[86/159] Generating .rcc/qmlcache/nexvary_mr_qml/DiagnosticHub_qml.cpp
+[87/159] Generating .rcc/qmlcache/nexvary_mr_qml/UsbDoctorPanel_qml.cpp
+[88/159] Generating .rcc/qmlcache/nexvary_mr_qml/DriverCatalogPage_qml.cpp
+[89/159] Generating .rcc/qmlcache/nexvary_mr_qml/FaultTreePage_qml.cpp
+[90/159] Generating .rcc/qmlcache/nexvary_mr_qml/FirmwarePage_qml.cpp
+[91/159] Generating .rcc/qmlcache/nexvary_mr_qml/SettingsPage_qml.cpp
+[92/159] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryAssessment_qml.cpp
+[93/159] Generating .rcc/qmlcache/nexvary_mr_qml/RecoveryPage_qml.cpp
+[94/159] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicEvidencePage_qml.cpp
+[95/159] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicLabPage_qml.cpp
+[96/159] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicTimelinePage_qml.cpp
+[97/159] Generating .rcc/qmlcache/nexvary_mr_qml/ForensicToolsPage_qml.cpp
