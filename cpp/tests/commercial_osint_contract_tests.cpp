@@ -3,6 +3,7 @@
 #include "../src/osint/OsintSourceRegistry.hpp"
 #include "../src/osint/OsintEvidenceRecord.hpp"
 #include "../src/osint/OsintOfflineParsers.hpp"
+#include "../src/osint/OsintProcessPolicy.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace mr::osint;
@@ -104,5 +105,21 @@ int main() {
         return EXIT_FAILURE;
     if (parseSubfinderLines("api.example.org\n", "invalid scope").error.empty())
         return EXIT_FAILURE;
+    ProcessLaunchPlan plan{"subfinder", "/trusted/subfinder", std::string(64, 'a'),
+                           {"-d", "example.org"}, "CASE-TEST", false, 30, 65536};
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.approvedForExternalDisclosure = true;
+    if (!mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.executableSha256 = "invalid";
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.executableSha256 = std::string(64, 'a');
+    plan.timeoutSeconds = 121;
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.timeoutSeconds = 30;
+    plan.sourceId = "exiftool";
+    plan.approvedForExternalDisclosure = false;
+    if (!mayLaunchProcess(plan)) return EXIT_FAILURE;
+    plan.sourceId = "lampyre";
+    if (mayLaunchProcess(plan)) return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
