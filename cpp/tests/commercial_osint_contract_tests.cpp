@@ -93,16 +93,16 @@ int main() {
     evidence.sha256Hex = std::string(64, 'a');
     evidence.sourceReference.clear();
     if (evidenceHasRequiredProvenance(evidence)) return EXIT_FAILURE;
-    const auto parsed = parseSubfinderLines("api.example.org\\nWWW.Example.Org\\n", "example.org");
+    const auto parsed = parseSubfinderLines("api.example.org\nWWW.Example.Org\n", "example.org");
     if (!parsed.error.empty() || parsed.leads.size() != 2 ||
         parsed.leads[0].value != "api.example.org") return EXIT_FAILURE;
-    if (parseSubfinderLines("api.example.org.evil\\n", "example.org").error.empty())
+    if (parseSubfinderLines("api.example.org.evil\n", "example.org").error.empty())
         return EXIT_FAILURE;
-    if (parseSubfinderLines("bad..example.org\\n", "example.org").error.empty())
+    if (parseSubfinderLines("bad..example.org\n", "example.org").error.empty())
         return EXIT_FAILURE;
-    if (parseSubfinderLines("api.example.org\\ninvalid\\n", "example.org").leads.size() != 0)
+    if (parseSubfinderLines("api.example.org\ninvalid\n", "example.org").leads.size() != 0)
         return EXIT_FAILURE;
-    if (parseSubfinderLines("api.example.org\\n", "invalid scope").error.empty())
+    if (parseSubfinderLines("api.example.org\n", "invalid scope").error.empty())
         return EXIT_FAILURE;
     std::cout << "Commercial OSINT contract deny-by-default checks passed\n";
 }
