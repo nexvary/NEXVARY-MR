@@ -14,6 +14,25 @@ struct AdbDeviceEntry {
     std::string product;
     std::string transportId;
 };
+// ADB authorization is required before read-only shell diagnostics.
+enum class AdbDiagnosticReadiness {
+    Ready,
+    NeedsOwnerAuthorization,
+    ReconnectRequired,
+    RecoveryOnly,
+    SideloadOnly,
+    UnsupportedState
+};
+inline AdbDiagnosticReadiness adbDiagnosticReadiness(AdbConnectionState state) {
+    switch (state) {
+    case AdbConnectionState::Device: return AdbDiagnosticReadiness::Ready;
+    case AdbConnectionState::Unauthorized: return AdbDiagnosticReadiness::NeedsOwnerAuthorization;
+    case AdbConnectionState::Offline: return AdbDiagnosticReadiness::ReconnectRequired;
+    case AdbConnectionState::Recovery: return AdbDiagnosticReadiness::RecoveryOnly;
+    case AdbConnectionState::Sideload: return AdbDiagnosticReadiness::SideloadOnly;
+    default: return AdbDiagnosticReadiness::UnsupportedState;
+    }
+}
 struct AdbInventoryResult {
     std::vector<AdbDeviceEntry> devices;
     std::string error;
