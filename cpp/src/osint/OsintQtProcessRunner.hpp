@@ -72,6 +72,10 @@ inline LocalRunResult runPinnedTool(const ProcessLaunchPlan& plan,
     }
     result.standardOutput += process.readAllStandardOutput();
     process.readAllStandardError();
+    if (cancelled.load()) { result.standardOutput.clear(); result.error = "cancelled"; return result; }
+    if (elapsed.elapsed() > static_cast<qint64>(plan.timeoutSeconds) * 1000) {
+        result.standardOutput.clear(); result.error = "timeout"; return result;
+    }
     if (result.standardOutput.size() > limit) {
         result.standardOutput.clear();
         result.error = "output-limit";
