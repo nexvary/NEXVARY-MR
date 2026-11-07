@@ -12,6 +12,8 @@ Item {
  readonly property var selectedConnections:toolBridge.devices.filter(function(device){return device.serial===toolBridge.selectedSerial})
  readonly property bool adbReady:page.selected&&selectedConnections.length===1&&selectedConnections[0].transport==="adb"&&selectedConnections[0].state==="device"
  readonly property string selectionReason:!page.selected?app.trx("حدد جهازًا أولًا","Select a device first"):selectedConnections.length!==1?app.trx("اتصال الجهاز غائب أو ملتبس؛ أعد الاكتشاف","Target missing or ambiguous; rediscover devices"):selectedConnections[0].state==="unauthorized"?app.trx("وافق على تصحيح USB من الهاتف","Authorize USB debugging on the phone"):selectedConnections[0].state==="offline"?app.trx("اتصال ADB غير متاح؛ افحص الكابل والتفويض","ADB is offline; check the cable and authorization"):app.trx("تتطلب هذه العملية اتصال ADB بحالة device","This operation requires an ADB connection in device state")
+ readonly property string diagnosticReadiness:!page.selected?"no-selection":selectedConnections.length!==1?"ambiguous":selectedConnections[0].transport!=="adb"?"not-adb":selectedConnections[0].state==="device"?"ready":selectedConnections[0].state==="unauthorized"?"authorization-required":selectedConnections[0].state==="offline"?"reconnect-required":selectedConnections[0].state==="recovery"?"recovery-only":selectedConnections[0].state==="sideload"?"sideload-only":"unsupported"
+ readonly property string readinessMessage:diagnosticReadiness==="ready"?app.trx("جاهز للتشخيص عبر ADB بعد موافقة مالك الجهاز","Ready for ADB diagnostics with device-owner authorization"):diagnosticReadiness==="authorization-required"?app.trx("التصريح مطلوب: وافق على رسالة USB debugging من الهاتف","Authorization required: approve USB debugging on the phone"):diagnosticReadiness==="reconnect-required"?app.trx("الاتصال غير مستقر: افحص الكابل وأعد الاكتشاف","Connection offline: check the cable and rediscover"):diagnosticReadiness==="recovery-only"?app.trx("وضع Recovery: تشخيص ADB المعتاد غير متاح","Recovery mode: normal ADB diagnostics unavailable"):diagnosticReadiness==="sideload-only"?app.trx("وضع Sideload: لا تتوفر عمليات التشخيص المعتادة","Sideload mode: normal diagnostics unavailable"):diagnosticReadiness==="not-adb"?app.trx("هذا اتصال Fastboot وليس ADB؛ لا تستخدم أوامر ADB","Fastboot connection, not ADB; do not run ADB commands"):page.selectionReason
  readonly property bool identified:!!toolBridge.deviceInfo["ro.build.fingerprint"]
  function screenState(){const state=toolBridge.mirrorState;return state==="running"||state.indexOf("monitor-")===0?app.trx("نافذة العرض قيد التشغيل","Screen window running"):state==="stopping"?app.trx("جارٍ إيقاف العرض","Stopping screen view"):app.trx("جارٍ التحقق من الأداة والهاتف","Checking tool and device")}
  function reviewMirror(){
@@ -48,6 +50,17 @@ Item {
      ActionButton {objectName:"inspectDeviceDrivers";text:app.trx("فحص USB والتعريفات","Inspect USB / drivers");enabled:!toolBridge.busy;onClicked:{page.showMirror=false;page.showDrivers=true;resultTabs.currentIndex=2;toolBridge.inspectDrivers()}}
      Switch {objectName:"deviceAutoRefresh";text:app.trx("تحديث تلقائي","Auto refresh");checked:toolBridge.autoRefresh;onToggled:toolBridge.autoRefresh=checked}
      ActionButton {objectName:"cancelDeviceOperation";text:app.trx("إلغاء العملية","Cancel operation");enabled:toolBridge.busy;onClicked:toolBridge.cancel()}
+    }
+    Label {
+     objectName:"adbReadinessStatus"
+     Layout.fillWidth:true
+     visible:page.selected
+     wrapMode:Text.WordWrap
+     textFormat:Text.PlainText
+     font.bold:true
+     text:page.readinessMessage
+     color:page.diagnosticReadiness==="ready"?app.tone("#48dea4"):app.tone("#f6bb67")
+     Accessible.name:page.readinessMessage
     }
     Label {visible:toolBridge.devices.length===0;text:app.trx("لا يوجد جهاز مكتشف. صِل كابل بيانات ووافق على تصحيح USB في هاتفك، ثم اضغط اكتشاف ADB.","No devices discovered. Connect a data cable, authorize USB debugging on your phone, then click Discover ADB.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#9bbbd3")}
     ListView {
