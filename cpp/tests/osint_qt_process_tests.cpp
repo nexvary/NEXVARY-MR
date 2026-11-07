@@ -23,9 +23,9 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     if (mr::osint::parseExifToolJson("not-json").completed) return EXIT_FAILURE;
     const auto domains = mr::osint::parseSubfinderOutput(
-        "api.example.org\\n", "example.org");
+        "api.example.org\n", "example.org");
     if (!domains.completed || domains.findings.size() != 1) return EXIT_FAILURE;
-    if (mr::osint::parseSubfinderOutput("api.example.org.evil\\n", "example.org").completed)
+    if (mr::osint::parseSubfinderOutput("api.example.org.evil\n", "example.org").completed)
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }
