@@ -51,11 +51,11 @@ ApplicationWindow {
   {ar:"فتح قضية",en:"Open Case",icon:"document_lock",page:12,law:2},
   {ar:"إدارة القضايا",en:"Case Management",icon:"clipboard_task",page:12,law:3},
   {ar:"تقييم الأجهزة",en:"Device Assessment",icon:"phone",page:12,law:7},
-  {ar:"إدارة الأدلة",en:"Evidence Management",icon:"document_lock",page:12,law:6,evidence:1},
+  {ar:"إدارة الأدلة",en:"Evidence Management",icon:"evidence_box",page:12,law:6,evidence:1},
   {ar:"سلسلة الحيازة",en:"Chain of Custody",icon:"history",page:12,law:6,evidence:2},
   {ar:"التحليل الجنائي",en:"Forensic Analysis",icon:"shield_checkmark",page:14},
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
-  {ar:"مختبر التدريب",en:"Training Laboratory",icon:"book_open_lightbulb",page:12,law:9},
+  {ar:"مختبر التدريب",en:"Training Laboratory",icon:"training_lab",page:12,law:9},
   {ar:"التقارير والتدقيق",en:"Reports & Audit",icon:"document_text",page:12,law:8},
   {ar:"الإدارة",en:"Administration",icon:"settings",page:12,law:10},
   {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}

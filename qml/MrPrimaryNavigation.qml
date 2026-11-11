@@ -41,7 +41,7 @@ Rectangle {
      ToolTip.visible:hovered;ToolTip.text:text
      contentItem:ColumnLayout {
       spacing:3
-      Image {objectName:"primaryNavIcon"+section.index;source:"qrc:/assets/icons-professional/"+section.modelData.icon+".svg";Layout.preferredWidth:40;Layout.preferredHeight:40;Layout.alignment:Qt.AlignHCenter;sourceSize:Qt.size(64,64);fillMode:Image.PreserveAspectFit}
+      Image {objectName:"primaryNavIcon"+section.index;source:"qrc:/assets/icons-professional/"+section.modelData.icon+".svg";Layout.preferredWidth:44;Layout.preferredHeight:44;Layout.alignment:Qt.AlignHCenter;sourceSize:Qt.size(64,64);fillMode:Image.PreserveAspectFit}
       Label {text:section.text;color:section.selected?"#E5EDF3":section.hovered?"#C4E7F5":"#9EB4C1";font.pixelSize:12;font.weight:section.selected?Font.DemiBold:Font.Normal;Layout.fillWidth:true;Layout.preferredHeight:34;horizontalAlignment:Text.AlignHCenter;verticalAlignment:Text.AlignVCenter;wrapMode:Text.WordWrap;maximumLineCount:2;elide:Text.ElideRight}
      }
      background:Item {

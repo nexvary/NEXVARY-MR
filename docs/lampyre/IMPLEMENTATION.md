@@ -243,3 +243,15 @@ Repeated the 48 navigation component checks and rendered the Home plus eight
 AR/EN request/table/graph previews using PySide6 / Qt 6.8.3 (the CI Qt version).
 All passed without QML warnings after the TextField compatibility correction.
 This is source-QML/component validation, not a full native Windows executable test.
+
+## Sculpted icon correction
+
+User rejected the flat color library appearance. Replaced the 25 flat symbols
+with 27 independently authored SVGs using silver material reflections, indigo
+enamel and crimson accents, without backing plates. Added distinct sealed-evidence
+and laboratory symbols; all Government routes and section order remain unchanged.
+A deterministic builder and per-file hashes document authorship. Downloaded
+Fluent sources remain archived with their license, but current symbols do not
+use that geometry. Navigation sizing is 44 px. All 27 SVGs validate with Qt 6.8.3;
+the 48 AR/EN wide/narrow navigation component checks pass. Current-head full native
+Windows execution remains a separate acceptance gate.

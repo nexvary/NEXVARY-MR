@@ -1,15 +1,9 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.75 2C16.9926 2 18 3.00736 18 4.25V19.75C18 20.9926 16.9926 22 15.75 22H8.25C7.00736 22 6 20.9926 6 19.75V4.25C6 3.00736 7.00736 2 8.25 2H15.75Z" fill="url(#paint0_radial_72095_8515)"/>
-<path d="M13.25 18H10.75C10.3358 18 10 18.3358 10 18.75C10 19.1642 10.3358 19.5 10.75 19.5H13.25C13.6642 19.5 14 19.1642 14 18.75C14 18.3358 13.6642 18 13.25 18Z" fill="url(#paint1_radial_72095_8515)"/>
-<defs>
-<radialGradient id="paint0_radial_72095_8515" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(6 1.375) rotate(62.8053) scale(25.4368 48.5425)">
-<stop stop-color="#CB7DF8"/>
-<stop offset="0.412452" stop-color="#9C6CFE"/>
-<stop offset="1" stop-color="#4E44DB"/>
-</radialGradient>
-<radialGradient id="paint1_radial_72095_8515" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(9.375 18.1) rotate(44.2227) scale(7.38405 8.76848)">
-<stop stop-color="#DECBFF"/>
-<stop offset="1" stop-color="#D1D1FF"/>
-</radialGradient>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs>
+<linearGradient id="silver" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#FCFEFF"/><stop offset=".19" stop-color="#B0C4D4"/><stop offset=".43" stop-color="#F7FCFF"/><stop offset=".48" stop-color="#8CA3B8"/><stop offset=".7" stop-color="#C8D7E1"/><stop offset="1" stop-color="#536A82"/></linearGradient>
+<linearGradient id="edge" x2=".5" y2="1"><stop stop-color="#F2FAFF"/><stop offset=".44" stop-color="#9DB8CD"/><stop offset="1" stop-color="#324A65"/></linearGradient>
+<linearGradient id="blue" x1=".1" y1="0" x2=".8" y2="1"><stop stop-color="#AAB8FF"/><stop offset=".26" stop-color="#657EE6"/><stop offset=".5" stop-color="#344DAD"/><stop offset=".55" stop-color="#203578"/><stop offset="1" stop-color="#101D43"/></linearGradient>
+<linearGradient id="red" x2=".6" y2="1"><stop stop-color="#FFB9C3"/><stop offset=".26" stop-color="#E9536D"/><stop offset=".52" stop-color="#AE203F"/><stop offset="1" stop-color="#4C1126"/></linearGradient>
+<linearGradient id="glass" x2="1" y2="1"><stop stop-color="#244C69"/><stop offset=".45" stop-color="#0D2239"/><stop offset=".5" stop-color="#071424"/><stop offset="1" stop-color="#132F48"/></linearGradient>
+<linearGradient id="green" x2=".5" y2="1"><stop stop-color="#AEEDD9"/><stop offset=".5" stop-color="#399E85"/><stop offset="1" stop-color="#123E38"/></linearGradient>
+<linearGradient id="amber" x2=".5" y2="1"><stop stop-color="#FFF3C7"/><stop offset=".4" stop-color="#D7A34A"/><stop offset="1" stop-color="#75511D"/></linearGradient>
+</defs><ellipse cx="32" cy="59.5" rx="22" ry="2" fill="#000" opacity=".28"/><g transform="translate(0 1.5)" opacity=".8"><rect x="19" y="5" width="28" height="53" rx="5" fill="url(#silver)" stroke="url(#edge)" stroke-width="0.8"/><rect x="22" y="10" width="22" height="40" rx="2" fill="url(#glass)" stroke="url(#edge)" stroke-width="0.8"/><path d="M23 11H43V24L23 40Z" fill="url(#blue)" stroke="url(#edge)" stroke-width="0" stroke-linejoin="round" /><path d="M28 8h10" fill="none" stroke="#253C54" stroke-width="1.5" opacity="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="33" cy="54" r="1.6" fill="url(#glass)" stroke="url(#edge)" stroke-width="0.8"/><path d="M24 41l5-7 4 4 7-13" fill="none" stroke="#8ECAEB" stroke-width="1.3" opacity="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="25" r="1.7" fill="url(#red)" stroke="url(#edge)" stroke-width="0.8"/></g><g><rect x="19" y="5" width="28" height="53" rx="5" fill="url(#silver)" stroke="url(#edge)" stroke-width="0.8"/><rect x="22" y="10" width="22" height="40" rx="2" fill="url(#glass)" stroke="url(#edge)" stroke-width="0.8"/><path d="M23 11H43V24L23 40Z" fill="url(#blue)" stroke="url(#edge)" stroke-width="0" stroke-linejoin="round" /><path d="M28 8h10" fill="none" stroke="#253C54" stroke-width="1.5" opacity="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="33" cy="54" r="1.6" fill="url(#glass)" stroke="url(#edge)" stroke-width="0.8"/><path d="M24 41l5-7 4 4 7-13" fill="none" stroke="#8ECAEB" stroke-width="1.3" opacity="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="25" r="1.7" fill="url(#red)" stroke="url(#edge)" stroke-width="0.8"/></g></svg>

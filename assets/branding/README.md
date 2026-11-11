@@ -23,3 +23,10 @@ silver/indigo/crimson; semantic status colors are preserved. Original fetched
 bytes and MIT license are in assets/icon-sources/fluent. The fetch script verifies
 source hashes before producing the variants. The primary navigation uses the
 same live app.sections model as the sidebar: 12 Government and 13 Repair entries.
+
+## Current sculpted icons
+
+The flat downloaded variants were rejected. Current icons-professional SVGs are
+independently drawn metal/enamel symbols from scripts/build_sculpted_icons.py.
+The 27 unframed assets replace those variants, with output hashes in PROVENANCE.json.
+Government navigation now has 12 distinct symbols and 44 px display sizing.
