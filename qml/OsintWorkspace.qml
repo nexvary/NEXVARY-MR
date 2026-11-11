@@ -2,104 +2,109 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 ColumnLayout {
- id: workspace
- objectName: "osintWorkspace"
+ id:workspace;objectName:"osintWorkspace"
  property var app
- property int activeTab: 0
- property int selectedProvider: 0
- readonly property var evaluation: typeof lampyreEvaluation !== "undefined" ? lampyreEvaluation : null
- readonly property bool hasCase: !!lawCaseBridge.activeCase.id
- LayoutMirroring.enabled: app.ar
- LayoutMirroring.childrenInherit: true
- spacing: 16
- GlossSurface {
-  Layout.fillWidth: true; implicitHeight: 138; color: "#101A28"; border.color: "#304A65"
-  RowLayout {
-   anchors.fill: parent; anchors.margins: 24; spacing: 20
-   Image {source: "qrc:/assets/icons/shield_checkmark.svg"; Layout.preferredWidth: 58; Layout.preferredHeight: 58; sourceSize: Qt.size(58,58)}
-   ColumnLayout {
-    Layout.fillWidth: true; spacing: 8
-    Label {text: "NEXVARY  /  INTELLIGENCE"; color: "#6BB8FF"; font.pixelSize: 12; font.letterSpacing: 2}
-    Label {text: workspace.app.trx("مساحة استخبارات المصادر المفتوحة", "Open Source Intelligence"); color: "#F1F5FA"; font.pixelSize: 27; font.bold: true; wrapMode: Text.WordWrap; Layout.fillWidth: true}
-    Label {text: workspace.app.trx("قضية واضحة. مصادر موثقة. تكلفة معتمدة قبل البحث.", "Case context. Traceable sources. Approved cost before a search."); color: "#AABBD0"; font.pixelSize: 13; wrapMode: Text.WordWrap; Layout.fillWidth: true}
+ property int activeTab:2
+ property int selectedProvider:0
+ property int ribbonTab:0
+ property bool showInspector:true
+ property bool showRequests:true
+ readonly property var evaluation:typeof lampyreEvaluation!=="undefined"?lampyreEvaluation:null
+ QtObject {
+  id:desktopTokens
+  readonly property color text:"#25333E"
+  readonly property color muted:"#687680"
+  readonly property color surface:"#FFFFFF"
+  readonly property color raised:"#F3F5F7"
+  readonly property color border:"#BBC3CB"
+  readonly property color accent:"#337D9F"
+  readonly property color silver:"#647782"
+  readonly property color success:"#3D8131"
+  readonly property color danger:"#B33039"
+ }
+ QtObject {
+  id:desktopApp
+  readonly property bool ar:workspace.app.ar
+  readonly property var design:desktopTokens
+  function trx(a,e){return workspace.app.trx(a,e)}
+ }
+ LayoutMirroring.enabled:app.ar;LayoutMirroring.childrenInherit:true;spacing:0
+ Rectangle {
+  Layout.fillWidth:true;implicitHeight:33;color:"#DDE2E7";border.color:"#B6BDC5"
+  RowLayout {anchors.fill:parent;anchors.margins:7;spacing:8
+   Image {source:"qrc:/assets/icons/search_visual.svg";Layout.preferredWidth:19;Layout.preferredHeight:19;sourceSize:Qt.size(24,24)}
+   Label {text:"NEXVARY MR  /  "+workspace.app.trx("مساحة التحقيق", "Investigation workspace");font.pixelSize:13;font.bold:true;color:"#293B49";Layout.fillWidth:true}
+   Label {text:workspace.app.trx("محلي • غير متصل", "Local • Disconnected");font.pixelSize:11;color:"#626F78"}
+  }
+ }
+ Rectangle {
+  Layout.fillWidth:true;implicitHeight:31;color:"#F3F4F5";border.color:"#B6BDC5"
+  RowLayout {anchors.fill:parent;anchors.leftMargin:8;anchors.rightMargin:8;spacing:2
+   Repeater {model:workspace.app.ar?["الرئيسية", "التحليل", "العرض"]:["Home", "Analysis", "View"]
+    delegate:OsintDesktopCommand {required property string modelData;required property int index;text:modelData;primary:workspace.ribbonTab===index;onClicked:workspace.ribbonTab=index}
    }
-   StateBadge {text: workspace.app.trx("تقييم", "EVALUATION"); tint: "#6BB8FF"}
+   Item {Layout.fillWidth:true}
+   Label {text:"OSINT";font.pixelSize:11;font.bold:true;color:"#5E6D77"}
   }
  }
- RowLayout {
-  Layout.fillWidth: true; spacing: 8
-  Repeater {
-   model: workspace.app.ar ? ["نظرة عامة", "مساحة البحث", "النتائج والمصادر", "الاستخدام والسجل"] : ["Overview", "Query workspace", "Results & sources", "Usage & history"]
-   delegate: ActionButton {
-    required property string modelData
-    required property int index
-    objectName: "osintTab" + index
-    text: modelData; primary: workspace.activeTab === index
-    Layout.fillWidth: true; Layout.minimumWidth: 0
-    onClicked: workspace.activeTab = index
+ Rectangle {
+  Layout.fillWidth:true;implicitHeight:89;color:"#F7F8F9";border.color:"#B6BDC5"
+  RowLayout {anchors.fill:parent;anchors.margins:7;spacing:10
+   ColumnLayout {spacing:5
+    RowLayout {spacing:5
+     OsintDesktopCommand {iconName:"document_text";text:workspace.app.trx("مثال جديد", "New example");enabled:!!workspace.evaluation&&!workspace.evaluation.busy;onClicked:{workspace.evaluation.runSynthetic(0);workspace.activeTab=2}}
+     OsintDesktopCommand {iconName:"settings";text:workspace.app.trx("قائمة الطلبات", "Request catalog");primary:workspace.activeTab===1;onClicked:workspace.activeTab=1}
+    }
+    Label {text:workspace.app.trx("تحقيق محلي", "Local investigation");color:"#74808A";font.pixelSize:10;Layout.alignment:Qt.AlignHCenter}
    }
-  }
- }
- GridLayout {
-  visible: workspace.activeTab === 0; Layout.fillWidth: true
-  columns: width > 900 ? 3 : 1; columnSpacing: 14; rowSpacing: 14
-  Repeater {
-   model: [
-    {name:"Lampyre",icon:"shield_checkmark",ar:"API / MCP تجريبي",en:"API / MCP evaluation",stateAr:"التفعيل غير مؤكد",stateEn:"Activation unconfirmed",detailAr:"التوثيق الخاص بالحساب مطلوب قبل الاتصال.",detailEn:"Account documentation is required before connecting."},
-    {name:"PhoneInfoga",icon:"phone",ar:"بحث رقم هاتف",en:"Phone number research",stateAr:"محرك خارجي",stateEn:"External engine",detailAr:"يتطلب محركًا مراجعًا وقضية وتفويضًا محددًا.",detailEn:"Requires a reviewed engine, case and specific authorization."},
-    {name:"OSINT Industries",icon:"document_lock",ar:"مزوّد تجاري",en:"Commercial provider",stateAr:"غير مفعّل",stateEn:"Not enabled",detailAr:"الترخيص والتكلفة والصلاحيات قيد المراجعة.",detailEn:"License, pricing and access remain under review."}
-   ]
-   delegate: Panel {
-    required property var modelData
-    required property int index
-    Layout.fillWidth: true; Layout.minimumWidth: 0; Layout.preferredHeight: 252
-    title: modelData.name; subtitle: workspace.app.ar ? modelData.ar : modelData.en
-    iconName: modelData.icon; accent: index === 0 ? "blue" : "silver"
-    Label {text: workspace.app.ar ? modelData.stateAr : modelData.stateEn; color: index === 0 ? "#6BB8FF" : workspace.app.design.silver; font.pixelSize: 17; font.bold: true; wrapMode: Text.WordWrap; Layout.fillWidth: true}
-    Label {text: workspace.app.ar ? modelData.detailAr : modelData.detailEn; color: workspace.app.design.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true; Layout.fillHeight: true}
-    ActionButton {text: workspace.app.trx("فتح المزوّد", "Open provider"); Layout.fillWidth: true; onClicked: {workspace.selectedProvider = index; workspace.activeTab = 1}}
+   Rectangle {Layout.fillHeight:true;width:1;color:"#CAD0D6"}
+   ColumnLayout {spacing:5;visible:workspace.ribbonTab===0
+    RowLayout {spacing:5
+     OsintDesktopCommand {iconName:"database";text:workspace.app.trx("جدول", "Table");onClicked:{workspace.activeTab=2;analysis.viewMode=0}}
+     OsintDesktopCommand {iconName:"board";text:workspace.app.trx("مخطط العلاقات", "Relationship schema");onClicked:{workspace.activeTab=2;analysis.viewMode=1}}
+    }
+    Label {text:workspace.app.trx("عرض البيانات", "Data visualization");color:"#74808A";font.pixelSize:10;Layout.alignment:Qt.AlignHCenter}
    }
+   ColumnLayout {spacing:5;visible:workspace.ribbonTab===1
+    RowLayout {spacing:5
+     OsintDesktopCommand {iconName:"arrow_sync";text:workspace.app.trx("عكس الترتيب", "Reverse sort");onClicked:{workspace.activeTab=2;analysis.viewMode=0;analysis.descending=!analysis.descending}}
+     OsintDesktopCommand {iconName:"checkmark_circle";text:workspace.app.trx("إلغاء التحديد", "Clear selection");enabled:analysis.selectedIndex>=0;onClicked:analysis.selectedIndex=-1}
+    }
+    Label {text:workspace.app.trx("تحليل العناصر", "Entity analysis");color:"#74808A";font.pixelSize:10;Layout.alignment:Qt.AlignHCenter}
+   }
+   ColumnLayout {spacing:5
+    RowLayout {spacing:5
+     OsintDesktopCommand {iconName:"history";objectName:"osintToggleRequests";text:workspace.app.trx("الطلبات", "Requests");primary:workspace.showRequests;onClicked:workspace.showRequests=!workspace.showRequests}
+     OsintDesktopCommand {iconName:"document_lock";objectName:"osintToggleInspector";text:workspace.app.trx("الخصائص", "Properties");primary:workspace.showInspector;onClicked:workspace.showInspector=!workspace.showInspector}
+    }
+    Label {text:workspace.app.trx("الألواح", "Panels");color:"#74808A";font.pixelSize:10;Layout.alignment:Qt.AlignHCenter}
+   }
+   Item {Layout.fillWidth:true}
   }
  }
- GridLayout {
-  visible: workspace.activeTab === 0; Layout.fillWidth: true
-  columns: width > 800 ? 2 : 1; columnSpacing: 14; rowSpacing: 14
-  Panel {
-   Layout.fillWidth: true; title: workspace.app.trx("سياق القضية", "Case context"); iconName: "document_lock"
-   Label {text: workspace.hasCase ? (lawCaseBridge.activeCase.metadata.caseNumber || lawCaseBridge.activeCase.id) : workspace.app.trx("لا توجد قضية مفتوحة", "No case open"); color: workspace.app.design.text; font.pixelSize: 19; font.bold: true; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere; textFormat: Text.PlainText}
-   Label {text: workspace.app.trx("البحث الخارجي يحتاج تفويض الإفصاح وصلاحيات القضية. المختبر الاصطناعي منفصل عن الأدلة.", "External research requires disclosure approval and case permissions. Synthetic fixtures are separate from evidence."); color: workspace.app.design.muted; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-  }
-  Panel {
-   Layout.fillWidth: true; title: workspace.app.trx("ميزانية المزوّد", "Provider budget"); iconName: "database"
-   Label {text: workspace.app.trx("الرصيد غير متاح", "Balance unavailable"); color: workspace.app.design.text; font.pixelSize: 19; font.bold: true; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-   Label {text: workspace.app.trx("لا يوجد اتصال بحساب Lampyre. عرض 200 Photon ليس رصيدًا مؤكدًا. لا يبدأ طلب مدفوع من هذه الواجهة.", "No Lampyre account connection. The offered 200 Photons are not a confirmed balance. This workspace cannot submit paid requests."); color: workspace.app.design.muted; Layout.fillWidth: true; wrapMode: Text.WordWrap}
+ Rectangle {
+  Layout.fillWidth:true;implicitHeight:34;color:"#E5E9ED";border.color:"#B6BDC5"
+  RowLayout {anchors.fill:parent;anchors.leftMargin:5;anchors.rightMargin:5;spacing:3
+   Repeater {
+    model:workspace.app.ar?["قائمة الطلبات", "نتائج التحقيق", "الاستخدام"]:["Request catalog", "Investigation results", "Usage"]
+    delegate:OsintDesktopCommand {required property string modelData;required property int index;objectName:"osintTab"+(index+1);text:modelData;primary:workspace.activeTab===index+1;onClicked:workspace.activeTab=index+1;implicitHeight:28}
+   }
+   Item {Layout.fillWidth:true}
   }
  }
- ColumnLayout {
-  visible: workspace.activeTab === 1; Layout.fillWidth: true; spacing: 14
-  RowLayout {
-   Layout.fillWidth: true
-   Label {text: workspace.app.trx("اختيار المزوّد", "Select provider"); color: workspace.app.design.muted}
-   NeonComboBox {objectName: "osintProviderSelector"; Layout.fillWidth: true; model: ["Lampyre", "PhoneInfoga", "OSINT Industries"]; currentIndex: workspace.selectedProvider; onActivated: workspace.selectedProvider = currentIndex}
-  }
-  LampyrePanel {Layout.fillWidth: true; app: workspace.app; visible: workspace.selectedProvider === 0}
-  PhoneOsintPanel {Layout.fillWidth: true; app: workspace.app; visible: workspace.selectedProvider === 1}
-  Panel {
-   Layout.fillWidth: true; visible: workspace.selectedProvider === 2
-   title: "OSINT Industries"; iconName: "document_lock"
-   Label {text: workspace.app.trx("الاتصال غير مفعّل. يلزم التحقق من ترخيص التكامل والتوثيق والتكلفة قبل إتاحة البحث.", "Connection is not enabled. Integration licensing, documentation and costs must be verified before searches can be enabled."); color: workspace.app.design.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true}
-  }
+ OsintAnalysisPane {id:analysis;Layout.fillWidth:true;app:desktopApp;visible:workspace.activeTab===0||workspace.activeTab===2;showInspector:workspace.showInspector;showRequests:workspace.showRequests}
+ OsintRequestDesk {Layout.fillWidth:true;app:desktopApp;visible:workspace.activeTab===1;selectedProvider:workspace.selectedProvider;onSelectedProviderChanged:workspace.selectedProvider=selectedProvider}
+ OsintDesktopPane {
+  Layout.fillWidth:true;visible:workspace.activeTab===3;title:workspace.app.trx("الاستخدام والتفويض", "Usage & authorization");iconName:"history";Layout.preferredHeight:350
+  Label {text:workspace.app.trx("حساب Lampyre غير متصل. الرصيد والتكلفة الفعلية غير متاحين.", "Lampyre account disconnected. Actual balance and pricing are unavailable.");color:desktopTokens.text;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+  Label {text:workspace.app.trx("المثال المحلي: 0 Photon. لا توجد طلبات مدفوعة أو سجل حساب متزامن.", "Local example: 0 Photons. No paid requests or synchronized account history.");color:desktopTokens.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+  Item {Layout.fillHeight:true}
  }
- OsintAnalysisPane {visible: workspace.activeTab === 2; Layout.fillWidth:true; app:workspace.app}
- Panel {
-  visible: workspace.activeTab === 3; Layout.fillWidth: true
-  title: workspace.app.trx("الاستخدام والسجل", "Usage & history"); iconName: "history"
-  GridLayout {
-   Layout.fillWidth: true; columns: width > 700 ? 3 : 1; columnSpacing: 20
-   Label {text: workspace.app.trx("الرصيد الفعلي\nغير متاح", "Actual balance\nUnavailable"); color: workspace.app.design.text; font.pixelSize: 18; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-   Label {text: workspace.app.trx("تكلفة الاختبار المحلي\n0 Photon", "Local fixture cost\n0 Photons"); color: workspace.app.design.success; font.pixelSize: 18; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-   Label {text: workspace.app.trx("التكلفة قبل الطلب\nغير متاحة — يلزم التأكيد", "Pre-query cost\nUnavailable — approval required"); color: workspace.app.design.silver; font.pixelSize: 18; Layout.fillWidth: true; wrapMode: Text.WordWrap}
+ Rectangle {
+  Layout.fillWidth:true;implicitHeight:25;color:"#E9ECEF";border.color:"#B6BDC5"
+  RowLayout {anchors.fill:parent;anchors.leftMargin:8;anchors.rightMargin:8
+   Label {text:workspace.app.trx("مثال اصطناعي • ليس دليلًا", "Synthetic example • Not evidence");font.pixelSize:10;color:"#566775";Layout.fillWidth:true}
+   Label {text:workspace.app.trx("الرصيد: غير متاح", "Balance: unavailable");font.pixelSize:10;color:"#566775"}
   }
-  Label {text: workspace.app.trx("لم يُربط سجل استخدام Lampyre بالحساب بعد. لا تمثل هذه الصفحة دفتر تدقيق دائمًا. سجلات القضايا الحالية متاحة في التقارير والتدقيق.", "Lampyre account usage history is not connected. This page is not a durable audit ledger. Existing case records are available under Reports & audit."); color: workspace.app.design.muted; Layout.fillWidth: true; wrapMode: Text.WordWrap}
  }
 }

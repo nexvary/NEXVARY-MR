@@ -142,3 +142,26 @@ relationship view. No proprietary resources or decompiled implementation importe
 Local source-QML table/graph rendering and selection/filter assertions passed in
 AR/EN. Core CTest 6/6 passed. Updated native Qt UI assertions and screenshots await
 CI for this commit; no Windows runtime acceptance is inferred from local previews.
+
+
+## Windows desktop visual alignment
+
+At the user's explicit request the OSINT section now uses a light desktop palette
+(white work areas, silver/gray chrome and pale green selections) rather than the
+corporate dark card dashboard. Reference: official Quick Start Guide pages 18 and
+21 (2022) and statically inspected docking/module resources of uploaded 1.10.4.
+The current default skin of a running 1.10.4 client has NOT been observed. Existing
+licensed NEXVARY Fluent SVGs are used at small desktop toolbar sizes; vendor icons,
+DevExpress skin assets and application code are not redistributed.
+
+Added compact Home/Analysis/View ribbon groups, document tabs, a criteria/tasks/
+parameters request desk, a column-aligned entity grid, status bar and resizable
+request/analysis/property panes. Ribbon sort/selection/panel commands act on the
+actual local model. PhoneInfoga keeps its existing gated path with matching light
+controls. No external search or provider capabilities are invented.
+
+Local source-QML AR/EN request/table/graph captures and filter/selection/panel-state
+assertions passed. Core CTest 6/6 passed. Latest native CI must validate this visual
+revision separately. Earlier code dc7fc0d passed both Windows Qt production and
+laboratory jobs in run 43035575698; that run failed both Linux jobs during dependency
+installation, before configuration/build. This is not current-head acceptance.

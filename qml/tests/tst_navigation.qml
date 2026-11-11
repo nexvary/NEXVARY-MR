@@ -38,12 +38,15 @@ TestCase {
   page.showOsint=true;ws.selectedProvider=0;
   for(const ar of [true,false]){
    app.ar=ar;
-   for(const tab of [0,1,2,3]){
+   for(const tab of [1,2,3]){
     ws.activeTab=tab;page.contentItem.contentY=0;verify(renderedFrame());
     compare(ws.LayoutMirroring.enabled,ar);
     verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-workspace-"+tab+"-"+(ar?"ar":"en")+".png"));
    }
   }
+  ws.showInspector=false;compare(findChild(app,"osintAnalysisPane").showInspector,false);
+  ws.showRequests=false;compare(findChild(app,"osintAnalysisPane").showRequests,false);
+  ws.showInspector=true;ws.showRequests=true;
   ws.activeTab=1;ws.selectedProvider=0;
   lampyreEvaluation.runSynthetic(0);compare(lampyreEvaluation.busy,true);
   lampyreEvaluation.cancel();compare(lampyreEvaluation.state,"synthetic-cancelled");
