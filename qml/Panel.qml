@@ -32,7 +32,7 @@ GlossSurface {
   id:column;anchors.fill:parent;anchors.margins:16;spacing:12
   RowLayout {
    visible:card.title!=="";Layout.fillWidth:true;spacing:10
-   Image {visible:card.iconName!=="";source:visible?"qrc:/assets/icons/"+card.iconName+".svg":"";sourceSize.width:40;sourceSize.height:40;Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
+   Image {visible:card.iconName!=="";source:visible?"qrc:/assets/icons-professional/"+card.iconName+".svg":"";sourceSize.width:40;sourceSize.height:40;Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
    ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
     Label {text:card.title;color:card.tokens?card.tokens.text:"#EEF4FC";font.pixelSize:14;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}
     Label {visible:card.subtitle!=="";text:card.subtitle;color:card.tokens?card.tokens.muted:"#9AAABD";font.pixelSize:11;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}

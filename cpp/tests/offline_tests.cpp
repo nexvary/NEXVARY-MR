@@ -185,6 +185,13 @@ private slots:
   QVERIFY(recovery.analyzePartitions(t.filePath("missing.dd"),QCoreApplication::applicationFilePath(),true));QTRY_VERIFY_WITH_TIMEOUT(!recovery.busy(),5000);
   QCOMPARE(recovery.operationReceipt().value("status").toString(),QString("failed"));QCOMPARE(recovery.evidence().size(),0);
  }
+ void officialHelpDoesNotGrantOperations(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);GovernmentOperationPolicy policy(&identity);
+  QVERIFY(policy.isHelpLink("https://account.lampyre.io/"));
+  for(const auto &url:{"https://account.lampyre.io.evil.invalid/","https://account.lampyre.io/?case=secret","https://user:password@account.lampyre.io/","https://account.lampyre.io/#case","http://account.lampyre.io/","https://account.lampyre.io/unknown","https://account.lampyre.io:443/"})QVERIFY(!policy.isHelpLink(url));
+  QVERIFY(!policy.openHelpLink("https://account.lampyre.io/",false));QDesktopServices::setUrlHandler("https",this,"captureUrl");
+  QVERIFY(policy.openHelpLink("https://account.lampyre.io/",true));QCOMPARE(capturedUrl,QUrl("https://account.lampyre.io/"));QVERIFY(policy.offline());QVERIFY(!policy.permit("external-analysis"));QVERIFY(!policy.openExternal("https://example.invalid/"));
+ }
  void browserHandoffBlockedAndProtocolsRestricted(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);admin(identity);GovernmentOperationPolicy policy(&identity);
   QVERIFY(!policy.openExternal("https://example.invalid/"));QVERIFY(performSyntheticReviewedException(identity,policy,"external-links","synthetic scheme rejection only",password));

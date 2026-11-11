@@ -13,10 +13,13 @@ ApplicationWindow {
  LegacyPalette {id:legacy;dark:window.darkTheme}
  function tone(value){return legacy.tone(value)}
  color:design.background
- background:Rectangle {color:window.design.background;gradient:Gradient {GradientStop {position:0;color:window.darkTheme?"#171D25":"#F7FAFF"}GradientStop {position:0.4;color:window.design.background}GradientStop {position:1;color:window.darkTheme?"#10141A":"#E5ECF5"}}}
+ background:Rectangle {color:window.design.background
+  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme&&window.currentPage!==0;dimming:0.28}
+ }
+
  property bool showDevicePanel:false
  property bool governmentMode:true
- property int currentPage:12
+ property int currentPage:0
  property int activeSection:0
  property var pageHistory:[]
  property int previousPage:0
@@ -48,33 +51,62 @@ ApplicationWindow {
   {ar:"فتح قضية",en:"Open Case",icon:"document_lock",page:12,law:2},
   {ar:"إدارة القضايا",en:"Case Management",icon:"clipboard_task",page:12,law:3},
   {ar:"تقييم الأجهزة",en:"Device Assessment",icon:"phone",page:12,law:7},
-  {ar:"إدارة الأدلة",en:"Evidence Management",icon:"document_lock",page:12,law:6,evidence:1},
+  {ar:"إدارة الأدلة",en:"Evidence Management",icon:"evidence_box",page:12,law:6,evidence:1},
   {ar:"سلسلة الحيازة",en:"Chain of Custody",icon:"history",page:12,law:6,evidence:2},
   {ar:"التحليل الجنائي",en:"Forensic Analysis",icon:"shield_checkmark",page:14},
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
-  {ar:"مختبر التدريب",en:"Training Laboratory",icon:"book_open_lightbulb",page:12,law:9},
+  {ar:"مختبر التدريب",en:"Training Laboratory",icon:"training_lab",page:12,law:9},
   {ar:"التقارير والتدقيق",en:"Reports & Audit",icon:"document_text",page:12,law:8},
   {ar:"الإدارة",en:"Administration",icon:"settings",page:12,law:10},
   {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
  ]
  readonly property var sections:governmentMode?governmentSections:professionalSections
- function openExternal(url){const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
+ property string pendingHelpUrl:""
+ function openExternal(url){if(operationPolicy.isHelpLink(url)){pendingHelpUrl=url;helpLinkDialog.open();return true}const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
+ Dialog {id:helpLinkDialog;objectName:"officialHelpLinkDialog";anchors.centerIn:parent;modal:true;width:Math.min(520,window.width-32);title:window.trx("فتح الموقع الرسمي","Open official website");standardButtons:Dialog.Yes|Dialog.No
+  Label {width:helpLinkDialog.availableWidth;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:window.design.text;text:window.trx("سيفتح الرابط في المتصفح الخارجي دون إرسال بيانات القضية: ","Open this link in the external browser without sending case data: ")+window.pendingHelpUrl}
+  onAccepted:{const ok=operationPolicy.openHelpLink(window.pendingHelpUrl,true);if(!ok)window.notice(false,"",operationPolicy.error);window.pendingHelpUrl=""}
+  onRejected:window.pendingHelpUrl=""
+ }
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
- readonly property string pageTitle:currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
+ readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
- function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
+ function humanError(value){
+  const text=String(value||"");if(!ar)return text;
+  if(text.indexOf("Government offline policy blocked")>=0)return "الاتصال الخارجي لهذه العملية غير مفعّل. افتح الإدارة ← صلاحيات الاتصال لطلب التفعيل.";
+  if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
+  if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
+  if(text.indexOf("Sign-in failed")>=0)return "تعذر تسجيل الدخول. راجع اسم المستخدم وكلمة المرور وحالة الحساب.";
+  if(text.indexOf("Username already exists")>=0)return "اسم المستخدم موجود بالفعل؛ اختر اسمًا آخر أو سجّل الدخول بالحساب الموجود.";
+  if(text.indexOf("3–64 character lowercase")>=0)return "اختر اسم مستخدم إنجليزيًا صغيرًا من 3 إلى 64 حرفًا، واسم عرض، وكلمة مرور لا تقل عن 14 حرفًا.";
+  if(text.indexOf("14 characters")>=0)return "كلمة المرور يجب ألا تقل عن 14 حرفًا. راجع اسم المستخدم واسم العرض أيضًا.";
+  if(text.indexOf("No case grant")>=0)return "هذا الحساب لا يملك صلاحية الوصول إلى القضية المحددة.";
+  return text;
+ }
+ function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
+ function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:humanError(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
  function sectionForPage(page){if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
  function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{
   if(!goingBack&&currentPage!==previousPage){let history=pageHistory.slice();history.push(snapshot(previousPage));pageHistory=history.slice(-50)}
   previousPage=currentPage;activeSection=sectionForPage(currentPage)
  }
+ function navigatePrimary(index){
+  if(index===3){setWorkspace(true);navigateSection(6);analysisWorkspaceRoot.showOsint=true;return}
+  setWorkspace(false);
+  if(index===4){navigate(7);return}
+  navigateSection(index);
+ }
  function navigate(index){currentPage=index}
  function navigateSection(index){
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
   currentPage=entry.page
+  // A forensic section selection opens evidence analysis; the OSINT shortcut
+  // explicitly opts into its workspace after navigation. Do not retain a hidden
+  // provider view when the user returns to the forensic section.
+  if(entry.page===14)analysisWorkspaceRoot.showOsint=false
   if(entry.law!==undefined)lawWorkspace.section=entry.law
   if(entry.evidence!==undefined)lawWorkspace.evidenceView=entry.evidence
   if(entry.page===1)deviceHub.currentTab=entry.tab===undefined?0:entry.tab
@@ -143,7 +175,7 @@ ApplicationWindow {
     HelpPage {app:window}
     LawEnforcementPage {id:lawWorkspace;app:window}
     ResearchCenter {app:window}
-    GovernmentAnalysisPage {app:window}
+    GovernmentAnalysisPage {id:analysisWorkspaceRoot;app:window}
    }
   }
  }

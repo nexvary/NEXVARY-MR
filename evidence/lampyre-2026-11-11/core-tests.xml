@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="6"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="264539c5a4a2"
+	time="0"
+	timestamp="2026-11-11T14:31:53"
+	>
+	<testcase name="mr_research_data_validation" classname="mr_research_data_validation" time="0.109061" status="run">
+		<properties/>
+		<system-out>Research catalog: offline validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_policy_tests" classname="mr_policy_tests" time="0.00596054" status="run">
+		<properties/>
+		<system-out>production-read-only: policy passed
+</system-out>
+	</testcase>
+	<testcase name="mr_core_tests" classname="mr_core_tests" time="0.0141079" status="run">
+		<properties/>
+		<system-out>Catalog: 20 brand groups, 65 family entries (directory only)
+Guided workflows: 22 distinct symptoms, sequential read-only triage
+Core rules and input validation passed
+</system-out>
+	</testcase>
+	<testcase name="mr_law_enforcement_case_tests" classname="mr_law_enforcement_case_tests" time="0.0333959" status="run">
+		<properties/>
+		<system-out>432 law-enforcement structural validation checks passed; no legal/device authorization inferred
+</system-out>
+	</testcase>
+	<testcase name="mr_commercial_osint_contract_tests" classname="mr_commercial_osint_contract_tests" time="0.0196141" status="run">
+		<properties/>
+		<system-out>Commercial OSINT contract deny-by-default checks passed
+</system-out>
+	</testcase>
+	<testcase name="mr_lampyre_evaluation_tests" classname="mr_lampyre_evaluation_tests" time="0.0146719" status="run">
+		<properties/>
+		<system-out>Lampyre offline registry, lifecycle and credit tests passed
+</system-out>
+	</testcase>
+</testsuite>

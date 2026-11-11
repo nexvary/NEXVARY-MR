@@ -1,3 +1,5 @@
+#include "LampyreEvaluationBridge.hpp"
+#include "LampyreConnection.hpp"
 #include <QTemporaryDir>
 #include <QSaveFile>
 #include "SyntheticPolicyExercise.hpp"
@@ -164,7 +166,7 @@ int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
- QGuiApplication::setApplicationVersion(QStringLiteral("0.4.0"));
+ QGuiApplication::setApplicationVersion(QStringLiteral("0.4.1"));
  QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/assets/nexvary-mr.png")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
@@ -206,7 +208,11 @@ int main(int argc,char *argv[]) {
  ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware,nullptr,smoke?nullptr:&identity);
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
+ LampyreEvaluationBridge lampyre;
+ LampyreConnection lampyreConnection(QDir(dir).filePath("provider-credentials"),&identity,&operationPolicy);
  QQmlApplicationEngine engine;
+ engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);
+ engine.rootContext()->setContextProperty(QStringLiteral("lampyreConnection"), &lampyreConnection);
  engine.rootContext()->setContextProperty(QStringLiteral("operationPolicy"),&operationPolicy);
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
  engine.rootContext()->setContextProperty(QStringLiteral("lawCaseBridge"),&law);

@@ -96,6 +96,7 @@ python scripts/prepare_screen_tools.py --destination $screenTools --cache (Join-
 if ($LASTEXITCODE -ne 0) { throw 'Pinned scrcpy runtime preparation failed' }
 Copy-Item (Join-Path $repo 'docs/SCREEN_VIEW.md') $bundle
 Copy-Item (Join-Path $repo 'docs/USER_GUIDE.md') $bundle
+Copy-Item (Join-Path $repo 'docs/WORKSPACE_QUICK_START_AR.md') $bundle
 Copy-Item (Join-Path $repo 'docs/GOVERNMENT_OPERATIONS.md') $bundle
 Copy-Item (Join-Path $repo 'docs/PROTECTED_CASE_BACKUP.md') $bundle
 Copy-Item (Join-Path $repo 'docs/EVIDENCE_RETENTION.md') $bundle

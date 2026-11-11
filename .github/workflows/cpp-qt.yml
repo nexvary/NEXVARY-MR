@@ -206,6 +206,13 @@ jobs:
           "QT_QPA_FONTDIR=$fontTarget" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
+      - name: Verify MCP transport before building the complete application
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --target mr_lampyre_connection_tests --parallel
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ctest --test-dir build -C Release -R '^mr_lampyre_connection_tests$' --output-on-failure
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build GUI
         id: native_build
         run: cmake --build build --config Release --parallel

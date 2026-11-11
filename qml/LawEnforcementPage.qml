@@ -8,6 +8,9 @@ Item {
  property var app
  property int section:0
  property int evidenceView:1
+ property string formOwner:""
+ Component.onCompleted:formOwner=identityBridge.session.id||""
+ Connections {target:identityBridge;function onChanged(){const owner=identityBridge.session.id||"";if(owner!==page.formOwner){intake.startNew();page.formOwner=owner;if(!identityBridge.authenticated)page.section=10}}}
  property bool auditVerified:false
  property bool anchorVerified:false
  property var lastBackup:({})
@@ -26,10 +29,11 @@ Item {
     Label {text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber+" · "+lawCaseBridge.activeCase.status):app.trx("اختر قضية أو ابدأ سيناريو تدريب اصطناعي","Choose a case or a synthetic training scenario");Layout.fillWidth:true;elide:Text.ElideRight;color:app.design.muted;textFormat:Text.PlainText}
    }
    ActionButton {text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
-   StateBadge {text:lawCaseBridge.role;tint:app.design.silver}
+   StateBadge {objectName:"lawIdentityRole";text:app.roleLabel(identityBridge.authenticated?identityBridge.session.role:lawCaseBridge.role);tint:app.design.silver}
   }
-  Label {text:lawCaseBridge.protection;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:lawCaseBridge.ready?app.design.muted:app.design.danger;font.pixelSize:11}
-  Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:lawCaseBridge.error;width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
+  Label {objectName:"lawStorageStatus";text:lawCaseBridge.protection.indexOf("DPAPI;")>=0?app.trx("البيانات المحلية محمية بحساب Windows الحالي","Local data protected by the current Windows account"):app.humanError(lawCaseBridge.protection);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;font.pixelSize:11}
+  Label {objectName:"lawAccountGuidance";visible:!lawCaseBridge.permissions.create;width:parent.width;wrapMode:Text.WordWrap;color:app.design.accent;text:identityBridge.session.role==="administrator"?app.trx("أنت مدير الحسابات. افتح الدخول / الحسابات وأنشئ حساب محقق للعمل على القضايا.","You are the account administrator. Open Sign in / accounts and create an investigator for case work."):!identityBridge.authenticated?app.trx("سجّل الدخول بحساب محقق لإنشاء القضايا وحفظها؛ الإعداد الأول من الدخول / الحسابات.","Sign in as an investigator to create and save cases; first-time setup is in Sign in / accounts."):app.trx("دورك الحالي لا يملك صلاحية إنشاء القضايا.","Your current role cannot create cases.")}
+  Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:app.humanError(lawCaseBridge.error);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
   RowLayout {width:parent.width
    ComboBox {id:sectionSelector;objectName:"lawSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.45);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
    ActionButton {objectName:"lawNewCase";text:app.trx("قضية جديدة","New case");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.create;onClicked:page.newCase()}
@@ -60,7 +64,7 @@ Item {
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;font.pixelSize:11;text:app.trx("حسابات محلية مصادق عليها ومنح منفصلة للقضايا. يبقى التحقق من الهوية المؤسسية وربط SSO ضمن متطلبات النشر.","Local authenticated accounts and case grants. Agency identity verification and SSO remain deployment requirements.")}
     }
    }
-   LawCaseForm {id:intake;objectName:"lawCaseForm";app:page.app;onSaved:page.section=0}
+   LawCaseForm {id:intake;objectName:"lawCaseForm";app:page.app;onRequestSignIn:page.section=10;onSaved:{page.app.notice(true,page.app.trx("تم حفظ القضية محليًا","Case saved locally"));page.section=0}}
    LawCaseBrowser {app:page.app;onOpened:page.section=0}
    LawCaseDevices {app:page.app}
    ScrollView {id:legalScroll;contentWidth:availableWidth;clip:true

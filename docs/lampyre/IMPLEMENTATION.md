@@ -1,0 +1,289 @@
+# Lampyre integration evaluation — 2026-11-11
+
+## Current 0.4.1 implementation (supersedes fixture-only status below)
+
+`LampyreConnection` is a native user-configured Streamable HTTP MCP client. It implements initialize, initialized notification, paginated tools/list, explicit tools/call, JSON/SSE responses, session/protocol headers, and a bounded local result export. Endpoint and Bearer key must come from the user's provider account; no public endpoint or vendor-specific authentication contract is assumed. OAuth, automatic Photon balance/cost lookup, and provider-specific graph ontology are not implemented.
+
+The production UI starts empty. Synthetic evaluation is opt-in, separate, and cleared on exit. Windows credentials use the existing DPAPI-backed vault and local user UUID; logout/user changes clear in-memory credentials, results, sessions and pending requests. Redirects and insecure production endpoints are refused. Testing the connection and invoking tools both require reviewed external-analysis permission. Search additionally requires the existing AnalyzeEvidence role and explicit per-request cost consent. Revocation cancels local work and discards pending results; local cancellation does not certify provider cancellation/refund.
+
+The QTcpServer test fixture verifies protocol exchange, pagination, SSE, credential handling, explicit consent, argument transport, redaction, bounded failures, protected storage, logout, reviewed grants/revocation, signed operation receipts, and new-file result export. These are synthetic tests, not live Lampyre verification. The account-specific URL/key, real entitlements, provider schema and pricing remain unverified.
+
+See `docs/WORKSPACE_QUICK_START_AR.md` for account, case and connection instructions. The historical evaluation notes below remain as provenance and describe the separate fixture adapter only.
+
+## Repository audit and branch choice
+
+`main` is 7446b17 and does not contain the native Qt application. Native foundation is
+`dev/cpp-qt-foundation` (0bfe9b1); government operations and forensic integration remain
+separate unmerged development streams. The evidence branch (6e3301f) records an earlier
+phone-provider evaluation; it is not a replacement integration base.
+
+This branch is based on `feature/osint-commercial-providers` at d615428 because that
+branch already contains the government Qt application, PhoneInfoga integration,
+commercial contract, source registry, process policy and offline parser tests. PR #18
+is a draft targeting government operations. PR #17 preserves the forensic stream;
+PR #15 preserves government operations. No merges or unrelated repair changes were made.
+Later government ADB inventory work is not present on this base and is not claimed here.
+
+Inspected relevant branch tips, main, native CMake/QML registration, provider headers,
+CaseVault, existing case OSINT panel, workflows, recent commits and open PR metadata.
+Upstream d615428 PR CI: native 42336286468, commercial 42336286289 and phone provider
+42336286312 failed; Python 42336286338 and history 42336286299 passed. Commercial jobs
+configured and compiled on Windows/Linux but failed their tests. Local reproduction
+found a whitespace escape defect, a wrong-provider fixture and a C++ line-splicing
+fixture that did not actually contain the newline it intended to test. Those are fixed.
+Other upstream native/phone CI failures are not diagnosed or claimed resolved.
+
+## Architecture and implementation
+
+Existing case authorization, identity, audit, evidence/export and Windows DPAPI remain
+in their current modules. Existing PhoneInfoga execution is unchanged. The new reusable
+`IOSINTProvider`, `ProviderRegistry`, live-disabled `LampyreProvider`, synthetic polling
+adapter and integer `CreditBudgetManager` live in `LampyreEvaluation.hpp` and reuse the
+commercial query/finding types.
+
+The in-memory budget reserves before submission, rejects unknown/negative costs,
+missing approval, duplicate IDs and overspending, retains uncertain charges and refuses
+settlements above the reservation. Units are millionths of a Photon, not provider prices.
+Tests use arbitrary synthetic amounts. No 200-Photon balance is installed or assumed.
+This ledger is not yet persistent, synchronized or linked to external query execution.
+It must not be used as a production spending authorization service.
+
+`LampyreEvaluationBridge` connects the native Qt panel to a fixed synthetic adapter.
+A timer permits cancellation before fixture completion. Only a fixed reserved-domain
+selector is accepted; no arbitrary real subject, credential or endpoint is exposed.
+The panel labels trial pending, balance/cost unknown and synthetic output explicitly,
+and uses the existing shield asset/theme and AR/EN layout. It does not change research
+case evidence or present fixture output as a live finding.
+
+## Official capability matrix
+
+Sources checked 2026-11-11:
+- https://lampyre.io/ — advertises MCP and account/API-key connection.
+- https://lampyre.io/terms — describes Photons and request prices in API documentation.
+- https://lampyre.io/python-api-doc/lighthouse_intro/what_is_lighthouse_and_request.html
+  — describes local Python Tasks; this is not a verified remote API protocol.
+
+| Capability | Documented publicly | Implemented here | Tested |
+|---|---|---|---|
+| MCP offering | Yes, homepage | No transport | No live test |
+| Account/API-key MCP authentication | Advertised only | No credential flow | No |
+| API/MCP endpoints, schemas, tool names, scopes | Account docs required | None invented | Blocked |
+| Pricing/balance endpoints, idempotency, cancellation | Not verified | No live implementation | Blocked |
+| Provider registry and live refusal | Internal design | Yes | Native C++ |
+| Budget reservations and duplicate prevention | Internal design | In-memory evaluation only | Native C++ |
+| Synthetic errors/cancellation | Internal fixtures | Yes | Native C++ |
+| Qt AR/EN panel and timer bridge | Internal design | Yes | Pending Qt CI/visual QA |
+| Secure credential persistence | Existing DPAPI component | No Lampyre credential integration | Blocked |
+| JSON/CSV/PDF and SHA-256 evidence exports | Existing case workflow | No Lampyre result linkage | Blocked |
+| Hardware/production acceptance | No | No | Not verified |
+
+## Security review
+
+No HTTP client, endpoint, MCP discovery, shell execution, credentials, environment-secret
+read or paid lookup is introduced. Provider output is rendered as plain text. No tool
+response can invoke application actions. Synthetic output is bounded and fixed. No new
+personal-data database is created. Current-account DPAPI is the existing protected-store
+candidate; do not add a plaintext fallback or portable API-key file.
+
+Before live enablement: verify official account docs and redistribution permission;
+implement narrow tool/category allowlists, schema and output bounds, TLS and redirect
+policy, durable identity-bound case/purpose/cost approvals, credential redaction, durable
+reservation recovery, provider-authoritative cost reconciliation, access revocation,
+retention/deletion and evidence/audit linkage. Avoid retries for chargeable submissions
+unless the provider guarantees idempotency. A timeout or cancellation is not proof that
+no charge occurred. No synthetic approval is permission to execute a live query.
+
+## Trial plan and blockers
+
+Trial activation, 14 days and 200 Photons are user-supplied offer details, not verified
+account state. Do not activate as part of this change. After confirmation, days 1–3:
+docs and access; 4–6: individually approved authorized sample queries; 7–9: provenance
+and export; 10–12: UI/accounting/stability; 13–14: evaluation and commercial assessment.
+Agree a reserve before the first paid test. Never put credentials in an issue or PR.
+
+Required account documentation: authentication, request catalog/schema, price units,
+balance and cost estimates, async/poll/cancel behavior, error/rate-limit contracts,
+idempotency, MCP transport/tool list and retention/licensing restrictions. Upload a
+redacted documentation export when available. No password or API key is needed for
+continued offline development.
+
+This is an offline evaluation increment, not the completed live integration. Live
+adapter, MCP adapter, credential workflow, durable query/audit store, exports, full
+Windows packaging and screenshots remain acceptance gates. Existing repair and case
+storage schemas are unchanged. Keep the PR draft; do not merge main.
+
+## Executed validation
+
+Local GNU C++ 14.2 / CMake 4.4.4, GUI OFF, warnings as errors: configured,
+built all core targets and passed **6/6 CTest suites**. Raw JUnit and configure
+output are in `evidence/lampyre-2026-11-11/`. New suite covers registry duplicates,
+live refusal, missing/negative cost, approval, exact budget, overflow, duplicate IDs,
+uncertain holds, settlement, cancellation, synthetic data restrictions and errors.
+Qt SDK is absent locally: no Qt build, RTL screenshot, packaging, physical Windows
+or production claim is made. CI results must be inspected separately after publication.
+
+CI code commit c94ea07344d50ad71497cfcfe745fb8d47c5ed84: commercial offline contract run 43021289721 passed on both Windows 2022 and Ubuntu 24.04. Full native Qt run 43021289665 and phone-provider run 43021289626 were still running when checked. This documentation-only checkpoint does not claim those results or a Windows artifact.
+
+## OSINT workspace redesign
+
+Replaced the stacked phone/Lampyre forms with a dedicated OSINT view inside the
+analysis workspace, with a return action to existing evidence analysis. Overview
+shows three provider cards, case context and explicitly unknown account balance.
+Separate tabs contain provider selection/query controls, results/source status and
+usage/history availability. PhoneInfoga keeps its existing case/permission path.
+Lampyre connection, costs and synthetic laboratory are separate cards; raw JSON
+is opt-in. No decorative graph, fake account balance or fake connection is shown.
+Existing colored SVG assets, theme controls, AR/EN and responsive grids are reused.
+
+Added bilingual four-tab Qt screenshot/navigation coverage and native synthetic
+run/cancellation assertions to the existing UI suite. Local source-QML component
+rendering used PySide6/Qt 6.12 with a synthetic case bridge; it is a component
+preview, not a full Windows binary acceptance. Eight AR/EN tab screenshots were
+rendered. Core regression CTest remains 6/6 passing. Windows/UI CI must be checked
+for the redesign commit separately; earlier screenshots are not its evidence.
+
+
+## Client-guided analysis workspace
+
+See CLIENT_INSPECTION.md for the actual uploaded 1.10.4 package inspection,
+extraction limits and independent design. Results now have request context,
+sort/filter table, selected-item provenance and a zoomable/selectable synthetic
+relationship view. No proprietary resources or decompiled implementation imported.
+Local source-QML table/graph rendering and selection/filter assertions passed in
+AR/EN. Core CTest 6/6 passed. Updated native Qt UI assertions and screenshots await
+CI for this commit; no Windows runtime acceptance is inferred from local previews.
+
+
+## Windows desktop visual alignment
+
+At the user's explicit request the OSINT section now uses a light desktop palette
+(white work areas, silver/gray chrome and pale green selections) rather than the
+corporate dark card dashboard. Reference: official Quick Start Guide pages 18 and
+21 (2022) and statically inspected docking/module resources of uploaded 1.10.4.
+The current default skin of a running 1.10.4 client has NOT been observed. Existing
+licensed NEXVARY Fluent SVGs are used at small desktop toolbar sizes; vendor icons,
+DevExpress skin assets and application code are not redistributed.
+
+Added compact Home/Analysis/View ribbon groups, document tabs, a criteria/tasks/
+parameters request desk, a column-aligned entity grid, status bar and resizable
+request/analysis/property panes. Ribbon sort/selection/panel commands act on the
+actual local model. PhoneInfoga keeps its existing gated path with matching light
+controls. No external search or provider capabilities are invented.
+
+Local source-QML AR/EN request/table/graph captures and filter/selection/panel-state
+assertions passed. Core CTest 6/6 passed. Latest native CI must validate this visual
+revision separately. Earlier code dc7fc0d passed both Windows Qt production and
+laboratory jobs in run 43035575698; that run failed both Linux jobs during dependency
+installation, before configuration/build. This is not current-head acceptance.
+
+
+## Approved black / petrol / cyan MR theme
+
+The user explicitly approved the hooded analyst/spider reference image as the
+background and palette. Replaced the preceding light OSINT colors with deep
+chair black (#040507), midnight panels (#08121B), petrol surfaces (#0A2231),
+cyan highlights (#23B9E7), silver text and matching borders. Updated the common
+MR default-dark design tokens and legacy neutral-color mappings, preserving
+semantic warning/success colors and optional light mode. Desktop arrangement,
+query gates and synthetic model are unchanged.
+
+The exact approved image is packaged as a PNG resource for the app and Qt UI
+runner; provenance/fingerprint are in assets/branding/README.md. Background is
+dimmed separately for readable data and shown once in the central analysis pane.
+No provider credentials or network capability was added.
+
+Local AR/EN source-QML request/table/graph renders passed and were visually
+inspected. Core CTest 6/6 passed. Added native UI assertions for the approved
+palette and packaged background Image.Ready state. Current-head Windows/native
+CI remains a separate gate; source previews do not claim native acceptance.
+
+
+## Approved home / network separation and metallic icons
+
+The user's corrected, explicit approval supersedes the masked-analyst background:
+home uses the thin-title Nexvary company-search artwork; working screens use only
+the supplied abstract cyan/silver network-wave crop. No hoodie/mask/spider appears
+on working screens. A top-edge fade blends the wave without editing its pixels.
+
+Added a home hero with real device/OSINT/report routes and compact global primary
+navigation, preserving existing sidebar and detailed workshop dashboard below.
+Initial page is home. OSINT navigation retains the government case workspace and
+its existing access checks. Existing sidebar navigation remains available.
+
+Added 25 independently finished metallic variants of the bundled MIT Fluent SVGs:
+chrome surrounds and indigo/cyan/red materials, with semantic status colors kept.
+The deterministic build script, input/output hashes and license provenance are
+committed. Existing symbol geometry is retained; no vendor icons are imported.
+
+Local source-QML home and AR/EN request/table/graph previews rendered without QML
+warnings. Filtering/selection/panel assertions passed. Core CTest 6/6 passed.
+Native UI tests now cover the distinct home/network asset paths and primary
+navigation routes. Current-head full Windows/Qt CI remains a separate gate.
+
+
+## Full navigation and downloaded professional icons
+
+The five-item shortcut strip is replaced with the live section model shared by
+the sidebar. Government exposes all 12 original sections, in their original
+order and through the original navigateSection routes; Repair exposes all 13.
+The sidebar is preserved. Wide views show the complete strip; narrow views have
+horizontal scrolling, selected-item/focus reveal and full-caption tooltips.
+Icons are 40 px, unframed, with selection/focus indicated by an underline rather
+than a box. No feature, case permission or provider gate is removed.
+
+Freshly downloaded 24 pinned Microsoft Fluent color SVGs and their MIT license.
+Source SHA-256 checks passed. Kept the existing MR checkbox glyph, for 25 usable
+assets. Original bytes, per-file provenance and deterministic fetch/build script
+are committed. Prior boxed metallic files are no longer packaged or referenced.
+Selected color adjustments use silver/indigo/crimson without decorative plates.
+
+Executed locally: all 25 SVGs parsed/rasterized with Qt; 48 bilingual component
+checks across 12 sections and wide/narrow layouts passed, including icon-ready
+state, selection and overflow. Source-QML home preview rendered without warnings.
+Core build/CTest passed 6/6. Native UI coverage adds actual clicks across all
+Government routes and the Repair model count. Those full native assertions and
+current-head Windows acceptance remain subject to CI; local component checks do
+not establish institutional or production acceptance.
+
+Windows Qt 6.8.3 CI exposed unsupported palette.placeholderText assignments in
+TextFields. Replaced them with TextField.placeholderTextColor in the analysis
+filter and PhoneInfoga inputs; the application-level palette is unchanged.
+
+Repeated the 48 navigation component checks and rendered the Home plus eight
+AR/EN request/table/graph previews using PySide6 / Qt 6.8.3 (the CI Qt version).
+All passed without QML warnings after the TextField compatibility correction.
+This is source-QML/component validation, not a full native Windows executable test.
+
+## Sculpted icon correction
+
+User rejected the flat color library appearance. Replaced the 25 flat symbols
+with 27 independently authored SVGs using silver material reflections, indigo
+enamel and crimson accents, without backing plates. Added distinct sealed-evidence
+and laboratory symbols; all Government routes and section order remain unchanged.
+A deterministic builder and per-file hashes document authorship. Downloaded
+Fluent sources remain archived with their license, but current symbols do not
+use that geometry. Navigation sizing is 44 px. All 27 SVGs validate with Qt 6.8.3;
+the 48 AR/EN wide/narrow navigation component checks pass. Current-head full native
+Windows execution remains a separate acceptance gate.
+
+Neon accent update: green `#39FF14` and red `#FF1744` are incorporated into
+the existing metallic material gradients and functional details. Silver/indigo
+body materials and all routes remain unchanged. Qt 6.8.3 SVG and bilingual
+wide/narrow component checks cover the revised assets.
+
+## Windows delivery regression
+
+Native Windows testing exposed a retained OSINT subview hiding evidence controls
+when returning through the forensic section. Section navigation now explicitly
+opens evidence analysis; the OSINT shortcut opts in afterwards. Added a regression
+asserting OSINT -> device workspace -> forensic section restores visible evidence
+controls. The initial Windows run compiled successfully and passed 56/57 CTest
+suites, with six hidden-control assertions in the remaining UI suite. Delivery
+requires rerunning the native suite after this correction; no failed-gate package
+is presented as a verified release.
+
+The native screenshot also exposed inherited application mirroring reversing
+the explicit RTL Row twice. The navigation now propagates its disabled mirroring
+to children and controls Row direction explicitly. The regression asserts the
+first/last symbol ordering in both languages; all 48 local component checks pass
+with the actual application mirroring settings.

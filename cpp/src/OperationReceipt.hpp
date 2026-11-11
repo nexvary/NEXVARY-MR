@@ -37,7 +37,7 @@ inline bool operationRecord(const QVariantMap &r, const QVariantMap &request,
     return false;
   const auto kind = r.value("kind").toString(),
              cap = r.value("capability").toString();
-  if (!(((kind == "security-scan" || kind == "partition-analysis" || kind == "phone-osint") &&
+  if (!(((kind == "security-scan" || kind == "partition-analysis" || kind == "phone-osint" || kind == "lampyre-mcp") &&
          cap == "external-analysis") ||
         (kind == "signature-update" && cap == "signature-update")))
     return false;

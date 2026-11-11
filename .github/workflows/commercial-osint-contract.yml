@@ -1,11 +1,12 @@
 name: Commercial OSINT offline contract
 on:
   push:
-    branches: [feature/osint-commercial-providers]
+    branches: [feature/osint-commercial-providers, feature/lampyre-api-mcp-integration]
   pull_request:
     paths:
       - 'cpp/src/osint/**'
       - 'cpp/tests/commercial_osint_contract_tests.cpp'
+      - 'cpp/tests/lampyre_evaluation_tests.cpp'
       - 'CMakeLists.txt'
       - '.github/workflows/commercial-osint-contract.yml'
 permissions:
@@ -22,6 +23,6 @@ jobs:
       - name: Configure
         run: cmake -S . -B build-commercial -DMR_BUILD_GUI=OFF -DBUILD_TESTING=ON -DMR_WARNINGS_AS_ERRORS=ON
       - name: Build
-        run: cmake --build build-commercial --config Release --target mr_commercial_osint_contract_tests
+        run: cmake --build build-commercial --config Release --target mr_commercial_osint_contract_tests mr_lampyre_evaluation_tests
       - name: Test
-        run: ctest --test-dir build-commercial -C Release --output-on-failure -R "^mr_commercial_osint_contract_tests$"
+        run: ctest --test-dir build-commercial -C Release --output-on-failure -R "^mr_(commercial_osint_contract|lampyre_evaluation)_tests$"

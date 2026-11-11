@@ -9,6 +9,7 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
+ readonly property var windowUnderTest:app
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
@@ -27,10 +28,84 @@ TestCase {
  }
  function test_phoneOsintBilingualBoundary(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
-  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;
+  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;const osint=findChild(app,"osintWorkspace");osint.activeTab=1;osint.selectedProvider=1;
   const number=findChild(panel,"osintNumber"),run=findChild(panel,"osintRun");
   for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
   page.showOsint=false
+ }
+ function test_fullGovernmentNavigationAndProfessionalIcons(){
+  app.setWorkspace(true);app.width=1536;
+  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);compare(nav.sectionCount,12);
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   verify(ar?nav.itemAt(0).x>nav.itemAt(11).x:nav.itemAt(0).x<nav.itemAt(11).x);
+   for(let i=0;i<12;i++){
+    nav.reveal(i);verify(renderedFrame());
+    const button=nav.itemAt(i);verify(button!==null);
+    compare(button.text,ar?app.governmentSections[i].ar:app.governmentSections[i].en);
+    const icon=findChild(button,"primaryNavIcon"+i);verify(icon!==null);tryCompare(icon,"status",Image.Ready,5000);
+    verify(icon.source.toString().indexOf("icons-professional/")>=0);
+    mouseClick(button);compare(app.activeSection,i);compare(app.currentPage,app.governmentSections[i].page);
+   }
+   app.navigateSection(6);verify(renderedFrame());
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"all-government-navigation-"+(ar?"ar":"en")+".png"));
+  }
+  app.width=980;verify(renderedFrame());verify(nav.overflowing);
+  nav.reveal(11);verify(renderedFrame());mouseClick(nav.itemAt(11));compare(app.activeSection,11);
+  app.setWorkspace(false);compare(nav.sectionCount,13);
+ }
+ function test_approvedHomeAndPrimaryNavigation(){
+  app.navigatePrimary(0);verify(renderedFrame());compare(app.currentPage,0);
+  const art=findChild(app,"mrHomeArtwork");verify(art!==null);tryCompare(art,"status",Image.Ready,5000);
+  verify(art.source.toString().indexOf("mr-home-background.png")>=0);
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
+  app.navigatePrimary(3);compare(app.currentPage,14);verify(findChild(app,"governmentAnalysisWorkspace").showOsint);
+  app.navigatePrimary(1);compare(app.currentPage,1);compare(app.governmentMode,false);
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
+  compare(findChild(app,"governmentAnalysisWorkspace").showOsint,false);
+  verify(findChild(app,"governmentAnalyzeEvidence").visible);
+ }
+ function test_approvedMrPaletteAndBackground(){
+  compare(String(app.design.background),"#040507");
+  compare(String(app.design.surface),"#08121b");
+  compare(String(app.design.accent),"#23b9e7");
+  const background=findChild(app,"osintBackgroundImage");verify(background!==null);
+  tryCompare(background,"status",Image.Ready,5000);verify(background.source.toString().indexOf("mr-network-wave.png")>=0);
+ }
+ function test_osintWorkspaceBilingualNavigation(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
+  const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");
+  page.showOsint=true;ws.selectedProvider=0;ws.demoMode=true;
+  for(const ar of [true,false]){
+   app.ar=ar;
+   for(const tab of [1,2,3]){
+    ws.activeTab=tab;page.contentItem.contentY=0;verify(renderedFrame());
+    compare(ws.LayoutMirroring.enabled,ar);
+    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-workspace-"+tab+"-"+(ar?"ar":"en")+".png"));
+   }
+  }
+  ws.showInspector=false;compare(findChild(app,"osintAnalysisPane").showInspector,false);
+  ws.showRequests=false;compare(findChild(app,"osintAnalysisPane").showRequests,false);
+  ws.showInspector=true;ws.showRequests=true;
+  ws.activeTab=1;ws.selectedProvider=0;
+  lampyreEvaluation.runSynthetic(0);compare(lampyreEvaluation.busy,true);
+  lampyreEvaluation.cancel();compare(lampyreEvaluation.state,"synthetic-cancelled");
+  lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);
+  compare(lampyreEvaluation.result.networkRequests,0);compare(lampyreEvaluation.result.photonsConsumed,0);
+  compare(lampyreEvaluation.result.records.length,3);
+  ws.activeTab=2;const analysis=findChild(app,"osintAnalysisPane");
+  analysis.pick(0);compare(analysis.selected.value,"research@example.invalid");
+  analysis.filterText="example.invalid";compare(analysis.filtered.length,2);analysis.filterText="";
+  for(const ar of [true,false]){
+   app.ar=ar;
+   for(const mode of [0,1]){
+    analysis.viewMode=mode;page.contentItem.contentY=0;verify(renderedFrame());
+    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-analysis-"+mode+"-"+(ar?"ar":"en")+".png"));
+   }
+  }
+  lampyreEvaluation.runSynthetic(1);tryCompare(lampyreEvaluation,"state","synthetic-failed",3000);
+  compare(analysis.records.length,0);compare(analysis.selectedIndex,-1);
+  ws.activeTab=0;page.showOsint=false;
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
@@ -415,7 +490,7 @@ TestCase {
   findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
-   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150)
+   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150,"service list "+list.width+"x"+list.height+" page "+page.width+"x"+page.height+" ar="+arabic)
    page.review({id:"sideload_zip",ar:"اختبار موافقة اصطناعي",en:"Synthetic consent test",risk:"destructive"})
    const dialog=findChild(app,"deviceServiceConfirm");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled)
    findChild(app,"serviceOwnerConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
@@ -787,6 +862,30 @@ TestCase {
   compare(findChild(app,"runRecovery").enabled,false);page.step=4;verify(renderedFrame());mouseClick(findChild(app,"closeRecoveryCase"));tryCompare(recoveryBridge,"active",false);findChild(app,"recoveryTabs").currentIndex=0;
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
+ function test_osintDefaultIsLiveSetup(){
+  app.setWorkspace(true);app.navigateSection(6);const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");page.showOsint=true;verify(renderedFrame());
+  compare(ws.demoMode,false);compare(ws.activeTab,1);compare(findChild(app,"osintAnalysisPane").records.length,0);
+  verify(findChild(app,"lampyreMcpEndpoint").visible);verify(findChild(app,"lampyreApiKey").visible);compare(findChild(app,"lampyreTestConnection").enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-ar.png"));
+  ws.demoMode=true;lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);compare(findChild(app,"osintAnalysisPane").records.length,3);
+  ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);page.showOsint=false;
+ }
+ Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}
+ function test_yFirstAdministratorIsSignedIn(){
+  verify(firstRunIdentity.needsSetup);const pane=firstRunPanelComponent.createObject(app.contentItem);verify(pane!==null);verify(renderedFrame());
+  findChild(pane,"identityUsername").text="first-admin";findChild(pane,"identityDisplayName").text="Synthetic first administrator";findChild(pane,"identityPassword").text="Synthetic-only UI password 2026!";
+  artifactClick(pane,findChild(pane,"identitySignIn"));verify(firstRunIdentity.authenticated,firstRunIdentity.error);compare(firstRunIdentity.session.role,"administrator");compare(findChild(pane,"identityPassword").text,"");pane.destroy();verify(renderedFrame());
+ }
+ function test_yGuidedInvestigatorAndCaseSave(){
+  app.setWorkspace(true);app.navigateSection(10);verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));verify(renderedFrame());
+  const law=findChild(app,"lawEnforcementWorkspace"),panel=findChild(app,"identityPanel");law.section=10;
+  compare(findChild(app,"lawIdentityRole").text,app.roleLabel("administrator"));verify(findChild(app,"lawAccountGuidance").visible);
+  findChild(app,"identityNewUsername").text="guided-investigator";findChild(app,"identityNewDisplayName").text="Synthetic guided operator";findChild(app,"identityNewPassword").text="Synthetic-only UI password 2026!";
+  artifactClick(panel,findChild(app,"identityCreateInvestigatorAndSignIn"));compare(identityBridge.session.role,"investigator");compare(findChild(app,"identityNewPassword").text,"");
+  law.newCase();verify(renderedFrame());const form=findChild(app,"lawCaseForm");form.step=3;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));verify(findChild(app,"lawFormError").text.length>0);compare(form.missingFields.length,7);
+  const m={caseNumber:"SYNTHETIC-GUIDED-SAVE",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic item",authorityReference:"TEST-ONLY",issuingAuthority:"Synthetic lab",scope:"Synthetic local fixture only"};form.form=m;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));compare(law.section,0);compare(lawCaseBridge.activeCase.metadata.caseNumber,m.caseNumber);
+  law.editCase();form.setField("notes","Edited through guided workflow");form.step=3;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));compare(lawCaseBridge.activeCase.metadata.notes,"Edited through guided workflow");const id=lawCaseBridge.activeCase.id;lawCaseBridge.closeWorkspace();verify(lawCaseBridge.openCase(id));compare(lawCaseBridge.activeCase.metadata.notes,"Edited through guided workflow");
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));app.setWorkspace(false);
+ }
  function test_yLocalIdentity(){
   app.navigateSection(12);const law=findChild(app,"lawEnforcementWorkspace");law.section=10;verify(renderedFrame());identityBridge.logout();verify(!identityBridge.needsSetup)
   findChild(app,"identityUsername").text="ui-admin";verify(lawCaseBridge.activeCase.id===undefined);compare(lawCaseBridge.cases.length,0)

@@ -10,6 +10,7 @@ Item {
   id:scroll;objectName:"dashboardScroll";anchors.fill:parent;contentWidth:availableWidth;clip:true
   ColumnLayout {
    width:scroll.availableWidth;spacing:16
+   MrHomeHero {app:page.app;Layout.fillWidth:true}
    RowLayout {
     Layout.fillWidth:true
     ColumnLayout {Layout.fillWidth:true;spacing:4
@@ -29,7 +30,7 @@ Item {
       required property var modelData
       Layout.fillWidth:true;implicitHeight:104;radius:12;color:page.app.design.surface;border.color:page.app.design.border
       RowLayout {anchors.fill:parent;anchors.margins:16;spacing:12
-       Image {source:"qrc:/assets/icons/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       Image {source:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
         Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
         Label {text:modelData.value;color:page.app.design.text;font.pixelSize:26;font.bold:true}
@@ -46,7 +47,7 @@ Item {
    }
    GridLayout {
     objectName:"dashboardActions";Layout.fillWidth:true;columns:width>=1000?3:2;columnSpacing:12;rowSpacing:12
-    ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("مدير الأجهزة","Device Manager");iconName:"phone";description:page.app.trx("اكتشاف ADB وFastboot، تثبيت الهدف وقراءة هوية الهاتف والسجلات.","Discover ADB and Fastboot targets, select one device and read identity and logs.");statusText:toolBridge.selectedSerial?page.app.trx("هدف محدد","Selected"):page.app.trx("بانتظار هدف","Select target");actionText:page.app.trx("فتح مدير الأجهزة","Open Device Manager");actionName:"dashboardDevices";primary:true;onTriggered:page.app.navigateSection(1)}
+    ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("مدير الأجهزة","Device Manager");iconName:"phone";description:page.app.trx("اكتشاف ADB وFastboot، تثبيت الهدف وقراءة هوية الهاتف والسجلات.","Discover ADB and Fastboot targets, select one device and read identity and logs.");statusText:toolBridge.selectedSerial?page.app.trx("هدف محدد","Selected"):page.app.trx("بانتظار هدف","Select target");actionText:page.app.trx("فتح مدير الأجهزة","Open Device Manager");actionName:"dashboardDevicesDetails";primary:true;onTriggered:page.app.navigateSection(1)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("استوديو الصيانة","Repair Studio");iconName:"toolbox";description:page.app.trx("إرشادات الأعطال، توثيق نتائج الفني، خدمات محددة ومخططات اللوحات.","Guided symptoms, technician findings, scoped services and board inspection.");statusText:page.app.trx("قدرات محددة","Scoped");actionText:page.app.trx("بدء التشخيص","Start diagnostics");actionName:"dashboardRepair";onTriggered:page.app.navigateSection(2)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("ذكاء ملفات النظام","Firmware Intelligence");iconName:"arrow_square_down";description:page.app.trx("فحص الحزم والبصمات وبيانات AVB مع فصل البنية عن مصادقة الشركة.","Inspect containers, hashes and AVB declarations with explicit trust boundaries.");statusText:page.app.trx("ملفات محلية","Local files");actionText:page.app.trx("تحليل Firmware","Analyze firmware");actionName:"dashboardFirmware";onTriggered:page.app.navigateSection(3)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("المختبر الجنائي","Forensic Laboratory");iconName:"document_lock";description:page.app.trx("قضايا وأدلة مصرح بها، تحقق SHA-256، EXIF وPCAP وسجل حيازة محلي.","Authorized cases, SHA-256 verification, EXIF, PCAP and local custody declarations.");statusText:recoveryBridge.active?page.app.trx("قضية مفتوحة","Case open"):page.app.trx("اختر قضية","Select case");actionText:page.app.trx("فتح المختبر","Open laboratory");actionName:"dashboardForensics";onTriggered:page.app.navigateSection(5)}

@@ -23,7 +23,7 @@ Item {
  Connections {target:researchBridge;function onChanged(){page.refresh()}}
  ColumnLayout {anchors.fill:parent;spacing:10
   RowLayout {Layout.fillWidth:true
-   Image {source:"qrc:/assets/icons/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;sourceSize.width:32;sourceSize.height:32}
+   Image {source:"qrc:/assets/icons-professional/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;sourceSize.width:32;sourceSize.height:32}
    Label {text:app.trx("مركز الأبحاث","Research Center");font.pixelSize:23;font.bold:true;color:app.design.text;Layout.fillWidth:true}
    StateBadge {text:"OFFLINE R&D";tint:app.design.accent}
   }
@@ -37,14 +37,16 @@ Item {
   ScrollView {id:scroll;objectName:"researchScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
    ColumnLayout {width:scroll.availableWidth;spacing:12
     Panel {visible:page.section===0;title:app.trx("المحركات المشتركة وبوابات الإثبات","Shared engines and evidence gates");iconName:"gauge";Layout.fillWidth:true
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:researchBridge.catalog.atlas.length+" Atlas · "+researchBridge.catalog.tools.length+" Tools · "+researchBridge.catalog.experiments.length+" Plans · "+researchBridge.results.length+" Results"}
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:researchBridge.engineContext.capabilityGate}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:researchBridge.catalog.atlas.length+app.trx(" سجلًا معرفيًا · "," knowledge records · ")+researchBridge.catalog.tools.length+app.trx(" أدوات · "," tools · ")+researchBridge.catalog.experiments.length+app.trx(" خطط تجارب · "," experiment plans · ")+researchBridge.results.length+app.trx(" نتائج مسجلة"," recorded results")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("هذا فهرس بحثي محلي. أعداد الأدوات والخطط لا تعني نجاح اختبار جهاز؛ تُعرض النتائج المسجلة بشكل منفصل.","This is a local research catalog. Tool and plan counts do not establish device test success; recorded results are separate.")}
      RowLayout {Layout.fillWidth:true
       ActionButton {text:app.trx("ذكاء الجهاز","Device Intelligence");onClicked:page.app.navigateSection(1)}
       ActionButton {text:app.trx("تشخيص USB","USB Diagnostics");onClicked:page.app.navigateSection(4)}
       ActionButton {text:app.trx("ملفات النظام","Firmware Intelligence");onClicked:page.app.navigateSection(3)}
      }
-     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;textFormat:Text.PlainText;text:JSON.stringify({propertiesCurrent:researchBridge.engineContext.deviceIntelligence.propertiesCurrent,usbScope:researchBridge.engineContext.deviceIntelligence.usbScope,avbStatus:researchBridge.engineContext.firmwareAvb.status||"not inspected",packageStatus:researchBridge.engineContext.firmwarePackage.status||"not inspected",modelAcceptance:researchBridge.engineContext.modelAcceptance},null,2)}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:(researchBridge.engineContext.deviceIntelligence.propertiesCurrent?app.trx("خصائص الجهاز: قراءة حديثة متاحة","Device properties: current reading available"):app.trx("خصائص الجهاز: لا توجد قراءة حديثة","Device properties: no current reading"))+"\n"+app.trx("حالة فحص الإقلاع: ","Verified boot inspection: ")+(researchBridge.engineContext.firmwareAvb.status==="not inspected"||!researchBridge.engineContext.firmwareAvb.status?app.trx("لم يُفحص","Not inspected"):researchBridge.engineContext.firmwareAvb.status)+"\n"+app.trx("نتائج اعتماد الطراز تُراجع من سجلات الاختبارات، ولا تُستنتج من هذا الفهرس.","Review model acceptance in test records; it is not inferred from this catalog.")}
+     CheckBox {id:researchTechnical;objectName:"researchTechnicalDetails";text:app.trx("إظهار التفاصيل التقنية","Show technical details")}
+     Label {visible:researchTechnical.checked;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;textFormat:Text.PlainText;text:JSON.stringify({propertiesCurrent:researchBridge.engineContext.deviceIntelligence.propertiesCurrent,usbScope:researchBridge.engineContext.deviceIntelligence.usbScope,avbStatus:researchBridge.engineContext.firmwareAvb.status||"not inspected",packageStatus:researchBridge.engineContext.firmwarePackage.status||"not inspected",modelAcceptance:researchBridge.engineContext.modelAcceptance},null,2)}
     }
     Repeater {model:page.rows
      delegate:Panel {required property var modelData;Layout.fillWidth:true;title:page.app.ar?(modelData.titleAr||modelData.title||modelData.model||modelData.id):(modelData.title||modelData.model||modelData.id);iconName:page.section===2?"search_visual":"document_text";stateText:modelData.status||"Pending"

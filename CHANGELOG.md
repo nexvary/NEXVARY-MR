@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.1 — 2026-11-11 (evaluation)
+
+- Add guided first-administrator sign-in and investigator account creation without granting administrators implicit case access.
+- Show required case fields and actionable errors; retain drafts on failed saves and clear them on account changes. Cover save/edit/reopen in Qt UI tests.
+- Start OSINT with empty connection settings; move synthetic data behind an explicit demo switch and clear it on exit.
+- Add user-configured MCP Streamable HTTP connection, protected per-user Windows credentials, tool discovery, explicit paid-request consent and bounded JSON/SSE results. Reviewed external-analysis permission covers connection testing and queries; no OAuth or vendor REST endpoint is guessed.
+- Export explicitly selected results as new JSON files, marked unverified and not automatically attached as case evidence. No automatic balance or Photon-price estimate.
+- Separate confirmed official help links from operational grants, simplify Arabic account/policy/research messages, and hide optional technical details.
+- Preserve the approved backgrounds and sculpted icon set; compact service guidance at minimum window sizes.
+- Live Lampyre authentication, account entitlements, prices and real provider results remain unverified without account-specific MCP credentials.
+
 ## 0.3.0 — 2026-10-16 (development)
 
 - Replace the five-page foundation shell with a native bilingual eight-section engineering workspace inspired by the supplied visual reference; no fabricated live device/voltage readings.
