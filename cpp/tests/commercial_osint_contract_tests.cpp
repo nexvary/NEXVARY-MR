@@ -57,6 +57,7 @@ int main() {
     price.unit = "credit";
     CommercialProviderMock industries(Provider::OsintIndustries);
     CommercialProviderMock lampyre(Provider::Lampyre);
+    q.provider = Provider::OsintIndustries;
     auto denied = industries.execute(q, price, false, true);
     if (denied.state != QueryState::AwaitingAuthorization ||
         denied.errorCode != "POLICY_DENIED" || !denied.findings.empty()) return EXIT_FAILURE;
@@ -122,8 +123,7 @@ int main() {
     plan.caseId = "  ";
     if (mayLaunchProcess(plan)) return EXIT_FAILURE;
     plan.caseId = "CASE-TEST";
-    plan.executablePath = "/trusted/tool\
-other";
+    plan.executablePath = "/trusted/tool\nother";
     if (mayLaunchProcess(plan)) return EXIT_FAILURE;
     plan.executablePath = "/trusted/subfinder";
     plan.sourceId = "lampyre";

@@ -1,3 +1,4 @@
+#include "LampyreEvaluationBridge.hpp"
 #include <QTemporaryDir>
 #include <QSaveFile>
 #include "SyntheticPolicyExercise.hpp"
@@ -206,7 +207,9 @@ int main(int argc,char *argv[]) {
  ResearchBridge research(QDir(dir).filePath(QStringLiteral("public-research.json")),&tools,&firmware,nullptr,smoke?nullptr:&identity);
  tools.loadToolConfiguration(QDir(dir).filePath(QStringLiteral("tools.json")));
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
+ LampyreEvaluationBridge lampyre;
  QQmlApplicationEngine engine;
+ engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);
  engine.rootContext()->setContextProperty(QStringLiteral("operationPolicy"),&operationPolicy);
  engine.rootContext()->setContextProperty(QStringLiteral("toolBridge"),&tools);
  engine.rootContext()->setContextProperty(QStringLiteral("lawCaseBridge"),&law);

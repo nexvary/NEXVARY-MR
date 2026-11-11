@@ -47,7 +47,7 @@ struct QueryResult {
     std::string providerRequestId;
 };
 inline bool hasVisibleText(std::string_view value) {
-    return value.find_first_not_of(" \\t\\r\\n") != std::string_view::npos;
+    return value.find_first_not_of(" \t\r\n") != std::string_view::npos;
 }
 inline bool maySubmit(const QueryRequest& request, const PriceEstimate& estimate,
                       bool credentialsConfigured, bool contractPermitsIntegration) {
