@@ -17,7 +17,7 @@ Button {
  }
  contentItem:RowLayout {
   spacing:10
-  Image {source:"qrc:/assets/icons-metallic/"+item.iconName+".svg";Layout.preferredWidth:26;Layout.preferredHeight:26;sourceSize.width:32;sourceSize.height:32;fillMode:Image.PreserveAspectFit}
+  Image {source:"qrc:/assets/icons-professional/"+item.iconName+".svg";Layout.preferredWidth:30;Layout.preferredHeight:30;sourceSize.width:48;sourceSize.height:48;fillMode:Image.PreserveAspectFit}
   Label {visible:!item.compact;text:item.text;Layout.fillWidth:true;Layout.minimumWidth:0;color:item.selected?item.app.design.text:item.app.design.muted;font.pixelSize:12;font.bold:item.selected;elide:Text.ElideRight}
  }
 }

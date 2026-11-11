@@ -209,3 +209,37 @@ Local source-QML home and AR/EN request/table/graph previews rendered without QM
 warnings. Filtering/selection/panel assertions passed. Core CTest 6/6 passed.
 Native UI tests now cover the distinct home/network asset paths and primary
 navigation routes. Current-head full Windows/Qt CI remains a separate gate.
+
+
+## Full navigation and downloaded professional icons
+
+The five-item shortcut strip is replaced with the live section model shared by
+the sidebar. Government exposes all 12 original sections, in their original
+order and through the original navigateSection routes; Repair exposes all 13.
+The sidebar is preserved. Wide views show the complete strip; narrow views have
+horizontal scrolling, selected-item/focus reveal and full-caption tooltips.
+Icons are 40 px, unframed, with selection/focus indicated by an underline rather
+than a box. No feature, case permission or provider gate is removed.
+
+Freshly downloaded 24 pinned Microsoft Fluent color SVGs and their MIT license.
+Source SHA-256 checks passed. Kept the existing MR checkbox glyph, for 25 usable
+assets. Original bytes, per-file provenance and deterministic fetch/build script
+are committed. Prior boxed metallic files are no longer packaged or referenced.
+Selected color adjustments use silver/indigo/crimson without decorative plates.
+
+Executed locally: all 25 SVGs parsed/rasterized with Qt; 48 bilingual component
+checks across 12 sections and wide/narrow layouts passed, including icon-ready
+state, selection and overflow. Source-QML home preview rendered without warnings.
+Core build/CTest passed 6/6. Native UI coverage adds actual clicks across all
+Government routes and the Repair model count. Those full native assertions and
+current-head Windows acceptance remain subject to CI; local component checks do
+not establish institutional or production acceptance.
+
+Windows Qt 6.8.3 CI exposed unsupported palette.placeholderText assignments in
+TextFields. Replaced them with TextField.placeholderTextColor in the analysis
+filter and PhoneInfoga inputs; the application-level palette is unchanged.
+
+Repeated the 48 navigation component checks and rendered the Home plus eight
+AR/EN request/table/graph previews using PySide6 / Qt 6.8.3 (the CI Qt version).
+All passed without QML warnings after the TextField compatibility correction.
+This is source-QML/component validation, not a full native Windows executable test.

@@ -33,7 +33,7 @@ Item {
     title:app.trx("1. الاتصال واختيار الجهاز","1. CONNECT AND SELECT");accent:"blue";Layout.fillWidth:true
     RowLayout {
      Layout.fillWidth:true;spacing:12
-     Image {source:"qrc:/assets/icons-metallic/phone.svg";Layout.preferredWidth:40;Layout.preferredHeight:40;fillMode:Image.PreserveAspectFit}
+     Image {source:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:40;Layout.preferredHeight:40;fillMode:Image.PreserveAspectFit}
      ColumnLayout {
       Layout.fillWidth:true;spacing:4
       Label {text:page.selected?app.trx("جهاز محدد وجاهز للفحوص المتاحة","A target is selected for available checks"):app.trx("اختر هاتفًا قبل تشغيل أي عملية","Select a phone before starting an operation");font.bold:true;color:app.tone("#edf5ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
@@ -62,7 +62,7 @@ Item {
       background:Rectangle {radius:8;color:toolBridge.selectedSerial===modelData.serial?app.tone("#143c64"):app.tone("#0b2131");border.width:toolBridge.selectedSerial===modelData.serial?2:1;border.color:toolBridge.selectedSerial===modelData.serial?"#299bff":app.tone("#234a63")}
       contentItem:RowLayout {
        spacing:12
-       Image {source:"qrc:/assets/icons-metallic/phone.svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       Image {source:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {
         Layout.fillWidth:true;spacing:4
         Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}

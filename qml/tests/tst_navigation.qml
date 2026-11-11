@@ -32,6 +32,26 @@ TestCase {
   for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
   page.showOsint=false
  }
+ function test_fullGovernmentNavigationAndProfessionalIcons(){
+  app.setWorkspace(true);app.width=1536;
+  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);compare(nav.sectionCount,12);
+  for(const ar of [true,false]){
+   app.ar=ar;
+   for(let i=0;i<12;i++){
+    nav.reveal(i);verify(renderedFrame());
+    const button=nav.itemAt(i);verify(button!==null);
+    compare(button.text,ar?app.governmentSections[i].ar:app.governmentSections[i].en);
+    const icon=findChild(button,"primaryNavIcon"+i);verify(icon!==null);tryCompare(icon,"status",Image.Ready,5000);
+    verify(icon.source.toString().indexOf("icons-professional/")>=0);
+    mouseClick(button);compare(app.activeSection,i);compare(app.currentPage,app.governmentSections[i].page);
+   }
+   app.navigateSection(6);verify(renderedFrame());
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"all-government-navigation-"+(ar?"ar":"en")+".png"));
+  }
+  app.width=980;verify(renderedFrame());verify(nav.overflowing);
+  nav.reveal(11);verify(renderedFrame());mouseClick(nav.itemAt(11));compare(app.activeSection,11);
+  app.setWorkspace(false);compare(nav.sectionCount,13);
+ }
  function test_approvedHomeAndPrimaryNavigation(){
   app.navigatePrimary(0);verify(renderedFrame());compare(app.currentPage,0);
   const art=findChild(app,"mrHomeArtwork");verify(art!==null);tryCompare(art,"status",Image.Ready,5000);

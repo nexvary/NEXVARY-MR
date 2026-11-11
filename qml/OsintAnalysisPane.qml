@@ -64,7 +64,7 @@ Pane {
    Label {font.pixelSize:12;visible:!analysis.records.length;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("حمّل المثال المحلي لعرض الجدول ورسم العلاقات. لن تُنفّذ أي عملية بحث خارجية.", "Load the local example to inspect its table and relationship graph. No external search is performed.")}
    ColumnLayout {
     visible:analysis.viewMode===0;Layout.fillWidth:true;spacing:8
-    TextField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";palette.text:"#E5EDF3";palette.placeholderText:"#9EB4C1"}
+    TextField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";palette.text:"#E5EDF3";placeholderTextColor:"#9EB4C1"}
     RowLayout {
      Layout.fillWidth:true
      Label {font.pixelSize:12;text:analysis.app.trx("العنصر / النوع", "Entity / type");color:analysis.app.design.muted;Layout.fillWidth:true}
@@ -86,7 +86,7 @@ Pane {
       border.color:analysis.selectedIndex===modelData.index?analysis.app.design.accent:analysis.app.design.border
       RowLayout {
        anchors.fill:parent;anchors.margins:7;spacing:8
-       Image {source:"qrc:/assets/icons-metallic/"+modelData.row.icon+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17;sourceSize:Qt.size(20,20)}
+       Image {source:"qrc:/assets/icons-professional/"+modelData.row.icon+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17;sourceSize:Qt.size(20,20)}
        Label {text:modelData.row.value;textFormat:Text.PlainText;color:analysis.app.design.text;Layout.fillWidth:true;elide:Text.ElideMiddle;font.pixelSize:12}
        Label {text:modelData.row.type;color:analysis.app.design.muted;font.pixelSize:11;Layout.preferredWidth:85;elide:Text.ElideRight}
        Label {text:analysis.app.trx("اصطناعي", "Synthetic");color:analysis.app.design.muted;font.pixelSize:11;Layout.preferredWidth:70;elide:Text.ElideRight}
@@ -119,7 +119,7 @@ Pane {
         x:index===0?50:460;y:index===0?145:index===1?38:250;width:210;height:76;radius:3
         color:analysis.selectedIndex===index?"#0C435C":"#0A2231";border.color:analysis.selectedIndex===index?"#23B9E7":"#24556D"
         RowLayout {anchors.fill:parent;anchors.margins:10;spacing:8
-         Image {source:"qrc:/assets/icons-metallic/"+modelData.icon+".svg";Layout.preferredWidth:28;Layout.preferredHeight:28;sourceSize:Qt.size(40,40)}
+         Image {source:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:28;Layout.preferredHeight:28;sourceSize:Qt.size(40,40)}
          ColumnLayout {Layout.fillWidth:true;spacing:5
           Label {text:modelData.type;color:"#70D8F5";font.pixelSize:12;font.bold:true}
           Label {text:modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideMiddle}
