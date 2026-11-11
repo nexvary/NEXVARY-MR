@@ -27,7 +27,7 @@ Pane {
  LayoutMirroring.enabled: app.ar
  LayoutMirroring.childrenInherit: true
  padding:8
- background:Rectangle {color:"#F0F2F4"}
+ background:Rectangle {color:"#040507"}
  contentItem:ColumnLayout {spacing:8
  Connections {target:analysis.bridge;function onChanged(){analysis.selectedIndex=-1}}
  RowLayout {
@@ -40,7 +40,7 @@ Pane {
   objectName:"osintAnalysisSplit"
   Layout.fillWidth:true;Layout.preferredHeight:width>1060?510:1150
   orientation:width>1060?Qt.Horizontal:Qt.Vertical
-  handle:Rectangle {implicitWidth:5;implicitHeight:5;color:SplitHandle.hovered?"#8CB67B":"#D7DDE2"}
+  handle:Rectangle {implicitWidth:5;implicitHeight:5;color:SplitHandle.hovered?"#23B9E7":"#153D52"}
   OsintDesktopPane {
    visible:analysis.showRequests;SplitView.preferredWidth:210;SplitView.minimumWidth:165;SplitView.preferredHeight:240;Layout.fillWidth:analysis.width<=1060;Layout.fillHeight:true;Layout.minimumWidth:0
    title:analysis.app.trx("الطلبات", "Requests");iconName:"history"
@@ -53,6 +53,7 @@ Pane {
    Item {Layout.fillHeight:true;Layout.minimumHeight:1}
   }
   OsintDesktopPane {
+   wallpaper:true
    SplitView.fillWidth:true;SplitView.fillHeight:true;SplitView.minimumWidth:340;SplitView.preferredHeight:510
    title:analysis.app.trx("مساحة التحليل", "Analysis workspace");iconName:"search_visual"
    RowLayout {
@@ -63,17 +64,17 @@ Pane {
    Label {font.pixelSize:12;visible:!analysis.records.length;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("حمّل المثال المحلي لعرض الجدول ورسم العلاقات. لن تُنفّذ أي عملية بحث خارجية.", "Load the local example to inspect its table and relationship graph. No external search is performed.")}
    ColumnLayout {
     visible:analysis.viewMode===0;Layout.fillWidth:true;spacing:8
-    TextField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#25333E";palette.base:"#FFFFFF";palette.text:"#25333E";palette.placeholderText:"#74808A"}
+    TextField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";palette.text:"#E5EDF3";palette.placeholderText:"#9EB4C1"}
     RowLayout {
      Layout.fillWidth:true
      Label {font.pixelSize:12;text:analysis.app.trx("العنصر / النوع", "Entity / type");color:analysis.app.design.muted;Layout.fillWidth:true}
      OsintDesktopCommand {text:analysis.descending?analysis.app.trx("ترتيب تنازلي", "Descending"):analysis.app.trx("ترتيب تصاعدي", "Ascending");onClicked:analysis.descending=!analysis.descending}
     }
-    Rectangle {Layout.fillWidth:true;implicitHeight:27;color:"#E9ECEF";border.color:"#C2CAD1"
+    Rectangle {Layout.fillWidth:true;implicitHeight:27;color:"#0D2A3D";border.color:"#24556D"
      RowLayout {anchors.fill:parent;anchors.leftMargin:8;anchors.rightMargin:8
-      Label {text:analysis.app.trx("القيمة", "Value");Layout.fillWidth:true;color:"#465B68";font.pixelSize:11;font.bold:true}
-      Label {text:analysis.app.trx("النوع", "Type");Layout.preferredWidth:85;color:"#465B68";font.pixelSize:11;font.bold:true}
-      Label {text:analysis.app.trx("المصدر", "Source");Layout.preferredWidth:70;color:"#465B68";font.pixelSize:11;font.bold:true}
+      Label {text:analysis.app.trx("القيمة", "Value");Layout.fillWidth:true;color:"#BCCED8";font.pixelSize:11;font.bold:true}
+      Label {text:analysis.app.trx("النوع", "Type");Layout.preferredWidth:85;color:"#BCCED8";font.pixelSize:11;font.bold:true}
+      Label {text:analysis.app.trx("المصدر", "Source");Layout.preferredWidth:70;color:"#BCCED8";font.pixelSize:11;font.bold:true}
      }
     }
     Repeater {
@@ -81,7 +82,7 @@ Pane {
      delegate:Rectangle {
       required property var modelData
       Layout.fillWidth:true;implicitHeight:34;radius:0
-      color:analysis.selectedIndex===modelData.index?"#DCEBD5":analysis.app.design.raised
+      color:analysis.selectedIndex===modelData.index?"#0C435C":analysis.app.design.raised
       border.color:analysis.selectedIndex===modelData.index?analysis.app.design.accent:analysis.app.design.border
       RowLayout {
        anchors.fill:parent;anchors.margins:7;spacing:8
@@ -108,18 +109,18 @@ Pane {
      id:graph;objectName:"osintRelationshipGraph";property real zoom:1
      Layout.fillWidth:true;Layout.preferredHeight:350;clip:true
      contentWidth:720*zoom;contentHeight:380*zoom;boundsBehavior:Flickable.StopAtBounds
-     Rectangle {width:720;height:380;scale:graph.zoom;transformOrigin:Item.TopLeft;color:"#FFFFFF"
+     Rectangle {width:720;height:380;scale:graph.zoom;transformOrigin:Item.TopLeft;color:"transparent"
       Repeater {model:analysis.records.length?2:0
-       delegate:Rectangle {required property int index;x:260;y:190;width:226;height:2;color:"#86A27C";rotation:index===0?-28.1:27.7;transformOrigin:Item.Left}
+       delegate:Rectangle {required property int index;x:260;y:190;width:226;height:2;color:"#2F8DB1";rotation:index===0?-28.1:27.7;transformOrigin:Item.Left}
       }
       Repeater {model:analysis.records
        delegate:Rectangle {
         required property int index;required property var modelData
         x:index===0?50:460;y:index===0?145:index===1?38:250;width:210;height:76;radius:3
-        color:analysis.selectedIndex===index?"#D5E9CA":"#F4F7F3";border.color:analysis.selectedIndex===index?"#76A563":"#AFBEA7"
+        color:analysis.selectedIndex===index?"#0C435C":"#0A2231";border.color:analysis.selectedIndex===index?"#23B9E7":"#24556D"
         Column {anchors.fill:parent;anchors.margins:12;spacing:8
-         Label {font.pixelSize:12;text:parent.parent.modelData.type;color:"#3C7034";font.bold:true}
-         Label {font.pixelSize:12;text:parent.parent.modelData.value;textFormat:Text.PlainText;color:"#273B2C";width:parent.width;elide:Text.ElideMiddle}
+         Label {font.pixelSize:12;text:parent.parent.modelData.type;color:"#70D8F5";font.bold:true}
+         Label {font.pixelSize:12;text:parent.parent.modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";width:parent.width;elide:Text.ElideMiddle}
         }
         MouseArea {anchors.fill:parent;onClicked:analysis.pick(parent.index)}
         Accessible.role:Accessible.Button;Accessible.name:modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(index)

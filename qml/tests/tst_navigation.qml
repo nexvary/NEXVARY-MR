@@ -32,6 +32,13 @@ TestCase {
   for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
   page.showOsint=false
  }
+ function test_approvedMrPaletteAndBackground(){
+  compare(String(app.design.background),"#040507");
+  compare(String(app.design.surface),"#08121b");
+  compare(String(app.design.accent),"#23b9e7");
+  const background=findChild(app,"osintBackgroundImage");verify(background!==null);
+  tryCompare(background,"status",Image.Ready,5000);
+ }
  function test_osintWorkspaceBilingualNavigation(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
   const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");

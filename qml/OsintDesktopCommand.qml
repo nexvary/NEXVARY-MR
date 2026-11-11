@@ -11,7 +11,7 @@ Button {
  contentItem:RowLayout {
   spacing:6
   Image {visible:command.iconName!=="";source:visible?"qrc:/assets/icons/"+command.iconName+".svg":"";Layout.preferredWidth:18;Layout.preferredHeight:18;sourceSize:Qt.size(24,24);opacity:command.enabled?1:0.4}
-  Label {text:command.text;font:command.font;color:command.enabled?"#24313C":"#889098";horizontalAlignment:Text.AlignHCenter;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
+  Label {text:command.text;font:command.font;color:command.enabled?"#E5EDF3":"#718897";horizontalAlignment:Text.AlignHCenter;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
  }
- background:Rectangle {radius:2;color:command.down?"#C3DDB9":command.primary?"#D9EAD0":command.hovered?"#E7F2E1":"#F5F6F7";border.color:command.activeFocus?"#468D36":command.primary?"#91B782":"#BCC3CB";border.width:command.activeFocus?2:1}
+ background:Rectangle {radius:2;color:command.down?"#115875":command.primary?"#0C435C":command.hovered?"#0E3044":"#0A2231";border.color:command.activeFocus?"#50D4F7":command.primary?"#23B9E7":"#24556D";border.width:command.activeFocus?2:1}
 }

@@ -165,3 +165,24 @@ assertions passed. Core CTest 6/6 passed. Latest native CI must validate this vi
 revision separately. Earlier code dc7fc0d passed both Windows Qt production and
 laboratory jobs in run 43035575698; that run failed both Linux jobs during dependency
 installation, before configuration/build. This is not current-head acceptance.
+
+
+## Approved black / petrol / cyan MR theme
+
+The user explicitly approved the hooded analyst/spider reference image as the
+background and palette. Replaced the preceding light OSINT colors with deep
+chair black (#040507), midnight panels (#08121B), petrol surfaces (#0A2231),
+cyan highlights (#23B9E7), silver text and matching borders. Updated the common
+MR default-dark design tokens and legacy neutral-color mappings, preserving
+semantic warning/success colors and optional light mode. Desktop arrangement,
+query gates and synthetic model are unchanged.
+
+The exact approved image is packaged as a PNG resource for the app and Qt UI
+runner; provenance/fingerprint are in assets/branding/README.md. Background is
+dimmed separately for readable data and shown once in the central analysis pane.
+No provider credentials or network capability was added.
+
+Local AR/EN source-QML request/table/graph renders passed and were visually
+inspected. Core CTest 6/6 passed. Added native UI assertions for the approved
+palette and packaged background Image.Ready state. Current-head Windows/native
+CI remains a separate gate; source previews do not claim native acceptance.

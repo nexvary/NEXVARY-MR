@@ -13,7 +13,10 @@ ApplicationWindow {
  LegacyPalette {id:legacy;dark:window.darkTheme}
  function tone(value){return legacy.tone(value)}
  color:design.background
- background:Rectangle {color:window.design.background;gradient:Gradient {GradientStop {position:0;color:window.darkTheme?"#171D25":"#F7FAFF"}GradientStop {position:0.4;color:window.design.background}GradientStop {position:1;color:window.darkTheme?"#10141A":"#E5ECF5"}}}
+ background:Rectangle {color:window.design.background
+  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme;dimming:0.78}
+ }
+
  property bool showDevicePanel:false
  property bool governmentMode:true
  property int currentPage:12
