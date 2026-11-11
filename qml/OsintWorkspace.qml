@@ -90,15 +90,7 @@ ColumnLayout {
    Label {text: workspace.app.trx("الاتصال غير مفعّل. يلزم التحقق من ترخيص التكامل والتوثيق والتكلفة قبل إتاحة البحث.", "Connection is not enabled. Integration licensing, documentation and costs must be verified before searches can be enabled."); color: workspace.app.design.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true}
   }
  }
- Panel {
-  visible: workspace.activeTab === 2; Layout.fillWidth: true
-  title: workspace.app.trx("النتائج والمصادر", "Results & sources"); iconName: "document_text"
-  StateBadge {text: workspace.app.trx("بيانات اصطناعية فقط", "SYNTHETIC DATA ONLY"); tint: "#6BB8FF"}
-  Label {text: workspace.evaluation && workspace.evaluation.result.source ? workspace.app.trx("اكتمل اختبار محلي — ليس بحثًا فعليًا", "Local fixture completed — not a live search") : workspace.app.trx("لا توجد نتائج Lampyre في هذه الجلسة", "No Lampyre results in this session"); color: workspace.app.design.text; font.pixelSize: 20; font.bold: true; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-  Label {text: workspace.app.trx("مصادر البحث الفعلي ستظهر مع مرجع المصدر ووقت الجمع وحالة التحقق. نتائج PhoneInfoga تبقى داخل نموذج البحث والأدلة الحالي.", "Live findings will need source references, collection times and verification status. PhoneInfoga results remain in the existing query and evidence workflow."); color: workspace.app.design.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true}
-  Label {visible: !!workspace.evaluation && !!workspace.evaluation.result.source; text: workspace.evaluation ? workspace.evaluation.result.source || "" : ""; textFormat: Text.PlainText; color: workspace.app.design.accent; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere}
-  ActionButton {text: workspace.app.trx("فتح مساحة البحث", "Open query workspace"); onClicked: workspace.activeTab = 1}
- }
+ OsintAnalysisPane {visible: workspace.activeTab === 2; Layout.fillWidth:true; app:workspace.app}
  Panel {
   visible: workspace.activeTab === 3; Layout.fillWidth: true
   title: workspace.app.trx("الاستخدام والسجل", "Usage & history"); iconName: "history"

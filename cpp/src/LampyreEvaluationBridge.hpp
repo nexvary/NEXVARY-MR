@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVariantMap>
+#include <QVariantList>
 #include <memory>
 
 // No credential field or network transport is exposed to QML.
@@ -23,6 +24,15 @@ public:
                 {QStringLiteral("source"), QStringLiteral("fixture:lampyre-evaluation-v1")},
                 {QStringLiteral("findings"), static_cast<int>(reply.findings.size())},
                 {QStringLiteral("networkRequests"), 0}, {QStringLiteral("photonsConsumed"), 0}};
+            if (reply.state == mr::osint::QueryState::Completed) {
+                QVariantList records;
+                const QString source = QStringLiteral("fixture:lampyre-evaluation-v1");
+                const QString at = QStringLiteral("2026-11-11T00:00:00Z (fixture)");
+                records.append(QVariantMap{{QStringLiteral("type"), QStringLiteral("Email")}, {QStringLiteral("value"), QStringLiteral("research@example.invalid")}, {QStringLiteral("icon"), QStringLiteral("document_text")}, {QStringLiteral("source"), source}, {QStringLiteral("at"), at}});
+                records.append(QVariantMap{{QStringLiteral("type"), QStringLiteral("Domain")}, {QStringLiteral("value"), QStringLiteral("example.invalid")}, {QStringLiteral("icon"), QStringLiteral("search_visual")}, {QStringLiteral("source"), source}, {QStringLiteral("at"), at}});
+                records.append(QVariantMap{{QStringLiteral("type"), QStringLiteral("Fixture")}, {QStringLiteral("value"), QStringLiteral("SYNTHETIC-CASE")}, {QStringLiteral("icon"), QStringLiteral("document_lock")}, {QStringLiteral("source"), source}, {QStringLiteral("at"), at}});
+                result_.insert(QStringLiteral("records"), records);
+            }
             emit changed();
         });
     }

@@ -49,6 +49,19 @@ TestCase {
   lampyreEvaluation.cancel();compare(lampyreEvaluation.state,"synthetic-cancelled");
   lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);
   compare(lampyreEvaluation.result.networkRequests,0);compare(lampyreEvaluation.result.photonsConsumed,0);
+  compare(lampyreEvaluation.result.records.length,3);
+  ws.activeTab=2;const analysis=findChild(app,"osintAnalysisPane");
+  analysis.pick(0);compare(analysis.selected.value,"research@example.invalid");
+  analysis.filterText="example.invalid";compare(analysis.filtered.length,2);analysis.filterText="";
+  for(const ar of [true,false]){
+   app.ar=ar;
+   for(const mode of [0,1]){
+    analysis.viewMode=mode;page.contentItem.contentY=0;verify(renderedFrame());
+    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-analysis-"+mode+"-"+(ar?"ar":"en")+".png"));
+   }
+  }
+  lampyreEvaluation.runSynthetic(1);tryCompare(lampyreEvaluation,"state","synthetic-failed",3000);
+  compare(analysis.records.length,0);compare(analysis.selectedIndex,-1);
   ws.activeTab=0;page.showOsint=false;
  }
  function test_governmentOperationReceipts(){

@@ -131,3 +131,14 @@ rendering used PySide6/Qt 6.12 with a synthetic case bridge; it is a component
 preview, not a full Windows binary acceptance. Eight AR/EN tab screenshots were
 rendered. Core regression CTest remains 6/6 passing. Windows/UI CI must be checked
 for the redesign commit separately; earlier screenshots are not its evidence.
+
+
+## Client-guided analysis workspace
+
+See CLIENT_INSPECTION.md for the actual uploaded 1.10.4 package inspection,
+extraction limits and independent design. Results now have request context,
+sort/filter table, selected-item provenance and a zoomable/selectable synthetic
+relationship view. No proprietary resources or decompiled implementation imported.
+Local source-QML table/graph rendering and selection/filter assertions passed in
+AR/EN. Core CTest 6/6 passed. Updated native Qt UI assertions and screenshots await
+CI for this commit; no Windows runtime acceptance is inferred from local previews.
