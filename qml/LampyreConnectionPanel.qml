@@ -25,13 +25,13 @@ ColumnLayout {
   Label {text:"API key";color:panel.app.design.muted}
   TextField {id:key;objectName:"lampyreApiKey";Layout.fillWidth:true;maximumLength:4096;echoMode:TextInput.Password;LayoutMirroring.enabled:false;selectByMouse:true;color:panel.app.design.text;placeholderTextColor:panel.app.design.muted;placeholderText:panel.connection&&panel.connection.hasCredential?panel.app.trx("مفتاح محفوظ؛ اترك الحقل فارغًا للاحتفاظ به","Saved key; leave empty to retain it"):panel.app.trx("أدخل مفتاح API","Enter API key");background:Rectangle {color:panel.app.design.surface;border.color:panel.app.design.border;radius:5} enabled:!panel.connection||!panel.connection.busy}
   CheckBox {id:remember;objectName:"lampyreRememberKey";checked:true;text:panel.app.trx("حفظ المفتاح محميًا لهذا الحساب على Windows","Remember a protected key for this account on Windows")}
-  Flow {Layout.fillWidth:true;spacing:8
+  GridLayout {Layout.fillWidth:true;columns:width>650?3:1;columnSpacing:8;rowSpacing:8
    OsintDesktopCommand {objectName:"lampyreSaveConnection";text:panel.app.trx("حفظ الإعدادات","Save settings");enabled:!!panel.connection&&!panel.connection.busy;onClicked:{panel.connection.configure(endpoint.text.trim(),key.text,remember.checked);key.clear()}}
    OsintDesktopCommand {objectName:"lampyreForgetConnection";text:panel.app.trx("حذف بيانات الاتصال","Forget connection");enabled:!!panel.connection&&!panel.connection.busy&&panel.connection.hasCredential;onClicked:{panel.connection.forget();key.clear();endpoint.clear()}}
    OsintDesktopCommand {text:panel.app.trx("فتح حساب Lampyre","Open Lampyre account");onClicked:panel.app.openExternal("https://account.lampyre.io/")}
   }
   CheckBox {id:connectionConsent;objectName:"lampyreConnectionConsent";text:panel.app.trx("أوافق على الاتصال بهذا الخادم للتحقق من المفتاح وجلب قائمة الأدوات","Connect to this server to validate the key and retrieve its tool list")}
-  Flow {Layout.fillWidth:true;spacing:8
+  RowLayout {Layout.fillWidth:true;spacing:8
    OsintDesktopCommand {objectName:"lampyreTestConnection";primary:true;text:panel.app.trx("اختبار الاتصال وجلب الأدوات","Test connection & load tools");enabled:!!panel.connection&&panel.connection.hasCredential&&!panel.connection.busy&&connectionConsent.checked;onClicked:{panel.connection.connectProvider(connectionConsent.checked);connectionConsent.checked=false}}
    OsintDesktopCommand {objectName:"lampyreStopWaiting";visible:!!panel.connection&&panel.connection.busy;text:panel.app.trx("إيقاف الانتظار","Stop waiting");onClicked:panel.connection.cancel()}
   }

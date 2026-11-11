@@ -66,7 +66,7 @@ private slots:
   QVERIFY(!client.resultText().contains("TEST-API-KEY"));
   LampyreConnection reopened(t.path(),nullptr,nullptr,nullptr,true);QVERIFY(reopened.hasCredential());QCOMPARE(reopened.endpoint(),server.url());QVERIFY(!reopened.connected());QCOMPARE(server.requests,0);
 #ifdef Q_OS_WIN
-  QFile f(t.filePath("lampyre-synthetic.dat"));QVERIFY(f.open(QIODevice::ReadOnly));QVERIFY(!f.readAll().contains("TEST-API-KEY"));
+  QFile f(t.filePath("lampyre-synthetic.dat"));QVERIFY(f.open(QIODevice::ReadOnly));QVERIFY(!f.readAll().contains("TEST-API-KEY"));f.close();
 #endif
   reopened.forget();QVERIFY(!reopened.hasCredential());QVERIFY(!QFile::exists(t.filePath("lampyre-synthetic.dat")));
  }
