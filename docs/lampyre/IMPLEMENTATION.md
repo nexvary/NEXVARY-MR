@@ -255,3 +255,8 @@ Fluent sources remain archived with their license, but current symbols do not
 use that geometry. Navigation sizing is 44 px. All 27 SVGs validate with Qt 6.8.3;
 the 48 AR/EN wide/narrow navigation component checks pass. Current-head full native
 Windows execution remains a separate acceptance gate.
+
+Neon accent update: green `#39FF14` and red `#FF1744` are incorporated into
+the existing metallic material gradients and functional details. Silver/indigo
+body materials and all routes remain unchanged. Qt 6.8.3 SVG and bilingual
+wide/narrow component checks cover the revised assets.

@@ -30,3 +30,8 @@ The flat downloaded variants were rejected. Current icons-professional SVGs are
 independently drawn metal/enamel symbols from scripts/build_sculpted_icons.py.
 The 27 unframed assets replace those variants, with output hashes in PROVENANCE.json.
 Government navigation now has 12 distinct symbols and 44 px display sizing.
+
+Neon accent update: green `#39FF14` and red `#FF1744` are incorporated into
+the existing metallic material gradients and functional details. Silver/indigo
+body materials and all routes remain unchanged. Qt 6.8.3 SVG and bilingual
+wide/narrow component checks cover the revised assets.

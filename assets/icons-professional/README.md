@@ -13,3 +13,8 @@ current sculpted assets. Downloaded Fluent originals and their license remain
 archived under assets/icon-sources/fluent. The earlier fetch_professional_icons.py
 reconstructs the historical flat variant; rerun build_sculpted_icons.py afterwards
 to restore the current application set.
+
+Neon accent update: green `#39FF14` and red `#FF1744` are incorporated into
+the existing metallic material gradients and functional details. Silver/indigo
+body materials and all routes remain unchanged. Qt 6.8.3 SVG and bilingual
+wide/narrow component checks cover the revised assets.
