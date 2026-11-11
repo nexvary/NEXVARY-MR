@@ -1,5 +1,15 @@
 # Lampyre integration evaluation — 2026-11-11
 
+## Current 0.4.1 implementation (supersedes fixture-only status below)
+
+`LampyreConnection` is a native user-configured Streamable HTTP MCP client. It implements initialize, initialized notification, paginated tools/list, explicit tools/call, JSON/SSE responses, session/protocol headers, and a bounded local result export. Endpoint and Bearer key must come from the user's provider account; no public endpoint or vendor-specific authentication contract is assumed. OAuth, automatic Photon balance/cost lookup, and provider-specific graph ontology are not implemented.
+
+The production UI starts empty. Synthetic evaluation is opt-in, separate, and cleared on exit. Windows credentials use the existing DPAPI-backed vault and local user UUID; logout/user changes clear in-memory credentials, results, sessions and pending requests. Redirects and insecure production endpoints are refused. Testing the connection and invoking tools both require reviewed external-analysis permission. Search additionally requires the existing AnalyzeEvidence role and explicit per-request cost consent. Revocation cancels local work and discards pending results; local cancellation does not certify provider cancellation/refund.
+
+The QTcpServer test fixture verifies protocol exchange, pagination, SSE, credential handling, explicit consent, argument transport, redaction, bounded failures, protected storage, logout, reviewed grants/revocation, signed operation receipts, and new-file result export. These are synthetic tests, not live Lampyre verification. The account-specific URL/key, real entitlements, provider schema and pricing remain unverified.
+
+See `docs/WORKSPACE_QUICK_START_AR.md` for account, case and connection instructions. The historical evaluation notes below remain as provenance and describe the separate fixture adapter only.
+
 ## Repository audit and branch choice
 
 `main` is 7446b17 and does not contain the native Qt application. Native foundation is

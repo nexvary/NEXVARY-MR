@@ -23,7 +23,7 @@ ScrollView {
     ActionButton {text:page.app.trx("فتح إعدادات الأدوات","Open tool settings");onClicked:page.app.navigateSection(10)}
    }
    Panel {title:page.app.trx("عن NEXVARY MR","About NEXVARY MR");iconName:"question_circle";Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
-    Label {text:page.app.trx("محطة صيانة وتحليل أدلة محلية — 0.4.0 تطوير.\nاختبار البناء لا يساوي اعتماد الأجهزة أو التوقيع التجاري.\nالأيقونات: Microsoft Fluent System Icons — MIT.\nCtrl+R: اكتشاف ADB · Ctrl+Q: إغلاق بمراجعة.\nزر الرجوع يعيدك إلى القسم السابق.","Local repair and evidence workstation — 0.4.0 development.\nBuild tests do not establish hardware acceptance or publisher signing.\nIcons: Microsoft Fluent System Icons — MIT.\nCtrl+R: ADB discovery · Ctrl+Q: reviewed exit.\nBack restores the previous workspace.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted}
+    Label {text:page.app.trx("محطة صيانة وتحليل أدلة محلية — 0.4.1 تطوير.\nاختبار البناء لا يساوي اعتماد الأجهزة أو التوقيع التجاري.\nأيقونات Nexvary معدنية؛ تراخيص المكونات ضمن الحزمة.\nCtrl+R: اكتشاف ADB · Ctrl+Q: إغلاق بمراجعة.\nزر الرجوع يعيدك إلى القسم السابق.","Local repair and evidence workstation — 0.4.1 development.\nBuild tests do not establish hardware acceptance or publisher signing.\nOriginal Nexvary metal icons; component licenses are bundled.\nCtrl+R: ADB discovery · Ctrl+Q: reviewed exit.\nBack restores the previous workspace.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted}
     ActionButton {text:page.app.trx("المشروع والمصادر","Project & sources");onClicked:app.openExternal("https://github.com/nexvary/NEXVARY-MR")}
    }
   }

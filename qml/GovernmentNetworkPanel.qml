@@ -16,8 +16,8 @@ Panel {
  stateText:operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
  function requestCategory(name){const consent=approval.checked;approval.checked=false;selectedRequest=operationPolicy.requestException(name,reason.text,caseRef.text,seconds.value,consent)}
  function caption(name){
-  const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","external-analysis":"محللات خارجية: ClamAV وmmls","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
-  const en={"cloud-publish":"Cloud workshop publishing","tracking-portal":"Tracking listener, including loopback","signature-update":"FreshClam signature downloads","device-tools":"External device tools: ADB, scrcpy and USB inspection","external-analysis":"External analyzers: ClamAV and mmls","external-links":"HTTP/HTTPS browser handoff"}
+  const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","external-analysis":"التحليل الخارجي وطلبات OSINT","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
+  const en={"cloud-publish":"Cloud workshop publishing","tracking-portal":"Tracking listener, including loopback","signature-update":"FreshClam signature downloads","device-tools":"External device tools: ADB, scrcpy and USB inspection","external-analysis":"External analysis and OSINT requests","external-links":"HTTP/HTTPS browser handoff"}
   return (app.ar?ar:en)[name]||name
  }
  function statusCaption(status){
@@ -25,11 +25,13 @@ Panel {
   return app.ar?(ar[status]||status):status
  }
  function kindCaption(kind){
-  const ar={"phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
-  const en={"phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
+  const ar={"lampyre-mcp":"طلب أداة Lampyre MCP","phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
+  const en={"lampyre-mcp":"Lampyre MCP tool request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
   return (app.ar?ar:en)[kind]||kind
  }
- Label {objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
+ Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
+ CheckBox {id:policyTechnical;text:app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
+ Label {visible:policyTechnical.checked;objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.accent:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("سجل السياسات متاح — تحقق محلي","Policy journal available — local verification"):app.trx("تعذر التحقق من سجل السياسات — الاستثناءات مغلقة","Policy journal unavailable — exceptions denied")}
  ColumnLayout {
   Layout.fillWidth:true
@@ -65,7 +67,7 @@ Panel {
    Label {visible:modelData.allowed;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:panel.app.design.muted;text:(modelData.reason||"")+"\n"+(modelData.actor||"")+" · "+(modelData.expiresUtc||"")}
    RowLayout {Layout.fillWidth:true
     ActionButton {objectName:"governmentNetworkGrant-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("طلب استثناء","Request exception");enabled:panel.canRequest&&approval.checked&&reason.text.trim().length>0&&!modelData.allowed;onClicked:panel.requestCategory(modelData.capability)}
-    ActionButton {objectName:"governmentNetworkRevoke-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("إيقاف فوري","Stop now");enabled:modelData.allowed;onClicked:operationPolicy.revoke(modelData.capability)}
+    ActionButton {objectName:"governmentNetworkRevoke-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("إيقاف التفعيل","Stop activation");visible:modelData.allowed;enabled:modelData.allowed;onClicked:operationPolicy.revoke(modelData.capability)}
    }
   }
  }
@@ -102,6 +104,6 @@ Panel {
   ActionButton {objectName:"governmentPolicyVerify";enabled:auditPath.text.length>0&&retained.text.length>0;text:app.trx("تحقق من التواقيع والترتيب والمرساة","Verify signatures, order and retained anchor");onClicked:operationPolicy.verifyAudit(auditPath.text,retained.text)}
   Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:operationPolicy.auditStatus.verification?JSON.stringify(operationPolicy.auditStatus.verification):""}
  }
- Label {objectName:"governmentNetworkError";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger;text:operationPolicy.error}
+ Label {objectName:"governmentNetworkError";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger;text:panel.app.humanError(operationPolicy.error)}
  Connections {target:identityBridge;function onChanged(){reason.clear();caseRef.clear();approval.checked=false;exportConsent.checked=false;auditPath.clear();retained.clear();panel.selectedRequest=""}}
 }

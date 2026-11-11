@@ -32,10 +32,12 @@
 #include "GovernmentOperationPolicy.hpp"
 #include "ResearchBridge.hpp"
 #include "LampyreEvaluationBridge.hpp"
+#include "LampyreConnection.hpp"
 class Setup:public QObject {
  Q_OBJECT
  QTemporaryDir temp;
  std::unique_ptr<LampyreEvaluationBridge> lampyre;
+ std::unique_ptr<LampyreConnection> lampyreConnection;
  std::unique_ptr<ToolBridge> tools;
  std::unique_ptr<RepairBridge> repair;
  std::unique_ptr<WorkshopBridge> workshop;
@@ -48,6 +50,7 @@ class Setup:public QObject {
  std::unique_ptr<RecoveryBridge> recovery;
  std::unique_ptr<LawCaseBridge> law;
  std::unique_ptr<IdentityService> identity;
+ std::unique_ptr<IdentityService> firstRunIdentity;
  std::unique_ptr<ResearchBridge> research;
  std::unique_ptr<GovernmentOperationPolicy> operationPolicy;
  QByteArray originalSyntheticModeEnv;
@@ -170,8 +173,12 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));
   engine->rootContext()->setContextProperty("operationPolicy",operationPolicy.get());
+  lampyreConnection=std::make_unique<LampyreConnection>(temp.filePath("provider-credentials"),identity.get(),operationPolicy.get());
+  engine->rootContext()->setContextProperty("lampyreConnection",lampyreConnection.get());
   engine->rootContext()->setContextProperty("lampyreEvaluation",lampyre.get());
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
+  firstRunIdentity=std::make_unique<IdentityService>(temp.filePath("fresh-identities.dat"),true);
+  engine->rootContext()->setContextProperty("firstRunIdentity",firstRunIdentity.get());
   engine->rootContext()->setContextProperty("identityBridge",identity.get());
   engine->rootContext()->setContextProperty("researchBridge",research.get());
   engine->rootContext()->setContextProperty("toolBridge",tools.get());

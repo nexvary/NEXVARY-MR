@@ -61,12 +61,31 @@ ApplicationWindow {
   {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
  ]
  readonly property var sections:governmentMode?governmentSections:professionalSections
- function openExternal(url){const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
+ property string pendingHelpUrl:""
+ function openExternal(url){if(operationPolicy.isHelpLink(url)){pendingHelpUrl=url;helpLinkDialog.open();return true}const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
+ Dialog {id:helpLinkDialog;objectName:"officialHelpLinkDialog";anchors.centerIn:parent;modal:true;width:Math.min(520,window.width-32);title:window.trx("فتح الموقع الرسمي","Open official website");standardButtons:Dialog.Yes|Dialog.No
+  Label {width:helpLinkDialog.availableWidth;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:window.design.text;text:window.trx("سيفتح الرابط في المتصفح الخارجي دون إرسال بيانات القضية: ","Open this link in the external browser without sending case data: ")+window.pendingHelpUrl}
+  onAccepted:{const ok=operationPolicy.openHelpLink(window.pendingHelpUrl,true);if(!ok)window.notice(false,"",operationPolicy.error);window.pendingHelpUrl=""}
+  onRejected:window.pendingHelpUrl=""
+ }
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
  readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
- function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
+ function humanError(value){
+  const text=String(value||"");if(!ar)return text;
+  if(text.indexOf("Government offline policy blocked")>=0)return "الاتصال الخارجي لهذه العملية غير مفعّل. افتح الإدارة ← صلاحيات الاتصال لطلب التفعيل.";
+  if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
+  if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
+  if(text.indexOf("Sign-in failed")>=0)return "تعذر تسجيل الدخول. راجع اسم المستخدم وكلمة المرور وحالة الحساب.";
+  if(text.indexOf("Username already exists")>=0)return "اسم المستخدم موجود بالفعل؛ اختر اسمًا آخر أو سجّل الدخول بالحساب الموجود.";
+  if(text.indexOf("3–64 character lowercase")>=0)return "اختر اسم مستخدم إنجليزيًا صغيرًا من 3 إلى 64 حرفًا، واسم عرض، وكلمة مرور لا تقل عن 14 حرفًا.";
+  if(text.indexOf("14 characters")>=0)return "كلمة المرور يجب ألا تقل عن 14 حرفًا. راجع اسم المستخدم واسم العرض أيضًا.";
+  if(text.indexOf("No case grant")>=0)return "هذا الحساب لا يملك صلاحية الوصول إلى القضية المحددة.";
+  return text;
+ }
+ function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
+ function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:humanError(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
  function sectionForPage(page){if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
  function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{

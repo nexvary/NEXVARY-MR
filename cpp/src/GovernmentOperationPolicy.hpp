@@ -38,6 +38,8 @@ public:
   Q_INVOKABLE void revoke(const QString &capability);
   Q_INVOKABLE void revokeAll();
   Q_INVOKABLE bool openExternal(const QString &url);
+  Q_INVOKABLE bool isHelpLink(const QString &url) const;
+  Q_INVOKABLE bool openHelpLink(const QString &url,bool consent);
   static QStringList capabilities();
   QVariantList requests() const;
   QVariantMap auditStatus() const;

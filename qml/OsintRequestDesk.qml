@@ -5,6 +5,7 @@ Pane {
  id:desk
  property var app
  property int selectedProvider:0
+ property bool demoMode:false
  property int scenario:0
  readonly property var bridge:typeof lampyreEvaluation!=="undefined"?lampyreEvaluation:null
  padding:8
@@ -14,10 +15,11 @@ Pane {
   Label {text:desk.app.trx("المزوّد", "Provider");color:"#9EB4C1";font.pixelSize:12}
   ComboBox {objectName:"osintProviderSelector";model:["Lampyre", "PhoneInfoga", "OSINT Industries"];currentIndex:desk.selectedProvider;onActivated:desk.selectedProvider=currentIndex;Layout.preferredWidth:240;palette.base:"#08121B";palette.text:"#E5EDF3";palette.button:"#0D2A3D";palette.buttonText:"#E5EDF3"}
   Item {Layout.fillWidth:true}
-  Label {text:desk.app.trx("التجربة غير مؤكدة • لا اتصال API", "Trial unconfirmed • No API connection");color:"#9EB4C1";font.pixelSize:11;visible:desk.selectedProvider===0}
+  Label {text:desk.app.trx("التجربة غير مؤكدة • لا اتصال API", "Trial unconfirmed • No API connection");color:"#9EB4C1";font.pixelSize:11;visible:desk.selectedProvider===0&&desk.demoMode}
  }
+ LampyreConnectionPanel {app:desk.app;Layout.fillWidth:true;visible:desk.selectedProvider===0&&!desk.demoMode}
  GridLayout {
-  objectName:"lampyrePanel";visible:desk.selectedProvider===0
+  objectName:"lampyrePanel";visible:desk.selectedProvider===0&&desk.demoMode
   Layout.fillWidth:true;columns:width>900?3:1;columnSpacing:4;rowSpacing:4
   OsintDesktopPane {
    Layout.preferredWidth:220;Layout.fillWidth:desk.width<=900;Layout.fillHeight:true
@@ -58,7 +60,7 @@ Pane {
   }
   Layout.preferredHeight:440
  }
- RowLayout {visible:desk.selectedProvider===0;Layout.fillWidth:true;Layout.margins:6
+ RowLayout {visible:desk.selectedProvider===0&&desk.demoMode;Layout.fillWidth:true;Layout.margins:6
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#9EB4C1";font.pixelSize:11;text:!desk.bridge?desk.app.trx("المختبر غير متاح", "Laboratory unavailable"):desk.bridge.busy?desk.app.trx("جارٍ تشغيل المثال…", "Running fixture…"):desk.app.trx("المثال دون تكلفة • النتائج في تبويب التحقيق", "No-cost example • Results in the investigation tab")}
   OsintDesktopCommand {objectName:"lampyreCancelSynthetic";text:desk.app.trx("إلغاء", "Cancel");enabled:!!desk.bridge&&desk.bridge.busy;onClicked:desk.bridge.cancel()}
   OsintDesktopCommand {objectName:"lampyreRunSynthetic";iconName:"checkmark_circle";primary:true;text:desk.app.trx("تنفيذ المثال", "Execute example");enabled:!!desk.bridge&&!desk.bridge.busy;onClicked:desk.bridge.runSynthetic(desk.scenario)}

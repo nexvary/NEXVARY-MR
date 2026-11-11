@@ -566,6 +566,20 @@ bool GovernmentOperationPolicy::verifyAudit(const QString &input,
   emit errorChanged();
   return true;
 }
+// Public setup/help only: exact URLs, no query, credentials or case payload.
+// This user-confirmed browser handoff does not grant any operation category.
+bool GovernmentOperationPolicy::isHelpLink(const QString &text) const {
+ const QUrl url(text,QUrl::StrictMode);
+ if(!url.isValid()||url.scheme()!="https"||!url.userInfo().isEmpty()||url.hasQuery()||url.hasFragment()||url.port(-1)!=-1)return false;
+ static const QStringList urls={"https://lampyre.io/","https://lampyre.io/documentation/","https://lampyre.io/faq/","https://account.lampyre.io/","https://nexvary.com/","https://developer.android.com/tools/releases/platform-tools","https://developer.android.com/studio/run/win-usb","https://github.com/Genymobile/scrcpy","https://github.com/nexvary/NEXVARY-MR","https://www.clamav.net/downloads","https://docs.clamav.net/manual/Usage/SignatureManagement.html"};
+ auto canonical=url.toString(QUrl::FullyEncoded);if(url.path().isEmpty())canonical+='/';return urls.contains(canonical);
+}
+bool GovernmentOperationPolicy::openHelpLink(const QString &text,bool consent) {
+ if(!consent||!isHelpLink(text))return fail("Only a confirmed official help link without case data may be opened.");
+ const bool ok=QDesktopServices::openUrl(QUrl(text,QUrl::StrictMode));
+ if(!ok)return fail("The default browser could not be opened.");
+ error_.clear();emit errorChanged();return true;
+}
 bool GovernmentOperationPolicy::openExternal(const QString &text) {
   if (!permit("external-links"))
     return false;

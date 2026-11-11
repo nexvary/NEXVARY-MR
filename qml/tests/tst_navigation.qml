@@ -9,6 +9,7 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
+ readonly property var windowUnderTest:app
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
@@ -74,7 +75,7 @@ TestCase {
  function test_osintWorkspaceBilingualNavigation(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
   const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");
-  page.showOsint=true;ws.selectedProvider=0;
+  page.showOsint=true;ws.selectedProvider=0;ws.demoMode=true;
   for(const ar of [true,false]){
    app.ar=ar;
    for(const tab of [1,2,3]){
@@ -489,7 +490,7 @@ TestCase {
   findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
-   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150)
+   const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150,"service list "+list.width+"x"+list.height+" page "+page.width+"x"+page.height+" ar="+arabic)
    page.review({id:"sideload_zip",ar:"اختبار موافقة اصطناعي",en:"Synthetic consent test",risk:"destructive"})
    const dialog=findChild(app,"deviceServiceConfirm");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled)
    findChild(app,"serviceOwnerConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
@@ -861,6 +862,30 @@ TestCase {
   compare(findChild(app,"runRecovery").enabled,false);page.step=4;verify(renderedFrame());mouseClick(findChild(app,"closeRecoveryCase"));tryCompare(recoveryBridge,"active",false);findChild(app,"recoveryTabs").currentIndex=0;
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
+ function test_osintDefaultIsLiveSetup(){
+  app.setWorkspace(true);app.navigateSection(6);const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");page.showOsint=true;verify(renderedFrame());
+  compare(ws.demoMode,false);compare(ws.activeTab,1);compare(findChild(app,"osintAnalysisPane").records.length,0);
+  verify(findChild(app,"lampyreMcpEndpoint").visible);verify(findChild(app,"lampyreApiKey").visible);compare(findChild(app,"lampyreTestConnection").enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-ar.png"));
+  ws.demoMode=true;lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);compare(findChild(app,"osintAnalysisPane").records.length,3);
+  ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);page.showOsint=false;
+ }
+ Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}
+ function test_yFirstAdministratorIsSignedIn(){
+  verify(firstRunIdentity.needsSetup);const pane=firstRunPanelComponent.createObject(app.contentItem);verify(pane!==null);verify(renderedFrame());
+  findChild(pane,"identityUsername").text="first-admin";findChild(pane,"identityDisplayName").text="Synthetic first administrator";findChild(pane,"identityPassword").text="Synthetic-only UI password 2026!";
+  artifactClick(pane,findChild(pane,"identitySignIn"));verify(firstRunIdentity.authenticated,firstRunIdentity.error);compare(firstRunIdentity.session.role,"administrator");compare(findChild(pane,"identityPassword").text,"");pane.destroy();verify(renderedFrame());
+ }
+ function test_yGuidedInvestigatorAndCaseSave(){
+  app.setWorkspace(true);app.navigateSection(10);verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));verify(renderedFrame());
+  const law=findChild(app,"lawEnforcementWorkspace"),panel=findChild(app,"identityPanel");law.section=10;
+  compare(findChild(app,"lawIdentityRole").text,app.roleLabel("administrator"));verify(findChild(app,"lawAccountGuidance").visible);
+  findChild(app,"identityNewUsername").text="guided-investigator";findChild(app,"identityNewDisplayName").text="Synthetic guided operator";findChild(app,"identityNewPassword").text="Synthetic-only UI password 2026!";
+  artifactClick(panel,findChild(app,"identityCreateInvestigatorAndSignIn"));compare(identityBridge.session.role,"investigator");compare(findChild(app,"identityNewPassword").text,"");
+  law.newCase();verify(renderedFrame());const form=findChild(app,"lawCaseForm");form.step=3;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));verify(findChild(app,"lawFormError").text.length>0);compare(form.missingFields.length,7);
+  const m={caseNumber:"SYNTHETIC-GUIDED-SAVE",investigatingAgency:"Synthetic lab",investigatorName:"Synthetic operator",seizedDeviceDescription:"Synthetic item",authorityReference:"TEST-ONLY",issuingAuthority:"Synthetic lab",scope:"Synthetic local fixture only"};form.form=m;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));compare(law.section,0);compare(lawCaseBridge.activeCase.metadata.caseNumber,m.caseNumber);
+  law.editCase();form.setField("notes","Edited through guided workflow");form.step=3;verify(renderedFrame());mouseClick(findChild(app,"lawSaveCase"));compare(lawCaseBridge.activeCase.metadata.notes,"Edited through guided workflow");const id=lawCaseBridge.activeCase.id;lawCaseBridge.closeWorkspace();verify(lawCaseBridge.openCase(id));compare(lawCaseBridge.activeCase.metadata.notes,"Edited through guided workflow");
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));app.setWorkspace(false);
+ }
  function test_yLocalIdentity(){
   app.navigateSection(12);const law=findChild(app,"lawEnforcementWorkspace");law.section=10;verify(renderedFrame());identityBridge.logout();verify(!identityBridge.needsSetup)
   findChild(app,"identityUsername").text="ui-admin";verify(lawCaseBridge.activeCase.id===undefined);compare(lawCaseBridge.cases.length,0)

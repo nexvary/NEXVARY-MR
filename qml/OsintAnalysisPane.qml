@@ -5,8 +5,9 @@ Pane {
  id: analysis
  objectName: "osintAnalysisPane"
  property var app
+ property bool demoMode:false
  readonly property var bridge: typeof lampyreEvaluation !== "undefined" ? lampyreEvaluation : null
- readonly property var records: bridge && bridge.result.records ? bridge.result.records : []
+ readonly property var records: demoMode && bridge && bridge.result.records ? bridge.result.records : []
  property int viewMode: 0
  property int selectedIndex: -1
  property bool showInspector:true

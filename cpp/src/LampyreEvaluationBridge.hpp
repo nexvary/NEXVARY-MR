@@ -56,6 +56,9 @@ public:
         timer_.stop(); provider_->cancel(); result_.clear();
         state_ = QStringLiteral("synthetic-cancelled"); emit changed();
     }
+    Q_INVOKABLE void clear() {
+        timer_.stop(); if(provider_)provider_->cancel();provider_.reset();result_.clear();state_=QStringLiteral("trial-pending");emit changed();
+    }
 signals:
     void changed();
 private:

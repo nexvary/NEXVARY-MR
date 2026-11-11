@@ -4,11 +4,14 @@ import QtQuick.Layouts
 ColumnLayout {
  id:workspace;objectName:"osintWorkspace"
  property var app
- property int activeTab:2
+ property bool demoMode:false
+ onDemoModeChanged:{if(!demoMode&&evaluation)evaluation.clear();activeTab=1}
+ property int activeTab:1
  property int selectedProvider:0
  property int ribbonTab:0
  property bool showInspector:true
  property bool showRequests:true
+ readonly property var liveConnection:typeof lampyreConnection!=="undefined"?lampyreConnection:null
  readonly property var evaluation:typeof lampyreEvaluation!=="undefined"?lampyreEvaluation:null
  QtObject {
   id:desktopTokens
@@ -27,6 +30,8 @@ ColumnLayout {
   readonly property bool ar:workspace.app.ar
   readonly property var design:desktopTokens
   function trx(a,e){return workspace.app.trx(a,e)}
+  function openExternal(url){return workspace.app.openExternal(url)}
+  function humanError(error){return workspace.app.humanError(error)}
  }
  LayoutMirroring.enabled:app.ar;LayoutMirroring.childrenInherit:true;spacing:0
  Rectangle {
@@ -34,7 +39,7 @@ ColumnLayout {
   RowLayout {anchors.fill:parent;anchors.margins:7;spacing:8
    Image {source:"qrc:/assets/icons-professional/search_visual.svg";Layout.preferredWidth:19;Layout.preferredHeight:19;sourceSize:Qt.size(24,24)}
    Label {text:"NEXVARY MR  /  "+workspace.app.trx("مساحة التحقيق", "Investigation workspace");font.pixelSize:13;font.bold:true;color:"#E5EDF3";Layout.fillWidth:true}
-   Label {text:workspace.app.trx("محلي • غير متصل", "Local • Disconnected");font.pixelSize:11;color:"#9EB4C1"}
+   Label {text:workspace.demoMode?workspace.app.trx("وضع عرض تجريبي", "Demo mode"):workspace.liveConnection&&workspace.liveConnection.connected?workspace.app.trx("متصل بخادم MCP", "MCP server connected"):workspace.app.trx("اتصال الحساب من إعدادات المزود", "Configure the provider account below");font.pixelSize:11;color:"#9EB4C1"}
   }
  }
  Rectangle {
@@ -52,7 +57,7 @@ ColumnLayout {
   RowLayout {anchors.fill:parent;anchors.margins:7;spacing:10
    ColumnLayout {spacing:5
     RowLayout {spacing:5
-     OsintDesktopCommand {iconName:"document_text";text:workspace.app.trx("مثال جديد", "New example");enabled:!!workspace.evaluation&&!workspace.evaluation.busy;onClicked:{workspace.evaluation.runSynthetic(0);workspace.activeTab=2}}
+     OsintDesktopCommand {iconName:"document_text";text:workspace.app.trx("مثال جديد", "New example");visible:workspace.demoMode;enabled:!!workspace.evaluation&&!workspace.evaluation.busy;onClicked:{workspace.evaluation.runSynthetic(0);workspace.activeTab=2}}
      OsintDesktopCommand {iconName:"settings";text:workspace.app.trx("قائمة الطلبات", "Request catalog");primary:workspace.activeTab===1;onClicked:workspace.activeTab=1}
     }
     Label {text:workspace.app.trx("تحقيق محلي", "Local investigation");color:"#9EB4C1";font.pixelSize:10;Layout.alignment:Qt.AlignHCenter}
@@ -92,18 +97,19 @@ ColumnLayout {
    Item {Layout.fillWidth:true}
   }
  }
- OsintAnalysisPane {id:analysis;Layout.fillWidth:true;app:desktopApp;visible:workspace.activeTab===0||workspace.activeTab===2;showInspector:workspace.showInspector;showRequests:workspace.showRequests}
- OsintRequestDesk {Layout.fillWidth:true;app:desktopApp;visible:workspace.activeTab===1;selectedProvider:workspace.selectedProvider;onSelectedProviderChanged:workspace.selectedProvider=selectedProvider}
+ CheckBox {objectName:"osintDemoMode";text:workspace.app.trx("وضع عرض تجريبي منفصل — بيانات اختبار فقط","Separate demonstration mode — test data only");checked:workspace.demoMode;onToggled:workspace.demoMode=checked;Layout.fillWidth:true}
+ OsintAnalysisPane {id:analysis;demoMode:workspace.demoMode;Layout.fillWidth:true;app:desktopApp;visible:workspace.demoMode&&(workspace.activeTab===0||workspace.activeTab===2);showInspector:workspace.showInspector;showRequests:workspace.showRequests}
+ OsintRequestDesk {Layout.fillWidth:true;app:desktopApp;demoMode:workspace.demoMode;visible:workspace.activeTab===1||!workspace.demoMode&&workspace.activeTab===2;selectedProvider:workspace.selectedProvider;onSelectedProviderChanged:workspace.selectedProvider=selectedProvider}
  OsintDesktopPane {
   Layout.fillWidth:true;visible:workspace.activeTab===3;title:workspace.app.trx("الاستخدام والتفويض", "Usage & authorization");iconName:"history";Layout.preferredHeight:350
-  Label {text:workspace.app.trx("حساب Lampyre غير متصل. الرصيد والتكلفة الفعلية غير متاحين.", "Lampyre account disconnected. Actual balance and pricing are unavailable.");color:desktopTokens.text;Layout.fillWidth:true;wrapMode:Text.WordWrap}
-  Label {text:workspace.app.trx("المثال المحلي: 0 Photon. لا توجد طلبات مدفوعة أو سجل حساب متزامن.", "Local example: 0 Photons. No paid requests or synchronized account history.");color:desktopTokens.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+  Label {text:workspace.app.trx("الرصيد وتكلفة الطلبات يُراجعان في حساب Lampyre قبل التنفيذ.","Review balance and request prices in the Lampyre account before execution.");color:desktopTokens.text;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+  Label {text:workspace.demoMode?workspace.app.trx("العرض التجريبي يعمل محليًا دون خصم رصيد.","The demonstration runs locally without credit consumption."):workspace.app.trx("راجع الرصيد والتكلفة في حساب المزود. لا يُعرض رصيد مفترض أو تقدير غير متحقق منه.","Check balance and prices in the provider account. No assumed balance or unverified quote is displayed.");color:desktopTokens.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
   Item {Layout.fillHeight:true}
  }
  Rectangle {
   Layout.fillWidth:true;implicitHeight:25;color:"#0D2A3D";border.color:"#24556D"
   RowLayout {anchors.fill:parent;anchors.leftMargin:8;anchors.rightMargin:8
-   Label {text:workspace.app.trx("مثال اصطناعي • ليس دليلًا", "Synthetic example • Not evidence");font.pixelSize:10;color:"#9EB4C1";Layout.fillWidth:true}
+   Label {text:workspace.demoMode?workspace.app.trx("عرض تجريبي منفصل", "Separate demonstration"):workspace.app.trx("لا يُنفّذ طلب دون اختيار وتأكيد", "No request runs without selection and confirmation");font.pixelSize:10;color:"#9EB4C1";Layout.fillWidth:true}
    Label {text:workspace.app.trx("الرصيد: غير متاح", "Balance: unavailable");font.pixelSize:10;color:"#9EB4C1"}
   }
  }
