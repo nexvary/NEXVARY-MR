@@ -32,7 +32,7 @@ ColumnLayout {
  Rectangle {
   Layout.fillWidth:true;implicitHeight:33;color:"#040507";border.color:"#24556D"
   RowLayout {anchors.fill:parent;anchors.margins:7;spacing:8
-   Image {source:"qrc:/assets/icons/search_visual.svg";Layout.preferredWidth:19;Layout.preferredHeight:19;sourceSize:Qt.size(24,24)}
+   Image {source:"qrc:/assets/icons-metallic/search_visual.svg";Layout.preferredWidth:19;Layout.preferredHeight:19;sourceSize:Qt.size(24,24)}
    Label {text:"NEXVARY MR  /  "+workspace.app.trx("مساحة التحقيق", "Investigation workspace");font.pixelSize:13;font.bold:true;color:"#E5EDF3";Layout.fillWidth:true}
    Label {text:workspace.app.trx("محلي • غير متصل", "Local • Disconnected");font.pixelSize:11;color:"#9EB4C1"}
   }

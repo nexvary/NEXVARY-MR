@@ -86,7 +86,7 @@ Pane {
       border.color:analysis.selectedIndex===modelData.index?analysis.app.design.accent:analysis.app.design.border
       RowLayout {
        anchors.fill:parent;anchors.margins:7;spacing:8
-       Image {source:"qrc:/assets/icons/"+modelData.row.icon+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17;sourceSize:Qt.size(20,20)}
+       Image {source:"qrc:/assets/icons-metallic/"+modelData.row.icon+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17;sourceSize:Qt.size(20,20)}
        Label {text:modelData.row.value;textFormat:Text.PlainText;color:analysis.app.design.text;Layout.fillWidth:true;elide:Text.ElideMiddle;font.pixelSize:12}
        Label {text:modelData.row.type;color:analysis.app.design.muted;font.pixelSize:11;Layout.preferredWidth:85;elide:Text.ElideRight}
        Label {text:analysis.app.trx("اصطناعي", "Synthetic");color:analysis.app.design.muted;font.pixelSize:11;Layout.preferredWidth:70;elide:Text.ElideRight}
@@ -118,9 +118,12 @@ Pane {
         required property int index;required property var modelData
         x:index===0?50:460;y:index===0?145:index===1?38:250;width:210;height:76;radius:3
         color:analysis.selectedIndex===index?"#0C435C":"#0A2231";border.color:analysis.selectedIndex===index?"#23B9E7":"#24556D"
-        Column {anchors.fill:parent;anchors.margins:12;spacing:8
-         Label {font.pixelSize:12;text:parent.parent.modelData.type;color:"#70D8F5";font.bold:true}
-         Label {font.pixelSize:12;text:parent.parent.modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";width:parent.width;elide:Text.ElideMiddle}
+        RowLayout {anchors.fill:parent;anchors.margins:10;spacing:8
+         Image {source:"qrc:/assets/icons-metallic/"+modelData.icon+".svg";Layout.preferredWidth:28;Layout.preferredHeight:28;sourceSize:Qt.size(40,40)}
+         ColumnLayout {Layout.fillWidth:true;spacing:5
+          Label {text:modelData.type;color:"#70D8F5";font.pixelSize:12;font.bold:true}
+          Label {text:modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideMiddle}
+         }
         }
         MouseArea {anchors.fill:parent;onClicked:analysis.pick(parent.index)}
         Accessible.role:Accessible.Button;Accessible.name:modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(index)

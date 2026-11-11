@@ -8,7 +8,7 @@ Pane {
  property int scenario:0
  readonly property var bridge:typeof lampyreEvaluation!=="undefined"?lampyreEvaluation:null
  padding:8
- background:OsintBackdrop {dimming:0.74}
+ background:OsintBackdrop {dimming:0.24}
  contentItem:ColumnLayout {spacing:8
  RowLayout {Layout.fillWidth:true;Layout.margins:6
   Label {text:desk.app.trx("المزوّد", "Provider");color:"#9EB4C1";font.pixelSize:12}
@@ -25,7 +25,7 @@ Pane {
    Rectangle {Layout.fillWidth:true;implicitHeight:28;color:"#0C435C"
     Label {anchors.fill:parent;anchors.margins:6;text:desk.app.trx("▾  مثال محلي", "▾  Local example");color:"#E5EDF3";font.pixelSize:12;font.bold:true}
    }
-   RowLayout {Image {source:"qrc:/assets/icons/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
+   RowLayout {Image {source:"qrc:/assets/icons-metallic/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
    Label {text:desk.app.trx("هذا معيار المثال الاصطناعي؛ لا يمثّل كتالوج Lampyre الفعلي.", "This is the synthetic example criterion, not Lampyre's live catalog.");color:"#9EB4C1";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11}
    Item {Layout.fillHeight:true}
   }
@@ -36,7 +36,7 @@ Pane {
    Repeater {model:desk.app.ar?["نجاح وبيانات اصطناعية", "فشل المصادقة", "انتهاء المهلة", "رصيد غير كافٍ", "حد الطلبات"]:["Success with synthetic data", "Authentication failure", "Timeout", "Insufficient credits", "Rate limited"]
     delegate:Rectangle {required property int index;required property string modelData;Layout.fillWidth:true;implicitHeight:34;color:desk.scenario===index?"#0C435C":index%2?"#0A2231":"#08121B";border.color:desk.scenario===index?"#23B9E7":"transparent"
      RowLayout {anchors.fill:parent;anchors.margins:6;spacing:7
-      Image {source:"qrc:/assets/icons/"+(desk.scenario===index?"checkmark_circle":"document_text")+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17}
+      Image {source:"qrc:/assets/icons-metallic/"+(desk.scenario===index?"checkmark_circle":"document_text")+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17}
       Label {text:modelData;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideRight}
       Label {text:"0 Ph";color:"#70D8F5";font.pixelSize:11}
      }

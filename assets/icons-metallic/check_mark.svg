@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<defs>
+ <linearGradient id="mrPlate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#253E56"/><stop offset=".43" stop-color="#0B1726"/><stop offset="1" stop-color="#173657"/></linearGradient>
+ <linearGradient id="mrSilver" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F3FAFF"/><stop offset=".3" stop-color="#9AB9CB"/><stop offset=".52" stop-color="#E1F1F9"/><stop offset="1" stop-color="#4E738E"/></linearGradient>
+</defs>
+<rect x="3" y="3" width="58" height="58" rx="13" fill="#02070C"/>
+<rect x="5" y="4" width="54" height="54" rx="12" fill="url(#mrPlate)" stroke="url(#mrSilver)" stroke-width="1.4"/>
+<path d="M17 7H47" stroke="#CBE9F8" stroke-opacity=".7" stroke-linecap="round"/>
+<path d="M17 56H47" stroke="#28BDEB" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+<g transform="translate(11 10) scale(1.75)"><path xmlns="http://www.w3.org/2000/svg" fill="#071007" d="M20.3 5.3a1 1 0 0 1 0 1.4l-10 11a1 1 0 0 1-1.5 0l-5-5a1 1 0 1 1 1.4-1.4l4.3 4.3 9.3-10.3a1 1 0 0 1 1.5 0Z" /></g>
+</svg>

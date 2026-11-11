@@ -14,12 +14,12 @@ ApplicationWindow {
  function tone(value){return legacy.tone(value)}
  color:design.background
  background:Rectangle {color:window.design.background
-  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme;dimming:0.78}
+  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme&&window.currentPage!==0;dimming:0.28}
  }
 
  property bool showDevicePanel:false
  property bool governmentMode:true
- property int currentPage:12
+ property int currentPage:0
  property int activeSection:0
  property var pageHistory:[]
  property int previousPage:0
@@ -63,7 +63,7 @@ ApplicationWindow {
  readonly property var sections:governmentMode?governmentSections:professionalSections
  function openExternal(url){const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
- readonly property string pageTitle:currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
+ readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
@@ -72,6 +72,12 @@ ApplicationWindow {
  onCurrentPageChanged:{
   if(!goingBack&&currentPage!==previousPage){let history=pageHistory.slice();history.push(snapshot(previousPage));pageHistory=history.slice(-50)}
   previousPage=currentPage;activeSection=sectionForPage(currentPage)
+ }
+ function navigatePrimary(index){
+  if(index===3){setWorkspace(true);navigateSection(6);analysisWorkspaceRoot.showOsint=true;return}
+  setWorkspace(false);
+  if(index===4){navigate(7);return}
+  navigateSection(index);
  }
  function navigate(index){currentPage=index}
  function navigateSection(index){
@@ -146,7 +152,7 @@ ApplicationWindow {
     HelpPage {app:window}
     LawEnforcementPage {id:lawWorkspace;app:window}
     ResearchCenter {app:window}
-    GovernmentAnalysisPage {app:window}
+    GovernmentAnalysisPage {id:analysisWorkspaceRoot;app:window}
    }
   }
  }

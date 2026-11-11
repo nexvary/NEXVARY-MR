@@ -186,3 +186,26 @@ Local AR/EN source-QML request/table/graph renders passed and were visually
 inspected. Core CTest 6/6 passed. Added native UI assertions for the approved
 palette and packaged background Image.Ready state. Current-head Windows/native
 CI remains a separate gate; source previews do not claim native acceptance.
+
+
+## Approved home / network separation and metallic icons
+
+The user's corrected, explicit approval supersedes the masked-analyst background:
+home uses the thin-title Nexvary company-search artwork; working screens use only
+the supplied abstract cyan/silver network-wave crop. No hoodie/mask/spider appears
+on working screens. A top-edge fade blends the wave without editing its pixels.
+
+Added a home hero with real device/OSINT/report routes and compact global primary
+navigation, preserving existing sidebar and detailed workshop dashboard below.
+Initial page is home. OSINT navigation retains the government case workspace and
+its existing access checks. Existing sidebar navigation remains available.
+
+Added 25 independently finished metallic variants of the bundled MIT Fluent SVGs:
+chrome surrounds and indigo/cyan/red materials, with semantic status colors kept.
+The deterministic build script, input/output hashes and license provenance are
+committed. Existing symbol geometry is retained; no vendor icons are imported.
+
+Local source-QML home and AR/EN request/table/graph previews rendered without QML
+warnings. Filtering/selection/panel assertions passed. Core CTest 6/6 passed.
+Native UI tests now cover the distinct home/network asset paths and primary
+navigation routes. Current-head full Windows/Qt CI remains a separate gate.

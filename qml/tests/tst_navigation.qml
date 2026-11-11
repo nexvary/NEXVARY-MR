@@ -32,12 +32,20 @@ TestCase {
   for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
   page.showOsint=false
  }
+ function test_approvedHomeAndPrimaryNavigation(){
+  app.navigatePrimary(0);verify(renderedFrame());compare(app.currentPage,0);
+  const art=findChild(app,"mrHomeArtwork");verify(art!==null);tryCompare(art,"status",Image.Ready,5000);
+  verify(art.source.toString().indexOf("mr-home-background.png")>=0);
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
+  app.navigatePrimary(3);compare(app.currentPage,14);verify(findChild(app,"governmentAnalysisWorkspace").showOsint);
+  app.navigatePrimary(1);compare(app.currentPage,1);compare(app.governmentMode,false);
+ }
  function test_approvedMrPaletteAndBackground(){
   compare(String(app.design.background),"#040507");
   compare(String(app.design.surface),"#08121b");
   compare(String(app.design.accent),"#23b9e7");
   const background=findChild(app,"osintBackgroundImage");verify(background!==null);
-  tryCompare(background,"status",Image.Ready,5000);
+  tryCompare(background,"status",Image.Ready,5000);verify(background.source.toString().indexOf("mr-network-wave.png")>=0);
  }
  function test_osintWorkspaceBilingualNavigation(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());

@@ -9,6 +9,7 @@ Item {
  ColumnLayout {
   anchors.fill:parent;spacing:0
   TopBar {app:shell.app;z:10;Layout.fillWidth:true;Layout.preferredHeight:shell.app.design.topBarHeight}
+  MrPrimaryNavigation {app:shell.app;Layout.fillWidth:true}
   RowLayout {
    Layout.fillWidth:true;Layout.fillHeight:true;Layout.margins:12;spacing:12
    Sidebar {id:sidebar;objectName:"workstationSidebar";app:shell.app;Layout.preferredWidth:collapsed?shell.app.design.collapsedSidebar:shell.app.design.expandedSidebar;Layout.fillHeight:true}
