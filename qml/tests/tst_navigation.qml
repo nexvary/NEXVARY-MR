@@ -59,6 +59,9 @@ TestCase {
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
   app.navigatePrimary(3);compare(app.currentPage,14);verify(findChild(app,"governmentAnalysisWorkspace").showOsint);
   app.navigatePrimary(1);compare(app.currentPage,1);compare(app.governmentMode,false);
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
+  compare(findChild(app,"governmentAnalysisWorkspace").showOsint,false);
+  verify(findChild(app,"governmentAnalyzeEvidence").visible);
  }
  function test_approvedMrPaletteAndBackground(){
   compare(String(app.design.background),"#040507");

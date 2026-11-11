@@ -84,6 +84,10 @@ ApplicationWindow {
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
   currentPage=entry.page
+  // A forensic section selection opens evidence analysis; the OSINT shortcut
+  // explicitly opts into its workspace after navigation. Do not retain a hidden
+  // provider view when the user returns to the forensic section.
+  if(entry.page===14)analysisWorkspaceRoot.showOsint=false
   if(entry.law!==undefined)lawWorkspace.section=entry.law
   if(entry.evidence!==undefined)lawWorkspace.evidenceView=entry.evidence
   if(entry.page===1)deviceHub.currentTab=entry.tab===undefined?0:entry.tab

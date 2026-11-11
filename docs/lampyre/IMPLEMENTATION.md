@@ -260,3 +260,14 @@ Neon accent update: green `#39FF14` and red `#FF1744` are incorporated into
 the existing metallic material gradients and functional details. Silver/indigo
 body materials and all routes remain unchanged. Qt 6.8.3 SVG and bilingual
 wide/narrow component checks cover the revised assets.
+
+## Windows delivery regression
+
+Native Windows testing exposed a retained OSINT subview hiding evidence controls
+when returning through the forensic section. Section navigation now explicitly
+opens evidence analysis; the OSINT shortcut opts in afterwards. Added a regression
+asserting OSINT -> device workspace -> forensic section restores visible evidence
+controls. The initial Windows run compiled successfully and passed 56/57 CTest
+suites, with six hidden-control assertions in the remaining UI suite. Delivery
+requires rerunning the native suite after this correction; no failed-gate package
+is presented as a verified release.
