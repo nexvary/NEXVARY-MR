@@ -31,9 +31,11 @@
 #include "IdentityService.hpp"
 #include "GovernmentOperationPolicy.hpp"
 #include "ResearchBridge.hpp"
+#include "LampyreEvaluationBridge.hpp"
 class Setup:public QObject {
  Q_OBJECT
  QTemporaryDir temp;
+ std::unique_ptr<LampyreEvaluationBridge> lampyre;
  std::unique_ptr<ToolBridge> tools;
  std::unique_ptr<RepairBridge> repair;
  std::unique_ptr<WorkshopBridge> workshop;
@@ -98,6 +100,7 @@ public slots:
   // QuickTest constructs Setup before QGuiApplication. Qt plug-ins, SQL and
   // process/thread machinery must be initialized only after the application.
   QQuickStyle::setStyle(QStringLiteral("Fusion"));
+  lampyre=std::make_unique<LampyreEvaluationBridge>();
   tools=std::make_unique<ToolBridge>();repair=std::make_unique<RepairBridge>();
   workshop=std::make_unique<WorkshopBridge>(temp.filePath(QStringLiteral("ui.db")));
   catalog=std::make_unique<ServiceCatalog>(temp.filePath("guides.json"));
@@ -167,6 +170,7 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));
   engine->rootContext()->setContextProperty("operationPolicy",operationPolicy.get());
+  engine->rootContext()->setContextProperty("lampyreEvaluation",lampyre.get());
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
   engine->rootContext()->setContextProperty("identityBridge",identity.get());
   engine->rootContext()->setContextProperty("researchBridge",research.get());
@@ -183,7 +187,7 @@ public slots:
  }
  void cleanupTestCase() {
   // Release runtime-dependent objects before QuickTest destroys its application.
-  research.reset();law.reset();identity.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  lampyre.reset();research.reset();law.reset();identity.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
   if(syntheticModeEnvChanged) {
    if(originalSyntheticModeEnv.isNull())qunsetenv("MR_UI_DEVICE_MODE");else qputenv("MR_UI_DEVICE_MODE",originalSyntheticModeEnv);
   }

@@ -113,3 +113,21 @@ Qt SDK is absent locally: no Qt build, RTL screenshot, packaging, physical Windo
 or production claim is made. CI results must be inspected separately after publication.
 
 CI code commit c94ea07344d50ad71497cfcfe745fb8d47c5ed84: commercial offline contract run 43021289721 passed on both Windows 2022 and Ubuntu 24.04. Full native Qt run 43021289665 and phone-provider run 43021289626 were still running when checked. This documentation-only checkpoint does not claim those results or a Windows artifact.
+
+## OSINT workspace redesign
+
+Replaced the stacked phone/Lampyre forms with a dedicated OSINT view inside the
+analysis workspace, with a return action to existing evidence analysis. Overview
+shows three provider cards, case context and explicitly unknown account balance.
+Separate tabs contain provider selection/query controls, results/source status and
+usage/history availability. PhoneInfoga keeps its existing case/permission path.
+Lampyre connection, costs and synthetic laboratory are separate cards; raw JSON
+is opt-in. No decorative graph, fake account balance or fake connection is shown.
+Existing colored SVG assets, theme controls, AR/EN and responsive grids are reused.
+
+Added bilingual four-tab Qt screenshot/navigation coverage and native synthetic
+run/cancellation assertions to the existing UI suite. Local source-QML component
+rendering used PySide6/Qt 6.12 with a synthetic case bridge; it is a component
+preview, not a full Windows binary acceptance. Eight AR/EN tab screenshots were
+rendered. Core regression CTest remains 6/6 passing. Windows/UI CI must be checked
+for the redesign commit separately; earlier screenshots are not its evidence.

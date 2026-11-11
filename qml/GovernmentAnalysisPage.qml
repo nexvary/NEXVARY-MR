@@ -37,9 +37,9 @@ ScrollView {
  contentWidth:availableWidth;clip:true
  Connections {target:lawCaseBridge;function onChanged(){partitionConsent.checked=false;page.result=({});page.showTechnical=false;page.savedImport=({});importConsent.checked=false;if(page.lastCaseId!==(lawCaseBridge.activeCase.id||"")){importPurpose.text="";timelineQuery.text="";if(page.contentItem)page.contentItem.contentY=0;page.lastCaseId=lawCaseBridge.activeCase.id||""}}}
  ColumnLayout {width:page.availableWidth;spacing:12
-  ActionButton {objectName:"osintToggle";text:page.showOsint?app.trx("إغلاق استخبارات الأرقام","Close phone OSINT"):app.trx("استخبارات أرقام الهاتف OSINT","Phone number OSINT Intelligence");onClicked:page.showOsint=!page.showOsint}
-  PhoneOsintPanel {Layout.fillWidth:true;app:page.app;visible:page.showOsint}
-  LampyrePanel {Layout.fillWidth:true;app:page.app;visible:page.showOsint}
+  ActionButton {objectName:"osintToggle";text:page.showOsint?app.trx("العودة إلى تحليل الأدلة","Back to evidence analysis"):app.trx("فتح مساحة OSINT","Open OSINT workspace");onClicked:page.showOsint=!page.showOsint}
+  OsintWorkspace {Layout.fillWidth:true;app:page.app;visible:page.showOsint}
+  ColumnLayout {Layout.fillWidth:true;visible:!page.showOsint;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("تحليل أدلة القضية","Case evidence analysis");iconName:"shield_checkmark"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحليل محلي لنسخة القضية المحمية بعد التحقق من SHA-256. الحد 8 MiB. يدعم إحصاءات classic PCAP وحقول JPEG EXIF المحدودة دون فك تشفير أو تشغيل الملف.","Local analysis of hash-verified protected case evidence, up to 8 MiB. Supports classic-PCAP statistics and bounded JPEG-EXIF fields without decryption or file execution.")}
    Label {Layout.fillWidth:true;textFormat:Text.PlainText;color:app.design.text;text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber||lawCaseBridge.activeCase.id):app.trx("افتح قضية مصرحًا بها أولًا","Open a permitted case first")}
@@ -128,5 +128,6 @@ ScrollView {
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.atUtc+"\nSHA-256: "+modelData.sourceSha256+"\nReport SHA-256: "+modelData.reportSha256}
    ActionButton {visible:modelData.parser.indexOf("authorized-import/")===0;text:page.app.trx("فتح نتيجة الاستيراد المحفوظة","Open retained import result");onClicked:{page.savedImport=modelData;page.showTechnical=true}}
   }}}
+  }
  }
 }

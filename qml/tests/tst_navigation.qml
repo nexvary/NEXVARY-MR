@@ -27,10 +27,29 @@ TestCase {
  }
  function test_phoneOsintBilingualBoundary(){
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
-  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;
+  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;const osint=findChild(app,"osintWorkspace");osint.activeTab=1;osint.selectedProvider=1;
   const number=findChild(panel,"osintNumber"),run=findChild(panel,"osintRun");
   for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
   page.showOsint=false
+ }
+ function test_osintWorkspaceBilingualNavigation(){
+  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
+  const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");
+  page.showOsint=true;ws.selectedProvider=0;
+  for(const ar of [true,false]){
+   app.ar=ar;
+   for(const tab of [0,1,2,3]){
+    ws.activeTab=tab;page.contentItem.contentY=0;verify(renderedFrame());
+    compare(ws.LayoutMirroring.enabled,ar);
+    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-workspace-"+tab+"-"+(ar?"ar":"en")+".png"));
+   }
+  }
+  ws.activeTab=1;ws.selectedProvider=0;
+  lampyreEvaluation.runSynthetic(0);compare(lampyreEvaluation.busy,true);
+  lampyreEvaluation.cancel();compare(lampyreEvaluation.state,"synthetic-cancelled");
+  lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);
+  compare(lampyreEvaluation.result.networkRequests,0);compare(lampyreEvaluation.result.photonsConsumed,0);
+  ws.activeTab=0;page.showOsint=false;
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
