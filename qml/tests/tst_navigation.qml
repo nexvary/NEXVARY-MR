@@ -36,7 +36,8 @@ TestCase {
   app.setWorkspace(true);app.width=1536;
   const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);compare(nav.sectionCount,12);
   for(const ar of [true,false]){
-   app.ar=ar;
+   app.ar=ar;verify(renderedFrame());
+   verify(ar?nav.itemAt(0).x>nav.itemAt(11).x:nav.itemAt(0).x<nav.itemAt(11).x);
    for(let i=0;i<12;i++){
     nav.reveal(i);verify(renderedFrame());
     const button=nav.itemAt(i);verify(button!==null);

@@ -15,6 +15,7 @@ Rectangle {
  }
  implicitHeight:96;color:"#E608121B"
  LayoutMirroring.enabled:false
+ LayoutMirroring.childrenInherit:true
  Rectangle {anchors.left:parent.left;anchors.right:parent.right;anchors.bottom:parent.bottom;height:1;color:"#24556D"}
  Flickable {
   id:viewport;objectName:"primaryNavigationViewport"

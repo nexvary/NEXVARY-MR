@@ -271,3 +271,9 @@ controls. The initial Windows run compiled successfully and passed 56/57 CTest
 suites, with six hidden-control assertions in the remaining UI suite. Delivery
 requires rerunning the native suite after this correction; no failed-gate package
 is presented as a verified release.
+
+The native screenshot also exposed inherited application mirroring reversing
+the explicit RTL Row twice. The navigation now propagates its disabled mirroring
+to children and controls Row direction explicitly. The regression asserts the
+first/last symbol ordering in both languages; all 48 local component checks pass
+with the actual application mirroring settings.
