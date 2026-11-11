@@ -104,10 +104,12 @@ storage schemas are unchanged. Keep the PR draft; do not merge main.
 
 ## Executed validation
 
-Local GNU C++ 14.2 / CMake 4.3.0, GUI OFF, warnings as errors: configured,
+Local GNU C++ 14.2 / CMake 4.4.4, GUI OFF, warnings as errors: configured,
 built all core targets and passed **6/6 CTest suites**. Raw JUnit and configure
 output are in `evidence/lampyre-2026-11-11/`. New suite covers registry duplicates,
 live refusal, missing/negative cost, approval, exact budget, overflow, duplicate IDs,
 uncertain holds, settlement, cancellation, synthetic data restrictions and errors.
 Qt SDK is absent locally: no Qt build, RTL screenshot, packaging, physical Windows
 or production claim is made. CI results must be inspected separately after publication.
+
+CI code commit c94ea07344d50ad71497cfcfe745fb8d47c5ed84: commercial offline contract run 43021289721 passed on both Windows 2022 and Ubuntu 24.04. Full native Qt run 43021289665 and phone-provider run 43021289626 were still running when checked. This documentation-only checkpoint does not claim those results or a Windows artifact.
