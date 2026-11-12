@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add the Nexvary Intelligence server billing module with a default €14.00 EUR price, administrator price updates, expiring quotes, prepaid balance reservation, idempotency, refunds and private cost auditing. Production gateway and Windows checkout wiring are pending.
+- Label direct-provider Intelligence tools as separately billed and remove supplier billing units from visible Intelligence labels.
+
 - Add a bilingual Intelligence tab beside Security Dashboard, with a dedicated route accessible before account sign-in and case selection.
 - Move the existing provider setup and research interface to the Intelligence route. Retain provider, account, case and evidence controls for requests and attachments.
 - Clear local demonstration data when leaving Intelligence. Cover navigation, right-to-left order and signed-out access in Qt Quick tests.

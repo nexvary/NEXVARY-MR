@@ -21,7 +21,7 @@ Panel {
   Panel {
    Layout.fillWidth: true; Layout.fillHeight: true; title: panel.app.trx("التكلفة والتفويض", "Cost & approval"); iconName: "database"
    Label {text: panel.app.trx("الرصيد غير متاح", "Balance unavailable"); color: panel.app.design.text; font.pixelSize: 22; font.bold: true; Layout.fillWidth: true; wrapMode: Text.WordWrap}
-   Label {text: panel.app.trx("التكلفة غير متاحة — يلزم التأكيد. عرض 200 Photon غير متحقق. البحث الفعلي يبقى معطّلًا.", "Cost unavailable — confirmation required. The offered 200 Photons are unverified. Live research remains disabled."); color: panel.app.design.muted; Layout.fillWidth: true; wrapMode: Text.WordWrap}
+   Label {text: panel.app.trx("تكلفة البحث غير متاحة. البحث الفعلي معطّل.", "Search cost is unavailable. Live research is disabled."); color: panel.app.design.muted; Layout.fillWidth: true; wrapMode: Text.WordWrap}
   }
  }
  Panel {

@@ -50,7 +50,7 @@ Pane {
    Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:analysis.app.design.muted;text:"research@example.invalid";textFormat:Text.PlainText}
    Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.records.length?analysis.app.trx("اكتمل • 3 عناصر اصطناعية", "Completed • 3 synthetic entities"):analysis.app.trx("لم يُشغّل الاختبار", "Fixture not run")}
    OsintDesktopCommand {objectName:"osintLoadAnalysisFixture";Layout.fillWidth:true;primary:true;text:analysis.app.trx("تحميل مثال محلي", "Load local example");enabled:!!analysis.bridge&&!analysis.bridge.busy;onClicked:analysis.bridge.runSynthetic(0)}
-   Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("0 Photon\nلا اتصال بالمزوّد", "0 Photons\nNo provider connection")}
+   Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("مثال محلي دون رسوم", "No-charge local demonstration")}
    Item {Layout.fillHeight:true;Layout.minimumHeight:1}
   }
   OsintDesktopPane {

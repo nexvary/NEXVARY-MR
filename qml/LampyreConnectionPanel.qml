@@ -60,7 +60,9 @@ ColumnLayout {
   Label {objectName:"lampyreConnectionStatus";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.connection&&panel.connection.errorCode!==""?panel.app.design.danger:panel.app.design.accent;text:panel.connection?panel.message(panel.connection.errorCode||panel.connection.state):panel.app.trx("موصل الاتصال غير متاح","Connection client unavailable")}
  }
  OsintDesktopPane {
-  Layout.fillWidth:true;visible:!!panel.connection&&panel.connection.connected;title:panel.app.trx("أدوات حسابك","Your account tools");iconName:"search_visual"
+  Layout.fillWidth:true;visible:panel.catalogAvailable;title:panel.app.trx("أدوات حساب المزود المباشر","Direct provider account tools");iconName:"search_visual"
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("تُدار رسوم هذه الأدوات في حساب المزود. فوترة Nexvary باليورو غير متاحة لهذا الاتصال.","Charges for these tools are managed in the provider account. Nexvary EUR billing is unavailable on this connection.")}
+
   Label {
    visible:catalog.count===0;Layout.fillWidth:true;wrapMode:Text.WordWrap
    color:panel.app.design.muted;text:panel.app.trx("لم يُرجع الخادم أدوات متاحة لهذا الحساب.","The server returned no tools for this account.")
@@ -122,7 +124,7 @@ ColumnLayout {
    SpinBox {id:requestLimit;from:0;to:100;value:0;editable:true}
    OsintDesktopCommand {text:panel.app.trx("تطبيق الحد","Apply limit");onClicked:panel.connection.setRequestLimit(requestLimit.value)}
   }
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("عدد الإرسالات: ","Submitted requests: ")+(panel.connection?panel.connection.submittedRequests:0)+" / "+(panel.connection?panel.connection.requestLimit:0)+"\n"+panel.app.trx("لا يوجد حد موثوق لقيمة Photons دون تسعير مؤكد. يلزم إذن إداري مستقل للتكلفة المجهولة وموافقتك لكل إرسال. لا إعادة تلقائية حتى عند انقطاع الاتصال.","No reliable Photon cap is possible without verified pricing. Unknown cost requires separate administrator approval and your consent for every submission. No automatic retry, including after network failure.")}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("عدد الإرسالات: ","Submitted requests: ")+(panel.connection?panel.connection.submittedRequests:0)+" / "+(panel.connection?panel.connection.requestLimit:0)+"\n"+panel.app.trx("يلزم إذن إداري مستقل للتكلفة المجهولة وموافقتك لكل إرسال. لا يُعاد الإرسال تلقائيًا عند انقطاع الاتصال.","Unknown cost requires separate administrator approval and your consent for every submission. Submissions are never retried automatically after network failure.")}
   CheckBox {id:requestConsent;objectName:"lampyrePaidRequestConsent";Layout.fillWidth:true;text:panel.app.trx("أوافق على إرسال معاملات الأداة المحددة وأي خصم وفق حسابي لدى المزود","Send the selected tool arguments and accept any charge under my provider account")}
   OsintDesktopCommand {objectName:"lampyreExecuteTool";primary:true;text:panel.app.trx("تنفيذ الأداة المحددة","Run selected tool");enabled:!!panel.connection&&panel.connection.connected&&!panel.connection.busy&&!!panel.selected.name&&requestConsent.checked&&panel.inputError==="";onClicked:{
     const required=panel.schema.required||[];for(const key of required)if(panel.toolArguments[key]===undefined||panel.toolArguments[key]===""){panel.inputError=panel.app.trx("أكمل الحقل المطلوب: ","Complete required field: ")+key;requestConsent.checked=false;return}
