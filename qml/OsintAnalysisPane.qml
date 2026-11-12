@@ -36,7 +36,7 @@ Pane {
   Label {text:analysis.app.trx("مستكشف النتائج", "Results explorer");font.pixelSize:15;font.bold:true;color:analysis.app.design.text;Layout.fillWidth:true}
   StateBadge {text:analysis.app.trx("اصطناعي • دون اتصال", "SYNTHETIC • OFFLINE");tint:analysis.app.design.accent}
  }
- Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("تجربة محلية لعرض البيانات؛ ليست نتائج من Lampyre ولا أدلة قضية. تحديد عنصر يفتح مرجعه وتفاصيله.", "Local data-viewing fixture; not Lampyre findings or case evidence. Select an entity to inspect its reference and details.")}
+ Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("اختر عنصرًا من بيانات الاختبار لعرض مرجعه وتفاصيله.", "Select a test record to inspect its reference and details.")}
  SplitView {
   objectName:"osintAnalysisSplit"
   Layout.fillWidth:true;Layout.preferredHeight:width>1060?510:1150
@@ -46,7 +46,7 @@ Pane {
    visible:analysis.showRequests;SplitView.preferredWidth:210;SplitView.minimumWidth:165;SplitView.preferredHeight:240;Layout.fillWidth:analysis.width<=1060;Layout.fillHeight:true;Layout.minimumWidth:0
    title:analysis.app.trx("الطلبات", "Requests");iconName:"history"
    StateBadge {text:analysis.app.trx("جلسة محلية", "LOCAL SESSION");tint:analysis.app.design.silver}
-   Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.text;font.bold:true;text:"Lampyre / UI fixture"}
+   Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.text;font.bold:true;text:"Local test data"}
    Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:analysis.app.design.muted;text:"research@example.invalid";textFormat:Text.PlainText}
    Label {font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.records.length?analysis.app.trx("اكتمل • 3 عناصر اصطناعية", "Completed • 3 synthetic entities"):analysis.app.trx("لم يُشغّل الاختبار", "Fixture not run")}
    OsintDesktopCommand {objectName:"osintLoadAnalysisFixture";Layout.fillWidth:true;primary:true;text:analysis.app.trx("تحميل مثال محلي", "Load local example");enabled:!!analysis.bridge&&!analysis.bridge.busy;onClicked:analysis.bridge.runSynthetic(0)}

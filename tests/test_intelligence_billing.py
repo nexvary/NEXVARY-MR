@@ -5,6 +5,7 @@ import sqlite3
 import tempfile
 import threading
 import unittest
+from contextlib import closing
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -57,7 +58,7 @@ class IntelligenceBillingTests(unittest.TestCase):
         self.billing.grant_credit("admin", self.actor, 4200, "payment-1")
 
     def balance(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             return db.execute("SELECT balance FROM intelligence_balances").fetchone()[0]
 
     def quote(self):
@@ -82,7 +83,7 @@ class IntelligenceBillingTests(unittest.TestCase):
             self.confirm(stale, "request-key-00000002")
         self.assertEqual(self.quote()["price_cents"], 1500)
         self.assertEqual(self.billing.receipt(self.actor, old["id"])["price_cents"], 1400)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             actor, ts = db.execute("SELECT actor,at_epoch FROM intelligence_billing_audit WHERE action='price-updated'").fetchone()
         self.assertEqual((actor, ts), ("admin", 1000))
 
@@ -164,7 +165,7 @@ class IntelligenceBillingTests(unittest.TestCase):
         receipt = self.confirm(self.quote())
         self.assertEqual(receipt["price_cents"], 1400)
         self.assertEqual(self.balance(), 2800)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             events = {name: json.loads(details) for name, details in db.execute(
                 "SELECT action,details FROM intelligence_billing_audit")}
         self.assertEqual(events["provider-cost-overrun"]["actual"], 1251)
