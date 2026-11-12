@@ -439,7 +439,7 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
           r.value("status") != "requested" ||
           r.value("requesterRole") != role ||
           !QStringList{"cloud-publish", "tracking-portal", "signature-update",
-                       "device-tools", "external-analysis", "external-links"}
+                       "device-tools", "external-analysis", "external-links", "paid-unknown-cost"}
                .contains(r.value("capability").toString()) ||
           r.value("durationMs").toLongLong() < 1000 ||
           r.value("durationMs").toLongLong() > 600000 ||
@@ -475,6 +475,10 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
       const auto status = old.value("status").toString();
       if (old.isEmpty() || invariantOld != invariantNew)
         return reject("Exception identity/scope mutation rejected.");
+
+      if ((action == "review" || action == "approve" || action == "reject") &&
+          old.value("capability") == "paid-unknown-cost" && role != "administrator")
+        return reject("Unknown-cost policy requires administrator review.");
 
       if (action == "review" &&
           (status != "requested" ||

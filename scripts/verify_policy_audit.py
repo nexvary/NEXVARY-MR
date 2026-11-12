@@ -20,7 +20,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 DOMAIN = b"NEXVARY-MR/policy-audit/v1\n"
 ACTOR_DOMAIN = b"NEXVARY-MR/local-attestation/v1\0"
 SCHEMA = "nexvary-policy-audit/v1"
-CAPABILITIES = {"cloud-publish", "tracking-portal", "signature-update", "device-tools", "external-analysis", "external-links"}
+CAPABILITIES = {"cloud-publish", "tracking-portal", "signature-update", "device-tools", "external-analysis", "external-links", "paid-unknown-cost"}
 CLOSED = {"revoked", "rejected", "expired"}
 
 
@@ -235,6 +235,8 @@ def verify(data, anchor):
                 mutable.add("closedUtc")
             if not old or {k: v for k, v in old.items() if k not in mutable} != {k: v for k, v in r.items() if k not in mutable}:
                 raise ValueError("Request identity/scope changed")
+            if action in {"review", "approve", "reject"} and old.get("capability") == "paid-unknown-cost" and role != "administrator":
+                raise ValueError("Unknown-cost policy requires administrator review")
             if action == "review" and (status != "requested" or actor == old["requester"] or role not in {"administrator", "reviewer"} or r.get("reviewer") != actor or r["status"] != "in-review"):
                 raise ValueError("Separate review rejected")
             if action in {"approve", "reject"} and (status != "in-review" or actor != old.get("reviewer") or actor == old["requester"] or role not in {"administrator", "reviewer"} or r.get("reviewer") != old.get("reviewer") or r["status"] != ("approved" if action == "approve" else "rejected")):
