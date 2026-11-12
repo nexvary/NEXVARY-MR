@@ -11,7 +11,7 @@ Pane {
  padding:8
  background:OsintBackdrop {dimming:0.24}
  contentItem:ColumnLayout {spacing:8
- RowLayout {Layout.fillWidth:true;Layout.margins:6
+ RowLayout {visible:!desk.demoMode;Layout.fillWidth:true;Layout.margins:6
   Label {text:desk.app.trx("المزوّد", "Provider");color:"#9EB4C1";font.pixelSize:12}
   ComboBox {objectName:"osintProviderSelector";model:["Lampyre", "PhoneInfoga", "OSINT Industries"];currentIndex:desk.selectedProvider;onActivated:desk.selectedProvider=currentIndex;Layout.preferredWidth:240;palette.base:"#08121B";palette.text:"#E5EDF3";palette.button:"#0D2A3D";palette.buttonText:"#E5EDF3"}
   Item {Layout.fillWidth:true}
@@ -28,7 +28,7 @@ Pane {
     Label {anchors.fill:parent;anchors.margins:6;text:desk.app.trx("▾  مثال محلي", "▾  Local example");color:"#E5EDF3";font.pixelSize:12;font.bold:true}
    }
    RowLayout {Image {source:"qrc:/assets/icons-professional/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
-   Label {text:desk.app.trx("هذا معيار المثال الاصطناعي؛ لا يمثّل كتالوج Lampyre الفعلي.", "This is the synthetic example criterion, not Lampyre's live catalog.");color:"#9EB4C1";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11}
+   Label {text:desk.app.trx("هذا معيار لبيانات الاختبار.", "This input belongs to the test example.");color:"#9EB4C1";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11}
    Item {Layout.fillHeight:true}
   }
   OsintDesktopPane {

@@ -1,5 +1,11 @@
 # NEXVARY-MR implementation state
 
+## Intelligence cards integration
+
+- Active branch `integration/mr-intelligence-final-ux-pricing`. Base `2347fdb4b2fabf1fad265c566511d470fcfabd69` includes the stacked account, connection and modernization branches through PR #22.
+- The default workspace displays Arabic and English cards. Phone analysis opens the existing case-authorized form. The €14.00 default is shown with paid dispatch disabled while the trusted gateway and verified catalog are unavailable. Supplier setup loads only for an authenticated administrator who opens advanced settings.
+- Next: check exact-commit Windows CI and card captures, then wire authenticated catalog, checkout and result delivery against a deployed gateway with a verified adapter. Live billing and physical Windows validation remain pending.
+
 ## Unified Intelligence pricing
 
 - Branch `feature/mr-unified-intelligence-pricing`, based on PR #21 at `2860f661`.

@@ -27,10 +27,17 @@ TestCase {
   return id
  }
  function test_phoneOsintBilingualBoundary(){
+  identityBridge.logout()
   app.navigatePrimary(3);verify(renderedFrame());
-  const page=findChild(app,"intelligenceWorkspace"),panel=findChild(app,"phoneOsintPanel");verify(panel!==null);const osint=findChild(app,"osintWorkspace");osint.activeTab=1;osint.selectedProvider=1;
-  const number=findChild(panel,"osintNumber"),run=findChild(panel,"osintRun");
-  for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,number);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
+  const ws=findChild(app,"osintWorkspace");
+  for(const ar of [true,false]){
+   app.ar=ar;
+   verify(renderedFrame());
+   compare(ws.LayoutMirroring.enabled,ar);
+   verify(findChild(ws,"intelligencePhoneCard").visible);
+   verify(!findChild(ws,"intelligenceOpenPhoneSearch").enabled);
+  }
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
   app.goBack()
  }
  function test_fullGovernmentNavigationAndProfessionalIcons(){
@@ -65,13 +72,11 @@ TestCase {
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
   app.navigatePrimary(3);compare(app.currentPage,app.intelligencePage)
   verify(findChild(app,"intelligenceWorkspace").visible)
-  const draft=findChild(app,"lampyreApiKey"), consent=findChild(app,"lampyreConnectionConsent")
-  draft.text="Synthetic-credential-draft";consent.checked=true
   identityBridge.logout()
-  compare(draft.text,"");verify(!consent.checked)
+  verify(findChild(app,"lampyreApiKey")===null)
   app.goBack();compare(app.currentPage,0)
   app.navigatePrimary(3);verify(renderedFrame())
-  const permissions=findChild(app,"lampyreOpenPermissions")
+  const permissions=findChild(app,"intelligenceAccountPermissions")
   reveal(findChild(app,"intelligenceWorkspace"),permissions);mouseClick(permissions)
   compare(app.currentPage,12);compare(app.activeSection,10)
   app.setWorkspace(true);app.navigateSection(app.intelligenceSectionIndex)
@@ -80,7 +85,7 @@ TestCase {
   verify(intelligence.visible)
   compare(intelligence.contentItem.contentY,intelligence.contentItem.originY)
   verify(!identityBridge.authenticated);verify(!lawCaseBridge.activeCase.id)
-  verify(!findChild(app,"lampyreTestConnection").enabled)
+  verify(findChild(app,"lampyreTestConnection")===null)
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
   app.goBack();compare(app.currentPage,12);compare(app.activeSection,0)
   app.navigatePrimary(1);compare(app.currentPage,1);compare(app.governmentMode,false);
@@ -99,10 +104,10 @@ TestCase {
  function test_osintWorkspaceBilingualNavigation(){
   app.navigatePrimary(3);verify(renderedFrame());
   const page=findChild(app,"intelligenceWorkspace"),ws=findChild(app,"osintWorkspace");
-  ws.selectedProvider=0;ws.demoMode=true;
+  ws.demoMode=true;
   for(const ar of [true,false]){
    app.ar=ar;
-   for(const tab of [1,2,3]){
+   for(const tab of [1,2]){
     ws.activeTab=tab;page.contentItem.contentY=0;verify(renderedFrame());
     compare(ws.LayoutMirroring.enabled,ar);
     verify(uiEvidence.captureWindow(app,uiScreenshotBase+"osint-workspace-"+tab+"-"+(ar?"ar":"en")+".png"));
@@ -111,7 +116,7 @@ TestCase {
   ws.showInspector=false;compare(findChild(app,"osintAnalysisPane").showInspector,false);
   ws.showRequests=false;compare(findChild(app,"osintAnalysisPane").showRequests,false);
   ws.showInspector=true;ws.showRequests=true;
-  ws.activeTab=1;ws.selectedProvider=0;
+  ws.activeTab=1;
   lampyreEvaluation.runSynthetic(0);compare(lampyreEvaluation.busy,true);
   lampyreEvaluation.cancel();compare(lampyreEvaluation.state,"synthetic-cancelled");
   lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);
@@ -886,14 +891,29 @@ TestCase {
   compare(findChild(app,"runRecovery").enabled,false);page.step=4;verify(renderedFrame());mouseClick(findChild(app,"closeRecoveryCase"));tryCompare(recoveryBridge,"active",false);findChild(app,"recoveryTabs").currentIndex=0;
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
- function test_osintDefaultIsLiveSetup(){
-  app.navigatePrimary(3);const ws=findChild(app,"osintWorkspace");ws.selectedProvider=0;verify(renderedFrame());
-  compare(ws.demoMode,false);compare(ws.activeTab,1);compare(findChild(app,"osintAnalysisPane").records.length,0);
-  verify(findChild(app,"lampyreMcpEndpoint").visible);verify(findChild(app,"lampyreApiKey").visible);compare(findChild(app,"lampyreTestConnection").enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-ar.png"));
-  compare(findChild(app,"lampyreMcpEndpoint").text,"https://account.lampyre.io/api/v2/mcp");compare(lampyreConnection.credentialSaved,false);verify(findChild(app,"lampyreLocalChecks").text.indexOf(identityBridge.session.username)>=0);
-  app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-en.png"));app.ar=true;
-  ws.demoMode=true;lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);compare(findChild(app,"osintAnalysisPane").records.length,3);
-  ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);app.goBack();
+ function test_osintDefaultShowsServiceCards(){
+  verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"))
+  app.navigatePrimary(3);verify(renderedFrame());
+  const ws=findChild(app,"osintWorkspace");
+  compare(ws.demoMode,false);
+  for(const ar of [true,false]){
+   app.ar=ar;
+   verify(renderedFrame());
+   verify(findChild(ws,"intelligenceBillingCard").visible);
+   verify(findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
+   verify(!findChild(ws,"intelligenceStartPaidSearch").enabled);
+   verify(findChild(ws,"lampyreMcpEndpoint")===null);
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-cards-"+(ar?"ar":"en")+".png"));
+  }
+  const settings=findChild(ws,"intelligenceAdvancedSettings");
+  mouseClick(settings);
+  tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
+  findChild(ws,"lampyreApiKey").text="Synthetic-credential-draft";
+  identityBridge.logout();
+  tryVerify(function(){return findChild(ws,"lampyreApiKey")===null});
+  verify(!settings.visible);
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
+  app.goBack();
  }
  Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}
  function test_yFirstAdministratorIsSignedIn(){
