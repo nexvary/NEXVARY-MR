@@ -6,6 +6,7 @@ ScrollView {
  property var app
  property var identity:identityBridge
  property string feedback:""
+ function roleAllows(role,p){if(p==="user-administration")return role==="administrator";if(p==="external-connection")return ["administrator","investigator","reviewer"].indexOf(role)>=0;if(p==="case-create"||p==="case-edit")return role==="investigator";if(p==="evidence-access")return ["investigator","reviewer","auditor"].indexOf(role)>=0;return role==="investigator"||role==="reviewer"}
  function connectionAllowed(){const rows=operationPolicy.permissions;for(const row of rows)if(row.capability==="external-analysis")return row.allowed;return false}
  objectName:"identityPanel"
  contentWidth:availableWidth
@@ -50,10 +51,14 @@ ScrollView {
    TextField {id:newPassword;objectName:"identityNewPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة مرور الحساب الجديد","New account password")}
    ActionButton {text:app.trx("إنشاء حساب","Create account");onClicked:{const id=page.identity.createUser(newUsername.text,newDisplay.text,newRole.currentText,newPassword.text);page.feedback=id!==""?app.trx("تم إنشاء الحساب بنجاح؛ يمكنك الانتقال إليه عبر تبديل الحساب","Account created successfully; use Switch account to sign in"):"";newPassword.clear()}}
    ActionButton {objectName:"identityCreateInvestigatorAndSignIn";text:page.app.trx("إنشاء حساب المحقق والدخول إليه","Create investigator and sign in");primary:true;onClicked:{const user=newUsername.text;const pass=newPassword.text;const id=page.identity.createUser(user,newDisplay.text,"investigator",pass);if(id!=="")page.identity.login(user,pass);newPassword.clear()}}
-   Repeater {model:page.identity.users;delegate:RowLayout {required property var modelData;Layout.fillWidth:true
+   Repeater {model:page.identity.users;delegate:ColumnLayout {id:accountRow;required property var modelData;Layout.fillWidth:true
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.username+" · "+page.app.roleLabel(modelData.role)+"\n"+modelData.id}
     ActionButton {text:modelData.enabled?page.app.trx("تعطيل","Disable"):page.app.trx("تمكين","Enable");enabled:modelData.id!==page.identity.session.id;onClicked:page.identity.setEnabled(modelData.id,!modelData.enabled)}
+    Repeater {model:[{id:"case-create",ar:"إنشاء القضايا",en:"Create cases"},{id:"case-edit",ar:"تعديل القضايا",en:"Edit cases"},{id:"evidence-access",ar:"قراءة الأدلة",en:"Evidence access"},{id:"osint-investigation",ar:"تحقيق OSINT",en:"OSINT investigation"},{id:"external-connection",ar:"اتصال API/MCP",en:"API/MCP connection"},{id:"paid-search",ar:"البحث المدفوع",en:"Paid searches"},{id:"evidence-export",ar:"تصدير الأدلة",en:"Evidence export"},{id:"user-administration",ar:"إدارة المستخدمين",en:"User administration"}]
+     delegate:CheckBox {required property var modelData;text:page.app.ar?modelData.ar:modelData.en;checked:page.roleAllows(accountRow.modelData.role,modelData.id)&&(accountRow.modelData.deniedPermissions||[]).indexOf(modelData.id)<0;enabled:page.roleAllows(accountRow.modelData.role,modelData.id)&&!(accountRow.modelData.id===page.identity.session.id&&modelData.id==="user-administration");onClicked:{const ok=page.identity.setPermission(accountRow.modelData.id,modelData.id,checked);page.feedback=ok?page.app.trx("تم حفظ الصلاحية؛ يجب إعادة دخول الحساب المتأثر","Permission saved; affected account must sign in again"):""}}
+    }
    }}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("صلاحيات كل حساب تظهر أدناه. السماح يبقى ضمن سقف الدور، وتغييرها ينهي جلسة الحساب المتأثر ويحتاج تسجيل دخول جديد. الوصول لقضية وموافقة التحليل الخارجي شرطان مستقلان.","Permissions remain within the role ceiling. A permission change ends the affected session and requires sign-in again. Case access and reviewed external-analysis grants remain separate requirements.")}
    TextField {id:caseId;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID القضية — يقدمه مالك القضية","Case UUID supplied by its owner")}
    TextField {id:principal;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID الحساب أعلاه","Account UUID shown above")}
    RowLayout {Layout.fillWidth:true

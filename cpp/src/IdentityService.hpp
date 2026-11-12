@@ -30,6 +30,8 @@ public:
  Q_INVOKABLE void logout();
  Q_INVOKABLE bool changePassword(const QString &currentPassword,const QString &newPassword);
  Q_INVOKABLE QString createUser(const QString &username,const QString &displayName,const QString &role,const QString &password);
+ Q_INVOKABLE bool setPermission(const QString &userId,const QString &permission,bool allowed);
+ bool hasPermission(const QString &permission)const;
  Q_INVOKABLE bool setEnabled(const QString &userId,bool enabled);
  Q_INVOKABLE bool setCaseGrant(const QString &caseId,const QString &userId,bool granted);
  bool checkSession();

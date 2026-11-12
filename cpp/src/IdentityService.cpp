@@ -18,6 +18,7 @@ QByteArray json(const QVariantMap &v){return QJsonDocument(QJsonObject::fromVari
 QString utc(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);}
 QString b64(const QByteArray &v){return QString::fromLatin1(v.toBase64());}
 QByteArray un64(const QVariant &v){return QByteArray::fromBase64(v.toString().toLatin1(),QByteArray::AbortOnBase64DecodingErrors);}
+QStringList permissionNames(){return {"case-create","case-edit","evidence-access","osint-investigation","external-connection","paid-search","evidence-export","user-administration"};}
 QStringList roles(){return {"administrator","investigator","reviewer","auditor","trainer","repair-technician"};}
 bool passwordValid(const QString &s){return s.size()>=14&&s.toUtf8().size()<=256&&!s.contains(QChar(0));}
 QVariantMap publicAccount(QVariantMap a){for(const auto *key:{"passwordHash","salt","nonce","secret","failed","blockedUntil"})a.remove(key);return a;}
@@ -47,6 +48,7 @@ bool IdentityService::read(){
  const auto id=a.value("id").toString(),name=a.value("username").toString();
  const auto encoded=a.value("passwordHash").toString().toLatin1();
   if(QUuid(id).isNull()||ids.contains(id)||names.contains(name)||!QRegularExpression("^[a-z0-9][a-z0-9._-]{2,63}$").match(name).hasMatch()||!roles().contains(a.value("role").toString())||a.value("enabled").metaType().id()!=QMetaType::Bool||a.value("displayName").toString().isEmpty()||a.value("displayName").toString().size()>128||encoded.size()>=crypto_pwhash_STRBYTES||crypto_pwhash_str_needs_rehash(encoded.constData(),crypto_pwhash_OPSLIMIT_INTERACTIVE,crypto_pwhash_MEMLIMIT_INTERACTIVE)!=0||un64(a.value("salt")).size()!=crypto_pwhash_SALTBYTES||un64(a.value("nonce")).size()!=crypto_secretbox_NONCEBYTES||un64(a.value("secret")).size()!=crypto_sign_SECRETKEYBYTES+crypto_secretbox_MACBYTES||un64(a.value("publicKey")).size()!=crypto_sign_PUBLICKEYBYTES)return fail("Identity account validation failed.");
+  const auto denied=a.value("deniedPermissions").toStringList();if(denied.size()>permissionNames().size())return fail("Invalid permission restrictions.");for(const auto &permission:denied)if(!permissionNames().contains(permission))return fail("Unknown permission restriction.");
   ids.insert(id);names.insert(name);if(a.value("role")=="administrator"&&a.value("enabled").toBool())admin=true;
  }
  if(!admin)return fail("An enabled local administrator is required.");
@@ -118,10 +120,10 @@ bool IdentityService::changePassword(const QString &currentPassword,const QStrin
 bool IdentityService::checkSession(){
  if(!authenticated())return false;
  const auto before=sessionAccount_;
- const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
+ const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_){logout();return fail("Session expired after 15 minutes. Sign in again; saved credentials remain protected.");}if(!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
  return true;
 }
-bool IdentityService::administrator(){return checkSession()&&account(userId_).value("role")=="administrator";}
+bool IdentityService::administrator(){return checkSession()&&hasPermission("user-administration");}
 QString IdentityService::createUser(const QString &username,const QString &name,const QString &role,const QString &password){if(!administrator()) {fail("An authenticated local administrator is required.");return {};}
  auto rows=state_.value("users").toList();if(rows.size()>=128){fail("Account limit reached.");return {};}const auto a=newAccount(username,name,role,password);if(a.isEmpty())return {};rows.append(a);
  auto next=state_;next.insert("users",rows);return save(next)?a.value("id").toString():QString();}
@@ -148,4 +150,21 @@ bool IdentityService::verify(const QVariantMap &envelope,const QString &purpose,
 QVariantMap IdentityService::setupStatus()const{
  bool investigator=false;for(const auto &v:state_.value("users").toList()){const auto a=v.toMap();if(a.value("enabled").toBool()&&a.value("role")=="investigator")investigator=true;}
  return {{"administrator",ready_&&!needsSetup()},{"investigator",ready_&&investigator}};
+}
+
+bool IdentityService::hasPermission(const QString &permission)const{
+ if(!authenticated()||!permissionNames().contains(permission))return false;
+ const auto a=account(userId_);if(!a.value("enabled").toBool()||a.value("deniedPermissions").toStringList().contains(permission))return false;
+ const auto role=a.value("role").toString();
+ if(permission=="user-administration")return role=="administrator";
+ if(permission=="external-connection")return role=="administrator"||role=="investigator"||role=="reviewer";
+ if(permission=="case-create"||permission=="case-edit")return role=="investigator";
+ if(permission=="evidence-access")return role=="investigator"||role=="reviewer"||role=="auditor";
+ return role=="investigator"||role=="reviewer";
+}
+bool IdentityService::setPermission(const QString &id,const QString &permission,bool allowed){
+ if(!administrator()||!hasPermission("user-administration")||!permissionNames().contains(permission)||(!allowed&&id==userId_&&permission=="user-administration"))return fail("An authorized administrator must configure a known permission; self-lockout is refused.");
+ auto rows=state_.value("users").toList();bool found=false;for(auto &v:rows){auto a=v.toMap();if(a.value("id")==id){auto denied=a.value("deniedPermissions").toStringList();denied.removeAll(permission);if(!allowed)denied.append(permission);a.insert("deniedPermissions",denied);a.insert("version",a.value("version").toInt()+1);v=a;found=true;}}
+ if(!found)return fail("Unknown local account.");
+ auto next=state_;next.insert("users",rows);return save(next);
 }

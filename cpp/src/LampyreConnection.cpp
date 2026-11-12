@@ -86,6 +86,7 @@ bool LampyreConnection::connectProvider(bool consent){
  if(busy_)return false;
  if(!consent)return reject("connection-consent-required");
  if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
+ if(identity_&&!identity_->hasPermission("external-connection"))return reject("local-connection-permission-denied");
  if(!validEndpoint(endpoint_,synthetic_)||!hasCredential())return reject("configuration-required");
  if((!synthetic_&&!policy_)||(policy_&&!policy_->granted("external-analysis")))return reject("external-analysis-approval-required");
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
@@ -98,13 +99,14 @@ bool LampyreConnection::setRequestLimit(int limit){
  requestLimit_=limit;error_.clear();emit changed();return true;
 }
 bool LampyreConnection::authorized(){
- return synthetic_&& !identity_ && !policy_ ? true : identity_&&identity_->checkSession()&&nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)&&policy_&&policy_->granted("external-analysis");
+ return synthetic_&& !identity_ && !policy_ ? true : identity_&&identity_->checkSession()&&identity_->hasPermission("paid-search")&&identity_->hasPermission("osint-investigation")&&nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)&&policy_&&policy_->granted("external-analysis");
 }
 bool LampyreConnection::callTool(const QString &name,const QString &arguments,bool consent){
  if(busy_)return false;
  if(!consent)return reject("request-consent-required");
  if(!connected_)return reject("not-connected");
  if(identity_&&(!identity_->checkSession()||!nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)))return reject("investigator-required");
+ if(identity_&&(!identity_->hasPermission("paid-search")||!identity_->hasPermission("osint-investigation")))return reject("local-search-permission-denied");
  if(!authorized())return reject("external-analysis-approval-required");
  if(!synthetic_ && (!caseAuthorization_ || !caseAuthorization_()))return reject("active-case-required");
  if(policy_&&!policy_->granted("paid-unknown-cost"))return reject("unknown-cost-policy-required");
