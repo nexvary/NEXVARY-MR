@@ -31,6 +31,8 @@ ApplicationWindow {
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
  // Legacy page numbers stay stable for native smoke consumers and page APIs.
  property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة الورشة","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Workshop CRM","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
+ readonly property int intelligencePage:15
+ readonly property var intelligenceSection:({ar:"الاستخبارات",en:"Intelligence",icon:"search_visual",page:intelligencePage})
  readonly property var professionalSections:[
   {ar:"لوحة المتابعة",en:"Dashboard",icon:"home",page:0},
   {ar:"مدير الأجهزة",en:"Device Manager",icon:"phone",page:1},
@@ -44,10 +46,11 @@ ApplicationWindow {
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
   {ar:"الإعدادات",en:"Settings",icon:"settings",page:7},
   {ar:"المساعدة وعن البرنامج",en:"Help & About",icon:"question_circle",page:11},
-  {ar:"إنفاذ القانون",en:"Law Enforcement",icon:"document_lock",page:12}
+  {ar:"إنفاذ القانون",en:"Law Enforcement",icon:"document_lock",page:12},
+  intelligenceSection
  ]
  readonly property var governmentSections:[
-  {ar:"لوحة التحكم الحكومية",en:"Government Dashboard",icon:"home",page:12,law:0},
+  {ar:"لوحة التحكم الأمنية",en:"Security Dashboard",icon:"home",page:12,law:0},
   {ar:"فتح قضية",en:"Open Case",icon:"document_lock",page:12,law:2},
   {ar:"إدارة القضايا",en:"Case Management",icon:"clipboard_task",page:12,law:3},
   {ar:"تقييم الأجهزة",en:"Device Assessment",icon:"phone",page:12,law:7},
@@ -58,9 +61,17 @@ ApplicationWindow {
   {ar:"مختبر التدريب",en:"Training Laboratory",icon:"training_lab",page:12,law:9},
   {ar:"التقارير والتدقيق",en:"Reports & Audit",icon:"document_text",page:12,law:8},
   {ar:"الإدارة",en:"Administration",icon:"settings",page:12,law:10},
-  {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
+  {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0},
+  intelligenceSection
  ]
  readonly property var sections:governmentMode?governmentSections:professionalSections
+ readonly property int intelligenceSectionIndex:sections.length-1
+ // Keep route IDs stable for shortcuts, history and existing section callers.
+ readonly property var primarySectionOrder:{
+  const order=sections.map((section,index)=>index)
+  if(governmentMode)order.splice(1,0,order.pop())
+  return order
+ }
  property string pendingHelpUrl:""
  function openExternal(url){if(operationPolicy.isHelpLink(url)){pendingHelpUrl=url;helpLinkDialog.open();return true}const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
  Dialog {id:helpLinkDialog;objectName:"officialHelpLinkDialog";anchors.centerIn:parent;modal:true;width:Math.min(520,window.width-32);title:window.trx("فتح الموقع الرسمي","Open official website");standardButtons:Dialog.Yes|Dialog.No
@@ -69,7 +80,7 @@ ApplicationWindow {
   onRejected:window.pendingHelpUrl=""
  }
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
- readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
+ readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?(sections[activeSection]||sections[0]).ar:(sections[activeSection]||sections[0]).en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function humanError(value){
@@ -88,14 +99,14 @@ ApplicationWindow {
  }
  function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
  function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:humanError(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
- function sectionForPage(page){if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
+ function sectionForPage(page){if(page===intelligencePage)return intelligenceSectionIndex;if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
  function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{
   if(!goingBack&&currentPage!==previousPage){let history=pageHistory.slice();history.push(snapshot(previousPage));pageHistory=history.slice(-50)}
   previousPage=currentPage;activeSection=sectionForPage(currentPage)
  }
  function navigatePrimary(index){
-  if(index===3){setWorkspace(true);navigateSection(6);analysisWorkspaceRoot.showOsint=true;return}
+  if(index===3){navigateSection(intelligenceSectionIndex);return}
   setWorkspace(false);
   if(index===4){navigate(7);return}
   navigateSection(index);
@@ -105,10 +116,6 @@ ApplicationWindow {
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
   currentPage=entry.page
-  // A forensic section selection opens evidence analysis; the OSINT shortcut
-  // explicitly opts into its workspace after navigation. Do not retain a hidden
-  // provider view when the user returns to the forensic section.
-  if(entry.page===14)analysisWorkspaceRoot.showOsint=false
   if(entry.law!==undefined)lawWorkspace.section=entry.law
   if(entry.evidence!==undefined)lawWorkspace.evidenceView=entry.evidence
   if(entry.page===1)deviceHub.currentTab=entry.tab===undefined?0:entry.tab
@@ -181,7 +188,14 @@ ApplicationWindow {
     HelpPage {app:window}
     LawEnforcementPage {id:lawWorkspace;app:window}
     ResearchCenter {app:window}
-    GovernmentAnalysisPage {id:analysisWorkspaceRoot;app:window}
+    GovernmentAnalysisPage {app:window}
+    ScrollView {
+     id:intelligenceView;objectName:"intelligenceWorkspace"
+     contentWidth:availableWidth
+     clip:true
+     onVisibleChanged:if(!visible&&intelligenceContent)intelligenceContent.demoMode=false
+     OsintWorkspace {id:intelligenceContent;width:intelligenceView.availableWidth;app:window}
+    }
    }
   }
  }

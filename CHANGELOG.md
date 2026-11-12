@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add a bilingual Intelligence tab beside Security Dashboard, with a dedicated route accessible before account sign-in and case selection.
+- Move the existing provider setup and research interface to the Intelligence route. Retain provider, account, case and evidence controls for requests and attachments.
+- Clear local demonstration data when leaving Intelligence. Cover navigation, right-to-left order and signed-out access in Qt Quick tests.
+
 ## 0.4.1 — 2026-11-11 (evaluation)
 
 - Add guided first-administrator sign-in and investigator account creation without granting administrators implicit case access.

@@ -20,7 +20,7 @@ Rectangle {
     Label {text:hero.app.trx("الصيانة • البحث • التحليل", "REPAIR • RESEARCH • ANALYSIS");font.pixelSize:10;color:"#9EB4C1";font.letterSpacing:1;Layout.fillWidth:true;elide:Text.ElideRight}
    }
    OsintDesktopCommand {objectName:"dashboardDevices";iconName:"phone";text:hero.app.trx("الأجهزة", "Devices");onClicked:hero.app.navigatePrimary(1)}
-   OsintDesktopCommand {objectName:"homeOpenOsint";iconName:"search_visual";primary:true;text:"OSINT";onClicked:hero.app.navigatePrimary(3)}
+   OsintDesktopCommand {objectName:"homeOpenOsint";iconName:"search_visual";primary:true;text:hero.app.trx("الاستخبارات","Intelligence");onClicked:hero.app.navigatePrimary(3)}
    OsintDesktopCommand {visible:hero.width>850;iconName:"document_text";text:hero.app.trx("التقارير", "Reports");onClicked:{hero.app.setWorkspace(false);hero.app.navigateSection(8)}}
   }
  }

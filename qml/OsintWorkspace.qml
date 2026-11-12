@@ -13,6 +13,16 @@ ColumnLayout {
  property bool showRequests:true
  readonly property var liveConnection:typeof lampyreConnection!=="undefined"?lampyreConnection:null
  readonly property var evaluation:typeof lampyreEvaluation!=="undefined"?lampyreEvaluation:null
+ Label {
+  Layout.fillWidth:true
+  color:workspace.app.design.text;font.pixelSize:22;font.bold:true;wrapMode:Text.WordWrap
+  text:workspace.app.trx("مرحبًا بك في قسم الاستخبارات وجمع المعلومات","Welcome to Intelligence and Information Gathering")
+ }
+ Label {
+  Layout.fillWidth:true
+  color:workspace.app.design.muted;wrapMode:Text.WordWrap
+  text:workspace.app.trx("اختر نوع البحث الذي تريد تنفيذه","Choose the type of search you want to run")
+ }
  QtObject {
   id:desktopTokens
   readonly property color text:"#E5EDF3"
