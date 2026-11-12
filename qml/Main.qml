@@ -14,7 +14,7 @@ ApplicationWindow {
  function tone(value){return legacy.tone(value)}
  color:design.background
  background:Rectangle {color:window.design.background
-  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme&&window.currentPage!==0;dimming:0.28}
+  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme;fullWindow:true;dimming:0.38}
  }
 
  property bool showDevicePanel:false
@@ -31,6 +31,8 @@ ApplicationWindow {
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
  // Legacy page numbers stay stable for native smoke consumers and page APIs.
  property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة الورشة","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Workshop CRM","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
+ readonly property int intelligencePage:15
+ readonly property var intelligenceSection:({ar:"الاستخبارات",en:"Intelligence",icon:"search_visual",page:intelligencePage})
  readonly property var professionalSections:[
   {ar:"لوحة المتابعة",en:"Dashboard",icon:"home",page:0},
   {ar:"مدير الأجهزة",en:"Device Manager",icon:"phone",page:1},
@@ -44,10 +46,11 @@ ApplicationWindow {
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
   {ar:"الإعدادات",en:"Settings",icon:"settings",page:7},
   {ar:"المساعدة وعن البرنامج",en:"Help & About",icon:"question_circle",page:11},
-  {ar:"إنفاذ القانون",en:"Law Enforcement",icon:"document_lock",page:12}
+  {ar:"إنفاذ القانون",en:"Law Enforcement",icon:"document_lock",page:12},
+  intelligenceSection
  ]
  readonly property var governmentSections:[
-  {ar:"لوحة التحكم الحكومية",en:"Government Dashboard",icon:"home",page:12,law:0},
+  {ar:"لوحة التحكم الأمنية",en:"Security Dashboard",icon:"home",page:12,law:0},
   {ar:"فتح قضية",en:"Open Case",icon:"document_lock",page:12,law:2},
   {ar:"إدارة القضايا",en:"Case Management",icon:"clipboard_task",page:12,law:3},
   {ar:"تقييم الأجهزة",en:"Device Assessment",icon:"phone",page:12,law:7},
@@ -58,9 +61,17 @@ ApplicationWindow {
   {ar:"مختبر التدريب",en:"Training Laboratory",icon:"training_lab",page:12,law:9},
   {ar:"التقارير والتدقيق",en:"Reports & Audit",icon:"document_text",page:12,law:8},
   {ar:"الإدارة",en:"Administration",icon:"settings",page:12,law:10},
-  {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0}
+  {ar:"الصيانة الاحترافية",en:"Professional Repair",icon:"toolbox",page:0},
+  intelligenceSection
  ]
  readonly property var sections:governmentMode?governmentSections:professionalSections
+ readonly property int intelligenceSectionIndex:sections.length-1
+ // Keep route IDs stable for shortcuts, history and existing section callers.
+ readonly property var primarySectionOrder:{
+  const order=sections.map((section,index)=>index)
+  if(governmentMode)order.splice(1,0,order.pop())
+  return order
+ }
  property string pendingHelpUrl:""
  function openExternal(url){if(operationPolicy.isHelpLink(url)){pendingHelpUrl=url;helpLinkDialog.open();return true}const ok=operationPolicy.openExternal(url);if(!ok)notice(false,"",operationPolicy.error);return ok}
  Dialog {id:helpLinkDialog;objectName:"officialHelpLinkDialog";anchors.centerIn:parent;modal:true;width:Math.min(520,window.width-32);title:window.trx("فتح الموقع الرسمي","Open official website");standardButtons:Dialog.Yes|Dialog.No
@@ -69,7 +80,7 @@ ApplicationWindow {
   onRejected:window.pendingHelpUrl=""
  }
  function setWorkspace(government){governmentMode=government;pageHistory=[];navigateSection(0)}
- readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?sections[activeSection].ar:sections[activeSection].en)
+ readonly property string pageTitle:currentPage===0?trx("الرئيسية","Home"):currentPage===3?titles[3]:currentPage===6?titles[6]:(ar?(sections[activeSection]||sections[0]).ar:(sections[activeSection]||sections[0]).en)
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function humanError(value){
@@ -78,37 +89,38 @@ ApplicationWindow {
   if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
   if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
   if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات Lampyre المحفوظة تبقى محمية.";
-  if(text.indexOf("Account permission denied")>=0)return "الحساب الحالي لا يملك إذن العملية. يضبطه المدير في الحسابات والصلاحيات؛ سجّل الدخول مجددًا بعد تغيير الإذن.";
+  const denied=/^Account permission denied: ([a-z-]+)\./.exec(text);
+  if(denied){
+   const labels={"case-create":"إنشاء القضايا","case-edit":"تعديل القضايا","evidence-access":"قراءة الأدلة","osint-investigation":"تحقيق OSINT","evidence-export":"تصدير الأدلة"};
+   return "الإذن المطلوب: "+(labels[denied[1]]||denied[1])+". اطلب تفعيله من المدير في الحسابات والصلاحيات، ثم سجّل الدخول مجددًا.";
+  }
   if(text.indexOf("Sign-in failed")>=0)return "تعذر تسجيل الدخول. راجع اسم المستخدم وكلمة المرور وحالة الحساب.";
   if(text.indexOf("Username already exists")>=0)return "اسم المستخدم موجود بالفعل؛ اختر اسمًا آخر أو سجّل الدخول بالحساب الموجود.";
   if(text.indexOf("3–64 character lowercase")>=0)return "اختر اسم مستخدم إنجليزيًا صغيرًا من 3 إلى 64 حرفًا، واسم عرض، وكلمة مرور لا تقل عن 14 حرفًا.";
   if(text.indexOf("14 characters")>=0)return "كلمة المرور يجب ألا تقل عن 14 حرفًا. راجع اسم المستخدم واسم العرض أيضًا.";
-  if(text.indexOf("No case grant")>=0)return "هذا الحساب لا يملك صلاحية الوصول إلى القضية المحددة.";
+  if(text.indexOf("No case grant")>=0||text.indexOf("no grant for the active case")>=0)return "اطلب من المدير منح حسابك صلاحية الوصول إلى هذه القضية.";
   return text;
  }
  function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
  function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:humanError(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
- function sectionForPage(page){if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
+ function sectionForPage(page){if(page===intelligencePage)return intelligenceSectionIndex;if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
  function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{
   if(!goingBack&&currentPage!==previousPage){let history=pageHistory.slice();history.push(snapshot(previousPage));pageHistory=history.slice(-50)}
   previousPage=currentPage;activeSection=sectionForPage(currentPage)
  }
  function navigatePrimary(index){
-  if(index===3){setWorkspace(true);navigateSection(6);analysisWorkspaceRoot.showOsint=true;return}
+  if(index===3){navigateSection(intelligenceSectionIndex);return}
   setWorkspace(false);
   if(index===4){navigate(7);return}
   navigateSection(index);
  }
  function navigate(index){currentPage=index}
+ function openAccountPermissions(){if(!governmentMode)setWorkspace(true);navigateSection(10)}
  function navigateSection(index){
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
   currentPage=entry.page
-  // A forensic section selection opens evidence analysis; the OSINT shortcut
-  // explicitly opts into its workspace after navigation. Do not retain a hidden
-  // provider view when the user returns to the forensic section.
-  if(entry.page===14)analysisWorkspaceRoot.showOsint=false
   if(entry.law!==undefined)lawWorkspace.section=entry.law
   if(entry.evidence!==undefined)lawWorkspace.evidenceView=entry.evidence
   if(entry.page===1)deviceHub.currentTab=entry.tab===undefined?0:entry.tab
@@ -154,7 +166,7 @@ ApplicationWindow {
    anchors.fill:parent;spacing:8
    RowLayout {Layout.fillWidth:true
     Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
-    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:{window.setWorkspace(true);window.navigateSection(10)}}
+    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
    }
    RowLayout {
     visible:window.activeSection===2||window.activeSection===7;Layout.fillWidth:true
@@ -181,7 +193,17 @@ ApplicationWindow {
     HelpPage {app:window}
     LawEnforcementPage {id:lawWorkspace;app:window}
     ResearchCenter {app:window}
-    GovernmentAnalysisPage {id:analysisWorkspaceRoot;app:window}
+    GovernmentAnalysisPage {app:window}
+    ScrollView {
+     id:intelligenceView;objectName:"intelligenceWorkspace"
+     contentWidth:availableWidth
+     clip:true
+     onVisibleChanged:{
+      if(visible&&contentItem)contentItem.contentY=contentItem.originY
+      else if(intelligenceContent)intelligenceContent.demoMode=false
+     }
+     OsintWorkspace {id:intelligenceContent;width:intelligenceView.availableWidth;app:window}
+    }
    }
   }
  }

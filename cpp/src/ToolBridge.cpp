@@ -380,12 +380,27 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
       success=false;terminalReason_=QStringLiteral("USB inventory rejected: invalid or oversized schema / جرد USB غير صالح");
     }
   }
+  QVariantMap properties;
+  if (success && operation_ == Operation::Properties) {
+    properties = parseDeviceProperties(output);
+    if (properties.isEmpty()) {
+      success = false;
+      terminalReason_ = QStringLiteral("لم يُرجع ADB خصائص جهاز قابلة للقراءة / ADB returned no readable device properties.");
+    }
+  }
+  qsizetype detectedCount = 0;
   if (success) {
     switch (operation_) {
-    case Operation::AdbScan: replaceDevices(parseAdbDevices(output), adbTransport); break;
-    case Operation::FastbootScan: replaceDevices(parseFastbootDevices(output), fastbootTransport); break;
+    case Operation::AdbScan:
+    case Operation::FastbootScan: {
+      const bool adb = operation_ == Operation::AdbScan;
+      const auto found = adb ? parseAdbDevices(output) : parseFastbootDevices(output);
+      detectedCount = found.size();
+      replaceDevices(found, adb ? adbTransport : fastbootTransport);
+      break;
+    }
     case Operation::Properties:
-      if (commandSerial_ == selectedSerial_) { deviceInfo_ = parseDeviceProperties(output); deviceInfo_.insert(QStringLiteral("serial"), commandSerial_); emit deviceInfoChanged(); }
+      if (commandSerial_ == selectedSerial_) { deviceInfo_ = properties; deviceInfo_.insert(QStringLiteral("serial"), commandSerial_); emit deviceInfoChanged(); }
       break;
     case Operation::Logcat:
       if (commandSerial_ == selectedSerial_) { logcat_ = output; emit logcatChanged(); }
@@ -402,7 +417,7 @@ void ToolBridge::finish(int exitCode, QProcess::ExitStatus exitStatus) {
     case Operation::None: break;
     case Operation::Service: break;
     }
-    if (operation_ == Operation::AdbScan || operation_ == Operation::FastbootScan) setStatus(QStringLiteral("اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: ") + QString::number(devices_.size()));
+    if (operation_ == Operation::AdbScan || operation_ == Operation::FastbootScan) setStatus(QStringLiteral("اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: ") + QString::number(detectedCount));
     else setStatus(output.isEmpty() ? QStringLiteral("اكتمل الفحص دون بيانات متاحة") : QStringLiteral("اكتمل الفحص بنجاح"));
   } else {
     if(operation_==Operation::Properties&&commandSerial_==selectedSerial_){deviceInfo_.clear();emit deviceInfoChanged();}

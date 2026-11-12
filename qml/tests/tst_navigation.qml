@@ -27,19 +27,23 @@ TestCase {
   return id
  }
  function test_phoneOsintBilingualBoundary(){
-  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
-  const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"phoneOsintPanel"),toggle=findChild(app,"osintToggle");verify(panel!==null);page.showOsint=true;const osint=findChild(app,"osintWorkspace");osint.activeTab=1;osint.selectedProvider=1;
+  app.navigatePrimary(3);verify(renderedFrame());
+  const page=findChild(app,"intelligenceWorkspace"),panel=findChild(app,"phoneOsintPanel");verify(panel!==null);const osint=findChild(app,"osintWorkspace");osint.activeTab=1;osint.selectedProvider=1;
   const number=findChild(panel,"osintNumber"),run=findChild(panel,"osintRun");
-  for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,toggle);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
-  page.showOsint=false
+  for(const ar of [true,false]){app.ar=ar;number.text="+12025550100";reveal(page,number);verify(renderedFrame());compare(panel.LayoutMirroring.enabled,ar);compare(number.text,"+12025550100");compare(run.enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"phone-osint-"+(ar?"ar":"en")+".png"))}
+  app.goBack()
  }
  function test_fullGovernmentNavigationAndProfessionalIcons(){
   app.setWorkspace(true);app.width=1536;
-  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);compare(nav.sectionCount,12);
+  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);compare(nav.sectionCount,13);
   for(const ar of [true,false]){
    app.ar=ar;verify(renderedFrame());
    verify(ar?nav.itemAt(0).x>nav.itemAt(11).x:nav.itemAt(0).x<nav.itemAt(11).x);
-   for(let i=0;i<12;i++){
+   const dashboard=nav.itemAt(0), intelligence=nav.itemAt(app.intelligenceSectionIndex)
+   compare(dashboard.text,ar?"لوحة التحكم الأمنية":"Security Dashboard")
+   compare(intelligence.text,ar?"الاستخبارات":"Intelligence")
+   compare(Math.abs(dashboard.x-intelligence.x),dashboard.width+4)
+   for(let i=0;i<nav.sectionCount;i++){
     nav.reveal(i);verify(renderedFrame());
     const button=nav.itemAt(i);verify(button!==null);
     compare(button.text,ar?app.governmentSections[i].ar:app.governmentSections[i].en);
@@ -52,30 +56,50 @@ TestCase {
   }
   app.width=980;verify(renderedFrame());verify(nav.overflowing);
   nav.reveal(11);verify(renderedFrame());mouseClick(nav.itemAt(11));compare(app.activeSection,11);
-  app.setWorkspace(false);compare(nav.sectionCount,13);
+  app.setWorkspace(false);compare(nav.sectionCount,14);
  }
  function test_approvedHomeAndPrimaryNavigation(){
   app.navigatePrimary(0);verify(renderedFrame());compare(app.currentPage,0);
   const art=findChild(app,"mrHomeArtwork");verify(art!==null);tryCompare(art,"status",Image.Ready,5000);
   verify(art.source.toString().indexOf("mr-home-background.png")>=0);
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
-  app.navigatePrimary(3);compare(app.currentPage,14);verify(findChild(app,"governmentAnalysisWorkspace").showOsint);
+  app.navigatePrimary(3);compare(app.currentPage,app.intelligencePage)
+  verify(findChild(app,"intelligenceWorkspace").visible)
+  const draft=findChild(app,"lampyreApiKey"), consent=findChild(app,"lampyreConnectionConsent")
+  draft.text="Synthetic-credential-draft";consent.checked=true
+  identityBridge.logout()
+  compare(draft.text,"");verify(!consent.checked)
+  app.goBack();compare(app.currentPage,0)
+  app.navigatePrimary(3);verify(renderedFrame())
+  const permissions=findChild(app,"lampyreOpenPermissions")
+  reveal(findChild(app,"intelligenceWorkspace"),permissions);mouseClick(permissions)
+  compare(app.currentPage,12);compare(app.activeSection,10)
+  app.setWorkspace(true);app.navigateSection(app.intelligenceSectionIndex)
+  verify(renderedFrame());
+  const intelligence=findChild(app,"intelligenceWorkspace")
+  verify(intelligence.visible)
+  compare(intelligence.contentItem.contentY,intelligence.contentItem.originY)
+  verify(!identityBridge.authenticated);verify(!lawCaseBridge.activeCase.id)
+  verify(!findChild(app,"lampyreTestConnection").enabled)
+  verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
+  app.goBack();compare(app.currentPage,12);compare(app.activeSection,0)
   app.navigatePrimary(1);compare(app.currentPage,1);compare(app.governmentMode,false);
   app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
-  compare(findChild(app,"governmentAnalysisWorkspace").showOsint,false);
+  verify(!findChild(app,"intelligenceWorkspace").visible);
   verify(findChild(app,"governmentAnalyzeEvidence").visible);
  }
  function test_approvedMrPaletteAndBackground(){
   compare(String(app.design.background),"#040507");
   compare(String(app.design.surface),"#08121b");
   compare(String(app.design.accent),"#23b9e7");
-  const background=findChild(app,"osintBackgroundImage");verify(background!==null);
+  const background=findChild(app,"workstationBackgroundImage");verify(background!==null);
   tryCompare(background,"status",Image.Ready,5000);verify(background.source.toString().indexOf("mr-network-wave.png")>=0);
+  compare(background.width,app.width);compare(background.height,app.height);
  }
  function test_osintWorkspaceBilingualNavigation(){
-  app.setWorkspace(true);app.navigateSection(6);verify(renderedFrame());
-  const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");
-  page.showOsint=true;ws.selectedProvider=0;ws.demoMode=true;
+  app.navigatePrimary(3);verify(renderedFrame());
+  const page=findChild(app,"intelligenceWorkspace"),ws=findChild(app,"osintWorkspace");
+  ws.selectedProvider=0;ws.demoMode=true;
   for(const ar of [true,false]){
    app.ar=ar;
    for(const tab of [1,2,3]){
@@ -105,7 +129,7 @@ TestCase {
   }
   lampyreEvaluation.runSynthetic(1);tryCompare(lampyreEvaluation,"state","synthetic-failed",3000);
   compare(analysis.records.length,0);compare(analysis.selectedIndex,-1);
-  ws.activeTab=0;page.showOsint=false;
+  ws.activeTab=0;app.goBack();compare(ws.demoMode,false);
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
@@ -143,7 +167,7 @@ TestCase {
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));app.setWorkspace(false)
  }
  function test_governmentNavigationAndWorkingCopies(){
-  app.setWorkspace(true);compare(app.currentPage,12);compare(app.sections.length,12)
+  app.setWorkspace(true);compare(app.currentPage,12);compare(app.sections.length,13)
   const law=findChild(app,"lawEnforcementWorkspace")
   for(const arabic of [true,false]){
    app.ar=arabic;app.width=1366;app.height=768
@@ -863,13 +887,13 @@ TestCase {
  }
  function test_exitCancel(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);let no=dialog.standardButton(Dialog.No);verify(no);mouseClick(no);tryCompare(dialog,"visible",false);compare(app.visible,true)}
  function test_osintDefaultIsLiveSetup(){
-  app.setWorkspace(true);app.navigateSection(6);const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");page.showOsint=true;verify(renderedFrame());
+  app.navigatePrimary(3);const ws=findChild(app,"osintWorkspace");ws.selectedProvider=0;verify(renderedFrame());
   compare(ws.demoMode,false);compare(ws.activeTab,1);compare(findChild(app,"osintAnalysisPane").records.length,0);
   verify(findChild(app,"lampyreMcpEndpoint").visible);verify(findChild(app,"lampyreApiKey").visible);compare(findChild(app,"lampyreTestConnection").enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-ar.png"));
   compare(findChild(app,"lampyreMcpEndpoint").text,"https://account.lampyre.io/api/v2/mcp");compare(lampyreConnection.credentialSaved,false);verify(findChild(app,"lampyreLocalChecks").text.indexOf(identityBridge.session.username)>=0);
   app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-en.png"));app.ar=true;
   ws.demoMode=true;lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);compare(findChild(app,"osintAnalysisPane").records.length,3);
-  ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);page.showOsint=false;
+  ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);app.goBack();
  }
  Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}
  function test_yFirstAdministratorIsSignedIn(){

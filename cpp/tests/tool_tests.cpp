@@ -27,6 +27,10 @@ static int fakeAdb(const QStringList &args) {
     std::fwrite(flood.constData(), 1, static_cast<size_t>(flood.size()), stdout);
     return 0;
   }
+  if (args == QStringList{"devices"}) {
+    if (mode != "no-fastboot") std::fputs("BOOT42\tfastboot\n", stdout);
+    return 0;
+  }
   if (mode == "duplicate" && args == QStringList{"devices","-l"}) {
     std::fputs("List of devices attached\nDEVICE42 device\nDEVICE42 device\n",stdout);return 0;
   }
@@ -35,6 +39,15 @@ static int fakeAdb(const QStringList &args) {
     return 0;
   }
   if (args == QStringList{QStringLiteral("-s"), QStringLiteral("DEVICE42"), QStringLiteral("shell"), QStringLiteral("getprop")}) {
+    if (mode == "oppo-cph2577") {
+      // Synthetic command output for parser and workflow coverage only.
+      std::fputs("[ro.product.manufacturer]: [OPPO]\n[ro.product.model]: [CPH2577]\n[ro.build.version.release]: [15]\n", stdout);
+      return 0;
+    }
+    if (mode == "empty-properties") {
+      std::fputs("unstructured output\n[gsm.sim.operator.alpha]: [PRIVATE]\n", stdout);
+      return 0;
+    }
     std::fputs("[ro.product.model]: [Test Phone]\n[sys.boot_completed]: [1]\n[gsm.sim.operator.alpha]: [PRIVATE]\n", stdout);
     return 0;
   }
@@ -188,6 +201,53 @@ private slots:
     QCOMPARE(info.size(), 2);
     QCOMPARE(info.value(QStringLiteral("ro.product.model")).toString(), QStringLiteral("Pixel 8"));
     QVERIFY(!info.contains(QStringLiteral("gsm.sim.operator.alpha")));
+  }
+  void authorizedUnknownModelAndUnreadableProperties() {
+    ToolBridge bridge;
+    QSignalSpy finished(&bridge, &ToolBridge::operationFinished);
+    bridge.scanAdb();
+    QVERIFY(finished.wait(5000));
+    QVERIFY(finished.takeFirst().first().toBool());
+    bridge.selectDevice("DEVICE42");
+
+    qputenv("MR_TEST_TOOL_MODE", "oppo-cph2577");
+    bridge.readDeviceInfo();
+    QVERIFY(finished.wait(5000));
+    QVERIFY(finished.takeFirst().first().toBool());
+    QCOMPARE(bridge.deviceInfo().value("ro.product.model").toString(), QStringLiteral("CPH2577"));
+    QCOMPARE(bridge.deviceInfo().value("ro.build.version.release").toString(), QStringLiteral("15"));
+
+    qputenv("MR_TEST_TOOL_MODE", "empty-properties");
+    bridge.readDeviceInfo();
+    QVERIFY(finished.wait(5000));
+    QVERIFY(!finished.takeFirst().first().toBool());
+    QVERIFY(bridge.deviceInfo().isEmpty());
+    QVERIFY(bridge.deviceIntelligence().value("propertiesObservedAtUtc").toString().isEmpty());
+    QCOMPARE(bridge.selectedSerial(), QStringLiteral("DEVICE42"));
+  }
+  void emptyFastbootScanReportsItsOwnTransportCount() {
+    ToolBridge bridge;
+#ifdef Q_OS_WIN
+    const auto fixture = directory_.filePath(QStringLiteral("adb.exe"));
+#else
+    const auto fixture = directory_.filePath(QStringLiteral("adb"));
+#endif
+    QVERIFY(bridge.configureTool("fastboot", fixture));
+    QSignalSpy finished(&bridge, &ToolBridge::operationFinished);
+    bridge.scanAdb();
+    QVERIFY(finished.wait(5000));
+    QCOMPARE(bridge.devices().size(), 2);
+    bridge.scanFastboot();
+    QVERIFY(finished.wait(5000));
+    QCOMPARE(bridge.devices().size(), 3);
+    QVERIFY(bridge.status().endsWith(": 1"));
+
+    qputenv("MR_TEST_TOOL_MODE", "no-fastboot");
+    bridge.scanFastboot();
+    QVERIFY(finished.wait(5000));
+    QVERIFY(finished.last().first().toBool());
+    QCOMPARE(bridge.devices().size(), 2);
+    QVERIFY(bridge.status().endsWith(": 0"));
   }
   void ambiguousSerialCannotReadPropertiesOrLogs() {
     qputenv("MR_TEST_TOOL_MODE","duplicate");ToolBridge bridge;QSignalSpy finished(&bridge,&ToolBridge::operationFinished);
