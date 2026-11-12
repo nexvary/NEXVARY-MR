@@ -14,7 +14,7 @@ ApplicationWindow {
  function tone(value){return legacy.tone(value)}
  color:design.background
  background:Rectangle {color:window.design.background
-  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme&&window.currentPage!==0;dimming:0.28}
+  OsintBackdrop {anchors.fill:parent;visible:window.darkTheme;fullWindow:true;dimming:0.38}
  }
 
  property bool showDevicePanel:false
@@ -198,7 +198,10 @@ ApplicationWindow {
      id:intelligenceView;objectName:"intelligenceWorkspace"
      contentWidth:availableWidth
      clip:true
-     onVisibleChanged:if(!visible&&intelligenceContent)intelligenceContent.demoMode=false
+     onVisibleChanged:{
+      if(visible&&contentItem)contentItem.contentY=contentItem.originY
+      else if(intelligenceContent)intelligenceContent.demoMode=false
+     }
      OsintWorkspace {id:intelligenceContent;width:intelligenceView.availableWidth;app:window}
     }
    }

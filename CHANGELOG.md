@@ -9,6 +9,7 @@
 - Clear unsubmitted provider credentials and consents on account changes. Route provider setup to Accounts and permissions from either workspace.
 - Improve account field contrast and focus, identify the missing case permission, and point case-grant errors to an administrator.
 - Report the count for the scanned Android transport and reject unreadable ADB property responses without retaining stale identity data.
+- Use full-window network artwork in the dark theme and show the Intelligence welcome on each entry. Compact the device-services header so the action list and results remain accessible in smaller windows.
 
 ## 0.4.1 — 2026-11-11 (evaluation)
 

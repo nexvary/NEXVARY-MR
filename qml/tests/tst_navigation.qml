@@ -75,7 +75,10 @@ TestCase {
   reveal(findChild(app,"intelligenceWorkspace"),permissions);mouseClick(permissions)
   compare(app.currentPage,12);compare(app.activeSection,10)
   app.setWorkspace(true);app.navigateSection(app.intelligenceSectionIndex)
-  verify(renderedFrame());verify(findChild(app,"intelligenceWorkspace").visible)
+  verify(renderedFrame());
+  const intelligence=findChild(app,"intelligenceWorkspace")
+  verify(intelligence.visible)
+  compare(intelligence.contentItem.contentY,intelligence.contentItem.originY)
   verify(!identityBridge.authenticated);verify(!lawCaseBridge.activeCase.id)
   verify(!findChild(app,"lampyreTestConnection").enabled)
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
@@ -89,8 +92,9 @@ TestCase {
   compare(String(app.design.background),"#040507");
   compare(String(app.design.surface),"#08121b");
   compare(String(app.design.accent),"#23b9e7");
-  const background=findChild(app,"osintBackgroundImage");verify(background!==null);
+  const background=findChild(app,"workstationBackgroundImage");verify(background!==null);
   tryCompare(background,"status",Image.Ready,5000);verify(background.source.toString().indexOf("mr-network-wave.png")>=0);
+  compare(background.width,app.width);compare(background.height,app.height);
  }
  function test_osintWorkspaceBilingualNavigation(){
   app.navigatePrimary(3);verify(renderedFrame());

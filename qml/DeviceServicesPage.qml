@@ -25,7 +25,7 @@ Item {
   return row.available?"":app.trx("تحقق من الجهاز والوضع وقراءة القدرات الحديثة.","")+"\n"+row.reason
  }
  function review(row){selectedAction=row;reviewedTarget=toolBridge.selectedSerial;owner.checked=false;loss.checked=false;compatible.checked=false;replace.checked=false;challenge.text="";packagePath.text="";packageHash.text="";confirm.open()}
- ColumnLayout {anchors.fill:parent;spacing:8
+ ColumnLayout {anchors.fill:parent;spacing:3
   RowLayout {Layout.fillWidth:true
    NavIcon {kind:1;Layout.preferredWidth:32;Layout.preferredHeight:32}
    Label {text:app.trx("خدمات الجهاز حسب قدراته","Capability-based device services");font.bold:true;font.pixelSize:19;color:app.tone("#edf4ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
@@ -35,7 +35,7 @@ Item {
   Label {objectName:"serviceBuildProfile";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:toolBridge.laboratoryBuild?"#FF465C":"#39FF14";text:toolBridge.laboratoryBuild?app.trx("نسخة المختبر التجريبية — عمليات تغيير الجهاز تحتاج تفويضًا واختبارًا فعليًا لكل موديل.","Experimental Laboratory build — device changes require authorization and per-model physical testing."):app.trx("نسخة الإنتاج: قراءة وتشخيص فقط. عمليات تغيير الجهاز غير متاحة.","Production build: read-only diagnostics. Device-changing operations are unavailable.")}
   Label {objectName:"serviceWorkflow";font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
   Label {objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");font.pixelSize:12;text:app.trx("اختيار الشركة يرشّح المراجع فقط. تُقرأ هوية الجهاز وقدراته من الاتصال الحالي. العربية والإنجليزية والفرنسية والتركية تتبع اللغات الموجودة في Firmware؛ لن تُضاف ترجمة غير موجودة.","The brand filter selects references only. Device identity/capabilities come from the current connection. Arabic, English, French and Turkish depend on the languages present in the installed firmware.")}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");font.pixelSize:12;text:app.trx("اختيار الشركة يرشّح المراجع. تُقرأ الهوية والقدرات من الجهاز المتصل. تتبع اللغات إصدار النظام المثبّت.","Brand filters references. The connected device reports its identity and capabilities. Available languages depend on its installed firmware.")}
   RowLayout {Layout.fillWidth:true
    NeonComboBox {id:device;objectName:"serviceDevice";Layout.fillWidth:true;model:toolBridge.devices;textRole:"serial";valueRole:"serial";currentIndex:toolBridge.devices.findIndex(function(row){return row.serial===toolBridge.selectedSerial});displayText:currentIndex<0?app.trx("اختر جهازًا بعد الفحص","Select a device after discovery"):currentText;enabled:!toolBridge.busy;onActivated:toolBridge.selectDevice(currentValue)}
    ActionButton {text:"ADB";enabled:!toolBridge.busy;onClicked:toolBridge.scanAdb()}
