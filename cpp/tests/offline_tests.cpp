@@ -50,7 +50,7 @@ private slots:
  void cleanup(){QDesktopServices::unsetUrlHandler("https");capturedUrl=QUrl();qunsetenv("MR_OFFLINE_MARKER");qunsetenv("MR_OFFLINE_MODE");qunsetenv("MR_OFFLINE_DESCENDANT_DIR");}
  void defaultDenyAndExplicitAdministrator(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);GovernmentOperationPolicy policy(&identity);
-  QVERIFY(policy.offline());QCOMPARE(policy.permissions().size(),6);
+  QVERIFY(policy.offline());QCOMPARE(policy.permissions().size(),7);
   for(const auto &cap:policy.capabilities()){QVERIFY(!policy.permit(cap));QVERIFY(!policy.grant(cap,"synthetic",true));}
   admin(identity);
   QVERIFY(!policy.grant("unknown","synthetic",true));QVERIFY(!policy.grant("device-tools"," ",true));QVERIFY(!policy.grant("device-tools",QString(257,'x'),true));QVERIFY(!policy.grant("device-tools","synthetic",false));

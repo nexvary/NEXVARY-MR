@@ -866,6 +866,8 @@ TestCase {
   app.setWorkspace(true);app.navigateSection(6);const page=findChild(app,"governmentAnalysisWorkspace"),ws=findChild(app,"osintWorkspace");page.showOsint=true;verify(renderedFrame());
   compare(ws.demoMode,false);compare(ws.activeTab,1);compare(findChild(app,"osintAnalysisPane").records.length,0);
   verify(findChild(app,"lampyreMcpEndpoint").visible);verify(findChild(app,"lampyreApiKey").visible);compare(findChild(app,"lampyreTestConnection").enabled,false);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-ar.png"));
+  compare(findChild(app,"lampyreMcpEndpoint").text,"https://account.lampyre.io/api/v2/mcp");compare(lampyreConnection.credentialSaved,false);verify(findChild(app,"lampyreLocalChecks").text.indexOf(identityBridge.session.username)>=0);
+  app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"lampyre-live-setup-en.png"));app.ar=true;
   ws.demoMode=true;lampyreEvaluation.runSynthetic(0);tryCompare(lampyreEvaluation,"state","synthetic-completed",3000);compare(findChild(app,"osintAnalysisPane").records.length,3);
   ws.demoMode=false;compare(findChild(app,"osintAnalysisPane").records.length,0);compare(Object.keys(lampyreEvaluation.result).length,0);page.showOsint=false;
  }

@@ -53,7 +53,7 @@ bool LawCaseBridge::ready()const{
  return identity_?identity_->authenticated():synthetic_;
 }
 nexvary::law::Role LawCaseBridge::currentRole()const{return identity_?identity_->lawRole():synthetic_?role_:nexvary::law::Role::Unknown;}
-bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}
+bool LawCaseBridge::caseAllowed(const QVariantMap &record)const{return !identity_?synthetic_:identity_->authenticated()&&identity_->hasPermission("evidence-access")&&(record.value("ownerUserId").toString()==identity_->userId()||identity_->hasCaseGrant(record.value("id").toString()));}
 QString LawCaseBridge::protection()const {
  return mr::recovery::vaultAvailable()?QStringLiteral("Windows current-account DPAPI; SQLite payloads protected"):
   synthetic_?QStringLiteral("SYNTHETIC TEST DATA ONLY — NOT ENCRYPTED"):QStringLiteral("Windows protected storage required; real cases disabled");
@@ -68,14 +68,14 @@ QString LawCaseBridge::role()const{return QString::fromUtf8(nexvary::law::roleId
 QVariantMap LawCaseBridge::permissions()const {
  using A=nexvary::law::Action;QVariantMap p;
  for(const auto &entry:std::initializer_list<std::pair<const char *,A>>{{"retention",A::ManageRetention},{"preserve",A::PreserveEvidence},{"releasePreservation",A::ReleasePreservation},{"archiveEvidence",A::ArchiveEvidence},{"requestDisposal",A::RequestDisposal},{"reviewDisposal",A::ReviewDisposal},{"read",A::ReadCase},{"create",A::CreateCase},{"edit",A::EditCase},{"archive",A::ArchiveCase},{"close",A::CloseCase},{"addDevice",A::AddDevice},{"report",A::ExportReport},{"exportEvidence",A::ExportEvidence},{"analyze",A::AnalyzeEvidence},{"backup",A::BackupCase},{"restore",A::RestoreCase},{"audit",A::ReadAudit},{"training",A::AccessTraining},{"addEvidence",A::AddEvidence},{"custody",A::TransferCustody}})
-  p.insert(entry.first,nexvary::law::allows(currentRole(),entry.second)&&(!identity_||permissionFor(entry.second).isEmpty()||identity_->hasPermission(permissionFor(entry.second))));
+  p.insert(entry.first,(!identity_||entry.second==A::AccessTraining||identity_->hasPermission("evidence-access"))&&nexvary::law::allows(currentRole(),entry.second)&&(!identity_||permissionFor(entry.second).isEmpty()||identity_->hasPermission(permissionFor(entry.second))));
  p.insert("executeDevice",false);p.insert("enterpriseRoleProvisioningReady",false);return p;
 }
 QString LawCaseBridge::actor()const{if(identity_)return identity_->actor();return synthetic_?QStringLiteral("SYNTHETIC operator"):QStringLiteral("Current OS account — local operator declaration");}
 bool LawCaseBridge::fail(const QString &message){error_=message;emit changed();return false;}
 bool LawCaseBridge::permit(nexvary::law::Action action,bool caseBound) {
  if(identity_&&!identity_->checkSession())return fail(QStringLiteral("Sign in with a permitted local account."));
- if(identity_&&caseBound&&!identity_->hasPermission("evidence-access"))return fail(QStringLiteral("Account permission denied: evidence access. Ask an administrator in Accounts and permissions, then sign in again."));
+ if(identity_&&action!=nexvary::law::Action::AccessTraining&&!identity_->hasPermission("evidence-access"))return fail(QStringLiteral("Account permission denied: evidence access. Ask an administrator in Accounts and permissions, then sign in again."));
  if(caseBound&&!active_.isEmpty()&&!caseAllowed(active_))return fail(QStringLiteral("This account has no grant for the active case."));
  if(identity_&&!permissionFor(action).isEmpty()&&!identity_->hasPermission(permissionFor(action)))return fail(QStringLiteral("Account permission denied. Ask an administrator in Accounts and permissions; sign in again after any permission change."));
  if(!nexvary::law::allows(currentRole(),action))return fail(QStringLiteral("This session role does not permit this action."));

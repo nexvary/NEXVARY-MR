@@ -105,7 +105,7 @@ void governmentPolicySmoke(QQuickWindow *window,GovernmentOperationPolicy &polic
    const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
    bool ok=ar&&policy.offline()&&(screenshot.isEmpty()||window->grabWindow().save(destination("-government-offline-en.png")));
    if(!screenshot.isEmpty()){
-    const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",6},{"offlineAfterRevoke",policy.offline()},
+    const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",policy.permissions().size()},{"offlineAfterRevoke",policy.offline()},
      {"startupBoundaryDenials",true},{"explicitSyntheticPortalGrant",true},{"reviewedExceptionProtocol",true},{"signedPolicyAudit",policy.auditStatus().value("healthy")},{"policyVerification",policy.auditStatus().value("verification")},{"portalStoppedAfterRevoke",true},{"permissions",policy.permissions()},
      {"scope","Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance"}};
     QFile out(destination("-government-offline.json"));const auto data=QJsonDocument::fromVariant(receipt).toJson(QJsonDocument::Indented);ok=out.open(QIODevice::WriteOnly|QIODevice::Truncate)&&out.write(data)==data.size()&&ok;

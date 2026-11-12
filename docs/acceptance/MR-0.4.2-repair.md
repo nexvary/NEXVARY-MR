@@ -26,7 +26,7 @@ This is a repair candidate, not a certification of live Lampyre connectivity or 
 
 ## Storage and migration
 
-No SQLite table migration, case rewrite, credential format replacement, path move or deletion is performed. The schema-1 protected identity registry accepts an optional `deniedPermissions` list. Existing accounts without that list retain their existing role ceiling. Restrictions do not add roles or privileges. New restriction changes bump the account version and end affected sessions at the next native session check (also polled each second). Older executables do not understand these new restrictions: do not downgrade an installation after configuring them.
+No SQLite table migration, case rewrite, credential format replacement, path move or deletion is performed. The protected identity registry reads legacy schema 1. The first explicit per-account permission change writes schema 2 with a `deniedPermissions` list; earlier executables reject that schema instead of ignoring restrictions. Existing accounts without that list retain their existing role ceiling. Restrictions do not add roles or privileges. New restriction changes bump the account version and end affected sessions at the next native session check (also polled each second). Keep a backup before configuring restrictions; do not edit/decrypt the registry to bypass the schema guard.
 
 Existing credential files remain readable. Keys remain isolated by application identity UUID and the Windows OS account. Logout clears memory; signing in again reloads saved protected credentials. Sessions are intentionally not silently restored after process restart; password-derived signing keys are not persisted in plaintext. The fixed 15-minute session expiry now explains why reauthentication is needed.
 
@@ -53,7 +53,7 @@ The client retains Streamable HTTP JSON-RPC initialize/initialized/tools-list be
 ## Security and remaining acceptance
 
 - No bypass of independent review, case grants, role ceilings, certificate validation or cost consent. Tests use local synthetic fixtures only.
-- Account restrictions add protection but require running this candidate or later; downgrade behavior needs an organizational deployment rule.
+- Account restrictions use schema 2 to fail closed under older executables. Registry backups remain sensitive and must be protected.
 - API credentials are never included in CI or diagnostic/evidence exports. Existing response redaction is retained.
 - Provider result copies are explicitly marked unverified and are not automatically case evidence. Dedicated MCP-to-case evidence ingestion with a signed case-operation link remains unfinished; do not claim otherwise.
 - Exact Photon spending caps, verified balance/cost retrieval and provider-confirmed consumption/request IDs are not implemented in this generic MCP path. A bounded submission count cannot guarantee a monetary ceiling.

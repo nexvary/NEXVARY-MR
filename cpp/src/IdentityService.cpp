@@ -42,7 +42,7 @@ bool IdentityService::read(){
  QJsonParseError parse;
  auto doc=QJsonDocument::fromJson(bytes,&parse);sodium_memzero(bytes.data(),static_cast<size_t>(bytes.size()));
  auto next=doc.object().toVariantMap();
- if(parse.error!=QJsonParseError::NoError||!doc.isObject()||next.value("schema").toInt()!=1||next.value("revision").toLongLong()<1||next.value("users").metaType().id()!=QMetaType::QVariantList||next.value("grants").metaType().id()!=QMetaType::QVariantMap)return fail("Identity registry schema rejected.");
+ if(parse.error!=QJsonParseError::NoError||!doc.isObject()||(next.value("schema").toInt()!=1&&next.value("schema").toInt()!=2)||next.value("revision").toLongLong()<1||next.value("users").metaType().id()!=QMetaType::QVariantList||next.value("grants").metaType().id()!=QMetaType::QVariantMap)return fail("Identity registry schema rejected.");
  auto users=next.value("users").toList();if(users.isEmpty()||users.size()>128)return fail("Invalid identity registry size.");QSet<QString> names,ids;bool admin=false;
  for(const auto &v:users){const auto a=v.toMap();
  const auto id=a.value("id").toString(),name=a.value("username").toString();
@@ -85,7 +85,7 @@ bool IdentityService::bootstrap(const QString &username,const QString &name,cons
 QVariantMap IdentityService::account(const QString &id)const{for(const auto &v:state_.value("users").toList())if(v.toMap().value("id")==id)return v.toMap();return {};}
 QVariantMap IdentityService::session()const{if(!authenticated())return {};
  auto a=publicAccount(account(userId_));a.insert("identityScope","local-credential; not agency-verified");return a;}
-QVariantList IdentityService::users()const{QVariantList out;if(!authenticated()||account(userId_).value("role")!="administrator")return out;for(const auto &v:state_.value("users").toList())out.append(publicAccount(v.toMap()));return out;}
+QVariantList IdentityService::users()const{QVariantList out;if(!hasPermission("user-administration"))return out;for(const auto &v:state_.value("users").toList())out.append(publicAccount(v.toMap()));return out;}
 void IdentityService::logout(){if(secret_){sodium_free(secret_);secret_=nullptr;}userId_.clear();sessionAccount_.clear();lifetime_.invalidate();emit changed();}
 bool IdentityService::login(const QString &username,const QString &password){
  logout();if(!ready_||!passwordValid(password)||!read())return fail("Sign-in failed.");
@@ -166,5 +166,5 @@ bool IdentityService::setPermission(const QString &id,const QString &permission,
  if(!administrator()||!hasPermission("user-administration")||!permissionNames().contains(permission)||(!allowed&&id==userId_&&permission=="user-administration"))return fail("An authorized administrator must configure a known permission; self-lockout is refused.");
  auto rows=state_.value("users").toList();bool found=false;for(auto &v:rows){auto a=v.toMap();if(a.value("id")==id){auto denied=a.value("deniedPermissions").toStringList();denied.removeAll(permission);if(!allowed)denied.append(permission);a.insert("deniedPermissions",denied);a.insert("version",a.value("version").toInt()+1);v=a;found=true;}}
  if(!found)return fail("Unknown local account.");
- auto next=state_;next.insert("users",rows);return save(next);
+ auto next=state_;next.insert("schema",2);next.insert("users",rows);return save(next);
 }
