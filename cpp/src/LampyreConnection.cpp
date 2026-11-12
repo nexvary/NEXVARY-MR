@@ -19,7 +19,7 @@
 #include <QUrl>
 #include <QUuid>
 #include <cmath>
-namespace {constexpr qsizetype limit=2*1024*1024;}
+namespace {constexpr qsizetype responseLimit=2*1024*1024;}
 LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent,bool syntheticTests,int timeoutMs)
  :QObject(parent),directory_(dir),identity_(identity),policy_(policy),synthetic_(syntheticTests),timeoutMs_(qBound(50,timeoutMs,120000)) {
  timer_.setSingleShot(true);
@@ -136,14 +136,14 @@ void LampyreConnection::post(const QString &method,const QJsonObject &params,con
  req.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");req.setRawHeader("Accept","application/json, text/event-stream");req.setRawHeader("Authorization","Bearer "+key_.toUtf8());
  if(!session_.isEmpty())req.setRawHeader("Mcp-Session-Id",session_.toLatin1());
  if(!version_.isEmpty())req.setRawHeader("MCP-Protocol-Version",version_.toLatin1());
- auto *reply=manager_.post(req,QJsonDocument(message).toJson(QJsonDocument::Compact));reply->setReadBufferSize(limit+1);reply_=reply;
+ auto *reply=manager_.post(req,QJsonDocument(message).toJson(QJsonDocument::Compact));reply->setReadBufferSize(responseLimit+1);reply_=reply;
  connect(reply,&QNetworkReply::readyRead,this,[this,reply]{read(reply,false);});
  connect(reply,&QNetworkReply::finished,this,[this,reply]{read(reply,true);reply->deleteLater();});
  timer_.start(timeoutMs_);
 }
 void LampyreConnection::read(QNetworkReply *reply,bool ended){
  if(reply_!=reply)return;
- body_+=reply->readAll();if(body_.size()>limit){fail("response-too-large");return;}
+ body_+=reply->readAll();if(body_.size()>responseLimit){fail("response-too-large");return;}
  if(ended&&reply->error()==QNetworkReply::SslHandshakeFailedError){fail("tls-failure");return;}
  const int status=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
  if(status>=300||(ended&&status<200)){
