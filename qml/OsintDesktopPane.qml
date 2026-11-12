@@ -12,7 +12,7 @@ Rectangle {
  OsintBackdrop {anchors.fill:parent;visible:pane.wallpaper;dimming:0.24}
  implicitHeight:layout.implicitHeight+2
  ColumnLayout {
-  id:layout;anchors.fill:parent;anchors.margins:1;spacing:0
+  id:layout;anchors.left:parent.left;anchors.right:parent.right;anchors.top:parent.top;anchors.margins:1;spacing:0
   Rectangle {
    Layout.fillWidth:true;implicitHeight:30;color:"#0D2A3D";visible:pane.title!==""
    RowLayout {anchors.fill:parent;anchors.leftMargin:8;anchors.rightMargin:8;spacing:6
@@ -20,6 +20,6 @@ Rectangle {
     Label {text:pane.title;Layout.fillWidth:true;color:"#E5EDF3";font.pixelSize:12;font.bold:true;elide:Text.ElideRight}
    }
   }
-  ColumnLayout {id:body;Layout.fillWidth:true;Layout.fillHeight:true;Layout.margins:8;spacing:7}
+  ColumnLayout {id:body;Layout.fillWidth:true;Layout.margins:8;spacing:7}
  }
 }

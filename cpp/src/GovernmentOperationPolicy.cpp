@@ -33,7 +33,7 @@ bool terminal(const QString &s) {
 } // namespace
 QStringList GovernmentOperationPolicy::capabilities() {
   return {"cloud-publish", "tracking-portal",   "signature-update",
-          "device-tools",  "external-analysis", "external-links"};
+          "device-tools",  "external-analysis", "external-links", "paid-unknown-cost"};
 }
 GovernmentOperationPolicy::GovernmentOperationPolicy(IdentityService *identity,
                                                      QObject *parent,
@@ -424,7 +424,8 @@ bool GovernmentOperationPolicy::decideException(const QString &id, bool approve,
   const auto r = requests_.value(id);
   const auto role = identity_->session().value("role").toString();
 
-  if (r.value("status") != "in-review" ||
+  if ((r.value("capability") == "paid-unknown-cost" && role != "administrator") ||
+      r.value("status") != "in-review" ||
       r.value("reviewer") != identity_->userId() ||
       r.value("requester") == identity_->userId() ||
       (role != "administrator" && role != "reviewer") || !note(reason))

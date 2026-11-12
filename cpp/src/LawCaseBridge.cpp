@@ -37,7 +37,11 @@ bool newOutput(const QString &input,QFile &file) {
 LawCaseBridge::LawCaseBridge(const QString &path,ToolBridge *tools,bool syntheticTestProfile,nexvary::law::Role role,QObject *parent,IdentityService *identity)
  :QObject(parent),store_(std::make_unique<LawCaseStore>(path,syntheticTestProfile)),tools_(tools),identity_(identity),synthetic_(syntheticTestProfile),role_(role) {
  initImports();initTimeline();initArtifacts();initPartitions();initOsint();
- if(identity_)connect(identity_,&IdentityService::changed,this,[this]{resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
+ sessionPrincipal_=identity_?identity_->userId():QString();
+ if(identity_)connect(identity_,&IdentityService::changed,this,[this]{
+  const auto principal=identity_->userId();
+  if(principal==sessionPrincipal_ && (active_.isEmpty()||caseAllowed(active_))){emit changed();return;}
+  sessionPrincipal_=principal;resetImport();active_.clear();devices_.clear();audit_.clear();cases_.clear();attempts_.clear();if(ready())refresh();else emit changed();emit accessChanged();emit trainingChanged();});
  if(tools_)connect(tools_,&ToolBridge::deviceIntelligenceChanged,this,&LawCaseBridge::accessChanged);
  if(!store_->ready())error_=store_->error();
  else if(nexvary::law::allows(currentRole(),nexvary::law::Action::ReadCase))refresh();

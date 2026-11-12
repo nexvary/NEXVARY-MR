@@ -144,3 +144,8 @@ bool IdentityService::verify(const QVariantMap &envelope,const QString &purpose,
  const auto a=account(e.value("signerId").toString());
  const auto pk=un64(a.value("publicKey"));if(e.value("schema").toInt()!=1||e.value("purpose")!=purpose||e.value("payload").toMap()!=payload||a.isEmpty()||!a.value("enabled").toBool()||e.value("publicKey")!=a.value("publicKey")||e.value("role")!=a.value("role")||sig.size()!=crypto_sign_BYTES||pk.size()!=crypto_sign_PUBLICKEYBYTES||json(e).size()>1024*1024)return false;
  const auto bytes=signedBytes(e);return crypto_sign_verify_detached(reinterpret_cast<const unsigned char*>(sig.constData()),reinterpret_cast<const unsigned char*>(bytes.constData()),static_cast<unsigned long long>(bytes.size()),reinterpret_cast<const unsigned char*>(pk.constData()))==0;}
+
+QVariantMap IdentityService::setupStatus()const{
+ bool investigator=false;for(const auto &v:state_.value("users").toList()){const auto a=v.toMap();if(a.value("enabled").toBool()&&a.value("role")=="investigator")investigator=true;}
+ return {{"administrator",ready_&&!needsSetup()},{"investigator",ready_&&investigator}};
+}

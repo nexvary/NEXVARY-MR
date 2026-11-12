@@ -210,6 +210,7 @@ int main(int argc,char *argv[]) {
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  LampyreEvaluationBridge lampyre;
  LampyreConnection lampyreConnection(QDir(dir).filePath("provider-credentials"),&identity,&operationPolicy);
+ lampyreConnection.setCaseAuthorization([&law]{return law.ready() && !law.activeCase().isEmpty() && law.permissions().value("analyze").toBool() && law.openCase(law.activeCase().value("id").toString());});
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreConnection"), &lampyreConnection);

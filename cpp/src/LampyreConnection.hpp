@@ -6,6 +6,7 @@
 #include <QVariantList>
 #include <QJsonObject>
 #include <QSet>
+#include <functional>
 class QNetworkReply;
 class IdentityService;
 class GovernmentOperationPolicy;
@@ -15,6 +16,9 @@ class LampyreConnection final:public QObject {
  Q_OBJECT
  Q_PROPERTY(QString endpoint READ endpoint NOTIFY changed)
  Q_PROPERTY(bool hasCredential READ hasCredential NOTIFY changed)
+ Q_PROPERTY(bool credentialSaved READ credentialSaved NOTIFY changed)
+ Q_PROPERTY(int requestLimit READ requestLimit NOTIFY changed)
+ Q_PROPERTY(int submittedRequests READ submittedRequests NOTIFY changed)
  Q_PROPERTY(bool connected READ connected NOTIFY changed)
  Q_PROPERTY(bool busy READ busy NOTIFY changed)
  Q_PROPERTY(QString state READ state NOTIFY changed)
@@ -27,6 +31,11 @@ public:
  ~LampyreConnection() override;
  QString endpoint()const{return endpoint_;}
  bool hasCredential()const{return !key_.isEmpty();}
+ bool credentialSaved()const{return saved_;}
+ int requestLimit()const{return requestLimit_;}
+ int submittedRequests()const{return submitted_;}
+ Q_INVOKABLE bool setRequestLimit(int limit);
+ void setCaseAuthorization(std::function<bool()> check){caseAuthorization_=std::move(check);}
  bool connected()const{return connected_;}
  bool busy()const{return busy_;}
  QString state()const{return state_;}
@@ -59,7 +68,9 @@ private:
  QString directory_,owner_,endpoint_,key_,state_="disconnected",error_,result_,session_,version_,stage_,operation_,resultTool_,resultAt_;
  IdentityService *identity_;
  GovernmentOperationPolicy *policy_;
- bool synthetic_=false,connected_=false,busy_=false;
+ bool synthetic_=false,connected_=false,busy_=false,saved_=false;
+ int requestLimit_=0,submitted_=0;
+ std::function<bool()> caseAuthorization_;
  int timeoutMs_,pages_=0;
  qint64 nextId_=0,pendingId_=0;
  QVariantList tools_;

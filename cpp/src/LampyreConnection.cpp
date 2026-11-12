@@ -28,7 +28,7 @@ LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identit
   const auto owner=identity_->authenticated()?identity_->userId():QString();
   if(owner!=owner_){reset();owner_=owner;load();emit changed();}
  });
- if(policy_)connect(policy_,&GovernmentOperationPolicy::changed,this,[this]{if(!operation_.isEmpty()&&!policy_->granted("external-analysis"))fail("policy-revoked");});
+ if(policy_)connect(policy_,&GovernmentOperationPolicy::changed,this,[this]{if(!operation_.isEmpty()&&(!policy_->granted("external-analysis")||(stage_=="call"&&!policy_->granted("paid-unknown-cost"))))fail("policy-revoked");});
  owner_=identity_&&identity_->authenticated()?identity_->userId():synthetic_?QStringLiteral("synthetic"):QString();load();
 }
 LampyreConnection::~LampyreConnection(){reset();}
@@ -48,7 +48,7 @@ QString LampyreConnection::credentialPath()const {
 void LampyreConnection::reset(){
  timer_.stop();if(reply_){auto *r=reply_.data();reply_.clear();r->abort();r->deleteLater();}
  finishReceipt("cancelled");connected_=false;busy_=false;tools_.clear();body_.clear();cursors_.clear();pages_=0;
- session_.clear();version_.clear();result_.clear();key_.fill(QChar(0));key_.clear();endpoint_.clear();state_="disconnected";error_.clear();
+ session_.clear();version_.clear();result_.clear();key_.fill(QChar(0));key_.clear();endpoint_.clear();state_="disconnected";error_.clear();saved_=false;requestLimit_=0;submitted_=0;
 }
 void LampyreConnection::load(){
  const auto path=credentialPath();if(path.isEmpty())return;QFile f(path);const QFileInfo info(f);
@@ -57,7 +57,7 @@ void LampyreConnection::load(){
  QString error;auto plain=mr::recovery::openCaseBytes(f.readAll(),synthetic_,error);
  const auto obj=QJsonDocument::fromJson(plain).object();plain.fill('\0');
  if(obj.value("owner").toString()!=owner_||!validEndpoint(obj.value("endpoint").toString(),synthetic_)||!validKey(obj.value("key").toString())){error_="credential-read";return;}
- endpoint_=obj.value("endpoint").toString();key_=obj.value("key").toString();state_="configured";
+ endpoint_=obj.value("endpoint").toString();key_=obj.value("key").toString();saved_=true;state_="configured";
 }
 bool LampyreConnection::save(){
  const auto path=credentialPath();if(path.isEmpty())return fail("sign-in-required");
@@ -80,7 +80,7 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
  reset();endpoint_=nextEndpoint;key_=nextKey;
  if(remember){if(!save()){key_.fill(QChar(0));key_.clear();emit changed();return false;}}
  else {const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path))return reject("credential-write");}
- state_="configured";emit changed();return true;
+ saved_=remember;state_="configured";emit changed();return true;
 }
 bool LampyreConnection::connectProvider(bool consent){
  if(busy_)return false;
@@ -90,7 +90,12 @@ bool LampyreConnection::connectProvider(bool consent){
  if((!synthetic_&&!policy_)||(policy_&&!policy_->granted("external-analysis")))return reject("external-analysis-approval-required");
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
  connected_=false;tools_.clear();result_.clear();session_.clear();version_.clear();cursors_.clear();pages_=0;error_.clear();busy_=true;state_="connecting";emit changed();
- post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.1"}}}},"initialize");return true;
+ post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.2"}}}},"initialize");return true;
+}
+bool LampyreConnection::setRequestLimit(int limit){
+ if(busy_||limit<0||limit>100)return reject("invalid-request-limit");
+ if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
+ requestLimit_=limit;error_.clear();emit changed();return true;
 }
 bool LampyreConnection::authorized(){
  return synthetic_&& !identity_ && !policy_ ? true : identity_&&identity_->checkSession()&&nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)&&policy_&&policy_->granted("external-analysis");
@@ -101,6 +106,9 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
  if(!connected_)return reject("not-connected");
  if(identity_&&(!identity_->checkSession()||!nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)))return reject("investigator-required");
  if(!authorized())return reject("external-analysis-approval-required");
+ if(!synthetic_ && (!caseAuthorization_ || !caseAuthorization_()))return reject("active-case-required");
+ if(policy_&&!policy_->granted("paid-unknown-cost"))return reject("unknown-cost-policy-required");
+ if((!synthetic_||policy_) && (requestLimit_<=0||submitted_>=requestLimit_))return reject("spending-limit-reached");
  QVariantMap tool;for(const auto &v:tools_)if(v.toMap().value("name").toString()==name)tool=v.toMap();
  QJsonParseError err;const auto bytes=arguments.toUtf8();const auto doc=QJsonDocument::fromJson(bytes,&err);
  if(tool.isEmpty()||bytes.size()>32768||err.error!=QJsonParseError::NoError||!doc.isObject())return reject("invalid-arguments");
@@ -115,7 +123,7 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   const auto allowed=fields.value(it.key()).toMap().value("enum");if(allowed.isValid()&&!allowed.toList().contains(value.toVariant()))return reject("invalid-arguments");
  }
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
- resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();error_.clear();emit changed();
+ ++submitted_;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();error_.clear();emit changed();
  post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
 }
 void LampyreConnection::post(const QString &method,const QJsonObject &params,const QString &stage,bool notification){
@@ -134,9 +142,10 @@ void LampyreConnection::post(const QString &method,const QJsonObject &params,con
 void LampyreConnection::read(QNetworkReply *reply,bool ended){
  if(reply_!=reply)return;
  body_+=reply->readAll();if(body_.size()>limit){fail("response-too-large");return;}
+ if(ended&&reply->error()==QNetworkReply::SslHandshakeFailedError){fail("tls-failure");return;}
  const int status=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
  if(status>=300||(ended&&status<200)){
-  fail(status==401||status==403?"authentication-failed":status==429?"rate-limited":status==402?"payment-required":status>=300&&status<400?"redirect-refused":status==404?"endpoint-or-session-expired":"network-error");return;
+  fail(status==401?"authentication-failed":status==403?"provider-authorization-denied":status>=500?"provider-service-error":status==429?"rate-limited":status==402?"payment-required":status>=300&&status<400?"redirect-refused":status==404?"endpoint-or-session-expired":"network-error");return;
  }
  if(stage_=="initialized"){
   if(ended){if(reply->error()!=QNetworkReply::NoError){fail("network-error");return;}timer_.stop();reply_.clear();post("tools/list",{},"tools");}return;
@@ -179,7 +188,7 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
   finishReceipt("completed");busy_=false;connected_=true;state_="connected";error_.clear();emit changed();return;
  }
  if(stage=="call"){
-  if(!authorized()){fail("policy-revoked");return;}
+  if(!authorized()||(policy_&&!policy_->granted("paid-unknown-cost"))||(!synthetic_&&(!caseAuthorization_||!caseAuthorization_()))){fail("policy-revoked");return;}
   resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_.replace(key_,"[credential redacted]");
   const bool failed=result.value("isError").toBool();finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
  }

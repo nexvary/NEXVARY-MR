@@ -16,8 +16,8 @@ Panel {
  stateText:operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
  function requestCategory(name){const consent=approval.checked;approval.checked=false;selectedRequest=operationPolicy.requestException(name,reason.text,caseRef.text,seconds.value,consent)}
  function caption(name){
-  const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","external-analysis":"التحليل الخارجي وطلبات OSINT","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
-  const en={"cloud-publish":"Cloud workshop publishing","tracking-portal":"Tracking listener, including loopback","signature-update":"FreshClam signature downloads","device-tools":"External device tools: ADB, scrcpy and USB inspection","external-analysis":"External analysis and OSINT requests","external-links":"HTTP/HTTPS browser handoff"}
+  const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","paid-unknown-cost":"السماح بعمليات مجهولة التكلفة — تتطلب موافقة مدير مستقل","external-analysis":"التحليل الخارجي وطلبات OSINT","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
+  const en={"cloud-publish":"Cloud workshop publishing","tracking-portal":"Tracking listener, including loopback","signature-update":"FreshClam signature downloads","device-tools":"External device tools: ADB, scrcpy and USB inspection","paid-unknown-cost":"Unknown-cost operations — independent administrator approval required","external-analysis":"External analysis and OSINT requests","external-links":"HTTP/HTTPS browser handoff"}
   return (app.ar?ar:en)[name]||name
  }
  function statusCaption(status){
@@ -86,7 +86,7 @@ Panel {
    Label {visible:!!modelData.reviewer;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:panel.app.design.muted;text:(modelData.reviewer||"")+"\n"+(modelData.reviewReason||"")+"\n"+(modelData.decisionReason||"")}
    ActionButton {objectName:"governmentPolicyReview-"+modelData.id;visible:modelData.status==="requested";enabled:panel.canReview&&!owner&&reason.text.trim().length>0;text:panel.app.trx("بدء المراجعة","Start review");onClicked:operationPolicy.reviewException(modelData.id,reason.text)}
    RowLayout {visible:modelData.status==="in-review";Layout.fillWidth:true
-    ActionButton {objectName:"governmentPolicyApprove-"+modelData.id;Layout.fillWidth:true;enabled:panel.canReview&&assigned&&!owner&&reason.text.trim().length>0;text:panel.app.trx("موافقة","Approve");onClicked:operationPolicy.decideException(modelData.id,true,reason.text)}
+    ActionButton {objectName:"governmentPolicyApprove-"+modelData.id;Layout.fillWidth:true;enabled:panel.canReview&&assigned&&!owner&&(modelData.capability!=="paid-unknown-cost"||panel.role==="administrator")&&reason.text.trim().length>0;text:panel.app.trx("موافقة","Approve");onClicked:operationPolicy.decideException(modelData.id,true,reason.text)}
     ActionButton {objectName:"governmentPolicyReject-"+modelData.id;Layout.fillWidth:true;enabled:panel.canReview&&assigned&&!owner&&reason.text.trim().length>0;text:panel.app.trx("رفض","Reject");onClicked:operationPolicy.decideException(modelData.id,false,reason.text)}
    }
    ActionButton {objectName:"governmentPolicyActivate-"+modelData.id;visible:modelData.status==="approved";enabled:owner;text:panel.app.trx("تفعيل بواسطة الطالب","Activate as requester");onClicked:operationPolicy.activateException(modelData.id)}
