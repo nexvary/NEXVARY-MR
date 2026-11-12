@@ -1,6 +1,7 @@
 #include "LampyreEvaluationBridge.hpp"
 #include "LampyreConnection.hpp"
 #include <QTemporaryDir>
+#include <QTemporaryFile>
 #include <QSaveFile>
 #include "SyntheticPolicyExercise.hpp"
 #include "RecoveryFile.hpp"
@@ -211,6 +212,13 @@ int main(int argc,char *argv[]) {
  LampyreEvaluationBridge lampyre;
  LampyreConnection lampyreConnection(QDir(dir).filePath("provider-credentials"),&identity,&operationPolicy);
  lampyreConnection.setCaseAuthorization([&law]{return law.ready() && !law.activeCase().isEmpty() && law.permissions().value("analyze").toBool() && law.openCase(law.activeCase().value("id").toString());});
+ lampyreConnection.setCaseIdentity([&law]{return law.activeCase().value("id").toString();});
+ lampyreConnection.setResultAttachment([&law,&identity](const QString &device,const QByteArray &bytes){
+  QTemporaryFile file(QDir::tempPath()+"/nexvary-mcp-XXXXXX.json");
+  if(!file.open()||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush())return QString();
+  const auto path=file.fileName();file.close();
+  return law.addEvidence(device,path,"Unverified Lampyre MCP provider result",identity.actor(),true);
+ });
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreConnection"), &lampyreConnection);

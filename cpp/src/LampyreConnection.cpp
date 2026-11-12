@@ -48,7 +48,7 @@ QString LampyreConnection::credentialPath()const {
 void LampyreConnection::reset(){
  timer_.stop();if(reply_){auto *r=reply_.data();reply_.clear();r->abort();r->deleteLater();}
  finishReceipt("cancelled");connected_=false;busy_=false;tools_.clear();body_.clear();cursors_.clear();pages_=0;
- session_.clear();version_.clear();result_.clear();key_.fill(QChar(0));key_.clear();endpoint_.clear();state_="disconnected";error_.clear();saved_=false;requestLimit_=0;submitted_=0;
+ session_.clear();version_.clear();result_.clear();resultCaseId_.clear();resultOperationId_.clear();key_.fill(QChar(0));key_.clear();endpoint_.clear();state_="disconnected";error_.clear();saved_=false;requestLimit_=0;submitted_=0;
 }
 void LampyreConnection::load(){
  const auto path=credentialPath();if(path.isEmpty())return;QFile f(path);const QFileInfo info(f);
@@ -125,6 +125,8 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   const auto allowed=fields.value(it.key()).toMap().value("enum");if(allowed.isValid()&&!allowed.toList().contains(value.toVariant()))return reject("invalid-arguments");
  }
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
+ resultCaseId_=caseIdentity_?caseIdentity_():QString();resultOperationId_=operation_;
+ if(!synthetic_&&resultCaseId_.isEmpty())return reject("active-case-required");
  ++submitted_;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();error_.clear();emit changed();
  post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
 }
@@ -190,7 +192,7 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
   finishReceipt("completed");busy_=false;connected_=true;state_="connected";error_.clear();emit changed();return;
  }
  if(stage=="call"){
-  if(!authorized()||(policy_&&!policy_->granted("paid-unknown-cost"))||(!synthetic_&&(!caseAuthorization_||!caseAuthorization_()))){fail("policy-revoked");return;}
+  if(!authorized()||(policy_&&!policy_->granted("paid-unknown-cost"))||(!synthetic_&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_))){fail("policy-revoked");return;}
   resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_.replace(key_,"[credential redacted]");
   const bool failed=result.value("isError").toBool();finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
  }
@@ -222,6 +224,7 @@ bool LampyreConnection::reject(const QString &code){error_=code;emit changed();r
 bool LampyreConnection::exportResult(const QString &input,bool consent){
  if(!consent)return reject("export-consent-required");
  if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
+ if(identity_&&!identity_->hasPermission("evidence-export"))return reject("local-export-permission-denied");
  if(result_.isEmpty())return reject("no-result");
  const auto path=mr::recovery::localFilePath(input);if(path.isEmpty()||QFileInfo(path).exists()||QFileInfo(path).isSymLink())return reject("choose-new-file");
  const QJsonObject envelope{{"schema","nexvary-mcp-result/v1"},{"provider","Lampyre MCP (user-configured endpoint)"},{"endpointHost",QUrl(endpoint_).host()},{"tool",resultTool_},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"caseEvidence",false},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
@@ -229,4 +232,14 @@ bool LampyreConnection::exportResult(const QString &input,bool consent){
  if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly))return reject("export-write");
  if(!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush()){file.close();QFile::remove(path);return reject("export-write");}
  file.close();error_.clear();emit changed();return true;
+}
+
+QString LampyreConnection::attachResult(const QString &device,bool consent){
+ if(!consent){reject("attachment-consent-required");return {};}
+ if(!identity_||!identity_->checkSession()||!identity_->hasPermission("case-edit")||!identity_->hasPermission("evidence-access")){reject("local-attachment-permission-denied");return {};}
+ if(result_.isEmpty()||resultCaseId_.isEmpty()||!caseIdentity_||caseIdentity_()!=resultCaseId_||!caseAuthorization_||!caseAuthorization_()||!attachment_){reject("active-case-required");return {};}
+ const QJsonObject envelope{{"schema","nexvary-mcp-case-result/v1"},{"provider","Lampyre MCP"},{"endpointHost",QUrl(endpoint_).host()},{"caseId",resultCaseId_},{"localOperationId",resultOperationId_},{"tool",resultTool_},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
+ const auto id=attachment_(device,QJsonDocument(envelope).toJson(QJsonDocument::Indented));
+ if(id.isEmpty()){reject("case-attachment-failed");return {};}
+ error_.clear();emit changed();return id;
 }

@@ -55,7 +55,7 @@ The client retains Streamable HTTP JSON-RPC initialize/initialized/tools-list be
 - No bypass of independent review, case grants, role ceilings, certificate validation or cost consent. Tests use local synthetic fixtures only.
 - Account restrictions use schema 2 to fail closed under older executables. Registry backups remain sensitive and must be protected.
 - API credentials are never included in CI or diagnostic/evidence exports. Existing response redaction is retained.
-- Provider result copies are explicitly marked unverified and are not automatically case evidence. Dedicated MCP-to-case evidence ingestion with a signed case-operation link remains unfinished; do not claim otherwise.
+- Provider result copies are explicitly marked unverified. A separate user-confirmed attachment selects an existing case device and registers a protected evidence copy through the existing native case audit/custody path. The envelope retains the local operation ID and original case ID; switching cases prevents attachment. It does not certify provider claims or legal authority.
 - Exact Photon spending caps, verified balance/cost retrieval and provider-confirmed consumption/request IDs are not implemented in this generic MCP path. A bounded submission count cannot guarantee a monetary ceiling.
 - A separate server-side API-key revocation workflow, live invalid/expired-key differentiation and agency/SSO identity federation remain outside this candidate.
 - Windows 10 physical installation, real Lampyre authentication, real investigator acceptance and live Arabic/English usability must be distinguished from Windows Server 2022 CI and synthetic smoke.

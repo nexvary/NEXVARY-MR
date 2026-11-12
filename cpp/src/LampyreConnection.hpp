@@ -35,6 +35,9 @@ public:
  int requestLimit()const{return requestLimit_;}
  int submittedRequests()const{return submitted_;}
  Q_INVOKABLE bool setRequestLimit(int limit);
+ void setCaseIdentity(std::function<QString()> reader){caseIdentity_=std::move(reader);}
+ void setResultAttachment(std::function<QString(const QString &,const QByteArray &)> writer){attachment_=std::move(writer);}
+ Q_INVOKABLE QString attachResult(const QString &device,bool consent);
  void setCaseAuthorization(std::function<bool()> check){caseAuthorization_=std::move(check);}
  bool connected()const{return connected_;}
  bool busy()const{return busy_;}
@@ -71,6 +74,9 @@ private:
  bool synthetic_=false,connected_=false,busy_=false,saved_=false;
  int requestLimit_=0,submitted_=0;
  std::function<bool()> caseAuthorization_;
+ std::function<QString()> caseIdentity_;
+ std::function<QString(const QString &,const QByteArray &)> attachment_;
+ QString resultCaseId_,resultOperationId_;
  int timeoutMs_,pages_=0;
  qint64 nextId_=0,pendingId_=0;
  QVariantList tools_;
