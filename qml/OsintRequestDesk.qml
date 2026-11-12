@@ -40,7 +40,6 @@ Pane {
      RowLayout {anchors.fill:parent;anchors.margins:6;spacing:7
       Image {source:"qrc:/assets/icons-professional/"+(desk.scenario===index?"checkmark_circle":"document_text")+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17}
       Label {text:modelData;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideRight}
-      Label {text:"0 Ph";color:"#70D8F5";font.pixelSize:11}
      }
      MouseArea {anchors.fill:parent;onClicked:desk.scenario=parent.index}
      activeFocusOnTab:true;Keys.onReturnPressed:desk.scenario=index;Accessible.role:Accessible.Button;Accessible.name:modelData

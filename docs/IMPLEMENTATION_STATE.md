@@ -1,5 +1,12 @@
 # NEXVARY-MR implementation state
 
+## Unified Intelligence pricing
+
+- Branch `feature/mr-unified-intelligence-pricing`, based on PR #21 at `2860f661`.
+- `server/intelligence/` implements the €14.00 EUR default, verified-cost quote gating, admin-only updates, prepaid reservation, idempotency, durable receipts, reconciliation and refunds. `tests/test_intelligence_billing.py` exercises the HTTP and ledger paths with simulated responses.
+- Intelligence QML distinguishes direct-provider tools and removes displayed supplier units. The Windows client still needs a trusted Nexvary gateway, production adapter and customer checkout/result wiring before commercial cards can be enabled. No paid requests were used.
+
+
 ## Baseline
 
 - Dedicated branch: `feature/mr-government-modernization`. Base: `6f8387d9b968823d8c149597c2f61b3a84d6ed25`, the head of PR #20. Main was at `7446b17d` and is an ancestor. PRs #15, #18, #19 and #20 carry the stacked government, commercial provider, Lampyre and account-permission work. PR #17 is a separate forensic integration.
