@@ -44,7 +44,7 @@ ColumnLayout {
   function humanError(error){return workspace.app.humanError(error)}
   readonly property bool governmentMode:workspace.app.governmentMode
   function roleLabel(role){return workspace.app.roleLabel(role)}
-  function navigateSection(index){return workspace.app.navigateSection(index)}
+  function openAccountPermissions(){workspace.app.openAccountPermissions()}
  }
  LayoutMirroring.enabled:app.ar;LayoutMirroring.childrenInherit:true;spacing:0
  Rectangle {

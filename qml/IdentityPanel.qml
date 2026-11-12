@@ -11,6 +11,19 @@ ScrollView {
  objectName:"identityPanel"
  contentWidth:availableWidth
  clip:true
+ component IdentityField: TextField {
+  id:field
+  color:enabled?page.app.design.text:page.app.design.muted
+  placeholderTextColor:page.app.design.muted
+  selectionColor:page.app.design.accent
+  selectedTextColor:page.app.design.background
+  background:Rectangle {
+   radius:5
+   color:field.enabled?page.app.design.surface:page.app.design.raised
+   border.width:field.activeFocus?2:1
+   border.color:field.activeFocus?page.app.design.accent:field.hovered?page.app.design.silver:page.app.design.border
+  }
+ }
  ColumnLayout {width:page.availableWidth;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("الإعداد الأول — تقدم متحقق","First-run setup — verified progress");iconName:"clipboard_task"
    Repeater {model:[
@@ -30,14 +43,14 @@ ScrollView {
    Label {visible:page.identity.authenticated;Layout.fillWidth:true;textFormat:Text.PlainText;color:app.design.text;text:(page.identity.session.displayName||"")+" · "+page.app.roleLabel(page.identity.session.role)}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.accent;text:page.feedback}
    ColumnLayout {visible:!page.identity.authenticated;Layout.fillWidth:true
-    TextField {id:username;objectName:"identityUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم بالأحرف الصغيرة","Lowercase username");inputMethodHints:Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText}
-    TextField {id:displayName;objectName:"identityDisplayName";visible:page.identity.needsSetup;Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم المسؤول المحلي الأول","First local administrator display name")}
-    TextField {id:password;objectName:"identityPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور (14 حرفًا على الأقل)","Password (at least 14 characters)")}
+    IdentityField {id:username;objectName:"identityUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم بالأحرف الصغيرة","Lowercase username");inputMethodHints:Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText}
+    IdentityField {id:displayName;objectName:"identityDisplayName";visible:page.identity.needsSetup;Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم المسؤول المحلي الأول","First local administrator display name")}
+    IdentityField {id:password;objectName:"identityPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور (14 حرفًا على الأقل)","Password (at least 14 characters)")}
     ActionButton {objectName:"identitySignIn";text:page.identity.needsSetup?app.trx("إنشاء المسؤول الأول","Create first administrator"):app.trx("تسجيل الدخول","Sign in");enabled:page.identity.ready;primary:true;onClicked:{const setup=page.identity.needsSetup;const ok=!setup||page.identity.bootstrap(username.text,displayName.text,password.text);if(ok)page.identity.login(username.text,password.text);password.clear()}}
    }
    ColumnLayout {visible:page.identity.authenticated;Layout.fillWidth:true
-    TextField {id:currentPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الحالية للتغيير","Current password for rotation")}
-    TextField {id:nextPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الجديدة","New password")}
+    IdentityField {id:currentPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الحالية للتغيير","Current password for rotation")}
+    IdentityField {id:nextPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الجديدة","New password")}
     ActionButton {text:app.trx("تغيير كلمة المرور وتسجيل الخروج","Change password and sign out");onClicked:{page.identity.changePassword(currentPassword.text,nextPassword.text);currentPassword.clear();nextPassword.clear()}}
    }
    ActionButton {visible:page.identity.authenticated;objectName:"identityLogout";text:app.trx("تبديل الحساب / تسجيل الخروج","Switch account / sign out");onClicked:page.identity.logout()}
@@ -45,10 +58,10 @@ ScrollView {
   }
   Panel {visible:page.identity.session.role==="administrator";Layout.fillWidth:true;title:app.trx("إدارة الحسابات والمنح","Accounts and case grants");iconName:"clipboard_task"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("للعمل على القضايا، أنشئ حساب محقق من الحقول أدناه. يمكنك إنشاء الحساب والانتقال إليه بخطوة واحدة؛ حساب المدير يبقى لإدارة الحسابات والمنح.","For case work, create an investigator below. Create and switch in one step; the administrator retains account and grant management.")}
-   TextField {id:newUsername;objectName:"identityNewUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم الجديد","New username")}
-   TextField {id:newDisplay;objectName:"identityNewDisplayName";Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم العرض","Display name")}
+   IdentityField {id:newUsername;objectName:"identityNewUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم الجديد","New username")}
+   IdentityField {id:newDisplay;objectName:"identityNewDisplayName";Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم العرض","Display name")}
    ComboBox {id:newRole;Layout.fillWidth:true;model:["investigator","reviewer","auditor","trainer","repair-technician","administrator"]}
-   TextField {id:newPassword;objectName:"identityNewPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة مرور الحساب الجديد","New account password")}
+   IdentityField {id:newPassword;objectName:"identityNewPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة مرور الحساب الجديد","New account password")}
    ActionButton {text:app.trx("إنشاء حساب","Create account");onClicked:{const id=page.identity.createUser(newUsername.text,newDisplay.text,newRole.currentText,newPassword.text);page.feedback=id!==""?app.trx("تم إنشاء الحساب بنجاح؛ يمكنك الانتقال إليه عبر تبديل الحساب","Account created successfully; use Switch account to sign in"):"";newPassword.clear()}}
    ActionButton {objectName:"identityCreateInvestigatorAndSignIn";text:page.app.trx("إنشاء حساب المحقق والدخول إليه","Create investigator and sign in");primary:true;onClicked:{const user=newUsername.text;const pass=newPassword.text;const id=page.identity.createUser(user,newDisplay.text,"investigator",pass);if(id!=="")page.identity.login(user,pass);newPassword.clear()}}
    Repeater {model:page.identity.users;delegate:ColumnLayout {id:accountRow;required property var modelData;Layout.fillWidth:true
@@ -59,8 +72,8 @@ ScrollView {
     }
    }}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("صلاحيات كل حساب تظهر أدناه. السماح يبقى ضمن سقف الدور، وتغييرها ينهي جلسة الحساب المتأثر ويحتاج تسجيل دخول جديد. الوصول لقضية وموافقة التحليل الخارجي شرطان مستقلان.","Permissions remain within the role ceiling. A permission change ends the affected session and requires sign-in again. Case access and reviewed external-analysis grants remain separate requirements.")}
-   TextField {id:caseId;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID القضية — يقدمه مالك القضية","Case UUID supplied by its owner")}
-   TextField {id:principal;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID الحساب أعلاه","Account UUID shown above")}
+   IdentityField {id:caseId;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID القضية — يقدمه مالك القضية","Case UUID supplied by its owner")}
+   IdentityField {id:principal;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID الحساب أعلاه","Account UUID shown above")}
    RowLayout {Layout.fillWidth:true
     ActionButton {text:app.trx("منح الوصول","Grant access");onClicked:page.identity.setCaseGrant(caseId.text,principal.text,true)}
     ActionButton {text:app.trx("سحب المنحة","Revoke grant");onClicked:page.identity.setCaseGrant(caseId.text,principal.text,false)}

@@ -89,12 +89,16 @@ ApplicationWindow {
   if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
   if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
   if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات Lampyre المحفوظة تبقى محمية.";
-  if(text.indexOf("Account permission denied")>=0)return "الحساب الحالي لا يملك إذن العملية. يضبطه المدير في الحسابات والصلاحيات؛ سجّل الدخول مجددًا بعد تغيير الإذن.";
+  const denied=/^Account permission denied: ([a-z-]+)\./.exec(text);
+  if(denied){
+   const labels={"case-create":"إنشاء القضايا","case-edit":"تعديل القضايا","evidence-access":"قراءة الأدلة","osint-investigation":"تحقيق OSINT","evidence-export":"تصدير الأدلة"};
+   return "الإذن المطلوب: "+(labels[denied[1]]||denied[1])+". اطلب تفعيله من المدير في الحسابات والصلاحيات، ثم سجّل الدخول مجددًا.";
+  }
   if(text.indexOf("Sign-in failed")>=0)return "تعذر تسجيل الدخول. راجع اسم المستخدم وكلمة المرور وحالة الحساب.";
   if(text.indexOf("Username already exists")>=0)return "اسم المستخدم موجود بالفعل؛ اختر اسمًا آخر أو سجّل الدخول بالحساب الموجود.";
   if(text.indexOf("3–64 character lowercase")>=0)return "اختر اسم مستخدم إنجليزيًا صغيرًا من 3 إلى 64 حرفًا، واسم عرض، وكلمة مرور لا تقل عن 14 حرفًا.";
   if(text.indexOf("14 characters")>=0)return "كلمة المرور يجب ألا تقل عن 14 حرفًا. راجع اسم المستخدم واسم العرض أيضًا.";
-  if(text.indexOf("No case grant")>=0)return "هذا الحساب لا يملك صلاحية الوصول إلى القضية المحددة.";
+  if(text.indexOf("No case grant")>=0||text.indexOf("no grant for the active case")>=0)return "اطلب من المدير منح حسابك صلاحية الوصول إلى هذه القضية.";
   return text;
  }
  function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
@@ -112,6 +116,7 @@ ApplicationWindow {
   navigateSection(index);
  }
  function navigate(index){currentPage=index}
+ function openAccountPermissions(){if(!governmentMode)setWorkspace(true);navigateSection(10)}
  function navigateSection(index){
   const entry=sections[index];if(!entry)return
   if(currentPage===entry.page&&activeSection!==index){let history=pageHistory.slice();history.push(snapshot(currentPage));pageHistory=history.slice(-50)}
@@ -161,7 +166,7 @@ ApplicationWindow {
    anchors.fill:parent;spacing:8
    RowLayout {Layout.fillWidth:true
     Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
-    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:{window.setWorkspace(true);window.navigateSection(10)}}
+    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
    }
    RowLayout {
     visible:window.activeSection===2||window.activeSection===7;Layout.fillWidth:true

@@ -5,6 +5,10 @@
 - Add a bilingual Intelligence tab beside Security Dashboard, with a dedicated route accessible before account sign-in and case selection.
 - Move the existing provider setup and research interface to the Intelligence route. Retain provider, account, case and evidence controls for requests and attachments.
 - Clear local demonstration data when leaving Intelligence. Cover navigation, right-to-left order and signed-out access in Qt Quick tests.
+- Present tools discovered from the approved MCP connection as selectable cards. A tool change clears prior input and charge consent.
+- Clear unsubmitted provider credentials and consents on account changes. Route provider setup to Accounts and permissions from either workspace.
+- Improve account field contrast and focus, identify the missing case permission, and point case-grant errors to an administrator.
+- Report the count for the scanned Android transport and reject unreadable ADB property responses without retaining stale identity data.
 
 ## 0.4.1 — 2026-11-11 (evaluation)
 

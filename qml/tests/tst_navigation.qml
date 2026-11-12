@@ -65,8 +65,15 @@ TestCase {
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"approved-home-ar.png"));
   app.navigatePrimary(3);compare(app.currentPage,app.intelligencePage)
   verify(findChild(app,"intelligenceWorkspace").visible)
-  app.goBack();compare(app.currentPage,0)
+  const draft=findChild(app,"lampyreApiKey"), consent=findChild(app,"lampyreConnectionConsent")
+  draft.text="Synthetic-credential-draft";consent.checked=true
   identityBridge.logout()
+  compare(draft.text,"");verify(!consent.checked)
+  app.goBack();compare(app.currentPage,0)
+  app.navigatePrimary(3);verify(renderedFrame())
+  const permissions=findChild(app,"lampyreOpenPermissions")
+  reveal(findChild(app,"intelligenceWorkspace"),permissions);mouseClick(permissions)
+  compare(app.currentPage,12);compare(app.activeSection,10)
   app.setWorkspace(true);app.navigateSection(app.intelligenceSectionIndex)
   verify(renderedFrame());verify(findChild(app,"intelligenceWorkspace").visible)
   verify(!identityBridge.authenticated);verify(!lawCaseBridge.activeCase.id)

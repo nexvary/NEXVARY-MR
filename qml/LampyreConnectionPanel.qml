@@ -6,11 +6,29 @@ ColumnLayout {
  id:panel;objectName:"lampyreConnectionPanel"
  property var app
  readonly property var connection:typeof lampyreConnection!=="undefined"?lampyreConnection:null
+ readonly property string principal:identityBridge.session.id||""
+ onPrincipalChanged:{
+  if(!key||!connectionConsent||!requestConsent||!attachConsent)return
+  key.clear()
+  connectionConsent.checked=false
+  requestConsent.checked=false
+  attachConsent.checked=false
+  exportMessage=""
+ }
  property var toolArguments:({})
  property string inputError:""
  property var invalidFields:({})
  property string exportMessage:""
- readonly property var selected:connection&&toolSelector.currentIndex>=0?connection.tools[toolSelector.currentIndex]||({}):({})
+ readonly property bool catalogAvailable:!!connection&&connection.connected
+ property string selectedToolName:""
+ readonly property var selected:catalogAvailable?connection.tools.find(tool=>tool.name===selectedToolName)||({}):({})
+ onCatalogAvailableChanged:if(!catalogAvailable)selectedToolName=""
+ onSelectedToolNameChanged:{
+  toolArguments=({})
+  invalidFields=({})
+  inputError=""
+  if(requestConsent)requestConsent.checked=false
+ }
  readonly property var schema:selected.inputSchema||({})
  function put(key,value){const copy=Object.assign({},panel.toolArguments);copy[key]=value;panel.toolArguments=copy;const errors=Object.assign({},invalidFields);delete errors[key];invalidFields=errors;inputError=Object.keys(errors).join(", ");requestConsent.checked=false}
  function policyAllowed(name){const rows=operationPolicy.permissions;for(const row of rows)if(row.capability===name)return row.allowed;return false}
@@ -22,7 +40,7 @@ ColumnLayout {
   Layout.fillWidth:true;title:panel.app.trx("حساب Lampyre واتصال MCP","Lampyre account & MCP connection");iconName:"settings"
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:panel.app.trx("أدخل رابط MCP ومفتاح API من إعدادات حساب Lampyre. كلمة مرور عميل Windows ومفتاح ترخيصه ليسا بديلًا عن بيانات اتصال MCP.","Enter the MCP URL and API key from your Lampyre account settings. A Windows desktop password or license key is not an MCP credential.")}
   Label {objectName:"lampyreLocalChecks";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:panel.app.trx("الحساب الحالي: ","Current account: ")+(identityBridge.session.username||panel.app.trx("لم يسجل الدخول","Signed out"))+" · "+panel.app.roleLabel(identityBridge.session.role)+"\n"+panel.app.trx("إذن التحليل الخارجي: ","External-analysis permission: ")+(panel.policyAllowed("external-analysis")?panel.app.trx("مفعّل","Active"):panel.app.trx("يحتاج طلبًا وموافقة من حساب آخر ثم تفعيلًا من حسابك. افتح الإدارة ← صلاحيات الاتصال. بعد الموافقة سجّل الدخول بالحساب الطالب وفعّل الطلب.","Request review by a separate account in Administration → connection permissions. Sign back in as the requester and activate the approved request."))}
-  OsintDesktopCommand {text:panel.app.trx("فتح الحسابات والصلاحيات","Open accounts and permissions");onClicked:panel.app.navigateSection(panel.app.governmentMode?10:11)}
+  OsintDesktopCommand {objectName:"lampyreOpenPermissions";text:panel.app.trx("فتح الحسابات والصلاحيات","Open accounts and permissions");onClicked:panel.app.openAccountPermissions()}
   Label {objectName:"lampyreCredentialSaved";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.connection&&panel.connection.credentialSaved?panel.app.trx("المفتاح محفوظ محميًا لهذا الحساب","Key saved in protected storage for this account"):panel.app.trx("لا يوجد مفتاح محفوظ على القرص لهذا الحساب","No key saved on disk for this account")}
   Label {text:panel.app.trx("رابط خادم MCP","MCP server URL");color:panel.app.design.muted}
   TextField {id:endpoint;objectName:"lampyreMcpEndpoint";Layout.fillWidth:true;text:panel.connection&&panel.connection.endpoint!==""?panel.connection.endpoint:"https://account.lampyre.io/api/v2/mcp";placeholderText:panel.app.trx("الصق الرابط الكامل من حسابك","Paste the full URL from your account");maximumLength:2048;selectByMouse:true;LayoutMirroring.enabled:false;color:panel.app.design.text;placeholderTextColor:panel.app.design.muted;background:Rectangle {color:panel.app.design.surface;border.color:panel.app.design.border;radius:5} enabled:!panel.connection||!panel.connection.busy}
@@ -43,17 +61,56 @@ ColumnLayout {
  }
  OsintDesktopPane {
   Layout.fillWidth:true;visible:!!panel.connection&&panel.connection.connected;title:panel.app.trx("أدوات حسابك","Your account tools");iconName:"search_visual"
-  ComboBox {id:toolSelector;objectName:"lampyreToolSelector";Layout.fillWidth:true;model:panel.connection?panel.connection.tools:[];textRole:"name";onCurrentIndexChanged:{panel.toolArguments=({});panel.invalidFields=({});requestConsent.checked=false;panel.inputError=""}}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.muted;text:panel.selected.description||""}
-  Repeater {model:Object.keys(panel.schema.properties||{})
-   delegate:ColumnLayout {id:parameterField;required property string modelData;readonly property var field:(panel.schema.properties||{})[parameterField.modelData]||({});Layout.fillWidth:true
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:(parameterField.field.title||parameterField.modelData)+((panel.schema.required||[]).indexOf(parameterField.modelData)>=0?" *":"")}
+  Label {
+   visible:catalog.count===0;Layout.fillWidth:true;wrapMode:Text.WordWrap
+   color:panel.app.design.muted;text:panel.app.trx("لم يُرجع الخادم أدوات متاحة لهذا الحساب.","The server returned no tools for this account.")
+  }
+  GridView {
+   id:catalog;objectName:"lampyreToolCatalog";Layout.fillWidth:true;clip:true
+   visible:count>0
+   Layout.preferredHeight:Math.min(3,Math.ceil(count/columns))*cellHeight
+   readonly property int columns:width>=600?2:1
+   cellWidth:Math.floor(width/columns);cellHeight:106
+   model:panel.catalogAvailable?panel.connection.tools:[]
+   layoutDirection:panel.app.ar?Qt.RightToLeft:Qt.LeftToRight
+   boundsBehavior:Flickable.StopAtBounds
+   ScrollBar.vertical:ScrollBar {}
+   delegate:Button {
+    id:toolCard
+    required property var modelData
+    width:catalog.cellWidth-12;height:catalog.cellHeight-8
+    padding:10;hoverEnabled:true;focusPolicy:Qt.StrongFocus
+    checked:panel.selectedToolName===modelData.name
+    text:modelData.title||modelData.name
+    Accessible.name:text
+    Accessible.description:modelData.description||""
+    enabled:!panel.connection.busy
+    onClicked:panel.selectedToolName=modelData.name
+    background:Rectangle {
+     radius:8;color:toolCard.checked||toolCard.hovered?panel.app.design.raised:panel.app.design.surface
+     border.width:toolCard.activeFocus?2:1
+     border.color:toolCard.checked||toolCard.activeFocus?panel.app.design.accent:panel.app.design.border
+    }
+    contentItem:RowLayout {
+     Image {source:"qrc:/assets/icons-professional/search_visual.svg";Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
+     ColumnLayout {
+      Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
+      Label {Layout.fillWidth:true;text:toolCard.text;textFormat:Text.PlainText;color:panel.app.design.text;font.bold:true;elide:Text.ElideRight}
+      Label {Layout.fillWidth:true;text:toolCard.modelData.description||"";textFormat:Text.PlainText;color:panel.app.design.muted;wrapMode:Text.Wrap;maximumLineCount:2;elide:Text.ElideRight}
+     }
+    }
+   }
+  }
+  Label {visible:!!panel.selected.name;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:panel.selected.description||""}
+  Repeater {model:Object.keys(panel.schema.properties||{}).map(name=>({name:name,field:panel.schema.properties[name]}))
+   delegate:ColumnLayout {id:parameterField;required property var modelData;readonly property string name:modelData.name;readonly property var field:modelData.field||({});Layout.fillWidth:true
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:(parameterField.field.title||parameterField.name)+((panel.schema.required||[]).indexOf(parameterField.name)>=0?" *":"")}
     TextField {Layout.fillWidth:true;maximumLength:8192;placeholderText:parameterField.field.description||parameterField.field.type||"";color:panel.app.design.text;placeholderTextColor:panel.app.design.muted;background:Rectangle {color:panel.app.design.surface;border.color:panel.app.design.border;radius:5} onTextEdited:{
       try {let value=text;if(parameterField.field.type==="integer"||parameterField.field.type==="number"){value=Number(text);if(!text.trim()||!isFinite(value)||parameterField.field.type==="integer"&&!Number.isInteger(value))throw new Error("number")}
        else if(parameterField.field.type==="boolean"){if(text!=="true"&&text!=="false")throw new Error("boolean");value=text==="true"}
        else if(parameterField.field.type==="array"||parameterField.field.type==="object")value=JSON.parse(text);
-       if(parameterField.field.enum&&parameterField.field.enum.indexOf(value)<0)throw new Error("enum");panel.put(parameterField.modelData,value)
-      }catch(e){const args=Object.assign({},panel.toolArguments);delete args[parameterField.modelData];panel.toolArguments=args;const errors=Object.assign({},panel.invalidFields);errors[parameterField.modelData]=true;panel.invalidFields=errors;panel.inputError=panel.app.trx("راجع نوع قيمة الحقول: ","Check field value types: ")+Object.keys(errors).join(", ");requestConsent.checked=false}
+       if(parameterField.field.enum&&parameterField.field.enum.indexOf(value)<0)throw new Error("enum");panel.put(parameterField.name,value)
+      }catch(e){const args=Object.assign({},panel.toolArguments);delete args[parameterField.name];panel.toolArguments=args;const errors=Object.assign({},panel.invalidFields);errors[parameterField.name]=true;panel.invalidFields=errors;panel.inputError=panel.app.trx("راجع نوع قيمة الحقول: ","Check field value types: ")+Object.keys(errors).join(", ");requestConsent.checked=false}
      }}
    }
   }
@@ -67,7 +124,7 @@ ColumnLayout {
   }
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("عدد الإرسالات: ","Submitted requests: ")+(panel.connection?panel.connection.submittedRequests:0)+" / "+(panel.connection?panel.connection.requestLimit:0)+"\n"+panel.app.trx("لا يوجد حد موثوق لقيمة Photons دون تسعير مؤكد. يلزم إذن إداري مستقل للتكلفة المجهولة وموافقتك لكل إرسال. لا إعادة تلقائية حتى عند انقطاع الاتصال.","No reliable Photon cap is possible without verified pricing. Unknown cost requires separate administrator approval and your consent for every submission. No automatic retry, including after network failure.")}
   CheckBox {id:requestConsent;objectName:"lampyrePaidRequestConsent";Layout.fillWidth:true;text:panel.app.trx("أوافق على إرسال معاملات الأداة المحددة وأي خصم وفق حسابي لدى المزود","Send the selected tool arguments and accept any charge under my provider account")}
-  OsintDesktopCommand {objectName:"lampyreExecuteTool";primary:true;text:panel.app.trx("تنفيذ الأداة المحددة","Run selected tool");enabled:!!panel.connection&&panel.connection.connected&&!panel.connection.busy&&toolSelector.currentIndex>=0&&requestConsent.checked&&panel.inputError==="";onClicked:{
+  OsintDesktopCommand {objectName:"lampyreExecuteTool";primary:true;text:panel.app.trx("تنفيذ الأداة المحددة","Run selected tool");enabled:!!panel.connection&&panel.connection.connected&&!panel.connection.busy&&!!panel.selected.name&&requestConsent.checked&&panel.inputError==="";onClicked:{
     const required=panel.schema.required||[];for(const key of required)if(panel.toolArguments[key]===undefined||panel.toolArguments[key]===""){panel.inputError=panel.app.trx("أكمل الحقل المطلوب: ","Complete required field: ")+key;requestConsent.checked=false;return}
     panel.connection.callTool(panel.selected.name,JSON.stringify(panel.toolArguments),requestConsent.checked);requestConsent.checked=false
    }}

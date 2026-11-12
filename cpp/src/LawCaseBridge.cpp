@@ -75,9 +75,13 @@ QString LawCaseBridge::actor()const{if(identity_)return identity_->actor();retur
 bool LawCaseBridge::fail(const QString &message){error_=message;emit changed();return false;}
 bool LawCaseBridge::permit(nexvary::law::Action action,bool caseBound) {
  if(identity_&&!identity_->checkSession())return fail(QStringLiteral("Sign in with a permitted local account."));
- if(identity_&&action!=nexvary::law::Action::AccessTraining&&!identity_->hasPermission("evidence-access"))return fail(QStringLiteral("Account permission denied: evidence access. Ask an administrator in Accounts and permissions, then sign in again."));
- if(caseBound&&!active_.isEmpty()&&!caseAllowed(active_))return fail(QStringLiteral("This account has no grant for the active case."));
- if(identity_&&!permissionFor(action).isEmpty()&&!identity_->hasPermission(permissionFor(action)))return fail(QStringLiteral("Account permission denied. Ask an administrator in Accounts and permissions; sign in again after any permission change."));
+ const auto denied = [this](const QString &permission) {
+  return fail(QStringLiteral("Account permission denied: %1. Ask an administrator in Accounts and permissions, then sign in again.").arg(permission));
+ };
+ if(identity_&&action!=nexvary::law::Action::AccessTraining&&!identity_->hasPermission("evidence-access"))return denied(QStringLiteral("evidence-access"));
+ if(caseBound&&!active_.isEmpty()&&!caseAllowed(active_))return fail(QStringLiteral("This account has no grant for the active case. Request access from an administrator."));
+ const auto permission=permissionFor(action);
+ if(identity_&&!permission.isEmpty()&&!identity_->hasPermission(permission))return denied(permission);
  if(!nexvary::law::allows(currentRole(),action))return fail(QStringLiteral("This session role does not permit this action."));
  if(operationPolicy_ && transactionsReady_ && !verifyOperationLinks(true))return false;
  if(!ready())return fail(QStringLiteral("Protected case storage is unavailable on this host."));
