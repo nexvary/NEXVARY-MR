@@ -122,6 +122,7 @@ private:
  bool validateMetadata(const QVariantMap &metadata);
  bool refresh(const QString &id=QString());
  QString actor()const;
+ QString sessionPrincipal_;
  std::unique_ptr<LawCaseStore> store_;
  std::unique_ptr<EvidenceImportRunner> importer_;
  void initOsint();

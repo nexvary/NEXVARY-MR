@@ -1,4 +1,5 @@
 #include "LawCaseBridge.hpp"
+#include "IdentityService.hpp"
 #include "LawCaseStore.hpp"
 #include "DeviceAssessment.hpp"
 #include "ExifFixture.hpp"
@@ -24,6 +25,13 @@ QString fileHash(const QString &path){return QString::fromLatin1(QCryptographicH
 class LawWorkspaceTests:public QObject {
  Q_OBJECT
 private slots:
+ void registryNotificationsPreserveCaseButRevokeAccess(){
+  QTemporaryDir t;const QString pass="Synthetic registry test 2026!";const auto registry=t.filePath("identity");
+  IdentityService admin(registry,true);QVERIFY(admin.bootstrap("admin","Admin",pass));QVERIFY(admin.login("admin",pass));const auto investigator=admin.createUser("operator","Operator","investigator",pass);QVERIFY(!investigator.isEmpty());
+  IdentityService identity(registry,true);QVERIFY(identity.login("operator",pass));LawCaseBridge b(t.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&identity);
+  const auto id=b.createCase(metadata());QVERIFY(!id.isEmpty());QVERIFY(admin.setCaseGrant(id,investigator,true));QVERIFY(identity.checkSession());QCOMPARE(b.activeCase().value("id").toString(),id);
+  auto m=metadata();m.insert("notes","Still editable after registry notification");QVERIFY(b.updateCase(m));QVERIFY(admin.setEnabled(investigator,false));QVERIFY(!identity.checkSession());QVERIFY(b.activeCase().isEmpty());
+ }
  void createSearchReopenAndDevice() {
   QTemporaryDir temp;QString id,dev;
   {LawCaseBridge b(temp.filePath("cases.db"),nullptr,true);QVERIFY2(b.ready(),qPrintable(b.error()));id=b.createCase(metadata());QVERIFY2(!id.isEmpty(),qPrintable(b.error()));dev=b.addDevice(device());QVERIFY(!dev.isEmpty());QCOMPARE(b.devices().size(),1);QVERIFY(b.verifyAudit());b.closeWorkspace();QVERIFY(b.activeCase().isEmpty());QVERIFY(b.searchCases("SYNTHETIC-CASE"));QCOMPARE(b.cases().size(),1);QVERIFY(b.searchCases("absent"));QCOMPARE(b.cases().size(),0);}

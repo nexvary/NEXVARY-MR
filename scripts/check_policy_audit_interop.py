@@ -135,6 +135,20 @@ def main():
             assert accepted == expected and (native.returncode == 0) == expected, name + ": " + native.stderr.decode(errors="replace")
             results.append({"check": name, "passed": True})
         protocol("independent producer accepted by both verifier implementations", expected=True)
+        def unknown_cost_admin(rows, ids):
+            selected = rows[:4]
+            for index, (action, record, actor, role) in enumerate(selected):
+                record["capability"] = "paid-unknown-cost"
+                if action in {"review", "approve"}:
+                    selected[index] = (action, record, actor, "administrator")
+            return selected
+        protocol("independent unknown-cost administrator approval accepted", unknown_cost_admin, expected=True)
+        def unknown_cost_reviewer(rows, ids):
+            selected = rows[:4]
+            for action, record, actor, role in selected:
+                record["capability"] = "paid-unknown-cost"
+            return selected
+        protocol("unknown-cost approval by ordinary reviewer rejected", unknown_cost_reviewer)
         def self_review(rows, ids):
             rows[1] = ("review", {**rows[1][1], "reviewer": ids[0]}, 0, "administrator")
             return rows

@@ -8,6 +8,7 @@
 // Synthetic storage is a native test fixture; production has no plaintext fallback.
 class IdentityService final:public QObject {
  Q_OBJECT
+ Q_PROPERTY(QVariantMap setupStatus READ setupStatus NOTIFY changed)
  Q_PROPERTY(bool ready READ ready NOTIFY changed)
  Q_PROPERTY(bool needsSetup READ needsSetup NOTIFY changed)
  Q_PROPERTY(bool authenticated READ authenticated NOTIFY changed)
@@ -17,6 +18,7 @@ class IdentityService final:public QObject {
 public:
  explicit IdentityService(const QString &path,bool synthetic=false,QObject *parent=nullptr,int syntheticSessionLifetimeMs=15*60*1000);
  ~IdentityService() override;
+ QVariantMap setupStatus()const;
  bool ready()const{return ready_;}
  bool needsSetup()const{return ready_&&state_.value("users").toList().isEmpty();}
  bool authenticated()const{return !userId_.isEmpty();}
@@ -28,6 +30,8 @@ public:
  Q_INVOKABLE void logout();
  Q_INVOKABLE bool changePassword(const QString &currentPassword,const QString &newPassword);
  Q_INVOKABLE QString createUser(const QString &username,const QString &displayName,const QString &role,const QString &password);
+ Q_INVOKABLE bool setPermission(const QString &userId,const QString &permission,bool allowed);
+ bool hasPermission(const QString &permission)const;
  Q_INVOKABLE bool setEnabled(const QString &userId,bool enabled);
  Q_INVOKABLE bool setCaseGrant(const QString &caseId,const QString &userId,bool granted);
  bool checkSession();

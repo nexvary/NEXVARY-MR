@@ -1,6 +1,7 @@
 #include "LampyreEvaluationBridge.hpp"
 #include "LampyreConnection.hpp"
 #include <QTemporaryDir>
+#include <QTemporaryFile>
 #include <QSaveFile>
 #include "SyntheticPolicyExercise.hpp"
 #include "RecoveryFile.hpp"
@@ -105,7 +106,7 @@ void governmentPolicySmoke(QQuickWindow *window,GovernmentOperationPolicy &polic
    const QFileInfo file(screenshot);const auto destination=[&file](const QString &suffix){return QDir(file.absolutePath()).filePath(file.completeBaseName()+suffix);};
    bool ok=ar&&policy.offline()&&(screenshot.isEmpty()||window->grabWindow().save(destination("-government-offline-en.png")));
    if(!screenshot.isEmpty()){
-    const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",6},{"offlineAfterRevoke",policy.offline()},
+    const QVariantMap receipt{{"schema","nexvary-deployed-operation-policy/v1"},{"synthetic",true},{"defaultDeniedCategories",policy.permissions().size()},{"offlineAfterRevoke",policy.offline()},
      {"startupBoundaryDenials",true},{"explicitSyntheticPortalGrant",true},{"reviewedExceptionProtocol",true},{"signedPolicyAudit",policy.auditStatus().value("healthy")},{"policyVerification",policy.auditStatus().value("verification")},{"portalStoppedAfterRevoke",true},{"permissions",policy.permissions()},
      {"scope","Actual deployed application gate, synthetic loopback grant/revoke and local import/index smoke; not OS sandbox or field acceptance"}};
     QFile out(destination("-government-offline.json"));const auto data=QJsonDocument::fromVariant(receipt).toJson(QJsonDocument::Indented);ok=out.open(QIODevice::WriteOnly|QIODevice::Truncate)&&out.write(data)==data.size()&&ok;
@@ -166,7 +167,7 @@ int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
- QGuiApplication::setApplicationVersion(QStringLiteral("0.4.1"));
+ QGuiApplication::setApplicationVersion(QStringLiteral("0.4.2"));
  QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/assets/nexvary-mr.png")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
@@ -210,6 +211,14 @@ int main(int argc,char *argv[]) {
  QObject::connect(&tools,&ToolBridge::diagnosticCompleted,&workshop,&WorkshopBridge::recordDiagnostic);
  LampyreEvaluationBridge lampyre;
  LampyreConnection lampyreConnection(QDir(dir).filePath("provider-credentials"),&identity,&operationPolicy);
+ lampyreConnection.setCaseAuthorization([&law]{return law.ready() && !law.activeCase().isEmpty() && law.permissions().value("analyze").toBool() && law.openCase(law.activeCase().value("id").toString());});
+ lampyreConnection.setCaseIdentity([&law]{return law.activeCase().value("id").toString();});
+ lampyreConnection.setResultAttachment([&law,&identity](const QString &device,const QByteArray &bytes){
+  QTemporaryFile file(QDir::tempPath()+"/nexvary-mcp-XXXXXX.json");
+  if(!file.open()||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush())return QString();
+  const auto path=file.fileName();file.close();
+  return law.addEvidence(device,path,"Unverified Lampyre MCP provider result",identity.actor(),true);
+ });
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreConnection"), &lampyreConnection);

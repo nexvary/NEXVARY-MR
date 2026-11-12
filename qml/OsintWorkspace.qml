@@ -32,6 +32,9 @@ ColumnLayout {
   function trx(a,e){return workspace.app.trx(a,e)}
   function openExternal(url){return workspace.app.openExternal(url)}
   function humanError(error){return workspace.app.humanError(error)}
+  readonly property bool governmentMode:workspace.app.governmentMode
+  function roleLabel(role){return workspace.app.roleLabel(role)}
+  function navigateSection(index){return workspace.app.navigateSection(index)}
  }
  LayoutMirroring.enabled:app.ar;LayoutMirroring.childrenInherit:true;spacing:0
  Rectangle {

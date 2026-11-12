@@ -108,7 +108,11 @@ try {
   if (-not (Test-Path $picture)) { throw "$Label screenshot was not produced" }
   if ((Get-Item $picture).Length -lt 1000) { throw "$Label screenshot is empty or invalid" }
   $policyReceipt = Get-Content -LiteralPath (Join-Path $evidence "$Label-government-offline.json") -Raw | ConvertFrom-Json
-  if ($policyReceipt.schema -ne 'nexvary-deployed-operation-policy/v1' -or -not $policyReceipt.synthetic -or $policyReceipt.defaultDeniedCategories -ne 6 -or -not $policyReceipt.offlineAfterRevoke -or -not $policyReceipt.startupBoundaryDenials -or -not $policyReceipt.explicitSyntheticPortalGrant -or -not $policyReceipt.portalStoppedAfterRevoke -or @($policyReceipt.permissions).Count -ne 6 -or @($policyReceipt.permissions | Where-Object { $_.allowed }).Count -ne 0) { throw 'Deployed Government operation policy receipt failed' }
+  if ($policyReceipt.schema -ne 'nexvary-deployed-operation-policy/v1' -or -not $policyReceipt.synthetic -or $policyReceipt.defaultDeniedCategories -ne 7 -or -not $policyReceipt.offlineAfterRevoke -or -not $policyReceipt.startupBoundaryDenials -or -not $policyReceipt.explicitSyntheticPortalGrant -or -not $policyReceipt.portalStoppedAfterRevoke -or @($policyReceipt.permissions).Count -ne 7 -or @($policyReceipt.permissions | Where-Object { $_.allowed }).Count -ne 0) { throw 'Deployed Government operation policy receipt failed' }
+  $expectedCategories = @('cloud-publish','tracking-portal','signature-update','device-tools','external-analysis','external-links','paid-unknown-cost')
+  foreach ($category in $expectedCategories) {
+    if (@($policyReceipt.permissions | Where-Object { $_.capability -eq $category -and -not $_.allowed }).Count -ne 1) { throw "Missing or duplicate default-denied category: $category" }
+  }
   if (-not $policyReceipt.reviewedExceptionProtocol -or -not $policyReceipt.signedPolicyAudit -or -not $policyReceipt.policyVerification.valid) { throw 'Deployed signed policy audit/review protocol receipt failed' }
   $auditFile = Join-Path $evidence "$Label-government-policy-audit.json"
   $auditAnchor = Join-Path $evidence "$Label-government-policy-anchor.json"

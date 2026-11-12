@@ -18,6 +18,7 @@ QByteArray json(const QVariantMap &v){return QJsonDocument(QJsonObject::fromVari
 QString utc(){return QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);}
 QString b64(const QByteArray &v){return QString::fromLatin1(v.toBase64());}
 QByteArray un64(const QVariant &v){return QByteArray::fromBase64(v.toString().toLatin1(),QByteArray::AbortOnBase64DecodingErrors);}
+QStringList permissionNames(){return {"case-create","case-edit","evidence-access","osint-investigation","external-connection","paid-search","evidence-export","user-administration"};}
 QStringList roles(){return {"administrator","investigator","reviewer","auditor","trainer","repair-technician"};}
 bool passwordValid(const QString &s){return s.size()>=14&&s.toUtf8().size()<=256&&!s.contains(QChar(0));}
 QVariantMap publicAccount(QVariantMap a){for(const auto *key:{"passwordHash","salt","nonce","secret","failed","blockedUntil"})a.remove(key);return a;}
@@ -41,12 +42,13 @@ bool IdentityService::read(){
  QJsonParseError parse;
  auto doc=QJsonDocument::fromJson(bytes,&parse);sodium_memzero(bytes.data(),static_cast<size_t>(bytes.size()));
  auto next=doc.object().toVariantMap();
- if(parse.error!=QJsonParseError::NoError||!doc.isObject()||next.value("schema").toInt()!=1||next.value("revision").toLongLong()<1||next.value("users").metaType().id()!=QMetaType::QVariantList||next.value("grants").metaType().id()!=QMetaType::QVariantMap)return fail("Identity registry schema rejected.");
+ if(parse.error!=QJsonParseError::NoError||!doc.isObject()||(next.value("schema").toInt()!=1&&next.value("schema").toInt()!=2)||next.value("revision").toLongLong()<1||next.value("users").metaType().id()!=QMetaType::QVariantList||next.value("grants").metaType().id()!=QMetaType::QVariantMap)return fail("Identity registry schema rejected.");
  auto users=next.value("users").toList();if(users.isEmpty()||users.size()>128)return fail("Invalid identity registry size.");QSet<QString> names,ids;bool admin=false;
  for(const auto &v:users){const auto a=v.toMap();
  const auto id=a.value("id").toString(),name=a.value("username").toString();
  const auto encoded=a.value("passwordHash").toString().toLatin1();
   if(QUuid(id).isNull()||ids.contains(id)||names.contains(name)||!QRegularExpression("^[a-z0-9][a-z0-9._-]{2,63}$").match(name).hasMatch()||!roles().contains(a.value("role").toString())||a.value("enabled").metaType().id()!=QMetaType::Bool||a.value("displayName").toString().isEmpty()||a.value("displayName").toString().size()>128||encoded.size()>=crypto_pwhash_STRBYTES||crypto_pwhash_str_needs_rehash(encoded.constData(),crypto_pwhash_OPSLIMIT_INTERACTIVE,crypto_pwhash_MEMLIMIT_INTERACTIVE)!=0||un64(a.value("salt")).size()!=crypto_pwhash_SALTBYTES||un64(a.value("nonce")).size()!=crypto_secretbox_NONCEBYTES||un64(a.value("secret")).size()!=crypto_sign_SECRETKEYBYTES+crypto_secretbox_MACBYTES||un64(a.value("publicKey")).size()!=crypto_sign_PUBLICKEYBYTES)return fail("Identity account validation failed.");
+  const auto denied=a.value("deniedPermissions").toStringList();if(denied.size()>permissionNames().size())return fail("Invalid permission restrictions.");for(const auto &permission:denied)if(!permissionNames().contains(permission))return fail("Unknown permission restriction.");
   ids.insert(id);names.insert(name);if(a.value("role")=="administrator"&&a.value("enabled").toBool())admin=true;
  }
  if(!admin)return fail("An enabled local administrator is required.");
@@ -83,7 +85,7 @@ bool IdentityService::bootstrap(const QString &username,const QString &name,cons
 QVariantMap IdentityService::account(const QString &id)const{for(const auto &v:state_.value("users").toList())if(v.toMap().value("id")==id)return v.toMap();return {};}
 QVariantMap IdentityService::session()const{if(!authenticated())return {};
  auto a=publicAccount(account(userId_));a.insert("identityScope","local-credential; not agency-verified");return a;}
-QVariantList IdentityService::users()const{QVariantList out;if(!authenticated()||account(userId_).value("role")!="administrator")return out;for(const auto &v:state_.value("users").toList())out.append(publicAccount(v.toMap()));return out;}
+QVariantList IdentityService::users()const{QVariantList out;if(!hasPermission("user-administration"))return out;for(const auto &v:state_.value("users").toList())out.append(publicAccount(v.toMap()));return out;}
 void IdentityService::logout(){if(secret_){sodium_free(secret_);secret_=nullptr;}userId_.clear();sessionAccount_.clear();lifetime_.invalidate();emit changed();}
 bool IdentityService::login(const QString &username,const QString &password){
  logout();if(!ready_||!passwordValid(password)||!read())return fail("Sign-in failed.");
@@ -118,10 +120,10 @@ bool IdentityService::changePassword(const QString &currentPassword,const QStrin
 bool IdentityService::checkSession(){
  if(!authenticated())return false;
  const auto before=sessionAccount_;
- const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_||!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
+ const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_){logout();return fail("Session expired after 15 minutes. Sign in again; saved credentials remain protected.");}if(!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
  return true;
 }
-bool IdentityService::administrator(){return checkSession()&&account(userId_).value("role")=="administrator";}
+bool IdentityService::administrator(){return checkSession()&&hasPermission("user-administration");}
 QString IdentityService::createUser(const QString &username,const QString &name,const QString &role,const QString &password){if(!administrator()) {fail("An authenticated local administrator is required.");return {};}
  auto rows=state_.value("users").toList();if(rows.size()>=128){fail("Account limit reached.");return {};}const auto a=newAccount(username,name,role,password);if(a.isEmpty())return {};rows.append(a);
  auto next=state_;next.insert("users",rows);return save(next)?a.value("id").toString():QString();}
@@ -144,3 +146,25 @@ bool IdentityService::verify(const QVariantMap &envelope,const QString &purpose,
  const auto a=account(e.value("signerId").toString());
  const auto pk=un64(a.value("publicKey"));if(e.value("schema").toInt()!=1||e.value("purpose")!=purpose||e.value("payload").toMap()!=payload||a.isEmpty()||!a.value("enabled").toBool()||e.value("publicKey")!=a.value("publicKey")||e.value("role")!=a.value("role")||sig.size()!=crypto_sign_BYTES||pk.size()!=crypto_sign_PUBLICKEYBYTES||json(e).size()>1024*1024)return false;
  const auto bytes=signedBytes(e);return crypto_sign_verify_detached(reinterpret_cast<const unsigned char*>(sig.constData()),reinterpret_cast<const unsigned char*>(bytes.constData()),static_cast<unsigned long long>(bytes.size()),reinterpret_cast<const unsigned char*>(pk.constData()))==0;}
+
+QVariantMap IdentityService::setupStatus()const{
+ bool investigator=false;for(const auto &v:state_.value("users").toList()){const auto a=v.toMap();if(a.value("enabled").toBool()&&a.value("role")=="investigator")investigator=true;}
+ return {{"administrator",ready_&&!needsSetup()},{"investigator",ready_&&investigator}};
+}
+
+bool IdentityService::hasPermission(const QString &permission)const{
+ if(!authenticated()||!permissionNames().contains(permission))return false;
+ const auto a=account(userId_);if(!a.value("enabled").toBool()||a.value("deniedPermissions").toStringList().contains(permission))return false;
+ const auto role=a.value("role").toString();
+ if(permission=="user-administration")return role=="administrator";
+ if(permission=="external-connection")return role=="administrator"||role=="investigator"||role=="reviewer";
+ if(permission=="case-create"||permission=="case-edit")return role=="investigator";
+ if(permission=="evidence-access")return role=="investigator"||role=="reviewer"||role=="auditor";
+ return role=="investigator"||role=="reviewer";
+}
+bool IdentityService::setPermission(const QString &id,const QString &permission,bool allowed){
+ if(!administrator()||!hasPermission("user-administration")||!permissionNames().contains(permission)||(!allowed&&id==userId_&&permission=="user-administration"))return fail("An authorized administrator must configure a known permission; self-lockout is refused.");
+ auto rows=state_.value("users").toList();bool found=false;for(auto &v:rows){auto a=v.toMap();if(a.value("id")==id){auto denied=a.value("deniedPermissions").toStringList();denied.removeAll(permission);if(!allowed)denied.append(permission);a.insert("deniedPermissions",denied);a.insert("version",a.value("version").toInt()+1);v=a;found=true;}}
+ if(!found)return fail("Unknown local account.");
+ auto next=state_;next.insert("schema",2);next.insert("users",rows);return save(next);
+}
