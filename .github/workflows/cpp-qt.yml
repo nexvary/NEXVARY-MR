@@ -175,6 +175,16 @@ jobs:
           version: '6.8.3'
           arch: win64_msvc2022_64
           cache: true
+      - name: Validate QML syntax before compiling native targets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $formatter = Join-Path $env:QT_ROOT_DIR 'bin/qmlformat.exe'
+          if (-not (Test-Path -LiteralPath $formatter)) { throw 'Qt QML syntax validator is missing' }
+          foreach ($source in (Get-ChildItem qml -Filter '*.qml' -File -Recurse)) {
+            & $formatter $source.FullName > $null
+            if ($LASTEXITCODE -ne 0) { throw "QML syntax validation failed: $($source.Name)" }
+          }
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
