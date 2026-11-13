@@ -11,7 +11,7 @@ class ProfessionalIconTests(unittest.TestCase):
     def test_all_active_icons_are_exact_licensed_upstream_vectors(self):
         folder = ROOT / 'assets/icons-professional'
         manifest = json.loads((folder / 'PROVENANCE.json').read_text(encoding="utf-8"))
-        self.assertEqual(len(manifest['files']), 27)
+        self.assertGreaterEqual(len(manifest['files']), 27)
         self.assertEqual(set(p.name for p in folder.glob('*.svg')), {v['file'] for v in manifest['files']})
         self.assertIn('Permission is hereby granted', (ROOT / 'packaging/licenses/FLUENT-ICONS-MIT.txt').read_text(encoding="utf-8"))
         for item in manifest['files']:

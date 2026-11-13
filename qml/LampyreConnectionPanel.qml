@@ -6,6 +6,8 @@ import "InputRules.js" as Rules
 ColumnLayout {
  id:panel;objectName:"lampyreConnectionPanel"
  property var app
+ property bool showSetup:true
+ property bool showTools:true
  readonly property var connection:typeof lampyreConnection!=="undefined"?lampyreConnection:null
  readonly property string principal:identityBridge.session.id||""
  onPrincipalChanged:{
@@ -37,7 +39,7 @@ ColumnLayout {
   return app.ar?(a[code]||code):code.replace(/-/g," ");
  }
  OsintDesktopPane {
-  Layout.fillWidth:true;title:panel.app.trx("إعداد استخبارات نيكسفاري","NEXVARY Intelligence Setup");iconName:"settings"
+  Layout.fillWidth:true;visible:panel.showSetup;title:panel.app.trx("إعداد استخبارات نيكسفاري","NEXVARY Intelligence Setup");iconName:"settings"
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.app.design.text;text:panel.app.trx("أدخل مفتاح API الخاص بخدمات الاستخبارات. عنوان الاتصال مضبوط داخليًا؛ كلمة مرور التطبيق أو مفتاح ترخيصه ليسا مفتاح API.","Enter your Intelligence API key. The connection is configured internally; an application password or desktop license is not an API key.")}
   Label {objectName:"lampyreLocalChecks";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.text;text:panel.app.trx("عمل مباشر — لا حساب تطبيق ولا موافقة من حساب آخر. المفتاح محمي بملف مستخدم Windows.","Direct work — no application account or approval by another account. The key is protected by your Windows user profile.") }
   Label {objectName:"lampyreCredentialSaved";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.connection&&panel.connection.credentialSaved?panel.app.trx("المفتاح محفوظ محميًا لهذا الحساب","Key saved in protected storage for this account"):panel.app.trx("لا يوجد مفتاح محفوظ على القرص لهذا الحساب","No key saved on disk for this account")}
@@ -56,7 +58,7 @@ ColumnLayout {
   Label {objectName:"lampyreConnectionStatus";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:panel.connection&&panel.connection.errorCode!==""?panel.app.design.danger:panel.app.design.accent;text:panel.connection?panel.message(panel.connection.errorCode||panel.connection.state):panel.app.trx("موصل الاتصال غير متاح","Connection client unavailable")}
  }
  OsintDesktopPane {
-  Layout.fillWidth:true;visible:panel.catalogAvailable;title:panel.app.trx("خدمات استخبارات نيكسفاري","NEXVARY Intelligence Services");iconName:"search_visual"
+  Layout.fillWidth:true;visible:panel.showTools&&panel.catalogAvailable;title:panel.app.trx("خدمات استخبارات نيكسفاري","NEXVARY Intelligence Services");iconName:"search_visual"
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("تُدار رسوم هذه الأدوات في حساب المزود. فوترة Nexvary باليورو غير متاحة لهذا الاتصال.","Charges for these tools are managed in the provider account. Nexvary EUR billing is unavailable on this connection.")}
 
   Label {

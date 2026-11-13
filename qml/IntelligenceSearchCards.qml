@@ -1,0 +1,118 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import "IntelligenceCategories.js" as Categories
+import "InputRules.js" as Rules
+ColumnLayout {
+    id:search
+    objectName:"intelligenceSearchCards"
+    property var app
+    property var connection:typeof lampyreConnection!=="undefined"?lampyreConnection:null
+    signal setupRequested()
+    readonly property string retailPrice:"€"+(connection?connection.retailPriceEur:14).toFixed(2)
+    property string selectedService:""
+    property var values:({})
+    property string validationError:""
+    readonly property var service:connection?(connection.services.find(row=>row.tool_name===selectedService)||{}):({})
+    readonly property var fields:Categories.fields(service.args||"")
+    readonly property var categories:connection?connection.categories:[]
+    readonly property var orderedCategories:{const priority=["email","phone","username","person","domain","ip","image","company_name"];return categories.slice().sort((a,b)=>{const x=priority.indexOf(a.name),y=priority.indexOf(b.name);return (x<0?99:x)-(y<0?99:y)||a.name.localeCompare(b.name)})}
+    property string filter:""
+    readonly property var shownCategories:orderedCategories.filter(row=>!filter||Categories.title(row.name,app.ar).toLowerCase().indexOf(filter.toLowerCase())>=0)
+    function errorMessage(code){
+        const ar={"quote-expired":"انتهت صلاحية بيانات الخدمة أو تغيرت؛ حدّث الفئة واختر الخدمة مجددًا.","unsupported-service-form":"هذه الخدمة تحتاج مدخلات مركبة؛ استخدم الإعدادات المتقدمة.","metadata-not-free":"لم يؤكد دليل الخدمة أن قراءة هذه البيانات مجانية؛ لم يُرسل الطلب.","invalid-category":"حدّث دليل فئات البحث واختر بطاقة متاحة.","metadata-response-error":"تعذر قراءة دليل الخدمات؛ حدّث الاتصال.","invalid-arguments":"راجع البيانات المطلوبة وصيغتها قبل التنفيذ.","payment-required":"رصيد الاتصال الداخلي غير كافٍ لتنفيذ الخدمة.","not-connected":"افتح إعداد الاتصال واحفظ المفتاح ثم اختبر الاتصال.","request-consent-required":"أكد سعر البحث وإرسال البيانات قبل التنفيذ."};
+        return app.ar?(ar[code]||"تعذر إتمام العملية؛ راجع حالة الاتصال والإعدادات."):code.replace(/-/g," ");
+    }
+    function clearSelection(){selectedService="";values=({});validationError="";paidConsent.checked=false}
+    onSelectedServiceChanged:{values=({});validationError="";paidConsent.checked=false}
+    Connections {target:search.connection;function onChanged(){if(!search.connection.connected||!search.connection.services.some(row=>row.tool_name===search.selectedService))search.clearSelection()}}
+    spacing:12
+    RowLayout {
+        Layout.fillWidth:true
+        Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;font.pixelSize:20;color:app.design.text;text:app.trx("البحث الاستخباراتي","Intelligence Search")}
+        OsintDesktopCommand {text:search.app.trx("إعداد الاتصال","Connection setup");onClicked:search.setupRequested()}
+    }
+    Label {objectName:"intelligenceRetailPrice";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.success;text:app.trx("سعر نيكسفاري الموحد: ","NEXVARY fixed price: ")+search.retailPrice+app.trx(" لكل عملية بحث"," per search") }
+    RowLayout {
+        Layout.fillWidth:true
+        OsintDesktopCommand {objectName:"intelligenceLoadCategories";text:search.app.trx("تحديث فئات البحث — دون رسوم","Refresh search categories — free");enabled:!!search.connection&&search.connection.connected&&!search.connection.busy;onClicked:search.connection.refreshCatalog()}
+        BusyIndicator {running:!!search.connection&&search.connection.busy;visible:running;Layout.preferredWidth:30;Layout.preferredHeight:30}
+    }
+    Label {visible:categories.length===0;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احفظ المفتاح واختبر الاتصال ثم حدّث الفئات. تظهر البطاقات من دليل الخدمة الحقيقي؛ لا توجد نتائج افتراضية.","Save the key, test the connection, then refresh categories. Cards come from the live service catalog; no default findings are generated.")}
+    EntryField {objectName:"intelligenceCategoryFilter";visible:search.categories.length>0;Layout.fillWidth:true;requiredInput:false;placeholderText:app.trx("تصفية بطاقات البحث","Filter search cards");onTextEdited:search.filter=text;color:app.design.text;background:Rectangle {color:search.app.design.surface;border.color:search.app.design.border;radius:5}}
+    GridLayout {
+        objectName:"intelligenceCategoryGrid"
+        Layout.fillWidth:true;columns:width>=1100?6:width>=850?5:width>=640?4:width>=450?3:width>=300?2:1;columnSpacing:10;rowSpacing:10
+        Repeater {
+            model:search.shownCategories
+            delegate:Button {
+                id:card
+                required property var modelData
+                objectName:"intelligenceCategory-"+modelData.name
+                Layout.fillWidth:true;Layout.preferredWidth:1;Layout.minimumWidth:0;Layout.preferredHeight:136
+                enabled:!!search.connection&&search.connection.connected&&!search.connection.busy
+                text:Categories.title(modelData.name,search.app.ar)
+                Accessible.name:text
+                onClicked:{search.clearSelection();search.connection.discoverServices(modelData.name)}
+                background:Rectangle {radius:12;gradient:Gradient {GradientStop {position:0;color:card.hovered?"#103F53":"#102C3B"} GradientStop {position:0.6;color:"#081019"} GradientStop {position:1;color:"#04080D"}} border.color:search.connection&&search.connection.selectedCategory===card.modelData.name?search.app.design.accent:search.app.design.border;border.width:card.activeFocus?2:1}
+                contentItem:ColumnLayout {
+                    spacing:6
+                    SemanticIcon {name:Categories.icon(card.modelData.name);Layout.alignment:Qt.AlignHCenter;Layout.preferredWidth:38;Layout.preferredHeight:38}
+                    Label {Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;horizontalAlignment:Text.AlignHCenter;maximumLineCount:2;elide:Text.ElideRight;color:search.app.design.text;font.bold:true;text:card.text}
+                    Rectangle {objectName:"categoryRetailPrice";Layout.alignment:Qt.AlignHCenter;implicitWidth:105;implicitHeight:24;radius:12;border.color:"#39FF14";gradient:Gradient {GradientStop {position:0;color:"#176646"} GradientStop {position:0.5;color:"#082F23"} GradientStop {position:1;color:"#03160C"}} Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:"#F0FFF4";font.bold:true}}
+                }
+            }
+        }
+    }
+    OsintDesktopPane {
+        Layout.fillWidth:true;visible:!!search.connection&&search.connection.selectedCategory!==""
+        title:search.app.trx("خدمات ","Services: ")+Categories.title(search.connection?search.connection.selectedCategory:"",search.app.ar);iconName:"search_visual"
+        Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.muted;text:search.app.trx("اختر الخدمة، أدخل بياناتها، ثم راجع التكلفة قبل التنفيذ. فتح البطاقة وجلب دليلها لا يشغّلان بحثًا مدفوعًا.","Choose a service, enter its inputs and review its price. Opening a card and loading its catalog do not start a paid search.")}
+        ComboBox {
+            id:services
+            objectName:"intelligenceServiceSelector"
+            Layout.fillWidth:true;textRole:"title";model:search.connection?search.connection.services:[];currentIndex:-1
+            enabled:!!search.connection&&!search.connection.busy
+            displayText:search.selectedService?search.connection.displayText(search.service.title||search.selectedService):search.app.trx("اختر خدمة البحث","Choose a search service")
+            onActivated:index=>search.selectedService=model[index].tool_name
+            palette.text:search.app.design.text;palette.buttonText:search.app.design.text
+        }
+        Label {visible:!!search.service.description;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:search.app.design.muted;text:search.connection?search.connection.displayText(search.service.description||""):""}
+        Label {visible:search.selectedService!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:search.app.design.muted;text:search.connection?search.connection.displayText(search.service.args||""):""}
+        Repeater {
+            model:search.fields
+            delegate:ColumnLayout {
+                required property var modelData
+                Layout.fillWidth:true
+                Label {Layout.fillWidth:true;color:search.app.design.text;text:Categories.title(modelData.name,search.app.ar)}
+                EntryField {
+                    id:argument
+                    objectName:"intelligenceArgument-"+modelData.name
+                    Layout.fillWidth:true;maximumLength:8192
+                    requiredInput:search.fields.length===1||String(search.service.args||"").indexOf("(all required)")>=0
+                    validationKind:modelData.type==="integer"?"integer":modelData.type==="number"?"number":"text"
+                    echoMode:/password|api_key|token|secret/i.test(modelData.name)?TextInput.Password:TextInput.Normal
+                    color:search.app.design.text
+                    background:Rectangle {color:search.app.design.surface;border.color:search.app.design.border;radius:5}
+                    onTextEdited:{const next=Object.assign({},search.values);if(text.trim())next[modelData.name]=text;else delete next[modelData.name];search.values=next;paidConsent.checked=false;search.validationError=""}
+                }
+            }
+        }
+        Label {objectName:"intelligenceServiceCost";visible:search.selectedService!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.accent;text:search.app.trx("السعر النهائي لعملية البحث: ","Search price: ")+search.retailPrice+search.app.trx(" — لا يعني تأكيد البحث أن التطبيق حصّل المبلغ."," — search confirmation does not record payment collection.")}
+        CheckBox {id:paidConsent;objectName:"intelligenceServiceConsent";visible:search.selectedService!=="";Layout.fillWidth:true;text:search.app.trx("أؤكد عملية البحث بسعر نيكسفاري المبين وأوافق على إرسال البيانات وتنفيذ الخدمة","Confirm this search at the displayed NEXVARY price and authorize sending the inputs and executing the service");contentItem:Label {text:paidConsent.text;wrapMode:Text.WordWrap;color:search.app.design.text;leftPadding:paidConsent.mirrored?0:paidConsent.indicator.width+paidConsent.spacing;rightPadding:paidConsent.mirrored?paidConsent.indicator.width+paidConsent.spacing:0}}
+        OsintDesktopCommand {
+            objectName:"intelligenceExecuteService";primary:true
+            text:search.app.trx("تنفيذ البحث","Execute search")
+            enabled:!!search.connection&&search.connection.connected&&!search.connection.busy&&search.selectedService!==""&&search.fields.length>0&&typeof search.service.photons==="number"&&paidConsent.checked
+            onClicked:{
+                const all=String(search.service.args||"").indexOf("(all required)")>=0;
+                for(const field of search.fields){const value=search.values[field.name]||"";if((all||search.fields.length===1)&&!value.trim()||value&&!Rules.valid(value,field.type==="integer"?"integer":field.type==="number"?"number":"text")){search.validationError=search.app.trx("راجع الحقل: ","Check input: ")+Categories.title(field.name,search.app.ar);paidConsent.checked=false;return}}
+                if(Object.keys(search.values).length===0){search.validationError=search.app.trx("أدخل بيانات البحث أولًا","Enter search inputs first");paidConsent.checked=false;return}
+                search.connection.runService(search.selectedService,JSON.stringify(search.values),search.service.photons,paidConsent.checked);paidConsent.checked=false
+            }
+        }
+        Label {visible:search.validationError!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.danger;text:search.validationError}
+    }
+    Label {visible:!!connection&&connection.errorCode!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;text:app.trx("تعذر إتمام الطلب: ","Request could not complete: ")+(connection?search.errorMessage(connection.errorCode):"")}
+    Loader {Layout.fillWidth:true;active:!!search.connection&&search.connection.resultText!=="";visible:active;sourceComponent:LampyreConnectionPanel {app:search.app;showSetup:false;showTools:false}}
+}

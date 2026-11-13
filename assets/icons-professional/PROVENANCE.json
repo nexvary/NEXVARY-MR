@@ -163,6 +163,36 @@
       "file": "training_lab.svg",
       "alias_of": "book_open_lightbulb.svg",
       "sha256": "f30fa22f81320b5a1ee86eb074b7338d0cf4555dbdd4797747cc687e59a9c31f"
+    },
+    {
+      "file": "mail.svg",
+      "source": "assets/Mail/SVG/ic_fluent_mail_24_color.svg",
+      "source_sha256": "39a9c914d6c52d9af0e3adc4f952f09c166ed7e0db2ea7c1930875567ed97b29",
+      "sha256": "39a9c914d6c52d9af0e3adc4f952f09c166ed7e0db2ea7c1930875567ed97b29"
+    },
+    {
+      "file": "people.svg",
+      "source": "assets/People/SVG/ic_fluent_people_24_color.svg",
+      "source_sha256": "f7e8f96599ca357b13c37e36d939ebf6461bc5089d00892c5654bdbeaf72884d",
+      "sha256": "f7e8f96599ca357b13c37e36d939ebf6461bc5089d00892c5654bdbeaf72884d"
+    },
+    {
+      "file": "person.svg",
+      "source": "assets/Person/SVG/ic_fluent_person_24_color.svg",
+      "source_sha256": "e8488bba19a2aa80cb7e3fcd20d325ebb33babaf44fec62a11ca95182abb0f76",
+      "sha256": "e8488bba19a2aa80cb7e3fcd20d325ebb33babaf44fec62a11ca95182abb0f76"
+    },
+    {
+      "file": "building.svg",
+      "source": "assets/Building/SVG/ic_fluent_building_24_color.svg",
+      "source_sha256": "d822560c1ddca4a5805eab88d0ac0dbdb92381da3d77511ed38a8d74d9cb52ec",
+      "sha256": "d822560c1ddca4a5805eab88d0ac0dbdb92381da3d77511ed38a8d74d9cb52ec"
+    },
+    {
+      "file": "globe.svg",
+      "source": "assets/Globe/SVG/ic_fluent_globe_24_color.svg",
+      "source_sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34",
+      "sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34"
     }
   ]
 }

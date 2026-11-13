@@ -11,7 +11,7 @@
 #include <QFile>
 class FixtureServer:public QObject {
 public:
- QTcpServer server;QString mode;int requests=0,calls=0,lists=0;QList<QByteArray> headers;QJsonObject lastArguments;
+ QTcpServer server;QString mode;int requests=0,calls=0,lists=0,paidCalls=0;QList<QByteArray> headers;QJsonObject lastArguments;
  explicit FixtureServer(const QString &m={}):mode(m){
   if(!server.listen(QHostAddress::LocalHost))qFatal("Cannot bind the synthetic loopback MCP fixture");
   connect(&server,&QTcpServer::newConnection,this,[this]{while(server.hasPendingConnections()){
@@ -28,22 +28,36 @@ public:
     if(method=="initialize"){
      if(mode=="auth"||mode=="payment"||mode=="forbidden"||mode=="service"){status=mode=="auth"?401:mode=="payment"?402:mode=="forbidden"?403:503;payload="secret-reflection-must-not-display";}
      else if(mode=="redirect"){status=302;extra="Location: https://example.invalid/never-follow\r\n";}
-     else {result={{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{{"tools",QJsonObject{}}}},{"serverInfo",QJsonObject{{"name","Synthetic fixture"},{"version","1"}}}};extra="Mcp-Session-Id: synthetic-session\r\n";}
+     else {result={{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{{"tools",QJsonObject{}}}},{"serverInfo",QJsonObject{{"name","Synthetic fixture"},{"version","1"}}}};if(mode!="metadata")extra="Mcp-Session-Id: synthetic-session\r\n";}
     }else if(method=="notifications/initialized"){status=202;}
     else if(method=="tools/list"){
      ++lists;
      const QJsonObject schema{{"type","object"},{"required",QJsonArray{"selector"}},{"properties",QJsonObject{{"selector",QJsonObject{{"type","string"}}}}}};
      const QJsonObject tool{{"name",msg.value("params").toObject().value("cursor")=="second-page"?"second":"lookup"},{"description","Synthetic local test; not Lampyre data"},{"inputSchema",schema}};
-     result={{"tools",QJsonArray{tool}}};if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")result.insert("nextCursor","second-page");
+     result={{"tools",QJsonArray{tool}}};
+     if(mode=="metadata"){
+      QJsonArray tools;for(const auto *name:{"lampyre_balance","lampyre_categories_list","lampyre_endpoints_from_categories"})tools.append(QJsonObject{{"name",name},{"description","Synthetic free metadata. Free."},{"inputSchema",QJsonObject{{"type","object"}}}});
+      tools.append(QJsonObject{{"name","lampyre_run_crawlers"},{"description","Synthetic paid operation"},{"inputSchema",QJsonObject{{"type","object"},{"properties",QJsonObject{{"tasks",QJsonObject{{"type","array"}}}}},{"required",QJsonArray{"tasks"}}}}});result={{"tools",tools}};
+     }
+if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")result.insert("nextCursor","second-page");
     }else if(method=="tools/call"){
      ++calls;lastArguments=msg.value("params").toObject().value("arguments").toObject();
      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text","Synthetic server reply; TEST-API-KEY; Lampyre source label"}}}}};
+     if(mode=="metadata"){
+      const auto name=msg.value("params").toObject().value("name").toString();QJsonObject data;
+      if(name=="lampyre_balance")data={{"photons",37.5}};
+      else if(name=="lampyre_categories_list")data={{"categories",QJsonArray{QJsonObject{{"name","email"},{"description","Synthetic email category"}},QJsonObject{{"name","phone"}}}}};
+      else if(name=="lampyre_endpoints_from_categories")data={{"crawlers",QJsonObject{{"email",QJsonArray{QJsonObject{{"tool_name","synthetic_email_lookup"},{"title","Synthetic email lookup"},{"photons",2.0},{"args","email: string (Email address) (all required)"}}}}}}};
+      else if(name=="lampyre_run_crawlers"){++paidCalls;data={{"fixture",true}};}
+      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(data).toJson(QJsonDocument::Compact))}}}}};
+     }
+
     }
     if(payload.isEmpty()&&status==200)payload=QJsonDocument(QJsonObject{{"jsonrpc","2.0"},{"id",msg.value("id")},{"result",result}}).toJson(QJsonDocument::Compact);
     if(mode=="unsupported"&&method=="initialize")payload=QJsonDocument(QJsonObject{{"jsonrpc","2.0"},{"id",msg.value("id")},{"result",QJsonObject{{"protocolVersion","invalid-version"}}}}).toJson();
     if(mode=="malformed"&&method=="initialize")payload="not JSON";
     if(mode=="oversize"&&method=="initialize")payload=QByteArray(2*1024*1024+1,'x');
-    const bool sse=mode=="sse"&&status==200;
+    const bool sse=(mode=="sse"||mode=="metadata")&&status==200;
     if(sse)payload="event: message\r\ndata: "+payload+"\r\n\r\n";
     socket->write("HTTP/1.1 "+QByteArray::number(status)+" Fixture\r\nConnection: close\r\nContent-Type: "+(sse?QByteArray("text/event-stream"):QByteArray("application/json"))+"\r\n"+extra+"Content-Length: "+QByteArray::number(payload.size())+"\r\n\r\n"+payload);socket->disconnectFromHost();
    });
@@ -134,6 +148,22 @@ private slots:
   LampyreConnection client(credentials,&reopened,nullptr);QVERIFY(client.hasCredential());QVERIFY(client.credentialSaved());
  }
 #endif
+ void categoryCatalogIsFreeAndRetailPriceIsSeparate(){
+  QTemporaryDir t;FixtureServer server("metadata");LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QCOMPARE(client.retailPriceEur(),14.0);QVERIFY(client.configure(server.url(),"TEST-API-KEY",false));
+  QVERIFY(client.connectProvider(true));QTRY_VERIFY_WITH_TIMEOUT(client.connected(),3000);QCOMPARE(server.calls,0);
+  QVERIFY(client.refreshCatalog());QTRY_VERIFY_WITH_TIMEOUT(!client.busy(),3000);QCOMPARE(client.categories().size(),2);QCOMPARE(client.creditBalance(),37.5);QCOMPARE(client.submittedRequests(),0);QCOMPARE(server.paidCalls,0);
+  QVERIFY(!client.discoverServices("invented-category"));QVERIFY(client.discoverServices("email"));
+  QTRY_VERIFY_WITH_TIMEOUT(!client.busy(),3000);QCOMPARE(client.services().size(),1);
+  QVERIFY(!client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,false));QCOMPARE(server.paidCalls,0);
+  QVERIFY(!client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",3,true));QCOMPARE(server.paidCalls,0);
+  QVERIFY(!client.runService("synthetic_email_lookup","{\"wrong\":\"value\"}",2,true));QCOMPARE(server.paidCalls,0);
+  QVERIFY(client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,true));
+  QTRY_COMPARE_WITH_TIMEOUT(client.state(),QString("completed"),3000);QCOMPARE(server.paidCalls,1);QCOMPARE(client.submittedRequests(),1);QCOMPARE(client.creditBalance(),-1.0);
+  QCOMPARE(server.lastArguments.value("tasks").toArray().size(),1);QVERIFY(client.exportResult(t.filePath("result.json"),true));
+  QFile output(t.filePath("result.json"));QVERIFY(output.open(QIODevice::ReadOnly));const auto quote=QJsonDocument::fromJson(output.readAll()).object().value("retailQuote").toObject();
+  QCOMPARE(quote.value("minorUnits").toInt(),1400);QCOMPARE(quote.value("collectionStatus").toString(),QString("not-collected-by-application"));
+ }
  void directWorkWithoutIndependentApproval(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.startDirectWork());
   GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);

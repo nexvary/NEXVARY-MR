@@ -14,6 +14,12 @@ class GovernmentOperationPolicy;
 // no guessed vendor REST routes, automatic searches, or plaintext credential fallback.
 class LampyreConnection final:public QObject {
  Q_OBJECT
+ Q_PROPERTY(double retailPriceEur READ retailPriceEur CONSTANT)
+ Q_PROPERTY(QVariantList categories READ categories NOTIFY changed)
+ Q_PROPERTY(QVariantList services READ services NOTIFY changed)
+ Q_PROPERTY(double creditBalance READ creditBalance NOTIFY changed)
+ Q_PROPERTY(QString selectedCategory READ selectedCategory NOTIFY changed)
+ Q_PROPERTY(QString catalogCheckedAt READ catalogCheckedAt NOTIFY changed)
  Q_PROPERTY(bool hasCredential READ hasCredential NOTIFY changed)
  Q_PROPERTY(bool credentialSaved READ credentialSaved NOTIFY changed)
  Q_PROPERTY(int requestLimit READ requestLimit NOTIFY changed)
@@ -29,6 +35,15 @@ class LampyreConnection final:public QObject {
 public:
  explicit LampyreConnection(const QString &directory,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent=nullptr,bool syntheticTests=false,int timeoutMs=30000);
  ~LampyreConnection() override;
+ double retailPriceEur()const;
+ QVariantList categories()const{return categories_;}
+ QVariantList services()const{return services_;}
+ double creditBalance()const{return creditBalance_;}
+ QString selectedCategory()const{return selectedCategory_;}
+ QString catalogCheckedAt()const{return catalogCheckedAt_;}
+ Q_INVOKABLE bool refreshCatalog();
+ Q_INVOKABLE bool discoverServices(const QString &category);
+ Q_INVOKABLE bool runService(const QString &name,const QString &arguments,double approvedPhotons,bool consent);
  QString endpoint()const{return endpoint_;}
  bool hasCredential()const{return !key_.isEmpty();}
  bool credentialSaved()const{return saved_;}
@@ -63,6 +78,8 @@ public:
 signals:
  void changed();
 private:
+ bool freeMetadataTool(const QString &name)const;
+ bool metadataCall(const QString &name,const QJsonObject &args,const QString &stage);
  bool consumeSubmission();
  void reset();
  void load();
@@ -78,7 +95,7 @@ private:
  QString directory_,owner_,endpoint_,key_,state_="disconnected",error_,result_,session_,version_,stage_,operation_,resultTool_,resultAt_,sourceDigest_;
  IdentityService *identity_;
  GovernmentOperationPolicy *policy_;
- bool synthetic_=false,connected_=false,busy_=false,saved_=false;
+ bool synthetic_=false,connected_=false,busy_=false,saved_=false,retailQuoted_=false;
  int requestLimit_=0,submitted_=0;
  std::function<bool()> caseAuthorization_;
  std::function<QString()> caseIdentity_;
@@ -86,7 +103,10 @@ private:
  QString resultCaseId_,resultOperationId_;
  int timeoutMs_,pages_=0;
  qint64 nextId_=0,pendingId_=0;
- QVariantList tools_;
+ QVariantList tools_,categories_,services_;
+ double creditBalance_=-1;
+ QString selectedCategory_,catalogCheckedAt_;
+ qint64 serviceCatalogAt_=0;
  QSet<QString> cursors_;
  QNetworkAccessManager manager_;
  QPointer<QNetworkReply> reply_;

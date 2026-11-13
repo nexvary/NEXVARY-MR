@@ -8,6 +8,9 @@
 #include <vector>
 
 namespace mr::osint {
+// Owner-approved NEXVARY retail quote. Provider credits are a separate unit.
+inline constexpr std::int64_t intelligenceRetailPriceMinor = 1400;
+
 enum class Provider { OsintIndustries, Lampyre };
 enum class SelectorKind { Phone, Email, Username, Name, Wallet };
 enum class QueryState { Disabled, AwaitingAuthorization, AwaitingCostApproval,

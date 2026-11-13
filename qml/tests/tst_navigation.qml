@@ -156,6 +156,7 @@ TestCase {
   lampyreEvaluation.runSynthetic(1);tryCompare(lampyreEvaluation,"state","synthetic-failed",3000);
   compare(analysis.records.length,0);compare(analysis.selectedIndex,-1);
   ws.activeTab=0;app.goBack();compare(ws.demoMode,false);
+  ws.showLocalTools=true;
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
@@ -924,7 +925,7 @@ TestCase {
    app.ar=ar;
    verify(renderedFrame());
    verify(findChild(ws,"intelligenceBillingCard").visible);
-   verify(!findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
+   verify(findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
    verify(!findChild(ws,"intelligenceStartPaidSearch").enabled);
    verify(findChild(ws,"lampyreMcpEndpoint")===null);
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-cards-"+(ar?"ar":"en")+".png"));

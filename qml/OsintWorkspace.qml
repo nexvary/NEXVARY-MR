@@ -9,6 +9,7 @@ ColumnLayout {
  property bool demoMode: false
  property bool showAdvanced: false
  property bool showPhoneSearch: false
+ property bool showLocalTools:false
  property int activeTab: 1
  property bool showInspector: true
  property bool showRequests: true
@@ -152,7 +153,10 @@ ColumnLayout {
    delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:desktopTokens.muted;text:workspace.intelligenceConnection.displayText(modelData.title||modelData.name)}
   }
  }
+ IntelligenceSearchCards {app:desktopApp;Layout.fillWidth:true;onSetupRequested:workspace.showAdvanced=true}
+ OsintDesktopCommand {text:workspace.app.trx("أدوات محلية وإعدادات متقدمة","Local tools and advanced settings");onClicked:workspace.showLocalTools=!workspace.showLocalTools}
  GridLayout {
+  visible:workspace.showLocalTools
   Layout.fillWidth: true
   columns: width >= 620 ? 2 : 1
   columnSpacing: 12
@@ -176,7 +180,7 @@ ColumnLayout {
      description: workspace.app.trx("تظهر الخدمات المدفوعة بعد التحقق من إتاحتها.",
                                     "Billable services appear when their availability can be verified."),
      input: workspace.app.trx("نوع الإدخال يحدده دليل الخدمات", "Input type is defined by the service catalog"),
-     price: workspace.app.trx("رصيد الاستخبارات: غير متاح — التكلفة غير مؤكدة", "Intelligence Credits: balance unavailable — cost unconfirmed"),
+     price: workspace.app.trx("سعر نيكسفاري: €14.00 لكل عملية بحث", "NEXVARY price: €14.00 per search"),
      icon: "search_visual",
      status: workspace.intelligenceConnection&&workspace.intelligenceConnection.connected
          ? workspace.app.trx("الأدوات متاحة؛ تطبّق الموافقات عند التنفيذ", "Tools available; execution approvals still apply")
