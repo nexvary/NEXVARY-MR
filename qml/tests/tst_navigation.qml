@@ -617,7 +617,7 @@ TestCase {
   findChild(app,"treeTechnician").text="Synthetic technician";findChild(app,"treeFinding").text="Synthetic safety observation only";
   const save=findChild(app,"saveFaultTree");verify(save.enabled)
   // The save control is below the first viewport: scroll it into view before clicking.
-  const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
+  const scroll=findChild(app,"faultTreePage");artifactClick(scroll,save)
   verify(workshopBridge.diagnoses(selected).length>0)
  }
  function test_cloudTrackingConsent(){
