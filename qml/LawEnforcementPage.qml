@@ -28,8 +28,8 @@ Item {
     Label {text:app.trx("مساحة إنفاذ القانون","Law Enforcement");color:app.design.text;font.bold:true;font.pixelSize:23;Layout.fillWidth:true}
     Label {text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber+" · "+lawCaseBridge.activeCase.status):app.trx("اختر قضية أو ابدأ سيناريو تدريب اصطناعي","Choose a case or a synthetic training scenario");Layout.fillWidth:true;elide:Text.ElideRight;color:app.design.muted;textFormat:Text.PlainText}
    }
-   ActionButton {text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
-   StateBadge {objectName:"lawIdentityRole";text:app.roleLabel(identityBridge.authenticated?identityBridge.session.role:lawCaseBridge.role);tint:app.design.silver}
+   ActionButton {visible:!identityBridge.directWork;text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
+   StateBadge {objectName:"lawIdentityRole";text:identityBridge.directWork?app.trx("عمل مباشر","Direct work"):app.roleLabel(identityBridge.authenticated?identityBridge.session.role:lawCaseBridge.role);tint:app.design.silver}
   }
   Label {objectName:"lawStorageStatus";text:lawCaseBridge.protection.indexOf("DPAPI;")>=0?app.trx("البيانات المحلية محمية بحساب Windows الحالي","Local data protected by the current Windows account"):app.humanError(lawCaseBridge.protection);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;font.pixelSize:11}
   Label {objectName:"lawAccountGuidance";visible:!lawCaseBridge.permissions.create;width:parent.width;wrapMode:Text.WordWrap;color:app.design.accent;text:identityBridge.session.role==="administrator"?app.trx("أنت مدير الحسابات. افتح الدخول / الحسابات وأنشئ حساب محقق للعمل على القضايا.","You are the account administrator. Open Sign in / accounts and create an investigator for case work."):!identityBridge.authenticated?app.trx("سجّل الدخول بحساب محقق لإنشاء القضايا وحفظها؛ الإعداد الأول من الدخول / الحسابات.","Sign in as an investigator to create and save cases; first-time setup is in Sign in / accounts."):app.trx("دورك الحالي لا يملك صلاحية إنشاء القضايا.","Your current role cannot create cases.")}

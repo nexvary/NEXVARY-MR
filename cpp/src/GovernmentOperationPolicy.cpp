@@ -757,7 +757,7 @@ QVariantList GovernmentOperationPolicy::operationReceipts() const {
     return result;
   const auto role = identity_->session().value("role").toString();
   const bool review =
-      role == "administrator" || role == "reviewer" || role == "auditor";
+      identity_->directWork() || role == "administrator" || role == "reviewer" || role == "auditor";
   QSet<QString> seen;
   const auto events = audit_->events();
   for (auto it = events.crbegin(); it != events.crend() && result.size() < 32;

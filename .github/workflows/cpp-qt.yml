@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: mr-cpp-${{ github.ref }}
+  group: mr-cpp-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
   core:

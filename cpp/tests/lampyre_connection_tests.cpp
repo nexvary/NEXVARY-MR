@@ -110,6 +110,26 @@ private slots:
  void productionNeverUsesInsecureFixture(){
   QTemporaryDir t;LampyreConnection client(t.path(),nullptr,nullptr);QVERIFY(!client.configure("http://127.0.0.1/mcp","TEST-API-KEY",true));QVERIFY(!client.connectProvider(true));QVERIFY(!client.callTool("lookup","{}",true));QVERIFY(QDir(t.path()).entryList(QDir::Files).isEmpty());
  }
+ void directWorkMigratesSingleProtectedCredential(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);
+  QVERIFY(identity.bootstrap("admin","Synthetic administrator",password));QVERIFY(identity.login("admin",password));
+  const auto credentials=t.filePath("credentials");LampyreConnection client(credentials,&identity,nullptr,nullptr,true);
+  QVERIFY(client.configureCredential("SYNTHETIC-OLD-API-KEY",true));QVERIFY(identity.startDirectWork());
+  QVERIFY(client.hasCredential());QVERIFY(client.credentialSaved());
+  LampyreConnection reopened(credentials,&identity,nullptr,nullptr,true);QVERIFY(reopened.hasCredential());
+  QCOMPARE(QDir(credentials).entryList({"lampyre-*.dat"},QDir::Files).size(),2);
+ }
+#ifdef Q_OS_WIN
+ void windowsDirectProtectedPersistence(){
+  QTemporaryDir t;const auto path=t.filePath("identity"),credentials=t.filePath("credentials");QString principal;
+  {IdentityService identity(path);QVERIFY(identity.ready());QVERIFY(identity.startDirectWork());principal=identity.userId();
+   LampyreConnection client(credentials,&identity,nullptr);QVERIFY(client.configureCredential("SYNTHETIC-DPAPI-TEST-KEY",true));
+   QFile protectedKey(QDir(credentials).filePath("lampyre-"+principal+".dat"));QVERIFY(protectedKey.open(QIODevice::ReadOnly));
+   QVERIFY(!protectedKey.readAll().contains("SYNTHETIC-DPAPI-TEST-KEY"));}
+  IdentityService reopened(path);QVERIFY(reopened.startDirectWork());QCOMPARE(reopened.userId(),principal);
+  LampyreConnection client(credentials,&reopened,nullptr);QVERIFY(client.hasCredential());QVERIFY(client.credentialSaved());
+ }
+#endif
  void directWorkWithoutIndependentApproval(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.startDirectWork());
   GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);
