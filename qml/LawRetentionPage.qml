@@ -35,14 +35,14 @@ ScrollView {
    Label {objectName:"retentionAssessment";visible:!!page.assessment.evidenceId;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("التقييم حسب ساعة الجهاز المحلية. احتفظ بمرجع التوقيت المعتمد لدى الجهة عند اتخاذ القرار.","Assessment uses the local system clock. Use your institution's trusted time reference for records decisions.")}
   }
   Panel {Layout.fillWidth:true;title:app.trx("سياسات يقرها المراجع","Reviewer controlled policies");iconName:"shield_checkmark"
-   TextField {id:policyLabel;objectName:"retentionPolicyLabel";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("اسم السياسة","Policy label")}
+   EntryField {id:policyLabel;objectName:"retentionPolicyLabel";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("اسم السياسة","Policy label")}
    RowLayout {Layout.fillWidth:true
     Label {text:app.trx("مدة الاحتفاظ بالأيام","Retention days");color:app.design.muted}
     SpinBox {id:days;objectName:"retentionDays";from:1;to:36500;value:365}
     Label {text:app.trx("الأرشفة بعد أيام","Archive after days");color:app.design.muted}
     SpinBox {id:archiveDays;from:0;to:days.value;value:0}
    }
-   TextField {id:authority;objectName:"retentionAuthority";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("مرجع السياسة أو السند المختص","Policy / competent authority reference")}
+   EntryField {id:authority;objectName:"retentionAuthority";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("مرجع السياسة أو السند المختص","Policy / competent authority reference")}
    ActionButton {objectName:"retentionCreatePolicy";text:app.trx("إنشاء سياسة ثابتة","Create immutable policy");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.retention&&policyLabel.text.trim()!==""&&authority.text.trim()!=="";onClicked:page.operate("policy",{label:policyLabel.text,days:days.value,archiveAfterDays:archiveDays.value,authorityReference:authority.text})}
    ComboBox {id:policy;objectName:"retentionPolicy";Layout.fillWidth:true;model:page.governance.policies||[];textRole:"label"}
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:policy.currentIndex>=0&&page.governance.policies?page.app.trx("الاحتفاظ: ","Retention: ")+page.governance.policies[policy.currentIndex].days+page.app.trx(" يوم · الأرشفة بعد: "," days · Archive after: ")+page.governance.policies[policy.currentIndex].archiveAfterDays+page.app.trx(" يوم\nالسند: "," days\nAuthority: ")+page.governance.policies[policy.currentIndex].authorityReference:""}
@@ -50,8 +50,8 @@ ScrollView {
   }
   Panel {Layout.fillWidth:true;title:app.trx("الحجز القانوني واستثناء الحفظ","Legal hold & preservation exception");iconName:"shield_checkmark"
    ComboBox {id:kind;Layout.fillWidth:true;model:[app.trx("حجز قانوني","Legal hold"),app.trx("استثناء حفظ","Preservation exception")]}
-   TextField {id:reason;objectName:"retentionReason";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("سبب موثق للحجز أو المراجعة","Documented preservation / review reason")}
-   TextField {id:holdAuthority;objectName:"retentionHoldAuthority";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("مرجع السند المختص","Competent authority reference")}
+   EntryField {id:reason;objectName:"retentionReason";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("سبب موثق للحجز أو المراجعة","Documented preservation / review reason")}
+   EntryField {id:holdAuthority;objectName:"retentionHoldAuthority";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("مرجع السند المختص","Competent authority reference")}
    ActionButton {objectName:"retentionPlaceHold";text:app.trx("تسجيل قيد حفظ","Record preservation restriction");enabled:page.evidenceId!==""&&lawCaseBridge.permissions.preserve&&reason.text.trim()!==""&&holdAuthority.text.trim()!=="";onClicked:page.operate("hold",{evidenceId:page.evidenceId,kind:kind.currentIndex===0?"legal-hold":"preservation-exception",reason:reason.text,authorityReference:holdAuthority.text})}
    Repeater {model:page.governance.holds||[]
     delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true

@@ -45,6 +45,6 @@ Panel {
   NeonCheckBox {id: details; text: panel.app.trx("إظهار التفاصيل التقنية", "Show technical details")
    contentItem: Text {text: details.text; color: panel.app.design.text; font: details.font; verticalAlignment: Text.AlignVCenter; leftPadding: details.mirrored ? 0 : 34; rightPadding: details.mirrored ? 34 : 0}
   }
-  TextArea {visible: details.checked; Layout.fillWidth: true; readOnly: true; selectByMouse: true; textFormat: TextEdit.PlainText; wrapMode: TextEdit.WrapAnywhere; text: panel.bridge ? JSON.stringify(panel.bridge.result, null, 2) : "{}"}
+  EntryArea {visible: details.checked; Layout.fillWidth: true; readOnly: true; selectByMouse: true; textFormat: TextEdit.PlainText; wrapMode: TextEdit.WrapAnywhere; text: panel.bridge ? JSON.stringify(panel.bridge.result, null, 2) : "{}"}
  }
 }

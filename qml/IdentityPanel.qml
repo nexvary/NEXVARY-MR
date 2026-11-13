@@ -11,9 +11,11 @@ ScrollView {
  objectName:"identityPanel"
  contentWidth:availableWidth
  clip:true
- component IdentityField: TextField {
+ component IdentityField: EntryField {
   id:field
   color:enabled?page.app.design.text:page.app.design.muted
+  Layout.maximumWidth:340
+  validationKind:echoMode===TextInput.Password?"password":"text"
   placeholderTextColor:page.app.design.muted
   selectionColor:page.app.design.accent
   selectedTextColor:page.app.design.background
@@ -40,13 +42,14 @@ ScrollView {
    ActionButton {text:app.trx("فتح إعداد استخبارات نيكسفاري","Open Intelligence setup");onClicked:app.navigatePrimary(3)}
    ActionButton {text:app.trx("فتح القضايا","Open cases");onClicked:{app.setWorkspace(true);app.navigateSection(1)}}
   }
-  Panel {Layout.fillWidth:true;title:app.trx("هوية المستخدم المحلي","Local user identity");iconName:"document_lock"
+  GridLayout {id:accountForms;Layout.fillWidth:true;columns:width>=760?2:1;columnSpacing:16;rowSpacing:12
+  Panel {Layout.fillWidth:true;Layout.alignment:Qt.AlignTop;title:app.trx("هوية المستخدم المحلي","Local user identity");iconName:"document_lock"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("حسابات محلية ضمن حساب Windows الحالي. يلزم تحقق الجهة من هوية الأشخاص. لا تُرسل بيانات الحسابات والقضايا إلى خادم.","Local credentials within the current Windows account. Your organization must verify the people behind accounts. Identity and case data are not sent to a server.")}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger;text:page.app.humanError(page.identity.error)}
    Label {visible:page.identity.authenticated;Layout.fillWidth:true;textFormat:Text.PlainText;color:app.design.text;text:(page.identity.session.displayName||"")+" · "+page.app.roleLabel(page.identity.session.role)}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.accent;text:page.feedback}
    ColumnLayout {visible:!page.identity.authenticated;Layout.fillWidth:true
-    IdentityField {id:username;objectName:"identityUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم بالأحرف الصغيرة","Lowercase username");inputMethodHints:Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText}
+    IdentityField {id:username;validationKind:"username";objectName:"identityUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم بالأحرف الصغيرة","Lowercase username");inputMethodHints:Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText}
     IdentityField {id:displayName;objectName:"identityDisplayName";visible:page.identity.needsSetup;Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم المسؤول المحلي الأول","First local administrator display name")}
     IdentityField {id:password;objectName:"identityPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور (14 حرفًا على الأقل)","Password (at least 14 characters)")}
     ActionButton {objectName:"identitySignIn";text:page.identity.needsSetup?app.trx("إنشاء المسؤول الأول","Create first administrator"):app.trx("تسجيل الدخول","Sign in");enabled:page.identity.ready;primary:true;onClicked:{const setup=page.identity.needsSetup;const ok=!setup||page.identity.bootstrap(username.text,displayName.text,password.text);if(ok)page.identity.login(username.text,password.text);password.clear()}}
@@ -59,14 +62,17 @@ ScrollView {
    ActionButton {visible:page.identity.authenticated;objectName:"identityLogout";text:app.trx("تبديل الحساب / تسجيل الخروج","Switch account / sign out");onClicked:page.identity.logout()}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تنتهي الجلسة بعد 15 دقيقة. يُقفل الحساب لخمس دقائق بعد خمس محاولات خاطئة. الحساب الإداري يدير المنح ولا يقرأ القضايا تلقائيًا.","Sessions expire after 15 minutes. Five failed attempts lock the account for five minutes. Administrators manage grants and do not automatically read cases.")}
   }
-  Panel {visible:page.identity.session.role==="administrator";Layout.fillWidth:true;title:app.trx("إدارة الحسابات والمنح","Accounts and case grants");iconName:"clipboard_task"
+  Panel {visible:page.identity.session.role==="administrator";Layout.fillWidth:true;Layout.alignment:Qt.AlignTop;title:app.trx("إدارة الحسابات والمنح","Accounts and case grants");iconName:"clipboard_task"
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("للعمل على القضايا، أنشئ حساب محقق من الحقول أدناه. يمكنك إنشاء الحساب والانتقال إليه بخطوة واحدة؛ حساب المدير يبقى لإدارة الحسابات والمنح.","For case work, create an investigator below. Create and switch in one step; the administrator retains account and grant management.")}
-   IdentityField {id:newUsername;objectName:"identityNewUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم الجديد","New username")}
+   IdentityField {id:newUsername;validationKind:"username";objectName:"identityNewUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم الجديد","New username")}
    IdentityField {id:newDisplay;objectName:"identityNewDisplayName";Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم العرض","Display name")}
    ComboBox {id:newRole;Layout.fillWidth:true;model:["investigator","reviewer","auditor","trainer","repair-technician","administrator"]}
    IdentityField {id:newPassword;objectName:"identityNewPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة مرور الحساب الجديد","New account password")}
    ActionButton {text:app.trx("إنشاء حساب","Create account");onClicked:{const id=page.identity.createUser(newUsername.text,newDisplay.text,newRole.currentText,newPassword.text);page.feedback=id!==""?app.trx("تم إنشاء الحساب بنجاح؛ يمكنك الانتقال إليه عبر تبديل الحساب","Account created successfully; use Switch account to sign in"):"";newPassword.clear()}}
    ActionButton {objectName:"identityCreateInvestigatorAndSignIn";text:page.app.trx("إنشاء حساب المحقق والدخول إليه","Create investigator and sign in");primary:true;onClicked:{const user=newUsername.text;const pass=newPassword.text;const id=page.identity.createUser(user,newDisplay.text,"investigator",pass);if(id!=="")page.identity.login(user,pass);newPassword.clear()}}
+  }
+  }
+  Panel {visible:page.identity.session.role==="administrator";Layout.fillWidth:true;title:app.trx("المستخدمون والمنح","Users and grants");iconName:"settings"
    Repeater {model:page.identity.users;delegate:ColumnLayout {id:accountRow;required property var modelData;Layout.fillWidth:true
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.username+" · "+page.app.roleLabel(modelData.role)+"\n"+modelData.id}
     ActionButton {text:modelData.enabled?page.app.trx("تعطيل","Disable"):page.app.trx("تمكين","Enable");enabled:modelData.id!==page.identity.session.id;onClicked:page.identity.setEnabled(modelData.id,!modelData.enabled)}
@@ -81,8 +87,8 @@ ScrollView {
     }
    }}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("صلاحيات كل حساب تظهر أدناه. السماح يبقى ضمن سقف الدور، وتغييرها ينهي جلسة الحساب المتأثر ويحتاج تسجيل دخول جديد. الوصول لقضية وموافقة التحليل الخارجي شرطان مستقلان.","Permissions remain within the role ceiling. A permission change ends the affected session and requires sign-in again. Case access and reviewed external-analysis grants remain separate requirements.")}
-   IdentityField {id:caseId;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID القضية — يقدمه مالك القضية","Case UUID supplied by its owner")}
-   IdentityField {id:principal;Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID الحساب أعلاه","Account UUID shown above")}
+   IdentityField {id:caseId;validationKind:"uuid";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID القضية — يقدمه مالك القضية","Case UUID supplied by its owner")}
+   IdentityField {id:principal;validationKind:"uuid";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("UUID الحساب أعلاه","Account UUID shown above")}
    RowLayout {Layout.fillWidth:true
     ActionButton {text:app.trx("منح الوصول","Grant access");onClicked:page.identity.setCaseGrant(caseId.text,principal.text,true)}
     ActionButton {text:app.trx("سحب المنحة","Revoke grant");onClicked:page.identity.setCaseGrant(caseId.text,principal.text,false)}

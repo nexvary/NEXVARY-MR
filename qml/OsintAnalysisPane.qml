@@ -65,7 +65,7 @@ Pane {
    Label {font.pixelSize:12;visible:!analysis.records.length;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:analysis.app.design.muted;text:analysis.app.trx("حمّل المثال المحلي لعرض الجدول ورسم العلاقات. لن تُنفّذ أي عملية بحث خارجية.", "Load the local example to inspect its table and relationship graph. No external search is performed.")}
    ColumnLayout {
     visible:analysis.viewMode===0;Layout.fillWidth:true;spacing:8
-    TextField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";palette.text:"#E5EDF3";placeholderTextColor:"#9EB4C1"}
+    EntryField {objectName:"osintEntityFilter";Layout.fillWidth:true;placeholderText:analysis.app.trx("تصفية العناصر…", "Filter entities…");onTextChanged:analysis.filterText=text;maximumLength:200;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";palette.text:"#E5EDF3";placeholderTextColor:"#9EB4C1"}
     RowLayout {
      Layout.fillWidth:true
      Label {font.pixelSize:12;text:analysis.app.trx("العنصر / النوع", "Entity / type");color:analysis.app.design.muted;Layout.fillWidth:true}

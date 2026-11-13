@@ -153,7 +153,7 @@ Item {
                 spacing: 7
                 RowLayout {
                     Layout.fillWidth: true
-                    TextField { id: searchField; objectName: "boardSearch"; Layout.fillWidth: true; enabled: boardBridge.loaded; placeholderText: workspace.tr("مكون أو شبكة…", "Component or net…"); selectByMouse: true }
+                    EntryField { id: searchField; objectName: "boardSearch"; Layout.fillWidth: true; enabled: boardBridge.loaded; placeholderText: workspace.tr("مكون أو شبكة…", "Component or net…"); selectByMouse: true }
                     ActionButton { text: "−"; implicitWidth: 36; enabled: boardBridge.loaded; onClicked: workspace.setZoom(workspace.zoom / 1.2) }
                     Label { text: Math.round(workspace.zoom * 100) + "%"; color: app.tone("#91b5d1"); Layout.preferredWidth: 42; horizontalAlignment: Text.AlignHCenter }
                     ActionButton { text: "+"; implicitWidth: 36; enabled: boardBridge.loaded; onClicked: workspace.setZoom(workspace.zoom * 1.2) }
@@ -264,8 +264,8 @@ Item {
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("قياس يدوي · فولت", "Manual measurement · volts"); color: app.tone("#d9e8f2"); font.bold: true }
                         NeonComboBox { id: netBox; Layout.fillWidth: true; enabled: boardBridge.loaded; model: boardBridge.nets; textRole: "name"; valueRole: "name"; onActivated: workspace.activeNet = currentText }
-                        TextField { id: voltageField; objectName: "boardVoltage"; Layout.fillWidth: true; enabled: boardBridge.loaded; placeholderText: "3.30 V"; inputMethodHints: Qt.ImhFormattedNumbersOnly; validator: DoubleValidator { bottom: -1000; top: 1000; locale: "C"; notation: DoubleValidator.StandardNotation } }
-                        TextField { id: measurementNote; Layout.fillWidth: true; enabled: boardBridge.loaded; maximumLength: 2000; placeholderText: workspace.tr("ظروف القياس أو ملاحظة", "Measurement conditions or note") }
+                        EntryField { id: voltageField; objectName: "boardVoltage"; Layout.fillWidth: true; enabled: boardBridge.loaded; placeholderText: "3.30 V"; inputMethodHints: Qt.ImhFormattedNumbersOnly; validator: DoubleValidator { bottom: -1000; top: 1000; locale: "C"; notation: DoubleValidator.StandardNotation } }
+                        EntryField { id: measurementNote; Layout.fillWidth: true; enabled: boardBridge.loaded; maximumLength: 2000; placeholderText: workspace.tr("ظروف القياس أو ملاحظة", "Measurement conditions or note") }
                         ActionButton { Layout.fillWidth: true; objectName: "recordMeasurement"; text: workspace.tr("تسجيل القياس", "Record measurement"); enabled: boardBridge.loaded && voltageField.acceptableInput && voltageField.text.trim() !== "" && netBox.currentIndex >= 0; onClicked: if (boardBridge.addMeasurement(netBox.currentText, Number(voltageField.text), measurementNote.text)) { voltageField.clear(); measurementNote.clear(); workspace.status = workspace.tr("سُجل القياس اليدوي", "Manual measurement recorded") } }
                         Repeater {
                             model: boardBridge.measurements.slice(-5).reverse()
@@ -279,7 +279,7 @@ Item {
                         Label { Layout.fillWidth: true; text: workspace.tr("المقارنة حسابية مع مرجع الملف وليست حكمًا بسلامة القطعة.", "Comparison is arithmetic against the file reference; it does not establish component health."); wrapMode: Text.WordWrap; color: app.tone("#7797ae"); font.pixelSize: 11 }
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("تعليق على المكون", "Component annotation"); color: app.tone("#d9e8f2"); font.bold: true }
-                        TextArea { id: annotationText; Layout.fillWidth: true; Layout.preferredHeight: 80; enabled: !!workspace.selected.reference; wrapMode: TextEdit.Wrap; placeholderText: workspace.tr("ملاحظات الفني…", "Technician notes…"); color: app.tone("#d8e8f7"); background: Rectangle { color: app.tone("#071623"); border.color: app.tone("#24445a"); radius: 5 } onTextChanged: if (text.length > 4000) text = text.slice(0, 4000) }
+                        EntryArea { id: annotationText; Layout.fillWidth: true; Layout.preferredHeight: 80; enabled: !!workspace.selected.reference; wrapMode: TextEdit.Wrap; placeholderText: workspace.tr("ملاحظات الفني…", "Technician notes…"); color: app.tone("#d8e8f7"); background: Rectangle { color: app.tone("#071623"); border.color: app.tone("#24445a"); radius: 5 } onTextChanged: if (text.length > 4000) text = text.slice(0, 4000) }
                         ActionButton { Layout.fillWidth: true; text: workspace.tr("إضافة تعليق", "Add annotation"); enabled: !!workspace.selected.reference && annotationText.text.trim().length > 0; onClicked: if (boardBridge.addAnnotation(workspace.selected.reference, annotationText.text, workspace.selected.x + workspace.selected.width / 2, workspace.selected.y + workspace.selected.height / 2)) { annotationText.clear(); workspace.status = workspace.tr("أُضيف التعليق", "Annotation added") } }
                         Repeater {
                             model: boardBridge.annotations

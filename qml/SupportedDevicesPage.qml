@@ -17,7 +17,7 @@ ColumnLayout {
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:(serviceCatalog.deviceCatalog.revision||"")+" · "+(serviceCatalog.deviceCatalog.chipsets||[]).join(" / ")}
  RowLayout {Layout.fillWidth:true
   NeonComboBox {id:brand;objectName:"catalogBrand";Layout.preferredWidth:220;model:[app.trx("جميع الشركات","All brands")].concat(serviceCatalog.deviceCatalog.brands||[])}
-  TextField {id:search;objectName:"deviceCatalogSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث بالموديل أو المعالج","Search model or chipset")}
+  EntryField {id:search;objectName:"deviceCatalogSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث بالموديل أو المعالج","Search model or chipset")}
  }
  ListView {id:rows;objectName:"deviceCatalogList";Layout.fillWidth:true;Layout.fillHeight:true;spacing:8;clip:true
   model:(serviceCatalog.deviceCatalog.models||[]).filter(function(row){const query=search.text.toLowerCase().trim();return (brand.currentIndex===0||row.brand===brand.currentText)&&(!query||(row.model+" "+row.chipset).toLowerCase().includes(query))})
@@ -38,7 +38,7 @@ ColumnLayout {
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("يمكن تحديث المراجع دون إعادة بناء البرنامج. لا يقبل الكتالوج أكوادًا أو أوامر أو اعتماد اختبارات أجهزة. محركات العمليات تحتاج إصدارًا مختبرًا من البرنامج.","Reference data can update without rebuilding. Catalogs cannot contain code, commands or hardware-test certification. Operation engines require a tested application release.");color:app.tone("#edf4ff")}
    ActionButton {text:app.trx("اختيار JSON","Choose JSON");onClicked:inputFile.open()}
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;text:page.catalogFile;color:app.tone("#a8bfd4")}
-   TextField {id:digest;Layout.fillWidth:true;placeholderText:"Reviewed SHA-256"}
+   EntryField {id:digest;Layout.fillWidth:true;placeholderText:"Reviewed SHA-256"}
    NeonCheckBox {id:reviewed;text:app.trx("راجعت مصدر الكتالوج وترخيصه وبصمته","I reviewed the catalog source, license and hash")}
   }
  }

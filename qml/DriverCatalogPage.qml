@@ -30,7 +30,7 @@ ScrollView {
    }
   }
   Panel {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.preferredHeight:280;title:app.trx("نتيجة فحص التعريفات","Driver inspection output")
-   ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;textFormat:TextEdit.PlainText;text:toolBridge.driverInfo;color:app.tone("#c6daeb");background:null}}
+   ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;EntryArea {readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;textFormat:TextEdit.PlainText;text:toolBridge.driverInfo;color:app.tone("#c6daeb");background:null}}
   }
  }
 }

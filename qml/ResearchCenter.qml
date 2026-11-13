@@ -31,7 +31,7 @@ Item {
   Label {visible:researchBridge.error!=="";objectName:"researchError";text:researchBridge.error;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;textFormat:Text.PlainText}
   RowLayout {Layout.fillWidth:true
    ComboBox {id:sectionSelector;objectName:"researchSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.5);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
-   TextField {id:query;objectName:"researchQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
+   EntryField {id:query;objectName:"researchQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
    ActionButton {objectName:"researchSearch";text:app.trx("بحث","Search");onClicked:page.refresh()}
   }
   ScrollView {id:scroll;objectName:"researchScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
@@ -65,7 +65,7 @@ Item {
      GridLayout {Layout.fillWidth:true;columns:width>850?2:1;columnSpacing:12;rowSpacing:8
       Repeater {model:page.section===3?page.matrixFields:page.resultFields;delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true;Layout.minimumWidth:0
        Label {text:page.fieldTitle(modelData.key,modelData.label);Layout.fillWidth:true;color:page.app.design.muted}
-       TextField {objectName:"researchField-"+modelData.key;Layout.fillWidth:true;maximumLength:4096;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
+       EntryField {objectName:"researchField-"+modelData.key;Layout.fillWidth:true;maximumLength:4096;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
       }}
      }
      ComboBox {id:status;objectName:"researchRecordStatus";Layout.fillWidth:true;model:page.section===3?["Research Hypothesis","Publicly Documented","Vendor Claimed","Unsupported"]:["Successful","Not Reproduced","Research Hypothesis"]}
@@ -83,7 +83,7 @@ Item {
      ActionButton {text:app.trx("اختيار ملف الدليل للمراجعة","Choose review evidence file");onClicked:reviewEvidence.open()}
      Label {Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText;color:app.design.muted;text:page.evidencePath}
      ComboBox {id:reviewDecision;Layout.fillWidth:true;model:["Approved","Rejected"]}
-     TextArea {id:reviewNotes;Layout.fillWidth:true;wrapMode:TextEdit.Wrap;placeholderText:app.trx("ملاحظات المراجعة المستقلة","Independent review notes");onTextChanged:if(text.length>4096)text=text.slice(0,4096)}
+     EntryArea {id:reviewNotes;Layout.fillWidth:true;wrapMode:TextEdit.Wrap;placeholderText:app.trx("ملاحظات المراجعة المستقلة","Independent review notes");onTextChanged:if(text.length>4096)text=text.slice(0,4096)}
      ActionButton {objectName:"researchSignReview";text:app.trx("توقيع المراجعة المستقلة","Sign independent review");enabled:identityBridge.authenticated&&identityBridge.session.role==="reviewer"&&reviewResult.currentIndex>=0;onClicked:if(researchBridge.reviewResult(reviewResult.currentValue,page.evidencePath,reviewDecision.currentText,reviewNotes.text)){reviewNotes.clear();page.evidencePath=""}}
      Repeater {model:researchBridge.results;delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(researchBridge.validation(modelData.id),null,2)}}
     }

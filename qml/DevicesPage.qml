@@ -121,7 +121,7 @@ Item {
     }
     ScrollView {
      Layout.fillWidth:true;Layout.preferredHeight:page.height>850?300:220;contentWidth:availableWidth;clip:true
-     TextArea {
+     EntryArea {
       objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:12;color:app.tone("#c7deef");background:null
       text:resultTabs.currentIndex===0?(page.identified?JSON.stringify(toolBridge.deviceInfo,null,2):app.trx("اقرأ معلومات الهاتف لعرض الخصائص هنا.","Read phone properties to display them here.")):resultTabs.currentIndex===1?(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||app.trx("لم تتم قراءة السجل بعد.","No log has been read yet.")):resultTabs.currentIndex===2?(toolBridge.driverInfo||app.trx("شغّل فحص USB والتعريفات لعرض النتائج هنا.","Run USB / driver inspection to display the results here.")):(toolBridge.mirrorStatus!==""||toolBridge.mirrorOutput!==""?toolBridge.mirrorStatus+"\n\n"+toolBridge.mirrorOutput:app.trx("لم تبدأ جلسة عرض بعد.","No screen session has started."))
      }
@@ -138,7 +138,7 @@ Item {
    Label {objectName:"mirrorComponentNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("scrcpy يرفع مكونًا مؤقتًا ويشغله على الهاتف؛ هذه ليست عملية قراءة خالصة. قد تظهر بيانات الشاشة الخاصة في نافذة خارجية. إيقاف البرنامج لا يثبت تنظيف الهاتف أو سلامة الأدلة. اختبار الهاتف الفعلي معلق.","scrcpy uploads and runs a temporary device component; this is not a purely passive read. Private screen data may appear in an external window. Stopping the host does not prove phone cleanup or forensic integrity. Physical acceptance is pending.");color:app.tone("#eab775")}
    NeonCheckBox {id:mirrorOwner;objectName:"mirrorOwner";text:app.trx("لدي تفويض صريح من مالك الجهاز لعرض الشاشة","I have explicit owner authorization to view this screen")}
    NeonCheckBox {id:mirrorComponent;objectName:"mirrorComponent";text:app.trx("أوافق على تشغيل المكون المؤقت وكشف محتوى الشاشة","I approve the temporary component and screen-content exposure")}
-   TextField {id:mirrorChallenge;objectName:"mirrorChallenge";Layout.fillWidth:true;placeholderText:app.trx("اكتب الرقم التسلسلي المحدد للتأكيد","Type the reviewed serial to confirm")}
+   EntryField {id:mirrorChallenge;objectName:"mirrorChallenge";Layout.fillWidth:true;placeholderText:app.trx("اكتب الرقم التسلسلي المحدد للتأكيد","Type the reviewed serial to confirm")}
   }
  }
 

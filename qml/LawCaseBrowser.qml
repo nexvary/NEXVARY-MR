@@ -8,7 +8,7 @@ Item {
  ColumnLayout {anchors.fill:parent;spacing:12
   Panel {title:app.trx("فتح وبحث القضايا المحلية","Open / search local cases");iconName:"search_visual";Layout.fillWidth:true
    RowLayout {Layout.fillWidth:true
-    TextField {id:query;objectName:"lawCaseSearch";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث برقم القضية أو الجهة أو المحقق","Search case number, agency or investigator");onAccepted:lawCaseBridge.searchCases(text)}
+    EntryField {id:query;objectName:"lawCaseSearch";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث برقم القضية أو الجهة أو المحقق","Search case number, agency or investigator");onAccepted:lawCaseBridge.searchCases(text)}
     ActionButton {objectName:"lawSearchCases";text:app.trx("بحث","Search");enabled:lawCaseBridge.ready&&lawCaseBridge.permissions.read;onClicked:lawCaseBridge.searchCases(query.text)}
    }
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تُفك القراءات داخل الذاكرة للحساب الحالي؛ لا يوجد فهرس أسماء أو أرقام قضايا مكشوف في SQLite. الصلاحيات المؤسسية الموثقة ما زالت بوابة نشر مستقلة.","Search decrypts in memory for the current account; no plaintext name/case-number index is stored in SQLite. Authenticated enterprise role provisioning remains a separate deployment gate.")}

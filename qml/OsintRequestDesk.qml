@@ -52,7 +52,7 @@ Pane {
    title:desk.app.trx("المعاملات والوصف", "Parameters & description");iconName:"settings"
    Label {text:desk.app.trx("عام", "General");font.bold:true;color:"#E5EDF3";font.pixelSize:12}
    Label {text:"Email";color:"#9EB4C1";font.pixelSize:11}
-   TextField {Layout.fillWidth:true;text:"research@example.invalid";readOnly:true;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";font.pixelSize:12}
+   EntryField {Layout.fillWidth:true;text:"research@example.invalid";readOnly:true;selectByMouse:true;color:"#E5EDF3";palette.base:"#08121B";font.pixelSize:12}
    Label {text:desk.app.trx("المصدر: مثال محلي ثابت. لا يُرسل أي عنوان إلى المزوّد. البيانات ليست دليلًا.", "Source: fixed local example. No address is sent to the provider. Data is not evidence.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#9EB4C1";font.pixelSize:12}
    Label {text:desk.app.trx("التكلفة الفعلية: غير متاحة", "Live cost: unavailable");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#9EB4C1";font.pixelSize:12}
    Item {Layout.fillHeight:true}

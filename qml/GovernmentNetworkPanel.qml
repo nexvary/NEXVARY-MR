@@ -47,8 +47,8 @@ Panel {
    }
   }
  }
- TextField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
- TextField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
+ EntryField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
+ EntryField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
  RowLayout {Layout.fillWidth:true
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("مدة التفعيل بالثواني (1–600)","Activation duration in seconds (1–600)")}
   SpinBox {id:seconds;objectName:"governmentNetworkDuration";from:1;to:600;value:600;editable:true}
@@ -96,11 +96,11 @@ Panel {
  ColumnLayout {
   visible:panel.canAudit;Layout.fillWidth:true
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احتفظ بمرساة التحقق التالية في مكان مستقل. حذف السجل أو إرجاع ملف صحيح قديم بعد إعادة التشغيل يحتاج مرساة مستقلة لكشفه. التصدير غير مشفر ويحتوي أسباب القرارات ومراجعها.","Retain this anchor separately. Whole-history reset or valid-file rollback after restart requires an independently retained anchor to detect. Export is unencrypted and includes decision reasons and references.")}
-  TextArea {objectName:"governmentPolicyAnchor";Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify({journalId:operationPolicy.auditStatus.journalId,publicKey:operationPolicy.auditStatus.publicKey,sequence:operationPolicy.auditStatus.sequence,hash:operationPolicy.auditStatus.hash})}
-  TextField {id:auditPath;objectName:"governmentPolicyAuditPath";Layout.fillWidth:true;placeholderText:app.trx("المسار المحلي الكامل لملف السجل JSON","Full local path to the audit JSON file")}
+  EntryArea {objectName:"governmentPolicyAnchor";Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify({journalId:operationPolicy.auditStatus.journalId,publicKey:operationPolicy.auditStatus.publicKey,sequence:operationPolicy.auditStatus.sequence,hash:operationPolicy.auditStatus.hash})}
+  EntryField {id:auditPath;objectName:"governmentPolicyAuditPath";Layout.fillWidth:true;placeholderText:app.trx("المسار المحلي الكامل لملف السجل JSON","Full local path to the audit JSON file")}
   NeonCheckBox {id:exportConsent;text:app.trx("أوافق على تصدير سجل غير مشفر","Consent to unencrypted audit export")}
   ActionButton {objectName:"governmentPolicyExport";enabled:auditPath.text.length>0&&exportConsent.checked;text:app.trx("تصدير إلى ملف جديد","Export to a new file");onClicked:operationPolicy.exportAudit(auditPath.text,exportConsent.checked)}
-  TextArea {id:retained;objectName:"governmentPolicyRetainedAnchor";Layout.fillWidth:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;placeholderText:app.trx("ألصق مرساة JSON المحفوظة مستقلًا","Paste the independently retained JSON anchor")}
+  EntryArea {id:retained;objectName:"governmentPolicyRetainedAnchor";Layout.fillWidth:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;placeholderText:app.trx("ألصق مرساة JSON المحفوظة مستقلًا","Paste the independently retained JSON anchor")}
   ActionButton {objectName:"governmentPolicyVerify";enabled:auditPath.text.length>0&&retained.text.length>0;text:app.trx("تحقق من التواقيع والترتيب والمرساة","Verify signatures, order and retained anchor");onClicked:operationPolicy.verifyAudit(auditPath.text,retained.text)}
   Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:operationPolicy.auditStatus.verification?JSON.stringify(operationPolicy.auditStatus.verification):""}
  }
