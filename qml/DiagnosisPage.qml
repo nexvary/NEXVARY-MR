@@ -53,7 +53,7 @@ Item {
      ActionButton {objectName:"saveDiagnosis";text:app.trx("حفظ النتائج لأمر الصيانة","Save findings to repair order");primary:true;enabled:page.analyzedSymptom!==""&&page.guidanceSnapshot!==""&&orderChooser.currentValue>0&&findings.text.trim()!==""&&technician.text.trim()!=="";onClicked:{const ok=workshopBridge.saveDiagnosis(orderChooser.currentValue,page.analyzedSymptom,page.guidanceSnapshot,findings.text,evidence.text,technician.text);app.notice(ok,app.trx("حُفظت النتائج والإرشادات مع أمر الصيانة","Findings and guidance saved with repair order"));if(ok){findings.clear();evidence.clear()}}}
      ActionButton {objectName:"exportDiagnosis";text:app.trx("تصدير التقرير JSON","Export JSON report");enabled:page.savedEntries.length>0;onClicked:reportPicker.open()}
     }
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("يتضمن التقرير بيانات العميل والملاحظات المحفوظة. راجعه قبل المشاركة. تظهر النتائج أيضًا في ملف PDF الخاص بالأمر.","Reports contain customer data and saved notes. Review before sharing. Saved findings also appear in the order PDF.");color:app.tone("#c9aa78");font.pixelSize:12}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("يتضمن التقرير بيانات العميل والملاحظات المحفوظة. راجعه قبل المشاركة. تظهر النتائج أيضًا في ملف PDF الخاص بالأمر.","Reports contain customer data and saved notes. Review before sharing. Saved findings also appear in the order PDF.");color:app.tone("#c9aa78");font.pixelSize:14}
    }
    Panel {
     iconName:"document_lock";title:app.trx("النتائج المحفوظة للأمر المختار","Saved findings for selected order");Layout.fillWidth:true

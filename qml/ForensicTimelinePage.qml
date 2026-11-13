@@ -18,7 +18,7 @@ Item {
     ColumnLayout {id:eventColumn;anchors.left:parent.left;anchors.right:parent.right;anchors.top:parent.top;anchors.margins:12;spacing:5
      Label {text:modelData.atUtc+" · "+modelData.event;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#63d7b1");font.bold:true}
      Label {text:modelData.detail;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#d3e8fa")}
-     Label {text:modelData.operator+" · "+modelData.evidenceId;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:12}
+     Label {text:modelData.operator+" · "+modelData.evidenceId;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:14}
     }
    }
   }

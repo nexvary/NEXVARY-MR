@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtTest
 import ".." as MR
 import "../InputRules.js" as Rules
@@ -17,6 +18,13 @@ TestCase {
     Component {id:fieldComponent;MR.EntryField {width:300;height:42}}
     Component {id:areaComponent;MR.EntryArea {width:300;height:100}}
     Component {id:dateComponent;MR.CaseDateTime {width:480;app:style;onEdited:value=>text=value}}
+    Component {id:compactComponent;RowLayout {width:1200;MR.EntryField {objectName:"compactUsername";Layout.fillWidth:true} MR.EntryField {objectName:"compactPassword";Layout.fillWidth:true;echoMode:TextInput.Password}}}
+    Component {id:checkComponent;MR.NeonCheckBox {text:"موافقة";width:240}}
+    function test_compactFieldsAndPurpleSelection(){
+        const row=createTemporaryObject(compactComponent,test);verify(row);waitForRendering(row);
+        const user=findChild(row,"compactUsername"),password=findChild(row,"compactPassword");verify(user.width<=320);verify(password.width<=320);compare(user.y,password.y);verify(password.x>=user.x+user.width);
+        const box=createTemporaryObject(checkComponent,test);verify(box);const indicator=findChild(box,"selectionIndicator");verify(indicator);compare(String(indicator.color),"#261632");box.checked=true;compare(String(indicator.color),"#a855f7");verify(findChild(box,"neonCheckmark").visible);
+    }
     function test_validationFeedback(){
         const field=createTemporaryObject(fieldComponent,test,{validationKind:"integer"});verify(field)
         compare(field.inputState,"empty");compare(String(field.inputColor),"#ff3131")

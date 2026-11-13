@@ -39,7 +39,7 @@ Item {
      stateText:toolBridge.selectedSerial!==""?app.trx("جهاز محدد","Device selected"):app.trx("لم يُحدد جهاز","No device selected")
      Label {text:(toolBridge.deviceInfo["ro.product.manufacturer"]||"—")+" / "+(toolBridge.deviceInfo["ro.product.model"]||"—");Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#e0ecfa");font.bold:true;font.pixelSize:20}
      Label {text:app.trx("Android: ","Android: ")+(toolBridge.deviceInfo["ro.build.version.release"]||"—")+" · API "+(toolBridge.deviceInfo["ro.build.version.sdk"]||"—");Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8c1d7")}
-     Label {text:toolBridge.deviceInfo["ro.build.fingerprint"]||app.trx("اقرأ معلومات الهاتف من مدير الأجهزة لعرض هوية البناء.","Read phone information in Device Manager to display its build identity.");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:12}
+     Label {text:toolBridge.deviceInfo["ro.build.fingerprint"]||app.trx("اقرأ معلومات الهاتف من مدير الأجهزة لعرض هوية البناء.","Read phone information in Device Manager to display its build identity.");Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:14}
      Label {text:app.trx("المطابقة تقارن الهوية المعلنة في البيان؛ لا تُثبت أن الحزمة صادرة من الشركة أو مناسبة للتفليش.","Matching compares identity declared in the manifest; it does not authenticate OEM origin or approve flashing.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#f0bc75")}
      ActionButton {text:app.trx("فتح مدير الأجهزة","Open Device Manager");onClicked:app.navigate(1)}
     }
@@ -47,7 +47,7 @@ Item {
      iconName:"document_lock";title:app.trx("نتيجة التحقق وحدودها","Verification result and scope");Layout.columnSpan:parent.columns;Layout.fillWidth:true
      stateText:firmwareBridge.compatible?app.trx("مطابقة البيانات والبصمة","Metadata and hash match"):app.trx("راجع النتيجة","Review result")
      EntryArea {objectName:"firmwareMatchResult";Layout.fillWidth:true;Layout.preferredHeight:Math.max(80,Math.min(200,contentHeight+topPadding+bottomPadding));readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;textFormat:TextEdit.PlainText;text:firmwareBridge.status;color:firmwareBridge.compatible?app.tone("#4dd9a8"):app.tone("#a9bfd2");background:Rectangle {color:app.tone("#0b2030");radius:6}}
-     Label {text:app.trx("SHA-256 ومطابقة الموديل وحدهما لا يتحققان من التوقيع أو سلسلة ثقة OEM. لا تُفعّل هذه النتيجة التفليش أو الاستعادة.","SHA-256 and model matching alone do not verify a signature or OEM trust chain. This result enables neither flashing nor restoration.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774");font.pixelSize:12}
+     Label {text:app.trx("SHA-256 ومطابقة الموديل وحدهما لا يتحققان من التوقيع أو سلسلة ثقة OEM. لا تُفعّل هذه النتيجة التفليش أو الاستعادة.","SHA-256 and model matching alone do not verify a signature or OEM trust chain. This result enables neither flashing nor restoration.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774");font.pixelSize:14}
     }
    }
   }

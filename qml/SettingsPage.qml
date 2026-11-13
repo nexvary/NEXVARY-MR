@@ -24,7 +24,7 @@ Item {
       title:modelData.name
       subtitle:app.trx("ملف تنفيذي محلي منفصل","Separately installed local executable")
       stateText:modelData.available?app.trx("متاح","Available"):app.trx("يلزم الإعداد","Setup required")
-      Label {text:modelData.available?modelData.path:app.trx("اختر الملف التنفيذي من النسخة الرسمية المثبتة.","Choose the executable from your installed official distribution.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:12}
+      Label {text:modelData.available?modelData.path:app.trx("اختر الملف التنفيذي من النسخة الرسمية المثبتة.","Choose the executable from your installed official distribution.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:14}
       RowLayout {
        Layout.fillWidth:true
        ActionButton {text:app.trx("اختيار الأداة","Choose tool");primary:!modelData.available;enabled:!toolBridge.busy;Layout.fillWidth:true;onClicked:{page.toolName=modelData.name;toolPicker.open()}}
@@ -41,21 +41,21 @@ Item {
      ActionButton {text:app.trx("مصدر Platform Tools","Platform Tools source");onClicked:app.openExternal("https://developer.android.com/tools/releases/platform-tools")}
      ActionButton {text:app.trx("مصدر scrcpy","scrcpy source");onClicked:app.openExternal("https://github.com/Genymobile/scrcpy")}
     }
-    Label {text:app.trx("اختيار الملف يحفظ مساره. لا يتم تنزيل أو تثبيت التعريفات تلقائيًا؛ فحص Windows يعرض أجهزة PnP دون تعديلها.","Selecting an executable saves its path. Drivers are not downloaded or installed automatically; Windows inspection lists PnP devices without changing them.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:12}
+    Label {text:app.trx("اختيار الملف يحفظ مساره. لا يتم تنزيل أو تثبيت التعريفات تلقائيًا؛ فحص Windows يعرض أجهزة PnP دون تعديلها.","Selecting an executable saves its path. Drivers are not downloaded or installed automatically; Windows inspection lists PnP devices without changing them.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:14}
    }
    Panel {
     iconName:"database";title:app.trx("بيانات الورشة والنسخ الاحتياطي","Workshop data and backup");Layout.fillWidth:true
     stateText:workshopBridge.ready?app.trx("قاعدة البيانات جاهزة","Database ready"):app.trx("راجع خطأ قاعدة البيانات","Review database error")
-    Label {text:workshopBridge.databasePath;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:12}
+    Label {text:workshopBridge.databasePath;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#a8c1d7");font.pixelSize:14}
     Flow {
      Layout.fillWidth:true;spacing:8
      ActionButton {text:app.trx("فحص سلامة البيانات","Check integrity");onClicked:app.notice(workshopBridge.checkIntegrity()==="ok",app.trx("قاعدة البيانات سليمة","Database integrity is valid"))}
      ActionButton {text:app.trx("إنشاء نسخة احتياطية","Create backup");primary:true;onClicked:backupDialog.open()}
      ActionButton {text:app.trx("استعادة نسخة","Restore backup");onClicked:restoreDialog.open()}
     }
-    Label {text:app.trx("النسخ غير مشفرة. احفظها في مكان محمي. قبل الاستعادة تُحفظ نسخة من الحالة الحالية تلقائيًا.","Backups are not encrypted. Store them securely. Restore preserves a copy of the current database automatically.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774");font.pixelSize:12}
+    Label {text:app.trx("النسخ غير مشفرة. احفظها في مكان محمي. قبل الاستعادة تُحفظ نسخة من الحالة الحالية تلقائيًا.","Backups are not encrypted. Store them securely. Restore preserves a copy of the current database automatically.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774");font.pixelSize:14}
    }
-   Label {text:"NEXVARY MR 0.4.1 · Qt 6 / C++20 · "+app.trx("نسخة تطوير غير موقعة","Unsigned development build");color:app.tone("#829bb5");Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:12}
+   Label {text:"NEXVARY MR 0.4.1 · Qt 6 / C++20 · "+app.trx("نسخة تطوير غير موقعة","Unsigned development build");color:app.tone("#829bb5");Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:14}
   }
  }
  FileDialog {id:toolPicker;title:app.trx("اختيار الملف التنفيذي لأداة ","Choose executable for ")+page.toolName;nameFilters:["Executable (*.exe)","All files (*)"];onAccepted:{const ok=toolBridge.configureTool(page.toolName,selectedFile.toString());app.notice(ok,toolBridge.status,toolBridge.status)}}

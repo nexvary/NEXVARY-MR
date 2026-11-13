@@ -6,7 +6,7 @@ Button {
  property bool primary:false
  property string iconName:""
  implicitHeight:30;implicitWidth:Math.max(72,contentItem.implicitWidth+18)
- hoverEnabled:true;font.pixelSize:12;focusPolicy:Qt.StrongFocus
+ hoverEnabled:true;font.pixelSize:14;focusPolicy:Qt.StrongFocus
  Accessible.name:text
  contentItem:RowLayout {
   spacing:6

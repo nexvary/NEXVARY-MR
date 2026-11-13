@@ -14,7 +14,7 @@ ScrollView {
  component IdentityField: EntryField {
   id:field
   color:enabled?page.app.design.text:page.app.design.muted
-  Layout.maximumWidth:340
+  Layout.maximumWidth:260
   validationKind:echoMode===TextInput.Password?"password":"text"
   placeholderTextColor:page.app.design.muted
   selectionColor:page.app.design.accent
@@ -48,13 +48,13 @@ ScrollView {
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger;text:page.app.humanError(page.identity.error)}
    Label {visible:page.identity.authenticated;Layout.fillWidth:true;textFormat:Text.PlainText;color:app.design.text;text:(page.identity.session.displayName||"")+" · "+page.app.roleLabel(page.identity.session.role)}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.accent;text:page.feedback}
-   ColumnLayout {visible:!page.identity.authenticated;Layout.fillWidth:true
+   GridLayout {visible:!page.identity.authenticated;Layout.fillWidth:true;columns:width>=480?2:1;columnSpacing:16
     IdentityField {id:username;validationKind:"username";objectName:"identityUsername";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("اسم المستخدم بالأحرف الصغيرة","Lowercase username");inputMethodHints:Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText}
     IdentityField {id:displayName;objectName:"identityDisplayName";visible:page.identity.needsSetup;Layout.fillWidth:true;maximumLength:128;placeholderText:app.trx("اسم المسؤول المحلي الأول","First local administrator display name")}
     IdentityField {id:password;objectName:"identityPassword";Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور (14 حرفًا على الأقل)","Password (at least 14 characters)")}
     ActionButton {objectName:"identitySignIn";text:page.identity.needsSetup?app.trx("إنشاء المسؤول الأول","Create first administrator"):app.trx("تسجيل الدخول","Sign in");enabled:page.identity.ready;primary:true;onClicked:{const setup=page.identity.needsSetup;const ok=!setup||page.identity.bootstrap(username.text,displayName.text,password.text);if(ok)page.identity.login(username.text,password.text);password.clear()}}
    }
-   ColumnLayout {visible:page.identity.authenticated;Layout.fillWidth:true
+   GridLayout {visible:page.identity.authenticated;Layout.fillWidth:true;columns:width>=480?2:1;columnSpacing:16
     IdentityField {id:currentPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الحالية للتغيير","Current password for rotation")}
     IdentityField {id:nextPassword;Layout.fillWidth:true;maximumLength:256;echoMode:TextInput.Password;placeholderText:app.trx("كلمة المرور الجديدة","New password")}
     ActionButton {text:app.trx("تغيير كلمة المرور وتسجيل الخروج","Change password and sign out");onClicked:{page.identity.changePassword(currentPassword.text,nextPassword.text);currentPassword.clear();nextPassword.clear()}}
@@ -83,7 +83,7 @@ ScrollView {
      ActionButton {text:page.app.trx("ضبط السقف","Set ceiling");onClicked:{const ok=lampyreConnection.setSpendingLimit(accountRow.modelData.id,adminBudget.value);page.feedback=ok?page.app.trx("تم حفظ السقف الإداري؛ يستمر بعد إعادة التشغيل ولا يحدد تكلفة مالية","Administrative ceiling saved across restarts; it does not cap monetary cost"):page.app.humanError(lampyreConnection.errorCode)}}
     }
     Repeater {model:[{id:"case-create",ar:"إنشاء القضايا",en:"Create cases"},{id:"case-edit",ar:"تعديل القضايا",en:"Edit cases"},{id:"evidence-access",ar:"قراءة الأدلة",en:"Evidence access"},{id:"osint-investigation",ar:"تحقيق OSINT",en:"OSINT investigation"},{id:"external-connection",ar:"اتصال API/MCP",en:"API/MCP connection"},{id:"paid-search",ar:"البحث المدفوع",en:"Paid searches"},{id:"evidence-export",ar:"تصدير الأدلة",en:"Evidence export"},{id:"user-administration",ar:"إدارة المستخدمين",en:"User administration"}]
-     delegate:CheckBox {required property var modelData;text:page.app.ar?modelData.ar:modelData.en;checked:page.roleAllows(accountRow.modelData.role,modelData.id)&&(accountRow.modelData.deniedPermissions||[]).indexOf(modelData.id)<0;enabled:page.roleAllows(accountRow.modelData.role,modelData.id)&&!(accountRow.modelData.id===page.identity.session.id&&modelData.id==="user-administration");onClicked:{const ok=page.identity.setPermission(accountRow.modelData.id,modelData.id,checked);page.feedback=ok?page.app.trx("تم حفظ الصلاحية؛ يجب إعادة دخول الحساب المتأثر","Permission saved; affected account must sign in again"):""}}
+     delegate:NeonCheckBox {required property var modelData;text:page.app.ar?modelData.ar:modelData.en;checked:page.roleAllows(accountRow.modelData.role,modelData.id)&&(accountRow.modelData.deniedPermissions||[]).indexOf(modelData.id)<0;enabled:page.roleAllows(accountRow.modelData.role,modelData.id)&&!(accountRow.modelData.id===page.identity.session.id&&modelData.id==="user-administration");onClicked:{const ok=page.identity.setPermission(accountRow.modelData.id,modelData.id,checked);page.feedback=ok?page.app.trx("تم حفظ الصلاحية؛ يجب إعادة دخول الحساب المتأثر","Permission saved; affected account must sign in again"):""}}
     }
    }}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("صلاحيات كل حساب تظهر أدناه. السماح يبقى ضمن سقف الدور، وتغييرها ينهي جلسة الحساب المتأثر ويحتاج تسجيل دخول جديد. الوصول لقضية وموافقة التحليل الخارجي شرطان مستقلان.","Permissions remain within the role ceiling. A permission change ends the affected session and requires sign-in again. Case access and reviewed external-analysis grants remain separate requirements.")}

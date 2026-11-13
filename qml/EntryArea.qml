@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import "InputRules.js" as Rules
 TextArea {
     id:entry
+    Layout.maximumWidth:820
     property bool requiredInput:true
     property bool configuredValue:false
     property string validationKind:"text"

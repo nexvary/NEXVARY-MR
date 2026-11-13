@@ -53,8 +53,8 @@ Item {
        ColumnLayout {
         anchors.fill:parent;anchors.margins:12;spacing:4
         Label{text:app.ar?modelData.ar:modelData.en;color:app.tone("#e3effa");font.bold:true;font.pixelSize:15}
-        Label{text:modelData.ready?app.trx("متاح ضمن الحدود المذكورة","Available with limitations"):app.trx("غير متاح بعد","Not yet available");color:modelData.ready?app.tone("#64dbb0"):app.tone("#f0bb78");font.pixelSize:12}
-        Label{text:app.ar&&modelData.detailAr?modelData.detailAr:modelData.detail;color:app.tone("#a7bed0");wrapMode:Text.WordWrap;Layout.fillWidth:true;font.pixelSize:11}
+        Label{text:modelData.ready?app.trx("متاح ضمن الحدود المذكورة","Available with limitations"):app.trx("غير متاح بعد","Not yet available");color:modelData.ready?app.tone("#64dbb0"):app.tone("#f0bb78");font.pixelSize:14}
+        Label{text:app.ar&&modelData.detailAr?modelData.detailAr:modelData.detail;color:app.tone("#a7bed0");wrapMode:Text.WordWrap;Layout.fillWidth:true;font.pixelSize:14}
        }
       }
      }

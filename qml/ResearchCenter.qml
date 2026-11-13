@@ -45,7 +45,7 @@ Item {
       ActionButton {text:app.trx("ملفات النظام","Firmware Intelligence");onClicked:page.app.navigateSection(3)}
      }
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:(researchBridge.engineContext.deviceIntelligence.propertiesCurrent?app.trx("خصائص الجهاز: قراءة حديثة متاحة","Device properties: current reading available"):app.trx("خصائص الجهاز: لا توجد قراءة حديثة","Device properties: no current reading"))+"\n"+app.trx("حالة فحص الإقلاع: ","Verified boot inspection: ")+(researchBridge.engineContext.firmwareAvb.status==="not inspected"||!researchBridge.engineContext.firmwareAvb.status?app.trx("لم يُفحص","Not inspected"):researchBridge.engineContext.firmwareAvb.status)+"\n"+app.trx("نتائج اعتماد الطراز تُراجع من سجلات الاختبارات، ولا تُستنتج من هذا الفهرس.","Review model acceptance in test records; it is not inferred from this catalog.")}
-     CheckBox {id:researchTechnical;objectName:"researchTechnicalDetails";text:app.trx("إظهار التفاصيل التقنية","Show technical details")}
+     NeonCheckBox {id:researchTechnical;objectName:"researchTechnicalDetails";text:app.trx("إظهار التفاصيل التقنية","Show technical details")}
      Label {visible:researchTechnical.checked;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;textFormat:Text.PlainText;text:JSON.stringify({propertiesCurrent:researchBridge.engineContext.deviceIntelligence.propertiesCurrent,usbScope:researchBridge.engineContext.deviceIntelligence.usbScope,avbStatus:researchBridge.engineContext.firmwareAvb.status||"not inspected",packageStatus:researchBridge.engineContext.firmwarePackage.status||"not inspected",modelAcceptance:researchBridge.engineContext.modelAcceptance},null,2)}
     }
     Repeater {model:page.rows
@@ -73,7 +73,7 @@ Item {
       ActionButton {text:app.trx("اختيار دليل اصطناعي","Choose synthetic evidence");onClicked:evidence.open()}
       Label {Layout.fillWidth:true;elide:Text.ElideMiddle;color:app.design.muted;text:page.evidencePath;textFormat:Text.PlainText}
      }
-     CheckBox {id:publicConsent;objectName:"researchPublicConsent";text:app.trx("هذه بيانات عامة أو اصطناعية مصرح بحفظها","These are public or synthetic observations authorized for storage")}
+     NeonCheckBox {id:publicConsent;objectName:"researchPublicConsent";text:app.trx("هذه بيانات عامة أو اصطناعية مصرح بحفظها","These are public or synthetic observations authorized for storage")}
      ActionButton {objectName:"researchSaveRecord";text:app.trx("حفظ السجل","Save record");primary:true;enabled:researchBridge.ready&&publicConsent.checked;onClicked:{let fields=Object.assign({},page.form);let ok=false;if(page.section===3){fields.status=status.currentText;ok=researchBridge.addCompatibility(fields)}else{fields.reproducibility=status.currentText;ok=researchBridge.recordResult(fields,page.evidencePath,publicConsent.checked)!==""}if(ok){page.form={};publicConsent.checked=false;page.evidencePath="";page.refresh()}}}
     }
     Panel {visible:page.section===6;Layout.fillWidth:true;title:app.trx("بوابة التحقق","Validation gate");iconName:"shield_checkmark"
@@ -88,7 +88,7 @@ Item {
      Repeater {model:researchBridge.results;delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(researchBridge.validation(modelData.id),null,2)}}
     }
     Panel {visible:page.section===7;Layout.fillWidth:true;title:app.trx("تصدير تقرير أبحاث محلي","Export local research report");iconName:"document_text"
-     CheckBox {id:exportConsent;objectName:"researchExportConsent";text:app.trx("أوافق على تصدير السجلات البحثية العامة","Approve public research export")}
+     NeonCheckBox {id:exportConsent;objectName:"researchExportConsent";text:app.trx("أوافق على تصدير السجلات البحثية العامة","Approve public research export")}
      ActionButton {objectName:"researchExport";text:app.trx("حفظ JSON جديد","Save new JSON");enabled:researchBridge.ready&&exportConsent.checked;onClicked:report.open()}
     }
     LawTrainingPage {visible:page.section===8;Layout.fillWidth:true;Layout.preferredHeight:600;app:page.app}

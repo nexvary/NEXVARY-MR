@@ -30,7 +30,7 @@ Panel {
   return (app.ar?ar:en)[kind]||kind
  }
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
- CheckBox {id:policyTechnical;text:app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
+ NeonCheckBox {id:policyTechnical;text:app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
  Label {visible:policyTechnical.checked;objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.accent:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("سجل السياسات متاح — تحقق محلي","Policy journal available — local verification"):app.trx("تعذر التحقق من سجل السياسات — الاستثناءات مغلقة","Policy journal unavailable — exceptions denied")}
  ColumnLayout {
@@ -47,8 +47,17 @@ Panel {
    }
   }
  }
- EntryField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
- EntryField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
+ GridLayout {
+  objectName:"governmentRequestFields";Layout.fillWidth:true;Layout.maximumWidth:700;columns:width>=600?2:1;columnSpacing:16;rowSpacing:12
+  ColumnLayout {Layout.fillWidth:true;Layout.maximumWidth:320;spacing:5
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("سبب الطلب أو المراجعة","Request or review reason")}
+  EntryField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
+  }
+  ColumnLayout {Layout.fillWidth:true;Layout.maximumWidth:320;spacing:5
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("مرجع القضية — اختياري","Case reference — optional")}
+  EntryField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
+  }
+ }
  RowLayout {Layout.fillWidth:true
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("مدة التفعيل بالثواني (1–600)","Activation duration in seconds (1–600)")}
   SpinBox {id:seconds;objectName:"governmentNetworkDuration";from:1;to:600;value:600;editable:true}
@@ -58,9 +67,12 @@ Panel {
   text:app.trx("أقر بطلب الاستثناء ومخاطر الفئة المحددة","Consent to the request and selected category's risks")
   contentItem:Label {text:approval.text;wrapMode:Text.WordWrap;color:panel.app.design.text;leftPadding:approval.mirrored?0:approval.indicator.width+approval.spacing;rightPadding:approval.mirrored?approval.indicator.width+approval.spacing:0;verticalAlignment:Text.AlignVCenter}
  }
+ GridLayout {
+  objectName:"governmentPermissionGrid";Layout.fillWidth:true;columns:width>=820?2:1;columnSpacing:20;rowSpacing:16
  Repeater {
   model:operationPolicy.permissions
   delegate:ColumnLayout {
+   Layout.minimumWidth:0
    required property var modelData
    Layout.fillWidth:true
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.allowed?panel.app.design.accent:panel.app.design.text;text:panel.caption(modelData.capability)+" · "+(modelData.allowed?panel.app.trx("مسموح مؤقتًا","Temporarily allowed"):panel.app.trx("محظور","Blocked"))}
@@ -70,6 +82,7 @@ Panel {
     ActionButton {objectName:"governmentNetworkRevoke-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("إيقاف التفعيل","Stop activation");visible:modelData.allowed;enabled:modelData.allowed;onClicked:operationPolicy.revoke(modelData.capability)}
    }
   }
+ }
  }
  ActionButton {objectName:"governmentNetworkRevokeAll";text:app.trx("إغلاق جميع الاستثناءات النشطة","Close all active exceptions");enabled:!operationPolicy.offline;onClicked:operationPolicy.revokeAll()}
  ActionButton {objectName:"governmentPolicyRefresh";text:app.trx("تحديث السجل والطلبات","Refresh journal and requests");onClicked:operationPolicy.refreshAudit()}

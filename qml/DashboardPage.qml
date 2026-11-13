@@ -32,9 +32,9 @@ Item {
       RowLayout {anchors.fill:parent;anchors.margins:16;spacing:12
        SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
-        Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
+        Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideRight}
         Label {text:modelData.value;color:page.app.design.text;font.pixelSize:26;font.bold:true}
-        Label {text:modelData.sub;color:page.app.design.muted;font.pixelSize:10;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
+        Label {text:modelData.sub;color:page.app.design.muted;font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
        }
       }
      }
@@ -43,7 +43,7 @@ Item {
    Panel {
     title:page.app.trx("مسار الفني","TECHNICIAN WORKFLOW");iconName:"arrow_sync";Layout.fillWidth:true
     WorkflowStrip {app:page.app;Layout.fillWidth:true}
-    Label {text:page.app.trx("مراحل الاتصال والتعريف تعكس المعلومات المقروءة. التنفيذ والتحقق يحتاجان نتيجة العملية نفسها؛ اختيار بطاقة لا يثبت نجاحها.","Connection and identity reflect observed state. Execution and verification require operation results; opening a card does not establish success.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;font.pixelSize:11}
+    Label {text:page.app.trx("مراحل الاتصال والتعريف تعكس المعلومات المقروءة. التنفيذ والتحقق يحتاجان نتيجة العملية نفسها؛ اختيار بطاقة لا يثبت نجاحها.","Connection and identity reflect observed state. Execution and verification require operation results; opening a card does not establish success.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;font.pixelSize:14}
    }
    GridLayout {
     objectName:"dashboardActions";Layout.fillWidth:true;columns:width>=1000?3:2;columnSpacing:12;rowSpacing:12
@@ -67,7 +67,7 @@ Item {
     Panel {
      title:page.app.trx("آخر نشاط محفوظ","Recent saved activity");iconName:"history";Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
      ListView {Layout.fillWidth:true;Layout.preferredHeight:Math.min(200,Math.max(44,workshopBridge.events.length*42));clip:true;spacing:8;model:workshopBridge.events
-      delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.created_at+" · "+modelData.action;color:page.app.design.muted;textFormat:Text.PlainText;font.pixelSize:12;wrapMode:Text.WordWrap}
+      delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.created_at+" · "+modelData.action;color:page.app.design.muted;textFormat:Text.PlainText;font.pixelSize:14;wrapMode:Text.WordWrap}
      }
      EmptyState {visible:workshopBridge.events.length===0;app:page.app;iconName:"clipboard_task";title:page.app.trx("ابدأ بأمر صيانة","Start with a repair order");description:page.app.trx("سيظهر هنا النشاط المحفوظ بعد إنشاء أمر أو تسجيل نتيجة. لا توجد بيانات عرض مصطنعة.","Saved activity appears after an order or finding is recorded. No fabricated metrics are displayed.");Layout.fillWidth:true}
      ActionButton {text:page.app.trx("أوامر الصيانة والمخزون","Repair orders & inventory");onClicked:page.app.navigateSection(7)}

@@ -21,14 +21,14 @@ Item {
      Rectangle {anchors.fill:parent;color:shell.app.design.background}
      RowLayout {id:breadcrumbs;anchors.fill:parent
      ActionButton {objectName:"backButton";text:shell.app.trx("رجوع","Back");implicitHeight:30;implicitWidth:72;enabled:shell.app.pageHistory.length>0;onClicked:shell.app.goBack()}
-     Label {text:shell.app.trx("مساحة العمل / ","WORKSPACE / ")+shell.app.pageTitle;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideRight;color:shell.app.design.muted;font.pixelSize:11}
-     Label {text:"0.4.5 · "+shell.app.trx("تطوير","DEVELOPMENT");color:shell.app.design.muted;font.pixelSize:10}
+     Label {text:shell.app.trx("مساحة العمل / ","WORKSPACE / ")+shell.app.pageTitle;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideRight;color:shell.app.design.muted;font.pixelSize:14}
+     Label {text:"0.4.5 · "+shell.app.trx("تطوير","DEVELOPMENT");color:shell.app.design.muted;font.pixelSize:14}
      }
     }
     Item {id:workspace;objectName:"workstationWorkspace";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;clip:true}
     OperationProgress {visible:!shell.app.governmentMode||lawCaseBridge.artifactsBusy||lawCaseBridge.timelineBusy||lawCaseBridge.importBusy||toolBridge.busy||firmwareBridge.busy||recoveryBridge.busy||securityBridge.busy;app:shell.app;Layout.fillWidth:true}
    }
   }
-  Label {text:shell.app.trx("NEXVARY  •  محلي  •  أجهزة مصرح بها فقط","NEXVARY  •  LOCAL WORKSTATION  •  AUTHORIZED DEVICES ONLY");Layout.fillWidth:true;Layout.preferredHeight:24;horizontalAlignment:Text.AlignHCenter;color:shell.app.design.muted;font.pixelSize:10}
+  Label {text:shell.app.trx("NEXVARY  •  محلي  •  أجهزة مصرح بها فقط","NEXVARY  •  LOCAL WORKSTATION  •  AUTHORIZED DEVICES ONLY");Layout.fillWidth:true;Layout.preferredHeight:24;horizontalAlignment:Text.AlignHCenter;color:shell.app.design.muted;font.pixelSize:14}
  }
 }

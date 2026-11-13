@@ -24,6 +24,7 @@ ScrollView {
    }
    Panel {title:page.app.trx("عن NEXVARY MR","About NEXVARY MR");iconName:"question_circle";Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
     Label {text:page.app.trx("محطة صيانة وتحليل أدلة محلية — 0.4.1 تطوير.\nاختبار البناء لا يساوي اعتماد الأجهزة أو التوقيع التجاري.\nأيقونات Nexvary معدنية؛ تراخيص المكونات ضمن الحزمة.\nCtrl+R: اكتشاف ADB · Ctrl+Q: إغلاق بمراجعة.\nزر الرجوع يعيدك إلى القسم السابق.","Local repair and evidence workstation — 0.4.1 development.\nBuild tests do not establish hardware acceptance or publisher signing.\nOriginal Nexvary metal icons; component licenses are bundled.\nCtrl+R: ADB discovery · Ctrl+Q: reviewed exit.\nBack restores the previous workspace.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;text:page.app.trx("الخط العربي: Noto Kufi Arabic — ترخيص SIL Open Font License 1.1؛ نسخة الترخيص مضمّنة مع الخط.","Arabic font: Noto Kufi Arabic — SIL Open Font License 1.1; license included with the font.")}
     ActionButton {text:page.app.trx("المشروع والمصادر","Project & sources");onClicked:app.openExternal("https://github.com/nexvary/NEXVARY-MR")}
    }
   }

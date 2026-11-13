@@ -85,7 +85,7 @@ ColumnLayout {
  Label {
   Layout.fillWidth: true
   color: desktopTokens.text
-  font.pixelSize: 24
+  font.pixelSize:24
   font.bold: true
   text: "NEXVARY Intelligence"
  }
@@ -218,7 +218,7 @@ ColumnLayout {
        wrapMode: Text.WordWrap
        color: desktopTokens.text
        font.bold: true
-       font.pixelSize: 16
+       font.pixelSize:16
        text: serviceCard.modelData.title
       }
      }
@@ -276,7 +276,7 @@ ColumnLayout {
   Layout.fillWidth: true
   sourceComponent: LampyreConnectionPanel { app: desktopApp }
  }
- CheckBox {
+ NeonCheckBox {
   objectName: "osintDemoMode"
   text: workspace.app.trx("عرض تجريبي ببيانات اختبار", "Demonstration with test data")
   checked: workspace.demoMode

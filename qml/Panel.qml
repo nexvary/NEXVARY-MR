@@ -26,7 +26,7 @@ GlossSurface {
  readonly property bool dark:!themeWindow||themeWindow.darkTheme
  readonly property color accentColor:tokens?(accent==="blue"?tokens.accent:accent==="green"?tokens.success:tokens.silver):"#B6C4D5"
  default property alias body:container.data
- color:tokens?tokens.surface:"#11151B";border.color:tokens?tokens.border:"#3C4859";border.width:1;radius:12;reflection:0.035
+ color:tokens?tokens.surface:"#11151B";border.color:tokens?tokens.border:"#3C4859";border.width:1.5;radius:12;reflection:0.035
  implicitHeight:column.implicitHeight+32
  ColumnLayout {
   id:column;anchors.fill:parent;anchors.margins:16;spacing:12
@@ -34,8 +34,8 @@ GlossSurface {
    visible:card.title!=="";Layout.fillWidth:true;spacing:10
    SemanticIcon {visible:card.iconName!=="";iconSource:visible?"qrc:/assets/icons-professional/"+card.iconName+".svg":"";Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
    ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
-    Label {text:card.title;color:card.tokens?card.tokens.text:"#EEF4FC";font.pixelSize:14;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}
-    Label {visible:card.subtitle!=="";text:card.subtitle;color:card.tokens?card.tokens.muted:"#9AAABD";font.pixelSize:11;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}
+    Label {text:card.title;color:card.tokens?card.tokens.text:"#EEF4FC";font.pixelSize:16;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}
+    Label {visible:card.subtitle!=="";text:card.subtitle;color:card.tokens?card.tokens.muted:"#9AAABD";font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText}
    }
    StateBadge {visible:card.stateText!=="";text:card.stateText;tint:card.accentColor}
   }

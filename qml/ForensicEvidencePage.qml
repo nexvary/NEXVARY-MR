@@ -46,8 +46,8 @@ Item {
      ColumnLayout {
       anchors.fill:parent;anchors.margins:10;spacing:5
       Label {text:modelData.entry.name;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideMiddle;textFormat:Text.PlainText;color:app.tone("#d3e8fa");font.bold:true}
-      Label {text:modelData.entry.kind+" · "+modelData.entry.size+" B";Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideRight;color:app.tone("#8cb2ce");font.pixelSize:12}
-      Label {text:modelData.entry.id;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideMiddle;color:app.tone("#77b7e5");font.pixelSize:11}
+      Label {text:modelData.entry.kind+" · "+modelData.entry.size+" B";Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideRight;color:app.tone("#8cb2ce");font.pixelSize:14}
+      Label {text:modelData.entry.id;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideMiddle;color:app.tone("#77b7e5");font.pixelSize:14}
      }
      MouseArea {anchors.fill:parent;onClicked:page.selectedId=modelData.entry.id}
     }
@@ -74,11 +74,11 @@ Item {
      }
      Panel {
       title:app.trx("الدليل المحدد","SELECTED EVIDENCE");Layout.fillWidth:true;Layout.minimumWidth:0
-      Label {text:page.selectedIndex>=0?JSON.stringify(recoveryBridge.evidence[page.selectedIndex],null,2):app.trx("اختر دليلًا لعرض معلوماته","Select evidence to inspect metadata");textFormat:Text.PlainText;Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:12}
+      Label {text:page.selectedIndex>=0?JSON.stringify(recoveryBridge.evidence[page.selectedIndex],null,2):app.trx("اختر دليلًا لعرض معلوماته","Select evidence to inspect metadata");textFormat:Text.PlainText;Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:14}
       EntryArea {objectName:"forensicPreview";Layout.fillWidth:true;Layout.minimumWidth:0;Layout.preferredHeight:150;readOnly:true;selectByMouse:true;wrapMode:TextEdit.Wrap;textFormat:TextEdit.PlainText;text:page.selectedIndex>=0?recoveryBridge.previewEvidence(page.selectedIndex):""}
       Label {text:app.trx("الحائز المسجل: ","Recorded custodian: ")+(page.selectedIndex>=0?recoveryBridge.evidenceCustodian(page.selectedIndex):"");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#63d7b1")}
       ActionButton {objectName:"forensicCustody";text:app.trx("تسجيل نقل الحيازة","Record custody transfer");enabled:page.selectedIndex>=0&&!recoveryBridge.busy&&recoveryBridge.caseOperator!=="";onClicked:custody.open()}
-      Label {text:app.trx("سجل محلي مترابط بالبصمات؛ لا يثبت التسليم المادي أو اعتمادًا قضائيًا. سجلات القضايا القديمة تُميّز بأنها غير متحقق منها تاريخيًا.","Local hash-linked declarations do not prove physical handover or court accreditation. Migrated historical entries are marked unverified.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:12}
+      Label {text:app.trx("سجل محلي مترابط بالبصمات؛ لا يثبت التسليم المادي أو اعتمادًا قضائيًا. سجلات القضايا القديمة تُميّز بأنها غير متحقق منها تاريخيًا.","Local hash-linked declarations do not prove physical handover or court accreditation. Migrated historical entries are marked unverified.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:14}
      }
     }
    }
@@ -92,7 +92,7 @@ Item {
    Item {Layout.fillWidth:true;Layout.minimumWidth:0}
   }
   ProgressBar {Layout.fillWidth:true;Layout.minimumWidth:0;visible:recoveryBridge.busy;indeterminate:recoveryBridge.progress===0;value:recoveryBridge.progress}
-  RowLayout {Layout.fillWidth:true;Layout.minimumWidth:0;Label {text:recoveryBridge.status;Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:recoveryBridge.error?app.tone("#ecb774"):app.tone("#9bbbd3");font.pixelSize:12}ActionButton {text:app.trx("إلغاء","Cancel");visible:recoveryBridge.busy;onClicked:recoveryBridge.cancel()}}
+  RowLayout {Layout.fillWidth:true;Layout.minimumWidth:0;Label {text:recoveryBridge.status;Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:recoveryBridge.error?app.tone("#ecb774"):app.tone("#9bbbd3");font.pixelSize:14}ActionButton {text:app.trx("إلغاء","Cancel");visible:recoveryBridge.busy;onClicked:recoveryBridge.cancel()}}
  }
  FileDialog {id:report;fileMode:FileDialog.SaveFile;defaultSuffix:format.currentText.toLowerCase();nameFilters:[format.currentText+" (*."+format.currentText.toLowerCase()+")"];onAccepted:notify(format.currentText==="JSON"?recoveryBridge.exportReport(selectedFile.toString(),plaintext.checked):recoveryBridge.exportFormattedReport(selectedFile.toString(),format.currentText.toLowerCase(),app.ar,plaintext.checked))}
  FileDialog {id:evidence;fileMode:FileDialog.SaveFile;onAccepted:notify(recoveryBridge.exportEvidence(page.selectedIndex,selectedFile.toString(),plaintext.checked))}

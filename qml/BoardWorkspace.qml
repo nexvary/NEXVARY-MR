@@ -140,7 +140,7 @@ Item {
             Layout.fillWidth: true
             implicitHeight: warningLabel.implicitHeight + 18
             color: app.tone("#252514"); radius: 6; border.color: app.tone("#5e542c")
-            Label { id: warningLabel; anchors.fill: parent; anchors.margins: 9; wrapMode: Text.WordWrap; color: app.tone("#e9cb7d"); font.pixelSize: 12; text: workspace.tr("عارض مكونات وشبكات أصلي. لوحة التدريب خيالية والقيم توضيحية فقط. القياسات تُدخل يدويًا؛ لا توجد أداة قياس متصلة.", "Native component/net viewer. The training board is fictional; its values are illustrative only. Measurements are entered manually; no measurement hardware is connected.") }
+            Label { id: warningLabel; anchors.fill: parent; anchors.margins: 9; wrapMode: Text.WordWrap; color: app.tone("#e9cb7d"); font.pixelSize:14; text: workspace.tr("عارض مكونات وشبكات أصلي. لوحة التدريب خيالية والقيم توضيحية فقط. القياسات تُدخل يدويًا؛ لا توجد أداة قياس متصلة.", "Native component/net viewer. The training board is fictional; its values are illustrative only. Measurements are entered manually; no measurement hardware is connected.") }
         }
         RowLayout {
             Layout.fillWidth: true
@@ -205,7 +205,7 @@ Item {
                                         width: parent.width - 4
                                         spacing: 3
                                         Label { width: parent.width; text: modelData.reference; textFormat: Text.PlainText; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight; color: app.tone("#edf5ff"); font.pixelSize: Math.max(8, Math.min(17, 18 * workspace.zoom)); font.bold: true }
-                                        Label { width: parent.width; visible: parent.parent.height > 48 && workspace.zoom > 0.45; text: modelData.name; textFormat: Text.PlainText; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight; color: app.tone("#9ab8cd"); font.pixelSize: 10 }
+                                        Label { width: parent.width; visible: parent.parent.height > 48 && workspace.zoom > 0.45; text: modelData.name; textFormat: Text.PlainText; horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight; color: app.tone("#9ab8cd"); font.pixelSize:14 }
                                     }
                                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: workspace.selected = modelData }
                                 }
@@ -217,11 +217,11 @@ Item {
                         anchors.centerIn: parent
                         width: Math.max(100, parent.width - 48)
                         spacing: 12
-                        Label { width: parent.width; text: "BOARD WORKSPACE"; color: app.tone("#4284ac"); font.pixelSize: 23; font.bold: true; horizontalAlignment: Text.AlignHCenter }
+                        Label { width: parent.width; text: "BOARD WORKSPACE"; color: app.tone("#4284ac"); font.pixelSize:23; font.bold: true; horizontalAlignment: Text.AlignHCenter }
                         Label { width: parent.width; wrapMode: Text.WordWrap; horizontalAlignment: Text.AlignHCenter; color: app.tone("#90abc0"); text: workspace.tr("افتح ملفًا مرخصًا أو جرّب لوحة التدريب. اسحب لتحريك اللوحة واستخدم أزرار التكبير للفحص.", "Open licensed data or load the synthetic training board. Drag to pan; use the zoom controls to inspect components.") }
                     }
                 }
-                Label { Layout.fillWidth: true; text: boardBridge.loaded ? boardBridge.title + " · " + boardBridge.author + " · " + boardBridge.license : workspace.tr("لم يُفتح ملف بعد", "No board loaded"); textFormat: Text.PlainText; elide: Text.ElideRight; color: app.tone("#87a5ba"); font.pixelSize: 11 }
+                Label { Layout.fillWidth: true; text: boardBridge.loaded ? boardBridge.title + " · " + boardBridge.author + " · " + boardBridge.license : workspace.tr("لم يُفتح ملف بعد", "No board loaded"); textFormat: Text.PlainText; elide: Text.ElideRight; color: app.tone("#87a5ba"); font.pixelSize:14 }
                 ListView {
                     Layout.fillWidth: true; Layout.preferredHeight: searchField.text.trim() ? 92 : 0
                     visible: searchField.text.trim() !== ""
@@ -246,8 +246,8 @@ Item {
                     ColumnLayout {
                         width: parent.width
                         spacing: 10
-                        Label { text: workspace.tr("فحص المكونات", "Component inspector"); color: app.tone("#eef5ff"); font.bold: true; font.pixelSize: 16 }
-                        Label { Layout.fillWidth: true; text: workspace.selected.reference || workspace.tr("اختر مكونًا من اللوحة", "Select a board component"); textFormat: Text.PlainText; color: app.tone("#6eb6ff"); font.pixelSize: 20; font.bold: true; wrapMode: Text.WordWrap }
+                        Label { text: workspace.tr("فحص المكونات", "Component inspector"); color: app.tone("#eef5ff"); font.bold: true; font.pixelSize:16 }
+                        Label { Layout.fillWidth: true; text: workspace.selected.reference || workspace.tr("اختر مكونًا من اللوحة", "Select a board component"); textFormat: Text.PlainText; color: app.tone("#6eb6ff"); font.pixelSize:20; font.bold: true; wrapMode: Text.WordWrap }
                         Label { Layout.fillWidth: true; text: workspace.selected.name || ""; textFormat: Text.PlainText; color: app.tone("#a5bfd3"); wrapMode: Text.WordWrap }
                         Flow {
                             Layout.fillWidth: true; spacing: 5
@@ -260,7 +260,7 @@ Item {
                                 }
                             }
                         }
-                        Label { Layout.fillWidth: true; text: workspace.tr("إضاءة الشبكة تُظهر عضوية المكونات فقط؛ لا تتوفر مسارات الأسلاك.", "Net highlighting indicates component membership; trace geometry is not available."); color: app.tone("#7696ad"); font.pixelSize: 11; wrapMode: Text.WordWrap }
+                        Label { Layout.fillWidth: true; text: workspace.tr("إضاءة الشبكة تُظهر عضوية المكونات فقط؛ لا تتوفر مسارات الأسلاك.", "Net highlighting indicates component membership; trace geometry is not available."); color: app.tone("#7696ad"); font.pixelSize:14; wrapMode: Text.WordWrap }
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("قياس يدوي · فولت", "Manual measurement · volts"); color: app.tone("#d9e8f2"); font.bold: true }
                         NeonComboBox { id: netBox; Layout.fillWidth: true; enabled: boardBridge.loaded; model: boardBridge.nets; textRole: "name"; valueRole: "name"; onActivated: workspace.activeNet = currentText }
@@ -271,23 +271,23 @@ Item {
                             model: boardBridge.measurements.slice(-5).reverse()
                             delegate: Label {
                                 required property var modelData
-                                Layout.fillWidth: true; wrapMode: Text.WordWrap; textFormat: Text.PlainText; font.pixelSize: 11
+                                Layout.fillWidth: true; wrapMode: Text.WordWrap; textFormat: Text.PlainText; font.pixelSize:14
                                 text: modelData.net + ": " + Number(modelData.value).toFixed(3) + " V · " + workspace.comparisonText(modelData.comparison)
                                 color: modelData.comparison === "outside_reference" ? app.tone("#edb266") : app.tone("#8bd6c0")
                             }
                         }
-                        Label { Layout.fillWidth: true; text: workspace.tr("المقارنة حسابية مع مرجع الملف وليست حكمًا بسلامة القطعة.", "Comparison is arithmetic against the file reference; it does not establish component health."); wrapMode: Text.WordWrap; color: app.tone("#7797ae"); font.pixelSize: 11 }
+                        Label { Layout.fillWidth: true; text: workspace.tr("المقارنة حسابية مع مرجع الملف وليست حكمًا بسلامة القطعة.", "Comparison is arithmetic against the file reference; it does not establish component health."); wrapMode: Text.WordWrap; color: app.tone("#7797ae"); font.pixelSize:14 }
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("تعليق على المكون", "Component annotation"); color: app.tone("#d9e8f2"); font.bold: true }
                         EntryArea { id: annotationText; Layout.fillWidth: true; Layout.preferredHeight: 80; enabled: !!workspace.selected.reference; wrapMode: TextEdit.Wrap; placeholderText: workspace.tr("ملاحظات الفني…", "Technician notes…"); color: app.tone("#d8e8f7"); background: Rectangle { color: app.tone("#071623"); border.color: app.tone("#24445a"); radius: 5 } onTextChanged: if (text.length > 4000) text = text.slice(0, 4000) }
                         ActionButton { Layout.fillWidth: true; text: workspace.tr("إضافة تعليق", "Add annotation"); enabled: !!workspace.selected.reference && annotationText.text.trim().length > 0; onClicked: if (boardBridge.addAnnotation(workspace.selected.reference, annotationText.text, workspace.selected.x + workspace.selected.width / 2, workspace.selected.y + workspace.selected.height / 2)) { annotationText.clear(); workspace.status = workspace.tr("أُضيف التعليق", "Annotation added") } }
                         Repeater {
                             model: boardBridge.annotations
-                            delegate: Label { required property var modelData; Layout.fillWidth: true; visible: modelData.reference === workspace.selected.reference; text: "• " + modelData.text; textFormat: Text.PlainText; color: app.tone("#9fbbcd"); wrapMode: Text.WordWrap; font.pixelSize: 12 }
+                            delegate: Label { required property var modelData; Layout.fillWidth: true; visible: modelData.reference === workspace.selected.reference; text: "• " + modelData.text; textFormat: Text.PlainText; color: app.tone("#9fbbcd"); wrapMode: Text.WordWrap; font.pixelSize:14 }
                         }
                         Rectangle { Layout.fillWidth: true; height: 1; color: app.tone("#233b4c") }
                         Label { text: workspace.tr("صور المكون", "Component photographs"); color: app.tone("#d9e8f2"); font.bold: true }
-                        Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: app.tone("#7797ae"); font.pixelSize: 11; text: workspace.tr("حتى 4 صور لكل جلسة. PNG/JPEG محلية حتى 4 MiB و4096×4096؛ الصورة المحفوظة حتى 2 MiB. تبقى الصور داخل ملف الجلسة.", "Up to 4 photos per session. Local PNG/JPEG up to 4 MiB and 4096×4096; stored PNG up to 2 MiB. Photos remain inside the session file.") }
+                        Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: app.tone("#7797ae"); font.pixelSize:14; text: workspace.tr("حتى 4 صور لكل جلسة. PNG/JPEG محلية حتى 4 MiB و4096×4096؛ الصورة المحفوظة حتى 2 MiB. تبقى الصور داخل ملف الجلسة.", "Up to 4 photos per session. Local PNG/JPEG up to 4 MiB and 4096×4096; stored PNG up to 2 MiB. Photos remain inside the session file.") }
                         ActionButton { objectName: "attachBoardPhoto"; Layout.fillWidth: true; text: workspace.tr("إرفاق صورة", "Attach photograph"); enabled: !!workspace.selected.reference && boardBridge.photos.length < 4; onClicked: { workspace.photoReference = workspace.selected.reference; photoPicker.open() } }
                         Repeater {
                             model: boardBridge.photos
@@ -297,16 +297,16 @@ Item {
                                 visible: modelData.reference === workspace.selected.reference
                                 Layout.fillWidth: true
                                 Image { Layout.fillWidth: true; Layout.preferredHeight: 130; fillMode: Image.PreserveAspectFit; source: modelData.image; sourceSize.width: 520; sourceSize.height: 260; cache: false; MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: { workspace.photoPreview = modelData.image; photoDialog.open() } } }
-                                Label { Layout.fillWidth: true; text: modelData.name; textFormat: Text.PlainText; color: app.tone("#9fbbcd"); elide: Text.ElideRight; font.pixelSize: 11 }
+                                Label { Layout.fillWidth: true; text: modelData.name; textFormat: Text.PlainText; color: app.tone("#9fbbcd"); elide: Text.ElideRight; font.pixelSize:14 }
                                 ActionButton { text: workspace.tr("حذف المرفق", "Remove attachment"); implicitHeight: 28; onClicked: boardBridge.removePhoto(index) }
                             }
                         }
-                        Label { Layout.fillWidth: true; text: boardBridge.description; textFormat: Text.PlainText; wrapMode: Text.WordWrap; color: app.tone("#708ca2"); font.pixelSize: 10 }
+                        Label { Layout.fillWidth: true; text: boardBridge.description; textFormat: Text.PlainText; wrapMode: Text.WordWrap; color: app.tone("#708ca2"); font.pixelSize:14 }
                     }
                 }
             }
         }
-        Label { Layout.fillWidth: true; visible: boardBridge.error !== "" || workspace.status !== ""; text: boardBridge.error || workspace.status; textFormat: Text.PlainText; wrapMode: Text.WordWrap; color: boardBridge.error ? app.tone("#ffae8c") : app.tone("#6fd9b5"); font.pixelSize: 12 }
+        Label { Layout.fillWidth: true; visible: boardBridge.error !== "" || workspace.status !== ""; text: boardBridge.error || workspace.status; textFormat: Text.PlainText; wrapMode: Text.WordWrap; color: boardBridge.error ? app.tone("#ffae8c") : app.tone("#6fd9b5"); font.pixelSize:14 }
     }
     function comparisonText(value) {
         if (value === "within_reference") return tr("ضمن المرجع", "within reference")

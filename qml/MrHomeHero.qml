@@ -17,7 +17,7 @@ Rectangle {
    SemanticIcon {iconSource:"qrc:/assets/icons-professional/home.svg";Layout.preferredWidth:38;Layout.preferredHeight:38;}
    ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
     Label {text:hero.app.trx("مرحبًا بك في NEXVARY MR", "Welcome to NEXVARY MR");font.pixelSize:17;color:"#E5EDF3";font.weight:Font.Light;Layout.fillWidth:true;elide:Text.ElideRight}
-    Label {text:hero.app.trx("الصيانة • البحث • التحليل", "REPAIR • RESEARCH • ANALYSIS");font.pixelSize:10;color:"#9EB4C1";font.letterSpacing:1;Layout.fillWidth:true;elide:Text.ElideRight}
+    Label {text:hero.app.trx("الصيانة • البحث • التحليل", "REPAIR • RESEARCH • ANALYSIS");font.pixelSize:14;color:"#9EB4C1";font.letterSpacing:1;Layout.fillWidth:true;elide:Text.ElideRight}
    }
    OsintDesktopCommand {objectName:"dashboardDevices";iconName:"phone";text:hero.app.trx("الأجهزة", "Devices");onClicked:hero.app.navigatePrimary(1)}
    OsintDesktopCommand {objectName:"homeOpenOsint";iconName:"search_visual";primary:true;text:hero.app.trx("الاستخبارات","Intelligence");onClicked:hero.app.navigatePrimary(3)}

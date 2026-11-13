@@ -70,7 +70,7 @@ ScrollView {
    Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.success;text:page.verification.verified?app.trx("تم التحقق: ","Verified: ")+page.verification.sha256:""}
   }
   Panel {Layout.fillWidth:true;title:app.trx("طلبات الإتلاف ومراجعتها","Disposal requests & review");iconName:"warning"
-   CheckBox {id:consent;objectName:"retentionDisposalConsent";text:app.trx("أقر بمراجعة السند والسياسة؛ هذا طلب بلا حذف","Confirm authority / policy review; request retains all bytes")}
+   NeonCheckBox {id:consent;objectName:"retentionDisposalConsent";text:app.trx("أقر بمراجعة السند والسياسة؛ هذا طلب بلا حذف","Confirm authority / policy review; request retains all bytes")}
    ActionButton {objectName:"retentionRequestDisposal";text:app.trx("إرسال طلب إتلاف للمراجعة","Submit disposal request for review");enabled:lawCaseBridge.permissions.requestDisposal&&page.evidenceId!==""&&consent.checked&&reason.text.trim()!==""&&holdAuthority.text.trim()!=="";onClicked:{page.operate("request-disposal",{evidenceId:page.evidenceId,reason:reason.text,authorityReference:holdAuthority.text});consent.checked=false}}
    Repeater {model:page.governance.disposals||[]
     delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true

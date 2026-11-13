@@ -33,7 +33,7 @@ ColumnLayout {
     }
     onTextChanged:sync()
     Component.onCompleted:sync()
-    CheckBox {
+    NeonCheckBox {
         objectName:"dateEnabled"
         checked:picker.text!==""
         text:picker.app.trx("تحديد التاريخ والوقت (UTC)","Set date and time (UTC)")

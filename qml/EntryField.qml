@@ -1,8 +1,12 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import "InputRules.js" as Rules
 TextField {
     id:entry
+    Layout.maximumWidth:320
+    Layout.preferredWidth:280
+    implicitHeight:Math.max(44,contentHeight+topPadding+bottomPadding)
     property bool requiredInput:true
     property bool configuredValue:false
     property string validationKind:(inputMethodHints & Qt.ImhFormattedNumbersOnly)?"number":(inputMethodHints & Qt.ImhDigitsOnly)?"integer":"text"

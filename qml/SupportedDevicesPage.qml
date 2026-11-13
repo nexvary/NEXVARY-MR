@@ -26,7 +26,7 @@ ColumnLayout {
    ColumnLayout {id:details;anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;anchors.margins:12;spacing:6
     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.brand+" · "+modelData.model;color:app.tone("#edf4ff");font.bold:true}
     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:(modelData.evidence==="requested"?app.trx("مرجع مطلوب — غير متحقق","Requested reference — unverified"):app.trx("ادعاء موثق من مورّد — غير مختبر لدينا","Documented vendor claim — not tested by us"))+" · Android: "+(modelData.android||"?")+" · SoC: "+(modelData.chipset||"?");color:app.tone("#eab775")}
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.requirements;color:app.tone("#a8bfd4");font.pixelSize:12}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.requirements;color:app.tone("#a8bfd4");font.pixelSize:14}
     ActionButton {visible:!!modelData.sourceUrl;text:app.trx("فتح المصدر","Open source");onClicked:app.openExternal(modelData.sourceUrl)}
    }
   }

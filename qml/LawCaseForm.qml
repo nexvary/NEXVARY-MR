@@ -48,7 +48,7 @@ Item {
     Panel {Layout.fillWidth:true;title:page.stages[page.step];iconName:page.step===1?"document_lock":"clipboard_task"
      Label {visible:page.step===1;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تُسجل المستندات والنطاق للمراجعة البشرية. اكتمال الحقول ليس اعتمادًا قانونيًا ولا إذنًا آليًا لفحص جهاز. لا يُشترط حكم إدانة نهائي. اختر التاريخ والوقت بأزرار + و-؛ يُحفظان بالتوقيت العالمي UTC.","Record declarations and scope for human review. Completeness is not legal approval or automatic device permission. No final conviction is required. Choose date and time with + and -; values are stored in UTC.")}
      GridLayout {
-      id:formGrid;visible:page.step<3;Layout.fillWidth:true;columns:width>850?2:1;columnSpacing:16;rowSpacing:12
+      id:formGrid;visible:page.step<3;Layout.fillWidth:true;Layout.maximumWidth:900;columns:width>680?2:1;columnSpacing:16;rowSpacing:12
       Repeater {id:fields;model:page.step<3?page.definitions[page.step]:[]
        delegate:ColumnLayout {
         id:field

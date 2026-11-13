@@ -994,6 +994,20 @@ TestCase {
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-ar.png"));app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-en.png"))
   artifactClick(findChild(app,"identityPanel"),findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
  }
+ function test_compactGovernmentSettings(){
+  app.setWorkspace(false);app.navigateSection(10);app.ar=true;
+  tryVerify(function(){return app.font.family.indexOf("Noto Kufi Arabic")>=0},5000);
+  const reason=findChild(app,"governmentNetworkReason"),reference=findChild(app,"governmentNetworkCaseRef"),consent=findChild(app,"governmentNetworkApproval"),grid=findChild(app,"governmentRequestFields");
+  for(const size of [[1366,768],[1920,1080]])for(const ar of [true,false]){
+   app.width=size[0];app.height=size[1];app.ar=ar;verify(renderedFrame());
+   verify(reason.width<=320);verify(reference.width<=320);compare(grid.columns,2);
+   compare(Math.round(reason.mapToItem(grid,0,0).y),Math.round(reference.mapToItem(grid,0,0).y));
+   consent.checked=true;verify(renderedFrame());compare(String(findChild(consent,"selectionIndicator").color),"#a855f7");
+   findChild(app,"settingsScroll").contentItem.contentY=0;
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-settings-"+(ar?"ar":"en")+"-"+size[0]+".png"));
+  }
+  consent.checked=false;app.ar=true;
+ }
  function test_yzz_ownerInterfaceReview(){
   reviewCapture=true;app.width=1536;app.height=980;
   const screens=[];

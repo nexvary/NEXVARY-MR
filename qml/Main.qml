@@ -140,7 +140,8 @@ ApplicationWindow {
  function sectionButton(index){return shell.sectionButton(index)}
  function navigationButton(legacyIndex){return sectionButton([0,1,2,2,3,7,7,10,6,5][legacyIndex]||0)}
  palette.window:design.background;palette.windowText:design.text;palette.base:design.surface;palette.alternateBase:design.raised;palette.text:design.text;palette.button:design.raised;palette.buttonText:design.text;palette.highlight:design.accent;palette.highlightedText:"white";palette.mid:design.border;palette.dark:design.background;palette.light:design.border;palette.placeholderText:design.muted
- font.family:"Segoe UI";font.pixelSize:14
+ FontLoader {id:kufiFont;source:"qrc:/assets/fonts/NotoKufiArabic.ttf"}
+ font.family:ar&&kufiFont.status===FontLoader.Ready?kufiFont.name:"Segoe UI";font.pixelSize:ar?17:16
  LayoutMirroring.enabled:ar
  LayoutMirroring.childrenInherit:true
  Shortcut {sequence:"Ctrl+1";onActivated:window.navigateSection(0)}

@@ -23,7 +23,7 @@ ScrollView {
    }
    EntryField {id:description;objectName:"lawEvidenceDescription";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("وصف الدليل","Evidence description")}
    EntryField {id:custodian;objectName:"lawEvidenceCustodian";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("المسؤول الحالي","Current custodian")}
-   CheckBox {id:consent;objectName:"lawEvidenceConsent";text:app.trx("أقر بنطاق التفويض ونسخ الملف إلى القضية","Confirm scope and copy file into case")}
+   NeonCheckBox {id:consent;objectName:"lawEvidenceConsent";text:app.trx("أقر بنطاق التفويض ونسخ الملف إلى القضية","Confirm scope and copy file into case")}
    ActionButton {objectName:"lawRegisterEvidence";text:app.trx("حفظ الدليل وبصمته","Store evidence and digest");primary:true;enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.addEvidence&&device.currentIndex>=0&&page.path!==""&&consent.checked;onClicked:{const id=lawCaseBridge.addEvidence(lawCaseBridge.devices[device.currentIndex].id,page.path,description.text,custodian.text,consent.checked);if(id!==""){page.selectedId=id;page.path="";consent.checked=false}}}
   }
   Panel {title:page.custodyOnly?app.trx("سلسلة الحيازة","Chain of custody"):app.trx("التحقق ونسخ العمل","Verification and working copies");iconName:"history";Layout.fillWidth:true
@@ -32,7 +32,7 @@ ScrollView {
    Label {objectName:"lawEvidenceVerified";visible:page.verified&&!page.custodyOnly;color:app.design.success;text:app.trx("تطابق الحجم وSHA-256 للنسخة المحفوظة","Stored-copy size and SHA-256 match")}
    EntryField {id:copyPurpose;visible:!page.custodyOnly;objectName:"lawCopyPurpose";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("الغرض من نسخة العمل","Working-copy purpose")}
    EntryField {id:copyDirectory;visible:!page.custodyOnly;objectName:"lawCopyDirectory";Layout.fillWidth:true;maximumLength:2048;placeholderText:app.trx("مسار مجلد حزمة جديد داخل مجلد موجود","New package directory path inside an existing folder")}
-   CheckBox {id:copyConsent;visible:!page.custodyOnly;objectName:"lawCopyConsent";text:app.trx("أوافق على تصدير نسخة عمل غير مشفرة","Approve unencrypted working-copy export")}
+   NeonCheckBox {id:copyConsent;visible:!page.custodyOnly;objectName:"lawCopyConsent";text:app.trx("أوافق على تصدير نسخة عمل غير مشفرة","Approve unencrypted working-copy export")}
    ActionButton {objectName:"lawExportWorkingCopy";visible:!page.custodyOnly;text:app.trx("تصدير نسخة عمل وManifest","Export working copy & manifest");enabled:lawCaseBridge.permissions.exportEvidence&&evidence.currentIndex>=0&&copyPurpose.text.trim()!==""&&copyDirectory.text.trim()!==""&&copyConsent.checked;onClicked:{const result=lawCaseBridge.exportWorkingCopy(evidence.model[evidence.currentIndex].id,copyDirectory.text,copyPurpose.text,copyConsent.checked);page.lastExport=result}}
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تبقى النسخة الأصلية المحمية دون تغيير. احتفظ ببصمة Manifest منفصلة، وتحقق بالأداة verify_evidence_package.py دون تشغيل الدليل.","The protected original remains unchanged. Retain the manifest digest separately; verify with verify_evidence_package.py without executing evidence.")}
    EntryArea {objectName:"lawCopyManifestDigest";visible:!!page.lastExport.manifestSha256;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;text:page.lastExport.manifestSha256||"";color:app.design.success}

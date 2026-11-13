@@ -20,7 +20,7 @@ Item {
     contentItem:ColumnLayout {spacing:5
      Label {text:modelData.metadata.caseNumber;Layout.fillWidth:true;elide:Text.ElideRight;color:page.app.design.text;font.bold:true;textFormat:Text.PlainText}
      Label {text:modelData.metadata.investigatingAgency+" · "+modelData.metadata.investigatorName;Layout.fillWidth:true;elide:Text.ElideRight;color:page.app.design.muted;textFormat:Text.PlainText}
-     Label {text:modelData.status+" · "+page.app.trx("أجهزة: ","Devices: ")+modelData.deviceCount+" · revision "+modelData.revision;Layout.fillWidth:true;color:page.app.design.muted;font.pixelSize:12;textFormat:Text.PlainText}
+     Label {text:modelData.status+" · "+page.app.trx("أجهزة: ","Devices: ")+modelData.deviceCount+" · revision "+modelData.revision;Layout.fillWidth:true;color:page.app.design.muted;font.pixelSize:14;textFormat:Text.PlainText}
     }
     onClicked:if(lawCaseBridge.openCase(modelData.id))page.opened()
    }

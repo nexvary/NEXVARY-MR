@@ -1,14 +1,16 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 Button {
  id: control
  readonly property var themeWindow:ApplicationWindow.window
  function tone(value){return themeWindow?themeWindow.tone(value):value}
  property bool primary: false
- implicitHeight: 42
+ Layout.maximumWidth:360
+ implicitHeight: Math.max(44,contentItem.implicitHeight+16)
  implicitWidth: Math.max(112, contentItem.implicitWidth + 30)
  hoverEnabled: true
- font.pixelSize: 13
+ font.pixelSize:14
  focusPolicy: Qt.StrongFocus
  Accessible.name: text
  contentItem: Text {

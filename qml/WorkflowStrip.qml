@@ -14,7 +14,7 @@ Flow {
    width:Math.max(72,caption.implicitWidth+20);height:32;radius:6
    color:index<=flow.reached?Qt.rgba(flow.app.design.accent.r,flow.app.design.accent.g,flow.app.design.accent.b,0.10):flow.app.design.raised
    border.color:index===flow.reached?flow.app.design.accent:flow.app.design.border
-   Label {id:caption;anchors.centerIn:parent;text:(index+1)+"  "+modelData;font.pixelSize:11;color:index<=flow.reached?flow.app.design.text:flow.app.design.muted}
+   Label {id:caption;anchors.centerIn:parent;text:(index+1)+"  "+modelData;font.pixelSize:14;color:index<=flow.reached?flow.app.design.text:flow.app.design.muted}
   }
  }
 }

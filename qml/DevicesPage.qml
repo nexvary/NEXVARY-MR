@@ -66,7 +66,7 @@ Item {
        ColumnLayout {
         Layout.fillWidth:true;spacing:4
         Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
-        Label {text:modelData.serial;color:app.tone("#9bbbd3");font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText}
+        Label {text:modelData.serial;color:app.tone("#9bbbd3");font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText}
        }
        Label {text:modelData.state;color:modelData.state==="device"?app.tone("#48dea4"):app.tone("#f6bb67");font.bold:true;textFormat:Text.PlainText}
        Label {visible:toolBridge.selectedSerial===modelData.serial;text:app.trx("محدد","Selected");color:"#60bdff"}
@@ -122,11 +122,11 @@ Item {
     ScrollView {
      Layout.fillWidth:true;Layout.preferredHeight:page.height>850?300:220;contentWidth:availableWidth;clip:true
      EntryArea {
-      objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:12;color:app.tone("#c7deef");background:null
+      objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:14;color:app.tone("#c7deef");background:null
       text:resultTabs.currentIndex===0?(page.identified?JSON.stringify(toolBridge.deviceInfo,null,2):app.trx("اقرأ معلومات الهاتف لعرض الخصائص هنا.","Read phone properties to display them here.")):resultTabs.currentIndex===1?(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||app.trx("لم تتم قراءة السجل بعد.","No log has been read yet.")):resultTabs.currentIndex===2?(toolBridge.driverInfo||app.trx("شغّل فحص USB والتعريفات لعرض النتائج هنا.","Run USB / driver inspection to display the results here.")):(toolBridge.mirrorStatus!==""||toolBridge.mirrorOutput!==""?toolBridge.mirrorStatus+"\n\n"+toolBridge.mirrorOutput:app.trx("لم تبدأ جلسة عرض بعد.","No screen session has started."))
      }
     }
-    Label {text:app.trx("الخصائص والسجلات تصريحات مقروءة من الجهاز وليست اعتمادًا شاملًا لسلامته. راجع البيانات الشخصية قبل مشاركة النتائج.","Properties and logs are device observations, not complete health certification. Review personal data before sharing results.");color:app.tone("#9bbbd3");font.pixelSize:11;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+    Label {text:app.trx("الخصائص والسجلات تصريحات مقروءة من الجهاز وليست اعتمادًا شاملًا لسلامته. راجع البيانات الشخصية قبل مشاركة النتائج.","Properties and logs are device observations, not complete health certification. Review personal data before sharing results.");color:app.tone("#9bbbd3");font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.WordWrap}
    }
   }
  }
