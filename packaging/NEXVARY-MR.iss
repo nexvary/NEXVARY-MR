@@ -17,8 +17,15 @@ OutputBaseFilename=NEXVARY-MR-Government-Setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+DisableWelcomePage=no
+InfoBeforeFile=program-description.rtf
 SetupIconFile=app.ico
 UninstallDisplayIcon={app}\NEXVARY-MR.exe
+[Messages]
+WelcomeLabel2=Discover NEXVARY-MR Government Edition: a unified Windows workspace for device diagnostics, case and evidence management, and integrated intelligence search.%n%nThe next page introduces the program before installation.
+InfoBeforeLabel=Discover NEXVARY-MR Government Edition
+InfoBeforeClickLabel=Read about the workspace, then click Next to continue.
+
 [Files]
 Source: "..\dist\NEXVARY-MR\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]

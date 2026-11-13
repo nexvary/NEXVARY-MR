@@ -69,6 +69,10 @@ public:
   reviewServer=std::make_unique<FixtureServer>("metadata");
   return lampyreConnection->configure(reviewServer->url(),"SYNTHETIC-UI-ONLY-NOT-A-LIVE-KEY",false)&&lampyreConnection->connectProvider(true);
  }
+ Q_INVOKABLE QVariantMap reviewConnectionStats() const {
+  if(!reviewServer)return {};
+  return {{"paidCalls",reviewServer->paidCalls},{"lastArguments",reviewServer->lastArguments.toVariantMap()}};
+ }
  Q_INVOKABLE bool saveReviewManifest(const QVariantList &screens) {
   QSaveFile file(QDir(QCoreApplication::applicationDirPath()).filePath("ui-review-manifest.json"));
   const auto bytes=QJsonDocument::fromVariant(QVariantMap{{"schemaVersion",1},{"origin","Native Qt Windows CI; synthetic fixtures"},{"installerCreated",false},{"screens",screens}}).toJson();

@@ -1012,6 +1012,34 @@ TestCase {
   }
   consent.checked=false;app.ar=true;
  }
+ function test_yzNativeCardsDispatchAndDisplay(){
+  verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
+  const cards=findChild(app,"intelligenceSearchCards");verify(cards!==null);cards.selectedCard="";
+  verify(uiEvidence.prepareReviewConnection());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);
+  verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
+  compare(uiEvidence.reviewConnectionStats().paidCalls,0);
+  for(const category of ["email","phone"]){
+   const before=uiEvidence.reviewConnectionStats().paidCalls;
+   const card=findChild(cards,"intelligenceCategory-"+category);verify(card!==null);card.clicked();
+   const dialog=findChild(cards,"intelligenceServiceDialog");tryCompare(dialog,"opened",true);
+   tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.selectedCategory,category);
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before);
+   const selector=findChild(dialog.contentItem,"intelligenceServiceSelector");verify(selector!==null);selector.activated(0);
+   const input=findChild(dialog.contentItem,"intelligenceArgument-"+category);verify(input!==null);
+   const value=category==="email"?"native@example.invalid":"+12025550123";input.text=value;input.textEdited();
+   const execute=findChild(dialog.contentItem,"intelligenceExecuteService");verify(!execute.enabled);
+   const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);
+   const invoicesBefore=lampyreConnection.invoices.length;execute.clicked();
+   tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.state,"completed");
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before+1);
+   const task=uiEvidence.reviewConnectionStats().lastArguments.tasks[0];compare(task.tool_name,"synthetic_"+category+"_lookup");compare(task.args[category],value);
+   compare(lampyreConnection.invoices.length,invoicesBefore+1);compare(lampyreConnection.currentInvoice.amountDueMinorUnits,1400);
+   verify(cards.showSearchResult);verify(lampyreConnection.resultText.includes("fixture"));
+   tryVerify(()=>findChild(dialog.contentItem,"lampyreConnectionPanel")!==null,3000);
+   const invoice=findChild(cards,"intelligenceCurrentInvoice");verify(invoice.visible);verify(invoice.text.includes("14.00"));verify(!consent.checked);
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before+1);dialog.close();tryCompare(dialog,"opened",false);
+  }
+ }
  function test_yzz_ownerInterfaceReview(){
   reviewCapture=true;app.width=1536;app.height=980;
   const screens=[];

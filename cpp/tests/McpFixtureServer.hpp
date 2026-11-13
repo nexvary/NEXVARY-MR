@@ -42,7 +42,10 @@ if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")
       const auto name=msg.value("params").toObject().value("name").toString();QJsonObject metadata;
       if(name=="lampyre_balance")metadata={{"photons",37.5}};
       else if(name=="lampyre_categories_list")metadata={{"categories",QJsonArray{QJsonObject{{"name","email"},{"description","Synthetic email category"}},QJsonObject{{"name","phone"}}}}};
-      else if(name=="lampyre_endpoints_from_categories")metadata={{"crawlers",QJsonObject{{"email",QJsonArray{QJsonObject{{"tool_name","synthetic_email_lookup"},{"title","Synthetic email lookup"},{"photons",2.0},{"args","email: string (Email address) (all required)"}}}}}}};
+      else if(name=="lampyre_endpoints_from_categories"){
+       const auto category=lastArguments.value("categories").toArray().first().toString();
+       metadata={{"crawlers",QJsonObject{{category,QJsonArray{QJsonObject{{"tool_name","synthetic_"+category+"_lookup"},{"title","Synthetic "+category+" lookup"},{"photons",2.0},{"args",category+": string (all required)"}}}}}}};
+      }
       else if(name=="lampyre_run_crawlers"){++paidCalls;metadata={{"fixture",true}};}
       result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(metadata).toJson(QJsonDocument::Compact))}}}}};
       if(name=="lampyre_run_crawlers"&&failPaid)result.insert("isError",true);
