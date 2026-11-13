@@ -15,6 +15,9 @@ ColumnLayout {
  readonly property var evaluation: typeof lampyreEvaluation !== "undefined" ? lampyreEvaluation : null
  readonly property bool administrator: typeof identityBridge !== "undefined"
      && identityBridge.authenticated && identityBridge.session.role === "administrator"
+ readonly property bool intelligenceOperator: typeof identityBridge !== "undefined"
+     && identityBridge.authenticated
+     && ["administrator", "investigator", "reviewer"].indexOf(identityBridge.session.role) >= 0
  readonly property bool caseReady: typeof lawCaseBridge !== "undefined"
      && !!lawCaseBridge.activeCase.id && lawCaseBridge.permissions.analyze
      && lawCaseBridge.permissions.addEvidence && lawCaseBridge.devices.length > 0
@@ -24,8 +27,8 @@ ColumnLayout {
    showPhoneSearch = false
  }
 
- onAdministratorChanged: {
-  if (!administrator)
+ onIntelligenceOperatorChanged: {
+  if (!intelligenceOperator)
    showAdvanced = false
  }
 
@@ -163,11 +166,11 @@ ColumnLayout {
       id: searchAction
       objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
       primary: serviceCard.phoneService
-      enabled: serviceCard.phoneService && workspace.caseReady
+      enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !workspace.administrator
       text: serviceCard.phoneService && workspace.showPhoneSearch
           ? workspace.app.trx("إغلاق نموذج البحث", "Close search form")
           : workspace.app.trx("بدء البحث", "Start search")
-      onClicked: workspace.showPhoneSearch = !workspace.showPhoneSearch
+      onClicked: {if(serviceCard.phoneService)workspace.showPhoneSearch = !workspace.showPhoneSearch;else workspace.showAdvanced=true}
      }
     }
    }
@@ -186,14 +189,14 @@ ColumnLayout {
  }
  OsintDesktopCommand {
   objectName: "intelligenceAdvancedSettings"
-  visible: workspace.administrator
+  visible: workspace.intelligenceOperator
   text: workspace.showAdvanced
-      ? workspace.app.trx("إغلاق الإعدادات المتقدمة", "Close advanced settings")
-      : workspace.app.trx("الإعدادات المتقدمة", "Advanced settings")
+      ? workspace.app.trx("إغلاق إعداد الاستخبارات", "Close Intelligence setup")
+      : workspace.app.trx("إعداد الاستخبارات والبحث", "Intelligence setup and search")
   onClicked: workspace.showAdvanced = !workspace.showAdvanced
  }
  Loader {
-  active: workspace.administrator && workspace.showAdvanced
+  active: workspace.intelligenceOperator && workspace.showAdvanced
   visible: active
   Layout.fillWidth: true
   sourceComponent: LampyreConnectionPanel { app: desktopApp }

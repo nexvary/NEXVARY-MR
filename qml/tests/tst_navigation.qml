@@ -920,6 +920,15 @@ TestCase {
   tryVerify(function(){return findChild(ws,"lampyreApiKey")===null});
   verify(!settings.visible);
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
+  app.navigatePrimary(3);verify(renderedFrame());
+  const investigatorSettings=findChild(ws,"intelligenceAdvancedSettings");
+  verify(investigatorSettings.visible);
+  verify(findChild(ws,"intelligenceStartPaidSearch").enabled);
+  if(!ws.showAdvanced)mouseClick(investigatorSettings);
+  tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
+  verify(findChild(ws,"lampyreMcpEndpoint")===null);
+  verify(!findChild(ws,"lampyreExecuteTool").enabled);
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-investigator-setup.png"));
   app.goBack();
  }
  Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}

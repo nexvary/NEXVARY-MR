@@ -30,3 +30,9 @@ class IntelligenceBrandingTests(unittest.TestCase):
         source = (ROOT / "cpp/src/LampyreConnection.cpp").read_text()
         self.assertNotIn('"endpointHost"', source)
         self.assertIn('consumeSubmission()', source)
+
+    def test_investigator_can_reach_native_setup(self):
+        workspace = (ROOT / "qml/OsintWorkspace.qml").read_text()
+        self.assertIn('active: workspace.intelligenceOperator && workspace.showAdvanced', workspace)
+        self.assertNotIn('active: workspace.administrator && workspace.showAdvanced', workspace)
+        self.assertIn('["administrator", "investigator", "reviewer"]', workspace)

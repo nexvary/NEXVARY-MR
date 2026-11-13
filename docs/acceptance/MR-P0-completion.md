@@ -20,7 +20,9 @@ No existing identity, case or credential path is moved/deleted. Legacy credentia
 
 ## Verification gates
 
-- Local: 52 Python tests (49 existing + 3 focused branding/configuration checks); core CTest 6/6 passed before the additional native Qt regressions.
+- Local: 53 Python tests (49 existing + 4 focused branding/configuration/access checks); core CTest 6/6 passed before the additional native Qt regressions.
 - Added native regressions: hidden meta-property/method, fixed endpoint validation, provider/secret display redaction, export redaction, administrator-only persistent allowance, cancellation, unsupported protocol. Extended QML advanced-settings screenshot/regression.
 - Native Qt/Windows tests, package checksums and exact-commit artifacts: must be recorded after CI finishes. Local environment has no Qt SDK. Prior base artifacts are not deliverables for this candidate. The official REST OpenAPI was reachable; the account Swagger YAML path returned 404 and an unauthenticated MCP GET returned 405. These are not evidence of accepted MCP credentials or protocol negotiation.
 - Live authentication, invalid-vs-expired credential differentiation, real provider schema/relationships, exact spending caps, verified balance/pricing, clean Windows 10/11 functional acceptance and physical device testing remain NOT VERIFIED. No credential was supplied or sent to CI. New operation receipts use `intelligence-mcp`; legacy signed receipt identifiers remain verifiable without rewriting history.
+
+The inherited setup Loader was restricted to administrators, making native account/tool support unreachable by investigators. It now admits authenticated administrator/investigator/reviewer roles; investigator search opens the same native panel. Backend permission, independent approval, active-case and credit checks remain authoritative. Added native QML investigator reachability and denied-unconfigured-search regression.
