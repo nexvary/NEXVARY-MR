@@ -193,6 +193,36 @@
       "source": "assets/Globe/SVG/ic_fluent_globe_24_color.svg",
       "source_sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34",
       "sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34"
+    },
+    {
+      "file": "camera.svg",
+      "source": "assets/Camera/SVG/ic_fluent_camera_24_color.svg",
+      "source_sha256": "3189229c9c923c89ab1bf394e31c25c48245619b21828b710129240061597ce6",
+      "sha256": "3189229c9c923c89ab1bf394e31c25c48245619b21828b710129240061597ce6"
+    },
+    {
+      "file": "certificate.svg",
+      "source": "assets/Certificate/SVG/ic_fluent_certificate_24_color.svg",
+      "source_sha256": "05fa11423d4b8bed54b7aa06cd723272ffdf3f39c88e9b7959ea5285ea280af3",
+      "sha256": "05fa11423d4b8bed54b7aa06cd723272ffdf3f39c88e9b7959ea5285ea280af3"
+    },
+    {
+      "file": "coin_multiple.svg",
+      "source": "assets/Coin Multiple/SVG/ic_fluent_coin_multiple_24_color.svg",
+      "source_sha256": "c070c12c2cfba787b28e9c0d0b997b1eed1439d9265a1eee1451a56c0b59c020",
+      "sha256": "c070c12c2cfba787b28e9c0d0b997b1eed1439d9265a1eee1451a56c0b59c020"
+    },
+    {
+      "file": "contact_card.svg",
+      "source": "assets/Contact Card/SVG/ic_fluent_contact_card_24_color.svg",
+      "source_sha256": "d4cc99895eb3fd4e63eb09a067ed1f5f73c6cdae9061580a86642751a7d71684",
+      "sha256": "d4cc99895eb3fd4e63eb09a067ed1f5f73c6cdae9061580a86642751a7d71684"
+    },
+    {
+      "file": "flag.svg",
+      "source": "assets/Flag/SVG/ic_fluent_flag_24_color.svg",
+      "source_sha256": "b87228f6e5a296358f4a2733d975a9f8520d0ba2724b44b3f79dcef597ed8cbd",
+      "sha256": "b87228f6e5a296358f4a2733d975a9f8520d0ba2724b44b3f79dcef597ed8cbd"
     }
   ]
 }

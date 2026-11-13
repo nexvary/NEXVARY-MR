@@ -44,12 +44,12 @@ if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")
      ++calls;lastArguments=msg.value("params").toObject().value("arguments").toObject();
      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text","Synthetic server reply; TEST-API-KEY; Lampyre source label"}}}}};
      if(mode=="metadata"){
-      const auto name=msg.value("params").toObject().value("name").toString();QJsonObject data;
-      if(name=="lampyre_balance")data={{"photons",37.5}};
-      else if(name=="lampyre_categories_list")data={{"categories",QJsonArray{QJsonObject{{"name","email"},{"description","Synthetic email category"}},QJsonObject{{"name","phone"}}}}};
-      else if(name=="lampyre_endpoints_from_categories")data={{"crawlers",QJsonObject{{"email",QJsonArray{QJsonObject{{"tool_name","synthetic_email_lookup"},{"title","Synthetic email lookup"},{"photons",2.0},{"args","email: string (Email address) (all required)"}}}}}}};
-      else if(name=="lampyre_run_crawlers"){++paidCalls;data={{"fixture",true}};}
-      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(data).toJson(QJsonDocument::Compact))}}}}};
+      const auto name=msg.value("params").toObject().value("name").toString();QJsonObject metadata;
+      if(name=="lampyre_balance")metadata={{"photons",37.5}};
+      else if(name=="lampyre_categories_list")metadata={{"categories",QJsonArray{QJsonObject{{"name","email"},{"description","Synthetic email category"}},QJsonObject{{"name","phone"}}}}};
+      else if(name=="lampyre_endpoints_from_categories")metadata={{"crawlers",QJsonObject{{"email",QJsonArray{QJsonObject{{"tool_name","synthetic_email_lookup"},{"title","Synthetic email lookup"},{"photons",2.0},{"args","email: string (Email address) (all required)"}}}}}}};
+      else if(name=="lampyre_run_crawlers"){++paidCalls;metadata={{"fixture",true}};}
+      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(metadata).toJson(QJsonDocument::Compact))}}}}};
      }
 
     }

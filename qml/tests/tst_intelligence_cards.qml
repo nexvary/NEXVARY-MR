@@ -43,10 +43,11 @@ TestCase {
  }
  function test_openingCardDoesNotExecuteSearch(){
   const pane=createTemporaryObject(component,test);verify(pane)
-  findChild(pane,"intelligenceCategory-email").clicked();compare(engine.selectedCategory,"email");compare(engine.runs,0)
-  const selector=findChild(pane,"intelligenceServiceSelector");selector.activated(0)
-  const input=findChild(pane,"intelligenceArgument-email");verify(input);input.text="research@example.invalid";input.textEdited()
-  const execute=findChild(pane,"intelligenceExecuteService");verify(!execute.enabled)
-  const consent=findChild(pane,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);execute.clicked();compare(engine.runs,1);verify(!consent.checked)
+  findChild(pane,"intelligenceCategory-email").clicked();compare(engine.selectedCategory,"email");compare(engine.runs,0);tryCompare(findChild(pane,"intelligenceServiceDialog"),"opened",true)
+  const content=findChild(pane,"intelligenceServiceDialog").contentItem
+  const selector=findChild(content,"intelligenceServiceSelector");verify(selector);selector.activated(0);compare(pane.selectedService,"fixture_lookup");compare(pane.fields.length,1)
+  const input=findChild(content,"intelligenceArgument-email");verify(input);input.text="research@example.invalid";input.textEdited()
+  const execute=findChild(content,"intelligenceExecuteService");verify(!execute.enabled)
+  const consent=findChild(content,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);execute.clicked();compare(engine.runs,1);verify(!consent.checked)
  }
 }
