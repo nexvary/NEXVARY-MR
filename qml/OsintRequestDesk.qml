@@ -25,7 +25,7 @@ Pane {
    Layout.preferredWidth:220;Layout.fillWidth:desk.width<=900;Layout.fillHeight:true
    title:desk.app.trx("معيار الإدخال", "Criteria");iconName:"search_visual"
    Rectangle {Layout.fillWidth:true;implicitHeight:28;color:"#0C435C"
-    Label {anchors.fill:parent;anchors.margins:6;text:desk.app.trx("▾  مثال محلي", "▾  Local example");color:"#E5EDF3";font.pixelSize:12;font.bold:true}
+    Label {anchors.fill:parent;anchors.margins:6;text:desk.app.trx("مثال محلي", "Local example");color:"#E5EDF3";font.pixelSize:12;font.bold:true}
    }
    RowLayout {SemanticIcon {iconSource:"qrc:/assets/icons-professional/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
    Label {text:desk.app.trx("هذا معيار لبيانات الاختبار.", "This input belongs to the test example.");color:"#9EB4C1";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11}
