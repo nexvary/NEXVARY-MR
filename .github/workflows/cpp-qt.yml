@@ -226,6 +226,7 @@ jobs:
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
       - name: Verify MCP transport before building the complete application
+        if: env.MR_SKIP_SETUP != 'true'
         shell: pwsh
         run: |
           cmake --build build --config Release --target mr_lampyre_connection_tests --parallel
@@ -234,15 +235,23 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build GUI
         id: native_build
-        run: cmake --build build --config Release --parallel
+        shell: pwsh
+        run: |
+          if ($env:MR_SKIP_SETUP -eq 'true') {
+            # Owner is reviewing QML: build the existing native UI harness only.
+            cmake --build build --config Release --target mr_ui_tests --parallel
+          } else {
+            cmake --build build --config Release --parallel
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify bounded GUI profile probe and production packaging guard
-        if: ${{ steps.native_build.outcome == 'success' }}
+        if: ${{ env.MR_SKIP_SETUP != 'true' && steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: |
           $binaryName = if ('${{ matrix.profile }}' -eq 'laboratory') { 'nexvary_mr_lab.exe' } else { 'nexvary_mr.exe' }
           ./packaging/test-build-profile.ps1 -FixturePath build/Release/mr_build_profile_fixture.exe -ApplicationPath (Join-Path 'build/Release' $binaryName) -ExpectedProfile '${{ matrix.profile }}'
       - name: Prepare verified standalone ClamAV for synthetic Windows integration
-        if: ${{ steps.native_build.outcome == 'success' }}
+        if: ${{ env.MR_SKIP_SETUP != 'true' && steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -261,14 +270,21 @@ jobs:
         id: tests
         shell: pwsh
         run: |
-          ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          if ($env:MR_SKIP_SETUP -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_ui_(tests|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
+          } else {
+            ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          }
           $testResult = $LASTEXITCODE
           Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
           Copy-Item build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
-          ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($env:MR_SKIP_SETUP -ne 'true') {
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
       - name: Verify read-only Windows USB inventory
+        if: env.MR_SKIP_SETUP != 'true'
         id: usb_inventory
         shell: pwsh
         run: |
