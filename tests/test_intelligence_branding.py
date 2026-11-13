@@ -30,6 +30,8 @@ class IntelligenceBrandingTests(unittest.TestCase):
         source = (ROOT / "cpp/src/LampyreConnection.cpp").read_text()
         self.assertNotIn('"endpointHost"', source)
         self.assertIn('consumeSubmission()', source)
+        self.assertIn('redactedDisplayCopy', source)
+        self.assertIn('originalResultSha256', source)
 
     def test_investigator_can_reach_native_setup(self):
         workspace = (ROOT / "qml/OsintWorkspace.qml").read_text()

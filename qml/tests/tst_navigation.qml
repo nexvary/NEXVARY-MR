@@ -896,6 +896,9 @@ TestCase {
   app.navigatePrimary(3);verify(renderedFrame());
   const ws=findChild(app,"osintWorkspace");
   compare(ws.demoMode,false);
+  verify(findChild(ws,"intelligenceDashboard")!==null);
+  compare(findChild(ws,"intelligenceRefreshCases").enabled,false);
+
   for(const ar of [true,false]){
    app.ar=ar;
    verify(renderedFrame());
@@ -906,12 +909,14 @@ TestCase {
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-cards-"+(ar?"ar":"en")+".png"));
   }
   const settings=findChild(ws,"intelligenceAdvancedSettings");
-  mouseClick(settings);
+  const intelligenceScroll=findChild(app,"intelligenceWorkspace");
+  reveal(intelligenceScroll,settings);mouseClick(settings);
   tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
   verify(findChild(ws,"lampyreMcpEndpoint")===null);
   verify(findChild(ws,"lampyreConnectionPanel").connection.endpoint===undefined);
   for(const ar of [true,false]){
    app.ar=ar;verify(renderedFrame());
+   reveal(intelligenceScroll,findChild(ws,"lampyreApiKey"));
    verify(findChild(ws,"lampyreMcpEndpoint")===null);
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-setup-"+(ar?"ar":"en")+".png"));
   }
@@ -924,10 +929,17 @@ TestCase {
   const investigatorSettings=findChild(ws,"intelligenceAdvancedSettings");
   verify(investigatorSettings.visible);
   verify(findChild(ws,"intelligenceStartPaidSearch").enabled);
-  if(!ws.showAdvanced)mouseClick(investigatorSettings);
+  verify(findChild(ws,"intelligenceRefreshCases").enabled);
+  verify(lawCaseBridge.searchCases(""));
+  ws.showDashboardDetails=true;verify(renderedFrame());
+  reveal(intelligenceScroll,findChild(ws,"intelligenceActiveCase"));
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-case-dashboard.png"));
+  ws.showDashboardDetails=false;verify(renderedFrame());
+  if(!ws.showAdvanced){reveal(intelligenceScroll,investigatorSettings);mouseClick(investigatorSettings);}
   tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
   verify(findChild(ws,"lampyreMcpEndpoint")===null);
   verify(!findChild(ws,"lampyreExecuteTool").enabled);
+  reveal(intelligenceScroll,findChild(ws,"lampyreApiKey"));
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-investigator-setup.png"));
   app.goBack();
  }

@@ -75,7 +75,7 @@ private:
  void read(QNetworkReply *reply,bool ended);
  void accept(QNetworkReply *reply,const QJsonObject &message);
  void finishReceipt(const QString &status);
- QString directory_,owner_,endpoint_,key_,state_="disconnected",error_,result_,session_,version_,stage_,operation_,resultTool_,resultAt_;
+ QString directory_,owner_,endpoint_,key_,state_="disconnected",error_,result_,session_,version_,stage_,operation_,resultTool_,resultAt_,sourceDigest_;
  IdentityService *identity_;
  GovernmentOperationPolicy *policy_;
  bool synthetic_=false,connected_=false,busy_=false,saved_=false;
