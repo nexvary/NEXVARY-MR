@@ -46,7 +46,7 @@ ColumnLayout {
   activeTab = 1
  }
  onVisibleChanged: {
-  if(visible&&intelligenceConnection&&intelligenceConnection.liveProfile&&intelligenceConnection.hasCredential&&!intelligenceConnection.connected&&!intelligenceConnection.busy)intelligenceConnection.connectProvider(true)
+  if(visible&&intelligenceConnection&&intelligenceConnection.liveProfile&&intelligenceConnection.hasCredential&&!intelligenceConnection.lookupConnected&&!intelligenceConnection.busy)intelligenceConnection.verifyLookupConnection(true)
   if (!visible) {
    showAdvanced = false
    showDashboardDetails = false

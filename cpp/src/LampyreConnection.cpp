@@ -19,10 +19,12 @@
 #include <QHostAddress>
 #include <QCryptographicHash>
 #include <QUrl>
+#include <QUrlQuery>
 #include <QUuid>
 #include <cmath>
 namespace {
 constexpr qsizetype responseLimit=2*1024*1024;
+const QString officialLookupBase=QStringLiteral("https://account.lampyre.io/api/1.6");
 const QString officialEndpoint=QStringLiteral("https://account.lampyre.io/api/v2/mcp");
 QVariantMap publicInvoice(const QVariantMap &row){
  QVariantMap customer;for(const auto *field:{"id","operationId","createdUtc","updatedUtc","category","service","currency","quotedMinorUnits","amountDueMinorUnits","status","paymentStatus"})customer.insert(field,row.value(field));return customer;
@@ -35,11 +37,11 @@ LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identit
  connect(&timer_,&QTimer::timeout,this,[this]{fail("timeout");});
  if(identity_)connect(identity_,&IdentityService::changed,this,[this]{
   const auto owner=identity_->authenticated()?identity_->userId():QString();
-  if(owner!=owner_){reset();owner_=owner;load();emit changed();}
+  if(owner!=owner_){reset();owner_=owner;load();restoreLookupReference();emit changed();}
   else if(busy_ && (!identity_->hasPermission("external-connection") || (stage_=="call"&&!authorized())))fail("policy-revoked");
  });
 
- owner_=identity_&&identity_->authenticated()?identity_->userId():synthetic_?QStringLiteral("synthetic"):QString();load();
+ owner_=identity_&&identity_->authenticated()?identity_->userId():synthetic_?QStringLiteral("synthetic"):QString();load();restoreLookupReference();
 }
 bool LampyreConnection::liveProfile()const{return !synthetic_&&identity_&&!identity_->syntheticProfile();}
 double LampyreConnection::retailPriceEur()const{return static_cast<double>(mr::osint::intelligenceRetailPriceMinor)/100.0;}
@@ -60,6 +62,7 @@ QString LampyreConnection::credentialPath()const {
 void LampyreConnection::reset(){
  if(!invoiceId_.isEmpty())finishInvoice("review");
  pendingTasks_={};taskRows_={};
+ lookupConnected_=false;lookupRequestId_.clear();lookupKind_.clear();lookupPolls_=0;
  invoiceRows_.clear();invoiceId_.clear();invoiceOperationId_.clear();resultInvoiceId_.clear();requestSecrets_.clear();invoicePrepared_=false;
  timer_.stop();if(reply_){auto *r=reply_.data();reply_.clear();r->abort();r->deleteLater();}
  finishReceipt("cancelled");connected_=false;busy_=false;tools_.clear();body_.clear();cursors_.clear();pages_=0;
@@ -104,10 +107,11 @@ bool LampyreConnection::configureCredential(const QString &key,bool remember){
 }
 QString LampyreConnection::displayText(const QString &text)const {
  QString safe=text;
- if(!key_.isEmpty())safe.replace(key_,"[credential redacted]");
+ if(!key_.isEmpty()){safe.replace(key_,"[credential redacted]");safe.replace(QString::fromLatin1(QUrl::toPercentEncoding(key_)),"[credential redacted]",Qt::CaseInsensitive);}
  for(const auto &secret:requestSecrets_)if(!secret.isEmpty())safe.replace(secret,"[credential redacted]");
  if(!endpoint_.isEmpty())safe.replace(endpoint_,"[connection redacted]",Qt::CaseInsensitive);
  safe.replace(officialEndpoint,"[connection redacted]",Qt::CaseInsensitive);
+ safe.replace(officialLookupBase,"[connection redacted]",Qt::CaseInsensitive);
  safe.replace(QRegularExpression("https?://[^\\s\"<>]*lampyre\\.io[^\\s\"<>]*",QRegularExpression::CaseInsensitiveOption),"[connection redacted]");
  safe.replace(QRegularExpression("lampyre",QRegularExpression::CaseInsensitiveOption),"[external service redacted]");
  return safe;
@@ -129,7 +133,7 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
 }
 bool LampyreConnection::connectProvider(bool consent){
  if(busy_)return false;
- if(!pendingTasks_.isEmpty())return reject("results-pending");
+ if(pendingResultCount()>0)return reject("results-pending");
  if(!consent)return reject("connection-consent-required");
  if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
  if(identity_&&!identity_->hasPermission("external-connection"))return reject("local-connection-permission-denied");
@@ -271,7 +275,7 @@ bool LampyreConnection::metadataCall(const QString &name,const QJsonObject &args
 }
 bool LampyreConnection::refreshCatalog(){
  if(busy_)return false;
- if(!pendingTasks_.isEmpty())return reject("results-pending");
+ if(pendingResultCount()>0)return reject("results-pending");
  if(!freeMetadataTool("lampyre_categories_list"))return reject("metadata-not-free");
  creditBalance_=-1;categories_.clear();services_.clear();selectedCategory_.clear();catalogCheckedAt_.clear();serviceCatalogAt_=0;
  return metadataCall("lampyre_balance",{},"metadata-balance");
@@ -285,7 +289,7 @@ bool LampyreConnection::discoverServices(const QString &category){
 }
 bool LampyreConnection::runService(const QString &name,const QString &arguments,double approvedPhotons,bool consent){
  if(busy_)return false;
- if(!pendingTasks_.isEmpty())return reject("results-pending");
+ if(pendingResultCount()>0)return reject("results-pending");
  if(!connected_)return reject("not-connected");
  if(!authorized())return reject("investigator-required");
  if(!consent)return reject("request-consent-required");
@@ -311,7 +315,7 @@ bool LampyreConnection::runService(const QString &name,const QString &arguments,
 }
 bool LampyreConnection::callTool(const QString &name,const QString &arguments,bool consent){
  if(busy_)return false;
- if(!pendingTasks_.isEmpty())return reject("results-pending");
+ if(pendingResultCount()>0)return reject("results-pending");
  if(!consent)return reject("request-consent-required");
  if(name=="lampyre_run_crawlers"&&!synthetic_&&!invoicePrepared_)return reject("retail-invoice-required");
  if(!connected_)return reject("not-connected");
@@ -333,6 +337,12 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   if(type=="integer"&&std::floor(value.toDouble())!=value.toDouble())return reject("invalid-arguments");
   const auto allowed=fields.value(it.key()).toMap().value("enum");if(allowed.isValid()&&!allowed.toList().contains(value.toVariant()))return reject("invalid-arguments");
  }
+ if(!beginSubmission(name,doc.object()))return false;
+ post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
+}
+bool LampyreConnection::beginSubmission(const QString &name,const QJsonObject &args){
+ if(!authorized())return reject("investigator-required");
+ if(requestLimit_>0&&submitted_>=requestLimit_)return reject("spending-limit-reached");
  const auto caseId=caseIdentity_?caseIdentity_():QString();
  if(!synthetic_&&(!identity_||!identity_->directWork())&&caseId.isEmpty()){finishReceipt("failed");return reject("active-case-required");}
  if(policy_){operation_=policy_->beginInvestigation(caseId,"intelligence-mcp");if(operation_.isEmpty())return reject("audit-unavailable");}
@@ -348,10 +358,10 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
    }
   }
  };
- redactInputs(doc.object());
+ redactInputs(args);
  pendingTasks_={};taskRows_={};
  ++submitted_;resultInvoiceId_.clear();invoicePrepared_=false;retailQuoted_=false;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();sourceDigest_.clear();error_.clear();emit changed();
- post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
+ return true;
 }
 void LampyreConnection::post(const QString &method,const QJsonObject &params,const QString &stage,bool notification){
  stage_=stage;body_.clear();QJsonObject message{{"jsonrpc","2.0"},{"method",method}};
@@ -373,6 +383,13 @@ void LampyreConnection::read(QNetworkReply *reply,bool ended){
  const int status=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
  if(status>=300||(ended&&status<200)){
   fail(status==401?"authentication-failed":status==403?"provider-authorization-denied":status>=500?"provider-service-error":status==429?"rate-limited":status==402?"payment-required":status>=300&&status<400?"redirect-refused":status==404?"endpoint-or-session-expired":"network-error");return;
+ }
+ if(stage_.startsWith("lookup-")){
+  if(!ended)return;
+  if(reply->error()!=QNetworkReply::NoError){fail("network-error");return;}
+  QJsonParseError error;const auto document=body_.isEmpty()?QJsonDocument():QJsonDocument::fromJson(body_,&error);
+  if(status!=204&&(error.error!=QJsonParseError::NoError||document.isNull())){fail("invalid-lookup-response");return;}
+  timer_.stop();reply_.clear();reply->deleteLater();acceptLookup(status,document);return;
  }
  if(stage_=="initialized"){
   if(ended){if(reply->error()!=QNetworkReply::NoError){fail("network-error");return;}timer_.stop();reply_.clear();post("tools/list",{},"tools");}return;
@@ -460,12 +477,126 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
  }
  fail("invalid-response");
 }
+double LampyreConnection::lookupPhotons(const QString &kind){
+ // Owner-reviewed provider web display (2026-11-14); not a confirmed debit receipt.
+ return kind=="phone"?35.0:kind=="email"?30.0:kind=="username"?15.0:-1.0;
+}
+bool LampyreConnection::verifyLookupConnection(bool consent){
+ if(busy_)return false;
+ if(!consent)return reject("connection-consent-required");
+ if(!hasCredential())return reject("configuration-required");
+ if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
+ if(identity_&&!identity_->hasPermission("external-connection"))return reject("local-connection-permission-denied");
+ lookupConnected_=false;busy_=true;state_="checking-unified-search";error_.clear();emit changed();
+ // This history GET is read-only. Never call the side-effecting search GET here.
+ getLookup("/find/history/by-token",{},"lookup-check");return true;
+}
+void LampyreConnection::getLookup(const QString &path,const QJsonObject &parameters,const QString &stage){
+ stage_=stage;body_.clear();QUrl url(officialLookupBase+path);
+ if(synthetic_&&QHostAddress(QUrl(endpoint_).host()).isLoopback()){
+  url=QUrl(endpoint_);url.setPath("/api/1.6"+path);url.setQuery(QString());
+ }
+ QByteArray query="token="+QUrl::toPercentEncoding(key_);
+ for(auto i=parameters.begin();i!=parameters.end();++i)query+='&'+QUrl::toPercentEncoding(i.key())+'='+QUrl::toPercentEncoding(i.value().toString());
+ url.setQuery(QString::fromLatin1(query),QUrl::StrictMode);
+ QNetworkRequest request(url);request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,QNetworkRequest::ManualRedirectPolicy);
+ request.setAttribute(QNetworkRequest::CacheLoadControlAttribute,QNetworkRequest::AlwaysNetwork);request.setAttribute(QNetworkRequest::CacheSaveControlAttribute,false);
+ request.setAttribute(QNetworkRequest::Http2AllowedAttribute,false);request.setRawHeader("Connection","close");request.setRawHeader("Accept","application/json");
+ // Token-in-query is required by this published API. Never log the URL.
+ auto *reply=manager_.get(request);reply->setReadBufferSize(responseLimit+1);reply_=reply;
+ connect(reply,&QNetworkReply::readyRead,this,[this,reply]{read(reply,false);});
+ connect(reply,&QNetworkReply::finished,this,[this,reply]{read(reply,true);reply->deleteLater();});timer_.start(timeoutMs_);
+}
+bool LampyreConnection::runLookup(const QString &kind,const QString &input,bool consent){
+ if(busy_)return false;
+ if(pendingResultCount()>0)return reject("results-pending");
+ if(!consent)return reject("request-consent-required");
+ if(!lookupConnected_)return reject("unified-connection-required");
+ if(!authorized())return reject("investigator-required");
+ if(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()))return reject("active-case-required");
+ const double cost=lookupPhotons(kind);QString value=input.trimmed();
+ if(kind=="phone")value.remove(QRegularExpression("[ ()-]"));
+ if(cost<0||value.isEmpty()||value.size()>320||value.contains(QRegularExpression("[\\x00-\\x1f\\x7f]")))return reject("invalid-arguments");
+ if(kind=="phone"&&!QRegularExpression("^\\+[1-9][0-9]{6,14}$").match(value).hasMatch())return reject("invalid-arguments");
+ if(kind=="email"&&!QRegularExpression("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$").match(value).hasMatch())return reject("invalid-arguments");
+ if(kind=="username"&&(value.size()>128||!QRegularExpression("^[\\p{L}\\p{N}_.@-]+$").match(value).hasMatch()))return reject("invalid-arguments");
+ if(creditBalance_>=0&&cost>creditBalance_)return reject("payment-required");
+ selectedCategory_=kind;
+ if(!prepareInvoice({{"title","NEXVARY unified search"},{"photons",cost}}))return false;
+ if(!beginSubmission("unified-search",{{kind,value}})){finishInvoice("void");return false;}
+ lookupKind_=kind;lookupPolls_=0;invoiceOperationId_=resultOperationId_;resultInvoiceId_=invoiceId_;retailQuoted_=true;
+ // Write an intent before the one billable GET; no retry or MCP fallback is allowed.
+ if(!saveLookupReference()){fail("invoice-storage-error");return false;}
+ creditBalance_=-1;getLookup("/find/by-token",{{kind,value}},"lookup-start");return true;
+}
+bool LampyreConnection::saveLookupReference(bool complete){
+ if(invoiceId_.isEmpty())return false;
+ auto rows=invoiceRows_;bool found=false;for(auto &v:rows){auto row=v.toMap();if(row.value("id")!=invoiceId_)continue;
+  row.insert("internalTransport","data-lookup");row.insert("internalLookupComplete",complete);row.insert("internalProviderRequestId",lookupRequestId_);row.insert("internalLookupKind",lookupKind_);
+  row.insert("internalCaseId",resultCaseId_);row.insert("operationId",resultOperationId_);row.insert("internalPricingBasis","owner-reviewed-web-display-2026-11-14");v=row;found=true;
+ }
+ return found&&writeInvoices(rows);
+}
+void LampyreConnection::restoreLookupReference(){
+ for(auto it=invoiceRows_.crbegin();it!=invoiceRows_.crend();++it){const auto row=it->toMap();const auto id=row.value("internalProviderRequestId").toString();
+  if(row.value("internalLookupComplete").toBool()||row.value("internalTransport")!="data-lookup"||(row.value("status")!="pending"&&row.value("status")!="review")||QUuid(id).isNull())continue;
+  lookupRequestId_=id;lookupKind_=row.value("internalLookupKind").toString();selectedCategory_=lookupKind_;invoiceId_=row.value("id").toString();resultInvoiceId_=invoiceId_;
+  resultCaseId_=row.value("internalCaseId").toString();resultOperationId_=row.value("operationId").toString();invoiceOperationId_=resultOperationId_;resultTool_="unified-search";retailQuoted_=true;state_="awaiting-results";break;
+ }
+}
+bool LampyreConnection::collectLookup(){
+ if(busy_)return false;
+ if(!lookupConnected_)return reject("unified-connection-required");
+ if(QUuid(lookupRequestId_).isNull())return reject("no-pending-results");
+ if(!authorized()||(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_)))return reject("policy-revoked");
+ if(policy_&&operation_.isEmpty()){operation_=policy_->beginInvestigation(resultCaseId_,"intelligence-result-collection");if(operation_.isEmpty())return reject("audit-unavailable");}
+ ++lookupPolls_;busy_=true;state_="collecting-results";error_.clear();emit changed();
+ getLookup("/find/"+lookupRequestId_+"/by-token",{},"lookup-result");return true;
+}
+void LampyreConnection::acceptLookup(int status,const QJsonDocument &document){
+ if(stage_=="lookup-check"){
+  if(status!=204&&!document.isArray()){fail("invalid-lookup-response");return;}
+  // Discard other searches' private history, even in a successful response.
+  body_.clear();if(invoiceId_.isEmpty()&&!lookupRequestId_.isEmpty())restoreLookupReference();lookupConnected_=true;busy_=false;state_=lookupRequestId_.isEmpty()?"unified-connected":"awaiting-results";error_.clear();emit changed();return;
+ }
+ if(stage_=="lookup-start"){
+  const auto id=document.object().value("request_uuid").toString();
+  if(status!=200||QUuid(id).isNull()){fail("invalid-lookup-response");return;}
+  lookupRequestId_=id;
+  if(!saveLookupReference()){fail("invoice-storage-error");return;}
+  busy_=false;collectLookup();return;
+ }
+ if(stage_!="lookup-result"){fail("invalid-lookup-response");return;}
+ auto result=document.object();const int phase=result.value("status").toInt(-1);
+ if(status==204)result={{"status",2},{"result",QJsonArray{}},{"results_count",0}};
+ else if(!result.value("status").isDouble()||(phase!=1&&phase!=2&&phase!=3)){fail("invalid-lookup-response");return;}
+ if(phase==1&&status!=204){
+  busy_=false;state_="awaiting-results";emit changed();
+  const auto id=lookupRequestId_;if(lookupPolls_<20)QTimer::singleShot(1500,this,[this,id]{if(lookupConnected_&&!busy_&&lookupRequestId_==id)collectLookup();});return;
+ }
+ if(phase!=3&&!result.value("result").isArray()){fail("invalid-lookup-response");return;}
+ QJsonArray rows;bool locked=false;for(const auto &v:result.value("result").toArray()){
+  if(!v.isObject()){fail("invalid-lookup-response");return;}const auto source=v.toObject();
+  if(!source.value("source").isString()||(!source.value("data").isObject()&&!source.value("data").isArray())){fail("invalid-lookup-response");return;}
+  QJsonObject row{{"tool_name",source.value("source")},{"result",source.value("data")}};
+  if(source.value("payment_required").toBool()){row.insert("status","locked");locked=true;}rows.append(row);
+ }
+ if(rows.isEmpty())rows.append(QJsonObject{{"tool_name","NEXVARY unified search"},{"result",QJsonArray{}}});
+ if(phase==3){rows=QJsonArray{QJsonObject{{"tool_name","NEXVARY unified search"},{"error","Remote search failed"}}};}
+ const auto bytes=QJsonDocument(result).toJson(QJsonDocument::Compact);sourceDigest_=QString::fromLatin1(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex());
+ resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
+ result_=displayText(QString::fromUtf8(QJsonDocument(QJsonObject{{"lookupResponse",result},{"requestId",lookupRequestId_},{"structuredContent",QJsonObject{{"tasks",rows}}}}).toJson(QJsonDocument::Indented)));
+ if(!saveLookupReference(true)){fail("invoice-storage-error");return;}
+ const bool failed=phase==3;if(!finishInvoice(failed?"void":locked?"review":"due")){fail("invoice-storage-error");return;}
+ lookupRequestId_.clear();finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-task-error":locked?"provider-payment-required":"completed";error_=failed?"provider-task-error":locked?"provider-payment-required":QString();emit changed();
+}
 bool LampyreConnection::freeResultCollector()const {
  for(const auto &v:tools_){const auto t=v.toMap();if(t.value("name")=="lampyre_check_result_endpoint"&&t.value("description").toString().contains("Charges nothing",Qt::CaseInsensitive))return true;}
  return false;
 }
 bool LampyreConnection::collectResults(){
  if(busy_)return false;
+ if(!lookupRequestId_.isEmpty())return collectLookup();
  if(!connected_)return reject("not-connected");
  if(pendingTasks_.isEmpty())return reject("no-pending-results");
  if(!authorized()||(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_)))return reject("policy-revoked");
@@ -514,11 +645,11 @@ bool LampyreConnection::acceptTasks(const QJsonObject &result,bool collecting){
 }
 QVariantList LampyreConnection::findings()const {
  const auto doc=QJsonDocument::fromJson(result_.toUtf8()).object();const auto tasks=doc.value("structuredContent").toObject().value("tasks").toArray();QVariantList rows;
- for(const auto &v:tasks){const auto row=v.toObject();const auto data=row.value("result");const bool running=row.value("status")=="running",failed=row.contains("error");
+ for(const auto &v:tasks){const auto row=v.toObject();const auto data=row.value("result");const bool running=row.value("status")=="running",failed=row.contains("error"),locked=row.value("status")=="locked";
   const bool empty=data.isNull()||(data.isArray()&&data.toArray().isEmpty())||(data.isObject()&&data.toObject().isEmpty());
-  QString text;if(!empty&&!running&&!failed){if(data.isArray())text=QString::fromUtf8(QJsonDocument(data.toArray()).toJson(QJsonDocument::Indented));else if(data.isObject())text=QString::fromUtf8(QJsonDocument(data.toObject()).toJson(QJsonDocument::Indented));else text=data.toVariant().toString();}
+  QString text;if(!empty&&!running&&!failed&&!locked){if(data.isArray())text=QString::fromUtf8(QJsonDocument(data.toArray()).toJson(QJsonDocument::Indented));else if(data.isObject())text=QString::fromUtf8(QJsonDocument(data.toObject()).toJson(QJsonDocument::Indented));else text=data.toVariant().toString();}
   QString title=row.value("tool_name").toString();for(const auto &s:services_)if(s.toMap().value("tool_name").toString()==title){title=s.toMap().value("title").toString();break;}
-  rows.append(QVariantMap{{"service",displayText(title)},{"status",running?"running":failed?"failed":empty?"empty":"results"},{"data",displayText(text)}});
+  rows.append(QVariantMap{{"service",displayText(title)},{"status",running?"running":failed?"failed":locked?"locked":empty?"empty":"results"},{"data",displayText(text)}});
  }
  return rows;
 }
@@ -530,12 +661,14 @@ bool LampyreConnection::fail(const QString &code){
  const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
  pendingTasks_={};taskRows_={};
+ lookupConnected_=false;
  finishReceipt("failed");creditBalance_=-1;categories_.clear();services_.clear();serviceCatalogAt_=0;busy_=false;connected_=false;session_.clear();tools_.clear();result_.clear();sourceDigest_.clear();error_=invoiceSaved?code:QStringLiteral("invoice-storage-error");state_="error";emit changed();return false;
 }
 void LampyreConnection::cancel(){
  const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
  pendingTasks_={};taskRows_={};
+ lookupConnected_=false;
  finishReceipt("cancelled");busy_=false;connected_=false;tools_.clear();session_.clear();result_.clear();sourceDigest_.clear();state_=invoiceSaved?QStringLiteral("cancelled-local"):QStringLiteral("error");if(invoiceSaved)error_.clear();else error_="invoice-storage-error";emit changed();
 }
 void LampyreConnection::forget(){reset();loadInvoices();if(identity_&&identity_->directWork()){if(!save())return;emit changed();return;}const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}

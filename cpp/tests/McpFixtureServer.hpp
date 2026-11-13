@@ -4,9 +4,11 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QUrl>
+#include <QUrlQuery>
 class FixtureServer:public QObject {
 public:
- QTcpServer server;QString mode;int requests=0,calls=0,lists=0,paidCalls=0,collections=0;bool failPaid=false;QList<QByteArray> headers;QJsonObject lastArguments,lastPaidArguments;
+ QTcpServer server;QString mode;int requests=0,calls=0,lists=0,paidCalls=0,collections=0;bool failPaid=false;QList<QByteArray> headers;QJsonObject lastArguments,lastPaidArguments,lastLookupInput;int lookupSearches=0,lookupReads=0,lookupHistoryReads=0;QList<QByteArray> lookupHeaders;
  explicit FixtureServer(const QString &m={}):mode(m){
   if(!server.listen(QHostAddress::LocalHost))qFatal("Cannot bind the synthetic loopback MCP fixture");
   connect(&server,&QTcpServer::newConnection,this,[this]{while(server.hasPendingConnections()){
@@ -14,9 +16,10 @@ public:
    connect(socket,&QTcpSocket::readyRead,this,[this,socket]{
     auto data=socket->property("request").toByteArray()+socket->readAll();socket->setProperty("request",data);
     const auto split=data.indexOf("\r\n\r\n");if(split<0||socket->property("handled").toBool())return;
-    const auto head=data.left(split);qsizetype length=-1;for(auto line:head.split('\n'))if(line.toLower().startsWith("content-length:"))length=line.mid(15).trimmed().toLongLong();
+    const auto head=data.left(split);qsizetype length=head.startsWith("GET ")?0:-1;for(auto line:head.split('\n'))if(line.toLower().startsWith("content-length:"))length=line.mid(15).trimmed().toLongLong();
     if(length<0||data.size()<split+4+length)return;
     socket->setProperty("handled",true);headers.append(head);++requests;
+    if(head.startsWith("GET ")){handleLookup(socket,head);return;}
     const auto msg=QJsonDocument::fromJson(data.mid(split+4,length)).object();const auto method=msg.value("method").toString();
     if(mode=="timeout")return;
     QByteArray payload,extra;int status=200;QJsonObject result;
@@ -69,6 +72,27 @@ if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")
     socket->write("HTTP/1.1 "+QByteArray::number(status)+" Fixture\r\nConnection: close\r\nContent-Type: "+(sse?QByteArray("text/event-stream"):QByteArray("application/json"))+"\r\n"+extra+"Content-Length: "+QByteArray::number(payload.size())+"\r\n\r\n"+payload);socket->disconnectFromHost();
    });
   }});
+ }
+ void handleLookup(QTcpSocket *socket,const QByteArray &head){
+  lookupHeaders.append(head);const auto target=head.split(' ').value(1);const QUrl url=QUrl::fromEncoded(target);const QUrlQuery query(url);
+  int status=200;QJsonObject body;QByteArray raw;
+  if(mode=="lookup-auth")status=403;
+  else if(url.path()=="/api/1.6/find/history/by-token"){++lookupHistoryReads;status=204;}
+  else if(url.path()=="/api/1.6/find/by-token"){
+   ++lookupSearches;lastLookupInput={};for(const auto &pair:query.queryItems(QUrl::FullyDecoded))if(pair.first!="token")lastLookupInput.insert(pair.first,pair.second);
+   if(mode=="lookup-timeout")return;
+   if(mode=="lookup-service")status=503;
+   else if(mode=="lookup-malformed")raw="not JSON";
+   else body={{"request_uuid","00112233-4455-6677-8899-aabbccddeeff"}};
+  }else if(url.path()=="/api/1.6/find/00112233-4455-6677-8899-aabbccddeeff/by-token"){
+   ++lookupReads;
+   if((mode=="lookup-delayed"&&lookupReads==1)||mode=="lookup-pending")body={{"status",1}};
+   else if(mode=="lookup-failed")body={{"status",3}};
+   else if(mode=="lookup-empty")status=204;
+   else {QJsonArray rows{QJsonObject{{"source","Synthetic Network"},{"data",QJsonObject{{"profile",QJsonArray{QJsonObject{{"username","synthetic-user"},{"url","https://example.invalid/unified-profile"}}}}}},{"payment_required",mode=="lookup-locked"}}};body={{"status",2},{"input",lastLookupInput},{"results_count",1},{"result",rows}};}
+  }else status=404;
+  if(raw.isEmpty()&&status!=204)raw=QJsonDocument(body).toJson(QJsonDocument::Compact);
+  socket->write("HTTP/1.1 "+QByteArray::number(status)+" Fixture\r\nConnection: close\r\nContent-Type: application/json\r\nContent-Length: "+QByteArray::number(raw.size())+"\r\n\r\n"+raw);socket->disconnectFromHost();
  }
  QString url()const{return "http://127.0.0.1:"+QString::number(server.serverPort())+"/mcp";}
 };

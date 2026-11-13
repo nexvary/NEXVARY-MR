@@ -158,6 +158,63 @@ private slots:
   QVERIFY(!client.collectResults());QCOMPARE(client.errorCode(),QString("metadata-not-free"));QCOMPARE(server.collections,0);
   client.cancel();QCOMPARE(client.totalDueMinorUnits(),qint64(0));QCOMPARE(client.invoices().first().toMap().value("status").toString(),QString("review"));
  }
+ void unifiedLookupSelectors_data(){
+  QTest::addColumn<QString>("kind");QTest::addColumn<QString>("value");QTest::addColumn<double>("cost");
+  QTest::newRow("phone")<<QString("phone")<<QString("+12025550123")<<35.0;
+  QTest::newRow("email")<<QString("email")<<QString("synthetic@example.invalid")<<30.0;
+  QTest::newRow("username")<<QString("username")<<QString("synthetic-user")<<15.0;
+ }
+ void unifiedLookupSelectors(){
+  QFETCH(QString,kind);QFETCH(QString,value);QFETCH(double,cost);QTemporaryDir t;FixtureServer server("lookup-success");LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(!client.verifyLookupConnection(false));QCOMPARE(server.lookupHistoryReads,0);
+  QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());QCOMPARE(server.lookupSearches,0);QCOMPARE(client.submittedRequests(),0);
+  QCOMPARE(LampyreConnection::lookupPhotons(kind),cost);QVERIFY(!client.runLookup(kind,value,false));QCOMPARE(server.lookupSearches,0);
+  QVERIFY(client.runLookup(kind,value,true));QVERIFY(!client.runLookup(kind,value,true));QTRY_COMPARE(client.state(),QString("completed"));
+  QCOMPARE(server.lookupSearches,1);QCOMPARE(server.lookupReads,1);QCOMPARE(server.lastLookupInput.value(kind).toString(),value);QCOMPARE(client.submittedRequests(),1);
+  QCOMPARE(client.invoices().size(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(1400));QCOMPARE(client.providerUsage().first().toMap().value("internalQuotedPhotons").toDouble(),cost);
+  QCOMPARE(client.findings().first().toMap().value("status").toString(),QString("results"));QVERIFY(client.findings().first().toMap().value("data").toString().contains("https://example.invalid/unified-profile"));
+  QVERIFY(client.resultText().contains("Synthetic Network"));QVERIFY(!client.resultText().contains("TEST-API-KEY"));QVERIFY(!client.currentInvoice().contains("internalProviderRequestId"));
+  if(kind=="phone")QVERIFY(server.lookupHeaders[1].contains("phone=%2B12025550123"));
+  QVERIFY(!client.collectResults());QCOMPARE(server.lookupSearches,1);
+ }
+ void unifiedLookupOutcomes_data(){
+  QTest::addColumn<QString>("mode");QTest::addColumn<QString>("state");QTest::addColumn<QString>("finding");QTest::addColumn<int>("due");
+  QTest::newRow("delayed")<<QString("lookup-delayed")<<QString("completed")<<QString("results")<<1400;
+  QTest::newRow("empty")<<QString("lookup-empty")<<QString("completed")<<QString("empty")<<1400;
+  QTest::newRow("failed")<<QString("lookup-failed")<<QString("provider-task-error")<<QString("failed")<<0;
+  QTest::newRow("locked")<<QString("lookup-locked")<<QString("provider-payment-required")<<QString("locked")<<0;
+ }
+ void unifiedLookupOutcomes(){
+  QFETCH(QString,mode);QFETCH(QString,state);QFETCH(QString,finding);QFETCH(int,due);QTemporaryDir t;FixtureServer server(mode);LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());
+  QVERIFY(client.runLookup("username","synthetic-user",true));QTRY_COMPARE_WITH_TIMEOUT(client.state(),state,5000);QCOMPARE(server.lookupSearches,1);
+  QCOMPARE(client.findings().first().toMap().value("status").toString(),finding);QCOMPARE(client.totalDueMinorUnits(),qint64(due));QCOMPARE(client.submittedRequests(),1);
+  if(mode=="lookup-locked"){QVERIFY(client.findings().first().toMap().value("data").toString().isEmpty());LampyreConnection reopened(t.path(),nullptr,nullptr,nullptr,true);QCOMPARE(reopened.pendingResultCount(),0);}
+ }
+ void unifiedLookupUncertainDispatchNeverRetries_data(){
+  QTest::addColumn<QString>("mode");QTest::newRow("timeout")<<QString("lookup-timeout");QTest::newRow("remote-error")<<QString("lookup-service");QTest::newRow("malformed")<<QString("lookup-malformed");
+ }
+ void unifiedLookupUncertainDispatchNeverRetries(){
+  QFETCH(QString,mode);QTemporaryDir t;FixtureServer server(mode);LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true,150);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());
+  QVERIFY(client.runLookup("phone","+12025550123",true));QTRY_VERIFY(!client.busy());QCOMPARE(server.lookupSearches,1);QCOMPARE(client.totalDueMinorUnits(),qint64(0));
+  QCOMPARE(client.invoices().first().toMap().value("status").toString(),QString("review"));QTest::qWait(200);QCOMPARE(server.lookupSearches,1);
+ }
+ void unifiedLookupRestoresIdWithoutRepeatingSearch(){
+  QTemporaryDir t;FixtureServer server("lookup-pending");
+  {LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());
+   QVERIFY(client.runLookup("username","synthetic-user",true));QTRY_COMPARE(client.state(),QString("awaiting-results"));QCOMPARE(client.pendingResultCount(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(0));client.cancel();}
+  server.mode="lookup-success";LampyreConnection reopened(t.path(),nullptr,nullptr,nullptr,true);QCOMPARE(reopened.pendingResultCount(),1);
+  QVERIFY(reopened.verifyLookupConnection(true));QTRY_VERIFY(reopened.lookupConnected());QVERIFY(!reopened.runLookup("username","synthetic-user",true));
+  QVERIFY(reopened.collectResults());QTRY_COMPARE(reopened.state(),QString("completed"));QCOMPARE(server.lookupSearches,1);QCOMPARE(reopened.invoices().size(),1);QCOMPARE(reopened.totalDueMinorUnits(),qint64(1400));
+ }
+ void unifiedLookupValidatesInputAndAuthentication(){
+  QTemporaryDir t;FixtureServer server("lookup-auth");LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",false));QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(!client.busy());QVERIFY(!client.lookupConnected());QCOMPARE(server.lookupSearches,0);
+  server.mode="lookup-success";QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());
+  for(const auto &value:{"01000000000","+20<script>","+123"})QVERIFY(!client.runLookup("phone",value,true));
+  QVERIFY(!client.runLookup("email","invalid",true));QVERIFY(!client.runLookup("username","https://example.invalid",true));QVERIFY(!client.runLookup("unknown","value",true));QCOMPARE(server.lookupSearches,0);
+ }
  void directWorkWithoutIndependentApproval(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.startDirectWork());
   GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);

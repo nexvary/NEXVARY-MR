@@ -10,6 +10,7 @@
 #include <QSet>
 #include <functional>
 class QNetworkReply;
+class QJsonDocument;
 class IdentityService;
 class GovernmentOperationPolicy;
 // Streamable HTTP MCP client. Production destination is fixed internally;
@@ -17,6 +18,7 @@ class GovernmentOperationPolicy;
 class LampyreConnection final:public QObject {
  Q_OBJECT
  Q_PROPERTY(bool liveProfile READ liveProfile CONSTANT)
+ Q_PROPERTY(bool lookupConnected READ lookupConnected NOTIFY changed)
  Q_PROPERTY(QVariantMap currentInvoice READ currentInvoice NOTIFY changed)
  Q_PROPERTY(qint64 totalDueMinorUnits READ totalDueMinorUnits NOTIFY changed)
  Q_PROPERTY(QVariantList invoices READ invoices NOTIFY changed)
@@ -44,6 +46,10 @@ public:
  explicit LampyreConnection(const QString &directory,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent=nullptr,bool syntheticTests=false,int timeoutMs=120000);
  ~LampyreConnection() override;
  bool liveProfile()const;
+ bool lookupConnected()const{return lookupConnected_;}
+ Q_INVOKABLE bool verifyLookupConnection(bool consent);
+ Q_INVOKABLE bool runLookup(const QString &kind,const QString &value,bool consent);
+ static double lookupPhotons(const QString &kind);
  QVariantMap currentInvoice()const{return resultInvoice().toVariantMap();}
  qint64 totalDueMinorUnits()const;
  QVariantList invoices()const;
@@ -78,7 +84,7 @@ public:
  QString resultText()const{return result_;}
  QVariantList resultItems()const;
  QVariantList findings()const;
- int pendingResultCount()const{return static_cast<int>(pendingTasks_.size());}
+ int pendingResultCount()const{return static_cast<int>(pendingTasks_.size())+(lookupRequestId_.isEmpty()?0:1);}
  Q_INVOKABLE bool collectResults();
  // Native-only destination override is restricted to loopback synthetic fixtures.
  bool configure(const QString &endpoint,const QString &key,bool remember);
@@ -94,6 +100,12 @@ public:
 signals:
  void changed();
 private:
+ bool beginSubmission(const QString &name,const QJsonObject &args);
+ bool collectLookup();
+ void getLookup(const QString &path,const QJsonObject &query,const QString &stage);
+ void acceptLookup(int status,const QJsonDocument &document);
+ bool saveLookupReference(bool complete=false);
+ void restoreLookupReference();
  bool acceptTasks(const QJsonObject &result,bool collecting);
  bool freeResultCollector()const;
  void loadInvoices();
@@ -118,6 +130,9 @@ private:
  QString directory_,owner_,endpoint_,key_,state_="disconnected",error_,result_,session_,version_,stage_,operation_,resultTool_,resultAt_,sourceDigest_;
  IdentityService *identity_;
  GovernmentOperationPolicy *policy_;
+ bool lookupConnected_=false;
+ QString lookupRequestId_,lookupKind_;
+ int lookupPolls_=0;
  bool synthetic_=false,connected_=false,busy_=false,saved_=false,retailQuoted_=false;
  int requestLimit_=0,submitted_=0;
  std::function<bool()> caseAuthorization_;

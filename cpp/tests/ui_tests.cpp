@@ -69,9 +69,14 @@ public:
   reviewServer=std::make_unique<FixtureServer>(deferred?"metadata-running":"metadata");
   return lampyreConnection->configure(reviewServer->url(),"SYNTHETIC-UI-ONLY-NOT-A-LIVE-KEY",false)&&lampyreConnection->connectProvider(true);
  }
+ Q_INVOKABLE bool prepareUnifiedReview(){
+  if(!identity->syntheticProfile())return false;
+  reviewServer=std::make_unique<FixtureServer>("lookup-success");
+  return lampyreConnection->configure(reviewServer->url(),"SYNTHETIC-UI-ONLY-NOT-A-LIVE-KEY",false)&&lampyreConnection->verifyLookupConnection(true);
+ }
  Q_INVOKABLE QVariantMap reviewConnectionStats() const {
   if(!reviewServer)return {};
-  return {{"paidCalls",reviewServer->paidCalls},{"lastArguments",reviewServer->lastPaidArguments.toVariantMap()},{"collections",reviewServer->collections}};
+  return {{"paidCalls",reviewServer->paidCalls},{"lastArguments",reviewServer->lastPaidArguments.toVariantMap()},{"collections",reviewServer->collections},{"lookupSearches",reviewServer->lookupSearches},{"lookupReads",reviewServer->lookupReads},{"lookupHistoryReads",reviewServer->lookupHistoryReads},{"lastLookupInput",reviewServer->lastLookupInput.toVariantMap()}};
  }
  Q_INVOKABLE bool saveReviewManifest(const QVariantList &screens) {
   QSaveFile file(QDir(QCoreApplication::applicationDirPath()).filePath("ui-review-manifest.json"));
