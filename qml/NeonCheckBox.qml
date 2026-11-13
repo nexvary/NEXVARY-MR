@@ -1,7 +1,10 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 CheckBox {
  id: control
+ Layout.fillWidth:true
+ Layout.minimumWidth:0
  DesignTokens {id:fallbackDesign}
  readonly property var design:ApplicationWindow.window?ApplicationWindow.window.design:fallbackDesign
  spacing: 10

@@ -432,7 +432,7 @@ TestCase {
   function inspectAndWait(){
    const inspectButton=findChild(app,"inspectAvb");avbInspectionFinished.clear()
    tryCompare(inspectButton,"enabled",true);verify(inspectButton.visible);verify(renderedFrame())
-   mouseClick(inspectButton);tryCompare(avbInspectionFinished,"count",1,5000)
+   artifactClick(findChild(app,"avbPanelViewport"),inspectButton);tryCompare(avbInspectionFinished,"count",1,5000)
    tryCompare(firmwareBridge,"busy",false,5000)
    compare(firmwareBridge.avbReport.status,"metadata-only",firmwareBridge.status);compare(firmwareBridge.compatible,false)
   }
@@ -442,6 +442,7 @@ TestCase {
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(renderedFrame())
    const scroll=findChild(app,"avbScroll");verify(scroll.height>=100)
    for(const control of [privacy,exportButton]){
+    reveal(findChild(app,"avbPanelViewport"),control);verify(renderedFrame());
     const top=control.mapToItem(app.contentItem,0,0),bottom=control.mapToItem(app.contentItem,control.width,control.height)
     verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<=app.height,"AVB export controls remain fully reachable")
    }
@@ -470,7 +471,7 @@ TestCase {
  function test_firmwarePackageStructure(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=2
   const path=findChild(app,"firmwarePackagePath");path.text=syntheticFirmwarePackagePath
-  compare(findChild(app,"exportFirmwarePackage").enabled,false);mouseClick(findChild(app,"inspectFirmwarePackage"));tryCompare(firmwareBridge,"busy",false,5000)
+  compare(findChild(app,"exportFirmwarePackage").enabled,false);artifactClick(findChild(app,"packagePanelViewport"),findChild(app,"inspectFirmwarePackage"));tryCompare(firmwareBridge,"busy",false,5000)
   compare(firmwareBridge.packageReport.status,"structure-only");compare(firmwareBridge.compatible,false)
   const output=findChild(app,"firmwarePackageResult");compare(output.textFormat,TextEdit.PlainText);verify(output.text.indexOf("snapshotSha256")>=0)
   const privacy=findChild(app,"firmwarePackagePrivacy");privacy.checked=true;compare(findChild(app,"exportFirmwarePackage").enabled,true)
@@ -543,6 +544,8 @@ TestCase {
   app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(renderedFrame());const page=findChild(app,"deviceServicesPage");verify(page!==null)
   compare(findChild(app,"serviceBrand").count,18);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
   findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
+  mouseClick(findChild(app,"deviceServiceContextOpen"));const context=findChild(app,"deviceServiceContextDialog");tryCompare(context,"opened",true);
+  verify(findChild(app,"deviceServiceContextText").text.indexOf(findChild(app,"serviceWorkflow").text)>=0);context.close();tryCompare(context,"opened",false);
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
    const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150,"service list "+list.width+"x"+list.height+" page "+page.width+"x"+page.height+" ar="+arabic)
@@ -609,8 +612,8 @@ TestCase {
   verify(!findChild(app,"startSecurityScan").enabled);verify(!findChild(app,"updateSignatures").enabled);verify(!findChild(app,"cancelSignatureUpdate").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
   tabs.currentIndex=3;verify(renderedFrame());compare(serviceCatalog.drivers.length,7);verify(serviceCatalog.drivers.some(function(d){return d.brand==="Google"&&d.url.indexOf("https://developer.android.com/")===0}))
   tabs.currentIndex=1;verify(renderedFrame());const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
-  const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
-  mouseClick(findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
+  const selected=choice.currentValue;artifactClick(findChild(app,"faultTreePage"),findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
+  artifactClick(findChild(app,"faultTreePage"),findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
   findChild(app,"treeTechnician").text="Synthetic technician";findChild(app,"treeFinding").text="Synthetic safety observation only";
   const save=findChild(app,"saveFaultTree");verify(save.enabled)
   // The save control is below the first viewport: scroll it into view before clicking.
@@ -776,7 +779,7 @@ TestCase {
    const scope=findChild(app,"pcapScope");verify(scope.visible);verify(scope.text.indexOf("8 MiB")>=0)
    const point=run.mapToItem(app.contentItem,run.width/2,run.height/2);verify(point.y>0&&point.y<app.height)
   }
-  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  artifactClick(findChild(app,"forensicToolsScroll"),run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
   verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-pcap-summary/v1")>=0)
   const show=findChild(app,"showPcapResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
   verify(findChild(app,"forensicPreview").text.indexOf("nexvary-pcap-summary/v1")>=0);tabs.currentIndex=3
@@ -801,11 +804,12 @@ TestCase {
    scroll.contentItem.contentY=0
    const panel=findChild(app,"exifPanel");scroll.contentItem.contentY=panel.y;wait(50);verify(renderedFrame())
    const scope=findChild(app,"exifScope");verify(scope.visible);verify(scope.height+0.01>=scope.implicitHeight,"EXIF scope height "+scope.height+" implicit "+scope.implicitHeight);verify(scope.text.indexOf("8 MiB")>=0)
+   reveal(scroll,run);verify(renderedFrame());
    const top=run.mapToItem(app.contentItem,0,0),bottom=run.mapToItem(app.contentItem,run.width,run.height)
    verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<app.height,"EXIF action remains reachable")
    if(dark)verify(uiEvidence.captureWindow(app,exifScreenshotBase+(arabic?"ar":"en")+".png"))
   }
-  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  artifactClick(findChild(app,"forensicToolsScroll"),run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
   verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-exif-summary/v1")>=0)
   const show=findChild(app,"showExifResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
   verify(findChild(app,"forensicPreview").text.indexOf("nexvary-exif-summary/v1")>=0)
@@ -819,7 +823,7 @@ TestCase {
   findChild(app,"forensicOperator").text="UI operator";findChild(app,"forensicAuthorization").text="LAB authorization";
   let record=findChild(app,"forensicRecordOperator");compare(record.enabled,false);
   findChild(app,"forensicOperatorConsent").checked=true;tryCompare(record,"enabled",true);
-  verify(renderedFrame());mouseClick(record);compare(recoveryBridge.caseOperator,"UI operator");
+  artifactClick(findChild(app,"forensicDetailScroll"),record);compare(recoveryBridge.caseOperator,"UI operator");
   verify(recoveryBridge.importVisibleFile(syntheticEvidencePath,true));tryCompare(recoveryBridge,"busy",false);
   let files=findChild(app,"forensicEvidenceList");tryCompare(files,"count",1);
   mouseClick(files,files.width/2,40);let preview=findChild(app,"forensicPreview");tryVerify(function(){return preview.text.indexOf("SYNTHETIC UI EVIDENCE")>=0});

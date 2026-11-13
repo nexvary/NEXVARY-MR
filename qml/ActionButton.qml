@@ -8,7 +8,7 @@ Button {
  property bool primary: false
  Layout.maximumWidth:360
  implicitHeight: Math.max(44,contentItem.implicitHeight+16)
- implicitWidth: Math.max(112, contentItem.implicitWidth + 30)
+ implicitWidth: Math.min(360,Math.max(112, contentItem.implicitWidth + 30))
  hoverEnabled: true
  font.pixelSize:14
  focusPolicy: Qt.StrongFocus

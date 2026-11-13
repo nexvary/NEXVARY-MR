@@ -64,7 +64,8 @@ Item {
       Label {text:app.trx("المشغّل الحالي: ","Current operator: ")+(recoveryBridge.caseOperator||app.trx("لم يُسجّل","Not recorded"));Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#d3e8fa")}
        ActionButton {text:app.trx("تحرير","Edit");visible:recoveryBridge.caseOperator!=="";onClicked:page.editingOperator=!page.editingOperator}
       }
-      ColumnLayout {
+      GridLayout {
+       columns:width>=480?2:1;columnSpacing:12;rowSpacing:10
        visible:page.editingOperator||recoveryBridge.caseOperator==="";Layout.fillWidth:true
       EntryField {id:operatorName;objectName:"forensicOperator";placeholderText:app.trx("اسم أو معرف المشغّل","Operator name or identifier");maximumLength:160;Layout.fillWidth:true;Layout.minimumWidth:0}
       EntryField {id:authorization;objectName:"forensicAuthorization";placeholderText:app.trx("مرجع التفويض ونطاقه","Authorization reference and scope");maximumLength:500;Layout.fillWidth:true;Layout.minimumWidth:0}

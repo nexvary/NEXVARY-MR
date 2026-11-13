@@ -35,7 +35,7 @@ Item {
    TabButton{text:app.trx("القدرات والحدود","Capabilities")}
   }
   StackLayout {
-   currentIndex:tabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true
+   currentIndex:tabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:0
    RecoveryPage {app:lab.app;caseWorkspace:true}
    ForensicEvidencePage {id:evidenceBrowser;app:lab.app}
    ForensicTimelinePage {app:lab.app}

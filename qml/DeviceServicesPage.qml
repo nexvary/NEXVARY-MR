@@ -8,6 +8,7 @@ Item {
  property var app
  property var selectedAction:({})
  property string reviewedTarget:""
+ readonly property string contextExplanation:app.trx("اختيار الشركة يرشّح المراجع. تُقرأ الهوية والقدرات من الجهاز المتصل. تتبع اللغات إصدار النظام المثبّت.","Brand filters references. The connected device reports its identity and capabilities. Available languages depend on its installed firmware.")
  property var reviewedRecord:({})
  readonly property var diagnostics:toolBridge.serviceProfile.diagnostics||({})
  readonly property var battery:diagnostics.battery||({})
@@ -30,23 +31,24 @@ Item {
    NavIcon {kind:1;Layout.preferredWidth:32;Layout.preferredHeight:32}
    Label {text:app.trx("خدمات الجهاز حسب قدراته","Capability-based device services");font.bold:true;font.pixelSize:19;color:app.tone("#edf4ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
    NeonComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:190}
+   ActionButton {objectName:"deviceServiceContextOpen";text:app.trx("التفاصيل","Details");onClicked:contextDialog.open()}
    ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:app.openExternal(page.driverSource.url)}
   }
   Label {objectName:"serviceBuildProfile";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:toolBridge.laboratoryBuild?"#FF465C":"#39FF14";text:toolBridge.laboratoryBuild?app.trx("نسخة المختبر التجريبية — عمليات تغيير الجهاز تحتاج تفويضًا واختبارًا فعليًا لكل موديل.","Experimental Laboratory build — device changes require authorization and per-model physical testing."):app.trx("نسخة الإنتاج: قراءة وتشخيص فقط. عمليات تغيير الجهاز غير متاحة.","Production build: read-only diagnostics. Device-changing operations are unavailable.")}
-  Label {objectName:"serviceWorkflow";font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
-  Label {objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");font.pixelSize:14;text:app.trx("اختيار الشركة يرشّح المراجع. تُقرأ الهوية والقدرات من الجهاز المتصل. تتبع اللغات إصدار النظام المثبّت.","Brand filters references. The connected device reports its identity and capabilities. Available languages depend on its installed firmware.")}
+  Label {id:workflow;visible:false;objectName:"serviceWorkflow";font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.NoWrap;elide:Text.ElideRight;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
+  Label {id:driverWarning;objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.NoWrap;elide:Text.ElideRight;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
+
   RowLayout {Layout.fillWidth:true
    NeonComboBox {id:device;objectName:"serviceDevice";Layout.fillWidth:true;model:toolBridge.devices;textRole:"serial";valueRole:"serial";currentIndex:toolBridge.devices.findIndex(function(row){return row.serial===toolBridge.selectedSerial});displayText:currentIndex<0?app.trx("اختر جهازًا بعد الفحص","Select a device after discovery"):currentText;enabled:!toolBridge.busy;onActivated:toolBridge.selectDevice(currentValue)}
+   NeonComboBox {id:group;objectName:"serviceGroup";model:["All","ADB","Fastboot","Recovery","OEM / Restricted"];Layout.preferredWidth:175}
    ActionButton {text:"ADB";enabled:!toolBridge.busy;onClicked:toolBridge.scanAdb()}
    ActionButton {text:"Fastboot";enabled:!toolBridge.busy;onClicked:toolBridge.scanFastboot()}
    ActionButton {objectName:"cancelDeviceService";text:app.trx("إيقاف","Cancel");enabled:toolBridge.busy;onClicked:toolBridge.cancel()}
   }
-  Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#51d6a2");text:toolBridge.selectedSerial+" · "+(toolBridge.serviceProfile.vendor||toolBridge.serviceProfile.product||"")+" · "+(toolBridge.serviceProfile["ro.product.model"]||"")+" · "+(toolBridge.serviceProfile.verifiedAtUtc||app.trx("لم تُقرأ القدرات بعد","Capabilities not read yet"))}
-  Label {Layout.fillWidth:true;visible:!!toolBridge.serviceProfile.serial;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:"Android: "+(toolBridge.serviceProfile["ro.build.version.release"]||"?")+" · SoC: "+(toolBridge.serviceProfile["ro.soc.manufacturer"]||"?")+" / "+(toolBridge.serviceProfile["ro.soc.model"]||"?")+" · Bootloader: "+(toolBridge.serviceProfile.unlocked||toolBridge.serviceProfile["ro.boot.flash.locked"]||"?")+" · "+app.trx("القيم كما أبلغ عنها الجهاز؛ تعريف USB غير مرتبط بهذه القراءة","Device-reported values; USB driver binding is not correlated")}
-  RowLayout {Layout.fillWidth:true
+  Label {id:targetSummary;visible:false;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#51d6a2");text:toolBridge.selectedSerial+" · "+(toolBridge.serviceProfile.vendor||toolBridge.serviceProfile.product||"")+" · "+(toolBridge.serviceProfile["ro.product.model"]||"")+" · "+(toolBridge.serviceProfile.verifiedAtUtc||app.trx("لم تُقرأ القدرات بعد","Capabilities not read yet"))}
+  Label {id:profileSummary;Layout.fillWidth:true;visible:false;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:"Android: "+(toolBridge.serviceProfile["ro.build.version.release"]||"?")+" · SoC: "+(toolBridge.serviceProfile["ro.soc.manufacturer"]||"?")+" / "+(toolBridge.serviceProfile["ro.soc.model"]||"?")+" · Bootloader: "+(toolBridge.serviceProfile.unlocked||toolBridge.serviceProfile["ro.boot.flash.locked"]||"?")+" · "+app.trx("القيم كما أبلغ عنها الجهاز؛ تعريف USB غير مرتبط بهذه القراءة","Device-reported values; USB driver binding is not correlated")}
+  RowLayout {Layout.fillWidth:true;visible:toolBridge.busy
    Label {Layout.fillWidth:true;text:page.phases[toolBridge.servicePhase]?(app.ar?page.phases[toolBridge.servicePhase][0]:page.phases[toolBridge.servicePhase][1]):"";color:app.tone("#eab775")}
-   NeonComboBox {id:group;objectName:"serviceGroup";model:["All","ADB","Fastboot","Recovery","OEM / Restricted"];Layout.preferredWidth:175}
   }
   ProgressBar {objectName:"deviceServiceProgress";Layout.fillWidth:true;indeterminate:toolBridge.busy;visible:toolBridge.busy}
   RowLayout {Layout.fillWidth:true;Layout.fillHeight:true;spacing:10
@@ -88,6 +90,15 @@ Item {
    }
   }
  }
+ Dialog {
+  id:contextDialog;objectName:"deviceServiceContextDialog";parent:Overlay.overlay;anchors.centerIn:parent
+  width:Math.min(760,app.width-48);height:Math.min(440,app.height-80);modal:true
+  title:app.trx("سياق الخدمة والمصدر","Service context and provenance");standardButtons:Dialog.Close
+  contentItem:ScrollView {id:serviceContextScroll;contentWidth:availableWidth;clip:true
+   Label {objectName:"deviceServiceContextText";width:serviceContextScroll.availableWidth;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.text;text:workflow.text+"\n\n"+page.contextExplanation+"\n\n"+targetSummary.text+(toolBridge.serviceProfile.serial?"\n\n"+profileSummary.text:"")+(page.driverSource?"":"\n\n"+driverWarning.text)}
+  }
+ }
+
  Dialog {id:historyDetail;objectName:"deviceServiceHistoryDetail";parent:Overlay.overlay;anchors.centerIn:parent;width:Math.min(670,app.width-48);height:Math.min(480,app.height-96);modal:true;title:app.trx("تفاصيل العملية المسجلة","Recorded operation details");standardButtons:Dialog.Close
   contentItem:ScrollView {clip:true;contentWidth:availableWidth
    EntryArea {objectName:"deviceServiceHistoryText";readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.tone("#c7deef");background:null;text:(page.reviewedRecord.serial||"")+" · "+(page.reviewedRecord.transport||"")+"\n"+(page.reviewedRecord.action||"")+" · "+(page.reviewedRecord.atUtc||"")+"\n\n"+(page.reviewedRecord.result||"")}

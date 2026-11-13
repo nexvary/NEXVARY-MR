@@ -12,7 +12,7 @@ Item {
    TabButton {text:app.trx("تحليل AVB المحلي","Local AVB inspection")}
    TabButton {text:app.trx("بنية ZIP والمخاطر","ZIP structure and risks")}
   }
-  StackLayout {currentIndex:firmwareTabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true
+  StackLayout {currentIndex:firmwareTabs.currentIndex;Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:0
   ScrollView {
    id:matchingScroll;objectName:"firmwareMatchingScroll";contentWidth:availableWidth;clip:true
    GridLayout {
@@ -51,7 +51,8 @@ Item {
     }
    }
   }
-  Panel {
+  ScrollView {id:avbPanelViewport;objectName:"avbPanelViewport";contentWidth:availableWidth;contentHeight:avbAnalysisCard.implicitHeight;clip:true;Layout.minimumHeight:0
+  Panel {id:avbAnalysisCard;width:avbPanelViewport.availableWidth;height:implicitHeight;
    iconName:"document_lock";title:app.trx("Firmware Intelligence · بيانات AVB غير الموثوقة","Firmware Intelligence · untrusted AVB metadata")
    Label {objectName:"avbScope";text:app.trx("صورة vbmeta خام فقط، حتى 16 MiB. قراءة محلية دون هاتف. لا يشمل التحليل ZIP أو Sparse أو صور الأقسام ذات Footer.","Raw vbmeta images only, up to 16 MiB. Local inspection without a phone. ZIP, sparse images and partition footer discovery are unsupported.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#a9bfd2")}
    RowLayout {
@@ -65,13 +66,15 @@ Item {
    }
    Label {objectName:"avbTrustNotice";text:app.trx("الحقول التالية تصريحات داخل الملف، وليست إثباتًا للتوقيع أو أصالة الشركة أو أمان الرجوع أو توافق الجهاز. لا تمنح هذه النتيجة إذنًا بالتفليش.","These are file declarations. Signature, OEM authenticity, rollback safety and device compatibility remain unverified. This result does not authorize flashing.");wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#f0bc75")}
    Label {text:firmwareBridge.avbReport.status==="metadata-only"?app.trx("مؤشر الرجوع المعلن: ","Declared rollback index: ")+firmwareBridge.avbReport.declaredRollbackIndex+" · "+app.trx("أعلام الحماية المعلنة: ","Declared flags: ")+firmwareBridge.avbReport.declaredFlags:"";wrapMode:Text.WordWrap;Layout.fillWidth:true;color:app.tone("#c0c8d0")}
-   Flickable {id:avbScroll;objectName:"avbScroll";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:100;contentWidth:width;contentHeight:avbText.height;clip:true;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
+   Flickable {id:avbScroll;objectName:"avbScroll";Layout.fillWidth:true;Layout.preferredHeight:150;Layout.minimumHeight:100;contentWidth:width;contentHeight:avbText.height;clip:true;boundsBehavior:Flickable.StopAtBounds;ScrollBar.vertical:ScrollBar {}
    EntryArea {id:avbText;objectName:"avbResult";width:avbScroll.width;height:Math.max(avbScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;text:firmwareBridge.avbJson||firmwareBridge.status;color:app.tone("#a9bfd2");background:Rectangle{color:app.tone("#0b2030");radius:6}}
    }
    NeonCheckBox {id:avbPrivacy;objectName:"avbExportPrivacy";Layout.fillWidth:true;text:app.trx("أوافق على تصدير بيانات الأقسام والبصمة في تقرير محلي","I approve exporting partition metadata and hash in a local report")}
    Label {id:avbExportStatus;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a9bfd2")}
   }
-  Panel {
+  }
+  ScrollView {id:packagePanelViewport;objectName:"packagePanelViewport";contentWidth:availableWidth;contentHeight:packageAnalysisCard.implicitHeight;clip:true;Layout.minimumHeight:0
+  Panel {id:packageAnalysisCard;width:packagePanelViewport.availableWidth;height:implicitHeight;
    iconName:"database";title:app.trx("فحص بنية حزمة محلية · دون استخراج","Local package structure · no extraction")
    Label {objectName:"packageScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#f0bc75");text:app.trx("ZIP محلي حتى 128 MiB و4096 مدخلًا. قراءة الأسماء والأحجام وبصمة النسخة المقروءة فقط؛ لا يُفك الضغط أو تُفحص محتويات الأقسام. الحزم الكبيرة وZIP64 والمشفرة غير مدعومة.","Local ZIP up to 128 MiB and 4096 entries. Reads names, sizes and snapshot SHA-256; no decompression or partition payload analysis. Large, ZIP64 and encrypted packages are unsupported.")}
    RowLayout {Layout.fillWidth:true
@@ -84,11 +87,12 @@ Item {
     ActionButton {objectName:"exportFirmwarePackage";text:app.trx("تصدير JSON","Export JSON");enabled:packagePrivacy.checked&&!firmwareBridge.busy&&firmwareBridge.packageJson!=="";onClicked:packageExport.open()}
    }
    Label {objectName:"packageTrustNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#f0bc75");text:app.trx("أسماء الصور ليست خريطة أقسام. توقيع OEM وسلامة محتوى الملفات وتوافق الهاتف غير متحقق منها. لا يمنح التقرير إذنًا للتفليش.","Image names are not a partition map. OEM signatures, payload integrity and phone compatibility remain unverified. This report never authorizes flashing.")}
-   Flickable {id:packageScroll;objectName:"firmwarePackageScroll";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumHeight:100;contentWidth:width;contentHeight:packageText.height;clip:true;ScrollBar.vertical:ScrollBar {}
+   Flickable {id:packageScroll;objectName:"firmwarePackageScroll";Layout.fillWidth:true;Layout.preferredHeight:150;Layout.minimumHeight:100;contentWidth:width;contentHeight:packageText.height;clip:true;ScrollBar.vertical:ScrollBar {}
     EntryArea {id:packageText;objectName:"firmwarePackageResult";width:packageScroll.width;height:Math.max(packageScroll.height,contentHeight+topPadding+bottomPadding);readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.WrapAnywhere;text:firmwareBridge.packageJson||firmwareBridge.status;color:app.tone("#a9bfd2");background:Rectangle {color:app.tone("#0b2030");radius:6}}
    }
    NeonCheckBox {id:packagePrivacy;objectName:"firmwarePackagePrivacy";Layout.fillWidth:true;text:app.trx("أوافق على تصدير أسماء الملفات والبصمة في تقرير محلي","I approve exporting filenames and hash in a local report")}
    Label {id:packageExportStatus;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a9bfd2")}
+  }
   }
   }
  }
