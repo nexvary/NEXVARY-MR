@@ -205,6 +205,7 @@ private slots:
   {LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.verifyLookupConnection(true));QTRY_VERIFY(client.lookupConnected());
    QVERIFY(client.runLookup("username","synthetic-user",true));QTRY_COMPARE(client.state(),QString("awaiting-results"));QCOMPARE(client.pendingResultCount(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(0));client.cancel();}
   server.mode="lookup-success";LampyreConnection reopened(t.path(),nullptr,nullptr,nullptr,true);QCOMPARE(reopened.pendingResultCount(),1);
+  QVERIFY(reopened.configure(server.url(),"SYNTHETIC-REPLACED-KEY",true));QCOMPARE(reopened.pendingResultCount(),1);
   QVERIFY(reopened.verifyLookupConnection(true));QTRY_VERIFY(reopened.lookupConnected());QVERIFY(!reopened.runLookup("username","synthetic-user",true));
   QVERIFY(reopened.collectResults());QTRY_COMPARE(reopened.state(),QString("completed"));QCOMPARE(server.lookupSearches,1);QCOMPARE(reopened.invoices().size(),1);QCOMPARE(reopened.totalDueMinorUnits(),qint64(1400));
  }

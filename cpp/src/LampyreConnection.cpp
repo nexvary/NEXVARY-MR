@@ -129,7 +129,7 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
  else if(identity_&&identity_->directWork()){
   const auto retained=key_;key_.clear();const bool ok=save();key_=retained;if(!ok)return false;
  }else {const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path))return reject("credential-write");}
- saved_=remember;state_="configured";emit changed();return true;
+ saved_=remember;state_="configured";restoreLookupReference();emit changed();return true;
 }
 bool LampyreConnection::connectProvider(bool consent){
  if(busy_)return false;
