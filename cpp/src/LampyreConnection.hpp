@@ -10,11 +10,10 @@
 class QNetworkReply;
 class IdentityService;
 class GovernmentOperationPolicy;
-// Streamable HTTP MCP client. Endpoint/key come from the user's provider account;
+// Streamable HTTP MCP client. Production destination is fixed internally;
 // no guessed vendor REST routes, automatic searches, or plaintext credential fallback.
 class LampyreConnection final:public QObject {
  Q_OBJECT
- Q_PROPERTY(QString endpoint READ endpoint NOTIFY changed)
  Q_PROPERTY(bool hasCredential READ hasCredential NOTIFY changed)
  Q_PROPERTY(bool credentialSaved READ credentialSaved NOTIFY changed)
  Q_PROPERTY(int requestLimit READ requestLimit NOTIFY changed)
@@ -35,6 +34,8 @@ public:
  int requestLimit()const{return requestLimit_;}
  int submittedRequests()const{return submitted_;}
  Q_INVOKABLE bool setRequestLimit(int limit);
+ Q_INVOKABLE bool setSpendingLimit(const QString &accountId,int submissions);
+ Q_INVOKABLE int remainingSubmissions(const QString &accountId)const;
  void setCaseIdentity(std::function<QString()> reader){caseIdentity_=std::move(reader);}
  void setResultAttachment(std::function<QString(const QString &,const QByteArray &)> writer){attachment_=std::move(writer);}
  Q_INVOKABLE QString attachResult(const QString &device,bool consent);
@@ -46,7 +47,10 @@ public:
  QVariantList tools()const{return tools_;}
  QString resultText()const{return result_;}
  QVariantList resultItems()const;
- Q_INVOKABLE bool configure(const QString &endpoint,const QString &key,bool remember);
+ // Native-only destination override is restricted to loopback synthetic fixtures.
+ bool configure(const QString &endpoint,const QString &key,bool remember);
+ Q_INVOKABLE bool configureCredential(const QString &key,bool remember);
+ Q_INVOKABLE QString displayText(const QString &text)const;
  Q_INVOKABLE bool connectProvider(bool consent);
  Q_INVOKABLE bool callTool(const QString &name,const QString &argumentsJson,bool paidRequestConsent);
  Q_INVOKABLE void cancel();
@@ -57,6 +61,7 @@ public:
 signals:
  void changed();
 private:
+ bool consumeSubmission();
  void reset();
  void load();
  bool save();

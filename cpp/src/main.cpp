@@ -217,7 +217,7 @@ int main(int argc,char *argv[]) {
   QTemporaryFile file(QDir::tempPath()+"/nexvary-mcp-XXXXXX.json");
   if(!file.open()||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush())return QString();
   const auto path=file.fileName();file.close();
-  return law.addEvidence(device,path,"Unverified Lampyre MCP provider result",identity.actor(),true);
+  return law.addEvidence(device,path,"Unverified NEXVARY Intelligence result",identity.actor(),true);
  });
  QQmlApplicationEngine engine;
  engine.rootContext()->setContextProperty(QStringLiteral("lampyreEvaluation"), &lampyre);

@@ -106,7 +106,7 @@ ColumnLayout {
      description: workspace.app.trx("تظهر الخدمات المدفوعة بعد التحقق من إتاحتها.",
                                     "Billable services appear when their availability can be verified."),
      input: workspace.app.trx("نوع الإدخال يحدده دليل الخدمات", "Input type is defined by the service catalog"),
-     price: workspace.app.trx("السعر الافتراضي: ‎€14.00‎ لكل بحث", "Default price: €14.00 per search"),
+     price: workspace.app.trx("رصيد الاستخبارات: غير متاح — التكلفة غير مؤكدة", "Intelligence Credits: balance unavailable — cost unconfirmed"),
      icon: "search_visual",
      status: workspace.app.trx("غير متاح حاليًا", "Currently unavailable")
     }

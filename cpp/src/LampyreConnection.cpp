@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QJsonParseError>
 #include <QSaveFile>
+#include <QLockFile>
 #include <QFileInfo>
 #include <QFile>
 #include <QRegularExpression>
@@ -19,7 +20,10 @@
 #include <QUrl>
 #include <QUuid>
 #include <cmath>
-namespace {constexpr qsizetype responseLimit=2*1024*1024;}
+namespace {
+constexpr qsizetype responseLimit=2*1024*1024;
+const QString officialEndpoint=QStringLiteral("https://account.lampyre.io/api/v2/mcp");
+}
 LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent,bool syntheticTests,int timeoutMs)
  :QObject(parent),directory_(dir),identity_(identity),policy_(policy),synthetic_(syntheticTests),timeoutMs_(qBound(50,timeoutMs,120000)) {
  timer_.setSingleShot(true);
@@ -35,7 +39,7 @@ LampyreConnection::~LampyreConnection(){reset();}
 bool LampyreConnection::validEndpoint(const QString &text,bool syntheticTests){
  const QUrl u(text,QUrl::StrictMode);
  if(text.size()>2048||!u.isValid()||u.host().isEmpty()||!u.userInfo().isEmpty()||u.hasQuery()||u.hasFragment())return false;
- if(u.scheme()=="https")return true;
+ if(u.scheme()=="https")return syntheticTests||text==officialEndpoint;
  return syntheticTests&&u.scheme()=="http"&&QHostAddress(u.host()).isLoopback();
 }
 bool LampyreConnection::validKey(const QString &key){
@@ -56,8 +60,8 @@ void LampyreConnection::load(){
  if(info.isSymLink()||!info.isFile()||info.size()>32768||!f.open(QIODevice::ReadOnly)){error_="credential-read";return;}
  QString error;auto plain=mr::recovery::openCaseBytes(f.readAll(),synthetic_,error);
  const auto obj=QJsonDocument::fromJson(plain).object();plain.fill('\0');
- if(obj.value("owner").toString()!=owner_||!validEndpoint(obj.value("endpoint").toString(),synthetic_)||!validKey(obj.value("key").toString())){error_="credential-read";return;}
- endpoint_=obj.value("endpoint").toString();key_=obj.value("key").toString();saved_=true;state_="configured";
+ if(obj.value("owner").toString()!=owner_||!validEndpoint(obj.value("endpoint").toString(),true)||!validKey(obj.value("key").toString())){error_="credential-read";return;}
+ endpoint_=synthetic_?obj.value("endpoint").toString():officialEndpoint;key_=obj.value("key").toString();saved_=true;state_="configured";
 }
 bool LampyreConnection::save(){
  const auto path=credentialPath();if(path.isEmpty())return fail("sign-in-required");
@@ -68,6 +72,18 @@ bool LampyreConnection::save(){
  QSaveFile file(path);file.setDirectWriteFallback(false);
  if(!file.open(QIODevice::WriteOnly)||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(sealed)!=sealed.size()||!file.commit())return fail("credential-write");
  return true;
+}
+bool LampyreConnection::configureCredential(const QString &key,bool remember){
+ return configure(officialEndpoint,key,remember);
+}
+QString LampyreConnection::displayText(const QString &text)const {
+ QString safe=text;
+ if(!key_.isEmpty())safe.replace(key_,"[credential redacted]");
+ if(!endpoint_.isEmpty())safe.replace(endpoint_,"[connection redacted]",Qt::CaseInsensitive);
+ safe.replace(officialEndpoint,"[connection redacted]",Qt::CaseInsensitive);
+ safe.replace(QRegularExpression("https?://[^\\s\"<>]*lampyre\\.io[^\\s\"<>]*",QRegularExpression::CaseInsensitiveOption),"[connection redacted]");
+ safe.replace(QRegularExpression("lampyre",QRegularExpression::CaseInsensitiveOption),"NEXVARY Intelligence");
+ return safe;
 }
 bool LampyreConnection::configure(const QString &endpoint,const QString &key,bool remember){
  if(busy_)return false;
@@ -92,6 +108,40 @@ bool LampyreConnection::connectProvider(bool consent){
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
  connected_=false;tools_.clear();result_.clear();session_.clear();version_.clear();cursors_.clear();pages_=0;error_.clear();busy_=true;state_="connecting";emit changed();
  post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.2"}}}},"initialize");return true;
+}
+int LampyreConnection::remainingSubmissions(const QString &accountId)const {
+ if(!identity_||!identity_->authenticated()||QUuid(accountId).isNull()||
+    (accountId!=owner_&&!identity_->hasPermission("user-administration")))return 0;
+ QFile file(QDir(directory_).filePath("intelligence-budget-"+accountId+".dat"));
+ if(QFileInfo(file).isSymLink()||!file.open(QIODevice::ReadOnly)||file.size()>4096)return 0;
+ QString error;auto plain=mr::recovery::openCaseBytes(file.readAll(),synthetic_,error);
+ const auto obj=QJsonDocument::fromJson(plain).object();plain.fill('\0');
+ if(obj.value("owner").toString()!=accountId)return 0;
+ return qBound(0,obj.value("remaining").toInt(),100);
+}
+bool LampyreConnection::setSpendingLimit(const QString &accountId,int submissions){
+ if(!identity_||!identity_->checkSession()||!identity_->hasPermission("user-administration"))return reject("administrator-limit-required");
+ bool found=false;for(const auto &v:identity_->users())if(v.toMap().value("id").toString()==accountId)found=true;
+ if(!found||submissions<0||submissions>100)return reject("invalid-request-limit");
+ if(!QDir().mkpath(directory_))return reject("credential-write");
+ const auto path=QDir(directory_).filePath("intelligence-budget-"+accountId+".dat");
+ QLockFile lock(path+".lock");if(!lock.tryLock(0)||QFileInfo(path).isSymLink())return reject("budget-storage-error");
+ QString error;auto plain=QJsonDocument(QJsonObject{{"owner",accountId},{"remaining",submissions}}).toJson(QJsonDocument::Compact);
+ const auto sealed=mr::recovery::sealCase(plain,synthetic_,error);plain.fill('\0');
+ QSaveFile file(path);file.setDirectWriteFallback(false);
+ if(sealed.isEmpty()||!file.open(QIODevice::WriteOnly)||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(sealed)!=sealed.size()||!file.commit())return reject("budget-storage-error");
+ error_.clear();emit changed();return true;
+}
+bool LampyreConnection::consumeSubmission(){
+ if(!identity_)return synthetic_;
+ const auto path=QDir(directory_).filePath("intelligence-budget-"+owner_+".dat");
+ QLockFile lock(path+".lock");if(!lock.tryLock(0))return reject("budget-storage-error");
+ const int remaining=remainingSubmissions(owner_);if(remaining<=0)return reject("spending-limit-reached");
+ QString error;auto plain=QJsonDocument(QJsonObject{{"owner",owner_},{"remaining",remaining-1}}).toJson(QJsonDocument::Compact);
+ const auto sealed=mr::recovery::sealCase(plain,synthetic_,error);plain.fill('\0');
+ QSaveFile file(path);file.setDirectWriteFallback(false);
+ if(QFileInfo(path).isSymLink()||sealed.isEmpty()||!file.open(QIODevice::WriteOnly)||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(sealed)!=sealed.size()||!file.commit())return reject("budget-storage-error");
+ return true;
 }
 bool LampyreConnection::setRequestLimit(int limit){
  if(busy_||limit<0||limit>100)return reject("invalid-request-limit");
@@ -125,8 +175,10 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   const auto allowed=fields.value(it.key()).toMap().value("enum");if(allowed.isValid()&&!allowed.toList().contains(value.toVariant()))return reject("invalid-arguments");
  }
  if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
- resultCaseId_=caseIdentity_?caseIdentity_():QString();resultOperationId_=operation_;
- if(!synthetic_&&resultCaseId_.isEmpty())return reject("active-case-required");
+ const auto caseId=caseIdentity_?caseIdentity_():QString();
+ if(!synthetic_&&caseId.isEmpty()){finishReceipt("failed");return reject("active-case-required");}
+ if(!consumeSubmission()){finishReceipt("failed");return false;}
+ resultCaseId_=caseId;resultOperationId_=operation_;
  ++submitted_;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();error_.clear();emit changed();
  post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
 }
@@ -193,7 +245,7 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
  }
  if(stage=="call"){
   if(!authorized()||(policy_&&!policy_->granted("paid-unknown-cost"))||(!synthetic_&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_))){fail("policy-revoked");return;}
-  resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_.replace(key_,"[credential redacted]");
+  resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_=displayText(result_);
   const bool failed=result.value("isError").toBool();finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
  }
  fail("invalid-response");
@@ -226,8 +278,9 @@ bool LampyreConnection::exportResult(const QString &input,bool consent){
  if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
  if(identity_&&!identity_->hasPermission("evidence-export"))return reject("local-export-permission-denied");
  if(result_.isEmpty())return reject("no-result");
+ if(!synthetic_&&(!identity_->hasPermission("evidence-access")||!caseIdentity_||caseIdentity_()!=resultCaseId_||!caseAuthorization_||!caseAuthorization_()))return reject("active-case-required");
  const auto path=mr::recovery::localFilePath(input);if(path.isEmpty()||QFileInfo(path).exists()||QFileInfo(path).isSymLink())return reject("choose-new-file");
- const QJsonObject envelope{{"schema","nexvary-mcp-result/v1"},{"provider","Lampyre MCP (user-configured endpoint)"},{"endpointHost",QUrl(endpoint_).host()},{"tool",resultTool_},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"caseEvidence",false},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
+ const QJsonObject envelope{{"schema","nexvary-mcp-result/v1"},{"provider","NEXVARY Intelligence"},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"caseEvidence",false},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
  const auto bytes=QJsonDocument(envelope).toJson(QJsonDocument::Indented);QFile file(path);
  if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly))return reject("export-write");
  if(!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush()){file.close();QFile::remove(path);return reject("export-write");}
@@ -238,7 +291,7 @@ QString LampyreConnection::attachResult(const QString &device,bool consent){
  if(!consent){reject("attachment-consent-required");return {};}
  if(!identity_||!identity_->checkSession()||!identity_->hasPermission("case-edit")||!identity_->hasPermission("evidence-access")){reject("local-attachment-permission-denied");return {};}
  if(result_.isEmpty()||resultCaseId_.isEmpty()||!caseIdentity_||caseIdentity_()!=resultCaseId_||!caseAuthorization_||!caseAuthorization_()||!attachment_){reject("active-case-required");return {};}
- const QJsonObject envelope{{"schema","nexvary-mcp-case-result/v1"},{"provider","Lampyre MCP"},{"endpointHost",QUrl(endpoint_).host()},{"caseId",resultCaseId_},{"localOperationId",resultOperationId_},{"tool",resultTool_},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
+ const QJsonObject envelope{{"schema","nexvary-mcp-case-result/v1"},{"provider","NEXVARY Intelligence"},{"caseId",resultCaseId_},{"localOperationId",resultOperationId_},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
  const auto id=attachment_(device,QJsonDocument(envelope).toJson(QJsonDocument::Indented));
  if(id.isEmpty()){reject("case-attachment-failed");return {};}
  error_.clear();emit changed();return id;

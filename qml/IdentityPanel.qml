@@ -30,11 +30,11 @@ ScrollView {
     {ar:"1. إنشاء المدير",en:"1. Set up administrator",done:page.identity.ready&&!page.identity.needsSetup},
     {ar:"2. حساب محقق مفعّل",en:"2. Enabled investigator account",done:page.identity.setupStatus.investigator},
     {ar:"3. تفعيل إذن الاتصال لحسابك",en:"3. Activate connection permission for your account",done:page.connectionAllowed()},
-    {ar:"4. حفظ مفتاح Lampyre محميًا",en:"4. Save protected Lampyre key",done:lampyreConnection.credentialSaved},
+    {ar:"4. حفظ مفتاح استخبارات نيكسفاري محميًا",en:"4. Save protected Intelligence key",done:lampyreConnection.credentialSaved},
     {ar:"5. اختبار الاتصال واكتشاف الأدوات",en:"5. Test connection and discover tools",done:lampyreConnection.connected},
     {ar:"6. فتح قضية مسموحة",en:"6. Open an accessible case",done:!!lawCaseBridge.activeCase.id}
    ];delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.done?page.app.design.accent:page.app.design.muted;text:(page.app.ar?modelData.ar:modelData.en)+" · "+(modelData.done?page.app.trx("مكتمل الآن","Complete now"):page.app.trx("غير مكتمل","Incomplete"))}}
-   ActionButton {text:app.trx("فتح معالج Lampyre","Open Lampyre setup");onClicked:app.navigatePrimary(3)}
+   ActionButton {text:app.trx("فتح إعداد استخبارات نيكسفاري","Open Intelligence setup");onClicked:app.navigatePrimary(3)}
    ActionButton {text:app.trx("فتح القضايا","Open cases");onClicked:{app.setWorkspace(true);app.navigateSection(1)}}
   }
   Panel {Layout.fillWidth:true;title:app.trx("هوية المستخدم المحلي","Local user identity");iconName:"document_lock"
@@ -67,6 +67,12 @@ ScrollView {
    Repeater {model:page.identity.users;delegate:ColumnLayout {id:accountRow;required property var modelData;Layout.fillWidth:true
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:modelData.username+" · "+page.app.roleLabel(modelData.role)+"\n"+modelData.id}
     ActionButton {text:modelData.enabled?page.app.trx("تعطيل","Disable"):page.app.trx("تمكين","Enable");enabled:modelData.id!==page.identity.session.id;onClicked:page.identity.setEnabled(modelData.id,!modelData.enabled)}
+    RowLayout {
+     Layout.fillWidth:true
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("سقف إرسال الاستخبارات المتبقي: ","Remaining intelligence submissions: ")+lampyreConnection.remainingSubmissions(accountRow.modelData.id)}
+     SpinBox {id:adminBudget;from:0;to:100;value:0;editable:true}
+     ActionButton {text:page.app.trx("ضبط السقف","Set ceiling");onClicked:{const ok=lampyreConnection.setSpendingLimit(accountRow.modelData.id,adminBudget.value);page.feedback=ok?page.app.trx("تم حفظ السقف الإداري؛ يستمر بعد إعادة التشغيل ولا يحدد تكلفة مالية","Administrative ceiling saved across restarts; it does not cap monetary cost"):page.app.humanError(lampyreConnection.errorCode)}}
+    }
     Repeater {model:[{id:"case-create",ar:"إنشاء القضايا",en:"Create cases"},{id:"case-edit",ar:"تعديل القضايا",en:"Edit cases"},{id:"evidence-access",ar:"قراءة الأدلة",en:"Evidence access"},{id:"osint-investigation",ar:"تحقيق OSINT",en:"OSINT investigation"},{id:"external-connection",ar:"اتصال API/MCP",en:"API/MCP connection"},{id:"paid-search",ar:"البحث المدفوع",en:"Paid searches"},{id:"evidence-export",ar:"تصدير الأدلة",en:"Evidence export"},{id:"user-administration",ar:"إدارة المستخدمين",en:"User administration"}]
      delegate:CheckBox {required property var modelData;text:page.app.ar?modelData.ar:modelData.en;checked:page.roleAllows(accountRow.modelData.role,modelData.id)&&(accountRow.modelData.deniedPermissions||[]).indexOf(modelData.id)<0;enabled:page.roleAllows(accountRow.modelData.role,modelData.id)&&!(accountRow.modelData.id===page.identity.session.id&&modelData.id==="user-administration");onClicked:{const ok=page.identity.setPermission(accountRow.modelData.id,modelData.id,checked);page.feedback=ok?page.app.trx("تم حفظ الصلاحية؛ يجب إعادة دخول الحساب المتأثر","Permission saved; affected account must sign in again"):""}}
     }

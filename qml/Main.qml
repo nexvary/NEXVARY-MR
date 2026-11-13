@@ -88,7 +88,7 @@ ApplicationWindow {
   if(text.indexOf("Government offline policy blocked")>=0)return "الاتصال الخارجي لهذه العملية غير مفعّل. افتح الإدارة ← صلاحيات الاتصال لطلب التفعيل.";
   if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
   if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
-  if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات Lampyre المحفوظة تبقى محمية.";
+  if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات استخبارات نيكسفاري المحفوظة تبقى محمية.";
   const denied=/^Account permission denied: ([a-z-]+)\./.exec(text);
   if(denied){
    const labels={"case-create":"إنشاء القضايا","case-edit":"تعديل القضايا","evidence-access":"قراءة الأدلة","osint-investigation":"تحقيق OSINT","evidence-export":"تصدير الأدلة"};

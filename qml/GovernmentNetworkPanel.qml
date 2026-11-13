@@ -25,8 +25,8 @@ Panel {
   return app.ar?(ar[status]||status):status
  }
  function kindCaption(kind){
-  const ar={"lampyre-mcp":"طلب أداة Lampyre MCP","phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
-  const en={"lampyre-mcp":"Lampyre MCP tool request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
+  const ar={"lampyre-mcp":"طلب استخبارات نيكسفاري","phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
+  const en={"lampyre-mcp":"NEXVARY Intelligence request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
   return (app.ar?ar:en)[kind]||kind
  }
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}

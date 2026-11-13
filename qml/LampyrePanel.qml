@@ -6,7 +6,7 @@ Panel {
  property var app
  readonly property var bridge: typeof lampyreEvaluation !== "undefined" ? lampyreEvaluation : null
  objectName: "lampyrePanel"
- title: "Lampyre"; subtitle: app.trx("اتصال المزوّد والمختبر المحلي", "Provider connection & local laboratory")
+ title: "NEXVARY Intelligence"; subtitle: app.trx("اتصال المزوّد والمختبر المحلي", "Provider connection & local laboratory")
  iconName: "shield_checkmark"; accent: "blue"
  LayoutMirroring.enabled: app.ar
  LayoutMirroring.childrenInherit: true

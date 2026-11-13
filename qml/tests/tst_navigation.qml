@@ -900,7 +900,7 @@ TestCase {
    app.ar=ar;
    verify(renderedFrame());
    verify(findChild(ws,"intelligenceBillingCard").visible);
-   verify(findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
+   verify(!findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
    verify(!findChild(ws,"intelligenceStartPaidSearch").enabled);
    verify(findChild(ws,"lampyreMcpEndpoint")===null);
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-cards-"+(ar?"ar":"en")+".png"));
@@ -908,6 +908,9 @@ TestCase {
   const settings=findChild(ws,"intelligenceAdvancedSettings");
   mouseClick(settings);
   tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
+  verify(findChild(ws,"lampyreMcpEndpoint")===null);
+  verify(findChild(ws,"lampyreConnectionPanel").connection.endpoint===undefined);
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-setup-hidden-endpoint.png"));
   findChild(ws,"lampyreApiKey").text="Synthetic-credential-draft";
   identityBridge.logout();
   tryVerify(function(){return findChild(ws,"lampyreApiKey")===null});

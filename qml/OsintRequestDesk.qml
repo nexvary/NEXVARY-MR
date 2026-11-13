@@ -13,7 +13,7 @@ Pane {
  contentItem:ColumnLayout {spacing:8
  RowLayout {visible:!desk.demoMode;Layout.fillWidth:true;Layout.margins:6
   Label {text:desk.app.trx("المزوّد", "Provider");color:"#9EB4C1";font.pixelSize:12}
-  ComboBox {objectName:"osintProviderSelector";model:["Lampyre", "PhoneInfoga", "OSINT Industries"];currentIndex:desk.selectedProvider;onActivated:desk.selectedProvider=currentIndex;Layout.preferredWidth:240;palette.base:"#08121B";palette.text:"#E5EDF3";palette.button:"#0D2A3D";palette.buttonText:"#E5EDF3"}
+  ComboBox {objectName:"osintProviderSelector";model:["NEXVARY Intelligence", "PhoneInfoga", "OSINT Industries"];currentIndex:desk.selectedProvider;onActivated:desk.selectedProvider=currentIndex;Layout.preferredWidth:240;palette.base:"#08121B";palette.text:"#E5EDF3";palette.button:"#0D2A3D";palette.buttonText:"#E5EDF3"}
   Item {Layout.fillWidth:true}
   Label {text:desk.app.trx("التجربة غير مؤكدة • لا اتصال API", "Trial unconfirmed • No API connection");color:"#9EB4C1";font.pixelSize:11;visible:desk.selectedProvider===0&&desk.demoMode}
  }
