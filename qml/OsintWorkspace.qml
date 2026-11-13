@@ -203,8 +203,8 @@ ColumnLayout {
      spacing: 8
      RowLayout {
       Layout.fillWidth: true
-      Image {
-       source: "qrc:/assets/icons-professional/" + serviceCard.modelData.icon + ".svg"
+      SemanticIcon {
+       iconSource: "qrc:/assets/icons-professional/" + serviceCard.modelData.icon + ".svg"
        Layout.preferredWidth: 32
        Layout.preferredHeight: 32
       }

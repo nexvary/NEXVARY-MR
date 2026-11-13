@@ -26,6 +26,27 @@ TestCase {
   artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
   return id
  }
+ Component {id:professionalIconFixture;MR.SemanticIcon {width:32;height:32}}
+ function test_professionalIconAcceptance(){
+  const names=["home","phone","gauge","board","arrow_square_down","clipboard_task","database","settings","history","document_lock","toolbox","wrench","question_circle","document_text","search_visual","book_open_lightbulb","shield_checkmark","data_bar_vertical_ascending","puzzle_piece","phone_laptop","arrow_sync","checkmark_circle","error_circle","warning","evidence_box","training_lab","check_mark"];
+  for(const name of names){
+   const icon=professionalIconFixture.createObject(app.contentItem,{name:name});verify(icon!==null);
+   tryCompare(icon,"status",Image.Ready,5000);compare(icon.usingFallback,false);verify(icon.sourceSize.width>=32);icon.destroy();
+  }
+  const missing=professionalIconFixture.createObject(app.contentItem,{name:"missing-icon-fixture"});
+  tryCompare(missing,"usingFallback",true,5000);tryCompare(missing,"status",Image.Ready,5000);missing.destroy();
+  app.setWorkspace(true);app.navigatePrimary(3);verify(renderedFrame());
+  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);
+  for(const size of [[1366,768],[1920,1080],[2560,1440]])for(const ar of [true,false]){
+   app.width=size[0];app.height=size[1];app.ar=ar;verify(renderedFrame());
+   for(let i=0;i<nav.sectionCount;i++){
+    const button=nav.itemAt(i),icon=findChild(button,"primaryNavIcon"+i);
+    verify(button!==null);verify(icon!==null);tryCompare(icon,"status",Image.Ready,5000);
+    verify(icon.width>0&&icon.height>0);verify(icon.width<=button.width);verify(icon.height<=button.height);
+   }
+   if(size[0]===1366&&uiScaleTag==="1")verify(uiEvidence.captureWindow(app,uiScreenshotBase+"icon-acceptance-"+(ar?"ar":"en")+".png"));
+  }
+ }
  function test_phoneOsintBilingualBoundary(){
   identityBridge.logout()
   app.navigatePrimary(3);verify(renderedFrame());

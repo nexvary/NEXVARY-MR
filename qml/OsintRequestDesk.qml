@@ -27,7 +27,7 @@ Pane {
    Rectangle {Layout.fillWidth:true;implicitHeight:28;color:"#0C435C"
     Label {anchors.fill:parent;anchors.margins:6;text:desk.app.trx("▾  مثال محلي", "▾  Local example");color:"#E5EDF3";font.pixelSize:12;font.bold:true}
    }
-   RowLayout {Image {source:"qrc:/assets/icons-professional/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
+   RowLayout {SemanticIcon {iconSource:"qrc:/assets/icons-professional/document_text.svg";Layout.preferredWidth:17;Layout.preferredHeight:17}Label {text:"Email";color:"#E5EDF3";font.pixelSize:12}}
    Label {text:desk.app.trx("هذا معيار لبيانات الاختبار.", "This input belongs to the test example.");color:"#9EB4C1";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11}
    Item {Layout.fillHeight:true}
   }
@@ -38,7 +38,7 @@ Pane {
    Repeater {model:desk.app.ar?["نجاح وبيانات اصطناعية", "فشل المصادقة", "انتهاء المهلة", "رصيد غير كافٍ", "حد الطلبات"]:["Success with synthetic data", "Authentication failure", "Timeout", "Insufficient credits", "Rate limited"]
     delegate:Rectangle {required property int index;required property string modelData;Layout.fillWidth:true;implicitHeight:34;color:desk.scenario===index?"#0C435C":index%2?"#0A2231":"#08121B";border.color:desk.scenario===index?"#23B9E7":"transparent"
      RowLayout {anchors.fill:parent;anchors.margins:6;spacing:7
-      Image {source:"qrc:/assets/icons-professional/"+(desk.scenario===index?"checkmark_circle":"document_text")+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17}
+      SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+(desk.scenario===index?"checkmark_circle":"document_text")+".svg";Layout.preferredWidth:17;Layout.preferredHeight:17}
       Label {text:modelData;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideRight}
      }
      MouseArea {anchors.fill:parent;onClicked:desk.scenario=parent.index}

@@ -167,8 +167,8 @@ int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
- QGuiApplication::setApplicationVersion(QStringLiteral("0.4.2"));
- QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/assets/nexvary-mr.png")));
+ QGuiApplication::setApplicationVersion(QStringLiteral("0.4.3"));
+ QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/packaging/app.ico")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
  cli.addOption({QStringLiteral("build-profile"),QStringLiteral("Print the compiled device-operation profile and exit")});
@@ -253,8 +253,9 @@ int main(int argc,char *argv[]) {
   if(!workshop.ready()||workshop.checkIntegrity()!=QStringLiteral("ok"))return smokeFailure("workshop-database-integrity",4);
   auto *window=qobject_cast<QQuickWindow *>(engine.rootObjects().first());
  if(!window)return smokeFailure("qml-window-type",5);
+  if(QGuiApplication::windowIcon().isNull()||QGuiApplication::windowIcon().pixmap(16,16).isNull()||QGuiApplication::windowIcon().pixmap(32,32).isNull())return smokeFailure("application-icon-resource",8);
   if(QImage(QStringLiteral(":/assets/codec-check.jpg")).size()!=QSize(8,8)) return smokeFailure("jpeg-codec-resource",8);
-  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()||QImage(QStringLiteral(":/assets/icons/home.svg")).isNull()||QImage(QStringLiteral(":/assets/icons/check_mark.svg")).isNull()) return smokeFailure("png-svg-codec-resources",8);
+  if(QImage(QStringLiteral(":/assets/nexvary-mr.png")).isNull()||QImage(QStringLiteral(":/assets/icons-professional/home.svg")).isNull()||QImage(QStringLiteral(":/assets/icons-professional/check_mark.svg")).isNull()) return smokeFailure("png-svg-codec-resources",8);
   if(!board.importBoard(QStringLiteral(":/samples/training-board.json"),true)) return smokeFailure("synthetic-board-import",9);
   // Original synthetic raw-image fixture exercises deployed recovery decoding,
   // source verification and Windows DPAPI persistence without a phone.

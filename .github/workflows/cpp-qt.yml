@@ -11,6 +11,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   core:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     strategy:
       matrix:
         os: [windows-2022, ubuntu-latest]
@@ -29,6 +31,8 @@ jobs:
           name: core-test-results-${{ matrix.os }}
           path: build/core-results.xml
   linux-forensic-integration:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     strategy:
       fail-fast: false
       matrix:
@@ -117,6 +121,8 @@ jobs:
             build-avb-sanitized/adb-backup-interop-results.json
             build-avb-sanitized/Testing/Temporary/LastTest.log
   tracking-server:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -141,10 +147,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        profile: [production, laboratory]
+        profile: ${{ (github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') && fromJSON('["production"]') || fromJSON('["production","laboratory"]') }}
     runs-on: windows-2022
     env:
       QT_QUICK_BACKEND: software
+      MR_UI_ICON_FOCUS: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Parse Windows deployment scripts before building
@@ -301,14 +308,47 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
-          $setup = (Resolve-Path 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe').Path
-          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=`"$destination`"" -Wait -PassThru
+          $setup = (Resolve-Path 'dist/NEXVARY-MR-Government-Setup.exe').Path
+          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /TASKS=desktopicon /DIR=`"$destination`"" -Wait -PassThru
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
           $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
           if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Per-user uninstall registration was not created' }
           # Execute the installed binary itself; keep only synthetic data outside
           # its installation directory and exclude developer/Qt SDK paths.
           ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed -RunInPlace
+          # Compare shell-extracted icons against the reviewed 32px ICO frame.
+          Add-Type -AssemblyName System.Drawing
+          $reference = [System.Drawing.Icon]::new((Resolve-Path 'packaging/app.ico').Path, [System.Drawing.Size]::new(32,32))
+          $expectedIcon = $reference.ToBitmap()
+          $iconChecks = @()
+          foreach ($binary in @($setup,(Join-Path $destination 'NEXVARY-MR.exe'))) {
+            $actualIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($binary)
+            if (-not $actualIcon) { throw 'Missing shell executable icon' }
+            $actualPixels = $actualIcon.ToBitmap()
+            if ($actualPixels.Width -ne 32 -or $actualPixels.Height -ne 32) { throw 'Unexpected shell icon size' }
+            for ($y=0; $y -lt 32; $y++) {
+              for ($x=0; $x -lt 32; $x++) {
+                if ($actualPixels.GetPixel($x,$y).ToArgb() -ne $expectedIcon.GetPixel($x,$y).ToArgb()) { throw 'Executable shell icon differs from master ICO' }
+              }
+            }
+            $iconChecks += [ordered]@{file=[IO.Path]::GetFileName($binary);matchesMaster=$true}
+            $actualPixels.Dispose(); $actualIcon.Dispose()
+          }
+          $expectedIcon.Dispose(); $reference.Dispose()
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcuts = @(
+            (Join-Path ([Environment]::GetFolderPath('Programs')) 'NEXVARY MR/NEXVARY MR.lnk'),
+            (Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) 'NEXVARY MR.lnk')
+          )
+          foreach ($linkPath in $shortcuts) {
+            if (-not (Test-Path -LiteralPath $linkPath)) { throw 'Installer shortcut missing' }
+            $link = $shell.CreateShortcut($linkPath)
+            if ($link.TargetPath -ine (Join-Path $destination 'NEXVARY-MR.exe')) { throw 'Shortcut target mismatch' }
+            if ($link.IconLocation -ine ((Join-Path $destination 'NEXVARY-MR.exe')+',0')) { throw 'Shortcut icon mismatch' }
+          }
+          $displayIcon = (Get-ItemProperty -LiteralPath $uninstallKey).DisplayIcon
+          if ($displayIcon.Replace('"','').Split(',')[0] -ine (Join-Path $destination 'NEXVARY-MR.exe')) { throw 'Uninstall display icon mismatch' }
+          [ordered]@{schemaVersion=1;icons=$iconChecks;startMenuShortcut=$true;desktopShortcut=$true;uninstallIcon=$true} | ConvertTo-Json -Depth 5 | Set-Content dist/evidence/application-icon-acceptance.json
           $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
           if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
           $installedExe = Join-Path $destination 'NEXVARY-MR.exe'
@@ -324,14 +364,14 @@ jobs:
         if: matrix.profile == 'production'
         shell: pwsh
         run: |
-          $setup = Get-Item -LiteralPath 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe'
+          $setup = Get-Item -LiteralPath 'dist/NEXVARY-MR-Government-Setup.exe'
           "$( (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLower() )  $($setup.Name)" | Set-Content dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         if: matrix.profile == 'production'
         with:
           name: NEXVARY-MR-Windows-x64-installer-unsigned
           path: |
-            dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe
+            dist/NEXVARY-MR-Government-Setup.exe
             dist/SHA256SUMS.txt
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
@@ -346,7 +386,7 @@ jobs:
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json
-            build/**/smoke*.png
+            build/**/smoke-professional-ui-icon-acceptance-*.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/
             build/case-workload-benchmark.json

@@ -23,7 +23,7 @@ Item {
  Connections {target:researchBridge;function onChanged(){page.refresh()}}
  ColumnLayout {anchors.fill:parent;spacing:10
   RowLayout {Layout.fillWidth:true
-   Image {source:"qrc:/assets/icons-professional/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;sourceSize.width:32;sourceSize.height:32}
+   SemanticIcon {iconSource:"qrc:/assets/icons-professional/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;}
    Label {text:app.trx("مركز الأبحاث","Research Center");font.pixelSize:23;font.bold:true;color:app.design.text;Layout.fillWidth:true}
    StateBadge {text:"OFFLINE R&D";tint:app.design.accent}
   }

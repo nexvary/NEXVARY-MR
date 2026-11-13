@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QTemporaryDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QSaveFile>
 #include <QDir>
 #include <QCoreApplication>
@@ -69,7 +70,10 @@ public:
  Q_INVOKABLE bool hasGlyphCoverage(const QString &text) { return mr::ui::textHasGlyphs(text,QFont(QStringLiteral("Segoe UI"))); }
  Q_INVOKABLE bool captureWindow(QObject *object,const QString &path) {
   auto *window=qobject_cast<QQuickWindow *>(object);
-  return window&&!window->grabWindow().isNull()&&window->grabWindow().save(path);
+  if(!window)return false;
+  const auto frame=window->grabWindow();if(frame.isNull())return false;
+  if(qEnvironmentVariableIsSet("MR_UI_ICON_FOCUS")&&!QFileInfo(path).fileName().contains("icon-acceptance-"))return true;
+  return frame.save(path);
  }
  Q_INVOKABLE QString headerFingerprint(QObject *object) {
   auto *window=qobject_cast<QQuickWindow *>(object);

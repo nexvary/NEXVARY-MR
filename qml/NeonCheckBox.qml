@@ -12,6 +12,6 @@ CheckBox {
   y: (control.height-height)/2
   radius: 4; color: control.checked ? control.design.success : control.design.surface
   border.color: control.activeFocus ? control.design.accent : control.checked ? control.design.success : control.design.silver; border.width: control.activeFocus ? 3 : 2
-  Image {objectName:"neonCheckmark";anchors.fill:parent;anchors.margins:2;source:"qrc:/assets/icons-professional/check_mark.svg";visible:control.checked;fillMode:Image.PreserveAspectFit}
+  SemanticIcon {objectName:"neonCheckmark";anchors.fill:parent;anchors.margins:2;iconSource:"qrc:/assets/icons-professional/check_mark.svg";visible:control.checked;fillMode:Image.PreserveAspectFit}
  }
 }

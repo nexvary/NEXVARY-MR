@@ -91,7 +91,7 @@ ColumnLayout {
      border.color:toolCard.checked||toolCard.activeFocus?panel.app.design.accent:panel.app.design.border
     }
     contentItem:RowLayout {
-     Image {source:"qrc:/assets/icons-professional/search_visual.svg";Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
+     SemanticIcon {iconSource:"qrc:/assets/icons-professional/search_visual.svg";Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
      ColumnLayout {
       Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
       Label {Layout.fillWidth:true;text:toolCard.text;textFormat:Text.PlainText;color:panel.app.design.text;font.bold:true;elide:Text.ElideRight}

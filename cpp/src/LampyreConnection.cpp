@@ -107,7 +107,7 @@ bool LampyreConnection::connectProvider(bool consent){
  if((!synthetic_&&!policy_)||(policy_&&!policy_->granted("external-analysis")))return reject("external-analysis-approval-required");
  if(policy_){operation_=policy_->beginOperation("external-analysis","intelligence-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
  connected_=false;tools_.clear();result_.clear();sourceDigest_.clear();session_.clear();version_.clear();cursors_.clear();pages_=0;error_.clear();busy_=true;state_="connecting";emit changed();
- post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.2"}}}},"initialize");return true;
+ post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.3"}}}},"initialize");return true;
 }
 QVariantMap LampyreConnection::spendingAllowances()const {
  QVariantMap out;if(!identity_||!identity_->authenticated())return out;

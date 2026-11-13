@@ -30,7 +30,7 @@ Item {
       required property var modelData
       Layout.fillWidth:true;implicitHeight:104;radius:12;color:page.app.design.surface;border.color:page.app.design.border
       RowLayout {anchors.fill:parent;anchors.margins:16;spacing:12
-       Image {source:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
         Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
         Label {text:modelData.value;color:page.app.design.text;font.pixelSize:26;font.bold:true}

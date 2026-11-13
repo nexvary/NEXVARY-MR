@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><rect x="8" y="8" width="240" height="240" rx="56" fill="#081c32"/><path d="M128 35 208 81v94l-80 46-80-46V81Z" fill="#0b2b50" stroke="#338bff" stroke-width="10"/><path d="M81 166V91l94 75V91" fill="none" stroke="#eff6ff" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/><circle cx="81" cy="91" r="12" fill="#50c9ff"/><circle cx="175" cy="166" r="12" fill="#50c9ff"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="NEXVARY-MR">
+ <defs>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#EAF5FF"/><stop offset=".19" stop-color="#71899D"/><stop offset=".48" stop-color="#273747"/><stop offset=".76" stop-color="#A7C6DD"/><stop offset="1" stop-color="#405469"/></linearGradient>
+  <linearGradient id="obsidian" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#253645"/><stop offset=".36" stop-color="#111A23"/><stop offset=".58" stop-color="#0A0A0A"/><stop offset="1" stop-color="#111D29"/></linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2=".5" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".22" stop-color="#D8E2EA"/><stop offset=".48" stop-color="#8797A6"/><stop offset=".51" stop-color="#F6FAFD"/><stop offset=".76" stop-color="#C0C0C0"/><stop offset="1" stop-color="#61798D"/></linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#B1EDFF"/><stop offset=".44" stop-color="#00BFFF"/><stop offset="1" stop-color="#006AB5"/></linearGradient>
+  <linearGradient id="facet" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#FFFFFF" stop-opacity=".7"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+ </defs>
+ <rect x="7" y="9" width="242" height="242" rx="54" fill="#020508"/>
+ <rect x="7" y="5" width="242" height="242" rx="54" fill="url(#rim)"/>
+ <rect x="11" y="9" width="234" height="234" rx="50" fill="url(#obsidian)"/>
+ <path d="M26 62Q29 21 69 21H187Q215 22 229 45L168 91H26Z" fill="url(#facet)" opacity=".12"/>
+ <path d="M31 180V91Q31 72 50 72H65M193 177H207Q226 177 226 157V84" fill="none" stroke="#00BFFF" stroke-width="14" opacity=".09"/>
+ <path d="M32 179V92Q32 74 50 74H66M192 176H206Q224 176 224 158V86" fill="none" stroke="url(#blue)" stroke-width="3"/>
+ <!-- One interlocking N silhouette: a raised silver bridge and blue return rail. -->
+ <path d="M66 193V68H92L164 153V68H192V193H166L94 108V193Z" fill="#020609" stroke="#020609" stroke-width="7" stroke-linejoin="round" transform="translate(0 5)"/>
+ <path d="M65 188V63H93L163 147V63H192V188H164L94 104V188Z" fill="url(#metal)"/>
+ <path d="M65 188V63H93L163 147" fill="none" stroke="#F0FAFF" stroke-width="2" stroke-linejoin="round"/>
+ <path d="M94 104V188H84V92L166 188H164Z" fill="#536B80"/>
+ <path d="M164 63H192V188H182V74H164Z" fill="url(#blue)"/>
+ <path d="M94 63L164 147V126L112 63Z" fill="url(#facet)" opacity=".35"/>
+ <path d="M68 206H188" stroke="#263E50" stroke-width="2"/>
+ <path d="M98 212H158" stroke="url(#blue)" stroke-width="3" stroke-linecap="round"/>
+ <circle cx="32" cy="181" r="5" fill="#39FF14"/><circle cx="224" cy="83" r="4" fill="#FF3131"/>
+ <circle cx="32" cy="181" r="2" fill="#E5FFDD"/><circle cx="224" cy="83" r="1.5" fill="#FFE5E7"/>
+</svg>
