@@ -115,6 +115,7 @@ ColumnLayout {
             clip:true;contentWidth:availableWidth
             ColumnLayout {
                 width:serviceScroll.availableWidth
+    Loader {Layout.fillWidth:true;active:search.showSearchResult&&!!search.connection&&(search.connection.resultText!==""||search.connection.pendingResultCount>0);visible:active;sourceComponent:LampyreConnectionPanel {app:search.app;showSetup:false;showTools:false}}
     OsintDesktopPane {
         Layout.fillWidth:true;visible:search.selectedCard!==""
         title:search.app.trx("خدمات ","Services: ")+Categories.title(search.selectedCard,search.app.ar);iconName:"search_visual"
@@ -171,7 +172,6 @@ ColumnLayout {
         Label {visible:search.validationError!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.danger;text:search.validationError}
     }
     Label {visible:!!connection&&connection.errorCode!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;text:app.trx("تعذر إتمام الطلب: ","Request could not complete: ")+(connection?search.errorMessage(connection.errorCode):"")}
-    Loader {Layout.fillWidth:true;active:search.showSearchResult&&!!search.connection&&(search.connection.resultText!==""||search.connection.pendingResultCount>0);visible:active;sourceComponent:LampyreConnectionPanel {app:search.app;showSetup:false;showTools:false}}
             }
         }
     }

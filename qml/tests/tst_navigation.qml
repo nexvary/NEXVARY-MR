@@ -1022,7 +1022,7 @@ TestCase {
    const before=uiEvidence.reviewConnectionStats().paidCalls;const collectionsBefore=uiEvidence.reviewConnectionStats().collections;
    const card=findChild(cards,"intelligenceCategory-"+category);verify(card!==null);card.clicked();
    const dialog=findChild(cards,"intelligenceServiceDialog");tryCompare(dialog,"opened",true);
-   const specialized=findChild(dialog.contentItem,"intelligenceSpecializedMode");specialized.checked=true;specialized.toggled();
+   const specialized=findChild(dialog.contentItem,"intelligenceSpecializedMode");verify(renderedFrame());mouseClick(specialized);verify(cards.specializedSearch);
    tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.selectedCategory,category);
    compare(uiEvidence.reviewConnectionStats().paidCalls,before);
    const selector=findChild(dialog.contentItem,"intelligenceServiceSelector");verify(selector!==null);selector.activated(0);
