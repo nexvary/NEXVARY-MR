@@ -24,7 +24,10 @@ ScrollView {
    border.color:field.activeFocus?page.app.design.accent:field.hovered?page.app.design.silver:page.app.design.border
   }
  }
- ColumnLayout {width:page.availableWidth;spacing:12
+ ColumnLayout {
+  width:page.availableWidth;spacing:12
+  Label {visible:page.identity.directWork;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("العمل مباشر دون حساب داخل البرنامج. إعداد الاستخبارات متاح من تبويب الاستخبارات.","Work directly without an application account. Configure Intelligence in the Intelligence tab.")}
+  ColumnLayout {visible:!page.identity.directWork;Layout.fillWidth:true;spacing:12
   Panel {Layout.fillWidth:true;title:app.trx("الإعداد الأول — تقدم متحقق","First-run setup — verified progress");iconName:"clipboard_task"
    Repeater {model:[
     {ar:"1. إنشاء المدير",en:"1. Set up administrator",done:page.identity.ready&&!page.identity.needsSetup},
@@ -91,5 +94,6 @@ ScrollView {
    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("القضية المفتوحة: ","Open case: ")+(lawCaseBridge.activeCase.id||app.trx("لا توجد قضية مفتوحة","None"))+"\n"+app.trx("إدارة المستخدمين: ","User administration: ")+(page.identity.session.role==="administrator"?app.trx("مسموح","Allowed"):app.trx("غير مسموح","Not allowed"))}
   }
   GovernmentNetworkPanel {app:page.app;Layout.fillWidth:true}
+ }
  }
 }

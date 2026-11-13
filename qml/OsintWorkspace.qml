@@ -25,9 +25,9 @@ ColumnLayout {
  readonly property var readableCases:caseReader?lawCaseBridge.cases:[]
  readonly property var intelligenceHistory:typeof identityBridge!=="undefined"&&identityBridge.authenticated?operationPolicy.operationReceipts.filter(r=>["intelligence-mcp","lampyre-mcp","phone-osint"].indexOf(r.kind)>=0):[]
  Connections {target:identityBridge;function onChanged(){workspace.dashboardError=""}}
- readonly property bool caseReady: typeof lawCaseBridge !== "undefined"
+ readonly property bool caseReady: (typeof identityBridge!=="undefined"&&identityBridge.directWork) || typeof lawCaseBridge !== "undefined"
      && !!lawCaseBridge.activeCase.id && lawCaseBridge.permissions.analyze
-     && lawCaseBridge.permissions.addEvidence && lawCaseBridge.devices.length > 0
+     && lawCaseBridge.permissions.addEvidence
 
  onCaseReadyChanged: {
   if (!caseReady)
@@ -169,7 +169,7 @@ ColumnLayout {
      icon: "shield_checkmark",
      status: workspace.caseReady
          ? workspace.app.trx("القضية جاهزة لإدخال الطلب", "Case ready for search setup")
-         : workspace.app.trx("يلزم فتح قضية مخوّلة وتسجيل جهاز", "Open an authorized case and register a device")
+         : workspace.app.trx("افتح قضية لحفظ التقرير أو استخدم البحث المباشر", "Open a case to retain evidence or use direct search")
     },
     {
      title: workspace.app.trx("البحث المدفوع", "Billable search"),
@@ -253,6 +253,7 @@ ColumnLayout {
  }
  OsintDesktopCommand {
   objectName: "intelligenceAccountPermissions"
+  visible:!identityBridge.directWork
   text: workspace.app.trx("الحسابات والصلاحيات", "Accounts and permissions")
   onClicked: workspace.app.openAccountPermissions()
  }

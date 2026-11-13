@@ -124,6 +124,21 @@ def case_intent_authority(r, operation, request, closure):
 
 
 def operation_record(r, request, decision, old, closure, actor, role, time, result, start):
+    if r.get("schema") == "nexvary-investigator-operation/v1":
+        if (request or closure or r.get("requestId") != "" or r.get("decisionHash") != ""
+                or type(r.get("decisionSequence")) not in {int, float} or r["decisionSequence"] != 0
+                or not uuid(r.get("requester")) or (r.get("caseRef") != "" and not uuid(r.get("caseRef")))
+                or r.get("requesterRole") not in {"investigator", "reviewer"}
+                or r.get("kind") not in {"intelligence-mcp", "phone-osint"}
+                or r.get("capability") != "external-analysis"
+                or (not start and old.get("schema") != r["schema"])):
+            raise ValueError("Direct investigator operation scope rejected")
+        direct = dict(r, schema="nexvary-operation-result/v1")
+        previous = dict(old, schema="nexvary-operation-result/v1") if old else {}
+        authority = {"id": "", "requester": r["requester"], "requesterRole": r["requesterRole"],
+                     "caseRef": r["caseRef"], "capability": "external-analysis", "status": "active"}
+        return operation_record(direct, authority, {"sequence": 0, "hash": ""}, previous,
+                                "", actor, role, time, result, start)
     keys = {"capability", "caseRef", "completedUtc", "decisionHash", "decisionSequence", "failureClass", "kind", "operationId", "outputSha256", "requestId", "requester", "requesterRole", "schema", "sourceSha256", "startedUtc", "status"}
     digest = lambda x: isinstance(x, str) and (x == "" or re.fullmatch(r"[0-9a-f]{64}", x))
     if (set(r) != keys or r["schema"] != "nexvary-operation-result/v1" or not uuid(r["operationId"])

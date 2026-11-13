@@ -110,21 +110,24 @@ private slots:
  void productionNeverUsesInsecureFixture(){
   QTemporaryDir t;LampyreConnection client(t.path(),nullptr,nullptr);QVERIFY(!client.configure("http://127.0.0.1/mcp","TEST-API-KEY",true));QVERIFY(!client.connectProvider(true));QVERIFY(!client.callTool("lookup","{}",true));QVERIFY(QDir(t.path()).entryList(QDir::Files).isEmpty());
  }
- void reviewedPermissionAndRevocation(){
-  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.bootstrap("admin","Synthetic admin",password));QVERIFY(identity.login("admin",password));QVERIFY(!identity.createUser("operator","Synthetic operator","investigator",password).isEmpty());QVERIFY(identity.login("operator",password));GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);
-  QVERIFY(client.configure(server.url(),"TEST-API-KEY",false));QVERIFY(!client.connectProvider(true));QCOMPARE(client.errorCode(),QString("external-analysis-approval-required"));QCOMPARE(server.requests,0);
-  // An investigator requests; another account reviews; the original account activates.
-  const auto investigatorId=identity.userId();const auto request=policy.requestException("external-analysis","Synthetic MCP query",{},600,true);QVERIFY(!request.isEmpty());QVERIFY(identity.login("admin",password));QVERIFY(policy.reviewException(request,"Synthetic independent account review"));QVERIFY(policy.decideException(request,true,"Synthetic decision"));QVERIFY(identity.login("operator",password));
-  QVERIFY(!client.setSpendingLimit(identity.userId(),2));
-  const auto costRequest=policy.requestException("paid-unknown-cost","Explicit unknown Photon cost acceptance",{},600,true);QVERIFY(!costRequest.isEmpty());
-  QVERIFY(identity.login("admin",password));QVERIFY(policy.reviewException(costRequest,"Independent administrator cost review"));QVERIFY(policy.decideException(costRequest,true,"Approve unknown cost for bounded submissions"));QVERIFY(client.setSpendingLimit(investigatorId,2));QVERIFY(identity.login("operator",password));QVERIFY(policy.activateException(request));QVERIFY(policy.activateException(costRequest));
-  QString currentCase="synthetic-case-a";QByteArray retained;client.setCaseIdentity([&currentCase]{return currentCase;});client.setCaseAuthorization([]{return true;});client.setResultAttachment([&retained](const QString &,const QByteArray &payload){retained=payload;return QString("synthetic-evidence-id");});
-  QVERIFY(client.configure(server.url(),"TEST-API-KEY",false));QVERIFY(client.setRequestLimit(2));QVERIFY(client.connectProvider(true));QTRY_VERIFY_WITH_TIMEOUT(client.connected(),3000);QVERIFY(client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));QTRY_COMPARE_WITH_TIMEOUT(client.state(),QString("completed"),3000);QCOMPARE(server.calls,1);QCOMPARE(policy.operationReceipts().first().toMap().value("kind").toString(),QString("intelligence-mcp"));QVERIFY(policy.auditStatus().value("healthy").toBool());
-  QVERIFY(client.attachResult("synthetic-device",false).isEmpty());QVERIFY(retained.isEmpty());QCOMPARE(client.attachResult("synthetic-device",true),QString("synthetic-evidence-id"));QVERIFY(retained.contains("unverified-provider-result"));QVERIFY(!retained.contains("TEST-API-KEY"));currentCase="synthetic-case-b";QVERIFY(client.attachResult("synthetic-device",true).isEmpty());currentCase="synthetic-case-a";
-  QCOMPARE(client.remainingSubmissions(investigatorId),1);LampyreConnection reopenedBudget(t.path(),&identity,&policy,nullptr,true);QCOMPARE(reopenedBudget.remainingSubmissions(investigatorId),1);
-  QCOMPARE(client.submittedRequests(),1);QVERIFY(client.setRequestLimit(1));QVERIFY(!client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));QCOMPARE(client.errorCode(),QString("spending-limit-reached"));QCOMPARE(server.calls,1);QVERIFY(client.setRequestLimit(2));
-  server.mode="timeout";QVERIFY(client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));policy.revoke("external-analysis");QVERIFY(!client.busy());QVERIFY(client.resultText().isEmpty());QCOMPARE(client.errorCode(),QString("policy-revoked"));QCOMPARE(client.remainingSubmissions(investigatorId),0);QVERIFY(client.configure(server.url(),"REPLACEMENT-KEY",true));QCOMPARE(client.remainingSubmissions(investigatorId),0);
+ void directWorkWithoutIndependentApproval(){
+  QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.startDirectWork());
+  GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.connectProvider(true));
+  QTRY_VERIFY_WITH_TIMEOUT(client.connected(),3000);QCOMPARE(server.calls,0);QVERIFY(policy.operationReceipts().isEmpty());
+  QVERIFY(!client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",false));QCOMPARE(server.calls,0);
+  QVERIFY(client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));
+  QTRY_COMPARE_WITH_TIMEOUT(client.state(),QString("completed"),3000);QCOMPARE(server.calls,1);
+  const auto receipt=policy.operationReceipts().first().toMap();QCOMPARE(receipt.value("schema").toString(),QString("nexvary-investigator-operation/v1"));
+  QCOMPARE(receipt.value("status").toString(),QString("completed"));QVERIFY(receipt.value("requestId").toString().isEmpty());QVERIFY(policy.auditStatus().value("healthy").toBool());
+  QVERIFY(client.exportResult(t.filePath("direct-result.json"),true));QCOMPARE(client.remainingSubmissions(identity.userId()),-1);
+  QVERIFY(client.setRequestLimit(1));QVERIFY(!client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));QCOMPARE(server.calls,1);
+  QVERIFY(client.setRequestLimit(0));server.mode="timeout";QVERIFY(client.callTool("lookup","{\"selector\":\"synthetic.invalid\"}",true));
+  identity.logout();QVERIFY(!client.busy());QVERIFY(client.resultText().isEmpty());QVERIFY(!client.hasCredential());
+  QVERIFY(identity.startDirectWork());QVERIFY(client.hasCredential());
+  GovernmentOperationPolicy reopened(&identity);QVERIFY(reopened.auditStatus().value("healthy").toBool());
  }
+
 };
 QTEST_GUILESS_MAIN(LampyreConnectionTests)
 #include "lampyre_connection_tests.moc"

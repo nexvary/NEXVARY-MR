@@ -167,7 +167,7 @@ int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
- QGuiApplication::setApplicationVersion(QStringLiteral("0.4.3"));
+ QGuiApplication::setApplicationVersion(QStringLiteral("0.4.4"));
  QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/packaging/app.ico")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;
@@ -192,6 +192,7 @@ int main(int argc,char *argv[]) {
  const QString dir=cli.isSet(QStringLiteral("data-dir"))?cli.value(QStringLiteral("data-dir")):QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
  if(!QDir().mkpath(dir)) return smoke?smokeFailure("synthetic-data-directory-create",3):3;
  IdentityService identity(QDir(dir).filePath(QStringLiteral("local-identities.dat")),smoke);
+ if(!smoke&&!identity.startDirectWork()){std::fprintf(stderr,"Protected direct workspace unavailable.\n");return 18;}
  GovernmentOperationPolicy operationPolicy(&identity);
  RecoveryBridge recovery(QDir(dir).filePath(QStringLiteral("recovery-cases")),smoke);
  ToolBridge tools;

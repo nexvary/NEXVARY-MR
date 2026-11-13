@@ -165,8 +165,8 @@ ApplicationWindow {
   ColumnLayout {
    anchors.fill:parent;spacing:8
    RowLayout {Layout.fillWidth:true
-    Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
-    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
+    Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.directWork?window.trx("عمل مباشر · حماية مستخدم Windows","Direct work · Windows user protection"):identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
+    ActionButton {visible:!identityBridge.directWork;text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
    }
    RowLayout {
     visible:window.activeSection===2||window.activeSection===7;Layout.fillWidth:true

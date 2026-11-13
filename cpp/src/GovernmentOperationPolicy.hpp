@@ -57,6 +57,7 @@ public:
                                const QString &retainedAnchorJson);
   Q_INVOKABLE void refreshAudit();
   // Native consumers only. No caller-controlled labels, paths or case content.
+  QString beginInvestigation(const QString &caseId, const QString &kind);
   QString beginOperation(const QString &capability, const QString &kind);
   QVariantMap beginCasePartitions(const QString &caseId);
   QVariantMap beginCaseOsint(const QString &caseId,const QString &number);
