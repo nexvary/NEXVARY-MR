@@ -404,3 +404,12 @@ jobs:
             build/case-workload-benchmark.json
           if-no-files-found: warn
 
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEXVARY-MR-UI-Review
+          path: |
+            build/**/smoke-professional-ui-review-*.png
+            build/**/ui-review-manifest.json
+          if-no-files-found: warn

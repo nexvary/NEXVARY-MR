@@ -25,6 +25,8 @@ function valid(value, kind) {
     const text = String(value);
     if (!text.trim() || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(text)) return false;
     switch (kind) {
+    case "phone": return /^\+[1-9][0-9]{6,14}$/.test(digits(text));
+    case "email": return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text);
     case "integer": return /^[+-]?\d+$/.test(digits(text));
     case "number": return /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(digits(text));
     case "dateTime": return parseUtc(text) !== null;

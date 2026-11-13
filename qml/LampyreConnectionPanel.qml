@@ -59,7 +59,7 @@ ColumnLayout {
  }
  OsintDesktopPane {
   Layout.fillWidth:true;visible:panel.showTools&&panel.catalogAvailable;title:panel.app.trx("خدمات استخبارات نيكسفاري","NEXVARY Intelligence Services");iconName:"search_visual"
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("تُدار رسوم هذه الأدوات في حساب المزود. فوترة Nexvary باليورو غير متاحة لهذا الاتصال.","Charges for these tools are managed in the provider account. Nexvary EUR billing is unavailable on this connection.")}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("ابدأ البحث من بطاقة الفئة لربطه بفاتورة نيكسفاري. قيمة الفاتورة المستحقة منفصلة عن تكلفة الاتصال الداخلية، ولا تُعتبر مدفوعة تلقائيًا.","Start searches from a category card to link the NEXVARY invoice. The invoice due is separate from internal connection cost and is never automatically marked paid.")}
 
   Label {
    visible:catalog.count===0;Layout.fillWidth:true;wrapMode:Text.WordWrap

@@ -25,6 +25,7 @@ TestCase {
   property string errorCode:""
   property int runs:0
   property var categories:Object.keys(Categories.titles).map(name=>({name:name}))
+  property var invoices:[]
   property var services:[]
   function displayText(text){return text}
   function refreshCatalog(){}
@@ -32,7 +33,7 @@ TestCase {
   function runService(name,args,price,consent){if(consent)runs++;return consent}
  }
  Component {id:component;MR.IntelligenceSearchCards {width:960;app:style;connection:engine}}
- function init(){engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
+ function init(){engine.connected=true;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
  function test_allCardsDisplayRetailPriceInBothLanguages(){
   const pane=createTemporaryObject(component,test);verify(pane);compare(pane.shownCategories.length,54)
   for(const ar of [false,true]){
@@ -41,11 +42,22 @@ TestCase {
   }
   compare(engine.runs,0)
  }
+ function test_customerInvoiceShowsEurosWithoutSupplierCredits(){
+  const pane=createTemporaryObject(component,test);verify(pane)
+  engine.invoices=[{id:"synthetic-invoice",category:"phone",amountDueMinorUnits:1400,status:"due",paymentStatus:"unpaid",internalQuotedPhotons:35}]
+  for(const ar of [false,true]){style.ar=ar;const summary=findChild(pane,"intelligenceInvoice-synthetic-invoice");verify(summary);verify(summary.text.includes("€14.00"));verify(!summary.text.includes("35"));verify(!summary.text.toLowerCase().includes("photon"));verify(!summary.text.includes("فوتون"))}
+ }
+ function test_disconnectedCardStillOpensItsInputForm(){
+  engine.connected=false;const pane=createTemporaryObject(component,test);verify(pane)
+  findChild(pane,"intelligenceCategory-phone").clicked();const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+  verify(findChild(dialog.contentItem,"intelligenceArgument-phone"));verify(!findChild(dialog.contentItem,"intelligenceExecuteService").enabled);compare(engine.runs,0)
+ }
  function test_openingCardDoesNotExecuteSearch(){
   const pane=createTemporaryObject(component,test);verify(pane)
   findChild(pane,"intelligenceCategory-email").clicked();compare(engine.selectedCategory,"email");compare(engine.runs,0);tryCompare(findChild(pane,"intelligenceServiceDialog"),"opened",true)
   const content=findChild(pane,"intelligenceServiceDialog").contentItem
-  const selector=findChild(content,"intelligenceServiceSelector");verify(selector);selector.activated(0);compare(pane.selectedService,"fixture_lookup");compare(pane.fields.length,1)
+  const primary=findChild(content,"intelligenceArgument-email");verify(primary);primary.text="research@example.invalid";primary.textEdited();
+  const selector=findChild(content,"intelligenceServiceSelector");verify(selector);selector.activated(0);compare(pane.values.email,"research@example.invalid");compare(pane.selectedService,"fixture_lookup");compare(pane.fields.length,1)
   const input=findChild(content,"intelligenceArgument-email");verify(input);input.text="research@example.invalid";input.textEdited()
   const execute=findChild(content,"intelligenceExecuteService");verify(!execute.enabled)
   const consent=findChild(content,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);execute.clicked();compare(engine.runs,1);verify(!consent.checked)

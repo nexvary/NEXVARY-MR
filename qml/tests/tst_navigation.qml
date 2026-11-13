@@ -9,6 +9,10 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
+ property bool reviewCapture:false
+ Rectangle {parent:app.contentItem;z:100000;visible:test.reviewCapture;anchors.bottom:parent.bottom;anchors.left:parent.left;anchors.right:parent.right;height:24;color:"#4A1722"
+  Label {anchors.centerIn:parent;text:"UI REVIEW — SYNTHETIC FIXTURES — NO LIVE SEARCH / NO PAYMENT";color:"white";font.pixelSize:12}
+ }
  readonly property var windowUnderTest:app
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
@@ -924,7 +928,8 @@ TestCase {
   for(const ar of [true,false]){
    app.ar=ar;
    verify(renderedFrame());
-   verify(findChild(ws,"intelligenceBillingCard").visible);
+   verify(findChild(ws,"intelligenceSearchCards").visible);
+   verify(findChild(ws,"intelligenceCategory-email")!==null);verify(findChild(ws,"intelligenceCategory-phone")!==null);
    verify(findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
    verify(!findChild(ws,"intelligenceStartPaidSearch").enabled);
    verify(findChild(ws,"lampyreMcpEndpoint")===null);
@@ -988,6 +993,41 @@ TestCase {
   findChild(app,"identityPassword").text="Synthetic-only UI password 2026!";artifactClick(findChild(app,"identityPanel"),findChild(app,"identitySignIn"));verify(identityBridge.authenticated,identityBridge.error);compare(identityBridge.session.role,"administrator");compare(lawCaseBridge.role,"unknown");compare(lawCaseBridge.cases.length,0);verify(renderedFrame())
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-ar.png"));app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-en.png"))
   artifactClick(findChild(app,"identityPanel"),findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
+ }
+ function test_yzz_ownerInterfaceReview(){
+  verify(uiEvidence.prepareReviewContext());reviewCapture=true;app.width=1536;app.height=980;
+  const screens=[];
+  function capture(key,label){
+   verify(renderedFrame());wait(30);const name="smoke-professional-ui-review-"+String(screens.length+1).padStart(3,"0")+"-"+key+".png";
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase.replace("smoke-professional-ui-","")+name));
+   screens.push({file:name,label:label,language:app.ar?"ar":"en",page:app.currentPage,synthetic:true});
+  }
+  for(const gov of [true,false]){
+   app.setWorkspace(gov);
+   for(let i=0;i<app.sections.length;i++){app.navigateSection(i);capture((gov?"government-":"professional-")+i,app.sections[i].ar)}
+  }
+  const tabs=[[1,"deviceTabs"],[2,"diagnosticTabs"],[4,"firmwareTabs"],[5,"workshopTabs"],[9,"forensicTabs"],[8,"recoveryTabs"]];
+  for(const route of tabs){app.currentPage=route[0];app.activeSection=0;const bar=findChild(app,route[1]);if(bar){for(let i=0;i<bar.count;i++){bar.currentIndex=i;capture(route[1]+"-"+i,route[1]+" / "+i)}}}
+  app.currentPage=3;capture("board","فحص اللوحات");
+  app.setWorkspace(true);app.navigateSection(7);const research=findChild(app,"researchCenter");
+  for(let i=0;i<9;i++){research.section=i;capture("research-"+i,research.titles[i])}
+  app.navigateSection(0);const law=findChild(app,"lawEnforcementWorkspace");
+  for(let i=0;i<12;i++){law.section=i;capture("law-"+i,"مساحة القضايا / "+i)}
+  law.newCase();const form=findChild(app,"lawCaseForm");
+  for(let i=0;i<4;i++){form.step=i;capture("case-form-"+i,"إدخال القضية / "+i)}
+  app.currentPage=8;const recovery=findChild(app,"recoveryWorkspace");
+  if(recovery){for(let i=0;i<8;i++){recovery.step=i;capture("recovery-step-"+i,"خطوة الاستعادة / "+i)}}
+  app.navigatePrimary(3);const ws=findChild(app,"osintWorkspace");const cards=findChild(app,"intelligenceSearchCards");
+  verify(cards!==null);
+  for(const category of ["email","phone"]){const button=findChild(cards,"intelligenceCategory-"+category);verify(button!==null);button.clicked();capture("search-"+category,"بحث "+category);findChild(cards,"intelligenceServiceDialog").close()}
+  if(ws){ws.activeTab=2;capture("intelligence-setup","إعداد اتصال الاستخبارات");ws.activeTab=1;ws.showDashboardDetails=true;capture("intelligence-history","قضايا وسجل الاستخبارات");ws.showDashboardDetails=false}
+  verify(uiEvidence.prepareReviewConnection());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
+  verify(lampyreConnection.discoverServices("email"));tryCompare(lampyreConnection,"busy",false,5000);
+  cards.selectedCard="email";cards.selectedService="synthetic_email_lookup";cards.values={email:"review@example.invalid"};findChild(cards,"intelligenceServiceDialog").open();capture("email-confirmation","تأكيد البحث — بيانات محلية فقط");
+  verify(lampyreConnection.runService("synthetic_email_lookup",JSON.stringify(cards.values),2,true));cards.showSearchResult=true;tryCompare(lampyreConnection,"busy",false,5000);capture("invoice-due","فاتورة مستحقة تجريبية 14 يورو");findChild(cards,"intelligenceServiceDialog").close();capture("invoices","سجل الفواتير التجريبي");
+  app.ar=false;capture("intelligence-en","Intelligence / English");
+  for(const section of [0,1,6,10]){app.setWorkspace(true);app.ar=false;app.navigateSection(section);capture("government-en-"+section,app.sections[section].en)}
+  verify(uiEvidence.saveReviewManifest(screens));reviewCapture=false;app.ar=true;
  }
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

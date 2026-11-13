@@ -24,6 +24,10 @@
 namespace {
 constexpr qsizetype responseLimit=2*1024*1024;
 const QString officialEndpoint=QStringLiteral("https://account.lampyre.io/api/v2/mcp");
+QVariantMap publicInvoice(const QVariantMap &row){
+ QVariantMap customer;for(const auto *field:{"id","operationId","createdUtc","updatedUtc","category","service","currency","quotedMinorUnits","amountDueMinorUnits","status","paymentStatus"})customer.insert(field,row.value(field));return customer;
+}
+
 }
 LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent,bool syntheticTests,int timeoutMs)
  :QObject(parent),directory_(dir),identity_(identity),policy_(policy),synthetic_(syntheticTests),timeoutMs_(qBound(50,timeoutMs,120000)) {
@@ -37,6 +41,7 @@ LampyreConnection::LampyreConnection(const QString &dir,IdentityService *identit
 
  owner_=identity_&&identity_->authenticated()?identity_->userId():synthetic_?QStringLiteral("synthetic"):QString();load();
 }
+bool LampyreConnection::liveProfile()const{return !synthetic_&&identity_&&!identity_->syntheticProfile();}
 double LampyreConnection::retailPriceEur()const{return static_cast<double>(mr::osint::intelligenceRetailPriceMinor)/100.0;}
 LampyreConnection::~LampyreConnection(){reset();}
 bool LampyreConnection::validEndpoint(const QString &text,bool syntheticTests){
@@ -53,12 +58,15 @@ QString LampyreConnection::credentialPath()const {
  return QDir(directory_).filePath("lampyre-"+owner_+".dat");
 }
 void LampyreConnection::reset(){
+ if(!invoiceId_.isEmpty())finishInvoice("review");
+ invoiceRows_.clear();invoiceId_.clear();invoiceOperationId_.clear();resultInvoiceId_.clear();requestSecrets_.clear();invoicePrepared_=false;
  timer_.stop();if(reply_){auto *r=reply_.data();reply_.clear();r->abort();r->deleteLater();}
  finishReceipt("cancelled");connected_=false;busy_=false;tools_.clear();body_.clear();cursors_.clear();pages_=0;
  categories_.clear();services_.clear();selectedCategory_.clear();catalogCheckedAt_.clear();creditBalance_=-1;serviceCatalogAt_=0;retailQuoted_=false;
  session_.clear();version_.clear();result_.clear();sourceDigest_.clear();resultCaseId_.clear();resultOperationId_.clear();key_.fill(QChar(0));key_.clear();endpoint_.clear();state_="disconnected";error_.clear();saved_=false;requestLimit_=0;submitted_=0;
 }
 void LampyreConnection::load(){
+ loadInvoices();
  const auto path=credentialPath();if(path.isEmpty())return;QFile f(path);const QFileInfo info(f);
  if(!info.exists()){
   if(!identity_||!identity_->directWork())return;
@@ -96,6 +104,7 @@ bool LampyreConnection::configureCredential(const QString &key,bool remember){
 QString LampyreConnection::displayText(const QString &text)const {
  QString safe=text;
  if(!key_.isEmpty())safe.replace(key_,"[credential redacted]");
+ for(const auto &secret:requestSecrets_)if(!secret.isEmpty())safe.replace(secret,"[credential redacted]");
  if(!endpoint_.isEmpty())safe.replace(endpoint_,"[connection redacted]",Qt::CaseInsensitive);
  safe.replace(officialEndpoint,"[connection redacted]",Qt::CaseInsensitive);
  safe.replace(QRegularExpression("https?://[^\\s\"<>]*lampyre\\.io[^\\s\"<>]*",QRegularExpression::CaseInsensitiveOption),"[connection redacted]");
@@ -110,7 +119,7 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
  if(!validKey(effective))return reject("invalid-key");
  // Copy before reset: implicit sharing keeps the retained key alive until assigned.
  const auto nextKey=QString(effective);const auto nextEndpoint=QString(endpoint);
- reset();endpoint_=nextEndpoint;key_=nextKey;
+ reset();loadInvoices();endpoint_=nextEndpoint;key_=nextKey;
  if(remember){if(!save()){key_.fill(QChar(0));key_.clear();emit changed();return false;}}
  else if(identity_&&identity_->directWork()){
   const auto retained=key_;key_.clear();const bool ok=save();key_=retained;if(!ok)return false;
@@ -180,6 +189,70 @@ bool LampyreConnection::authorized(){
 }
 // Only tools explicitly documented by this provider as free are used for
 // metadata. Unknown/new tools remain on the explicit paid-consent path.
+qint64 LampyreConnection::totalDueMinorUnits()const {
+ qint64 total=0;for(const auto &value:invoiceRows_){const auto row=value.toMap();if(row.value("status")=="due"&&row.value("paymentStatus")=="unpaid")total+=row.value("amountDueMinorUnits").toLongLong();}return total;
+}
+QVariantList LampyreConnection::invoices()const {
+ QVariantList result;
+ for(auto it=invoiceRows_.crbegin();it!=invoiceRows_.crend()&&result.size()<64;++it){
+  result.append(publicInvoice(it->toMap()));
+ }
+ return result;
+}
+QJsonObject LampyreConnection::resultInvoice()const {
+ if(resultInvoiceId_.isEmpty())return {};
+ for(const auto &value:invoiceRows_){const auto row=value.toMap();if(row.value("id")==resultInvoiceId_)return QJsonObject::fromVariantMap(publicInvoice(row));}
+ return {};
+}
+void LampyreConnection::loadInvoices(){
+ invoiceRows_.clear();if(owner_.isEmpty())return;
+ QFile file(QDir(directory_).filePath("intelligence-invoices-"+owner_+".dat"));if(!file.exists())return;
+ if(QFileInfo(file).isSymLink()||!file.open(QIODevice::ReadOnly)||file.size()>2*1024*1024){error_="invoice-storage-error";return;}
+ QString error;auto bytes=mr::recovery::openCaseBytes(file.readAll(),synthetic_,error);
+ const auto document=QJsonDocument::fromJson(bytes).object();bytes.fill('\0');
+ if(document.value("schema")!="nexvary-intelligence-invoices/v1"||document.value("owner").toString()!=owner_||!document.value("rows").isArray()||document.value("rows").toArray().size()>1000){error_="invoice-storage-error";return;}
+ QSet<QString> ids;
+ for(const auto &value:document.value("rows").toArray()){
+  const auto row=value.toObject();const auto id=row.value("id").toString(),status=row.value("status").toString();
+  const auto quoted=row.value("quotedMinorUnits"),due=row.value("amountDueMinorUnits");
+  if(QUuid(id).isNull()||ids.contains(id)||row.value("currency")!="EUR"||row.value("paymentStatus")!="unpaid"||
+     !QStringList{"pending","due","void","review"}.contains(status)||!quoted.isDouble()||!due.isDouble()||
+     quoted.toInteger()<1||quoted.toInteger()>100000000||quoted.toDouble()!=static_cast<double>(quoted.toInteger())||
+     due.toDouble()!=(status=="due"?quoted.toDouble():0.0)){error_="invoice-storage-error";return;}
+  ids.insert(id);
+ }
+ invoiceRows_=document.value("rows").toArray().toVariantList();
+}
+bool LampyreConnection::writeInvoices(const QVariantList &rows){
+ if(owner_.isEmpty()||rows.size()>1000||!QDir().mkpath(directory_))return reject("invoice-storage-error");
+ const auto path=QDir(directory_).filePath("intelligence-invoices-"+owner_+".dat");
+ QLockFile lock(path+".lock");if(!lock.tryLock(0)||QFileInfo(path).isSymLink())return reject("invoice-storage-error");
+ // Reject concurrent stale writes, including a second instance of the application.
+ const auto expected=invoiceRows_;loadInvoices();if(error_=="invoice-storage-error"||QJsonDocument(QJsonArray::fromVariantList(invoiceRows_)).toJson(QJsonDocument::Compact)!=QJsonDocument(QJsonArray::fromVariantList(expected)).toJson(QJsonDocument::Compact))return reject("invoice-storage-error");
+ QString error;auto bytes=QJsonDocument(QJsonObject{{"schema","nexvary-intelligence-invoices/v1"},{"owner",owner_},{"rows",QJsonArray::fromVariantList(rows)}}).toJson(QJsonDocument::Compact);
+ if(bytes.size()>2*1024*1024){bytes.fill('\0');return reject("invoice-storage-error");}
+ const auto sealed=mr::recovery::sealCase(bytes,synthetic_,error);bytes.fill('\0');QSaveFile file(path);file.setDirectWriteFallback(false);
+ if(sealed.isEmpty()||!file.open(QIODevice::WriteOnly)||!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(sealed)!=sealed.size()||!file.commit())return reject("invoice-storage-error");
+ invoiceRows_=rows;return true;
+}
+bool LampyreConnection::prepareInvoice(const QVariantMap &service){
+ if(error_=="invoice-storage-error")return false;
+ const auto id=QUuid::createUuid().toString(QUuid::WithoutBraces),now=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
+ QVariantMap row{{"id",id},{"operationId",QString()},{"createdUtc",now},{"updatedUtc",now},{"category",selectedCategory_.left(128)},
+  {"service",displayText(service.value("title").toString()).left(256)},{"currency","EUR"},{"quotedMinorUnits",static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor)},
+  {"amountDueMinorUnits",0},{"status","pending"},{"paymentStatus","unpaid"},
+  {"internalQuotedPhotons",service.value("photons")},{"internalChargedPhotons",QVariant()},
+  {"internalChargeVerification","not-reported-by-provider"},{"internalBalanceBefore",creditBalance_}};
+ auto rows=invoiceRows_;rows.append(row);if(!writeInvoices(rows))return false;invoiceId_=id;invoiceOperationId_.clear();invoicePrepared_=true;return true;
+}
+bool LampyreConnection::finishInvoice(const QString &status){
+ if(invoiceId_.isEmpty())return true;
+ auto rows=invoiceRows_;for(auto &value:rows){auto row=value.toMap();if(row.value("id")!=invoiceId_)continue;
+  row.insert("status",status);row.insert("amountDueMinorUnits",status=="due"?static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor):0);
+  row.insert("operationId",invoiceOperationId_);row.insert("internalResponseSha256",sourceDigest_);row.insert("updatedUtc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs));value=row;
+ }
+ const auto id=invoiceId_;invoiceId_.clear();invoicePrepared_=false;if(!writeInvoices(rows)){invoiceId_=id;return false;}invoiceOperationId_.clear();emit changed();return true;
+}
 bool LampyreConnection::freeMetadataTool(const QString &name)const {
  if(name!="lampyre_balance"&&name!="lampyre_categories_list"&&name!="lampyre_endpoints_from_categories")return false;
  for(const auto &v:tools_)if(v.toMap().value("name")==name)
@@ -209,6 +282,8 @@ bool LampyreConnection::discoverServices(const QString &category){
 }
 bool LampyreConnection::runService(const QString &name,const QString &arguments,double approvedPhotons,bool consent){
  if(busy_)return false;
+ if(!connected_)return reject("not-connected");
+ if(!authorized())return reject("investigator-required");
  if(!consent)return reject("request-consent-required");
  QVariantMap service;for(const auto &v:services_)if(v.toMap().value("tool_name")==name)service=v.toMap();
  const auto cost=service.value("photons");
@@ -226,12 +301,14 @@ bool LampyreConnection::runService(const QString &name,const QString &arguments,
  for(auto it=args.begin();it!=args.end();++it)if(!allowed.contains(it.key())||it.value().toString().size()>8192)return reject("invalid-arguments");
  if(specification.contains("(all required)"))for(const auto &field:allowed)if(!args.contains(field))return reject("invalid-arguments");
  const QJsonObject task{{"tool_name",name},{"args",args}};
+ if(!prepareInvoice(service))return false;
  const bool started=callTool("lampyre_run_crawlers",QString::fromUtf8(QJsonDocument(QJsonObject{{"tasks",QJsonArray{task}}}).toJson(QJsonDocument::Compact)),true);
- if(started){retailQuoted_=true;creditBalance_=-1;emit changed();}return started;
+ if(started){invoiceOperationId_=resultOperationId_;resultInvoiceId_=invoiceId_;retailQuoted_=true;creditBalance_=-1;emit changed();}else finishInvoice("void");return started;
 }
 bool LampyreConnection::callTool(const QString &name,const QString &arguments,bool consent){
  if(busy_)return false;
  if(!consent)return reject("request-consent-required");
+ if(name=="lampyre_run_crawlers"&&!synthetic_&&!invoicePrepared_)return reject("retail-invoice-required");
  if(!connected_)return reject("not-connected");
  if(identity_&&(!identity_->checkSession()||!nexvary::law::allows(identity_->lawRole(),nexvary::law::Action::AnalyzeEvidence)))return reject("investigator-required");
  if(identity_&&(!identity_->hasPermission("paid-search")||!identity_->hasPermission("osint-investigation")))return reject("local-search-permission-denied");
@@ -256,7 +333,18 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
  if(policy_){operation_=policy_->beginInvestigation(caseId,"intelligence-mcp");if(operation_.isEmpty())return reject("audit-unavailable");}
  if(!consumeSubmission()){finishReceipt("failed");return false;}
  resultCaseId_=caseId;resultOperationId_=operation_;
- ++submitted_;retailQuoted_=false;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();sourceDigest_.clear();error_.clear();emit changed();
+ requestSecrets_.clear();
+ std::function<void(const QJsonValue &)> redactInputs=[&](const QJsonValue &value){
+  if(value.isArray()){for(const auto &item:value.toArray())redactInputs(item);}
+  else if(value.isObject()){
+   const auto object=value.toObject();for(auto it=object.begin();it!=object.end();++it){
+    if(QRegularExpression("api[_-]?key|password|token|secret",QRegularExpression::CaseInsensitiveOption).match(it.key()).hasMatch()&&it.value().isString()&&!it.value().toString().isEmpty())requestSecrets_.append(it.value().toString());
+    else redactInputs(it.value());
+   }
+  }
+ };
+ redactInputs(doc.object());
+ ++submitted_;resultInvoiceId_.clear();invoicePrepared_=false;retailQuoted_=false;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();sourceDigest_.clear();error_.clear();emit changed();
  post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
 }
 void LampyreConnection::post(const QString &method,const QJsonObject &params,const QString &stage,bool notification){
@@ -360,7 +448,7 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
   if(!authorized()||(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_))){fail("policy-revoked");return;}
   sourceDigest_=QString::fromLatin1(QCryptographicHash::hash(QJsonDocument(result).toJson(QJsonDocument::Compact),QCryptographicHash::Sha256).toHex());
   resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_=displayText(result_);
-  const bool failed=result.value("isError").toBool();finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
+  const bool failed=result.value("isError").toBool();if(!invoiceId_.isEmpty()&&!finishInvoice(failed?"void":"due")){fail("invoice-storage-error");return;}finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
  }
  fail("invalid-response");
 }
@@ -369,14 +457,16 @@ void LampyreConnection::finishReceipt(const QString &status){
  if(policy_&&!operation.isEmpty())policy_->finishOperation(operation,status,sourceDigest_,result_.isEmpty()?QString():QString::fromLatin1(QCryptographicHash::hash(result_.toUtf8(),QCryptographicHash::Sha256).toHex()));
 }
 bool LampyreConnection::fail(const QString &code){
+ const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
- finishReceipt("failed");creditBalance_=-1;categories_.clear();services_.clear();serviceCatalogAt_=0;busy_=false;connected_=false;session_.clear();tools_.clear();result_.clear();sourceDigest_.clear();error_=code;state_="error";emit changed();return false;
+ finishReceipt("failed");creditBalance_=-1;categories_.clear();services_.clear();serviceCatalogAt_=0;busy_=false;connected_=false;session_.clear();tools_.clear();result_.clear();sourceDigest_.clear();error_=invoiceSaved?code:QStringLiteral("invoice-storage-error");state_="error";emit changed();return false;
 }
 void LampyreConnection::cancel(){
+ const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
- finishReceipt("cancelled");busy_=false;connected_=false;tools_.clear();session_.clear();result_.clear();sourceDigest_.clear();state_="cancelled-local";error_.clear();emit changed();
+ finishReceipt("cancelled");busy_=false;connected_=false;tools_.clear();session_.clear();result_.clear();sourceDigest_.clear();state_=invoiceSaved?QStringLiteral("cancelled-local"):QStringLiteral("error");if(invoiceSaved)error_.clear();else error_="invoice-storage-error";emit changed();
 }
-void LampyreConnection::forget(){reset();if(identity_&&identity_->directWork()){if(!save())return;emit changed();return;}const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}
+void LampyreConnection::forget(){reset();loadInvoices();if(identity_&&identity_->directWork()){if(!save())return;emit changed();return;}const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}
 
 QVariantList LampyreConnection::resultItems()const {
  QVariantList rows;const auto doc=QJsonDocument::fromJson(result_.toUtf8()).object();
@@ -394,7 +484,7 @@ bool LampyreConnection::exportResult(const QString &input,bool consent){
  if(result_.isEmpty())return reject("no-result");
  if(!synthetic_&&!identity_->directWork()&&(!identity_->hasPermission("evidence-access")||!caseIdentity_||caseIdentity_()!=resultCaseId_||!caseAuthorization_||!caseAuthorization_()))return reject("active-case-required");
  const auto path=mr::recovery::localFilePath(input);if(path.isEmpty()||QFileInfo(path).exists()||QFileInfo(path).isSymLink())return reject("choose-new-file");
- const QJsonObject envelope{{"retailQuote",retailQuoted_?QJsonObject{{"currency","EUR"},{"minorUnits",static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor)},{"unit","search"},{"collectionStatus","not-collected-by-application"}}:QJsonObject{}},{"schema","nexvary-mcp-result/v1"},{"provider","NEXVARY Intelligence"},{"sourceType","external-service"},{"redactedDisplayCopy",true},{"originalResultSha256",sourceDigest_},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"caseEvidence",false},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
+ const QJsonObject envelope{{"invoice",resultInvoice()},{"retailQuote",retailQuoted_?QJsonObject{{"currency","EUR"},{"minorUnits",static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor)},{"unit","search"},{"collectionStatus","not-collected-by-application"}}:QJsonObject{}},{"schema","nexvary-mcp-result/v1"},{"provider","NEXVARY Intelligence"},{"sourceType","external-service"},{"redactedDisplayCopy",true},{"originalResultSha256",sourceDigest_},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"caseEvidence",false},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
  const auto bytes=QJsonDocument(envelope).toJson(QJsonDocument::Indented);QFile file(path);
  if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly))return reject("export-write");
  if(!file.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||file.write(bytes)!=bytes.size()||!file.flush()){file.close();QFile::remove(path);return reject("export-write");}
@@ -405,7 +495,7 @@ QString LampyreConnection::attachResult(const QString &device,bool consent){
  if(!consent){reject("attachment-consent-required");return {};}
  if(!identity_||!identity_->checkSession()||!identity_->hasPermission("case-edit")||!identity_->hasPermission("evidence-access")){reject("local-attachment-permission-denied");return {};}
  if(result_.isEmpty()||resultCaseId_.isEmpty()||!caseIdentity_||caseIdentity_()!=resultCaseId_||!caseAuthorization_||!caseAuthorization_()||!attachment_){reject("active-case-required");return {};}
- const QJsonObject envelope{{"retailQuote",retailQuoted_?QJsonObject{{"currency","EUR"},{"minorUnits",static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor)},{"unit","search"},{"collectionStatus","not-collected-by-application"}}:QJsonObject{}},{"schema","nexvary-mcp-case-result/v1"},{"provider","NEXVARY Intelligence"},{"sourceType","external-service"},{"redactedDisplayCopy",true},{"originalResultSha256",sourceDigest_},{"caseId",resultCaseId_},{"localOperationId",resultOperationId_},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
+ const QJsonObject envelope{{"invoice",resultInvoice()},{"retailQuote",retailQuoted_?QJsonObject{{"currency","EUR"},{"minorUnits",static_cast<qint64>(mr::osint::intelligenceRetailPriceMinor)},{"unit","search"},{"collectionStatus","not-collected-by-application"}}:QJsonObject{}},{"schema","nexvary-mcp-case-result/v1"},{"provider","NEXVARY Intelligence"},{"sourceType","external-service"},{"redactedDisplayCopy",true},{"originalResultSha256",sourceDigest_},{"caseId",resultCaseId_},{"localOperationId",resultOperationId_},{"tool",displayText(resultTool_)},{"receivedAtUtc",resultAt_},{"verification","unverified-provider-result"},{"result",QJsonDocument::fromJson(result_.toUtf8()).object()}};
  const auto id=attachment_(device,QJsonDocument(envelope).toJson(QJsonDocument::Indented));
  if(id.isEmpty()){reject("case-attachment-failed");return {};}
  error_.clear();emit changed();return id;

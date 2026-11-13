@@ -34,11 +34,13 @@
 #include "ResearchBridge.hpp"
 #include "LampyreEvaluationBridge.hpp"
 #include "LampyreConnection.hpp"
+#include "McpFixtureServer.hpp"
 class Setup:public QObject {
  Q_OBJECT
  QTemporaryDir temp;
  std::unique_ptr<LampyreEvaluationBridge> lampyre;
  std::unique_ptr<LampyreConnection> lampyreConnection;
+ std::unique_ptr<FixtureServer> reviewServer;
  std::unique_ptr<ToolBridge> tools;
  std::unique_ptr<RepairBridge> repair;
  std::unique_ptr<WorkshopBridge> workshop;
@@ -57,6 +59,21 @@ class Setup:public QObject {
  QByteArray originalSyntheticModeEnv;
  bool syntheticModeEnvChanged=false;
 public:
+ Q_INVOKABLE bool prepareReviewContext() {
+  if(!identity||!identity->syntheticProfile()||!identity->startDirectWork())return false;
+  const QVariantMap metadata{{"caseNumber","SYNTHETIC-UI-REVIEW"},{"investigatingAgency","Synthetic UI laboratory"},{"investigatorName","Synthetic reviewer"},{"seizedDeviceDescription","Synthetic test item"},{"authorityReference","TEST-ONLY"},{"issuingAuthority","Synthetic laboratory"},{"scope","Interface review only; no real investigation"}};
+  return !law->createCase(metadata).isEmpty();
+ }
+ Q_INVOKABLE bool prepareReviewConnection() {
+  if(!identity->syntheticProfile())return false;
+  reviewServer=std::make_unique<FixtureServer>("metadata");
+  return lampyreConnection->configure(reviewServer->url(),"SYNTHETIC-UI-ONLY-NOT-A-LIVE-KEY",false)&&lampyreConnection->connectProvider(true);
+ }
+ Q_INVOKABLE bool saveReviewManifest(const QVariantList &screens) {
+  QSaveFile file(QDir(QCoreApplication::applicationDirPath()).filePath("ui-review-manifest.json"));
+  const auto bytes=QJsonDocument::fromVariant(QVariantMap{{"schemaVersion",1},{"origin","Native Qt Windows CI; synthetic fixtures"},{"installerCreated",false},{"screens",screens}}).toJson();
+  return file.open(QIODevice::WriteOnly)&&file.write(bytes)==bytes.size()&&file.commit();
+ }
  Q_INVOKABLE QString recordSyntheticOperation(const QString &kind) {
   const QString pass="Synthetic-only UI password 2026!";
   if(!identity->syntheticProfile()||!identity->login("ui-investigator",pass))return {};
@@ -72,7 +89,7 @@ public:
   auto *window=qobject_cast<QQuickWindow *>(object);
   if(!window)return false;
   const auto frame=window->grabWindow();if(frame.isNull())return false;
-  if(qEnvironmentVariableIsSet("MR_UI_ICON_FOCUS")&&!QFileInfo(path).fileName().contains("icon-acceptance-"))return true;
+  if(qEnvironmentVariableIsSet("MR_UI_ICON_FOCUS")&&!QFileInfo(path).fileName().contains("icon-acceptance-")&&!QFileInfo(path).fileName().contains("review-"))return true;
   return frame.save(path);
  }
  Q_INVOKABLE QString headerFingerprint(QObject *object) {
@@ -177,7 +194,7 @@ public slots:
   engine->rootContext()->setContextProperty("syntheticWorkingCopyPath",temp.filePath("government-working-copy"));
   engine->rootContext()->setContextProperty("syntheticProtectedBackupPath",temp.filePath("government-case.nmrbackup"));
   engine->rootContext()->setContextProperty("operationPolicy",operationPolicy.get());
-  lampyreConnection=std::make_unique<LampyreConnection>(temp.filePath("provider-credentials"),identity.get(),operationPolicy.get());
+  lampyreConnection=std::make_unique<LampyreConnection>(temp.filePath("provider-credentials"),identity.get(),operationPolicy.get(),nullptr,true);
   engine->rootContext()->setContextProperty("lampyreConnection",lampyreConnection.get());
   engine->rootContext()->setContextProperty("lampyreEvaluation",lampyre.get());
   engine->rootContext()->setContextProperty("lawCaseBridge",law.get());
@@ -198,7 +215,7 @@ public slots:
  }
  void cleanupTestCase() {
   // Release runtime-dependent objects before QuickTest destroys its application.
-  lampyre.reset();research.reset();law.reset();identity.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
+  lampyreConnection.reset();reviewServer.reset();operationPolicy.reset();firstRunIdentity.reset();lampyre.reset();research.reset();law.reset();identity.reset();catalog.reset();security.reset();cloud.reset();portal.reset();recovery.reset();firmware.reset();board.reset();workshop.reset();repair.reset();tools.reset();
   if(syntheticModeEnvChanged) {
    if(originalSyntheticModeEnv.isNull())qunsetenv("MR_UI_DEVICE_MODE");else qputenv("MR_UI_DEVICE_MODE",originalSyntheticModeEnv);
   }

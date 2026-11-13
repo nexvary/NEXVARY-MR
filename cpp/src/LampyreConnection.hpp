@@ -4,6 +4,7 @@
 #include <QPointer>
 #include <QTimer>
 #include <QVariantList>
+#include <QStringList>
 #include <QJsonObject>
 #include <QSet>
 #include <functional>
@@ -14,6 +15,10 @@ class GovernmentOperationPolicy;
 // no guessed vendor REST routes, automatic searches, or plaintext credential fallback.
 class LampyreConnection final:public QObject {
  Q_OBJECT
+ Q_PROPERTY(bool liveProfile READ liveProfile CONSTANT)
+ Q_PROPERTY(QVariantMap currentInvoice READ currentInvoice NOTIFY changed)
+ Q_PROPERTY(qint64 totalDueMinorUnits READ totalDueMinorUnits NOTIFY changed)
+ Q_PROPERTY(QVariantList invoices READ invoices NOTIFY changed)
  Q_PROPERTY(double retailPriceEur READ retailPriceEur CONSTANT)
  Q_PROPERTY(QVariantList categories READ categories NOTIFY changed)
  Q_PROPERTY(QVariantList services READ services NOTIFY changed)
@@ -35,6 +40,11 @@ class LampyreConnection final:public QObject {
 public:
  explicit LampyreConnection(const QString &directory,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent=nullptr,bool syntheticTests=false,int timeoutMs=30000);
  ~LampyreConnection() override;
+ bool liveProfile()const;
+ QVariantMap currentInvoice()const{return resultInvoice().toVariantMap();}
+ qint64 totalDueMinorUnits()const;
+ QVariantList invoices()const;
+ QVariantList providerUsage()const{return invoiceRows_;} // Native owner reporting only; never a customer invoice.
  double retailPriceEur()const;
  QVariantList categories()const{return categories_;}
  QVariantList services()const{return services_;}
@@ -78,8 +88,13 @@ public:
 signals:
  void changed();
 private:
+ void loadInvoices();
+ bool writeInvoices(const QVariantList &rows);
+ bool prepareInvoice(const QVariantMap &service);
+ bool finishInvoice(const QString &status);
  bool freeMetadataTool(const QString &name)const;
  bool metadataCall(const QString &name,const QJsonObject &args,const QString &stage);
+ QJsonObject resultInvoice()const;
  bool consumeSubmission();
  void reset();
  void load();
@@ -103,7 +118,10 @@ private:
  QString resultCaseId_,resultOperationId_;
  int timeoutMs_,pages_=0;
  qint64 nextId_=0,pendingId_=0;
- QVariantList tools_,categories_,services_;
+ QVariantList tools_,categories_,services_,invoiceRows_;
+ QString invoiceId_,invoiceOperationId_,resultInvoiceId_;
+ QStringList requestSecrets_;
+ bool invoicePrepared_=false;
  double creditBalance_=-1;
  QString selectedCategory_,catalogCheckedAt_;
  qint64 serviceCatalogAt_=0;
