@@ -118,6 +118,10 @@ private slots:
   QVERIFY(client.hasCredential());QVERIFY(client.credentialSaved());
   LampyreConnection reopened(credentials,&identity,nullptr,nullptr,true);QVERIFY(reopened.hasCredential());
   QCOMPARE(QDir(credentials).entryList({"lampyre-*.dat"},QDir::Files).size(),2);
+  client.forget();QVERIFY(!client.hasCredential());
+  LampyreConnection forgotten(credentials,&identity,nullptr,nullptr,true);QVERIFY(!forgotten.hasCredential());
+  QVERIFY(client.configureCredential("SYNTHETIC-TEMPORARY-KEY",false));QVERIFY(client.hasCredential());
+  LampyreConnection temporaryReopened(credentials,&identity,nullptr,nullptr,true);QVERIFY(!temporaryReopened.hasCredential());
  }
 #ifdef Q_OS_WIN
  void windowsDirectProtectedPersistence(){

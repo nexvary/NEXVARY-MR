@@ -73,12 +73,13 @@ void LampyreConnection::load(){
  if(info.isSymLink()||!info.isFile()||info.size()>32768||!f.open(QIODevice::ReadOnly)){error_="credential-read";return;}
  QString error;auto plain=mr::recovery::openCaseBytes(f.readAll(),synthetic_,error);
  const auto obj=QJsonDocument::fromJson(plain).object();plain.fill('\0');
+ if(obj.value("owner").toString()==owner_&&obj.value("revoked").toBool()&&obj.value("key").toString().isEmpty())return;
  if(obj.value("owner").toString()!=owner_||!validEndpoint(obj.value("endpoint").toString(),true)||!validKey(obj.value("key").toString())){error_="credential-read";return;}
  endpoint_=synthetic_?obj.value("endpoint").toString():officialEndpoint;key_=obj.value("key").toString();saved_=true;state_="configured";
 }
 bool LampyreConnection::save(){
  const auto path=credentialPath();if(path.isEmpty())return fail("sign-in-required");
- auto plain=QJsonDocument(QJsonObject{{"owner",owner_},{"endpoint",endpoint_},{"key",key_}}).toJson(QJsonDocument::Compact);
+ auto plain=QJsonDocument(QJsonObject{{"owner",owner_},{"endpoint",endpoint_},{"key",key_},{"revoked",key_.isEmpty()}}).toJson(QJsonDocument::Compact);
  QString error;const auto sealed=mr::recovery::sealCase(plain,synthetic_,error);plain.fill('\0');
  if(sealed.isEmpty())return fail("protected-storage-required");
  if(!QDir().mkpath(directory_)||QFileInfo(path).isSymLink())return fail("credential-write");
@@ -108,7 +109,9 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
  const auto nextKey=QString(effective);const auto nextEndpoint=QString(endpoint);
  reset();endpoint_=nextEndpoint;key_=nextKey;
  if(remember){if(!save()){key_.fill(QChar(0));key_.clear();emit changed();return false;}}
- else {const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path))return reject("credential-write");}
+ else if(identity_&&identity_->directWork()){
+  const auto retained=key_;key_.clear();const bool ok=save();key_=retained;if(!ok)return false;
+ }else {const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path))return reject("credential-write");}
  saved_=remember;state_="configured";emit changed();return true;
 }
 bool LampyreConnection::connectProvider(bool consent){
@@ -283,7 +286,7 @@ void LampyreConnection::cancel(){
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
  finishReceipt("cancelled");busy_=false;connected_=false;tools_.clear();session_.clear();result_.clear();sourceDigest_.clear();state_="cancelled-local";error_.clear();emit changed();
 }
-void LampyreConnection::forget(){reset();const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}
+void LampyreConnection::forget(){reset();if(identity_&&identity_->directWork()){if(!save())return;emit changed();return;}const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}
 
 QVariantList LampyreConnection::resultItems()const {
  QVariantList rows;const auto doc=QJsonDocument::fromJson(result_.toUtf8()).object();
