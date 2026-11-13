@@ -10,10 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 class ProfessionalIconTests(unittest.TestCase):
     def test_all_active_icons_are_exact_licensed_upstream_vectors(self):
         folder = ROOT / 'assets/icons-professional'
-        manifest = json.loads((folder / 'PROVENANCE.json').read_text())
+        manifest = json.loads((folder / 'PROVENANCE.json').read_text(encoding="utf-8"))
         self.assertEqual(len(manifest['files']), 27)
         self.assertEqual(set(p.name for p in folder.glob('*.svg')), {v['file'] for v in manifest['files']})
-        self.assertIn('Permission is hereby granted', (ROOT / 'packaging/licenses/FLUENT-ICONS-MIT.txt').read_text())
+        self.assertIn('Permission is hereby granted', (ROOT / 'packaging/licenses/FLUENT-ICONS-MIT.txt').read_text(encoding="utf-8"))
         for item in manifest['files']:
             data = (folder / item['file']).read_bytes()
             self.assertEqual(hashlib.sha256(data).hexdigest(), item['sha256'])
@@ -36,9 +36,9 @@ class ProfessionalIconTests(unittest.TestCase):
         self.assertEqual(sizes, {(s,s) for s in (16,24,32,48,64,128,256)})
 
     def test_windows_icon_is_wired_to_native_and_installer_surfaces(self):
-        source = (ROOT / 'cpp/src/main.cpp').read_text()
-        cmake = (ROOT / 'CMakeLists.txt').read_text()
-        setup = (ROOT / 'packaging/NEXVARY-MR.iss').read_text()
+        source = (ROOT / 'cpp/src/main.cpp').read_text(encoding="utf-8")
+        cmake = (ROOT / 'CMakeLists.txt').read_text(encoding="utf-8")
+        setup = (ROOT / 'packaging/NEXVARY-MR.iss').read_text(encoding="utf-8")
         self.assertIn(':/packaging/app.ico', source)
         self.assertIn('packaging/app.ico', cmake)
         self.assertIn('SetupIconFile=app.ico', setup)
