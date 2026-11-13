@@ -64,14 +64,14 @@ public:
   const QVariantMap metadata{{"caseNumber","SYNTHETIC-UI-REVIEW"},{"investigatingAgency","Synthetic UI laboratory"},{"investigatorName","Synthetic reviewer"},{"seizedDeviceDescription","Synthetic test item"},{"authorityReference","TEST-ONLY"},{"issuingAuthority","Synthetic laboratory"},{"scope","Interface review only; no real investigation"}};
   return !law->createCase(metadata).isEmpty();
  }
- Q_INVOKABLE bool prepareReviewConnection() {
+ Q_INVOKABLE bool prepareReviewConnection(bool deferred=false) {
   if(!identity->syntheticProfile())return false;
-  reviewServer=std::make_unique<FixtureServer>("metadata");
+  reviewServer=std::make_unique<FixtureServer>(deferred?"metadata-running":"metadata");
   return lampyreConnection->configure(reviewServer->url(),"SYNTHETIC-UI-ONLY-NOT-A-LIVE-KEY",false)&&lampyreConnection->connectProvider(true);
  }
  Q_INVOKABLE QVariantMap reviewConnectionStats() const {
   if(!reviewServer)return {};
-  return {{"paidCalls",reviewServer->paidCalls},{"lastArguments",reviewServer->lastArguments.toVariantMap()}};
+  return {{"paidCalls",reviewServer->paidCalls},{"lastArguments",reviewServer->lastPaidArguments.toVariantMap()},{"collections",reviewServer->collections}};
  }
  Q_INVOKABLE bool saveReviewManifest(const QVariantList &screens) {
   QSaveFile file(QDir(QCoreApplication::applicationDirPath()).filePath("ui-review-manifest.json"));

@@ -6,6 +6,7 @@
 #include <QVariantList>
 #include <QStringList>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QSet>
 #include <functional>
 class QNetworkReply;
@@ -37,8 +38,10 @@ class LampyreConnection final:public QObject {
  Q_PROPERTY(QVariantList tools READ tools NOTIFY changed)
  Q_PROPERTY(QString resultText READ resultText NOTIFY changed)
  Q_PROPERTY(QVariantList resultItems READ resultItems NOTIFY changed)
+ Q_PROPERTY(QVariantList findings READ findings NOTIFY changed)
+ Q_PROPERTY(int pendingResultCount READ pendingResultCount NOTIFY changed)
 public:
- explicit LampyreConnection(const QString &directory,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent=nullptr,bool syntheticTests=false,int timeoutMs=30000);
+ explicit LampyreConnection(const QString &directory,IdentityService *identity,GovernmentOperationPolicy *policy,QObject *parent=nullptr,bool syntheticTests=false,int timeoutMs=120000);
  ~LampyreConnection() override;
  bool liveProfile()const;
  QVariantMap currentInvoice()const{return resultInvoice().toVariantMap();}
@@ -74,6 +77,9 @@ public:
  QVariantList tools()const{return tools_;}
  QString resultText()const{return result_;}
  QVariantList resultItems()const;
+ QVariantList findings()const;
+ int pendingResultCount()const{return static_cast<int>(pendingTasks_.size());}
+ Q_INVOKABLE bool collectResults();
  // Native-only destination override is restricted to loopback synthetic fixtures.
  bool configure(const QString &endpoint,const QString &key,bool remember);
  Q_INVOKABLE bool configureCredential(const QString &key,bool remember);
@@ -88,6 +94,8 @@ public:
 signals:
  void changed();
 private:
+ bool acceptTasks(const QJsonObject &result,bool collecting);
+ bool freeResultCollector()const;
  void loadInvoices();
  bool writeInvoices(const QVariantList &rows);
  bool prepareInvoice(const QVariantMap &service);
@@ -118,6 +126,7 @@ private:
  QString resultCaseId_,resultOperationId_;
  int timeoutMs_,pages_=0;
  qint64 nextId_=0,pendingId_=0;
+ QJsonArray pendingTasks_,taskRows_;
  QVariantList tools_,categories_,services_,invoiceRows_;
  QString invoiceId_,invoiceOperationId_,resultInvoiceId_;
  QStringList requestSecrets_;

@@ -121,6 +121,43 @@ private slots:
   QCOMPARE(client.invoices().at(1).toMap().value("amountDueMinorUnits").toInt(),1400);
 
  }
+ void deferredSearchCollectsWithoutSecondCharge_data(){
+  QTest::addColumn<QString>("mode");QTest::addColumn<QString>("state");QTest::addColumn<QString>("finding");QTest::addColumn<int>("due");
+  QTest::newRow("records")<<QString("metadata-running")<<QString("completed")<<QString("results")<<1400;
+  QTest::newRow("no-records")<<QString("metadata-empty")<<QString("completed")<<QString("empty")<<1400;
+  QTest::newRow("task-failure")<<QString("metadata-task-error")<<QString("provider-task-error")<<QString("failed")<<0;
+ }
+ void deferredSearchCollectsWithoutSecondCharge(){
+  QFETCH(QString,mode);QFETCH(QString,state);QFETCH(QString,finding);QFETCH(int,due);
+  QTemporaryDir t;FixtureServer server(mode);LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.connectProvider(true));QTRY_VERIFY(client.connected());
+  QVERIFY(client.refreshCatalog());QTRY_VERIFY(!client.busy());QVERIFY(client.discoverServices("email"));QTRY_VERIFY(!client.busy());
+  QVERIFY(client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,true));
+  QTRY_COMPARE(client.state(),state);QCOMPARE(server.paidCalls,1);QCOMPARE(server.collections,1);QCOMPARE(client.submittedRequests(),1);
+  QCOMPARE(client.pendingResultCount(),0);QCOMPARE(client.invoices().size(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(due));
+  QCOMPARE(client.findings().size(),1);QCOMPARE(client.findings().first().toMap().value("status").toString(),finding);
+  QVERIFY(!client.collectResults());QCOMPARE(server.paidCalls,1);QCOMPARE(server.collections,1);
+ }
+ void stillRunningDoesNotCompleteOrRetryPaidRequest(){
+  QTemporaryDir t;FixtureServer server("metadata-wait");LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.connectProvider(true));QTRY_VERIFY(client.connected());
+  QVERIFY(client.refreshCatalog());QTRY_VERIFY(!client.busy());QVERIFY(client.discoverServices("email"));QTRY_VERIFY(!client.busy());
+  QVERIFY(client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,true));
+  QTRY_COMPARE(client.state(),QString("awaiting-results"));QCOMPARE(client.pendingResultCount(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(0));
+  QCOMPARE(client.currentInvoice().value("status").toString(),QString("pending"));QCOMPARE(server.paidCalls,1);QCOMPARE(server.collections,1);
+  QVERIFY(!client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,true));
+  QCOMPARE(server.paidCalls,1);QVERIFY(client.collectResults());QTRY_COMPARE(client.state(),QString("completed"));
+  QCOMPARE(server.collections,2);QCOMPARE(server.paidCalls,1);QCOMPARE(client.submittedRequests(),1);QCOMPARE(client.totalDueMinorUnits(),qint64(1400));
+ }
+ void unknownCollectionCostNeverRunsAutomatically(){
+  QTemporaryDir t;FixtureServer server("metadata-no-free");LampyreConnection client(t.path(),nullptr,nullptr,nullptr,true);
+  QVERIFY(client.configure(server.url(),"TEST-API-KEY",true));QVERIFY(client.connectProvider(true));QTRY_VERIFY(client.connected());
+  QVERIFY(client.refreshCatalog());QTRY_VERIFY(!client.busy());QVERIFY(client.discoverServices("email"));QTRY_VERIFY(!client.busy());
+  QVERIFY(client.runService("synthetic_email_lookup","{\"email\":\"research@example.invalid\"}",2,true));
+  QTRY_COMPARE(client.state(),QString("awaiting-results"));QCOMPARE(server.paidCalls,1);QCOMPARE(server.collections,0);
+  QVERIFY(!client.collectResults());QCOMPARE(client.errorCode(),QString("metadata-not-free"));QCOMPARE(server.collections,0);
+  client.cancel();QCOMPARE(client.totalDueMinorUnits(),qint64(0));QCOMPARE(client.invoices().first().toMap().value("status").toString(),QString("review"));
+ }
  void directWorkWithoutIndependentApproval(){
   QTemporaryDir t;IdentityService identity(t.filePath("identity"),true);QVERIFY(identity.startDirectWork());
   GovernmentOperationPolicy policy(&identity);FixtureServer server;LampyreConnection client(t.path(),&identity,&policy,nullptr,true);

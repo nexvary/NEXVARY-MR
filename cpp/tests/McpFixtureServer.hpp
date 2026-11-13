@@ -6,7 +6,7 @@
 #include <QJsonArray>
 class FixtureServer:public QObject {
 public:
- QTcpServer server;QString mode;int requests=0,calls=0,lists=0,paidCalls=0;bool failPaid=false;QList<QByteArray> headers;QJsonObject lastArguments;
+ QTcpServer server;QString mode;int requests=0,calls=0,lists=0,paidCalls=0,collections=0;bool failPaid=false;QList<QByteArray> headers;QJsonObject lastArguments,lastPaidArguments;
  explicit FixtureServer(const QString &m={}):mode(m){
   if(!server.listen(QHostAddress::LocalHost))qFatal("Cannot bind the synthetic loopback MCP fixture");
   connect(&server,&QTcpServer::newConnection,this,[this]{while(server.hasPendingConnections()){
@@ -23,22 +23,22 @@ public:
     if(method=="initialize"){
      if(mode=="auth"||mode=="payment"||mode=="forbidden"||mode=="service"){status=mode=="auth"?401:mode=="payment"?402:mode=="forbidden"?403:503;payload="secret-reflection-must-not-display";}
      else if(mode=="redirect"){status=302;extra="Location: https://example.invalid/never-follow\r\n";}
-     else {result={{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{{"tools",QJsonObject{}}}},{"serverInfo",QJsonObject{{"name","Synthetic fixture"},{"version","1"}}}};if(mode!="metadata")extra="Mcp-Session-Id: synthetic-session\r\n";}
+     else {result={{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{{"tools",QJsonObject{}}}},{"serverInfo",QJsonObject{{"name","Synthetic fixture"},{"version","1"}}}};if(!mode.startsWith("metadata"))extra="Mcp-Session-Id: synthetic-session\r\n";}
     }else if(method=="notifications/initialized"){status=202;}
     else if(method=="tools/list"){
      ++lists;
      const QJsonObject schema{{"type","object"},{"required",QJsonArray{"selector"}},{"properties",QJsonObject{{"selector",QJsonObject{{"type","string"}}}}}};
      const QJsonObject tool{{"name",msg.value("params").toObject().value("cursor")=="second-page"?"second":"lookup"},{"description","Synthetic local test; not Lampyre data"},{"inputSchema",schema}};
      result={{"tools",QJsonArray{tool}}};
-     if(mode=="metadata"){
+     if(mode.startsWith("metadata")){
       QJsonArray tools;for(const auto *name:{"lampyre_balance","lampyre_categories_list","lampyre_endpoints_from_categories"})tools.append(QJsonObject{{"name",name},{"description","Synthetic free metadata. Free."},{"inputSchema",QJsonObject{{"type","object"}}}});
-      tools.append(QJsonObject{{"name","lampyre_run_crawlers"},{"description","Synthetic paid operation"},{"inputSchema",QJsonObject{{"type","object"},{"properties",QJsonObject{{"tasks",QJsonObject{{"type","array"}}}}},{"required",QJsonArray{"tasks"}}}}});result={{"tools",tools}};
+      tools.append(QJsonObject{{"name","lampyre_run_crawlers"},{"description","Synthetic paid operation"},{"inputSchema",QJsonObject{{"type","object"},{"properties",QJsonObject{{"tasks",QJsonObject{{"type","array"}}}}},{"required",QJsonArray{"tasks"}}}}});tools.append(QJsonObject{{"name","lampyre_check_result_endpoint"},{"description",mode=="metadata-no-free"?"Unknown cost":"Charges nothing — already paid for."},{"inputSchema",QJsonObject{{"type","object"}}}});result={{"tools",tools}};
      }
 if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")result.insert("nextCursor","second-page");
     }else if(method=="tools/call"){
      ++calls;lastArguments=msg.value("params").toObject().value("arguments").toObject();
      result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text","Synthetic server reply; TEST-API-KEY; Lampyre source label"}}}}};
-     if(mode=="metadata"){
+     if(mode.startsWith("metadata")){
       const auto name=msg.value("params").toObject().value("name").toString();QJsonObject metadata;
       if(name=="lampyre_balance")metadata={{"photons",37.5}};
       else if(name=="lampyre_categories_list")metadata={{"categories",QJsonArray{QJsonObject{{"name","email"},{"description","Synthetic email category"}},QJsonObject{{"name","phone"}}}}};
@@ -46,7 +46,15 @@ if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")
        const auto category=lastArguments.value("categories").toArray().first().toString();
        metadata={{"crawlers",QJsonObject{{category,QJsonArray{QJsonObject{{"tool_name","synthetic_"+category+"_lookup"},{"title","Synthetic "+category+" lookup"},{"photons",2.0},{"args",category+": string (all required)"}}}}}}};
       }
-      else if(name=="lampyre_run_crawlers"){++paidCalls;metadata={{"fixture",true}};}
+      else if(name=="lampyre_run_crawlers"||name=="lampyre_check_result_endpoint"){
+       const bool collecting=name=="lampyre_check_result_endpoint";if(collecting)++collections;else {++paidCalls;lastPaidArguments=lastArguments;}
+       const auto task=lastArguments.value("tasks").toArray().first().toObject();
+       QJsonObject row{{"tool_name",task.value("tool_name")},{"task_id","synthetic-task"}};
+       if((!collecting&&mode!="metadata")||(mode=="metadata-wait"&&collections==1))row.insert("status","running");
+       else if(mode=="metadata-task-error")row.insert("error","The crawler failed and was refunded.");
+       else row.insert("result",mode=="metadata-empty"?QJsonArray{}:QJsonArray{QJsonObject{{"fixture",true},{"url","https://example.invalid/synthetic-profile"}}});
+       metadata={{"tasks",QJsonArray{row}}};
+      }
       result={{"content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(metadata).toJson(QJsonDocument::Compact))}}}}};
       if(name=="lampyre_run_crawlers"&&failPaid)result.insert("isError",true);
      }
@@ -56,7 +64,7 @@ if(mode=="pages"&&msg.value("params").toObject().value("cursor")!="second-page")
     if(mode=="unsupported"&&method=="initialize")payload=QJsonDocument(QJsonObject{{"jsonrpc","2.0"},{"id",msg.value("id")},{"result",QJsonObject{{"protocolVersion","invalid-version"}}}}).toJson();
     if(mode=="malformed"&&method=="initialize")payload="not JSON";
     if(mode=="oversize"&&method=="initialize")payload=QByteArray(2*1024*1024+1,'x');
-    const bool sse=(mode=="sse"||mode=="metadata")&&status==200;
+    const bool sse=(mode=="sse"||mode.startsWith("metadata"))&&status==200;
     if(sse)payload="event: message\r\ndata: "+payload+"\r\n\r\n";
     socket->write("HTTP/1.1 "+QByteArray::number(status)+" Fixture\r\nConnection: close\r\nContent-Type: "+(sse?QByteArray("text/event-stream"):QByteArray("application/json"))+"\r\n"+extra+"Content-Length: "+QByteArray::number(payload.size())+"\r\n\r\n"+payload);socket->disconnectFromHost();
    });

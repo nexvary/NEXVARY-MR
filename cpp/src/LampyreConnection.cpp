@@ -59,6 +59,7 @@ QString LampyreConnection::credentialPath()const {
 }
 void LampyreConnection::reset(){
  if(!invoiceId_.isEmpty())finishInvoice("review");
+ pendingTasks_={};taskRows_={};
  invoiceRows_.clear();invoiceId_.clear();invoiceOperationId_.clear();resultInvoiceId_.clear();requestSecrets_.clear();invoicePrepared_=false;
  timer_.stop();if(reply_){auto *r=reply_.data();reply_.clear();r->abort();r->deleteLater();}
  finishReceipt("cancelled");connected_=false;busy_=false;tools_.clear();body_.clear();cursors_.clear();pages_=0;
@@ -128,6 +129,7 @@ bool LampyreConnection::configure(const QString &endpoint,const QString &key,boo
 }
 bool LampyreConnection::connectProvider(bool consent){
  if(busy_)return false;
+ if(!pendingTasks_.isEmpty())return reject("results-pending");
  if(!consent)return reject("connection-consent-required");
  if(!synthetic_&&(!identity_||!identity_->checkSession()))return reject("sign-in-required");
  if(identity_&&!identity_->hasPermission("external-connection"))return reject("local-connection-permission-denied");
@@ -269,6 +271,7 @@ bool LampyreConnection::metadataCall(const QString &name,const QJsonObject &args
 }
 bool LampyreConnection::refreshCatalog(){
  if(busy_)return false;
+ if(!pendingTasks_.isEmpty())return reject("results-pending");
  if(!freeMetadataTool("lampyre_categories_list"))return reject("metadata-not-free");
  creditBalance_=-1;categories_.clear();services_.clear();selectedCategory_.clear();catalogCheckedAt_.clear();serviceCatalogAt_=0;
  return metadataCall("lampyre_balance",{},"metadata-balance");
@@ -282,6 +285,7 @@ bool LampyreConnection::discoverServices(const QString &category){
 }
 bool LampyreConnection::runService(const QString &name,const QString &arguments,double approvedPhotons,bool consent){
  if(busy_)return false;
+ if(!pendingTasks_.isEmpty())return reject("results-pending");
  if(!connected_)return reject("not-connected");
  if(!authorized())return reject("investigator-required");
  if(!consent)return reject("request-consent-required");
@@ -307,6 +311,7 @@ bool LampyreConnection::runService(const QString &name,const QString &arguments,
 }
 bool LampyreConnection::callTool(const QString &name,const QString &arguments,bool consent){
  if(busy_)return false;
+ if(!pendingTasks_.isEmpty())return reject("results-pending");
  if(!consent)return reject("request-consent-required");
  if(name=="lampyre_run_crawlers"&&!synthetic_&&!invoicePrepared_)return reject("retail-invoice-required");
  if(!connected_)return reject("not-connected");
@@ -344,6 +349,7 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   }
  };
  redactInputs(doc.object());
+ pendingTasks_={};taskRows_={};
  ++submitted_;resultInvoiceId_.clear();invoicePrepared_=false;retailQuoted_=false;resultTool_=name;resultAt_.clear();busy_=true;state_="running";result_.clear();sourceDigest_.clear();error_.clear();emit changed();
  post("tools/call",{{"name",name},{"arguments",doc.object()}},"call");return true;
 }
@@ -444,13 +450,77 @@ void LampyreConnection::accept(QNetworkReply *reply,const QJsonObject &message){
   }
   busy_=false;state_="connected";error_.clear();emit changed();return;
  }
- if(stage=="call"){
+ if(stage=="call"||stage=="collect"){
   if(!authorized()||(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_))){fail("policy-revoked");return;}
   sourceDigest_=QString::fromLatin1(QCryptographicHash::hash(QJsonDocument(result).toJson(QJsonDocument::Compact),QCryptographicHash::Sha256).toHex());
   resultAt_=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);result_=QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Indented));result_=displayText(result_);
+  if(stage=="collect"&&result.value("isError").toBool()){fail("result-collection-error");return;}
+  if(resultTool_=="lampyre_run_crawlers"&&!result.value("isError").toBool()){acceptTasks(result,stage=="collect");return;}
   const bool failed=result.value("isError").toBool();if(!invoiceId_.isEmpty()&&!finishInvoice(failed?"void":"due")){fail("invoice-storage-error");return;}finishReceipt(failed?"failed":"completed");busy_=false;state_=failed?"provider-tool-error":"completed";emit changed();return;
  }
  fail("invalid-response");
+}
+bool LampyreConnection::freeResultCollector()const {
+ for(const auto &v:tools_){const auto t=v.toMap();if(t.value("name")=="lampyre_check_result_endpoint"&&t.value("description").toString().contains("Charges nothing",Qt::CaseInsensitive))return true;}
+ return false;
+}
+bool LampyreConnection::collectResults(){
+ if(busy_)return false;
+ if(!connected_)return reject("not-connected");
+ if(pendingTasks_.isEmpty())return reject("no-pending-results");
+ if(!authorized()||(!synthetic_&&(!identity_||!identity_->directWork())&&(!caseAuthorization_||!caseAuthorization_()||!caseIdentity_||caseIdentity_()!=resultCaseId_)))return reject("policy-revoked");
+ if(!freeResultCollector())return reject("metadata-not-free");
+ busy_=true;state_="collecting-results";error_.clear();emit changed();
+ // Result collection is documented as free: reuse task IDs, never submit crawlers again.
+ post("tools/call",{{"name","lampyre_check_result_endpoint"},{"arguments",QJsonObject{{"tasks",pendingTasks_}}}},"collect");return true;
+}
+bool LampyreConnection::acceptTasks(const QJsonObject &result,bool collecting){
+ QJsonObject payload=result.value("structuredContent").toObject();
+ if(payload.isEmpty())for(const auto &v:result.value("content").toArray()){
+  const auto item=v.toObject();if(item.value("type")!="text")continue;
+  const auto parsed=QJsonDocument::fromJson(item.value("text").toString().toUtf8());if(parsed.isObject()){payload=parsed.object();break;}
+ }
+ if(!payload.value("tasks").isArray()||payload.value("tasks").toArray().isEmpty()||payload.value("tasks").toArray().size()>256)return fail("invalid-task-response");
+ const auto incoming=payload.value("tasks").toArray();QSet<QString> seen;
+ for(const auto &value:incoming){
+  if(!value.isObject())return fail("invalid-task-response");
+  const auto row=value.toObject();const auto name=row.value("tool_name").toString();
+  if(name.isEmpty()||name.size()>256||seen.contains(name))return fail("invalid-task-response");seen.insert(name);
+  if(collecting){bool known=false;for(const auto &v:pendingTasks_){const auto task=v.toObject();if(task.value("tool_name")==name){known=true;if(row.contains("task_id")&&row.value("task_id")!=task.value("task_id"))return fail("invalid-task-response");}}
+   if(!known)return fail("invalid-task-response");}
+  if(row.value("status")=="running"){
+   const auto id=row.value("task_id").toString();if(id.isEmpty()||id.size()>256)return fail("invalid-task-response");
+  }else if(!row.contains("result")&&!row.value("error").isString())return fail("invalid-task-response");
+ }
+ // The collector must account for every submitted pending task; omissions are not success.
+ if(collecting&&incoming.size()!=pendingTasks_.size())return fail("invalid-task-response");
+ if(!collecting)taskRows_=incoming;
+ else for(const auto &value:incoming){const auto row=value.toObject();for(qsizetype i=0;i<taskRows_.size();++i)if(taskRows_[i].toObject().value("tool_name")==row.value("tool_name"))taskRows_[i]=row;}
+ pendingTasks_={};bool failed=false,succeeded=false;
+ for(const auto &v:taskRows_){const auto row=v.toObject();if(row.value("status")=="running")pendingTasks_.append(QJsonObject{{"tool_name",row.value("tool_name")},{"task_id",row.value("task_id")}});
+  else if(row.contains("error"))failed=true;else succeeded=true;}
+ payload.insert("tasks",taskRows_);QJsonObject display=result;display.insert("structuredContent",payload);
+ display.insert("content",QJsonArray{QJsonObject{{"type","text"},{"text",QString::fromUtf8(QJsonDocument(payload).toJson(QJsonDocument::Indented))}}});
+ result_=displayText(QString::fromUtf8(QJsonDocument(display).toJson(QJsonDocument::Indented)));busy_=false;
+ if(!pendingTasks_.isEmpty()){
+  state_="awaiting-results";emit changed();
+  // One free collection attempt after dispatch. A still-running reply stays pending.
+  if(!collecting&&freeResultCollector())return collectResults();
+  return true;
+ }
+ const auto status=failed?(succeeded?"review":"void"):"due";
+ if(!invoiceId_.isEmpty()&&!finishInvoice(status))return fail("invoice-storage-error");
+ finishReceipt(failed?"failed":"completed");state_=failed?"provider-task-error":"completed";error_=failed?"provider-task-error":QString();emit changed();return true;
+}
+QVariantList LampyreConnection::findings()const {
+ const auto doc=QJsonDocument::fromJson(result_.toUtf8()).object();const auto tasks=doc.value("structuredContent").toObject().value("tasks").toArray();QVariantList rows;
+ for(const auto &v:tasks){const auto row=v.toObject();const auto data=row.value("result");const bool running=row.value("status")=="running",failed=row.contains("error");
+  const bool empty=data.isNull()||(data.isArray()&&data.toArray().isEmpty())||(data.isObject()&&data.toObject().isEmpty());
+  QString text;if(!empty&&!running&&!failed){if(data.isArray())text=QString::fromUtf8(QJsonDocument(data.toArray()).toJson(QJsonDocument::Indented));else if(data.isObject())text=QString::fromUtf8(QJsonDocument(data.toObject()).toJson(QJsonDocument::Indented));else text=data.toVariant().toString();}
+  QString title=row.value("tool_name").toString();for(const auto &s:services_)if(s.toMap().value("tool_name").toString()==title){title=s.toMap().value("title").toString();break;}
+  rows.append(QVariantMap{{"service",displayText(title)},{"status",running?"running":failed?"failed":empty?"empty":"results"},{"data",displayText(text)}});
+ }
+ return rows;
 }
 void LampyreConnection::finishReceipt(const QString &status){
  const auto operation=operation_;operation_.clear();
@@ -459,11 +529,13 @@ void LampyreConnection::finishReceipt(const QString &status){
 bool LampyreConnection::fail(const QString &code){
  const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
+ pendingTasks_={};taskRows_={};
  finishReceipt("failed");creditBalance_=-1;categories_.clear();services_.clear();serviceCatalogAt_=0;busy_=false;connected_=false;session_.clear();tools_.clear();result_.clear();sourceDigest_.clear();error_=invoiceSaved?code:QStringLiteral("invoice-storage-error");state_="error";emit changed();return false;
 }
 void LampyreConnection::cancel(){
  const bool invoiceSaved=invoiceId_.isEmpty()||finishInvoice("review");
  timer_.stop();if(reply_){auto *reply=reply_.data();reply_.clear();reply->abort();reply->deleteLater();}
+ pendingTasks_={};taskRows_={};
  finishReceipt("cancelled");busy_=false;connected_=false;tools_.clear();session_.clear();result_.clear();sourceDigest_.clear();state_=invoiceSaved?QStringLiteral("cancelled-local"):QStringLiteral("error");if(invoiceSaved)error_.clear();else error_="invoice-storage-error";emit changed();
 }
 void LampyreConnection::forget(){reset();loadInvoices();if(identity_&&identity_->directWork()){if(!save())return;emit changed();return;}const auto path=credentialPath();if(!path.isEmpty()&&QFile::exists(path)&&!QFile::remove(path)){fail("credential-write");return;}emit changed();}
