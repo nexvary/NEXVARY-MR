@@ -69,7 +69,7 @@ ScrollView {
     ActionButton {text:modelData.enabled?page.app.trx("تعطيل","Disable"):page.app.trx("تمكين","Enable");enabled:modelData.id!==page.identity.session.id;onClicked:page.identity.setEnabled(modelData.id,!modelData.enabled)}
     RowLayout {
      Layout.fillWidth:true
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("سقف إرسال الاستخبارات المتبقي: ","Remaining intelligence submissions: ")+lampyreConnection.remainingSubmissions(accountRow.modelData.id)}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.text;text:page.app.trx("سقف إرسال الاستخبارات المتبقي: ","Remaining intelligence submissions: ")+(lampyreConnection.spendingAllowances[accountRow.modelData.id]||0)}
      SpinBox {id:adminBudget;from:0;to:100;value:0;editable:true}
      ActionButton {text:page.app.trx("ضبط السقف","Set ceiling");onClicked:{const ok=lampyreConnection.setSpendingLimit(accountRow.modelData.id,adminBudget.value);page.feedback=ok?page.app.trx("تم حفظ السقف الإداري؛ يستمر بعد إعادة التشغيل ولا يحدد تكلفة مالية","Administrative ceiling saved across restarts; it does not cap monetary cost"):page.app.humanError(lampyreConnection.errorCode)}}
     }

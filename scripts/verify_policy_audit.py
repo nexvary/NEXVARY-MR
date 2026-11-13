@@ -132,7 +132,7 @@ def operation_record(r, request, decision, old, closure, actor, role, time, resu
             or r["capability"] != request["capability"] or not decision or type(r["decisionSequence"]) not in {int, float}
             or r["decisionSequence"] != decision["sequence"] or r["decisionHash"] != decision["hash"]
             or not digest(r["sourceSha256"]) or not digest(r["outputSha256"]) or result != r["status"]
-            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("lampyre-mcp", "external-analysis"), ("phone-osint", "external-analysis"), ("partition-analysis", "external-analysis"), ("signature-update", "signature-update")}):
+            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("lampyre-mcp", "external-analysis"), ("intelligence-mcp", "external-analysis"), ("phone-osint", "external-analysis"), ("partition-analysis", "external-analysis"), ("signature-update", "signature-update")}):
         raise ValueError("Operation schema/approval/scope/digest rejected")
     from datetime import datetime
     def utc(value):

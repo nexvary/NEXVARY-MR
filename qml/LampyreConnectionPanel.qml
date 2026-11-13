@@ -113,7 +113,7 @@ ColumnLayout {
      }}
    }
   }
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.danger;text:panel.inputError;visible:panel.inputError!==""}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.danger;text:panel.connection?panel.connection.displayText(panel.inputError):panel.inputError;visible:panel.inputError!==""}
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:panel.app.design.muted;text:panel.app.trx("التكلفة والرصيد غير مقروءين تلقائيًا. راجعهما في حساب المزود قبل التنفيذ؛ لا تعني قائمة الأدوات أن البحث مجاني.","Cost and balance are not read automatically. Check them in the provider account before execution; tool discovery does not make a search free.")}
   Label {objectName:"lampyrePhotonBalance";Layout.fillWidth:true;color:panel.app.design.danger;text:panel.app.trx("رصيد استخبارات نيكسفاري: غير متاح — تكلفة العملية غير معروفة","NEXVARY Intelligence Credits: balance unavailable — operation cost unknown")}
   RowLayout {Layout.fillWidth:true

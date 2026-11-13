@@ -105,9 +105,16 @@ bool LampyreConnection::connectProvider(bool consent){
  if(identity_&&!identity_->hasPermission("external-connection"))return reject("local-connection-permission-denied");
  if(!validEndpoint(endpoint_,synthetic_)||!hasCredential())return reject("configuration-required");
  if((!synthetic_&&!policy_)||(policy_&&!policy_->granted("external-analysis")))return reject("external-analysis-approval-required");
- if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
+ if(policy_){operation_=policy_->beginOperation("external-analysis","intelligence-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
  connected_=false;tools_.clear();result_.clear();session_.clear();version_.clear();cursors_.clear();pages_=0;error_.clear();busy_=true;state_="connecting";emit changed();
  post("initialize",{{"protocolVersion","2025-06-18"},{"capabilities",QJsonObject{}},{"clientInfo",QJsonObject{{"name","NEXVARY MR"},{"version","0.4.2"}}}},"initialize");return true;
+}
+QVariantMap LampyreConnection::spendingAllowances()const {
+ QVariantMap out;if(!identity_||!identity_->authenticated())return out;
+ if(identity_->hasPermission("user-administration"))for(const auto &v:identity_->users()){
+  const auto id=v.toMap().value("id").toString();out.insert(id,remainingSubmissions(id));
+ }else out.insert(owner_,remainingSubmissions(owner_));
+ return out;
 }
 int LampyreConnection::remainingSubmissions(const QString &accountId)const {
  if(!identity_||!identity_->authenticated()||QUuid(accountId).isNull()||
@@ -174,7 +181,7 @@ bool LampyreConnection::callTool(const QString &name,const QString &arguments,bo
   if(type=="integer"&&std::floor(value.toDouble())!=value.toDouble())return reject("invalid-arguments");
   const auto allowed=fields.value(it.key()).toMap().value("enum");if(allowed.isValid()&&!allowed.toList().contains(value.toVariant()))return reject("invalid-arguments");
  }
- if(policy_){operation_=policy_->beginOperation("external-analysis","lampyre-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
+ if(policy_){operation_=policy_->beginOperation("external-analysis","intelligence-mcp");if(operation_.isEmpty())return reject("external-analysis-approval-required");}
  const auto caseId=caseIdentity_?caseIdentity_():QString();
  if(!synthetic_&&caseId.isEmpty()){finishReceipt("failed");return reject("active-case-required");}
  if(!consumeSubmission()){finishReceipt("failed");return false;}

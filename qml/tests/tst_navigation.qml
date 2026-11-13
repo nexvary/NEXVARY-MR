@@ -910,7 +910,11 @@ TestCase {
   tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
   verify(findChild(ws,"lampyreMcpEndpoint")===null);
   verify(findChild(ws,"lampyreConnectionPanel").connection.endpoint===undefined);
-  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-setup-hidden-endpoint.png"));
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   verify(findChild(ws,"lampyreMcpEndpoint")===null);
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-setup-"+(ar?"ar":"en")+".png"));
+  }
   findChild(ws,"lampyreApiKey").text="Synthetic-credential-draft";
   identityBridge.logout();
   tryVerify(function(){return findChild(ws,"lampyreApiKey")===null});
