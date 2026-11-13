@@ -267,8 +267,8 @@ jobs:
           $env:QT_QPA_PLATFORM = 'offscreen'
           & build/Release/mr_case_workload_benchmark.exe > build/case-workload-benchmark.json
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Assemble portable Qt runtime
-        id: portable
+      - name: Stage Qt runtime for installer
+        id: staged_runtime
         if: ${{ !cancelled() && matrix.profile == 'production' && steps.native_build.outcome == 'success' && steps.tests.outcome == 'success' && steps.usb_inventory.outcome == 'success' }}
         shell: pwsh
         run: |
@@ -278,14 +278,14 @@ jobs:
           try { ./packaging/package-windows.ps1 }
           catch { $_ | Format-List * -Force | Out-String | Set-Content dist/evidence/package-error.txt; throw }
           finally { Stop-Transcript }
-      - name: Verify portable in isolated path with spaces
-        id: portable_smoke
-        if: ${{ !cancelled() && matrix.profile == 'production' && steps.portable.outcome == 'success' }}
+      - name: Verify staged installer runtime in isolated path with spaces
+        id: staged_smoke
+        if: ${{ !cancelled() && matrix.profile == 'production' && steps.staged_runtime.outcome == 'success' }}
         shell: pwsh
-        run: ./packaging/smoke-windows.ps1
+        run: ./packaging/smoke-windows.ps1 -Label staging
       - name: Build per-user Windows installer
         id: installer
-        if: ${{ !cancelled() && matrix.profile == 'production' && steps.portable_smoke.outcome == 'success' }}
+        if: ${{ !cancelled() && matrix.profile == 'production' && steps.staged_smoke.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -324,13 +324,8 @@ jobs:
         if: matrix.profile == 'production'
         shell: pwsh
         run: |
-          Get-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt
-      - uses: actions/upload-artifact@v4
-        if: matrix.profile == 'production'
-        with:
-          name: NEXVARY-MR-Windows-x64-portable-unsigned
-          path: dist/NEXVARY-MR-Windows-x64-portable-unsigned.zip
-          if-no-files-found: error
+          $setup = Get-Item -LiteralPath 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe'
+          "$( (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLower() )  $($setup.Name)" | Set-Content dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         if: matrix.profile == 'production'
         with:
