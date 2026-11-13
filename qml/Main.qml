@@ -5,7 +5,7 @@ ApplicationWindow {
  id:window
  objectName:"mainWindow"
  width:1536;height:980;minimumWidth:840;minimumHeight:480;visible:true
- title:(operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
+ title:(identityBridge.directWork?"":operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
  property bool ar:true
  property bool darkTheme:true
  readonly property QtObject design:tokens
