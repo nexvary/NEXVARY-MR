@@ -995,33 +995,50 @@ TestCase {
   artifactClick(findChild(app,"identityPanel"),findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
  }
  function test_yzz_ownerInterfaceReview(){
-  verify(uiEvidence.prepareReviewContext());reviewCapture=true;app.width=1536;app.height=980;
+  reviewCapture=true;app.width=1536;app.height=980;
   const screens=[];
   function capture(key,label){
    verify(renderedFrame());wait(30);const name="smoke-professional-ui-review-"+String(screens.length+1).padStart(3,"0")+"-"+key+".png";
    verify(uiEvidence.captureWindow(app,uiScreenshotBase.replace("smoke-professional-ui-","")+name));
    screens.push({file:name,label:label,language:app.ar?"ar":"en",page:app.currentPage,synthetic:true});
   }
+  function captureScroll(key,label,name){
+   const scroll=findChild(app,name);if(!scroll||!scroll.visible||!scroll.contentItem)return;
+   const view=scroll.contentItem;if(view.contentHeight===undefined||view.contentHeight<=view.height+60)return;
+   const start=view.contentY;for(let part=1;part<=12;part++){const next=Math.min(view.contentHeight-view.height,part*Math.max(100,view.height*0.85));if(next<=view.contentY+10)break;view.contentY=next;capture(key+"-part-"+(part+1),label);if(next>=view.contentHeight-view.height-2)break}view.contentY=start;
+  }
+  app.setWorkspace(true);app.navigateSection(10);verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));
+  capture("optional-legacy-accounts","إدارة الحسابات القديمة — اختيارية");
+  verify(uiEvidence.prepareReviewContext());
   for(const gov of [true,false]){
    app.setWorkspace(gov);
-   for(let i=0;i<app.sections.length;i++){app.navigateSection(i);capture((gov?"government-":"professional-")+i,app.sections[i].ar)}
+   for(let i=0;i<app.sections.length;i++){
+    app.navigateSection(i);const key=(gov?"government-":"professional-")+i;capture(key,app.sections[i].ar);
+    const scrollers={7:"settingsScroll",11:"helpWorkspace",14:"governmentAnalysisWorkspace",15:"intelligenceWorkspace"};if(scrollers[app.currentPage])captureScroll(key,app.sections[i].ar,scrollers[app.currentPage]);
+   }
   }
   const tabs=[[1,"deviceTabs"],[2,"diagnosticTabs"],[4,"firmwareTabs"],[5,"workshopTabs"],[9,"forensicTabs"],[8,"recoveryTabs"]];
   for(const route of tabs){app.currentPage=route[0];app.activeSection=0;const bar=findChild(app,route[1]);if(bar){for(let i=0;i<bar.count;i++){bar.currentIndex=i;capture(route[1]+"-"+i,route[1]+" / "+i)}}}
-  app.currentPage=3;capture("board","فحص اللوحات");
+  app.currentPage=3;capture("board","فحص اللوحات");app.currentPage=6;capture("parts","مخزون قطع الغيار");
   app.setWorkspace(true);app.navigateSection(7);const research=findChild(app,"researchCenter");
-  for(let i=0;i<9;i++){research.section=i;capture("research-"+i,research.titles[i])}
+  for(let i=0;i<9;i++){research.section=i;capture("research-"+i,research.titles[i]);captureScroll("research-"+i,research.titles[i],"researchScroll")}
   app.navigateSection(0);const law=findChild(app,"lawEnforcementWorkspace");
-  for(let i=0;i<12;i++){law.section=i;capture("law-"+i,"مساحة القضايا / "+i)}
+  for(let i=0;i<12;i++){law.section=i;capture("law-"+i,law.titles[i])}
   law.newCase();const form=findChild(app,"lawCaseForm");
-  for(let i=0;i<4;i++){form.step=i;capture("case-form-"+i,"إدخال القضية / "+i)}
+  for(let i=0;i<4;i++){form.step=i;findChild(app,"lawFormScroll").contentItem.contentY=0;capture("case-form-"+i,"إدخال القضية / "+i);captureScroll("case-form-"+i,"إدخال القضية / "+i,"lawFormScroll")}
+  form.form={caseNumber:"SYNTHETIC-VALID-INPUT",investigatingAgency:"Synthetic UI lab",investigatorName:"Synthetic operator"};form.step=0;capture("case-valid-fields","حقول صحيحة — خضراء");
+  form.setField("validFromUtc","invalid time");form.step=1;capture("case-invalid-time","قيمة وقت غير صحيحة — صفراء");form.setField("validFromUtc","2026-11-13T12:00:00Z");capture("case-time-controls","عناصر تعديل التاريخ والوقت");
   app.currentPage=8;const recovery=findChild(app,"recoveryWorkspace");
-  if(recovery){for(let i=0;i<8;i++){recovery.step=i;capture("recovery-step-"+i,"خطوة الاستعادة / "+i)}}
+  if(recovery){findChild(app,"recoveryTabs").currentIndex=1;for(let i=0;i<8;i++){recovery.step=i;capture("recovery-step-"+i,"خطوة الاستعادة / "+i)}}
   app.navigatePrimary(3);const ws=findChild(app,"osintWorkspace");const cards=findChild(app,"intelligenceSearchCards");
   verify(cards!==null);
   for(const category of ["email","phone"]){const button=findChild(cards,"intelligenceCategory-"+category);verify(button!==null);button.clicked();capture("search-"+category,"بحث "+category);findChild(cards,"intelligenceServiceDialog").close()}
-  if(ws){ws.activeTab=2;capture("intelligence-setup","إعداد اتصال الاستخبارات");ws.activeTab=1;ws.showDashboardDetails=true;capture("intelligence-history","قضايا وسجل الاستخبارات");ws.showDashboardDetails=false}
-  verify(uiEvidence.prepareReviewConnection());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
+  if(ws){
+   ws.showAdvanced=true;verify(renderedFrame());const scroll=findChild(app,"intelligenceWorkspace");reveal(scroll,findChild(ws,"lampyreConnectionPanel"));capture("intelligence-setup","إعداد اتصال الاستخبارات");ws.showAdvanced=false;scroll.contentItem.contentY=0;
+   ws.showDashboardDetails=true;capture("intelligence-history","قضايا وسجل الاستخبارات");ws.showDashboardDetails=false;
+   ws.demoMode=true;ws.activeTab=2;verify(renderedFrame());const analysis=findChild(ws,"osintAnalysisPane");verify(analysis!==null);reveal(scroll,analysis);capture("graph-example","واجهة الرسم البياني — مثال محلي فقط");ws.demoMode=false;ws.activeTab=1;scroll.contentItem.contentY=0;
+  }
+  cards.selectedCard="";verify(uiEvidence.prepareReviewConnection());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
   verify(lampyreConnection.discoverServices("email"));tryCompare(lampyreConnection,"busy",false,5000);
   cards.selectedCard="email";cards.selectedService="synthetic_email_lookup";cards.values={email:"review@example.invalid"};findChild(cards,"intelligenceServiceDialog").open();capture("email-confirmation","تأكيد البحث — بيانات محلية فقط");
   verify(lampyreConnection.runService("synthetic_email_lookup",JSON.stringify(cards.values),2,true));cards.showSearchResult=true;tryCompare(lampyreConnection,"busy",false,5000);capture("invoice-due","فاتورة مستحقة تجريبية 14 يورو");findChild(cards,"intelligenceServiceDialog").close();capture("invoices","سجل الفواتير التجريبي");

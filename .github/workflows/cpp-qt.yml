@@ -1,7 +1,7 @@
 name: C++20 and Qt Windows
 on:
   push:
-    branches: [fix/intelligence-p0-completion, fix/mr-auth-permissions-lampyre-ux, main, dev/cpp-qt-foundation, feature/government-operations, integration/forensic-engines-audit]
+    branches: [fix/mr-auth-permissions-lampyre-ux, main, dev/cpp-qt-foundation, feature/government-operations, integration/forensic-engines-audit]
   pull_request:
   workflow_dispatch:
 permissions:
