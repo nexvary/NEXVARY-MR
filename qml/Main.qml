@@ -1,11 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "Brand.js" as Brand
 ApplicationWindow {
  id:window
  objectName:"mainWindow"
  width:1536;height:980;minimumWidth:840;minimumHeight:480;visible:true
  title:(identityBridge.directWork?"":operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
+ readonly property string productVersion:Brand.version
+ readonly property real intelligenceViewportHeight:intelligenceView.availableHeight
  property bool ar:true
  property bool darkTheme:true
  readonly property QtObject design:tokens
@@ -30,7 +33,7 @@ ApplicationWindow {
  property var states:["Received","Diagnosing","Awaiting parts","Repairing","Ready","Delivered","Cancelled"]
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
  // Legacy page numbers stay stable for native smoke consumers and page APIs.
- property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة الورشة","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Workshop CRM","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
+ property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة المركز","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Center Management","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
  readonly property int intelligencePage:15
  readonly property var intelligenceSection:({ar:"الاستخبارات",en:"Intelligence",icon:"search_visual",page:intelligencePage})
  readonly property var professionalSections:[
@@ -41,7 +44,7 @@ ApplicationWindow {
   {ar:"تشخيص USB",en:"USB Diagnostics",icon:"phone_laptop",page:2,tab:3},
   {ar:"المختبر الجنائي",en:"Forensic Laboratory",icon:"document_lock",page:9},
   {ar:"الاستعادة والنسخ",en:"Recovery & Backup",icon:"history",page:8},
-  {ar:"إدارة الورشة",en:"Workshop CRM",icon:"clipboard_task",page:5},
+  {ar:"إدارة المركز",en:"Center Management",icon:"clipboard_task",page:5},
   {ar:"التقارير",en:"Reports",icon:"document_text",page:10},
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
   {ar:"الإعدادات",en:"Settings",icon:"settings",page:7},

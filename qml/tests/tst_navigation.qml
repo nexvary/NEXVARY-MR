@@ -1025,6 +1025,32 @@ TestCase {
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-direct-device-"+(ar?"ar":"en")+".png"));
   }
  }
+ function test_yxaOwnerPresentation(){
+  verify(uiEvidence.prepareReviewContext());lampyreConnection.forget();app.setWorkspace(false);
+  for(const ar of [true,false])for(const size of [[1366,768],[1920,1080],[2560,1440]]){
+   app.ar=ar;app.width=size[0];app.height=size[1];app.navigatePrimary(3);verify(renderedFrame());
+   const view=findChild(app,"intelligenceWorkspace"),grid=findChild(app,"intelligenceCategoryGrid");
+   view.contentItem.contentY=0;verify(renderedFrame());
+   verify(grid.mapToItem(view,0,grid.height).y<=view.availableHeight+2,"All category rows must fit the viewport");
+   const seal=findChild(app,"nexvaryEyeSeal");tryCompare(seal,"status",Image.Ready);
+   compare(findChild(app,"brandSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
+   if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-cards-"+(ar?"ar":"en")+".png"));
+  }
+  app.width=1366;app.height=768;app.navigate(11);
+  const tabs=findChild(app,"helpAboutTabs");tabs.currentIndex=1;
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   compare(findChild(app,"aboutSystemSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
+   verify(findChild(app,"aboutSystemVersion").text.includes(app.productVersion));
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-system-"+(ar?"ar":"en")+".png"));
+  }
+  tabs.currentIndex=2;app.ar=true;verify(renderedFrame());
+  compare(findChild(app,"companyContactEmail").text,"info@nexvary.com");
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-developer-ar.png"));tabs.currentIndex=0;
+  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;research.selected=researchBridge.catalog.tools[0];verify(renderedFrame());
+  compare(findChild(app,"researchRawJson").visible,false);verify(findChild(app,"researchDetail-title").text.length>0);
+  research.selected={};app.ar=true;
+ }
  function test_yzNativeCardsDispatchAndDisplay(){
   verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
   const cards=findChild(app,"intelligenceSearchCards");verify(cards!==null);cards.selectedCard="";

@@ -1,6 +1,8 @@
-# Windows 0.4.5 owner review — 2026-11-14
+# Owner review — Windows 0.4.6 candidate, 2026-11-14
 
-- Pending: compact Intelligence cards and spacing so all rows fit the available screen while labels and prices remain readable.
-- Repaired in source: direct Windows work no longer requires an institutional exception for device-tools (ADB discovery, USB inspection and scrcpy). The native operation gate still audits usage and preserves executable validation, command allowlists and handset consent. Institutional account-mode checks and paid-operation confirmations remain unchanged.
-- Direct-mode settings show actual device access and keep the legacy institutional request form under advanced details. The header identifies direct work accurately.
-- No new Setup or paid API request is authorized by this review note. Verify the native policy and QML before further packaging.
+- Implemented: compact responsive Intelligence cards, approved eye-seal branding and multi-size ICO, Arabic/English subtitle, Center Management naming, readable research details with optional raw JSON, wrapped translated operation status, actual version labels, dedicated About System/Developer pages.
+- Preserved verified direct device access; audited executable/command checks and handset authorization remain. Production modifying commands remain disabled pending meaningful acceptance; the limitation is stated in Help/About rather than hidden.
+- Prepared: separate Arabic/English installer descriptions and institutional EULA; two explicit authority declarations. Interactive and managed silent acceptance are distinct from verified organizational eligibility.
+- Pending: native Windows UI acceptance for this candidate, owner screenshot review and a new Setup build. Existing 0.4.5 installer is not updated by source changes.
+- No paid requests, Portable, Ubuntu build or server deployment in this phase. See POST_WINDOWS_ROADMAP.md.
+- Corporate website and email are published on nexvary.com; GitHub organization is linked. Additional social URLs are not invented.

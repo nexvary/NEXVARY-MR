@@ -55,7 +55,7 @@ Item {
     }
     Label {text:app.trx("النسخ غير مشفرة. احفظها في مكان محمي. قبل الاستعادة تُحفظ نسخة من الحالة الحالية تلقائيًا.","Backups are not encrypted. Store them securely. Restore preserves a copy of the current database automatically.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#ecb774");font.pixelSize:14}
    }
-   Label {text:"NEXVARY MR 0.4.1 · Qt 6 / C++20 · "+app.trx("نسخة تطوير غير موقعة","Unsigned development build");color:app.tone("#829bb5");Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:14}
+   Label {text:"NEXVARY MR "+app.productVersion+" · Qt 6 / C++20 · "+app.trx("نسخة تطوير غير موقعة","Unsigned development build");color:app.tone("#829bb5");Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:14}
   }
  }
  FileDialog {id:toolPicker;title:app.trx("اختيار الملف التنفيذي لأداة ","Choose executable for ")+page.toolName;nameFilters:["Executable (*.exe)","All files (*)"];onAccepted:{const ok=toolBridge.configureTool(page.toolName,selectedFile.toString());app.notice(ok,toolBridge.status,toolBridge.status)}}

@@ -1,0 +1,12 @@
+﻿NEXVARY MR
+Operations & Intelligence System
+Developed by Nexvary Inc.
+
+A unified workstation for authorized institutional personnel: device identification and USB diagnostics; center, customer and repair-order management; cases, digital evidence, research and reports; and integrated intelligence search through configured external services.
+
+Device operations depend on available drivers, trusted tools and handset authorization. Production commands remain limited to inspection and reads; unverified modifying operations are not enabled. Internet access, a valid API credential and explicit confirmation are required for paid intelligence requests. Provider findings require independent verification. Mock tests do not establish physical-device acceptance or live paid-search success.
+
+Licensed exclusively to law-enforcement bodies and registered entities legally authorized to conduct digital criminal investigations, through their authorized personnel. Not offered for personal use. Installation grants no investigative authority or permission to access a device, account or data.
+
+Website: https://nexvary.com/
+Contact: info@nexvary.com

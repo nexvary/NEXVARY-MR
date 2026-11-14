@@ -121,6 +121,9 @@ Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/THIRD_PARTY.md') $bundle
 Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }
+New-Item -ItemType Directory -Force (Join-Path $bundle 'legal') | Out-Null
+Copy-Item (Join-Path $PSScriptRoot 'institutional-license-*.txt') (Join-Path $bundle 'legal') -Force
+Copy-Item (Join-Path $PSScriptRoot 'program-description-*.txt') (Join-Path $bundle 'legal') -Force
 New-Item -ItemType Directory -Force (Join-Path $bundle 'licenses') | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'licenses/*') (Join-Path $bundle 'licenses') -Recurse -Force
 if (-not (Test-Path (Join-Path $bundle 'licenses/LIBSODIUM-ISC.txt') -PathType Leaf)) { throw 'Packaged libsodium ISC notice is missing' }

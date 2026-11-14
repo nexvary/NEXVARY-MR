@@ -73,6 +73,7 @@ ColumnLayout {
  QtObject {
   id:desktopApp
   readonly property bool ar:workspace.app.ar
+  readonly property real intelligenceViewportHeight:workspace.app.intelligenceViewportHeight
   readonly property var design:desktopTokens
   function trx(a,e){return workspace.app.trx(a,e)}
   function openExternal(url){return workspace.app.openExternal(url)}
@@ -82,21 +83,25 @@ ColumnLayout {
   function openAccountPermissions(){workspace.app.openAccountPermissions()}
  }
 
+ IntelligenceSearchCards {app:desktopApp;Layout.fillWidth:true;onSetupRequested:workspace.showAdvanced=true}
  Label {
   Layout.fillWidth: true
   color: desktopTokens.text
   font.pixelSize:24
   font.bold: true
+  visible:false
   text: "NEXVARY Intelligence"
  }
  Label {
   Layout.fillWidth: true
   wrapMode: Text.WordWrap
   color: desktopTokens.muted
+  visible:false
   text: workspace.app.trx("خدمات البحث والتحليل", "Search and analysis services")
  }
  GridLayout {
   objectName: "intelligenceDashboard"
+  visible:workspace.showDashboardDetails
   Layout.fillWidth: true
   columns: width >= 700 ? 4 : 2
   Repeater {
@@ -154,7 +159,7 @@ ColumnLayout {
    delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:desktopTokens.muted;text:workspace.intelligenceConnection.displayText(modelData.title||modelData.name)}
   }
  }
- IntelligenceSearchCards {app:desktopApp;Layout.fillWidth:true;onSetupRequested:workspace.showAdvanced=true}
+
  OsintDesktopCommand {text:workspace.app.trx("أدوات محلية وإعدادات متقدمة","Local tools and advanced settings");onClicked:workspace.showLocalTools=!workspace.showLocalTools}
  GridLayout {
   visible:workspace.showLocalTools

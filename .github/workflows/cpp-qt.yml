@@ -336,7 +336,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
           $setup = (Resolve-Path 'dist/NEXVARY-MR-Government-Setup.exe').Path
-          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /TASKS=desktopicon /DIR=`"$destination`"" -Wait -PassThru
+          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /TASKS=desktopicon /DIR=`"$destination`"" -Wait -PassThru
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
           $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
           if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Per-user uninstall registration was not created' }

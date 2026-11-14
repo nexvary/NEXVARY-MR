@@ -1,0 +1,39 @@
+﻿NEXVARY MR — Institutional Software License and Acceptable Use
+Revision: 2026-11-14
+Licensor: Nexvary Inc. | info@nexvary.com | https://nexvary.com/
+
+1. ELIGIBILITY AND LICENSE SCOPE
+The proprietary system is licensed, not sold, solely to law-enforcement bodies and registered entities legally authorized to conduct digital criminal investigations, subject to an institutional license agreement. Only personnel authorized by the licensee may operate it within their assigned lawful duties. No license for personal use or for individuals in their private capacity is granted. Installing a copy does not itself establish an institutional license, official status or verified eligibility.
+
+2. AUTHORITY AND LAWFUL PURPOSE
+The installing representative must be authorized to accept these terms on behalf of the institution. The licensee and its operators must hold all lawful authority, warrants, orders, consents and other permissions required by applicable law for each activity. The software creates no investigative power or permission to access devices, accounts or data.
+
+3. PROHIBITED USE
+Do not use the system for unauthorized surveillance, stalking, unlawful access, discriminatory targeting, falsification of evidence, or any other unlawful purpose. Do not share access with unauthorized parties or redistribute proprietary software except as permitted by the institutional license.
+
+4. DATA, PRIVACY AND EVIDENCE
+The licensee determines and remains responsible for the lawful basis, scope, necessity, handling, retention and disclosure of investigation data. Protect credentials and evidence, minimize disclosure, and independently verify results. Provider findings alone do not establish identity or wrongdoing. Training or synthetic fixtures are not genuine evidence.
+
+5. EXTERNAL SERVICES AND CHARGES
+External capabilities depend on provider availability, credentials and applicable provider terms. Customer prices are distinct from supplier costs. A billable request requires explicit approval of the displayed charge or applicable quote; opening a screen does not authorize billing. A recorded amount due is not proof of payment. Do not automatically repeat an uncertain or pending charged request. No provider balance or per-operation cost is guaranteed unless verified.
+
+6. CAPABILITIES AND VALIDATION
+Only functions actually implemented and enabled are included. A catalog listing, successful build or mock response does not establish device compatibility, provider connectivity or forensic admissibility. Production modifying operations may be disabled. Review the displayed scope, provenance, limitations and operation result before relying on any output.
+
+7. INTELLECTUAL PROPERTY AND COMPONENTS
+Nexvary retains rights in its proprietary code, branding and documentation. Third-party and open-source components retain their own rights and licenses; applicable notices and source or replacement rights are not restricted by this agreement. Integration does not imply ownership of third-party software or endorsement by any government or provider.
+
+8. SECURITY AND REPORTING
+Use a secured institutional environment, restrict access to authorized personnel and report suspected misuse or a security defect to info@nexvary.com. Do not disclose credentials or investigation data in public support channels.
+
+9. SUSPENSION AND TERMINATION
+Material breach may lead to suspension or termination of contractual access as permitted by the applicable institutional agreement and law. On termination, cease unauthorized use and handle retained data and evidence according to applicable obligations. No undocumented remote-deletion capability is represented.
+
+10. WARRANTIES AND LIABILITY
+No guarantee is made of complete results, uninterrupted external services, universal device support or acceptance of evidence by any authority. Warranty, liability limits and remedies are governed by the signed institutional agreement and mandatory law; nothing excludes rights or liabilities that cannot lawfully be excluded.
+
+11. CONTRACT ORDER
+The signed institutional agreement controls negotiated commercial terms, jurisdiction, governing law and dispute resolution. This notice does not invent a governing jurisdiction where none has been agreed. Any unenforceable provision is limited to the extent permitted by law without overriding mandatory protections.
+
+12. ACCEPTANCE AND RECORD
+Accept the license and the separate authority declarations before installation. A declaration records the representative's statement and is not independent verification of institutional eligibility. Managed unattended installation requires explicit acceptance parameters supplied by an authorized institutional administrator. The terms remain available in the installed legal directory.

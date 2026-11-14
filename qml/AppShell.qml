@@ -22,7 +22,7 @@ Item {
      RowLayout {id:breadcrumbs;anchors.fill:parent
      ActionButton {objectName:"backButton";text:shell.app.trx("رجوع","Back");implicitHeight:30;implicitWidth:72;enabled:shell.app.pageHistory.length>0;onClicked:shell.app.goBack()}
      Label {text:shell.app.trx("مساحة العمل / ","WORKSPACE / ")+shell.app.pageTitle;Layout.fillWidth:true;Layout.minimumWidth:0;elide:Text.ElideRight;color:shell.app.design.muted;font.pixelSize:14}
-     Label {text:"0.4.5 · "+shell.app.trx("تطوير","DEVELOPMENT");color:shell.app.design.muted;font.pixelSize:14}
+     Label {text:shell.app.productVersion+" · "+shell.app.trx("تطوير","DEVELOPMENT");color:shell.app.design.muted;font.pixelSize:14}
      }
     }
     Item {id:workspace;objectName:"workstationWorkspace";Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;clip:true}

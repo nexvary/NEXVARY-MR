@@ -581,7 +581,7 @@ bool GovernmentOperationPolicy::verifyAudit(const QString &input,
 bool GovernmentOperationPolicy::isHelpLink(const QString &text) const {
  const QUrl url(text,QUrl::StrictMode);
  if(!url.isValid()||url.scheme()!="https"||!url.userInfo().isEmpty()||url.hasQuery()||url.hasFragment()||url.port(-1)!=-1)return false;
- static const QStringList urls={"https://lampyre.io/","https://lampyre.io/documentation/","https://lampyre.io/faq/","https://account.lampyre.io/","https://nexvary.com/","https://developer.android.com/tools/releases/platform-tools","https://developer.android.com/studio/run/win-usb","https://github.com/Genymobile/scrcpy","https://github.com/nexvary/NEXVARY-MR","https://www.clamav.net/downloads","https://docs.clamav.net/manual/Usage/SignatureManagement.html"};
+ static const QStringList urls={"https://lampyre.io/","https://lampyre.io/documentation/","https://lampyre.io/faq/","https://account.lampyre.io/","https://nexvary.com/","https://nexvary.com/contact","https://github.com/nexvary","https://developer.android.com/tools/releases/platform-tools","https://developer.android.com/studio/run/win-usb","https://github.com/Genymobile/scrcpy","https://github.com/nexvary/NEXVARY-MR","https://www.clamav.net/downloads","https://docs.clamav.net/manual/Usage/SignatureManagement.html"};
  auto canonical=url.toString(QUrl::FullyEncoded);if(url.path().isEmpty())canonical+='/';return urls.contains(canonical);
 }
 bool GovernmentOperationPolicy::openHelpLink(const QString &text,bool consent) {
