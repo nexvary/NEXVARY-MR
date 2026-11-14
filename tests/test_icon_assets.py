@@ -31,7 +31,7 @@ class ProfessionalIconTests(unittest.TestCase):
             self.assertGreater(len(root.findall('.//{http://www.w3.org/2000/svg}path')), 3)
             for forbidden in (b'<image', b'<script', b'<text', b'<foreignObject'):
                 self.assertNotIn(forbidden, data)
-        self.assertIn('nexvary-eye-seal.svg', (ROOT / 'qml/TopBar.qml').read_text())
+        self.assertIn('nexvary-eye-seal.svg', (ROOT / 'qml/TopBar.qml').read_text(encoding='utf-8'))
 
     def test_windows_ico_has_all_required_native_sizes(self):
         data = (ROOT / 'packaging/app.ico').read_bytes()
