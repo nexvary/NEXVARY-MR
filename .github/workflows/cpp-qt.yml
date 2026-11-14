@@ -270,7 +270,7 @@ jobs:
         shell: pwsh
         run: |
           if ($env:MR_SKIP_SETUP -eq 'true') {
-            ctest --test-dir build -C Release -R '^mr_ui_(tests|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
+            ctest --test-dir build -C Release -R '^mr_ui_(owner_review_1([.]25|[.]5)?|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
           } else {
             ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
           }

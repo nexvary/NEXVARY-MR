@@ -58,30 +58,31 @@ ColumnLayout {
         id:categoryGrid
         readonly property int rowCount:Math.max(1,Math.ceil(search.shownCategories.length/columns))
         readonly property real viewportHeight:typeof app.intelligenceViewportHeight==="number"?app.intelligenceViewportHeight:700
-        readonly property int cardHeight:Math.max(50,Math.min(78,Math.floor((viewportHeight-108-(rowCount-1)*4)/rowCount)))
+        readonly property int cardHeight:Math.max(48,Math.min(72,Math.floor((viewportHeight-headerAllowance-(rowCount-1)*3)/rowCount)))
         readonly property int baseColumns:width>=1400?10:width>=900?9:width>=760?8:width>=640?7:width>=520?6:width>=400?4:width>=300?3:2
-        readonly property int fittingRows:Math.max(1,Math.floor((viewportHeight-104)/54))
-        Layout.fillWidth:true;columns:Math.min(Math.max(baseColumns,Math.ceil(search.shownCategories.length/fittingRows)),Math.max(2,Math.floor(width/92)));columnSpacing:4;rowSpacing:4
+        readonly property int headerAllowance:search.connection&&search.connection.totalDueMinorUnits>0?108:80
+        readonly property int fittingRows:Math.max(1,Math.floor((viewportHeight-headerAllowance+3)/51))
+        Layout.fillWidth:true;columns:Math.min(Math.max(baseColumns,Math.ceil(search.shownCategories.length/fittingRows)),Math.max(2,Math.floor(width/92)));columnSpacing:4;rowSpacing:3
         Repeater {
             model:search.shownCategories
             delegate:Button {
                 id:card
                 required property var modelData
                 objectName:"intelligenceCategory-"+modelData.name
-                Layout.fillWidth:true;Layout.preferredWidth:1;Layout.minimumWidth:0;Layout.preferredHeight:categoryGrid.cardHeight;padding:4
+                Layout.fillWidth:true;Layout.preferredWidth:1;Layout.minimumWidth:0;Layout.preferredHeight:categoryGrid.cardHeight;padding:2
                 enabled:!search.connection||!search.connection.busy
                 text:Categories.title(modelData.name,search.app.ar)
                 Accessible.name:text
                 ToolTip.visible:hovered;ToolTip.text:text
                 onClicked:{search.specializedSearch=false;search.clearSelection();search.selectedCard=modelData.name;if(!search.unifiedSearch&&search.connection&&search.connection.connected&&search.connection.categories.some(row=>row.name===modelData.name))search.connection.discoverServices(modelData.name);serviceDialog.open()}
                 background:Rectangle {radius:12;gradient:Gradient {GradientStop {position:0;color:card.hovered?"#103F53":"#102C3B"} GradientStop {position:0.6;color:"#081019"} GradientStop {position:1;color:"#04080D"}} border.color:search.connection&&search.connection.selectedCategory===card.modelData.name?search.app.design.accent:search.app.design.border;border.width:card.activeFocus?2:1}
-                contentItem:RowLayout {
-                    spacing:4
-                    SemanticIcon {name:Categories.icon(card.modelData.name);Layout.preferredWidth:24;Layout.preferredHeight:24}
-                    ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
-                     Label {Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:1;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:categoryGrid.cardHeight<58?12:14;font.bold:true;text:card.text}
-                     Rectangle {objectName:"categoryRetailPrice";Layout.alignment:Qt.AlignHCenter;implicitWidth:66;implicitHeight:17;radius:8;border.color:"#39FF14";color:"#082F23";Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:"#F0FFF4";font.pixelSize:12;font.bold:true}}
+                contentItem:ColumnLayout {
+                    spacing:1
+                    RowLayout {Layout.alignment:Qt.AlignHCenter;spacing:5
+                     SemanticIcon {name:Categories.icon(card.modelData.name);Layout.preferredWidth:18;Layout.preferredHeight:18}
+                     Rectangle {objectName:"categoryRetailPrice";implicitWidth:66;implicitHeight:16;radius:8;border.color:"#39FF14";color:"#082F23";Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:"#F0FFF4";font.pixelSize:12;font.bold:true}}
                     }
+                    Label {Layout.fillWidth:true;Layout.minimumWidth:0;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:1;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:13;font.bold:true;text:card.text}
                 }
             }
         }

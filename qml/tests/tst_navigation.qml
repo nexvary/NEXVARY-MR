@@ -1026,6 +1026,7 @@ TestCase {
   }
  }
  function test_yxaOwnerPresentation(){
+  reviewCapture=true;
   verify(uiEvidence.prepareReviewContext());lampyreConnection.forget();app.setWorkspace(false);
   for(const ar of [true,false])for(const size of [[1366,768],[1920,1080],[2560,1440]]){
    app.ar=ar;app.width=size[0];app.height=size[1];app.navigatePrimary(3);verify(renderedFrame());
@@ -1048,9 +1049,10 @@ TestCase {
   tabs.currentIndex=2;app.ar=true;verify(renderedFrame());
   compare(findChild(app,"companyContactEmail").text,"info@nexvary.com");
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-developer-ar.png"));tabs.currentIndex=0;
-  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;research.selected=researchBridge.catalog.tools[0];verify(renderedFrame());
+  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;verify(renderedFrame());research.selected=research.rows[0];
+  tryVerify(function(){return findChild(app,"researchDetail-title")!==null},5000);verify(renderedFrame());
   compare(findChild(app,"researchRawJson").visible,false);verify(findChild(app,"researchDetail-title").text.length>0);
-  research.selected={};app.ar=true;
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-research-details-ar.png"));research.selected={};app.ar=true;reviewCapture=false;
  }
  function test_yzNativeCardsDispatchAndDisplay(){
   verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
