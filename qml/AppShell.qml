@@ -13,7 +13,7 @@ Item {
   RowLayout {
    Layout.fillWidth:true;Layout.fillHeight:true;Layout.margins:12;spacing:12
    Sidebar {id:sidebar;objectName:"workstationSidebar";app:shell.app;Layout.preferredWidth:collapsed?shell.app.design.collapsedSidebar:shell.app.design.expandedSidebar;Layout.fillHeight:true}
-   DeviceInspector {visible:shell.app.showDevicePanel;app:shell.app;Layout.preferredWidth:208;Layout.fillHeight:true}
+   DeviceInspector {visible:shell.app.showDevicePanel;app:shell.app;Layout.preferredWidth:280;Layout.fillHeight:true}
    ColumnLayout {
     Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;spacing:8
     Item {

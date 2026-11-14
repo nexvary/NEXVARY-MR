@@ -185,6 +185,30 @@ jobs:
             [ordered]@{sourceCommit=$verifiedSource;run=43572240042;job=132378935350;verifiedSteps=$required;unchangedApplicationSources=$true} | ConvertTo-Json -Depth 4 | Set-Content dist/evidence/native-regression-reuse.json
             'MR_INSTALLER_REPAIR_ONLY=true' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
           }
+          # A single QML-only follow-up reuses the proven 0.4.7 backend suite.
+          # Any other parent or native change keeps the full normal gate.
+          $uiBase = '2d53e6300766d88d881370ffa767c7d91e91b54b'
+          if ($parent -eq $uiBase -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
+            $files = @(git diff --name-only $uiBase HEAD)
+            $allowed = @('.github/workflows/cpp-qt.yml','CMakeLists.txt','cpp/src/main.cpp','packaging/NEXVARY-MR.iss','packaging/app.rc','qml/Brand.js','qml/DeviceInspector.qml','qml/TopBar.qml','qml/AppShell.qml','qml/tests/tst_navigation.qml')
+            if ($LASTEXITCODE -ne 0 -or @($files | Where-Object { $_ -notin $allowed }).Count -ne 0) { throw 'UI-only reuse refused: unexpected source changes' }
+            $before = (git show "${uiBase}:cpp/src/main.cpp") -join "`n"
+            $after = (Get-Content cpp/src/main.cpp) -join "`n"
+            if ($before.Replace('0.4.7','0.4.8') -cne $after) { throw 'UI-only reuse refused: native main logic changed' }
+            $before = (git show "${uiBase}:CMakeLists.txt") -join "`n"
+            $after = (Get-Content CMakeLists.txt) -join "`n"
+            $expected = $before.Replace('0.4.7','0.4.8').Replace('COMMAND mr_ui_tests WorkstationNavigation::test_yxaOwnerPresentation','COMMAND mr_ui_tests WorkstationNavigation::test_deviceIdentityCopyAndBrand WorkstationNavigation::test_yxaOwnerPresentation')
+            if ($expected -cne $after) { throw 'UI-only reuse refused: unexpected native build change' }
+            $headers = @{Authorization="Bearer $env:GH_TOKEN";Accept='application/vnd.github+json'}
+            $verified = Invoke-RestMethod -Uri 'https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/132408836819' -Headers $headers
+            if ($verified.head_sha -ne $uiBase -or $verified.conclusion -ne 'success') { throw 'UI-only native evidence mismatch' }
+            foreach ($name in @('Verify MCP transport and Windows credential persistence','Run CTest suite','Verify installer installation and deployed runtime')) {
+              if (@($verified.steps | Where-Object { $_.name -eq $name -and $_.conclusion -eq 'success' }).Count -ne 1) { throw "Prior native gate did not pass: $name" }
+            }
+            New-Item -ItemType Directory -Force dist/evidence | Out-Null
+            [ordered]@{sourceCommit=$uiBase;run=43582109138;job=132408836819;unchangedBackendSources=$true;freshChecks='clipboard, branded header, RTL/LTR viewport/scale, staged and installed runtime'} | ConvertTo-Json | Set-Content dist/evidence/ui-native-regression-reuse.json
+            'MR_UI_REPAIR_ONLY=true' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          }
       - name: Parse Windows deployment scripts before building
         shell: pwsh
         run: |
@@ -255,7 +279,7 @@ jobs:
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
       - name: Verify MCP transport and Windows credential persistence
-        if: env.MR_INSTALLER_REPAIR_ONLY != 'true'
+        if: env.MR_INSTALLER_REPAIR_ONLY != 'true' && env.MR_UI_REPAIR_ONLY != 'true'
         shell: pwsh
         run: |
           cmake --build build --config Release --target mr_lampyre_connection_tests mr_policy_audit_tests --parallel
@@ -266,7 +290,9 @@ jobs:
         id: native_build
         shell: pwsh
         run: |
-          if ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
+          if ($env:MR_UI_REPAIR_ONLY -eq 'true') {
+            cmake --build build --config Release --target nexvary_mr mr_ui_tests mr_evidence_import_worker mr_build_profile_fixture --parallel
+          } elseif ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
             cmake --build build --config Release --target nexvary_mr mr_evidence_import_worker mr_build_profile_fixture --parallel
           } elseif ($env:MR_SKIP_SETUP -eq 'true') {
             # Owner is reviewing QML: build the existing native UI harness only.
@@ -301,6 +327,12 @@ jobs:
         id: tests
         shell: pwsh
         run: |
+          if ($env:MR_UI_REPAIR_ONLY -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_ui_(owner_review_1([.]25|[.]5)?|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml
+            exit $LASTEXITCODE
+          }
           if ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
             ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit qt-results.xml
             exit $LASTEXITCODE

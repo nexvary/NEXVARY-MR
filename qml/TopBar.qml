@@ -9,12 +9,12 @@ Rectangle {
  readonly property string connectionState:!toolBridge.selectedSerial?"none":targetConnections.length!==1?"missing":targetConnections[0].transport==="fastboot"?"fastboot":targetConnections[0].state
  readonly property string connectionTitle:connectionState==="device"?app.trx("ADB مفوض","ADB authorized"):connectionState==="fastboot"?"Fastboot":connectionState==="unauthorized"?app.trx("ADB غير مفوض","ADB unauthorized"):connectionState==="offline"?app.trx("ADB غير متاح","ADB offline"):connectionState==="none"?app.trx("لم يحدد هدف","No target"):app.trx("اتصال غائب أو ملتبس","Missing / ambiguous")
  color:app.design.surface
- implicitHeight:72
+ implicitHeight:96
  RowLayout {
-  anchors.fill:parent;anchors.margins:12;spacing:12
-  Image {objectName:"nexvaryEyeSeal";source:"qrc:/assets/branding/nexvary-eye-seal.png";Layout.preferredWidth:72;Layout.preferredHeight:72;fillMode:Image.PreserveAspectFit;mipmap:true;Accessible.name:bar.app.trx("ختم نيكسفاري — عين الاستخبارات","Nexvary intelligence eye seal")}
+  anchors.fill:parent;anchors.leftMargin:12;anchors.rightMargin:12;anchors.topMargin:8;anchors.bottomMargin:8;spacing:12
+  Image {objectName:"nexvaryEyeSeal";source:"qrc:/assets/branding/nexvary-eye-seal.png";sourceSize:Qt.size(384,384);Layout.minimumWidth:80;Layout.maximumWidth:80;Layout.preferredWidth:80;Layout.minimumHeight:80;Layout.maximumHeight:80;Layout.preferredHeight:80;fillMode:Image.PreserveAspectFit;smooth:true;mipmap:true;Accessible.name:bar.app.trx("ختم نيكسفاري — عين الاستخبارات","Nexvary intelligence eye seal")}
   ColumnLayout {visible:bar.app.width>=1000;spacing:3;Layout.preferredWidth:260
-   Label {text:"NEXVARY MR";font.pixelSize:23;font.bold:true;color:bar.app.design.text}
+   Label {text:"NEXVARY MR";font.pixelSize:25;font.bold:true;color:bar.app.design.text}
    Label {objectName:"brandSubtitle";text:bar.app.trx("منظومة العمليات والاستخبارات","Operations & Intelligence System");font.pixelSize:14;color:bar.app.design.silver;Layout.fillWidth:true;wrapMode:Text.WordWrap}
   }
   Rectangle {Layout.preferredWidth:1;Layout.preferredHeight:30;color:bar.app.design.border}

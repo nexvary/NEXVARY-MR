@@ -14,6 +14,7 @@ TestCase {
   Label {anchors.centerIn:parent;text:"UI REVIEW — SYNTHETIC FIXTURES — NO LIVE SEARCH / NO PAYMENT";color:"white";font.pixelSize:12}
  }
  readonly property var windowUnderTest:app
+ Component {id:clipboardProbeComponent;MR.EntryField {visible:false;width:240;height:44}}
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
@@ -495,6 +496,27 @@ TestCase {
   dialog.close();tryCompare(dialog,"visible",false);input.text=code;mouseClick(lookup);tryCompare(dialog,"opened",true);compare(page.selectedId,id);compare(findChild(app,"deviceCardCode").text,code);compare(findChild(app,"deviceCardPrivacy").checked,false)
   dialog.close();tryCompare(dialog,"visible",false);input.text="INVALID";mouseClick(lookup);verify(findChild(app,"barcodeLookupError").visible);compare(dialog.opened,false);input.clear()
   verify(renderedFrame());mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
+ }
+ function test_deviceIdentityCopyAndBrand(){
+  const sink=createTemporaryObject(clipboardProbeComponent,app.contentItem);verify(sink)
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;app.showDevicePanel=true
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42");toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000)
+  const inspector=findChild(app,"deviceInspector"),serial=findChild(inspector,"selectedDeviceSerial"),model=findChild(inspector,"selectedDeviceModel")
+  tryCompare(serial,"text","SYNTHETIC42");tryCompare(model,"text","Synthetic Phone")
+  verify(serial.readOnly&&serial.selectByMouse);verify(model.readOnly&&model.selectByMouse)
+  for(const ar of [true,false])for(const size of [[1366,768],[1920,1080],[2560,1440]]){
+   app.ar=ar;app.width=size[0];app.height=size[1];verify(renderedFrame())
+   for(const row of [["copyDeviceSerial","SYNTHETIC42"],["copyDeviceModel","Synthetic Phone"]]){
+    const button=findChild(inspector,row[0]);verify(button.enabled);button.clicked();sink.clear();sink.paste();compare(sink.text,row[1])
+    const point=button.mapToItem(inspector,0,0);verify(point.x>=0&&point.x+button.width<=inspector.width)
+   }
+   const seal=findChild(app,"nexvaryEyeSeal");compare(seal.status,Image.Ready);compare(seal.width,80);compare(seal.height,80)
+   verify(seal.source.toString().includes("nexvary-eye-seal.png"));const point=seal.mapToItem(app.contentItem,0,0);verify(point.y>=0&&point.y+seal.height<=app.design.topBarHeight)
+   if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-device-copy-"+(ar?"ar":"en")+".png"))
+  }
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+  compare(model.text,"");verify(!findChild(inspector,"copyDeviceModel").enabled);app.showDevicePanel=false
  }
  function test_deviceBackgroundRefreshIsQuiet(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);toolBridge.selectDevice("SYNTHETIC42");toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000);verify(renderedFrame())
