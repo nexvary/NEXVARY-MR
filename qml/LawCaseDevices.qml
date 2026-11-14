@@ -15,7 +15,7 @@ ScrollView {
     Repeater {model:[{key:"manufacturer",ar:"الشركة",en:"Manufacturer"},{key:"model",ar:"الموديل",en:"Model"},{key:"serial",ar:"الرقم التسلسلي إن عُرف",en:"Serial if known"},{key:"imei",ar:"IMEI — اختياري ومصرح",en:"IMEI — optional, authorized"},{key:"condition",ar:"حالة الجهاز",en:"Device condition"},{key:"powerState",ar:"حالة التشغيل",en:"Power state"},{key:"connectionState",ar:"حالة الاتصال",en:"Connection state"},{key:"lockState",ar:"حالة القفل المرصودة",en:"Observed lock state"},{key:"receivedAtUtc",ar:"وقت الاستلام UTC",en:"Received UTC"},{key:"custodian",ar:"المسؤول عن الجهاز",en:"Device custodian"},{key:"accessories",ar:"الملحقات",en:"Accessories"},{key:"notes",ar:"ملاحظات الفحص",en:"Examination notes"}]
      delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true;spacing:4
       Label {text:page.app.ar?modelData.ar:modelData.en;color:page.app.design.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
-      TextField {objectName:"lawDevice-"+modelData.key;Layout.fillWidth:true;maximumLength:1024;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
+      EntryField {objectName:"lawDevice-"+modelData.key;Layout.fillWidth:true;maximumLength:1024;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
      }
     }
    }

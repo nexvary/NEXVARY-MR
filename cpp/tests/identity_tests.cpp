@@ -11,6 +11,21 @@ class IdentityTests:public QObject {
  const QString password="Synthetic-only password 2026!";
  QVariantMap metadata(){return {{"caseNumber","SYNTHETIC-LOGIN"},{"investigatingAgency","Synthetic lab"},{"investigatorName","Fixture operator"},{"seizedDeviceDescription","Synthetic phone"},{"authorityReference","TEST-ONLY"},{"issuingAuthority","Synthetic authority"},{"scope","Synthetic fixture metadata only"}};}
 private slots:
+ void directWorkNeedsNoApplicationAccount(){
+  QTemporaryDir t;const auto path=t.filePath("users.dat");QString principal;QVariantMap proof;
+  {
+   IdentityService id(path,true,nullptr,1);QVERIFY(id.needsSetup());QVERIFY(id.startDirectWork());
+   QVERIFY(id.directWork());QVERIFY(!id.needsSetup());QVERIFY(id.authenticated());QVERIFY(id.hasPermission("case-create"));
+   QVERIFY(id.hasPermission("osint-investigation"));QVERIFY(id.hasPermission("paid-search"));QVERIFY(!id.hasPermission("user-administration"));
+   principal=id.userId();proof=id.attest("direct-fixture",{{"test",true}});QVERIFY(!proof.isEmpty());
+   QTest::qWait(10);QVERIFY(id.checkSession());QVERIFY(!QFile::exists(path));
+   LawCaseBridge law(t.filePath("cases.db"),nullptr,true,nexvary::law::Role::Investigator,nullptr,&id);
+   QVERIFY(!law.createCase(metadata()).isEmpty());
+  }
+  IdentityService reopened(path,true);QVERIFY(reopened.startDirectWork());QCOMPARE(reopened.userId(),principal);
+  QVERIFY(reopened.verify(proof,"direct-fixture",{{"test",true}}));
+ }
+
  void permissionRestrictionsAndLiveRevocation(){
   QTemporaryDir t;const auto path=t.filePath("users.dat");IdentityService admin(path,true);QVERIFY(admin.bootstrap("admin","Admin",password));QVERIFY(admin.login("admin",password));QVERIFY(!admin.hasPermission("case-create"));QVERIFY(!admin.hasPermission("paid-search"));QVERIFY(admin.hasPermission("user-administration"));QVERIFY(!admin.setPermission(admin.userId(),"user-administration",false));
   const auto uid=admin.createUser("operator","Operator","investigator",password);QVERIFY(!uid.isEmpty());IdentityService user(path,true);QVERIFY(user.login("operator",password));QVERIFY(user.hasPermission("case-create"));QVERIFY(!user.hasPermission("user-administration"));QVERIFY(!user.setPermission(uid,"paid-search",true));

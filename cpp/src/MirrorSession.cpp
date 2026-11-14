@@ -8,6 +8,11 @@
 
 namespace {
 constexpr qsizetype outputLimit=64*1024;
+constexpr qsizetype identityOutputLimit=4096;
+const QStringList &identityFields(){
+ static const QStringList fields{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"};
+ return fields;
+}
 QString executable(const QString &path){
  const QFileInfo file(path);
  if(!file.isAbsolute()||!file.isFile()||!file.isReadable()||path.startsWith("//")||path.startsWith("\\\\"))return {};
@@ -57,7 +62,7 @@ bool MirrorSession::start(const QString &scrcpy,const QString &adb,const QString
  if(!mr::service::screenViewAllowed()||!owner||!component||!ToolBridge::isValidSerial(serial)){
   message("Screen view requires explicit owner authorization and device-component consent.");return false;
  }
- for(const auto &field:{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"})if(identity.value(field).toString().isEmpty()){
+ for(const auto &field:identityFields())if(identity.value(field).toString().isEmpty()){
   message("Read complete manufacturer, model and build fingerprint before screen view.");return false;
  }
  scrcpy_=executable(scrcpy);adb_=executable(adb);
@@ -75,10 +80,18 @@ void MirrorSession::query(const QStringList &arguments,const QString &state){
  if(!active_||check_.state()!=QProcess::NotRunning)return;
  state_=state;checkOutput_.clear();check_.setProgram(state=="version"?scrcpy_:adb_);check_.setArguments(arguments);deadline_.start();emit changed();check_.start();
 }
+void MirrorSession::queryIdentity(bool monitor,int index){
+ identityIndex_=index;
+ // Read only the three reviewed identity values, never the unbounded full
+ // Android property catalogue. Keep the exact serial pinned on every command.
+ query({"-s",serial_,"shell","getprop",identityFields().at(index)},monitor?"monitor-identity":"identity");
+}
 void MirrorSession::collectCheck(){
  const auto bytes=check_.readAllStandardOutput()+check_.readAllStandardError();
  if(!active_||state_=="stopping")return;
- if(bytes.size()>outputLimit-checkOutput_.size()){end("Screen-view check exceeded its output limit.",true);return;}
+ const bool identity=state_=="identity"||state_=="monitor-identity";
+ const auto limit=identity?identityOutputLimit:outputLimit;
+ if(bytes.size()>limit-checkOutput_.size()){end(identity?"Screen-view identity check exceeded its per-property output limit.":"Screen-view check exceeded its output limit.",true);return;}
  checkOutput_+=bytes;
 }
 void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
@@ -97,12 +110,13 @@ void MirrorSession::checkFinished(int code,QProcess::ExitStatus exit){
   int count=0;bool ready=false;
   for(const auto &line:text.split('\n')){const auto fields=line.trimmed().split(QRegularExpression("\\s+"),Qt::SkipEmptyParts);if(fields.size()>=2&&fields[0]==serial_){++count;ready=fields[1]=="device";}}
   if(count!=1||!ready){end("Screen-view target missing, unauthorized or ambiguous; no alternate device selected.",true);return;}
-  query({"-s",serial_,"shell","getprop"},monitor?"monitor-identity":"identity");return;
+  queryIdentity(monitor,0);return;
  }
- const auto properties=ToolBridge::parseDeviceProperties(text);
- for(const auto &field:{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"})if(properties.value(field)!=identity_.value(field)){
+ const auto &field=identityFields().at(identityIndex_);
+ if(text.isEmpty()||text.contains('\n')||text.contains('\r')||text!=identity_.value(field).toString()){
   end("Screen-view device identity/build changed; session stopped.",true);return;
  }
+ if(identityIndex_+1<identityFields().size()){queryIdentity(monitor,identityIndex_+1);return;}
  if(monitor){state_="running";emit changed();return;}
  launchView();
 }

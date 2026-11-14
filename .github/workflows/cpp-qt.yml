@@ -6,11 +6,14 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
-  group: mr-cpp-${{ github.ref }}
+  group: mr-cpp-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
   core:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     strategy:
       matrix:
         os: [windows-2022, ubuntu-latest]
@@ -29,6 +32,8 @@ jobs:
           name: core-test-results-${{ matrix.os }}
           path: build/core-results.xml
   linux-forensic-integration:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     strategy:
       fail-fast: false
       matrix:
@@ -77,18 +82,18 @@ jobs:
           python3 scripts/diagnose_ui_failure.py --build build
           ctest --test-dir build -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
       - name: Measure bounded synthetic case services
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         run: |
           cmake --build build --target mr_case_workload_benchmark --parallel 2
           QT_QPA_PLATFORM=offscreen build/mr_case_workload_benchmark > build/case-workload-benchmark.json
       - name: Instrument parser, identity and signed-update regressions
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         run: |
           cmake -S . -B build-avb-sanitized -G Ninja -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DBUILD_TESTING=ON -DMR_SANITIZERS=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Debug
           cmake --build build-avb-sanitized --target mr_owned_process_tests mr_partition_transaction_tests mr_case_transaction_tests mr_policy_audit_tests mr_offline_tests mr_artifact_tests mr_timeline_tests mr_import_tests mr_tool_tests mr_mirror_tests mr_retention_tests mr_identity_tests mr_law_workspace_tests mr_avb_mutation_tests mr_pcap_mutation_tests mr_exif_mutation_tests mr_update_tests mr_update_journal_tests mr_update_key_tests --parallel 2
           UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-avb-sanitized -R '^mr_(((avb|pcap|exif)_mutation|owned_process|partition_transaction|case_transaction|policy_audit|offline|artifact|timeline|import|tool|mirror|retention|identity|law_workspace|update|update_journal|update_key)_tests|adb_backup_interop)$' --output-on-failure --output-junit avb-sanitizer-results.xml
       - name: Native Qt client through real Gunicorn and verified Caddy TLS
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         run: |
           bash server/tracking-portal/tests/prepare_runtime.sh build/portal-runtime
           build/portal-runtime/venv/bin/python server/tracking-portal/tests/integration.py --caddy build/portal-runtime/caddy --native-tests build/mr_cloud_tests
@@ -117,6 +122,8 @@ jobs:
             build-avb-sanitized/adb-backup-interop-results.json
             build-avb-sanitized/Testing/Temporary/LastTest.log
   tracking-server:
+    # Focused icon/installer release; retain the full matrix on other branches.
+    if: ${{ !(github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -138,15 +145,70 @@ jobs:
             dist/NEXVARY-Portal-SHA256SUMS.txt
           if-no-files-found: error
   qt:
+    # Owner approved the completed Windows-only Setup release.
     strategy:
       fail-fast: false
       matrix:
-        profile: [production, laboratory]
+        profile: ${{ (github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') && fromJSON('["production"]') || fromJSON('["production","laboratory"]') }}
     runs-on: windows-2022
     env:
       QT_QUICK_BACKEND: software
+      MR_UI_ICON_FOCUS: '1'
+      MR_SKIP_SETUP: 'false'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+          ref: ${{ github.head_ref == 'fix/intelligence-p0-completion' && github.event.pull_request.head.sha || github.sha }}
+      - name: Reuse verified native tests for the isolated installer repair
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $verifiedSource = '06828bc686f79ad2dd7967aa17331cee9ef67077'
+          $parent = git rev-parse HEAD^
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot establish installer repair parent' }
+          if ($parent -eq $verifiedSource -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
+            $files = @(git diff --name-only $verifiedSource HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot compare installer repair files' }
+            $allowed = @('.github/workflows/cpp-qt.yml','packaging/NEXVARY-MR.iss','tests/test_institutional_installer.py')
+            if (@($files | Where-Object { $_ -notin $allowed }).Count -ne 0) { throw 'Installer-only reuse refused: application sources changed' }
+            $headers = @{Authorization="Bearer $env:GH_TOKEN";Accept='application/vnd.github+json'}
+            $verified = Invoke-RestMethod -Uri 'https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/132378935350' -Headers $headers
+            if ($verified.head_sha -ne $verifiedSource) { throw 'Native verification source mismatch' }
+            $required = @('Verify MCP transport and Windows credential persistence','Build GUI','Run CTest suite','Verify staged installer runtime in isolated path with spaces')
+            foreach ($name in $required) {
+              if (@($verified.steps | Where-Object { $_.name -eq $name -and $_.conclusion -eq 'success' }).Count -ne 1) { throw "Prior native gate did not pass: $name" }
+            }
+            New-Item -ItemType Directory -Force dist/evidence | Out-Null
+            [ordered]@{sourceCommit=$verifiedSource;run=43572240042;job=132378935350;verifiedSteps=$required;unchangedApplicationSources=$true} | ConvertTo-Json -Depth 4 | Set-Content dist/evidence/native-regression-reuse.json
+            'MR_INSTALLER_REPAIR_ONLY=true' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          }
+          # A single QML-only follow-up reuses the proven 0.4.7 backend suite.
+          # Any other parent or native change keeps the full normal gate.
+          $uiBase = '2d53e6300766d88d881370ffa767c7d91e91b54b'
+          if ($parent -eq '641c15e80c67e28ea4b068fe846ddc01564bc727' -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
+            $files = @(git diff --name-only $uiBase HEAD)
+            $allowed = @('.github/workflows/cpp-qt.yml','CMakeLists.txt','cpp/src/main.cpp','packaging/NEXVARY-MR.iss','packaging/app.rc','qml/Brand.js','qml/DeviceInspector.qml','qml/TopBar.qml','qml/AppShell.qml','qml/tests/tst_navigation.qml','qml/DevicesPage.qml','qml/StatusText.js','packaging/app.ico','assets/branding/nexvary-eye-seal.svg','assets/branding/nexvary-eye-symbol.svg','scripts/render_brand_icon.py','tests/test_icon_assets.py')
+            if ($LASTEXITCODE -ne 0 -or @($files | Where-Object { $_ -notin $allowed }).Count -ne 0) { throw 'UI-only reuse refused: unexpected source changes' }
+            $before = (git show "${uiBase}:cpp/src/main.cpp") -join "`n"
+            $after = (Get-Content cpp/src/main.cpp) -join "`n"
+            if ($before.Replace('0.4.7','0.4.9') -cne $after) { throw 'UI-only reuse refused: native main logic changed' }
+            $before = (git show "${uiBase}:CMakeLists.txt") -join "`n"
+            $after = (Get-Content CMakeLists.txt) -join "`n"
+            $expected = $before.Replace('0.4.7','0.4.9').Replace('assets/branding/nexvary-eye-seal.png packaging/app.ico','assets/branding/nexvary-eye-seal.png assets/branding/nexvary-eye-seal.svg packaging/app.ico').Replace('COMMAND mr_ui_tests WorkstationNavigation::test_yxaOwnerPresentation','COMMAND mr_ui_tests WorkstationNavigation::test_deviceIdentityCopyAndBrand WorkstationNavigation::test_yxaOwnerPresentation')
+            if ($expected -cne $after) { throw 'UI-only reuse refused: unexpected native build change' }
+            $headers = @{Authorization="Bearer $env:GH_TOKEN";Accept='application/vnd.github+json'}
+            $verified = Invoke-RestMethod -Uri 'https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/132408836819' -Headers $headers
+            if ($verified.head_sha -ne $uiBase -or $verified.conclusion -ne 'success') { throw 'UI-only native evidence mismatch' }
+            foreach ($name in @('Verify MCP transport and Windows credential persistence','Run CTest suite','Verify installer installation and deployed runtime')) {
+              if (@($verified.steps | Where-Object { $_.name -eq $name -and $_.conclusion -eq 'success' }).Count -ne 1) { throw "Prior native gate did not pass: $name" }
+            }
+            New-Item -ItemType Directory -Force dist/evidence | Out-Null
+            [ordered]@{sourceCommit=$uiBase;run=43582109138;job=132408836819;unchangedBackendSources=$true;freshChecks='vector seal, size-specific icons, bundled scrcpy consent recovery, clipboard, RTL/LTR viewport/scale, staged and installed runtime'} | ConvertTo-Json | Set-Content dist/evidence/ui-native-regression-reuse.json
+            'MR_UI_REPAIR_ONLY=true' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          }
       - name: Parse Windows deployment scripts before building
         shell: pwsh
         run: |
@@ -168,6 +230,16 @@ jobs:
           version: '6.8.3'
           arch: win64_msvc2022_64
           cache: true
+      - name: Validate QML syntax before compiling native targets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $formatter = Join-Path $env:QT_ROOT_DIR 'bin/qmlformat.exe'
+          if (-not (Test-Path -LiteralPath $formatter)) { throw 'Qt QML syntax validator is missing' }
+          foreach ($source in (Get-ChildItem qml -Filter '*.qml' -File -Recurse)) {
+            & $formatter $source.FullName > $null
+            if ($LASTEXITCODE -ne 0) { throw "QML syntax validation failed: $($source.Name)" }
+          }
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -206,24 +278,37 @@ jobs:
           "QT_QPA_FONTDIR=$fontTarget" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
-      - name: Verify MCP transport before building the complete application
+      - name: Verify MCP transport and Windows credential persistence
+        if: env.MR_INSTALLER_REPAIR_ONLY != 'true' && env.MR_UI_REPAIR_ONLY != 'true'
         shell: pwsh
         run: |
-          cmake --build build --config Release --target mr_lampyre_connection_tests --parallel
+          cmake --build build --config Release --target mr_lampyre_connection_tests mr_policy_audit_tests --parallel
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          ctest --test-dir build -C Release -R '^mr_lampyre_connection_tests$' --output-on-failure
+          ctest --test-dir build -C Release -R '^(mr_lampyre_connection_tests|mr_policy_audit_tests)$' --output-on-failure
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build GUI
         id: native_build
-        run: cmake --build build --config Release --parallel
+        shell: pwsh
+        run: |
+          if ($env:MR_UI_REPAIR_ONLY -eq 'true') {
+            cmake --build build --config Release --target nexvary_mr mr_ui_tests mr_evidence_import_worker mr_build_profile_fixture --parallel
+          } elseif ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
+            cmake --build build --config Release --target nexvary_mr mr_evidence_import_worker mr_build_profile_fixture --parallel
+          } elseif ($env:MR_SKIP_SETUP -eq 'true') {
+            # Owner is reviewing QML: build the existing native UI harness only.
+            cmake --build build --config Release --target mr_ui_tests --parallel
+          } else {
+            cmake --build build --config Release --parallel
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify bounded GUI profile probe and production packaging guard
-        if: ${{ steps.native_build.outcome == 'success' }}
+        if: ${{ env.MR_SKIP_SETUP != 'true' && steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: |
           $binaryName = if ('${{ matrix.profile }}' -eq 'laboratory') { 'nexvary_mr_lab.exe' } else { 'nexvary_mr.exe' }
           ./packaging/test-build-profile.ps1 -FixturePath build/Release/mr_build_profile_fixture.exe -ApplicationPath (Join-Path 'build/Release' $binaryName) -ExpectedProfile '${{ matrix.profile }}'
       - name: Prepare verified standalone ClamAV for synthetic Windows integration
-        if: ${{ steps.native_build.outcome == 'success' }}
+        if: ${{ env.MR_SKIP_SETUP != 'true' && steps.native_build.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -242,14 +327,31 @@ jobs:
         id: tests
         shell: pwsh
         run: |
-          ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          if ($env:MR_UI_REPAIR_ONLY -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_ui_(owner_review_1([.]25|[.]5)?|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml
+            exit $LASTEXITCODE
+          }
+          if ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit qt-results.xml
+            exit $LASTEXITCODE
+          }
+          if ($env:MR_SKIP_SETUP -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_ui_(owner_review_1([.]25|[.]5)?|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
+          } else {
+            ctest --test-dir build -C Release --output-on-failure --output-junit qt-results.xml
+          }
           $testResult = $LASTEXITCODE
           Get-ChildItem build/*-results.txt | ForEach-Object { Get-Content $_.FullName }
           if ($testResult -ne 0) { exit $testResult }
           Copy-Item build/Testing/Temporary/LastTest.log build/full-suite-last-test.log
-          ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($env:MR_SKIP_SETUP -ne 'true') {
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit gui-repeat-results.xml --output-log build/gui-repeat-console.txt
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
       - name: Verify read-only Windows USB inventory
+        if: env.MR_SKIP_SETUP != 'true'
         id: usb_inventory
         shell: pwsh
         run: |
@@ -259,7 +361,7 @@ jobs:
           if ($inventory.schemaVersion -ne 1 -or $null -eq $inventory.devices) { throw 'Invalid USB inventory schema' }
           "USB inventory schema validated; device count: $($inventory.devices.Count). No phone binding asserted."
       - name: Measure bounded synthetic case services
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         shell: pwsh
         run: |
           cmake --build build --config Release --target mr_case_workload_benchmark --parallel 2
@@ -267,9 +369,9 @@ jobs:
           $env:QT_QPA_PLATFORM = 'offscreen'
           & build/Release/mr_case_workload_benchmark.exe > build/case-workload-benchmark.json
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Assemble portable Qt runtime
-        id: portable
-        if: ${{ !cancelled() && matrix.profile == 'production' && steps.native_build.outcome == 'success' && steps.tests.outcome == 'success' && steps.usb_inventory.outcome == 'success' }}
+      - name: Stage Qt runtime for installer
+        id: staged_runtime
+        if: ${{ env.MR_SKIP_SETUP != 'true' && !cancelled() && matrix.profile == 'production' && steps.native_build.outcome == 'success' && steps.tests.outcome == 'success' && steps.usb_inventory.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -278,14 +380,14 @@ jobs:
           try { ./packaging/package-windows.ps1 }
           catch { $_ | Format-List * -Force | Out-String | Set-Content dist/evidence/package-error.txt; throw }
           finally { Stop-Transcript }
-      - name: Verify portable in isolated path with spaces
-        id: portable_smoke
-        if: ${{ !cancelled() && matrix.profile == 'production' && steps.portable.outcome == 'success' }}
+      - name: Verify staged installer runtime in isolated path with spaces
+        id: staged_smoke
+        if: ${{ !cancelled() && matrix.profile == 'production' && steps.staged_runtime.outcome == 'success' }}
         shell: pwsh
-        run: ./packaging/smoke-windows.ps1
+        run: ./packaging/smoke-windows.ps1 -Label staging
       - name: Build per-user Windows installer
         id: installer
-        if: ${{ !cancelled() && matrix.profile == 'production' && steps.portable_smoke.outcome == 'success' }}
+        if: ${{ !cancelled() && matrix.profile == 'production' && steps.staged_smoke.outcome == 'success' }}
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -300,16 +402,73 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          function Invoke-InstallerProcess([string]$FilePath, [string]$Arguments) {
+            $owned = Start-Process -FilePath $FilePath -ArgumentList $Arguments -PassThru
+            $null = $owned.Handle
+            if (-not $owned.WaitForExit(120000)) {
+              & taskkill.exe /PID $owned.Id /T /F | Out-Null
+              throw 'Installer process exceeded its two-minute deadline'
+            }
+            $owned.WaitForExit()
+            return $owned
+          }
           $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
-          $setup = (Resolve-Path 'dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe').Path
-          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=`"$destination`"" -Wait -PassThru
+          $setup = (Resolve-Path 'dist/NEXVARY-MR-Government-Setup.exe').Path
+          # Managed installs must explicitly accept every declaration.
+          $acceptanceFlags = @('NEXVARY_ACCEPT_LICENSE','NEXVARY_AUTHORIZED_ORG','NEXVARY_LAWFUL_USE')
+          $rejected = @()
+          foreach ($missing in @('all') + $acceptanceFlags) {
+            $deniedDestination = Join-Path $env:RUNNER_TEMP "NEXVARY denied $missing"
+            $deniedLog = Join-Path $env:RUNNER_TEMP "NEXVARY denied $missing.log"
+            $accepted = if ($missing -eq 'all') { @() } else { @($acceptanceFlags | Where-Object { $_ -ne $missing } | ForEach-Object { "/$_=1" }) }
+            $arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=en /LOG=`"$deniedLog`" /DIR=`"$deniedDestination`" " + ($accepted -join ' ')
+            $denied = Invoke-InstallerProcess -FilePath $setup -Arguments $arguments
+            if ($denied.ExitCode -eq 0 -or (Test-Path (Join-Path $deniedDestination 'NEXVARY-MR.exe'))) { throw "Missing $missing declaration did not block installation" }
+            if (-not ((Get-Content -LiteralPath $deniedLog -Raw) -match 'Managed installation requires explicit license and authority acceptance')) { throw "Unexpected rejection cause for $missing" }
+            $rejected += [ordered]@{missing=$missing;exitCode=$denied.ExitCode;blocked=$true}
+          }
+          $rejected | ConvertTo-Json | Set-Content dist/evidence/installer-declaration-rejections.json
+          $result = Invoke-InstallerProcess -FilePath $setup -Arguments "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=en /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /TASKS=desktopicon /DIR=`"$destination`""
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
           $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
           if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Per-user uninstall registration was not created' }
           # Execute the installed binary itself; keep only synthetic data outside
           # its installation directory and exclude developer/Qt SDK paths.
           ./packaging/smoke-windows.ps1 -BundleDirectory $destination -Label installed -RunInPlace
-          $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          # Compare shell-extracted icons against the reviewed 32px ICO frame.
+          Add-Type -AssemblyName System.Drawing
+          $reference = [System.Drawing.Icon]::new((Resolve-Path 'packaging/app.ico').Path, [System.Drawing.Size]::new(32,32))
+          $expectedIcon = $reference.ToBitmap()
+          $iconChecks = @()
+          foreach ($binary in @($setup,(Join-Path $destination 'NEXVARY-MR.exe'))) {
+            $actualIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($binary)
+            if (-not $actualIcon) { throw 'Missing shell executable icon' }
+            $actualPixels = $actualIcon.ToBitmap()
+            if ($actualPixels.Width -ne 32 -or $actualPixels.Height -ne 32) { throw 'Unexpected shell icon size' }
+            for ($y=0; $y -lt 32; $y++) {
+              for ($x=0; $x -lt 32; $x++) {
+                if ($actualPixels.GetPixel($x,$y).ToArgb() -ne $expectedIcon.GetPixel($x,$y).ToArgb()) { throw 'Executable shell icon differs from master ICO' }
+              }
+            }
+            $iconChecks += [ordered]@{file=[IO.Path]::GetFileName($binary);matchesMaster=$true}
+            $actualPixels.Dispose(); $actualIcon.Dispose()
+          }
+          $expectedIcon.Dispose(); $reference.Dispose()
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcuts = @(
+            (Join-Path ([Environment]::GetFolderPath('Programs')) 'NEXVARY MR/NEXVARY MR.lnk'),
+            (Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) 'NEXVARY MR.lnk')
+          )
+          foreach ($linkPath in $shortcuts) {
+            if (-not (Test-Path -LiteralPath $linkPath)) { throw 'Installer shortcut missing' }
+            $link = $shell.CreateShortcut($linkPath)
+            if ($link.TargetPath -ine (Join-Path $destination 'NEXVARY-MR.exe')) { throw 'Shortcut target mismatch' }
+            if ($link.IconLocation -ine ((Join-Path $destination 'NEXVARY-MR.exe')+',0')) { throw 'Shortcut icon mismatch' }
+          }
+          $displayIcon = (Get-ItemProperty -LiteralPath $uninstallKey).DisplayIcon
+          if ($displayIcon.Replace('"','').Split(',')[0] -ine (Join-Path $destination 'NEXVARY-MR.exe')) { throw 'Uninstall display icon mismatch' }
+          [ordered]@{schemaVersion=1;icons=$iconChecks;startMenuShortcut=$true;desktopShortcut=$true;uninstallIcon=$true} | ConvertTo-Json -Depth 5 | Set-Content dist/evidence/application-icon-acceptance.json
+          $uninstall = Invoke-InstallerProcess -FilePath (Join-Path $destination 'unins000.exe') -Arguments '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
           if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
           $installedExe = Join-Path $destination 'NEXVARY-MR.exe'
           for ($attempt=0; $attempt -lt 25 -and (Test-Path -LiteralPath $installedExe); $attempt++) { Start-Sleep -Milliseconds 200 }
@@ -320,23 +479,36 @@ jobs:
             launchMode='installed-in-place'; uninstallExit=$uninstall.ExitCode
             installedExecutableRemoved=$true; perUserUninstallRegistrationRemoved=$true
           } | ConvertTo-Json | Set-Content dist/evidence/installer-lifecycle.json
+          # Repeat installation, deployed launch and removal in Arabic.
+          $arabicDestination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR Arabic install test'
+          $arabic = Invoke-InstallerProcess -FilePath $setup -Arguments "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=ar /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /DIR=`"$arabicDestination`""
+          if ($arabic.ExitCode -ne 0) { throw "Arabic installation failed: $($arabic.ExitCode)" }
+          if ((Get-ItemProperty -LiteralPath $uninstallKey).'Inno Setup: Language' -ne 'ar') { throw 'Arabic installer language was not selected' }
+          foreach ($language in @('ar','en')) {
+            foreach ($document in @("institutional-license-$language.txt","program-description-$language.txt")) {
+              $installedDocument = Join-Path $arabicDestination "legal/$document"
+              if (-not (Test-Path -LiteralPath $installedDocument)) { throw "Missing installed legal document: $document" }
+              if ((Get-FileHash $installedDocument).Hash -ne (Get-FileHash (Join-Path packaging $document)).Hash) { throw "Installed legal document changed: $document" }
+            }
+          }
+          ./packaging/smoke-windows.ps1 -BundleDirectory $arabicDestination -Label installed-ar -RunInPlace
+          $arabicUninstall = Invoke-InstallerProcess -FilePath (Join-Path $arabicDestination 'unins000.exe') -Arguments '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
+          if ($arabicUninstall.ExitCode -ne 0) { throw 'Arabic uninstallation failed' }
+          for ($attempt=0; $attempt -lt 25 -and (Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')); $attempt++) { Start-Sleep -Milliseconds 200 }
+          if ((Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')) -or (Test-Path -LiteralPath $uninstallKey)) { throw 'Arabic uninstall left executable or registration' }
+          [ordered]@{language='ar';installExit=$arabic.ExitCode;launchMode='installed-in-place';uninstallExit=$arabicUninstall.ExitCode;legalDocumentsVerified=$true} | ConvertTo-Json | Set-Content dist/evidence/installer-ar-lifecycle.json
       - name: Record artifact checksums
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         shell: pwsh
         run: |
-          Get-ChildItem dist -File | ForEach-Object { "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $($_.Name)" } | Set-Content dist/SHA256SUMS.txt
+          $setup = Get-Item -LiteralPath 'dist/NEXVARY-MR-Government-Setup.exe'
+          "$( (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLower() )  $($setup.Name)" | Set-Content dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
-        if: matrix.profile == 'production'
-        with:
-          name: NEXVARY-MR-Windows-x64-portable-unsigned
-          path: dist/NEXVARY-MR-Windows-x64-portable-unsigned.zip
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: matrix.profile == 'production'
+        if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         with:
           name: NEXVARY-MR-Windows-x64-installer-unsigned
           path: |
-            dist/NEXVARY-MR-Windows-x64-setup-unsigned.exe
+            dist/NEXVARY-MR-Government-Setup.exe
             dist/SHA256SUMS.txt
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
@@ -351,9 +523,18 @@ jobs:
             build/*-results.txt
             build/policy-audit-interop-results.json
             build/adb-backup-interop-results.json
-            build/**/smoke*.png
+            build/**/smoke-professional-ui-icon-acceptance-*.png
             build/Testing/Temporary/LastTest.log
             dist/evidence/
             build/case-workload-benchmark.json
           if-no-files-found: warn
 
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEXVARY-MR-UI-Review
+          path: |
+            build/**/smoke-professional-ui-review-*.png
+            build/**/ui-review-manifest.json
+          if-no-files-found: warn

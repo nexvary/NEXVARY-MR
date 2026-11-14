@@ -26,9 +26,9 @@ Panel {
     required property var modelData
     Layout.fillWidth:true;implicitHeight:sourceColumn.implicitHeight+20;radius:8;color:doctor.app.design.raised;border.color:doctor.app.design.border
     ColumnLayout {id:sourceColumn;anchors.fill:parent;anchors.margins:10;spacing:4
-     Label {text:modelData.source.toUpperCase()+" · "+doctor.readingState(modelData.state);Layout.fillWidth:true;wrapMode:Text.WordWrap;color:doctor.app.design.text;font.bold:true;font.pixelSize:12}
-     Label {text:doctor.ageState(modelData.freshness);Layout.fillWidth:true;color:modelData.freshness==="stale"?doctor.app.design.danger:doctor.app.design.muted;font.pixelSize:11}
-     Label {text:modelData.observedAtUtc||"—";Layout.fillWidth:true;elide:Text.ElideMiddle;color:doctor.app.design.muted;font.pixelSize:11;textFormat:Text.PlainText}
+     Label {text:modelData.source.toUpperCase()+" · "+doctor.readingState(modelData.state);Layout.fillWidth:true;wrapMode:Text.WordWrap;color:doctor.app.design.text;font.bold:true;font.pixelSize:14}
+     Label {text:doctor.ageState(modelData.freshness);Layout.fillWidth:true;color:modelData.freshness==="stale"?doctor.app.design.danger:doctor.app.design.muted;font.pixelSize:14}
+     Label {text:modelData.observedAtUtc||"—";Layout.fillWidth:true;elide:Text.ElideMiddle;color:doctor.app.design.muted;font.pixelSize:14;textFormat:Text.PlainText}
     }
    }
   }
@@ -44,14 +44,14 @@ Panel {
     stateText:modelData.confidence==="reported"?doctor.app.trx("تصريح مرصود","REPORTED"):doctor.app.trx("غير محسوم","UNRESOLVED")
     Label {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:doctor.app.design.muted;text:doctor.app.ar?modelData.detailAr:modelData.detailEn}
     Label {Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:doctor.app.design.text;text:doctor.app.trx("الخطوة التالية: ","Next check: ")+(doctor.app.ar?modelData.nextAr:modelData.nextEn)}
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:11;color:doctor.app.design.muted;text:doctor.app.trx("المصدر: ","Source: ")+modelData.source}
+    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:14;color:doctor.app.design.muted;text:doctor.app.trx("المصدر: ","Source: ")+modelData.source}
    }
   }
  }
  Label {objectName:"doctorScope";Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("نطاق USB: ","USB scope: ")+(doctor.report.usbScope||"not-correlated")+app.trx(". أرقام VID/PID/MI مستخرجة من هوية Windows، وليست قراءة واصفات USB. السبب المادي واعتماد الواجهة غير مثبتين.",". VID/PID/MI come from Windows instance IDs, not USB descriptor reads. Physical cause and interface certification remain unverified.")}
- CheckBox {id:showNodes;objectName:"doctorShowNodes";text:app.trx("إظهار عقد USB المقروءة — قد تحتوي معرّفات خاصة","Show observed USB nodes — may contain private identifiers");enabled:(doctor.report.nodes||[]).length>0}
+ NeonCheckBox {id:showNodes;objectName:"doctorShowNodes";text:app.trx("إظهار عقد USB المقروءة — قد تحتوي معرّفات خاصة","Show observed USB nodes — may contain private identifiers");enabled:(doctor.report.nodes||[]).length>0}
  Repeater {
   model:showNodes.checked?doctor.report.nodes||[]:[]
-  delegate:Label {required property var modelData;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:doctor.app.design.muted;font.pixelSize:12;text:(modelData.name||"?")+"\n"+modelData.instanceId+"\nVID "+(modelData.vid||"?")+" · PID "+(modelData.pid||"?")+" · MI "+(modelData.interfaceNumber||"?")+" · "+(modelData.service||"?")+" · "+(modelData.infName||"?")}
+  delegate:Label {required property var modelData;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:doctor.app.design.muted;font.pixelSize:14;text:(modelData.name||"?")+"\n"+modelData.instanceId+"\nVID "+(modelData.vid||"?")+" · PID "+(modelData.pid||"?")+" · MI "+(modelData.interfaceNumber||"?")+" · "+(modelData.service||"?")+" · "+(modelData.infName||"?")}
  }
 }

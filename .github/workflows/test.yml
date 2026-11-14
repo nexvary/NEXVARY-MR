@@ -8,6 +8,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install independent audit verifier dependency
+        run: python -m pip install cryptography==50.0.2
       - name: Legacy Python regression
         run: python -m unittest discover -s tests -v
       - name: Research source and evidence classification gates

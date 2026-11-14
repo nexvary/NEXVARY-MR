@@ -30,6 +30,7 @@ signals:
 private:
  GovernmentOperationPolicy *policy_=nullptr;
  void query(const QStringList &arguments,const QString &state);
+ void queryIdentity(bool monitor,int index);
  void collectCheck();
  void checkFinished(int code,QProcess::ExitStatus exit);
  void collectView();
@@ -42,5 +43,6 @@ private:
  QByteArray checkOutput_,viewOutput_;
  QString scrcpy_,adb_,serial_,state_=QStringLiteral("idle"),status_,version_;
  QVariantMap identity_;
+ int identityIndex_=0;
  bool active_=false,failed_=false;
 };

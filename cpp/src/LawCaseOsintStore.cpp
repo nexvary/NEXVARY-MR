@@ -13,7 +13,7 @@ QString LawCaseStore::registerOsint(const QString &id,qint64 revision,const QStr
  const auto evidence=QUuid::createUuid().toString(QUuid::WithoutBraces);
  const auto now=QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
  const bool ok=mutate(id,revision,"phone-osint-report-retained",actor,[&](QVariantMap &record){
-  bool found=false;for(const auto &d:record.value("devices").toList())if(d.toMap().value("id")==device)found=true;
+  bool found=device.isEmpty();for(const auto &d:record.value("devices").toList())if(d.toMap().value("id")==device)found=true;
   auto rows=record.value("evidence").toList();if(!found||rows.size()>=100)return fail("Select an existing case device within the evidence limit.");
   QSqlQuery q(db_);q.prepare("INSERT INTO law_evidence(id,case_id,payload) VALUES(?,?,?)");q.addBindValue(evidence);q.addBindValue(id);q.addBindValue(sealed);if(!q.exec())return fail("OSINT report persistence failed.");
   rows.append(QVariantMap{{"id",evidence},{"deviceId",device},{"name","phone-osint-"+evidence+".json"},{"description","Unverified phone-number OSINT; operation "+report.value("operationId").toString()},{"custodian",actor},{"size",bytes.size()},{"sha256",QString::fromLatin1(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex())},{"registeredAtUtc",now}});

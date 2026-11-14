@@ -1,11 +1,15 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "Brand.js" as Brand
+import "StatusText.js" as StatusText
 ApplicationWindow {
  id:window
  objectName:"mainWindow"
  width:1536;height:980;minimumWidth:840;minimumHeight:480;visible:true
- title:(operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
+ title:(identityBridge.directWork?"":operationPolicy.offline?"[DEFAULT DENY] ":"[PERMISSION EXCEPTION] ")+(toolBridge.laboratoryBuild?"NEXVARY MR — LABORATORY / EXPERIMENTAL":"NEXVARY MR — Government Edition")
+ readonly property string productVersion:Brand.version
+ readonly property real intelligenceViewportHeight:intelligenceView.availableHeight
  property bool ar:true
  property bool darkTheme:true
  readonly property QtObject design:tokens
@@ -30,7 +34,7 @@ ApplicationWindow {
  property var states:["Received","Diagnosing","Awaiting parts","Repairing","Ready","Delivered","Cancelled"]
  property var statesAr:["تم الاستلام","التشخيص","انتظار القطع","قيد الإصلاح","جاهز","تم التسليم","ملغي"]
  // Legacy page numbers stay stable for native smoke consumers and page APIs.
- property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة الورشة","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Workshop CRM","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
+ property var titles:ar?["لوحة المتابعة","مدير الأجهزة","استوديو الصيانة","مخططات اللوحات","ذكاء ملفات النظام","إدارة المركز","قطع الغيار","الإعدادات","الاستعادة والنسخ الاحتياطي","مختبر الأدلة الرقمية","التقارير","المساعدة وعن البرنامج","إنفاذ القانون","مركز الأبحاث"]:["Dashboard","Device Manager","Repair Studio","Board workspace","Firmware Intelligence","Center Management","Parts inventory","Settings","Recovery & Backup","Forensic Lab","Reports","Help & About","Law Enforcement","Research Center"]
  readonly property int intelligencePage:15
  readonly property var intelligenceSection:({ar:"الاستخبارات",en:"Intelligence",icon:"search_visual",page:intelligencePage})
  readonly property var professionalSections:[
@@ -41,7 +45,7 @@ ApplicationWindow {
   {ar:"تشخيص USB",en:"USB Diagnostics",icon:"phone_laptop",page:2,tab:3},
   {ar:"المختبر الجنائي",en:"Forensic Laboratory",icon:"document_lock",page:9},
   {ar:"الاستعادة والنسخ",en:"Recovery & Backup",icon:"history",page:8},
-  {ar:"إدارة الورشة",en:"Workshop CRM",icon:"clipboard_task",page:5},
+  {ar:"إدارة المركز",en:"Center Management",icon:"clipboard_task",page:5},
   {ar:"التقارير",en:"Reports",icon:"document_text",page:10},
   {ar:"مركز الأبحاث",en:"Research Center",icon:"book_open_lightbulb",page:13},
   {ar:"الإعدادات",en:"Settings",icon:"settings",page:7},
@@ -84,11 +88,11 @@ ApplicationWindow {
  function trx(a,e){return ar?a:e}
  function orderStatus(s){let i=states.indexOf(s);return ar&&i>=0?statesAr[i]:s}
  function humanError(value){
-  const text=String(value||"");if(!ar)return text;
+  const text=StatusText.translate(value,ar);if(!ar)return text;
   if(text.indexOf("Government offline policy blocked")>=0)return "الاتصال الخارجي لهذه العملية غير مفعّل. افتح الإدارة ← صلاحيات الاتصال لطلب التفعيل.";
   if(text.indexOf("Check required case/authority fields")>=0)return "راجع الحقول المطلوبة وصيغة التواريخ وترتيب بداية السريان ونهايته.";
   if(text.indexOf("Seizure time must")>=0)return "أدخل وقت الضبط بصيغة UTC مثل 2026-11-11T10:00:00Z أو اتركه فارغًا.";
-  if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات Lampyre المحفوظة تبقى محمية.";
+  if(text.indexOf("Session expired")>=0)return "انتهت جلسة التطبيق بعد 15 دقيقة. سجّل الدخول مجددًا؛ بيانات استخبارات نيكسفاري المحفوظة تبقى محمية.";
   const denied=/^Account permission denied: ([a-z-]+)\./.exec(text);
   if(denied){
    const labels={"case-create":"إنشاء القضايا","case-edit":"تعديل القضايا","evidence-access":"قراءة الأدلة","osint-investigation":"تحقيق OSINT","evidence-export":"تصدير الأدلة"};
@@ -102,7 +106,7 @@ ApplicationWindow {
   return text;
  }
  function roleLabel(role){const labels={"administrator":"مدير الحسابات","investigator":"محقق","reviewer":"مراجع","auditor":"مدقق","trainer":"مدرب","repair-technician":"فني صيانة","unknown":"لم يسجل الدخول"};return ar?(labels[role]||"لم يسجل الدخول"):role||"Signed out"}
- function notice(ok,message,errorMessage){toastOk=ok;toastText=ok?message:humanError(errorMessage===undefined?workshopBridge.error:errorMessage);toastTimer.restart()}
+ function notice(ok,message,errorMessage){toastOk=ok;toastText=humanError(ok?message:(errorMessage===undefined?workshopBridge.error:errorMessage));toastTimer.restart()}
  function sectionForPage(page){if(page===intelligencePage)return intelligenceSectionIndex;if(!governmentMode)return [0,1,2,2,3,7,7,10,6,5,8,11,12,9][page]||0;for(let i=0;i<sections.length;i++)if(sections[i].page===page)return i;return 11}
  function snapshot(page){return {page:page,section:activeSection,deviceTab:deviceHub.currentTab,diagnosticTab:diagnosticHub.currentTab,forensicTab:forensicHub.currentTab,workshopTab:workshopHub.currentTab,lawSection:lawWorkspace.section,evidenceView:lawWorkspace.evidenceView}}
  onCurrentPageChanged:{
@@ -140,7 +144,8 @@ ApplicationWindow {
  function sectionButton(index){return shell.sectionButton(index)}
  function navigationButton(legacyIndex){return sectionButton([0,1,2,2,3,7,7,10,6,5][legacyIndex]||0)}
  palette.window:design.background;palette.windowText:design.text;palette.base:design.surface;palette.alternateBase:design.raised;palette.text:design.text;palette.button:design.raised;palette.buttonText:design.text;palette.highlight:design.accent;palette.highlightedText:"white";palette.mid:design.border;palette.dark:design.background;palette.light:design.border;palette.placeholderText:design.muted
- font.family:"Segoe UI";font.pixelSize:14
+ FontLoader {id:kufiFont;source:"qrc:/assets/fonts/NotoKufiArabic.ttf"}
+ font.family:ar&&kufiFont.status===FontLoader.Ready?kufiFont.name:"Segoe UI";font.pixelSize:ar?17:16
  LayoutMirroring.enabled:ar
  LayoutMirroring.childrenInherit:true
  Shortcut {sequence:"Ctrl+1";onActivated:window.navigateSection(0)}
@@ -165,8 +170,8 @@ ApplicationWindow {
   ColumnLayout {
    anchors.fill:parent;spacing:8
    RowLayout {Layout.fillWidth:true
-    Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
-    ActionButton {text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
+    Label {objectName:"currentAuthenticatedAccount";Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText;color:window.design.text;text:identityBridge.directWork?window.trx("عمل مباشر · حماية مستخدم Windows","Direct work · Windows user protection"):identityBridge.authenticated?(identityBridge.session.username+" · "+window.roleLabel(identityBridge.session.role)):window.trx("لم يسجل الدخول","Signed out")}
+    ActionButton {visible:!identityBridge.directWork;text:window.trx("الحساب والصلاحيات","Account and permissions");implicitHeight:32;onClicked:window.openAccountPermissions()}
    }
    RowLayout {
     visible:window.activeSection===2||window.activeSection===7;Layout.fillWidth:true

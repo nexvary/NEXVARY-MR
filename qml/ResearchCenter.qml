@@ -16,14 +16,31 @@ Item {
  readonly property var resultFields:[{key:"experimentId",label:"Experiment ID"},{key:"question",label:"Research question"},{key:"hypothesis",label:"Hypothesis"},{key:"model",label:"Device / synthetic model"},{key:"osBuild",label:"OS build"},{key:"firmware",label:"Firmware version"},{key:"environment",label:"Lab environment"},{key:"equipment",label:"Required equipment"},{key:"scope",label:"Authorized scope"},{key:"methodology",label:"Methodology"},{key:"expected",label:"Expected observations"},{key:"actual",label:"Actual observations"},{key:"researcher",label:"Researcher"}]
  readonly property var matrixFields:[{key:"manufacturer",label:"Manufacturer"},{key:"model",label:"Model"},{key:"chipset",label:"Chipset"},{key:"osBuild",label:"OS build"},{key:"firmware",label:"Firmware"},{key:"securityPatch",label:"Security patch"},{key:"connectionMode",label:"Connection mode"},{key:"capability",label:"Documented capability"},{key:"unsupported",label:"Unsupported operations"},{key:"sourceId",label:"Source ID"},{key:"lastTestUtc",label:"Last test UTC / not tested"},{key:"result",label:"Test outcome / not tested"},{key:"confidence",label:"Evidence confidence"}]
  function fieldTitle(key,fallback){const ar={experimentId:"معرّف التجربة",question:"السؤال البحثي",hypothesis:"الفرضية",model:"الموديل أو النموذج الاصطناعي",osBuild:"إصدار نظام التشغيل",firmware:"إصدار Firmware",environment:"بيئة المختبر",equipment:"المعدات المطلوبة",scope:"نطاق التفويض",methodology:"منهجية التجربة",expected:"الملاحظات المتوقعة",actual:"النتيجة الفعلية",researcher:"الباحث",manufacturer:"الشركة المصنعة",chipset:"المعالج",securityPatch:"التصحيح الأمني",connectionMode:"وضع الاتصال",capability:"الوظيفة الموثقة",unsupported:"الوظائف غير المدعومة",sourceId:"معرّف المصدر",lastTestUtc:"آخر اختبار UTC أو لم يُختبر",result:"نتيجة الاختبار أو لم يُختبر",confidence:"درجة الثقة"};return app.ar?(ar[key]||fallback):fallback}
- function refresh(){rows=researchBridge.search(categories[section],query.text);selected={}}
+ function detailTitle(key){
+  const titles={id:["المعرّف","Identifier"],title:["الاسم","Name"],company:["الشركة","Company"],status:["حالة التحقق","Verification status"],advertised:["الوظائف المعلنة","Advertised functions"],claim:["ادعاء المصدر","Source claim"],independentEvidence:["الإثبات المستقل","Independent evidence"],architecture:["البنية الموثقة","Documented architecture"],interfaces:["الواجهات والتوافق","Interfaces & compatibility"],processing:["المعالجة","Processing"],reporting:["التقارير","Reporting"],strengths:["نقاط القوة الموثقة","Documented strengths"],limitations:["القيود","Limitations"],originalDevelopment:["التطوير المحلي","Native development"],requiredExperiment:["الاختبار المطلوب","Required experiment"],reviewStatus:["حالة المراجعة","Review status"],sourceIds:["المصادر","Sources"]};
+  return titles[key]?app.trx(titles[key][0],titles[key][1]):fieldTitle(key,key.replace(/([a-z])([A-Z])/g,"$1 $2"));
+ }
+ function detailValue(key){
+  const value=page.selected[key+"Ar"]&&app.ar?page.selected[key+"Ar"]:page.selected[key];
+  if(value===undefined||value===null)return app.trx("غير متاح","Unavailable");
+  const text=Array.isArray(value)?value.join(" · "):typeof value==="object"?Object.keys(value).map(function(k){return k+": "+String(value[k])}).join("\n"):String(value);
+  const ar={"Vendor Claimed":"ادعاء المزوّد — غير متحقق مستقلًا","Not Tested":"لم يُختبر","Pending":"بانتظار المراجعة","Acquisition workflows":"مسارات جمع البيانات","Amnesty documents specific 2024 cases; no general present-day device support follows.":"توثّق منظمة العفو الدولية حالات محددة من 2024؛ لا يثبت ذلك دعم الأجهزة الحالية عمومًا.","Not established in this catalog; vendor descriptions remain vendor claims.":"لم يثبت ضمن هذا الفهرس؛ أوصاف المزوّد تظل ادعاءات من المزوّد.","Published workflow: Acquisition workflows. Internal proprietary implementation is unknown.":"المسار المنشور: جمع البيانات. تفاصيل التنفيذ الداخلي المملوك للمزوّد غير معروفة.","Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.":"تحديد واجهات الأجهزة والبروتوكولات والإصدارات المدعومة يتطلب نسخة مرخّصة محددة؛ لا يُفترض وجود بروتوكول غير موثق.","Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.":"راجع توثيق المزوّد لتحديد المخرجات والإصدار؛ توافق محلّل Nexvary معها لم يُختبر.","Documented workflow provides a comparison target; performance superiority is not independently established.":"يتيح المسار الموثق هدفًا للمقارنة؛ تفوق الأداء غير مثبت بصورة مستقلة.","No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.":"لا يُستنتج تحقق مختبري من Nexvary أو اعتماد جهاز محدد أو ترخيص أو وصول أمني من هذا السجل.","Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.":"توثيق محلي للمصدر، وتحليل بحدود مضبوطة، والتحقق من السلامة، ومراجعة القضايا بحسب الصلاحيات، وتقارير دون اتصال.","Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions.":"قارن بيانات اختبار اصطناعية وبصمات التقارير مع إصدار مرخّص قانونًا؛ اعزل المدخلات ووثّق الإصدارات."};
+  return app.ar?(ar[text]||text):text;
+ }
+ function refresh(){const id=selected.id;rows=researchBridge.search(categories[section],query.text);selected=id?JSON.parse(JSON.stringify(rows.find(function(row){return row.id===id})||{})):{}}
+ function openDetails(row){
+  if(!row)return;
+  // Normalize native QVariant/model records before enumerating their fields.
+  selected=JSON.parse(JSON.stringify(row));rawResearch.checked=false;
+  Qt.callLater(function(){scroll.contentItem.contentY=Math.max(0,details.y-8)});
+ }
  function setField(key,value){let next=Object.assign({},form);next[key]=value;form=next}
  onSectionChanged:{form={};refresh()}
  Component.onCompleted:refresh()
  Connections {target:researchBridge;function onChanged(){page.refresh()}}
  ColumnLayout {anchors.fill:parent;spacing:10
   RowLayout {Layout.fillWidth:true
-   Image {source:"qrc:/assets/icons-professional/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;sourceSize.width:32;sourceSize.height:32}
+   SemanticIcon {iconSource:"qrc:/assets/icons-professional/book_open_lightbulb.svg";Layout.preferredWidth:32;Layout.preferredHeight:32;}
    Label {text:app.trx("مركز الأبحاث","Research Center");font.pixelSize:23;font.bold:true;color:app.design.text;Layout.fillWidth:true}
    StateBadge {text:"OFFLINE R&D";tint:app.design.accent}
   }
@@ -31,7 +48,7 @@ Item {
   Label {visible:researchBridge.error!=="";objectName:"researchError";text:researchBridge.error;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;textFormat:Text.PlainText}
   RowLayout {Layout.fillWidth:true
    ComboBox {id:sectionSelector;objectName:"researchSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.5);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
-   TextField {id:query;objectName:"researchQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
+   EntryField {id:query;objectName:"researchQuery";requiredInput:false;Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
    ActionButton {objectName:"researchSearch";text:app.trx("بحث","Search");onClicked:page.refresh()}
   }
   ScrollView {id:scroll;objectName:"researchScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
@@ -45,18 +62,26 @@ Item {
       ActionButton {text:app.trx("ملفات النظام","Firmware Intelligence");onClicked:page.app.navigateSection(3)}
      }
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:(researchBridge.engineContext.deviceIntelligence.propertiesCurrent?app.trx("خصائص الجهاز: قراءة حديثة متاحة","Device properties: current reading available"):app.trx("خصائص الجهاز: لا توجد قراءة حديثة","Device properties: no current reading"))+"\n"+app.trx("حالة فحص الإقلاع: ","Verified boot inspection: ")+(researchBridge.engineContext.firmwareAvb.status==="not inspected"||!researchBridge.engineContext.firmwareAvb.status?app.trx("لم يُفحص","Not inspected"):researchBridge.engineContext.firmwareAvb.status)+"\n"+app.trx("نتائج اعتماد الطراز تُراجع من سجلات الاختبارات، ولا تُستنتج من هذا الفهرس.","Review model acceptance in test records; it is not inferred from this catalog.")}
-     CheckBox {id:researchTechnical;objectName:"researchTechnicalDetails";text:app.trx("إظهار التفاصيل التقنية","Show technical details")}
+     NeonCheckBox {id:researchTechnical;objectName:"researchTechnicalDetails";text:app.trx("إظهار التفاصيل التقنية","Show technical details")}
      Label {visible:researchTechnical.checked;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.muted;textFormat:Text.PlainText;text:JSON.stringify({propertiesCurrent:researchBridge.engineContext.deviceIntelligence.propertiesCurrent,usbScope:researchBridge.engineContext.deviceIntelligence.usbScope,avbStatus:researchBridge.engineContext.firmwareAvb.status||"not inspected",packageStatus:researchBridge.engineContext.firmwarePackage.status||"not inspected",modelAcceptance:researchBridge.engineContext.modelAcceptance},null,2)}
     }
     Repeater {model:page.rows
      delegate:Panel {required property var modelData;Layout.fillWidth:true;title:page.app.ar?(modelData.titleAr||modelData.title||modelData.model||modelData.id):(modelData.title||modelData.model||modelData.id);iconName:page.section===2?"search_visual":"document_text";stateText:modelData.status||"Pending"
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;textFormat:Text.PlainText;text:modelData.claim||modelData.advertised||modelData.question||modelData.actual||modelData.capability||""}
-      ActionButton {text:page.app.trx("عرض المصدر والقيود","View provenance and limits");onClicked:{page.selected=modelData;Qt.callLater(function(){scroll.contentItem.contentY=Math.max(0,details.y-8)})}}
+      ActionButton {text:page.app.trx("عرض المصدر والقيود","View provenance and limits");onClicked:page.openDetails(modelData)}
      }
     }
     EmptyState {visible:page.rows.length===0&&page.section>0&&page.section<6;Layout.fillWidth:true;app:page.app;iconName:"search_visual";title:app.trx("لا توجد سجلات مطابقة","No matching records");description:app.trx("غيّر البحث أو سجّل نتيجة فعلية. لم تُدرج نتائج مختبرية مفترضة.","Change the search or record an actual result. No lab results have been invented.")}
     Panel {id:details;visible:Object.keys(page.selected).length>0;Layout.fillWidth:true;title:app.trx("المصدر والتفاصيل","Provenance and details");iconName:"document_text"
-     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.design.text;textFormat:Text.PlainText;text:JSON.stringify(page.selected,null,2)}
+     Label {visible:page.app.ar;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;text:"تُعرض أسماء المنتجات والمقتطفات غير المترجمة بلغة المصدر؛ لا تعني ادعاءات المزوّد تحققًا مستقلًا."}
+     Repeater {id:detailFields;objectName:"researchDetailFields";model:Object.keys(page.selected).filter(function(key){return key!=="sourceIds"&&key!=="titleAr"&&!key.endsWith("Ar")})
+      delegate:ColumnLayout {id:detailRow;required property string modelData;readonly property string fieldName:modelData;Layout.fillWidth:true;spacing:4
+       Label {text:page.detailTitle(detailRow.fieldName);font.bold:true;color:page.app.design.silver;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+       Label {objectName:"researchDetailValue";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:page.app.design.text;textFormat:Text.PlainText;text:page.detailValue(detailRow.fieldName)}
+      }
+     }
+     NeonCheckBox {id:rawResearch;objectName:"researchRawDetails";text:page.app.trx("البيانات التقنية الأصلية (JSON)","Original technical data (JSON)")}
+     EntryArea {objectName:"researchRawJson";visible:rawResearch.checked;Layout.fillWidth:true;readOnly:true;requiredInput:false;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify(page.selected,null,2)}
      Repeater {model:page.selected.sourceIds||[];delegate:Label {required property string modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:page.app.design.accent;textFormat:Text.PlainText;text:{for(const s of researchBridge.catalog.sources)if(s.id===modelData)return s.publisher+" · "+s.url+" · "+s.reviewedOn+" · "+s.rights;return modelData}}}
      ActionButton {text:app.trx("إغلاق التفاصيل","Close details");onClicked:page.selected={}}
     }
@@ -65,7 +90,7 @@ Item {
      GridLayout {Layout.fillWidth:true;columns:width>850?2:1;columnSpacing:12;rowSpacing:8
       Repeater {model:page.section===3?page.matrixFields:page.resultFields;delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true;Layout.minimumWidth:0
        Label {text:page.fieldTitle(modelData.key,modelData.label);Layout.fillWidth:true;color:page.app.design.muted}
-       TextField {objectName:"researchField-"+modelData.key;Layout.fillWidth:true;maximumLength:4096;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
+       EntryField {objectName:"researchField-"+modelData.key;Layout.fillWidth:true;maximumLength:4096;text:page.form[modelData.key]||"";onTextEdited:page.setField(modelData.key,text)}
       }}
      }
      ComboBox {id:status;objectName:"researchRecordStatus";Layout.fillWidth:true;model:page.section===3?["Research Hypothesis","Publicly Documented","Vendor Claimed","Unsupported"]:["Successful","Not Reproduced","Research Hypothesis"]}
@@ -73,7 +98,7 @@ Item {
       ActionButton {text:app.trx("اختيار دليل اصطناعي","Choose synthetic evidence");onClicked:evidence.open()}
       Label {Layout.fillWidth:true;elide:Text.ElideMiddle;color:app.design.muted;text:page.evidencePath;textFormat:Text.PlainText}
      }
-     CheckBox {id:publicConsent;objectName:"researchPublicConsent";text:app.trx("هذه بيانات عامة أو اصطناعية مصرح بحفظها","These are public or synthetic observations authorized for storage")}
+     NeonCheckBox {id:publicConsent;objectName:"researchPublicConsent";text:app.trx("هذه بيانات عامة أو اصطناعية مصرح بحفظها","These are public or synthetic observations authorized for storage")}
      ActionButton {objectName:"researchSaveRecord";text:app.trx("حفظ السجل","Save record");primary:true;enabled:researchBridge.ready&&publicConsent.checked;onClicked:{let fields=Object.assign({},page.form);let ok=false;if(page.section===3){fields.status=status.currentText;ok=researchBridge.addCompatibility(fields)}else{fields.reproducibility=status.currentText;ok=researchBridge.recordResult(fields,page.evidencePath,publicConsent.checked)!==""}if(ok){page.form={};publicConsent.checked=false;page.evidencePath="";page.refresh()}}}
     }
     Panel {visible:page.section===6;Layout.fillWidth:true;title:app.trx("بوابة التحقق","Validation gate");iconName:"shield_checkmark"
@@ -83,12 +108,12 @@ Item {
      ActionButton {text:app.trx("اختيار ملف الدليل للمراجعة","Choose review evidence file");onClicked:reviewEvidence.open()}
      Label {Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText;color:app.design.muted;text:page.evidencePath}
      ComboBox {id:reviewDecision;Layout.fillWidth:true;model:["Approved","Rejected"]}
-     TextArea {id:reviewNotes;Layout.fillWidth:true;wrapMode:TextEdit.Wrap;placeholderText:app.trx("ملاحظات المراجعة المستقلة","Independent review notes");onTextChanged:if(text.length>4096)text=text.slice(0,4096)}
+     EntryArea {id:reviewNotes;Layout.fillWidth:true;wrapMode:TextEdit.Wrap;placeholderText:app.trx("ملاحظات المراجعة المستقلة","Independent review notes");onTextChanged:if(text.length>4096)text=text.slice(0,4096)}
      ActionButton {objectName:"researchSignReview";text:app.trx("توقيع المراجعة المستقلة","Sign independent review");enabled:identityBridge.authenticated&&identityBridge.session.role==="reviewer"&&reviewResult.currentIndex>=0;onClicked:if(researchBridge.reviewResult(reviewResult.currentValue,page.evidencePath,reviewDecision.currentText,reviewNotes.text)){reviewNotes.clear();page.evidencePath=""}}
      Repeater {model:researchBridge.results;delegate:Label {required property var modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:page.app.design.text;text:JSON.stringify(researchBridge.validation(modelData.id),null,2)}}
     }
     Panel {visible:page.section===7;Layout.fillWidth:true;title:app.trx("تصدير تقرير أبحاث محلي","Export local research report");iconName:"document_text"
-     CheckBox {id:exportConsent;objectName:"researchExportConsent";text:app.trx("أوافق على تصدير السجلات البحثية العامة","Approve public research export")}
+     NeonCheckBox {id:exportConsent;objectName:"researchExportConsent";text:app.trx("أوافق على تصدير السجلات البحثية العامة","Approve public research export")}
      ActionButton {objectName:"researchExport";text:app.trx("حفظ JSON جديد","Save new JSON");enabled:researchBridge.ready&&exportConsent.checked;onClicked:report.open()}
     }
     LawTrainingPage {visible:page.section===8;Layout.fillWidth:true;Layout.preferredHeight:600;app:page.app}

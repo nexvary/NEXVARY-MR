@@ -30,11 +30,11 @@ Item {
       required property var modelData
       Layout.fillWidth:true;implicitHeight:104;radius:12;color:page.app.design.surface;border.color:page.app.design.border
       RowLayout {anchors.fill:parent;anchors.margins:16;spacing:12
-       Image {source:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
-        Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:11;Layout.fillWidth:true;elide:Text.ElideRight}
+        Label {text:modelData.title;color:page.app.design.muted;font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideRight}
         Label {text:modelData.value;color:page.app.design.text;font.pixelSize:26;font.bold:true}
-        Label {text:modelData.sub;color:page.app.design.muted;font.pixelSize:10;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
+        Label {text:modelData.sub;color:page.app.design.muted;font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
        }
       }
      }
@@ -43,7 +43,7 @@ Item {
    Panel {
     title:page.app.trx("مسار الفني","TECHNICIAN WORKFLOW");iconName:"arrow_sync";Layout.fillWidth:true
     WorkflowStrip {app:page.app;Layout.fillWidth:true}
-    Label {text:page.app.trx("مراحل الاتصال والتعريف تعكس المعلومات المقروءة. التنفيذ والتحقق يحتاجان نتيجة العملية نفسها؛ اختيار بطاقة لا يثبت نجاحها.","Connection and identity reflect observed state. Execution and verification require operation results; opening a card does not establish success.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;font.pixelSize:11}
+    Label {text:page.app.trx("مراحل الاتصال والتعريف تعكس المعلومات المقروءة. التنفيذ والتحقق يحتاجان نتيجة العملية نفسها؛ اختيار بطاقة لا يثبت نجاحها.","Connection and identity reflect observed state. Execution and verification require operation results; opening a card does not establish success.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;font.pixelSize:14}
    }
    GridLayout {
     objectName:"dashboardActions";Layout.fillWidth:true;columns:width>=1000?3:2;columnSpacing:12;rowSpacing:12
@@ -51,7 +51,7 @@ Item {
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("استوديو الصيانة","Repair Studio");iconName:"toolbox";description:page.app.trx("إرشادات الأعطال، توثيق نتائج الفني، خدمات محددة ومخططات اللوحات.","Guided symptoms, technician findings, scoped services and board inspection.");statusText:page.app.trx("قدرات محددة","Scoped");actionText:page.app.trx("بدء التشخيص","Start diagnostics");actionName:"dashboardRepair";onTriggered:page.app.navigateSection(2)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("ذكاء ملفات النظام","Firmware Intelligence");iconName:"arrow_square_down";description:page.app.trx("فحص الحزم والبصمات وبيانات AVB مع فصل البنية عن مصادقة الشركة.","Inspect containers, hashes and AVB declarations with explicit trust boundaries.");statusText:page.app.trx("ملفات محلية","Local files");actionText:page.app.trx("تحليل Firmware","Analyze firmware");actionName:"dashboardFirmware";onTriggered:page.app.navigateSection(3)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("المختبر الجنائي","Forensic Laboratory");iconName:"document_lock";description:page.app.trx("قضايا وأدلة مصرح بها، تحقق SHA-256، EXIF وPCAP وسجل حيازة محلي.","Authorized cases, SHA-256 verification, EXIF, PCAP and local custody declarations.");statusText:recoveryBridge.active?page.app.trx("قضية مفتوحة","Case open"):page.app.trx("اختر قضية","Select case");actionText:page.app.trx("فتح المختبر","Open laboratory");actionName:"dashboardForensics";onTriggered:page.app.navigateSection(5)}
-    ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("إدارة الورشة","Workshop CRM");iconName:"clipboard_task";description:page.app.trx("عملاء وأجهزة وأوامر صيانة وباركود وقطع غيار وفواتير.","Customers, devices, repair orders, barcodes, inventory and invoices.");statusText:workshopBridge.ready?page.app.trx("SQLite جاهزة","SQLite ready"):page.app.trx("تعذر الفتح","Unavailable");actionText:page.app.trx("فتح الورشة","Open workshop");actionName:"dashboardWorkshop";onTriggered:page.app.navigateSection(7)}
+    ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("إدارة المركز","Center Management");iconName:"clipboard_task";description:page.app.trx("عملاء وأجهزة وأوامر صيانة وباركود وقطع غيار وفواتير.","Customers, devices, repair orders, barcodes, inventory and invoices.");statusText:workshopBridge.ready?page.app.trx("SQLite جاهزة","SQLite ready"):page.app.trx("تعذر الفتح","Unavailable");actionText:page.app.trx("فتح المركز","Open center");actionName:"dashboardWorkshop";onTriggered:page.app.navigateSection(7)}
     ActionCard {app:page.app;Layout.fillWidth:true;Layout.fillHeight:true;title:page.app.trx("التقارير والتسليم","Reports & handover");iconName:"document_text";description:page.app.trx("انتقل إلى التقرير المرتبط بمصدره، راجع البيانات ثم صدّر بالموافقة.","Open reports in their source context, review data and approve export.");statusText:page.app.trx("تصدير بموافقة","Consent required");actionText:page.app.trx("مركز التقارير","Report center");actionName:"dashboardReports";onTriggered:page.app.navigateSection(8)}
    }
    GridLayout {
@@ -67,7 +67,7 @@ Item {
     Panel {
      title:page.app.trx("آخر نشاط محفوظ","Recent saved activity");iconName:"history";Layout.fillWidth:true;Layout.alignment:Qt.AlignTop
      ListView {Layout.fillWidth:true;Layout.preferredHeight:Math.min(200,Math.max(44,workshopBridge.events.length*42));clip:true;spacing:8;model:workshopBridge.events
-      delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.created_at+" · "+modelData.action;color:page.app.design.muted;textFormat:Text.PlainText;font.pixelSize:12;wrapMode:Text.WordWrap}
+      delegate:Label {required property var modelData;width:ListView.view.width;text:modelData.created_at+" · "+modelData.action;color:page.app.design.muted;textFormat:Text.PlainText;font.pixelSize:14;wrapMode:Text.WordWrap}
      }
      EmptyState {visible:workshopBridge.events.length===0;app:page.app;iconName:"clipboard_task";title:page.app.trx("ابدأ بأمر صيانة","Start with a repair order");description:page.app.trx("سيظهر هنا النشاط المحفوظ بعد إنشاء أمر أو تسجيل نتيجة. لا توجد بيانات عرض مصطنعة.","Saved activity appears after an order or finding is recorded. No fabricated metrics are displayed.");Layout.fillWidth:true}
      ActionButton {text:page.app.trx("أوامر الصيانة والمخزون","Repair orders & inventory");onClicked:page.app.navigateSection(7)}

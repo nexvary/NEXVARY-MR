@@ -124,6 +124,21 @@ def case_intent_authority(r, operation, request, closure):
 
 
 def operation_record(r, request, decision, old, closure, actor, role, time, result, start):
+    if r.get("schema") == "nexvary-investigator-operation/v1":
+        if (request or closure or r.get("requestId") != "" or r.get("decisionHash") != ""
+                or type(r.get("decisionSequence")) not in {int, float} or r["decisionSequence"] != 0
+                or not uuid(r.get("requester")) or (r.get("caseRef") != "" and not uuid(r.get("caseRef")))
+                or r.get("requesterRole") not in {"investigator", "reviewer"}
+                or r.get("kind") not in {"intelligence-mcp", "phone-osint"}
+                or r.get("capability") != "external-analysis"
+                or (not start and old.get("schema") != r["schema"])):
+            raise ValueError("Direct investigator operation scope rejected")
+        direct = dict(r, schema="nexvary-operation-result/v1")
+        previous = dict(old, schema="nexvary-operation-result/v1") if old else {}
+        authority = {"id": "", "requester": r["requester"], "requesterRole": r["requesterRole"],
+                     "caseRef": r["caseRef"], "capability": "external-analysis", "status": "active"}
+        return operation_record(direct, authority, {"sequence": 0, "hash": ""}, previous,
+                                "", actor, role, time, result, start)
     keys = {"capability", "caseRef", "completedUtc", "decisionHash", "decisionSequence", "failureClass", "kind", "operationId", "outputSha256", "requestId", "requester", "requesterRole", "schema", "sourceSha256", "startedUtc", "status"}
     digest = lambda x: isinstance(x, str) and (x == "" or re.fullmatch(r"[0-9a-f]{64}", x))
     if (set(r) != keys or r["schema"] != "nexvary-operation-result/v1" or not uuid(r["operationId"])
@@ -132,7 +147,7 @@ def operation_record(r, request, decision, old, closure, actor, role, time, resu
             or r["capability"] != request["capability"] or not decision or type(r["decisionSequence"]) not in {int, float}
             or r["decisionSequence"] != decision["sequence"] or r["decisionHash"] != decision["hash"]
             or not digest(r["sourceSha256"]) or not digest(r["outputSha256"]) or result != r["status"]
-            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("lampyre-mcp", "external-analysis"), ("phone-osint", "external-analysis"), ("partition-analysis", "external-analysis"), ("signature-update", "signature-update")}):
+            or (r["kind"], r["capability"]) not in {("security-scan", "external-analysis"), ("lampyre-mcp", "external-analysis"), ("intelligence-mcp", "external-analysis"), ("phone-osint", "external-analysis"), ("partition-analysis", "external-analysis"), ("signature-update", "signature-update")}):
         raise ValueError("Operation schema/approval/scope/digest rejected")
     from datetime import datetime
     def utc(value):
@@ -278,7 +293,18 @@ def verify(data, anchor):
             reconciliation_seen = True
         elif action not in {"operation-allowed", "operation-denied", "browser-result", "audit-verification", "policy-rejection"}:
             raise ValueError("Unknown event action")
-        if action in {"operation-allowed", "browser-result"} and (not old or r != old or status != "active" or role != "system-observation"):
+        # Compatibility with exact journal-signed direct-device observations.
+        # This does not grant access or accept external/paid exception gates.
+        direct_device = (action == "operation-allowed"
+                         and set(r) == {"capability", "mode", "observedActor"}
+                         and r.get("capability") == "device-tools"
+                         and r.get("mode") == "windows-direct-work"
+                         and isinstance(r.get("observedActor"), str)
+                         and re.fullmatch(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12} / windows-workspace", r["observedActor"])
+                         and r["observedActor"][:36] != "00000000-0000-0000-0000-000000000000"
+                         and not actor and role == "system-observation" and not proof
+                         and p["result"] == "gate-allowed; operation completion not established")
+        if action in {"operation-allowed", "browser-result"} and not direct_device and (not old or r != old or status != "active" or role != "system-observation"):
             raise ValueError("Operation gate has no matching active exception")
         if action in {"expire", "session-close", "restart-close", "emergency-stop"} and role != "system-observation":
             raise ValueError("System closure attribution rejected")

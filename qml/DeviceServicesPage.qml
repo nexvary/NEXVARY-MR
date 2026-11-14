@@ -8,6 +8,7 @@ Item {
  property var app
  property var selectedAction:({})
  property string reviewedTarget:""
+ readonly property string contextExplanation:app.trx("اختيار الشركة يرشّح المراجع. تُقرأ الهوية والقدرات من الجهاز المتصل. تتبع اللغات إصدار النظام المثبّت.","Brand filters references. The connected device reports its identity and capabilities. Available languages depend on its installed firmware.")
  property var reviewedRecord:({})
  readonly property var diagnostics:toolBridge.serviceProfile.diagnostics||({})
  readonly property var battery:diagnostics.battery||({})
@@ -30,23 +31,24 @@ Item {
    NavIcon {kind:1;Layout.preferredWidth:32;Layout.preferredHeight:32}
    Label {text:app.trx("خدمات الجهاز حسب قدراته","Capability-based device services");font.bold:true;font.pixelSize:19;color:app.tone("#edf4ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
    NeonComboBox {id:brand;objectName:"serviceBrand";model:page.brands;Layout.preferredWidth:190}
+   ActionButton {objectName:"deviceServiceContextOpen";text:app.trx("التفاصيل","Details");onClicked:contextDialog.open()}
    ActionButton {objectName:"serviceOfficialDrivers";text:app.trx("التعريفات الرسمية","Official drivers");enabled:!!page.driverSource;onClicked:app.openExternal(page.driverSource.url)}
   }
   Label {objectName:"serviceBuildProfile";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:toolBridge.laboratoryBuild?"#FF465C":"#39FF14";text:toolBridge.laboratoryBuild?app.trx("نسخة المختبر التجريبية — عمليات تغيير الجهاز تحتاج تفويضًا واختبارًا فعليًا لكل موديل.","Experimental Laboratory build — device changes require authorization and per-model physical testing."):app.trx("نسخة الإنتاج: قراءة وتشخيص فقط. عمليات تغيير الجهاز غير متاحة.","Production build: read-only diagnostics. Device-changing operations are unavailable.")}
-  Label {objectName:"serviceWorkflow";font.pixelSize:12;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
-  Label {objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8c1d7");font.pixelSize:12;text:app.trx("اختيار الشركة يرشّح المراجع. تُقرأ الهوية والقدرات من الجهاز المتصل. تتبع اللغات إصدار النظام المثبّت.","Brand filters references. The connected device reports its identity and capabilities. Available languages depend on its installed firmware.")}
+  Label {id:workflow;visible:false;objectName:"serviceWorkflow";font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.NoWrap;elide:Text.ElideRight;color:"#C8D2DD";text:app.trx("توصيل الجهاز ← اكتشافه ← قراءة المعلومات ← التشخيص ← اختيار العملية ← مراجعة المخاطر ← التنفيذ ← التقرير","Connect → Discover → Read information → Diagnose → Select operation → Review risks → Run → Report")}
+  Label {id:driverWarning;objectName:"serviceDriverUnavailableReason";Layout.fillWidth:true;visible:!page.driverSource;wrapMode:Text.NoWrap;elide:Text.ElideRight;color:app.tone("#eab775");text:app.trx("لم يُوثّق رابط تعريف رسمي لهذه الشركة بعد. طابق الموديل ووضع الاتصال ومصدر التعريف قبل التثبيت.","No official driver source is recorded for this brand yet. Verify the exact model, connection mode and driver source before installation.")}
+
   RowLayout {Layout.fillWidth:true
    NeonComboBox {id:device;objectName:"serviceDevice";Layout.fillWidth:true;model:toolBridge.devices;textRole:"serial";valueRole:"serial";currentIndex:toolBridge.devices.findIndex(function(row){return row.serial===toolBridge.selectedSerial});displayText:currentIndex<0?app.trx("اختر جهازًا بعد الفحص","Select a device after discovery"):currentText;enabled:!toolBridge.busy;onActivated:toolBridge.selectDevice(currentValue)}
+   NeonComboBox {id:group;objectName:"serviceGroup";model:["All","ADB","Fastboot","Recovery","OEM / Restricted"];Layout.preferredWidth:175}
    ActionButton {text:"ADB";enabled:!toolBridge.busy;onClicked:toolBridge.scanAdb()}
    ActionButton {text:"Fastboot";enabled:!toolBridge.busy;onClicked:toolBridge.scanFastboot()}
    ActionButton {objectName:"cancelDeviceService";text:app.trx("إيقاف","Cancel");enabled:toolBridge.busy;onClicked:toolBridge.cancel()}
   }
-  Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#51d6a2");text:toolBridge.selectedSerial+" · "+(toolBridge.serviceProfile.vendor||toolBridge.serviceProfile.product||"")+" · "+(toolBridge.serviceProfile["ro.product.model"]||"")+" · "+(toolBridge.serviceProfile.verifiedAtUtc||app.trx("لم تُقرأ القدرات بعد","Capabilities not read yet"))}
-  Label {Layout.fillWidth:true;visible:!!toolBridge.serviceProfile.serial;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:"Android: "+(toolBridge.serviceProfile["ro.build.version.release"]||"?")+" · SoC: "+(toolBridge.serviceProfile["ro.soc.manufacturer"]||"?")+" / "+(toolBridge.serviceProfile["ro.soc.model"]||"?")+" · Bootloader: "+(toolBridge.serviceProfile.unlocked||toolBridge.serviceProfile["ro.boot.flash.locked"]||"?")+" · "+app.trx("القيم كما أبلغ عنها الجهاز؛ تعريف USB غير مرتبط بهذه القراءة","Device-reported values; USB driver binding is not correlated")}
-  RowLayout {Layout.fillWidth:true
+  Label {id:targetSummary;visible:false;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#51d6a2");text:toolBridge.selectedSerial+" · "+(toolBridge.serviceProfile.vendor||toolBridge.serviceProfile.product||"")+" · "+(toolBridge.serviceProfile["ro.product.model"]||"")+" · "+(toolBridge.serviceProfile.verifiedAtUtc||app.trx("لم تُقرأ القدرات بعد","Capabilities not read yet"))}
+  Label {id:profileSummary;Layout.fillWidth:true;visible:false;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:"Android: "+(toolBridge.serviceProfile["ro.build.version.release"]||"?")+" · SoC: "+(toolBridge.serviceProfile["ro.soc.manufacturer"]||"?")+" / "+(toolBridge.serviceProfile["ro.soc.model"]||"?")+" · Bootloader: "+(toolBridge.serviceProfile.unlocked||toolBridge.serviceProfile["ro.boot.flash.locked"]||"?")+" · "+app.trx("القيم كما أبلغ عنها الجهاز؛ تعريف USB غير مرتبط بهذه القراءة","Device-reported values; USB driver binding is not correlated")}
+  RowLayout {Layout.fillWidth:true;visible:toolBridge.busy
    Label {Layout.fillWidth:true;text:page.phases[toolBridge.servicePhase]?(app.ar?page.phases[toolBridge.servicePhase][0]:page.phases[toolBridge.servicePhase][1]):"";color:app.tone("#eab775")}
-   NeonComboBox {id:group;objectName:"serviceGroup";model:["All","ADB","Fastboot","Recovery","OEM / Restricted"];Layout.preferredWidth:175}
   }
   ProgressBar {objectName:"deviceServiceProgress";Layout.fillWidth:true;indeterminate:toolBridge.busy;visible:toolBridge.busy}
   RowLayout {Layout.fillWidth:true;Layout.fillHeight:true;spacing:10
@@ -56,8 +58,8 @@ Item {
     delegate:GlossSurface {required property var modelData;width:list.width;implicitHeight:content.implicitHeight+24;color:app.tone("#0b2131");radius:8;border.color:modelData.available?app.tone("#356756"):app.tone("#234a63");reflection:0.06
      ColumnLayout {id:content;anchors.left:parent.left;anchors.right:parent.right;anchors.top:parent.top;anchors.margins:12;spacing:7
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:app.ar?modelData.ar:modelData.en;color:app.tone("#edf4ff");font.bold:true}
-      Label {Layout.fillWidth:true;visible:!modelData.available;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:page.explain(modelData);color:app.tone("#a8bfd4");font.pixelSize:12}
-      Label {visible:modelData.risk==="destructive";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("قد تُحذف البيانات أو يتعطل الإقلاع؛ لا يمكن التراجع عن كتابة بدأت على الهاتف.","Data loss or boot failure is possible; changes already started on the phone cannot be undone.");color:app.tone("#e0787b");font.pixelSize:12}
+      Label {Layout.fillWidth:true;visible:!modelData.available;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:page.explain(modelData);color:app.tone("#a8bfd4");font.pixelSize:14}
+      Label {visible:modelData.risk==="destructive";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("قد تُحذف البيانات أو يتعطل الإقلاع؛ لا يمكن التراجع عن كتابة بدأت على الهاتف.","Data loss or boot failure is possible; changes already started on the phone cannot be undone.");color:app.tone("#e0787b");font.pixelSize:14}
       ActionButton {objectName:"serviceAction_"+modelData.id;Layout.fillWidth:true;visible:modelData.implemented;text:app.trx("مراجعة وتنفيذ","Review and run");enabled:modelData.available;onClicked:page.review(modelData)}
      }
     }
@@ -74,23 +76,32 @@ Item {
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#a8bfd4");text:app.trx("وقت القراءة UTC: ","Observed UTC: ")+(page.diagnostics.observedAtUtc||"");textFormat:Text.PlainText}
     }
     Panel {objectName:"deviceServiceResultPanel";title:app.trx("نتيجة العملية — بيانات محلية","Operation result — local data");Layout.fillWidth:true;Layout.minimumHeight:200;Layout.preferredHeight:Math.max(200,detailsScroll.availableHeight-references.implicitHeight-history.implicitHeight-20)
-     ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;TextArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
+     ScrollView {Layout.fillWidth:true;Layout.fillHeight:true;EntryArea {objectName:"deviceServiceOutput";readOnly:true;selectByMouse:true;text:toolBridge.serviceOutput;wrapMode:TextEdit.Wrap;color:app.tone("#c7deef");background:null;textFormat:TextEdit.PlainText}}
     }
     Panel {id:references;title:app.trx("الموديلات المطلوبة — مراجع غير معتمدة بعد","Requested models — not yet validated");Layout.fillWidth:true
      NeonComboBox {objectName:"requestedServiceModel";Layout.fillWidth:true;model:toolBridge.requestedModels.filter(function(row){return row.brand===brand.currentText});textRole:"model";enabled:count>0;displayText:count>0?currentText:app.trx("لا توجد مراجع موديلات مسجلة لهذه الشركة","No model references recorded for this brand")}
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("إضافة اسم موديل ليست اعتمادًا لعمليات FRP أو Format أو Firmware الخاصة به.","A model reference does not validate its FRP, format or firmware operations.");color:app.tone("#eab775");font.pixelSize:12}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("إضافة اسم موديل ليست اعتمادًا لعمليات FRP أو Format أو Firmware الخاصة به.","A model reference does not validate its FRP, format or firmware operations.");color:app.tone("#eab775");font.pixelSize:14}
     }
     Panel {id:history;title:app.trx("سجل خدمات الجلسة · UTC","Session service history · UTC");Layout.fillWidth:true
-     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:ItemDelegate {required property var modelData;width:ListView.view.width;onClicked:page.reviewRecord(modelData);contentItem:Label {text:modelData.atUtc+" · "+modelData.serial+" · "+modelData.transport+" · "+modelData.action+" · "+(modelData.success?app.trx("اكتملت","Completed"):app.trx("توقفت","Stopped"));textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:11}}}
+     ListView {objectName:"deviceServiceHistory";Layout.fillWidth:true;Layout.preferredHeight:80;clip:true;model:toolBridge.serviceHistory;ScrollBar.vertical:ScrollBar {}delegate:ItemDelegate {required property var modelData;width:ListView.view.width;onClicked:page.reviewRecord(modelData);contentItem:Label {text:modelData.atUtc+" · "+modelData.serial+" · "+modelData.transport+" · "+modelData.action+" · "+(modelData.success?app.trx("اكتملت","Completed"):app.trx("توقفت","Stopped"));textFormat:Text.PlainText;wrapMode:Text.WrapAnywhere;color:app.tone("#a8bfd4");font.pixelSize:14}}}
      ActionButton {objectName:"exportDeviceServiceReport";text:app.trx("تصدير تقرير محلي","Export local report");enabled:!toolBridge.busy&&toolBridge.serviceHistory.length>0;onClicked:reportConsent.open()}
     }
     }
    }
   }
  }
+ Dialog {
+  id:contextDialog;objectName:"deviceServiceContextDialog";parent:Overlay.overlay;anchors.centerIn:parent
+  width:Math.min(760,app.width-48);height:Math.min(440,app.height-80);modal:true
+  title:app.trx("سياق الخدمة والمصدر","Service context and provenance");standardButtons:Dialog.Close
+  contentItem:ScrollView {id:serviceContextScroll;contentWidth:availableWidth;clip:true
+   Label {objectName:"deviceServiceContextText";width:serviceContextScroll.availableWidth;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.text;text:workflow.text+"\n\n"+page.contextExplanation+"\n\n"+targetSummary.text+(toolBridge.serviceProfile.serial?"\n\n"+profileSummary.text:"")+(page.driverSource?"":"\n\n"+driverWarning.text)}
+  }
+ }
+
  Dialog {id:historyDetail;objectName:"deviceServiceHistoryDetail";parent:Overlay.overlay;anchors.centerIn:parent;width:Math.min(670,app.width-48);height:Math.min(480,app.height-96);modal:true;title:app.trx("تفاصيل العملية المسجلة","Recorded operation details");standardButtons:Dialog.Close
   contentItem:ScrollView {clip:true;contentWidth:availableWidth
-   TextArea {objectName:"deviceServiceHistoryText";readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.tone("#c7deef");background:null;text:(page.reviewedRecord.serial||"")+" · "+(page.reviewedRecord.transport||"")+"\n"+(page.reviewedRecord.action||"")+" · "+(page.reviewedRecord.atUtc||"")+"\n\n"+(page.reviewedRecord.result||"")}
+   EntryArea {objectName:"deviceServiceHistoryText";readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.tone("#c7deef");background:null;text:(page.reviewedRecord.serial||"")+" · "+(page.reviewedRecord.transport||"")+"\n"+(page.reviewedRecord.action||"")+" · "+(page.reviewedRecord.atUtc||"")+"\n\n"+(page.reviewedRecord.result||"")}
   }
  }
  FileDialog {id:packageFile;fileMode:FileDialog.OpenFile;nameFilters:page.selectedAction.id==="sideload_zip"?["Recovery package (*.zip)"]:["Android package (*.apk)"];onAccepted:packagePath.text=selectedFile.toString()}
@@ -108,11 +119,11 @@ Item {
     Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;text:app.trx("الجهاز المستهدف: ","Target device: ")+page.reviewedTarget;color:app.tone("#edf4ff");font.bold:true}
     NeonCheckBox {id:owner;objectName:"serviceOwnerConsent";Layout.fillWidth:true;text:app.trx("أقر بتفويض مالك الجهاز لتنفيذ هذه العملية","I have the device owner's authorization for this operation")}
     Label {Layout.fillWidth:true;visible:page.selectedAction.id!=="probe";wrapMode:Text.WordWrap;text:app.trx("اكتب معرف الجهاز كما يظهر أعلاه لتأكيد الاختيار","Type the exact device serial shown above to confirm the target");color:app.tone("#a8bfd4")}
-    TextField {id:challenge;objectName:"serviceTargetChallenge";Layout.fillWidth:true;visible:page.selectedAction.id!=="probe";placeholderText:page.reviewedTarget}
+    EntryField {id:challenge;objectName:"serviceTargetChallenge";Layout.fillWidth:true;visible:page.selectedAction.id!=="probe";placeholderText:page.reviewedTarget}
     NeonCheckBox {id:loss;objectName:"serviceDataLossConsent";visible:confirm.destructive;Layout.fillWidth:true;text:app.trx("أوافق على فقدان البيانات ومخاطر التوقف؛ لا يوجد تراجع","I accept data loss and interruption risks; there is no rollback")}
     Label {Layout.fillWidth:true;visible:confirm.destructive;wrapMode:Text.WordWrap;color:app.tone("#e0787b");text:app.trx("قد يستمر الجهاز في عملية بدأت حتى بعد إلغاء النقل من الكمبيوتر. مسح Userdata لا يزيل FRP ولا يستعيد البيانات المشفرة.","The device may continue a started operation after host cancellation. Userdata erasure does not remove FRP or recover encrypted data.")}
-    RowLayout {visible:confirm.fileAction;Layout.fillWidth:true;TextField {id:packagePath;objectName:"servicePackagePath";Layout.fillWidth:true;readOnly:true;placeholderText:app.trx("ملف محلي موثوق ومصرح به","Authorized trusted local package")}ActionButton {text:app.trx("اختيار ملف","Choose file");onClicked:packageFile.open()}}
-    TextField {id:packageHash;objectName:"servicePackageHash";visible:confirm.fileAction;Layout.fillWidth:true;placeholderText:app.trx("SHA-256 من مصدر موثوق — إلزامي لملف ZIP","Reviewed source SHA-256 — required for ZIP")}
+    RowLayout {visible:confirm.fileAction;Layout.fillWidth:true;EntryField {id:packagePath;objectName:"servicePackagePath";Layout.fillWidth:true;readOnly:true;placeholderText:app.trx("ملف محلي موثوق ومصرح به","Authorized trusted local package")}ActionButton {text:app.trx("اختيار ملف","Choose file");onClicked:packageFile.open()}}
+    EntryField {id:packageHash;objectName:"servicePackageHash";visible:confirm.fileAction;Layout.fillWidth:true;placeholderText:app.trx("SHA-256 من مصدر موثوق — إلزامي لملف ZIP","Reviewed source SHA-256 — required for ZIP")}
     NeonCheckBox {id:compatible;objectName:"serviceCompatibilityConsent";visible:page.selectedAction.id==="sideload_zip";Layout.fillWidth:true;text:app.trx("راجعت تطابق ZIP مع الموديل وإصداره وRecovery","I checked ZIP compatibility with the exact model, build and recovery")}
     NeonCheckBox {id:replace;visible:page.selectedAction.id==="install_apk";Layout.fillWidth:true;text:app.trx("السماح باستبدال التطبيق الموجود مع الاحتفاظ ببياناته","Allow updating the existing application while retaining its data")}
     Label {Layout.fillWidth:true;visible:page.selectedAction.id==="languages";wrapMode:Text.WordWrap;text:app.trx("ستفتح إعدادات اللغة؛ اختر العربية أو English أو Français أو Türkçe على الهاتف إن كانت متاحة. لا تُمنح صلاحيات Root ولا تُضاف لغات غير موجودة في Firmware.","Language settings will open. Choose العربية, English, Français or Türkçe on the device if available. No root is granted and no missing firmware translations are installed.");color:app.tone("#eab775")}

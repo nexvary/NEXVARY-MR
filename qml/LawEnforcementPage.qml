@@ -28,10 +28,10 @@ Item {
     Label {text:app.trx("مساحة إنفاذ القانون","Law Enforcement");color:app.design.text;font.bold:true;font.pixelSize:23;Layout.fillWidth:true}
     Label {text:lawCaseBridge.activeCase.id?(lawCaseBridge.activeCase.metadata.caseNumber+" · "+lawCaseBridge.activeCase.status):app.trx("اختر قضية أو ابدأ سيناريو تدريب اصطناعي","Choose a case or a synthetic training scenario");Layout.fillWidth:true;elide:Text.ElideRight;color:app.design.muted;textFormat:Text.PlainText}
    }
-   ActionButton {text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
-   StateBadge {objectName:"lawIdentityRole";text:app.roleLabel(identityBridge.authenticated?identityBridge.session.role:lawCaseBridge.role);tint:app.design.silver}
+   ActionButton {visible:!identityBridge.directWork;text:app.trx("الدخول / الحسابات","Sign in / accounts");onClicked:page.section=10}
+   StateBadge {objectName:"lawIdentityRole";text:identityBridge.directWork?app.trx("عمل مباشر","Direct work"):app.roleLabel(identityBridge.authenticated?identityBridge.session.role:lawCaseBridge.role);tint:app.design.silver}
   }
-  Label {objectName:"lawStorageStatus";text:lawCaseBridge.protection.indexOf("DPAPI;")>=0?app.trx("البيانات المحلية محمية بحساب Windows الحالي","Local data protected by the current Windows account"):app.humanError(lawCaseBridge.protection);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;font.pixelSize:11}
+  Label {objectName:"lawStorageStatus";text:lawCaseBridge.protection.indexOf("DPAPI;")>=0?app.trx("البيانات المحلية محمية بحساب Windows الحالي","Local data protected by the current Windows account"):app.humanError(lawCaseBridge.protection);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.muted;font.pixelSize:14}
   Label {objectName:"lawAccountGuidance";visible:!lawCaseBridge.permissions.create;width:parent.width;wrapMode:Text.WordWrap;color:app.design.accent;text:identityBridge.session.role==="administrator"?app.trx("أنت مدير الحسابات. افتح الدخول / الحسابات وأنشئ حساب محقق للعمل على القضايا.","You are the account administrator. Open Sign in / accounts and create an investigator for case work."):!identityBridge.authenticated?app.trx("سجّل الدخول بحساب محقق لإنشاء القضايا وحفظها؛ الإعداد الأول من الدخول / الحسابات.","Sign in as an investigator to create and save cases; first-time setup is in Sign in / accounts."):app.trx("دورك الحالي لا يملك صلاحية إنشاء القضايا.","Your current role cannot create cases.")}
   Label {visible:lawCaseBridge.error!=="";objectName:"lawError";text:app.humanError(lawCaseBridge.error);width:parent.width;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.design.danger}
   RowLayout {width:parent.width
@@ -61,7 +61,7 @@ Item {
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("التقارير","Reports");iconName:"document_text";description:app.trx("ملخص PDF قابل للمراجعة؛ تصدير غير مشفر بموافقة صريحة.","Reviewable PDF summary; plaintext export requires explicit approval.");statusText:app.trx("موافقة مطلوبة","Consent required");actionText:app.trx("فتح التقارير","Open reports");onTriggered:page.section=8}
       ActionCard {app:page.app;Layout.fillWidth:true;title:app.trx("المختبر التدريبي","Training laboratory");iconName:"book_open_lightbulb";description:app.trx("قرارات وتشخيصات افتراضية مع تقييم وتفسير؛ دون أجهزة حقيقية.","Virtual decisions with scoring and explanations; no real devices.");statusText:app.trx("اصطناعي فقط","Synthetic only");actionText:app.trx("بدء التدريب","Start training");onTriggered:page.section=9}
      }
-     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;font.pixelSize:11;text:app.trx("حسابات محلية مصادق عليها ومنح منفصلة للقضايا. يبقى التحقق من الهوية المؤسسية وربط SSO ضمن متطلبات النشر.","Local authenticated accounts and case grants. Agency identity verification and SSO remain deployment requirements.")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;font.pixelSize:14;text:app.trx("حسابات محلية مصادق عليها ومنح منفصلة للقضايا. يبقى التحقق من الهوية المؤسسية وربط SSO ضمن متطلبات النشر.","Local authenticated accounts and case grants. Agency identity verification and SSO remain deployment requirements.")}
     }
    }
    LawCaseForm {id:intake;objectName:"lawCaseForm";app:page.app;onRequestSignIn:page.section=10;onSaved:{page.app.notice(true,page.app.trx("تم حفظ القضية محليًا","Case saved locally"));page.section=0}}
@@ -86,7 +86,7 @@ Item {
      Panel {visible:page.evidenceView===3;Layout.fillWidth:true;title:app.trx("سلامة سجل القضية","Case audit integrity");iconName:"history"
       ActionButton {objectName:"lawVerifyAudit";text:app.trx("التحقق من ترابط السجل","Verify linked audit");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.audit;onClicked:page.auditVerified=lawCaseBridge.verifyAudit()}
       Label {objectName:"lawAuditResult";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:page.auditVerified?app.trx("نجح تحقق السجل المحلي. لا يثبت تسليمًا ماديًا أو مقاومة استرجاع نسخة قاعدة قديمة.","Local linked-record verification passed. It does not prove physical handover or resistance to whole-database rollback."):app.trx("لم يتم التحقق في هذا العرض بعد.","Not verified in this view yet.")}
-      CheckBox {id:anchorConsent;text:app.trx("أوافق على تصدير مرجع توقيع محلي للاحتفاظ به منفصلًا","Approve local signed anchor export for separate retention")}
+      NeonCheckBox {id:anchorConsent;text:app.trx("أوافق على تصدير مرجع توقيع محلي للاحتفاظ به منفصلًا","Approve local signed anchor export for separate retention")}
       RowLayout {Layout.fillWidth:true
        ActionButton {text:app.trx("تصدير مرجع موقّع","Export signed anchor");enabled:identityBridge.authenticated&&!!lawCaseBridge.activeCase.id&&anchorConsent.checked;onClicked:anchorExport.open()}
        ActionButton {text:app.trx("مقارنة مرجع محفوظ","Compare retained anchor");enabled:identityBridge.authenticated&&!!lawCaseBridge.activeCase.id;onClicked:anchorInput.open()}
@@ -109,23 +109,23 @@ Item {
      ActionButton {text:app.trx("فتح سجل التدقيق","Open audit trail");onClicked:{page.evidenceView=3;page.section=6}}
      Panel {title:app.trx("تقرير مراجعة القضية PDF","Case review PDF");iconName:"document_text";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("يتضمن الإقرار القانوني والأجهزة المسجلة وسجل التدقيق وحدود النموذج. لا يمثل تقرير استخلاص كاملًا أو اعتمادًا قضائيًا.","Contains recorded authority, registered devices, audit and prototype limits. Not a complete acquisition report or judicial accreditation.")}
-      CheckBox {id:caseExportConsent;objectName:"lawReportConsent";text:app.trx("أوافق على تصدير بيانات القضية غير مشفرة","Approve plaintext case-data export")}
+      NeonCheckBox {id:caseExportConsent;objectName:"lawReportConsent";text:app.trx("أوافق على تصدير بيانات القضية غير مشفرة","Approve plaintext case-data export")}
       ActionButton {objectName:"lawExportPdf";text:app.trx("حفظ PDF جديد","Save new PDF");primary:true;enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.report&&caseExportConsent.checked;onClicked:casePdf.open()}
      }
      Panel {objectName:"lawProtectedBackupPanel";title:app.trx("نسخة قضية محمية واستعادة","Protected case backup & restore");iconName:"document_lock";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحفظ نسخة الأدلة المحمية دون مفاتيح حسابات البرنامج. تعتمد الاستعادة على سياق حماية Windows الأصلي وسجل الهوية ومنح القضية. الحد 32 MiB للمحتوى المحمي و64 MiB للحاوية. احتفظ بالبصمة ومرجع التدقيق منفصلين.","Preserves protected case/evidence blobs without account signing keys. Recovery requires the original Windows protection context, identity registry and case grants. Limits: 32 MiB protected payloads, 64 MiB container. Retain the digest and audit anchor separately.")}
-      CheckBox {id:backupConsent;objectName:"lawBackupConsent";text:app.trx("أوافق على حفظ نسخة محمية لهذه القضية","Approve a protected backup of this case")}
+      NeonCheckBox {id:backupConsent;objectName:"lawBackupConsent";text:app.trx("أوافق على حفظ نسخة محمية لهذه القضية","Approve a protected backup of this case")}
       ActionButton {objectName:"lawSaveProtectedBackup";text:app.trx("حفظ نسخة محمية جديدة","Save new protected backup");enabled:!!lawCaseBridge.activeCase.id&&lawCaseBridge.permissions.backup&&backupConsent.checked;onClicked:protectedBackupOutput.open()}
-      TextArea {objectName:"lawBackupDigest";visible:!!page.lastBackup.sha256;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.design.success;text:page.lastBackup.sha256||""}
-      Repeater {model:lawCaseBridge.activeCase.backups||[];delegate:TextArea {required property var modelData;readOnly:true;selectByMouse:true;Layout.fillWidth:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:page.app.design.muted;text:modelData.atUtc+" · "+modelData.sourceRevision+"\nSHA-256: "+modelData.sha256}}
-      TextField {id:restoreDigest;objectName:"lawRestoreDigest";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("بصمة النسخة المحفوظة SHA-256: 64 حرفًا","Separately retained backup SHA-256: 64 characters")}
-      CheckBox {id:restoreConsent;objectName:"lawRestoreConsent";text:app.trx("أوافق على الاستعادة دون استبدال أي قضية","Approve restoration without replacing an existing case")}
+      EntryArea {objectName:"lawBackupDigest";visible:!!page.lastBackup.sha256;Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:app.design.success;text:page.lastBackup.sha256||""}
+      Repeater {model:lawCaseBridge.activeCase.backups||[];delegate:EntryArea {required property var modelData;readOnly:true;selectByMouse:true;Layout.fillWidth:true;wrapMode:TextEdit.WrapAnywhere;textFormat:TextEdit.PlainText;color:page.app.design.muted;text:modelData.atUtc+" · "+modelData.sourceRevision+"\nSHA-256: "+modelData.sha256}}
+      EntryField {id:restoreDigest;objectName:"lawRestoreDigest";Layout.fillWidth:true;maximumLength:64;placeholderText:app.trx("بصمة النسخة المحفوظة SHA-256: 64 حرفًا","Separately retained backup SHA-256: 64 characters")}
+      NeonCheckBox {id:restoreConsent;objectName:"lawRestoreConsent";text:app.trx("أوافق على الاستعادة دون استبدال أي قضية","Approve restoration without replacing an existing case")}
       ActionButton {objectName:"lawRestoreProtectedBackup";text:app.trx("اختيار نسخة محمية للاستعادة","Choose protected backup to restore");enabled:lawCaseBridge.permissions.restore&&/^[0-9a-fA-F]{64}$/.test(restoreDigest.text)&&restoreConsent.checked;onClicked:protectedBackupInput.open()}
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("تحتفظ الاستعادة بمعرّف القضية والمالك والأصول، وتضيف حدث استعادة جديدًا. قارن بمرجع التدقيق المحفوظ لكشف تاريخ أحدث أو متعارض. هذه ليست استعادة شاملة لمفاتيح الحساب أو النظام.","Restoration retains case ID, owner and originals and appends a recovery event. Compare a retained audit anchor to detect newer/divergent history. This is not full account-key or operating-system disaster recovery.")}
      }
      Panel {title:app.trx("تقرير التدريب الاصطناعي","Synthetic training report");iconName:"book_open_lightbulb";Layout.fillWidth:true
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:lawCaseBridge.trainingAttempts.length+app.trx(" محاولة؛ لا يتضمن بيانات قضايا حقيقية."," attempts; contains no real case data.")}
-      CheckBox {id:trainingExportConsent;text:app.trx("أوافق على حفظ تقرير التدريب","Approve training report export")}
+      NeonCheckBox {id:trainingExportConsent;text:app.trx("أوافق على حفظ تقرير التدريب","Approve training report export")}
       ActionButton {objectName:"lawExportTraining";text:app.trx("حفظ JSON تدريبي","Save training JSON");enabled:lawCaseBridge.permissions.training&&trainingExportConsent.checked;onClicked:trainingReport.open()}
      }
     }

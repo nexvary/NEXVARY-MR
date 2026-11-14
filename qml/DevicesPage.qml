@@ -33,7 +33,7 @@ Item {
     title:app.trx("1. الاتصال واختيار الجهاز","1. CONNECT AND SELECT");accent:"blue";Layout.fillWidth:true
     RowLayout {
      Layout.fillWidth:true;spacing:12
-     Image {source:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:40;Layout.preferredHeight:40;fillMode:Image.PreserveAspectFit}
+     SemanticIcon {iconSource:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:40;Layout.preferredHeight:40;fillMode:Image.PreserveAspectFit}
      ColumnLayout {
       Layout.fillWidth:true;spacing:4
       Label {text:page.selected?app.trx("جهاز محدد وجاهز للفحوص المتاحة","A target is selected for available checks"):app.trx("اختر هاتفًا قبل تشغيل أي عملية","Select a phone before starting an operation");font.bold:true;color:app.tone("#edf5ff");Layout.fillWidth:true;wrapMode:Text.WordWrap}
@@ -62,11 +62,11 @@ Item {
       background:Rectangle {radius:8;color:toolBridge.selectedSerial===modelData.serial?app.tone("#143c64"):app.tone("#0b2131");border.width:toolBridge.selectedSerial===modelData.serial?2:1;border.color:toolBridge.selectedSerial===modelData.serial?"#299bff":app.tone("#234a63")}
       contentItem:RowLayout {
        spacing:12
-       Image {source:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
+       SemanticIcon {iconSource:"qrc:/assets/icons-professional/phone.svg";Layout.preferredWidth:34;Layout.preferredHeight:34;fillMode:Image.PreserveAspectFit}
        ColumnLayout {
         Layout.fillWidth:true;spacing:4
         Label {text:modelData.model||modelData.serial;color:app.tone("#edf4ff");font.bold:true;Layout.fillWidth:true;elide:Text.ElideRight;textFormat:Text.PlainText}
-        Label {text:modelData.serial;color:app.tone("#9bbbd3");font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText}
+        Label {text:modelData.serial;color:app.tone("#9bbbd3");font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideMiddle;textFormat:Text.PlainText}
        }
        Label {text:modelData.state;color:modelData.state==="device"?app.tone("#48dea4"):app.tone("#f6bb67");font.bold:true;textFormat:Text.PlainText}
        Label {visible:toolBridge.selectedSerial===modelData.serial;text:app.trx("محدد","Selected");color:"#60bdff"}
@@ -116,29 +116,36 @@ Item {
     Flow {
      Layout.fillWidth:true;spacing:8
      ActionButton {objectName:"analyzeDeviceLog";visible:resultTabs.currentIndex===1;text:app.trx("تحليل مؤشرات السجل","Analyze log indicators");enabled:toolBridge.logcat!=="";onClicked:logAnalysis.text=repairBridge.analyzeLogReport(toolBridge.logcat,app.ar)}
+     ActionButton {objectName:"useBundledScreenView";visible:resultTabs.currentIndex===3;text:app.trx("استخدام نسخة عرض الشاشة المضمّنة","Use bundled screen viewer");enabled:toolBridge.screenViewAvailable&&!toolBridge.busy&&!toolBridge.mirrorActive&&page.adbReady&&page.identified;onClicked:{if(toolBridge.clearTool("scrcpy"))page.reviewMirror();else app.notice(false,"",toolBridge.status)}}
      ActionButton {objectName:"stopMirror";visible:resultTabs.currentIndex===3||toolBridge.mirrorActive;text:app.trx("إيقاف عرض الشاشة","Stop screen view");enabled:toolBridge.mirrorActive;onClicked:toolBridge.stopMirror()}
      Label {objectName:"mirrorState";visible:resultTabs.currentIndex===3&&toolBridge.mirrorActive;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:page.screenState()}
     }
     ScrollView {
      Layout.fillWidth:true;Layout.preferredHeight:page.height>850?300:220;contentWidth:availableWidth;clip:true
-     TextArea {
-      objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:12;color:app.tone("#c7deef");background:null
-      text:resultTabs.currentIndex===0?(page.identified?JSON.stringify(toolBridge.deviceInfo,null,2):app.trx("اقرأ معلومات الهاتف لعرض الخصائص هنا.","Read phone properties to display them here.")):resultTabs.currentIndex===1?(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||app.trx("لم تتم قراءة السجل بعد.","No log has been read yet.")):resultTabs.currentIndex===2?(toolBridge.driverInfo||app.trx("شغّل فحص USB والتعريفات لعرض النتائج هنا.","Run USB / driver inspection to display the results here.")):(toolBridge.mirrorStatus!==""||toolBridge.mirrorOutput!==""?toolBridge.mirrorStatus+"\n\n"+toolBridge.mirrorOutput:app.trx("لم تبدأ جلسة عرض بعد.","No screen session has started."))
+     EntryArea {
+      objectName:"deviceResultText";readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.Wrap;horizontalAlignment:Text.AlignLeft;LayoutMirroring.enabled:false;font.family:"Consolas";font.pixelSize:14;color:app.tone("#c7deef");background:null
+      text:resultTabs.currentIndex===0?(page.identified?JSON.stringify(toolBridge.deviceInfo,null,2):app.trx("اقرأ معلومات الهاتف لعرض الخصائص هنا.","Read phone properties to display them here.")):resultTabs.currentIndex===1?(logAnalysis.text!==""?logAnalysis.text+"\n\n──── LOGCAT ────\n":"")+(toolBridge.logcat||app.trx("لم تتم قراءة السجل بعد.","No log has been read yet.")):resultTabs.currentIndex===2?(toolBridge.driverInfo||app.trx("شغّل فحص USB والتعريفات لعرض النتائج هنا.","Run USB / driver inspection to display the results here.")):(toolBridge.mirrorStatus!==""||toolBridge.mirrorOutput!==""?app.humanError(toolBridge.mirrorStatus)+"\n\n"+toolBridge.mirrorOutput:app.trx("لم تبدأ جلسة عرض بعد.","No screen session has started."))
      }
     }
-    Label {text:app.trx("الخصائص والسجلات تصريحات مقروءة من الجهاز وليست اعتمادًا شاملًا لسلامته. راجع البيانات الشخصية قبل مشاركة النتائج.","Properties and logs are device observations, not complete health certification. Review personal data before sharing results.");color:app.tone("#9bbbd3");font.pixelSize:11;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+    Label {text:app.trx("الخصائص والسجلات تصريحات مقروءة من الجهاز وليست اعتمادًا شاملًا لسلامته. راجع البيانات الشخصية قبل مشاركة النتائج.","Properties and logs are device observations, not complete health certification. Review personal data before sharing results.");color:app.tone("#9bbbd3");font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.WordWrap}
    }
   }
  }
  Dialog {id:mirrorConfirm;objectName:"mirrorConfirm";parent:Overlay.overlay;anchors.centerIn:parent;modal:true;width:Math.min(620,app.width-48);title:app.trx("موافقة عرض شاشة الهاتف","Phone screen-view consent");standardButtons:Dialog.Ok|Dialog.Cancel
-  onOpened:standardButton(Dialog.Ok).enabled=Qt.binding(function(){return toolBridge.screenViewAvailable&&!toolBridge.busy&&page.reviewedMirrorTarget!==""&&page.reviewedMirrorTarget===toolBridge.selectedSerial&&mirrorOwner.checked&&mirrorComponent.checked&&mirrorChallenge.text===page.reviewedMirrorTarget})
+  readonly property string blocker:!toolBridge.screenViewAvailable?app.trx("عرض الشاشة غير متاح في هذه النسخة.","Screen view is unavailable in this build."):toolBridge.busy?app.trx("انتظر انتهاء العملية الحالية أو ألغها ثم أعد المحاولة.","Wait for the current operation to finish or cancel it, then retry."):!page.reviewedMirrorTarget||page.reviewedMirrorTarget!==toolBridge.selectedSerial?app.trx("تغيّر الجهاز المحدد؛ أغلق النافذة واختر الهاتف ثم افتح العرض مجددًا.","The selected target changed; close this dialog, select the phone, and review again."):!mirrorOwner.checked?app.trx("ضع علامة تأكيد تفويض مالك الجهاز.","Confirm the device owner's authorization."):!mirrorComponent.checked?app.trx("ضع علامة الموافقة على المكون المؤقت وعرض الشاشة.","Approve the temporary component and screen viewing."):mirrorChallenge.text!==page.reviewedMirrorTarget?app.trx("الرقم غير مطابق؛ انسخ الرقم المعروض والصقه في خانة التأكيد دون مسافات.","Serial does not match; copy the displayed serial and paste it into confirmation without spaces."):""
+  onOpened:standardButton(Dialog.Ok).enabled=Qt.binding(function(){return mirrorConfirm.blocker===""})
   onAccepted:{page.showMirror=true;resultTabs.currentIndex=3;app.notice(toolBridge.startMirror(page.reviewedMirrorTarget,{authorized:mirrorOwner.checked,component:mirrorComponent.checked,challenge:mirrorChallenge.text}),app.trx("بدأ التحقق من أداة العرض والهدف","Screen-view tool and target checks started"),toolBridge.status)}
   ColumnLayout {width:mirrorConfirm.availableWidth;spacing:12
-   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:app.trx("الجهاز المحدد: ","Reviewed target: ")+page.reviewedMirrorTarget;color:app.tone("#edf4ff")}
+   Label {text:app.trx("الجهاز المحدد — الرقم التسلسلي","Reviewed target — serial number");color:app.tone("#edf4ff")}
+   RowLayout {Layout.fillWidth:true
+    EntryField {id:mirrorSerial;objectName:"mirrorReviewedSerial";Layout.fillWidth:true;readOnly:true;requiredInput:false;text:page.reviewedMirrorTarget;LayoutMirroring.enabled:false;horizontalAlignment:TextInput.AlignLeft;Accessible.name:app.trx("الرقم التسلسلي للجهاز المحدد، قابل للنسخ","Reviewed device serial, selectable for copying")}
+    ActionButton {objectName:"copyMirrorSerial";text:app.trx("نسخ الرقم","Copy serial");enabled:mirrorSerial.length>0;onClicked:{mirrorSerial.selectAll();mirrorSerial.copy();Qt.callLater(function(){mirrorChallenge.forceActiveFocus()})}}
+   }
    Label {objectName:"mirrorComponentNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("scrcpy يرفع مكونًا مؤقتًا ويشغله على الهاتف؛ هذه ليست عملية قراءة خالصة. قد تظهر بيانات الشاشة الخاصة في نافذة خارجية. إيقاف البرنامج لا يثبت تنظيف الهاتف أو سلامة الأدلة. اختبار الهاتف الفعلي معلق.","scrcpy uploads and runs a temporary device component; this is not a purely passive read. Private screen data may appear in an external window. Stopping the host does not prove phone cleanup or forensic integrity. Physical acceptance is pending.");color:app.tone("#eab775")}
    NeonCheckBox {id:mirrorOwner;objectName:"mirrorOwner";text:app.trx("لدي تفويض صريح من مالك الجهاز لعرض الشاشة","I have explicit owner authorization to view this screen")}
    NeonCheckBox {id:mirrorComponent;objectName:"mirrorComponent";text:app.trx("أوافق على تشغيل المكون المؤقت وكشف محتوى الشاشة","I approve the temporary component and screen-content exposure")}
-   TextField {id:mirrorChallenge;objectName:"mirrorChallenge";Layout.fillWidth:true;placeholderText:app.trx("اكتب الرقم التسلسلي المحدد للتأكيد","Type the reviewed serial to confirm")}
+   EntryField {id:mirrorChallenge;objectName:"mirrorChallenge";Layout.fillWidth:true;LayoutMirroring.enabled:false;horizontalAlignment:TextInput.AlignLeft;validateInput:value=>value===page.reviewedMirrorTarget;placeholderText:app.trx("الصق الرقم التسلسلي المحدد للتأكيد","Paste the reviewed serial to confirm")}
+   Label {objectName:"mirrorConfirmationStatus";Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:mirrorConfirm.blocker||app.trx("جاهز لبدء عرض الشاشة. اضغط موافق.","Ready to start screen view. Click OK.");color:mirrorConfirm.blocker?app.tone("#eab775"):app.tone("#39FF14");Accessible.role:Accessible.StaticText}
   }
  }
 

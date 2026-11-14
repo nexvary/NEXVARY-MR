@@ -9,7 +9,7 @@ Item {
  ColumnLayout {
   anchors.fill:parent;spacing:12
   Label {text:app.trx("أوقات جمع الأدلة وعمليات القضية بصيغة UTC. لا يمثل هذا نشاط التطبيقات أو تاريخ إنشاء الملفات على الهاتف.","UTC evidence collection and case-operation times. This is not application activity or phone file-creation history.");Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3")}
-  TextField {id:query;objectName:"forensicTimelineSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث في الخط الزمني","Search case timeline")}
+  EntryField {id:query;objectName:"forensicTimelineSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث في الخط الزمني","Search case timeline")}
   ListView {
    objectName:"forensicTimelineList";Layout.fillWidth:true;Layout.fillHeight:true;clip:true;spacing:8;model:page.events;ScrollBar.vertical:ScrollBar {}
    delegate:GlossSurface {
@@ -18,7 +18,7 @@ Item {
     ColumnLayout {id:eventColumn;anchors.left:parent.left;anchors.right:parent.right;anchors.top:parent.top;anchors.margins:12;spacing:5
      Label {text:modelData.atUtc+" · "+modelData.event;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#63d7b1");font.bold:true}
      Label {text:modelData.detail;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#d3e8fa")}
-     Label {text:modelData.operator+" · "+modelData.evidenceId;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:12}
+     Label {text:modelData.operator+" · "+modelData.evidenceId;textFormat:Text.PlainText;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:app.tone("#9bbbd3");font.pixelSize:14}
     }
    }
   }

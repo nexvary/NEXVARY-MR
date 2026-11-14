@@ -13,7 +13,7 @@ Panel {
  objectName:"governmentNetworkPanel"
  title:app.trx("سياسة العمليات الحكومية","Government operation policy")
  iconName:"document_lock"
- stateText:operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
+ stateText:identityBridge.directWork?app.trx("عمل مباشر","Direct work"):operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
  function requestCategory(name){const consent=approval.checked;approval.checked=false;selectedRequest=operationPolicy.requestException(name,reason.text,caseRef.text,seconds.value,consent)}
  function caption(name){
   const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","paid-unknown-cost":"السماح بعمليات مجهولة التكلفة — تتطلب موافقة مدير مستقل","external-analysis":"التحليل الخارجي وطلبات OSINT","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
@@ -25,12 +25,13 @@ Panel {
   return app.ar?(ar[status]||status):status
  }
  function kindCaption(kind){
-  const ar={"lampyre-mcp":"طلب أداة Lampyre MCP","phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
-  const en={"lampyre-mcp":"Lampyre MCP tool request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
+  const ar={"intelligence-mcp":"طلب استخبارات نيكسفاري","lampyre-mcp":"طلب استخبارات نيكسفاري","phone-osint":"استخبارات رقم هاتف","security-scan":"فحص ملف","signature-update":"تحديث تواقيع","partition-analysis":"تحليل أقسام الصورة"}
+  const en={"intelligence-mcp":"NEXVARY Intelligence request","lampyre-mcp":"NEXVARY Intelligence request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
   return (app.ar?ar:en)[kind]||kind
  }
- Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
- CheckBox {id:policyTechnical;text:app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
+ Label {visible:!identityBridge.directWork||policyTechnical.checked;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
+ Label {objectName:"directDevicePolicyStatus";visible:identityBridge.directWork;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.success:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("أدوات الجهاز متاحة مباشرة دون حساب تطبيق أو طلب استثناء. افتح مدير الأجهزة ثم اكتشاف ADB؛ وافق على اتصال USB من الهاتف.","Device tools are available directly without an application account or exception. Open Device Manager, discover ADB, and authorize USB on the handset."):app.trx("تعذر التحقق من سجل العمليات المحلي؛ يلزم إصلاح السجل قبل تشغيل أدوات الجهاز.","The local operation journal could not be verified; repair it before running device tools.")}
+ NeonCheckBox {id:policyTechnical;text:identityBridge.directWork?app.trx("إعدادات السياسات المؤسسية المتقدمة","Advanced institutional policy settings"):app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
  Label {visible:policyTechnical.checked;objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.accent:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("سجل السياسات متاح — تحقق محلي","Policy journal available — local verification"):app.trx("تعذر التحقق من سجل السياسات — الاستثناءات مغلقة","Policy journal unavailable — exceptions denied")}
  ColumnLayout {
@@ -47,8 +48,20 @@ Panel {
    }
   }
  }
- TextField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
- TextField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
+ ColumnLayout {
+  visible:!identityBridge.directWork||policyTechnical.checked
+  Layout.fillWidth:true
+ GridLayout {
+  objectName:"governmentRequestFields";Layout.fillWidth:true;Layout.maximumWidth:700;columns:width>=600?2:1;columnSpacing:16;rowSpacing:12
+  ColumnLayout {Layout.fillWidth:true;Layout.maximumWidth:320;spacing:5
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("سبب الطلب أو المراجعة","Request or review reason")}
+  EntryField {id:reason;objectName:"governmentNetworkReason";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("سبب الطلب أو المراجعة أو القرار — يسجل بتوقيع","Request, review or decision reason — signed and retained")}
+  }
+  ColumnLayout {Layout.fillWidth:true;Layout.maximumWidth:320;spacing:5
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("مرجع القضية — اختياري","Case reference — optional")}
+  EntryField {id:caseRef;objectName:"governmentNetworkCaseRef";Layout.fillWidth:true;maximumLength:36;placeholderText:app.trx("مرجع القضية UUID اختياري، وليس تصريح وصول","Optional case UUID reference; not an access grant")}
+  }
+ }
  RowLayout {Layout.fillWidth:true
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("مدة التفعيل بالثواني (1–600)","Activation duration in seconds (1–600)")}
   SpinBox {id:seconds;objectName:"governmentNetworkDuration";from:1;to:600;value:600;editable:true}
@@ -58,18 +71,22 @@ Panel {
   text:app.trx("أقر بطلب الاستثناء ومخاطر الفئة المحددة","Consent to the request and selected category's risks")
   contentItem:Label {text:approval.text;wrapMode:Text.WordWrap;color:panel.app.design.text;leftPadding:approval.mirrored?0:approval.indicator.width+approval.spacing;rightPadding:approval.mirrored?approval.indicator.width+approval.spacing:0;verticalAlignment:Text.AlignVCenter}
  }
+ GridLayout {
+  objectName:"governmentPermissionGrid";Layout.fillWidth:true;columns:width>=820?2:1;columnSpacing:20;rowSpacing:16
  Repeater {
   model:operationPolicy.permissions
   delegate:ColumnLayout {
+   Layout.minimumWidth:0
    required property var modelData
    Layout.fillWidth:true
-   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.allowed?panel.app.design.accent:panel.app.design.text;text:panel.caption(modelData.capability)+" · "+(modelData.allowed?panel.app.trx("مسموح مؤقتًا","Temporarily allowed"):panel.app.trx("محظور","Blocked"))}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.allowed?panel.app.design.accent:panel.app.design.text;text:panel.caption(modelData.capability)+" · "+(modelData.allowed?(modelData.directWork?panel.app.trx("متاح مباشرة","Available directly"):panel.app.trx("مسموح مؤقتًا","Temporarily allowed")):panel.app.trx("محظور","Blocked"))}
    Label {visible:modelData.allowed;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:panel.app.design.muted;text:(modelData.reason||"")+"\n"+(modelData.actor||"")+" · "+(modelData.expiresUtc||"")}
-   RowLayout {Layout.fillWidth:true
+   RowLayout {visible:!modelData.directWork;Layout.fillWidth:true
     ActionButton {objectName:"governmentNetworkGrant-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("طلب استثناء","Request exception");enabled:panel.canRequest&&approval.checked&&reason.text.trim().length>0&&!modelData.allowed;onClicked:panel.requestCategory(modelData.capability)}
     ActionButton {objectName:"governmentNetworkRevoke-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("إيقاف التفعيل","Stop activation");visible:modelData.allowed;enabled:modelData.allowed;onClicked:operationPolicy.revoke(modelData.capability)}
    }
   }
+ }
  }
  ActionButton {objectName:"governmentNetworkRevokeAll";text:app.trx("إغلاق جميع الاستثناءات النشطة","Close all active exceptions");enabled:!operationPolicy.offline;onClicked:operationPolicy.revokeAll()}
  ActionButton {objectName:"governmentPolicyRefresh";text:app.trx("تحديث السجل والطلبات","Refresh journal and requests");onClicked:operationPolicy.refreshAudit()}
@@ -93,14 +110,15 @@ Panel {
    ActionButton {objectName:"governmentPolicyCancel-"+modelData.id;visible:!closed;enabled:owner||assigned||panel.role==="administrator";text:panel.app.trx("سحب الطلب أو الموافقة","Revoke request or approval");onClicked:operationPolicy.revokeException(modelData.id)}
   }
  }
+ }
  ColumnLayout {
   visible:panel.canAudit;Layout.fillWidth:true
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احتفظ بمرساة التحقق التالية في مكان مستقل. حذف السجل أو إرجاع ملف صحيح قديم بعد إعادة التشغيل يحتاج مرساة مستقلة لكشفه. التصدير غير مشفر ويحتوي أسباب القرارات ومراجعها.","Retain this anchor separately. Whole-history reset or valid-file rollback after restart requires an independently retained anchor to detect. Export is unencrypted and includes decision reasons and references.")}
-  TextArea {objectName:"governmentPolicyAnchor";Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify({journalId:operationPolicy.auditStatus.journalId,publicKey:operationPolicy.auditStatus.publicKey,sequence:operationPolicy.auditStatus.sequence,hash:operationPolicy.auditStatus.hash})}
-  TextField {id:auditPath;objectName:"governmentPolicyAuditPath";Layout.fillWidth:true;placeholderText:app.trx("المسار المحلي الكامل لملف السجل JSON","Full local path to the audit JSON file")}
+  EntryArea {objectName:"governmentPolicyAnchor";Layout.fillWidth:true;readOnly:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;text:JSON.stringify({journalId:operationPolicy.auditStatus.journalId,publicKey:operationPolicy.auditStatus.publicKey,sequence:operationPolicy.auditStatus.sequence,hash:operationPolicy.auditStatus.hash})}
+  EntryField {id:auditPath;objectName:"governmentPolicyAuditPath";Layout.fillWidth:true;placeholderText:app.trx("المسار المحلي الكامل لملف السجل JSON","Full local path to the audit JSON file")}
   NeonCheckBox {id:exportConsent;text:app.trx("أوافق على تصدير سجل غير مشفر","Consent to unencrypted audit export")}
   ActionButton {objectName:"governmentPolicyExport";enabled:auditPath.text.length>0&&exportConsent.checked;text:app.trx("تصدير إلى ملف جديد","Export to a new file");onClicked:operationPolicy.exportAudit(auditPath.text,exportConsent.checked)}
-  TextArea {id:retained;objectName:"governmentPolicyRetainedAnchor";Layout.fillWidth:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;placeholderText:app.trx("ألصق مرساة JSON المحفوظة مستقلًا","Paste the independently retained JSON anchor")}
+  EntryArea {id:retained;objectName:"governmentPolicyRetainedAnchor";Layout.fillWidth:true;selectByMouse:true;wrapMode:TextEdit.WrapAnywhere;placeholderText:app.trx("ألصق مرساة JSON المحفوظة مستقلًا","Paste the independently retained JSON anchor")}
   ActionButton {objectName:"governmentPolicyVerify";enabled:auditPath.text.length>0&&retained.text.length>0;text:app.trx("تحقق من التواقيع والترتيب والمرساة","Verify signatures, order and retained anchor");onClicked:operationPolicy.verifyAudit(auditPath.text,retained.text)}
   Label {Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.design.muted;text:operationPolicy.auditStatus.verification?JSON.stringify(operationPolicy.auditStatus.verification):""}
  }

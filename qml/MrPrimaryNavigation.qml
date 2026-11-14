@@ -43,8 +43,8 @@ Rectangle {
      ToolTip.visible:hovered;ToolTip.text:text
      contentItem:ColumnLayout {
       spacing:3
-      Image {objectName:"primaryNavIcon"+section.sectionIndex;source:"qrc:/assets/icons-professional/"+section.entry.icon+".svg";Layout.preferredWidth:44;Layout.preferredHeight:44;Layout.alignment:Qt.AlignHCenter;sourceSize:Qt.size(64,64);fillMode:Image.PreserveAspectFit}
-      Label {text:section.text;color:section.selected?"#E5EDF3":section.hovered?"#C4E7F5":"#9EB4C1";font.pixelSize:12;font.weight:section.selected?Font.DemiBold:Font.Normal;Layout.fillWidth:true;Layout.preferredHeight:34;horizontalAlignment:Text.AlignHCenter;verticalAlignment:Text.AlignVCenter;wrapMode:Text.WordWrap;maximumLineCount:2;elide:Text.ElideRight}
+      SemanticIcon {objectName:"primaryNavIcon"+section.sectionIndex;iconSource:"qrc:/assets/icons-professional/"+section.entry.icon+".svg";Layout.preferredWidth:44;Layout.preferredHeight:44;Layout.alignment:Qt.AlignHCenter;fillMode:Image.PreserveAspectFit}
+      Label {text:section.text;color:section.selected?"#E5EDF3":section.hovered?"#C4E7F5":"#9EB4C1";font.pixelSize:14;font.weight:section.selected?Font.DemiBold:Font.Normal;Layout.fillWidth:true;Layout.preferredHeight:48;horizontalAlignment:Text.AlignHCenter;verticalAlignment:Text.AlignVCenter;wrapMode:Text.WordWrap;maximumLineCount:2;elide:Text.ElideRight}
      }
      background:Item {
       Rectangle {anchors.left:parent.left;anchors.right:parent.right;anchors.bottom:parent.bottom;anchors.leftMargin:8;anchors.rightMargin:8;height:section.activeFocus?3:2;color:section.selected||section.activeFocus?"#23B9E7":"#52758A";visible:section.selected||section.hovered||section.activeFocus}

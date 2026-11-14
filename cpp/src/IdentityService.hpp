@@ -9,6 +9,7 @@
 class IdentityService final:public QObject {
  Q_OBJECT
  Q_PROPERTY(QVariantMap setupStatus READ setupStatus NOTIFY changed)
+ Q_PROPERTY(bool directWork READ directWork NOTIFY changed)
  Q_PROPERTY(bool ready READ ready NOTIFY changed)
  Q_PROPERTY(bool needsSetup READ needsSetup NOTIFY changed)
  Q_PROPERTY(bool authenticated READ authenticated NOTIFY changed)
@@ -19,8 +20,10 @@ public:
  explicit IdentityService(const QString &path,bool synthetic=false,QObject *parent=nullptr,int syntheticSessionLifetimeMs=15*60*1000);
  ~IdentityService() override;
  QVariantMap setupStatus()const;
+ bool startDirectWork(); // Native Windows-profile operation; no application login.
+ bool directWork()const{return direct_;}
  bool ready()const{return ready_;}
- bool needsSetup()const{return ready_&&state_.value("users").toList().isEmpty();}
+ bool needsSetup()const{return !direct_&&ready_&&state_.value("users").toList().isEmpty();}
  bool authenticated()const{return !userId_.isEmpty();}
  QString error()const{return error_;}
  QVariantMap session()const;
@@ -56,7 +59,8 @@ private:
  QVariantMap account(const QString &id)const;
  QVariantMap newAccount(const QString &username,const QString &name,const QString &role,const QString &password);
  QString path_,error_,userId_;
- bool synthetic_=false,ready_=false;
+ bool synthetic_=false,ready_=false,direct_=false;
+ QVariantMap directPrincipal_;
  QVariantMap state_;
  QElapsedTimer lifetime_;
  int sessionLifetimeMs_=15*60*1000;

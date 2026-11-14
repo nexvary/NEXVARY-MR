@@ -1,115 +1,228 @@
 {
-  "author": "Nexvary MR independently authored vector material system",
-  "treatment": "Unframed sculpted silver, indigo enamel, neon red #FF1744 and neon green #39FF14; original geometry authored by scripts/build_sculpted_icons.py. No emoji or library glyph tracing. Semantic green/amber/red status accents retained.",
-  "license": "Project license; no upstream geometry in these generated assets",
+  "repository": "https://github.com/microsoft/fluentui-system-icons",
+  "revision": "a347af95478f989038cccbf085978865264c048a",
+  "license": "MIT; packaging/licenses/FLUENT-ICONS-MIT.txt",
+  "treatment": "Unmodified official full-color SVGs. Three stable semantic aliases reuse official artwork; no custom geometric replacements or palette rewriting.",
   "files": [
     {
       "file": "home.svg",
-      "sha256": "c1676ab3580b66845f3717f02d226ff5911284dbc32f54569c8db7f1bb01d4ae"
-    },
-    {
-      "file": "document_lock.svg",
-      "sha256": "1bd1fe4075ec6c04cfdd8ead9bcab7a5e120fabd446123f310bb5ec4cac339b9"
-    },
-    {
-      "file": "clipboard_task.svg",
-      "sha256": "3b21233173175757232df9650a6d1b676ac4167dc5421504bfc0d93e9a0e91a0"
+      "source": "assets/Home/SVG/ic_fluent_home_24_color.svg",
+      "source_sha256": "1b6a5c06d4c44ebe0f0b675fdbde99968a96ef5c22c6d8eb303bdbe0cf40a92f",
+      "sha256": "1b6a5c06d4c44ebe0f0b675fdbde99968a96ef5c22c6d8eb303bdbe0cf40a92f"
     },
     {
       "file": "phone.svg",
-      "sha256": "b3a848eea2a71c1c7364784951ff3145ac1598731eb269653a05a3875b8d9bee"
-    },
-    {
-      "file": "evidence_box.svg",
-      "sha256": "b48c047f62218d55641c42d460d4d46935374a0ed0c6d6acece3ae9a3a75d339"
-    },
-    {
-      "file": "history.svg",
-      "sha256": "0887d628f8e84f7222072cc49faff0c9d700e16ce9ad2e76f706a03cb4db2f7c"
-    },
-    {
-      "file": "shield_checkmark.svg",
-      "sha256": "18b9b7105ae2d7fb621e80ec8ec84b26feb19632155a279461e72edf78966fbf"
-    },
-    {
-      "file": "book_open_lightbulb.svg",
-      "sha256": "c514f563de40a1962164af14e07498637826e0b9863708738f9c842b7b9246c9"
-    },
-    {
-      "file": "training_lab.svg",
-      "sha256": "ea6dcb873c42bc572d90a4713e34349e500adec96713969ed8d53feeef9c1c30"
-    },
-    {
-      "file": "document_text.svg",
-      "sha256": "d72a8c9f5334f6b406f337c3e609d0866e512b8c4eb6e5c57ceef62413236ebc"
-    },
-    {
-      "file": "settings.svg",
-      "sha256": "1f9d37e5fce8d4f4672ee7a79dbe95303593da26436bce6d7e9cd10e46e4bb96"
-    },
-    {
-      "file": "toolbox.svg",
-      "sha256": "e02e4130d0bbe5b34cbf4da7f92df65546ca79db5474d50c8b34c80194258a73"
-    },
-    {
-      "file": "phone_laptop.svg",
-      "sha256": "58e00e36eb4f0528e41c14d4a00a80134a31eb9c402c18b2d6646137f878b744"
-    },
-    {
-      "file": "arrow_square_down.svg",
-      "sha256": "e0487710b3edda4087d68377778b7f69b55010a55578650a2251c5d95abdad03"
+      "source": "assets/Phone/SVG/ic_fluent_phone_24_color.svg",
+      "source_sha256": "56e161979e92136aaaffacbcdd9f30cc09562e4d4f1f52f9b004c3f58be65edf",
+      "sha256": "56e161979e92136aaaffacbcdd9f30cc09562e4d4f1f52f9b004c3f58be65edf"
     },
     {
       "file": "gauge.svg",
-      "sha256": "0eb1e429dd41f6360751b5d55a70baa998b2a08dd8f2216257e8d746f80f8222"
+      "source": "assets/Gauge/SVG/ic_fluent_gauge_24_color.svg",
+      "source_sha256": "6d5edf5a1ffd285a385facdafcb463cebac7746d1739b4c7756b0c30680d9279",
+      "sha256": "6d5edf5a1ffd285a385facdafcb463cebac7746d1739b4c7756b0c30680d9279"
     },
     {
       "file": "board.svg",
-      "sha256": "102fc06bd8e0e7a9a7f09648c89d0241a1dae7166742bf81b6ccd32be59bf5a6"
+      "source": "assets/Board/SVG/ic_fluent_board_24_color.svg",
+      "source_sha256": "69a524179fa84dfe0aa417228d876fa7283da9f07fab7ac9e864328336cb864e",
+      "sha256": "69a524179fa84dfe0aa417228d876fa7283da9f07fab7ac9e864328336cb864e"
     },
     {
-      "file": "arrow_sync.svg",
-      "sha256": "7010c99725f6beda0ad8ec6ae44525e9a7a40f3a54acbe1887884db32a88cc17"
+      "file": "arrow_square_down.svg",
+      "source": "assets/Arrow Square Down/SVG/ic_fluent_arrow_square_down_24_color.svg",
+      "source_sha256": "075ca36bcea2d37b8600dbdaba887ea20288a99e487b2b246d73a8182966cc85",
+      "sha256": "075ca36bcea2d37b8600dbdaba887ea20288a99e487b2b246d73a8182966cc85"
     },
     {
-      "file": "wrench.svg",
-      "sha256": "0034b653cf028241228c3e658ab03d9461ad64e027ba873c8d500f2bbf228d69"
-    },
-    {
-      "file": "data_bar_vertical_ascending.svg",
-      "sha256": "7d41541482fe76d9021095316df221ab78900b25ae45659e6f5580e3ad1e1625"
-    },
-    {
-      "file": "search_visual.svg",
-      "sha256": "1def0b0b33811fa34815b3f306a7f9f5de0fefdd6ff83a25a996e56cbb1ea00b"
+      "file": "clipboard_task.svg",
+      "source": "assets/Clipboard Task/SVG/ic_fluent_clipboard_task_24_color.svg",
+      "source_sha256": "c81cab69d8fdf02ac921dc31b66f46ec4388ba1dc85818fe9488de4dea0ca831",
+      "sha256": "c81cab69d8fdf02ac921dc31b66f46ec4388ba1dc85818fe9488de4dea0ca831"
     },
     {
       "file": "database.svg",
-      "sha256": "c4089aa961c11e683f4f6a03477ae789358bd57c4f53eee1cd5597127b79e729"
+      "source": "assets/Database/SVG/ic_fluent_database_24_color.svg",
+      "source_sha256": "ec181d4822154949b1e7986be45cd68a9854c0083866a7a350674796fcba693e",
+      "sha256": "ec181d4822154949b1e7986be45cd68a9854c0083866a7a350674796fcba693e"
     },
     {
-      "file": "puzzle_piece.svg",
-      "sha256": "60852d679a95d098616165a292f1ae6754ac4089786a526273f5c88f2ae01dbe"
+      "file": "settings.svg",
+      "source": "assets/Settings/SVG/ic_fluent_settings_24_color.svg",
+      "source_sha256": "5703399b75763538275f16f22b4156894b97cc8aacb0141baaeac891e46b1d1e",
+      "sha256": "5703399b75763538275f16f22b4156894b97cc8aacb0141baaeac891e46b1d1e"
     },
     {
-      "file": "checkmark_circle.svg",
-      "sha256": "24217ad63f08d439a03ed9c6eaf7aac54b54695462caeebb80a38fb0ee884b0c"
+      "file": "history.svg",
+      "source": "assets/History/SVG/ic_fluent_history_24_color.svg",
+      "source_sha256": "f3240058f37c5bb0a9797cc8ba3ee1685c01de8af52f488cf9d5e0f2b698a324",
+      "sha256": "f3240058f37c5bb0a9797cc8ba3ee1685c01de8af52f488cf9d5e0f2b698a324"
     },
     {
-      "file": "error_circle.svg",
-      "sha256": "4b09881057f204ab1fd6b7f15caaef0a4140870e8f2940754bb091e564afddb5"
+      "file": "document_lock.svg",
+      "source": "assets/Document Lock/SVG/ic_fluent_document_lock_24_color.svg",
+      "source_sha256": "f47bdc6aa2d5065b1e2851bf489ebe724f9f9b67ffe46f5f2726f81f004258c0",
+      "sha256": "f47bdc6aa2d5065b1e2851bf489ebe724f9f9b67ffe46f5f2726f81f004258c0"
+    },
+    {
+      "file": "toolbox.svg",
+      "source": "assets/Toolbox/SVG/ic_fluent_toolbox_24_color.svg",
+      "source_sha256": "779aaaa9f41f34cdd24aa47e749001f5b79cef371cde354e91b62fad407156fa",
+      "sha256": "779aaaa9f41f34cdd24aa47e749001f5b79cef371cde354e91b62fad407156fa"
+    },
+    {
+      "file": "wrench.svg",
+      "source": "assets/Wrench/SVG/ic_fluent_wrench_24_color.svg",
+      "source_sha256": "aa22b006fc07ae368038a0c1ba82702caaaa3236afa4d9a89b6b150051042eba",
+      "sha256": "aa22b006fc07ae368038a0c1ba82702caaaa3236afa4d9a89b6b150051042eba"
     },
     {
       "file": "question_circle.svg",
-      "sha256": "50d95fe0be6df61cbe04405401c4dbeec616b580a82e96cf39a0705079f6d278"
+      "source": "assets/Question Circle/SVG/ic_fluent_question_circle_24_color.svg",
+      "source_sha256": "58a14133c6ffb9c43041e15a3968032f2cb82ea7fd3586d17509600ce947be93",
+      "sha256": "58a14133c6ffb9c43041e15a3968032f2cb82ea7fd3586d17509600ce947be93"
+    },
+    {
+      "file": "document_text.svg",
+      "source": "assets/Document Text/SVG/ic_fluent_document_text_24_color.svg",
+      "source_sha256": "6c6654a8db202201af9d8709f841dacd27ab74001655601bdb8e9314feb97374",
+      "sha256": "6c6654a8db202201af9d8709f841dacd27ab74001655601bdb8e9314feb97374"
+    },
+    {
+      "file": "search_visual.svg",
+      "source": "assets/Search Visual/SVG/ic_fluent_search_visual_24_color.svg",
+      "source_sha256": "0178f697fa83feb213c9c876b6051ce4aec36da472290c4db0909e33ac5fb2cd",
+      "sha256": "0178f697fa83feb213c9c876b6051ce4aec36da472290c4db0909e33ac5fb2cd"
+    },
+    {
+      "file": "book_open_lightbulb.svg",
+      "source": "assets/Book Open Lightbulb/SVG/ic_fluent_book_open_lightbulb_24_color.svg",
+      "source_sha256": "f30fa22f81320b5a1ee86eb074b7338d0cf4555dbdd4797747cc687e59a9c31f",
+      "sha256": "f30fa22f81320b5a1ee86eb074b7338d0cf4555dbdd4797747cc687e59a9c31f"
+    },
+    {
+      "file": "shield_checkmark.svg",
+      "source": "assets/Shield Checkmark/SVG/ic_fluent_shield_checkmark_24_color.svg",
+      "source_sha256": "79974746d0aac9f6910cb86e4e673e32f3b9e36c2b02eaff9c084810c6e578dc",
+      "sha256": "79974746d0aac9f6910cb86e4e673e32f3b9e36c2b02eaff9c084810c6e578dc"
+    },
+    {
+      "file": "data_bar_vertical_ascending.svg",
+      "source": "assets/Data Bar Vertical Ascending/SVG/ic_fluent_data_bar_vertical_ascending_24_color.svg",
+      "source_sha256": "fbbc2b60b4b8b1b6296016a598f7705fdc1cf9c2729ad54b10e812cc0a3a5045",
+      "sha256": "fbbc2b60b4b8b1b6296016a598f7705fdc1cf9c2729ad54b10e812cc0a3a5045"
+    },
+    {
+      "file": "puzzle_piece.svg",
+      "source": "assets/Puzzle Piece/SVG/ic_fluent_puzzle_piece_24_color.svg",
+      "source_sha256": "80f0370d728cab619d6c16efb3f6a54058ab1206f03d85b8eebeb13a186e67b6",
+      "sha256": "80f0370d728cab619d6c16efb3f6a54058ab1206f03d85b8eebeb13a186e67b6"
+    },
+    {
+      "file": "phone_laptop.svg",
+      "source": "assets/Phone Laptop/SVG/ic_fluent_phone_laptop_24_color.svg",
+      "source_sha256": "eccffe67e0ad1b53e29c96b65425e6d53fb8a0cb8eb6aad9fa0e591997aebdf4",
+      "sha256": "eccffe67e0ad1b53e29c96b65425e6d53fb8a0cb8eb6aad9fa0e591997aebdf4"
+    },
+    {
+      "file": "arrow_sync.svg",
+      "source": "assets/Arrow Sync/SVG/ic_fluent_arrow_sync_24_color.svg",
+      "source_sha256": "bb5b3763ca57b2dd31b31e309dd186886be05d38f1a29ad4e41284eb62289171",
+      "sha256": "bb5b3763ca57b2dd31b31e309dd186886be05d38f1a29ad4e41284eb62289171"
+    },
+    {
+      "file": "checkmark_circle.svg",
+      "source": "assets/Checkmark Circle/SVG/ic_fluent_checkmark_circle_24_color.svg",
+      "source_sha256": "bf4fc912b3c2b41a3143f631f49cb5f6deda8c70083a1909528b899afe7dbed8",
+      "sha256": "bf4fc912b3c2b41a3143f631f49cb5f6deda8c70083a1909528b899afe7dbed8"
+    },
+    {
+      "file": "error_circle.svg",
+      "source": "assets/Dismiss Circle/SVG/ic_fluent_dismiss_circle_24_color.svg",
+      "source_sha256": "85034ad363b85821e62a640942573a6463d1e3219fd5912b4b97e791cb0258c1",
+      "sha256": "85034ad363b85821e62a640942573a6463d1e3219fd5912b4b97e791cb0258c1",
+      "raw_file": "dismiss_circle.svg"
     },
     {
       "file": "warning.svg",
-      "sha256": "f4db85db71ac8d3e4e9f40638328f561c55000fa84bad9d0b3b8b2c80c5248f1"
+      "source": "assets/Warning/SVG/ic_fluent_warning_24_color.svg",
+      "source_sha256": "148ebb9a2c5e9958fa74c4b11fc44da4edff63386f6b71bf5093acd8e2126b6d",
+      "sha256": "148ebb9a2c5e9958fa74c4b11fc44da4edff63386f6b71bf5093acd8e2126b6d"
     },
     {
       "file": "check_mark.svg",
-      "sha256": "01c65e2574ef9e4532f4fa9cd5b92bc546ecc327bd6c4da732dac605a8096a04"
+      "alias_of": "checkmark_circle.svg",
+      "sha256": "bf4fc912b3c2b41a3143f631f49cb5f6deda8c70083a1909528b899afe7dbed8"
+    },
+    {
+      "file": "evidence_box.svg",
+      "alias_of": "database.svg",
+      "sha256": "ec181d4822154949b1e7986be45cd68a9854c0083866a7a350674796fcba693e"
+    },
+    {
+      "file": "training_lab.svg",
+      "alias_of": "book_open_lightbulb.svg",
+      "sha256": "f30fa22f81320b5a1ee86eb074b7338d0cf4555dbdd4797747cc687e59a9c31f"
+    },
+    {
+      "file": "mail.svg",
+      "source": "assets/Mail/SVG/ic_fluent_mail_24_color.svg",
+      "source_sha256": "39a9c914d6c52d9af0e3adc4f952f09c166ed7e0db2ea7c1930875567ed97b29",
+      "sha256": "39a9c914d6c52d9af0e3adc4f952f09c166ed7e0db2ea7c1930875567ed97b29"
+    },
+    {
+      "file": "people.svg",
+      "source": "assets/People/SVG/ic_fluent_people_24_color.svg",
+      "source_sha256": "f7e8f96599ca357b13c37e36d939ebf6461bc5089d00892c5654bdbeaf72884d",
+      "sha256": "f7e8f96599ca357b13c37e36d939ebf6461bc5089d00892c5654bdbeaf72884d"
+    },
+    {
+      "file": "person.svg",
+      "source": "assets/Person/SVG/ic_fluent_person_24_color.svg",
+      "source_sha256": "e8488bba19a2aa80cb7e3fcd20d325ebb33babaf44fec62a11ca95182abb0f76",
+      "sha256": "e8488bba19a2aa80cb7e3fcd20d325ebb33babaf44fec62a11ca95182abb0f76"
+    },
+    {
+      "file": "building.svg",
+      "source": "assets/Building/SVG/ic_fluent_building_24_color.svg",
+      "source_sha256": "d822560c1ddca4a5805eab88d0ac0dbdb92381da3d77511ed38a8d74d9cb52ec",
+      "sha256": "d822560c1ddca4a5805eab88d0ac0dbdb92381da3d77511ed38a8d74d9cb52ec"
+    },
+    {
+      "file": "globe.svg",
+      "source": "assets/Globe/SVG/ic_fluent_globe_24_color.svg",
+      "source_sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34",
+      "sha256": "b726489c1c3e0438b0d9f2d85495643c1e1d8dbaf44613290baf3efce115fd34"
+    },
+    {
+      "file": "camera.svg",
+      "source": "assets/Camera/SVG/ic_fluent_camera_24_color.svg",
+      "source_sha256": "3189229c9c923c89ab1bf394e31c25c48245619b21828b710129240061597ce6",
+      "sha256": "3189229c9c923c89ab1bf394e31c25c48245619b21828b710129240061597ce6"
+    },
+    {
+      "file": "certificate.svg",
+      "source": "assets/Certificate/SVG/ic_fluent_certificate_24_color.svg",
+      "source_sha256": "05fa11423d4b8bed54b7aa06cd723272ffdf3f39c88e9b7959ea5285ea280af3",
+      "sha256": "05fa11423d4b8bed54b7aa06cd723272ffdf3f39c88e9b7959ea5285ea280af3"
+    },
+    {
+      "file": "coin_multiple.svg",
+      "source": "assets/Coin Multiple/SVG/ic_fluent_coin_multiple_24_color.svg",
+      "source_sha256": "c070c12c2cfba787b28e9c0d0b997b1eed1439d9265a1eee1451a56c0b59c020",
+      "sha256": "c070c12c2cfba787b28e9c0d0b997b1eed1439d9265a1eee1451a56c0b59c020"
+    },
+    {
+      "file": "contact_card.svg",
+      "source": "assets/Contact Card/SVG/ic_fluent_contact_card_24_color.svg",
+      "source_sha256": "d4cc99895eb3fd4e63eb09a067ed1f5f73c6cdae9061580a86642751a7d71684",
+      "sha256": "d4cc99895eb3fd4e63eb09a067ed1f5f73c6cdae9061580a86642751a7d71684"
+    },
+    {
+      "file": "flag.svg",
+      "source": "assets/Flag/SVG/ic_fluent_flag_24_color.svg",
+      "source_sha256": "b87228f6e5a296358f4a2733d975a9f8520d0ba2724b44b3f79dcef597ed8cbd",
+      "sha256": "b87228f6e5a296358f4a2733d975a9f8520d0ba2724b44b3f79dcef597ed8cbd"
     }
   ]
 }

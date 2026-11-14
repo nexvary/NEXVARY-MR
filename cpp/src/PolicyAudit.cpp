@@ -558,9 +558,21 @@ bool PolicyAudit::verifyExport(const QByteArray &bytes,
       return reject("Unknown event action.");
 
     if (action == "operation-allowed" || action == "browser-result") {
+      // Older direct Windows device-tool gates are journal-signed observations,
+      // not institutional exceptions. Accept only the exact producer record;
+      // never extend this compatibility rule to external/paid capabilities.
+      const auto observed = r.value("observedActor").toString();
+      const bool directDevice = action == "operation-allowed" &&
+          r.keys() == QStringList{"capability", "mode", "observedActor"} &&
+          r.value("capability") == "device-tools" &&
+          r.value("mode") == "windows-direct-work" &&
+          observed.size() == 56 && observed.endsWith(" / windows-workspace") &&
+          !QUuid(observed.left(observed.size() - 20)).isNull() &&
+          actor.isEmpty() && role == "system-observation" && proof.isEmpty() &&
+          p.value("result") == "gate-allowed; operation completion not established";
       const auto current = states.value(id);
-      if (current.isEmpty() || r != current || r.value("status") != "active" ||
-          role != "system-observation")
+      if (!directDevice && (current.isEmpty() || r != current || r.value("status") != "active" ||
+          role != "system-observation"))
         return reject("Operation gate has no matching active exception.");
     }
     if ((action == "expire" || action == "session-close" ||

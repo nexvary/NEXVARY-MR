@@ -2,3 +2,6 @@
 samples/government-evaluation/evidence.json -text
 samples/government-evaluation/duplicate-key.json -text
 samples/government-evaluation/ground-truth.json -text
+
+# Preserve pinned upstream SVG bytes under Windows autocrlf checkouts.
+*.svg text eol=lf

@@ -21,12 +21,12 @@ public:
             state_ = reply.state == mr::osint::QueryState::Completed ? QStringLiteral("synthetic-completed") : QStringLiteral("synthetic-failed");
             result_ = {{QStringLiteral("classification"), QStringLiteral("synthetic-not-evidence")},
                 {QStringLiteral("errorCode"), static_cast<int>(reply.error)},
-                {QStringLiteral("source"), QStringLiteral("fixture:lampyre-evaluation-v1")},
+                {QStringLiteral("source"), QStringLiteral("fixture:nexvary-intelligence-v1")},
                 {QStringLiteral("findings"), static_cast<int>(reply.findings.size())},
                 {QStringLiteral("networkRequests"), 0}, {QStringLiteral("photonsConsumed"), 0}};
             if (reply.state == mr::osint::QueryState::Completed) {
                 QVariantList records;
-                const QString source = QStringLiteral("fixture:lampyre-evaluation-v1");
+                const QString source = QStringLiteral("fixture:nexvary-intelligence-v1");
                 const QString at = QStringLiteral("2026-11-11T00:00:00Z (fixture)");
                 records.append(QVariantMap{{QStringLiteral("type"), QStringLiteral("Email")}, {QStringLiteral("value"), QStringLiteral("research@example.invalid")}, {QStringLiteral("icon"), QStringLiteral("document_text")}, {QStringLiteral("source"), source}, {QStringLiteral("at"), at}});
                 records.append(QVariantMap{{QStringLiteral("type"), QStringLiteral("Domain")}, {QStringLiteral("value"), QStringLiteral("example.invalid")}, {QStringLiteral("icon"), QStringLiteral("search_visual")}, {QStringLiteral("source"), source}, {QStringLiteral("at"), at}});

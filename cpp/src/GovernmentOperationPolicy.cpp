@@ -180,6 +180,10 @@ bool GovernmentOperationPolicy::approvalCurrent(const QString &id) {
   return false;
 }
 bool GovernmentOperationPolicy::granted(const QString &capability) const {
+  // Windows identifies the direct operator; routine device discovery needs no
+  // second application account. Tool allowlists and handset consent still apply.
+  if (capability == "device-tools" && identity_ && identity_->directWork())
+    return audit_ && audit_->healthy() && identity_->authenticated();
   const auto it = grants_.constFind(capability);
   return audit_ && audit_->healthy() && it != grants_.cend() &&
          clock_.elapsed() < it->deadline && identity_ &&
@@ -197,6 +201,7 @@ QVariantList GovernmentOperationPolicy::permissions() const {
     const auto g = grants_.value(name);
     rows.append(QVariantMap{{"capability", name},
                             {"allowed", granted(name)},
+                            {"directWork", name == "device-tools" && identity_ && identity_->directWork()},
                             {"reason", g.reason},
                             {"actor", g.actor},
                             {"expiresUtc", g.expiresUtc},
@@ -318,6 +323,9 @@ bool GovernmentOperationPolicy::permit(const QString &capability) {
 
   if (allowed)
     r = requests_.value(grants_.value(capability).id);
+  if (allowed && capability == "device-tools" && identity_ && identity_->directWork())
+    r = {{"capability", capability}, {"mode", "windows-direct-work"},
+         {"observedActor", identity_->actor()}};
 
   if (!audit(allowed ? "operation-allowed" : "operation-denied", r,
              allowed ? "gate-allowed; operation completion not established"
@@ -573,7 +581,7 @@ bool GovernmentOperationPolicy::verifyAudit(const QString &input,
 bool GovernmentOperationPolicy::isHelpLink(const QString &text) const {
  const QUrl url(text,QUrl::StrictMode);
  if(!url.isValid()||url.scheme()!="https"||!url.userInfo().isEmpty()||url.hasQuery()||url.hasFragment()||url.port(-1)!=-1)return false;
- static const QStringList urls={"https://lampyre.io/","https://lampyre.io/documentation/","https://lampyre.io/faq/","https://account.lampyre.io/","https://nexvary.com/","https://developer.android.com/tools/releases/platform-tools","https://developer.android.com/studio/run/win-usb","https://github.com/Genymobile/scrcpy","https://github.com/nexvary/NEXVARY-MR","https://www.clamav.net/downloads","https://docs.clamav.net/manual/Usage/SignatureManagement.html"};
+ static const QStringList urls={"https://lampyre.io/","https://lampyre.io/documentation/","https://lampyre.io/faq/","https://account.lampyre.io/","https://nexvary.com/","https://nexvary.com/contact","https://github.com/nexvary","https://developer.android.com/tools/releases/platform-tools","https://developer.android.com/studio/run/win-usb","https://github.com/Genymobile/scrcpy","https://github.com/nexvary/NEXVARY-MR","https://www.clamav.net/downloads","https://docs.clamav.net/manual/Usage/SignatureManagement.html"};
  auto canonical=url.toString(QUrl::FullyEncoded);if(url.path().isEmpty())canonical+='/';return urls.contains(canonical);
 }
 bool GovernmentOperationPolicy::openHelpLink(const QString &text,bool consent) {
@@ -611,6 +619,23 @@ bool GovernmentOperationPolicy::openExternal(const QString &text) {
   return true;
 }
 
+QString GovernmentOperationPolicy::beginInvestigation(const QString &caseId, const QString &kind) {
+ if (!identity_ || !identity_->checkSession() || !identity_->hasPermission("osint-investigation") ||
+     (kind == "intelligence-mcp" && (!identity_->hasPermission("external-connection") || !identity_->hasPermission("paid-search"))) ||
+     (!caseId.isEmpty()&&QUuid(caseId).isNull()) || (kind != "intelligence-mcp" && kind != "phone-osint") ||
+     !available() || operations_.size() >= 64) return {};
+ const auto now = utc(), id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+ const QVariantMap r{{"schema", "nexvary-investigator-operation/v1"}, {"operationId", id},
+   {"requestId", QString()}, {"requester", identity_->userId()}, {"requesterRole", identity_->session().value("role")},
+   {"caseRef", caseId}, {"capability", "external-analysis"}, {"kind", kind},
+   {"decisionSequence", 0}, {"decisionHash", QString()}, {"startedUtc", now},
+   {"completedUtc", QString()}, {"status", "started"}, {"failureClass", QString()},
+   {"sourceSha256", QString()}, {"outputSha256", QString()}};
+ if (!mr::policy::operationRecord(r, {}, {}, {}, {}, identity_->userId(),
+     identity_->session().value("role").toString(), now, "started", true) ||
+     !audit("operation-start", r, "started", true)) return {};
+ operations_.insert(id, r); emit auditChanged(); return id;
+}
 QString GovernmentOperationPolicy::beginOperation(const QString &capability,
                                                   const QString &kind) {
   if (!permit(capability) || operations_.size() >= 64)
@@ -663,21 +688,18 @@ QVariantMap GovernmentOperationPolicy::beginCasePartitions(const QString &caseId
  return operations_.value(id);
 }
 QVariantMap GovernmentOperationPolicy::beginCaseOsint(const QString &caseId,const QString &number) {
- if(!permit("external-analysis") || caseId.isEmpty())return {};
- const auto request=requests_.value(grants_.value("external-analysis").id);
- if(request.value("caseRef")!=caseId || number.isEmpty() || !QRegularExpression("(?<![+\\p{Nd}])"+QRegularExpression::escape(number)+"(?!\\p{Nd})").match(request.value("reason").toString()).hasMatch()){
-  fail("OSINT requires a reviewed exception for this case UUID and the exact normalized international number in its reason.");return {};
- }
- if(consumedOsintApprovals_.contains(request.value("id").toString())){
-  fail("This OSINT approval has already been used; request a new single-number review.");return {};
- }
- consumedOsintApprovals_.insert(request.value("id").toString());
- return operations_.value(beginOperation("external-analysis","phone-osint"));
+ if(number.isEmpty())return {};
+ return operations_.value(beginInvestigation(caseId,"phone-osint"));
 }
 bool GovernmentOperationPolicy::caseOperationAuthorized(const QString &id) {
  refresh();
- if(!available() || !granted("external-analysis"))return false;
+ if(!available())return false;
  const auto operation=operations_.value(id);
+ if(operation.value("schema")=="nexvary-investigator-operation/v1")
+  return identity_ && identity_->checkSession() && identity_->userId()==operation.value("requester") &&
+   identity_->session().value("role")==operation.value("requesterRole") && identity_->hasPermission("osint-investigation") &&
+   (operation.value("kind")!="intelligence-mcp" || (identity_->hasPermission("paid-search") && identity_->hasPermission("external-connection")));
+ if(!granted("external-analysis"))return false;
  return !operation.isEmpty() && operationClosures_.value(operation.value("requestId").toString()).isEmpty() &&
   grants_.value("external-analysis").id==operation.value("requestId") && identity_ && identity_->checkSession() &&
   identity_->userId()==operation.value("requester") && identity_->session().value("role")==operation.value("requesterRole");
@@ -743,7 +765,7 @@ QVariantList GovernmentOperationPolicy::operationReceipts() const {
     return result;
   const auto role = identity_->session().value("role").toString();
   const bool review =
-      role == "administrator" || role == "reviewer" || role == "auditor";
+      identity_->directWork() || role == "administrator" || role == "reviewer" || role == "auditor";
   QSet<QString> seen;
   const auto events = audit_->events();
   for (auto it = events.crbegin(); it != events.crend() && result.size() < 32;

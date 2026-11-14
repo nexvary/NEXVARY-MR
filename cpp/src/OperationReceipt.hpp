@@ -15,6 +15,28 @@ inline bool operationRecord(const QVariantMap &r, const QVariantMap &request,
                             const QString &closure, const QString &actor,
                             const QString &role, const QString &time,
                             const QString &result, bool start) {
+  // Direct investigator work is explicitly identified, never represented as
+  // an independent approval. Legacy v1 approval receipts remain unchanged.
+  if (r.value("schema") == "nexvary-investigator-operation/v1") {
+    if (!request.isEmpty() || !closure.isEmpty() ||
+        !r.value("requestId").toString().isEmpty() ||
+        !r.value("decisionHash").toString().isEmpty() ||
+        r.value("decisionSequence").toInt() != 0 ||
+        QUuid(r.value("requester").toString()).isNull() ||
+        (r.value("requesterRole") != "investigator" && r.value("requesterRole") != "reviewer") ||
+        (r.value("kind") != "intelligence-mcp" && r.value("kind") != "phone-osint") ||
+        r.value("capability") != "external-analysis" ||
+        (!r.value("caseRef").toString().isEmpty()&&QUuid(r.value("caseRef").toString()).isNull()) ||
+        (!start && old.value("schema") != r.value("schema"))) return false;
+    auto direct = r, previous = old;
+    direct.insert("schema", "nexvary-operation-result/v1");
+    if (!previous.isEmpty()) previous.insert("schema", "nexvary-operation-result/v1");
+    const QVariantMap authority{{"id", QString()}, {"requester", r.value("requester")},
+      {"requesterRole", r.value("requesterRole")}, {"caseRef", r.value("caseRef")},
+      {"capability", "external-analysis"}, {"status", "active"}};
+    return operationRecord(direct, authority, {{"sequence", 0}, {"hash", QString()}},
+      previous, {}, actor, role, time, result, start);
+  }
   const QStringList keys{
       "capability",       "caseRef",      "completedUtc", "decisionHash",
       "decisionSequence", "failureClass", "kind",         "operationId",
@@ -37,7 +59,7 @@ inline bool operationRecord(const QVariantMap &r, const QVariantMap &request,
     return false;
   const auto kind = r.value("kind").toString(),
              cap = r.value("capability").toString();
-  if (!(((kind == "security-scan" || kind == "partition-analysis" || kind == "phone-osint" || kind == "lampyre-mcp") &&
+  if (!(((kind == "security-scan" || kind == "partition-analysis" || kind == "phone-osint" || kind == "lampyre-mcp" || kind == "intelligence-mcp") &&
          cap == "external-analysis") ||
         (kind == "signature-update" && cap == "signature-update")))
     return false;

@@ -2,6 +2,7 @@
 #include "CaseVault.hpp"
 #include "RecoveryFile.hpp"
 #include <sodium.h>
+#include <cstring>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QFileInfo>
@@ -30,6 +31,38 @@ IdentityService::IdentityService(const QString &path,bool synthetic,QObject *par
  if(sodium_init()<0||path_.isEmpty()||(!synthetic_&&!mr::recovery::vaultAvailable())){fail("Local identities require Windows protected storage (synthetic tests excepted).");return;}
  ready_=read();
  auto *timer=new QTimer(this);timer->setInterval(1000);connect(timer,&QTimer::timeout,this,[this]{if(authenticated())checkSession();});timer->start();
+}
+bool IdentityService::startDirectWork(){
+ if(!ready_)return false;
+ const auto path=path_+".windows-operator";
+ if(!QDir().mkpath(QFileInfo(path).absolutePath()))return fail("Cannot create protected workspace.");
+ QLockFile lock(path+".lock");if(!lock.tryLock(0))return fail("Workspace is busy; retry.");
+ QByteArray sk,pk;QVariantMap record;
+ if(QFileInfo::exists(path)){
+  QFile f(path);if(QFileInfo(path).isSymLink()||!f.open(QIODevice::ReadOnly)||f.size()>4096)return fail("Invalid protected workspace identity.");
+  QString error;auto bytes=mr::recovery::openCaseBytes(f.readAll(),synthetic_,error);
+  record=QJsonDocument::fromJson(bytes).object().toVariantMap();sodium_memzero(bytes.data(),static_cast<size_t>(bytes.size()));
+  sk=un64(record.value("secret"));pk=un64(record.value("publicKey"));
+ }else{
+  sk.resize(crypto_sign_SECRETKEYBYTES);pk.resize(crypto_sign_PUBLICKEYBYTES);
+  crypto_sign_keypair(reinterpret_cast<unsigned char*>(pk.data()),reinterpret_cast<unsigned char*>(sk.data()));
+  record={{"schema", "nexvary-windows-operator/v1"},{"id", QUuid::createUuid().toString(QUuid::WithoutBraces)},
+    {"publicKey",b64(pk)},{"secret",b64(sk)}};
+  auto bytes=json(record);QString error;const auto sealed=mr::recovery::sealCase(bytes,synthetic_,error);sodium_memzero(bytes.data(),static_cast<size_t>(bytes.size()));
+  QSaveFile f(path);f.setDirectWriteFallback(false);
+  if(sealed.isEmpty()||!f.open(QIODevice::WriteOnly)||!f.setPermissions(QFileDevice::ReadOwner|QFileDevice::WriteOwner)||f.write(sealed)!=sealed.size()||!f.commit()){
+   sodium_memzero(sk.data(),static_cast<size_t>(sk.size()));return fail("Cannot save protected workspace identity.");
+  }
+ }
+ if(record.value("schema")!="nexvary-windows-operator/v1"||QUuid(record.value("id").toString()).isNull()||sk.size()!=crypto_sign_SECRETKEYBYTES||pk.size()!=crypto_sign_PUBLICKEYBYTES){sodium_memzero(sk.data(),static_cast<size_t>(sk.size()));return fail("Protected workspace identity rejected.");}
+ unsigned char actual[crypto_sign_PUBLICKEYBYTES];crypto_sign_ed25519_sk_to_pk(actual,reinterpret_cast<const unsigned char*>(sk.constData()));
+ if(QByteArray(reinterpret_cast<const char*>(actual),sizeof actual)!=pk){sodium_memzero(sk.data(),static_cast<size_t>(sk.size()));return fail("Protected workspace signing key rejected.");}
+ logout();secret_=static_cast<unsigned char*>(sodium_malloc(crypto_sign_SECRETKEYBYTES));
+ if(!secret_){sodium_memzero(sk.data(),static_cast<size_t>(sk.size()));return fail("Protected memory unavailable.");}
+ memcpy(secret_,sk.constData(),crypto_sign_SECRETKEYBYTES);sodium_memzero(sk.data(),static_cast<size_t>(sk.size()));
+ directPrincipal_={{"id",record.value("id")},{"username","windows-workspace"},{"displayName","Windows local workspace"},
+   {"role","investigator"},{"enabled",true},{"version",1},{"publicKey",b64(pk)}};
+ direct_=true;userId_=record.value("id").toString();sessionAccount_=directPrincipal_;error_.clear();emit changed();return true;
 }
 IdentityService::~IdentityService(){if(secret_)sodium_free(secret_);}
 bool IdentityService::fail(const QString &m){error_=m;emit changed();return false;}
@@ -82,11 +115,11 @@ QVariantMap IdentityService::newAccount(const QString &username,const QString &n
 bool IdentityService::bootstrap(const QString &username,const QString &name,const QString &password){if(!ready_||!read()||!needsSetup())return fail("Local administrator setup is already complete or unavailable.");
  auto a=newAccount(username,name,"administrator",password);if(a.isEmpty())return false;
  auto next=state_;next.insert("users",QVariantList{a});return save(next);}
-QVariantMap IdentityService::account(const QString &id)const{for(const auto &v:state_.value("users").toList())if(v.toMap().value("id")==id)return v.toMap();return {};}
+QVariantMap IdentityService::account(const QString &id)const{if(!directPrincipal_.isEmpty()&&directPrincipal_.value("id")==id)return directPrincipal_;for(const auto &v:state_.value("users").toList())if(v.toMap().value("id")==id)return v.toMap();return {};}
 QVariantMap IdentityService::session()const{if(!authenticated())return {};
  auto a=publicAccount(account(userId_));a.insert("identityScope","local-credential; not agency-verified");return a;}
 QVariantList IdentityService::users()const{QVariantList out;if(!hasPermission("user-administration"))return out;for(const auto &v:state_.value("users").toList())out.append(publicAccount(v.toMap()));return out;}
-void IdentityService::logout(){if(secret_){sodium_free(secret_);secret_=nullptr;}userId_.clear();sessionAccount_.clear();lifetime_.invalidate();emit changed();}
+void IdentityService::logout(){direct_=false;if(secret_){sodium_free(secret_);secret_=nullptr;}userId_.clear();sessionAccount_.clear();lifetime_.invalidate();emit changed();}
 bool IdentityService::login(const QString &username,const QString &password){
  logout();if(!ready_||!passwordValid(password)||!read())return fail("Sign-in failed.");
  auto rows=state_.value("users").toList();qsizetype index=-1;for(qsizetype i=0;i<rows.size();++i)if(rows[i].toMap().value("username")==username)index=i;
@@ -119,6 +152,7 @@ bool IdentityService::changePassword(const QString &currentPassword,const QStrin
 }
 bool IdentityService::checkSession(){
  if(!authenticated())return false;
+ if(direct_)return secret_!=nullptr;
  const auto before=sessionAccount_;
  const auto oldGrants=state_.value("grants");if(!lifetime_.isValid()||lifetime_.elapsed()>sessionLifetimeMs_){logout();return fail("Session expired after 15 minutes. Sign in again; saved credentials remain protected.");}if(!read()){logout();return false;}const auto current=account(userId_);if(!current.value("enabled").toBool()||current.value("version")!=before.value("version")||current.value("publicKey")!=before.value("publicKey")||current.value("role")!=before.value("role")){logout();return false;}if(oldGrants!=state_.value("grants"))emit changed();
  return true;
@@ -134,7 +168,7 @@ bool IdentityService::setCaseGrant(const QString &caseId,const QString &id,bool 
  auto grants=state_.value("grants").toMap();if(!grants.contains(caseId)&&grants.size()>=1000)return fail("Case grant limit reached.");
  auto principals=grants.value(caseId).toStringList();principals.removeAll(id);if(granted)principals.append(id);if(principals.isEmpty())grants.remove(caseId);else grants.insert(caseId,principals);
  auto next=state_;next.insert("grants",grants);return save(next);}
-bool IdentityService::hasCaseGrant(const QString &id)const{return authenticated()&&state_.value("grants").toMap().value(id).toStringList().contains(userId_);}
+bool IdentityService::hasCaseGrant(const QString &id)const{return authenticated()&&(direct_||state_.value("grants").toMap().value(id).toStringList().contains(userId_));}
 nexvary::law::Role IdentityService::lawRole()const{using R=nexvary::law::Role;if(!authenticated())return R::Unknown;
  const auto r=account(userId_).value("role").toString();if(r=="investigator")return R::Investigator;if(r=="reviewer")return R::Reviewer;if(r=="auditor")return R::Auditor;if(r=="trainer")return R::Trainer;if(r=="repair-technician")return R::RepairTechnician;return R::Unknown;}
 QString IdentityService::actor()const{return authenticated()?userId_+" / "+account(userId_).value("username").toString():QString();}

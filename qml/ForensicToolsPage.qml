@@ -76,7 +76,7 @@ Item {
      required property var modelData
      title:modelData.name;Layout.fillWidth:true
      Label {text:modelData.adapter?app.trx("محول تحليل أقسام mmls؛ توفر الأداة مطلوب","mmls partition adapter; installed tool required"):app.trx("غير مدمج — لا يوجد زر تشغيل","Not integrated — no execution action");Layout.fillWidth:true;wrapMode:Text.WordWrap;Layout.minimumHeight:implicitHeight;color:app.tone("#9bbbd3")}
-     Label {text:modelData.license+"\n"+(modelData.available?modelData.path:app.trx("غير موجود في المسارات المفحوصة","Not found in checked paths"));Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#9bbbd3");font.pixelSize:12}
+     Label {text:modelData.license+"\n"+(modelData.available?modelData.path:app.trx("غير موجود في المسارات المفحوصة","Not found in checked paths"));Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#9bbbd3");font.pixelSize:14}
      ActionButton {text:app.trx("عرض المصدر الرسمي","View official source");onClicked:app.openExternal(modelData.source)}
     }
    }

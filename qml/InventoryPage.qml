@@ -7,7 +7,7 @@ Item {
   anchors.fill:parent;spacing:12
   Panel {
    title:app.trx("إضافة قطعة إلى المخزون","Add inventory item");Layout.fillWidth:true;Layout.preferredHeight:176
-   RowLayout {TextField{id:sku;placeholderText:"SKU";maximumLength:100;Layout.fillWidth:true} TextField{id:name;placeholderText:app.trx("اسم القطعة","Part name");maximumLength:240;Layout.fillWidth:true}}
+   RowLayout {EntryField {id:sku;placeholderText:"SKU";maximumLength:100;Layout.fillWidth:true} EntryField {id:name;placeholderText:app.trx("اسم القطعة","Part name");maximumLength:240;Layout.fillWidth:true}}
    RowLayout {
     Label {text:app.trx("الكمية","Quantity");color:app.tone("#a5bbce")} SpinBox{id:quantity;from:0;to:1000000;editable:true}
     Label {text:app.trx("سعر الوحدة ×100","Unit price ×100");color:app.tone("#a5bbce")} SpinBox{id:price;from:0;to:100000000;stepSize:100;editable:true}

@@ -23,7 +23,7 @@ if (-not (Test-Path $importWorker -PathType Leaf)) { throw 'Isolated evidence im
 Copy-Item $importWorker (Join-Path $bundle 'mr_evidence_import_worker.exe')
 & "$qtRoot/bin/windeployqt.exe" --release --qmldir (Join-Path $repo 'qml') --no-translations --no-compiler-runtime (Join-Path $bundle 'NEXVARY-MR.exe')
 if ($LASTEXITCODE -ne 0) { throw "windeployqt failed: $LASTEXITCODE" }
-# Official release CRT files only: preserve portable/per-user operation without
+# Official release CRT files only: preserve per-user operation without
 # running a machine-wide vc_redist installer. Never copy DLLs from System32,
 # compiler bin directories or debug_nonredist.
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
@@ -40,7 +40,7 @@ $crtDirectories = @(Get-ChildItem $redistRoot -Directory |
   ForEach-Object { Join-Path $_.FullName 'x64/Microsoft.VC143.CRT' } |
   Where-Object { Test-Path $_ -PathType Container })
 if ($crtDirectories.Count -eq 0) {
-  throw "No release x64 Microsoft.VC143.CRT directory exists below $redistRoot; incomplete portable packaging is refused"
+  throw "No release x64 Microsoft.VC143.CRT directory exists below $redistRoot; incomplete installer staging is refused"
 }
 $crtDirectory = $crtDirectories[0]
 $crtDlls = @(Get-ChildItem $crtDirectory -Filter '*.dll' -File)
@@ -121,6 +121,9 @@ Copy-Item (Join-Path $repo 'docs/RECOVERY_GUIDE.md') $bundle
 Copy-Item (Join-Path $repo 'docs/THIRD_PARTY.md') $bundle
 Copy-Item (Join-Path $repo 'docs/INTEGRATIONS.md') $bundle
 if (Test-Path (Join-Path $repo 'CHANGELOG.md')) { Copy-Item (Join-Path $repo 'CHANGELOG.md') $bundle }
+New-Item -ItemType Directory -Force (Join-Path $bundle 'legal') | Out-Null
+Copy-Item (Join-Path $PSScriptRoot 'institutional-license-*.txt') (Join-Path $bundle 'legal') -Force
+Copy-Item (Join-Path $PSScriptRoot 'program-description-*.txt') (Join-Path $bundle 'legal') -Force
 New-Item -ItemType Directory -Force (Join-Path $bundle 'licenses') | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'licenses/*') (Join-Path $bundle 'licenses') -Recurse -Force
 if (-not (Test-Path (Join-Path $bundle 'licenses/LIBSODIUM-ISC.txt') -PathType Leaf)) { throw 'Packaged libsodium ISC notice is missing' }
@@ -150,5 +153,6 @@ $manifest = Get-ChildItem $bundle -Recurse -File | Where-Object { $_.Name -ne 'S
   "$( (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() )  $relative"
 }
 $manifest | Set-Content (Join-Path $bundle 'SHA256SUMS.txt') -Encoding utf8
-Compress-Archive -Path $bundle -DestinationPath (Join-Path $OutputDirectory 'NEXVARY-MR-Windows-x64-portable-unsigned.zip') -Force
+# Installer staging only: the Inno Setup script consumes this directory.
+# No portable ZIP is created.
 

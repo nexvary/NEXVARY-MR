@@ -52,7 +52,7 @@ def independent_history(change=None):
     for sequence, (action, r, actor, role) in enumerate(operations, 1):
         if action in {"operation-start","operation-result"} and r["decisionHash"] == "__decision__":
             r = {**r, "decisionHash": events[2]["hash"]}
-        body = {"action": action, "record": r, "result": r["outcome"] if action == "case-reconciliation" else r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
+        body = {"action": action, "record": r, "result": "gate-allowed; operation completion not established" if "mode" in r else r["outcome"] if action == "case-reconciliation" else r["recoveryState"] if action == "case-operation" else r["status"], "timeUtc": stamp,
                 "principalId": ids[actor] if actor is not None else "", "principalRole": role}
         proof = {}
         if actor is not None:
@@ -135,6 +135,16 @@ def main():
             assert accepted == expected and (native.returncode == 0) == expected, name + ": " + native.stderr.decode(errors="replace")
             results.append({"check": name, "passed": True})
         protocol("independent producer accepted by both verifier implementations", expected=True)
+        def direct_gate(capability="device-tools", mode="windows-direct-work", action="operation-allowed"):
+            def change(rows, ids):
+                return rows + [(action, {"capability": capability, "mode": mode,
+                    "observedActor": ids[0] + " / windows-workspace"}, None, "system-observation")]
+            return change
+        protocol("historical direct device gate accepted without rewriting bytes", direct_gate(), expected=True)
+        protocol("direct gate cannot authorize external analysis", direct_gate("external-analysis"))
+        protocol("direct gate cannot authorize unknown-cost payment", direct_gate("paid-unknown-cost"))
+        protocol("direct gate cannot replace browser authorization", direct_gate(action="browser-result"))
+        protocol("direct gate cannot claim an arbitrary operating mode", direct_gate(mode="unreviewed"))
         def unknown_cost_admin(rows, ids):
             selected = rows[:4]
             for index, (action, record, actor, role) in enumerate(selected):

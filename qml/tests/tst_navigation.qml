@@ -9,7 +9,12 @@ TestCase {
  when:windowShown
  width:1536;height:980
  MR.Main {id:app}
+ property bool reviewCapture:false
+ Rectangle {parent:app.contentItem;z:100000;visible:test.reviewCapture;anchors.bottom:parent.bottom;anchors.left:parent.left;anchors.right:parent.right;height:24;color:"#4A1722"
+  Label {anchors.centerIn:parent;text:"UI REVIEW — SYNTHETIC FIXTURES — NO LIVE SEARCH / NO PAYMENT";color:"white";font.pixelSize:12}
+ }
  readonly property var windowUnderTest:app
+ Component {id:clipboardProbeComponent;MR.EntryField {visible:false;width:240;height:44}}
  SignalSpy {id:avbInspectionFinished;target:firmwareBridge;signalName:"inspectionFinished"}
  function init(){app.governmentMode=false;findChild(app,"deviceTabs").currentIndex=0;findChild(app,"workshopTabs").currentIndex=0;findChild(app,"diagnosticTabs").currentIndex=0;app.allowClose=false;app.toastText="";app.ar=true;app.darkTheme=true;app.showDevicePanel=false;app.width=1536;app.height=980;app.currentPage=0;verify(renderedFrame())}
  function renderedFrame(){return uiEvidence.requestFrame(app)&&waitForRendering(app.contentItem)}
@@ -25,6 +30,27 @@ TestCase {
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"));verify(renderedFrame())
   artifactClick(scroll,findChild(panel,"governmentPolicyActivate-"+id));compare(operationPolicy.offline,false)
   return id
+ }
+ Component {id:professionalIconFixture;MR.SemanticIcon {width:32;height:32}}
+ function test_professionalIconAcceptance(){
+  const names=["home","phone","gauge","board","arrow_square_down","clipboard_task","database","settings","history","document_lock","toolbox","wrench","question_circle","document_text","search_visual","book_open_lightbulb","shield_checkmark","data_bar_vertical_ascending","puzzle_piece","phone_laptop","arrow_sync","checkmark_circle","error_circle","warning","evidence_box","training_lab","check_mark"];
+  for(const name of names){
+   const icon=professionalIconFixture.createObject(app.contentItem,{name:name});verify(icon!==null);
+   tryCompare(icon,"status",Image.Ready,5000);compare(icon.usingFallback,false);verify(icon.sourceSize.width>=32);icon.destroy();
+  }
+  const missing=professionalIconFixture.createObject(app.contentItem,{name:"missing-icon-fixture"});
+  tryCompare(missing,"usingFallback",true,5000);tryCompare(missing,"status",Image.Ready,5000);missing.destroy();
+  app.setWorkspace(true);app.navigatePrimary(3);verify(renderedFrame());
+  const nav=findChild(app,"mrPrimaryNavigation");verify(nav!==null);
+  for(const size of [[1366,768],[1920,1080],[2560,1440]])for(const ar of [true,false]){
+   app.width=size[0];app.height=size[1];app.ar=ar;verify(renderedFrame());
+   for(let i=0;i<nav.sectionCount;i++){
+    const button=nav.itemAt(i),icon=findChild(button,"primaryNavIcon"+i);
+    verify(button!==null);verify(icon!==null);tryCompare(icon,"status",Image.Ready,5000);
+    verify(icon.width>0&&icon.height>0);verify(icon.width<=button.width);verify(icon.height<=button.height);
+   }
+   if(size[0]===1366&&uiScaleTag==="1")verify(uiEvidence.captureWindow(app,uiScreenshotBase+"icon-acceptance-"+(ar?"ar":"en")+".png"));
+  }
  }
  function test_phoneOsintBilingualBoundary(){
   identityBridge.logout()
@@ -135,6 +161,7 @@ TestCase {
   lampyreEvaluation.runSynthetic(1);tryCompare(lampyreEvaluation,"state","synthetic-failed",3000);
   compare(analysis.records.length,0);compare(analysis.selectedIndex,-1);
   ws.activeTab=0;app.goBack();compare(ws.demoMode,false);
+  ws.showLocalTools=true;
  }
  function test_governmentOperationReceipts(){
   operationPolicy.revokeAll();app.setWorkspace(true);app.navigateSection(10);verify(renderedFrame())
@@ -406,7 +433,7 @@ TestCase {
   function inspectAndWait(){
    const inspectButton=findChild(app,"inspectAvb");avbInspectionFinished.clear()
    tryCompare(inspectButton,"enabled",true);verify(inspectButton.visible);verify(renderedFrame())
-   mouseClick(inspectButton);tryCompare(avbInspectionFinished,"count",1,5000)
+   artifactClick(findChild(app,"avbPanelViewport"),inspectButton);tryCompare(avbInspectionFinished,"count",1,5000)
    tryCompare(firmwareBridge,"busy",false,5000)
    compare(firmwareBridge.avbReport.status,"metadata-only",firmwareBridge.status);compare(firmwareBridge.compatible,false)
   }
@@ -416,6 +443,7 @@ TestCase {
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60);verify(renderedFrame())
    const scroll=findChild(app,"avbScroll");verify(scroll.height>=100)
    for(const control of [privacy,exportButton]){
+    reveal(findChild(app,"avbPanelViewport"),control);verify(renderedFrame());
     const top=control.mapToItem(app.contentItem,0,0),bottom=control.mapToItem(app.contentItem,control.width,control.height)
     verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<=app.height,"AVB export controls remain fully reachable")
    }
@@ -444,7 +472,7 @@ TestCase {
  function test_firmwarePackageStructure(){
   app.currentPage=4;findChild(app,"firmwareTabs").currentIndex=2
   const path=findChild(app,"firmwarePackagePath");path.text=syntheticFirmwarePackagePath
-  compare(findChild(app,"exportFirmwarePackage").enabled,false);mouseClick(findChild(app,"inspectFirmwarePackage"));tryCompare(firmwareBridge,"busy",false,5000)
+  compare(findChild(app,"exportFirmwarePackage").enabled,false);artifactClick(findChild(app,"packagePanelViewport"),findChild(app,"inspectFirmwarePackage"));tryCompare(firmwareBridge,"busy",false,5000)
   compare(firmwareBridge.packageReport.status,"structure-only");compare(firmwareBridge.compatible,false)
   const output=findChild(app,"firmwarePackageResult");compare(output.textFormat,TextEdit.PlainText);verify(output.text.indexOf("snapshotSha256")>=0)
   const privacy=findChild(app,"firmwarePackagePrivacy");privacy.checked=true;compare(findChild(app,"exportFirmwarePackage").enabled,true)
@@ -469,12 +497,55 @@ TestCase {
   dialog.close();tryCompare(dialog,"visible",false);input.text="INVALID";mouseClick(lookup);verify(findChild(app,"barcodeLookupError").visible);compare(dialog.opened,false);input.clear()
   verify(renderedFrame());mouseClick(app.navigationButton(0));tryCompare(app,"currentPage",0)
  }
+ function test_deviceIdentityCopyAndBrand(){
+  const sink=createTemporaryObject(clipboardProbeComponent,app.contentItem);verify(sink)
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;app.showDevicePanel=true
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000)
+  toolBridge.selectDevice("SYNTHETIC42");toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000)
+  const inspector=findChild(app,"deviceInspector"),serial=findChild(inspector,"selectedDeviceSerial"),model=findChild(inspector,"selectedDeviceModel")
+  tryCompare(serial,"text","SYNTHETIC42");tryCompare(model,"text","Synthetic Phone")
+  verify(serial.readOnly&&serial.selectByMouse);verify(model.readOnly&&model.selectByMouse)
+  for(const ar of [true,false])for(const size of [[1366,768],[1920,1080],[2560,1440]]){
+   app.ar=ar;app.width=size[0];app.height=size[1];verify(renderedFrame())
+   for(const row of [["copyDeviceSerial","SYNTHETIC42"],["copyDeviceModel","Synthetic Phone"]]){
+    const button=findChild(inspector,row[0]);verify(button.enabled);button.clicked();sink.clear();sink.paste();compare(sink.text,row[1])
+    const point=button.mapToItem(inspector,0,0);verify(point.x>=0&&point.x+button.width<=inspector.width)
+   }
+   const seal=findChild(app,"nexvaryEyeSeal");compare(seal.status,Image.Ready);compare(seal.width,80);compare(seal.height,80)
+   verify(seal.source.toString().includes("nexvary-eye-seal.svg"));const point=seal.mapToItem(app.contentItem,0,0);verify(point.y>=0&&point.y+seal.height<=app.design.topBarHeight)
+   if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-device-copy-"+(ar?"ar":"en")+".png"))
+  }
+  const page=findChild(app,"deviceManagerPage"),tabs=findChild(app,"deviceResultTabs"),dialog=findChild(app,"mirrorConfirm")
+  tabs.currentIndex=3;verify(renderedFrame());const bundled=findChild(app,"useBundledScreenView");verify(bundled.enabled)
+  bundled.clicked();tryCompare(dialog,"opened",true);compare(findChild(app,"mirrorReviewedSerial").text,"SYNTHETIC42")
+  verify(!findChild(app,"mirrorOwner").checked);verify(!findChild(app,"mirrorComponent").checked);verify(!dialog.standardButton(Dialog.Ok).enabled);verify(!toolBridge.mirrorActive)
+  dialog.reject();tryCompare(dialog,"visible",false)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(!bundled.enabled);verify(uiEvidence.clearSyntheticTool())
+  compare(model.text,"");verify(!findChild(inspector,"copyDeviceModel").enabled);app.showDevicePanel=false
+ }
  function test_deviceBackgroundRefreshIsQuiet(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);toolBridge.selectDevice("SYNTHETIC42");toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000);verify(renderedFrame())
   const panel=findChild(app,"deviceIdentitySummary");tryVerify(function(){return panel.field("model")!==null&&panel.field("model").modelData.value==="Synthetic Phone"});const field=panel.field("model");
   const text=field.modelData.value;toolBridge.autoRefresh=true;tryCompare(toolBridge,"backgroundRefreshing",false,5000);verify(!toolBridge.foregroundBusy);verify(toolBridge.screenViewAvailable);compare(field.modelData.value,text);compare(panel.field("model"),field);verify(findChild(app,"reviewMirror").enabled);toolBridge.autoRefresh=false;toolBridge.readDeviceInfo();tryCompare(toolBridge,"busy",false,5000);verify(renderedFrame());compare(panel.field("model"),field)
   for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=768;findChild(app,"deviceManagerScroll").contentItem.contentY=150;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"screen-view-ready-"+(arabic?"ar":"en")+".png"))}
   toolBridge.autoRefresh=false;verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+ }
+ function test_mirrorClipboardAndValidation(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);toolBridge.selectDevice("SYNTHETIC42");verify(renderedFrame())
+  const page=findChild(app,"deviceManagerPage"),dialog=findChild(app,"mirrorConfirm"),input=findChild(app,"mirrorChallenge")
+  page.reviewMirror();tryCompare(dialog,"opened",true)
+  const serial=findChild(app,"mirrorReviewedSerial"),copy=findChild(app,"copyMirrorSerial"),status=findChild(app,"mirrorConfirmationStatus")
+  compare(serial.text,"SYNTHETIC42");verify(serial.readOnly);verify(serial.selectByMouse)
+  findChild(app,"mirrorOwner").checked=true;findChild(app,"mirrorComponent").checked=true
+  input.text="SYNTHETIC4";compare(input.inputState,"invalid");compare(String(input.inputColor),"#ffd166");verify(!dialog.standardButton(Dialog.Ok).enabled);verify(status.text.indexOf("الرقم غير مطابق")>=0)
+  app.requestActivate();copy.clicked();input.forceActiveFocus();tryCompare(input,"activeFocus",true);keyClick(Qt.Key_A,Qt.ControlModifier);keyClick(Qt.Key_V,Qt.ControlModifier)
+  compare(input.text,serial.text);compare(input.inputState,"valid");tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true)
+  // The copy action never substitutes for either explicit consent.
+  findChild(app,"mirrorOwner").checked=false;compare(dialog.standardButton(Dialog.Ok).enabled,false)
+  app.ar=false;verify(status.text.indexOf("owner's authorization")>=0)
+  dialog.reject();tryCompare(dialog,"visible",false)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
  }
  function test_mirrorConsentAndNavigation(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(renderedFrame())
@@ -517,6 +588,8 @@ TestCase {
   app.currentPage=1;const tabs=findChild(app,"deviceTabs");tabs.currentIndex=1;verify(renderedFrame());const page=findChild(app,"deviceServicesPage");verify(page!==null)
   compare(findChild(app,"serviceBrand").count,18);compare(findChild(app,"serviceDevice").currentIndex,-1);verify(!findChild(app,"exportDeviceServiceReport").enabled)
   findChild(app,"serviceBrand").currentIndex=1;verify(!findChild(app,"serviceOfficialDrivers").enabled);verify(findChild(app,"serviceDriverUnavailableReason").visible);findChild(app,"serviceBrand").currentIndex=0
+  mouseClick(findChild(app,"deviceServiceContextOpen"));const context=findChild(app,"deviceServiceContextDialog");tryCompare(context,"opened",true);
+  verify(findChild(app,"deviceServiceContextText").text.indexOf(findChild(app,"serviceWorkflow").text)>=0);context.close();tryCompare(context,"opened",false);
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;wait(60)
    const list=findChild(app,"deviceServiceList");verify(list.width>240&&list.height>150,"service list "+list.width+"x"+list.height+" page "+page.width+"x"+page.height+" ar="+arabic)
@@ -583,12 +656,12 @@ TestCase {
   verify(!findChild(app,"startSecurityScan").enabled);verify(!findChild(app,"updateSignatures").enabled);verify(!findChild(app,"cancelSignatureUpdate").enabled);compare(findChild(app,"securityVerdict").text,app.trx("لم يُجرَ فحص بعد","No scan performed yet"))
   tabs.currentIndex=3;verify(renderedFrame());compare(serviceCatalog.drivers.length,7);verify(serviceCatalog.drivers.some(function(d){return d.brand==="Google"&&d.url.indexOf("https://developer.android.com/")===0}))
   tabs.currentIndex=1;verify(renderedFrame());const choice=findChild(app,"faultTreeOrder");verify(choice.count>0)
-  const selected=choice.currentValue;mouseClick(findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
-  mouseClick(findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
+  const selected=choice.currentValue;artifactClick(findChild(app,"faultTreePage"),findChild(app,"startFaultTree"));verify(findChild(app,"faultTreeQuestion").text.length>5)
+  artifactClick(findChild(app,"faultTreePage"),findChild(app,"faultTreeYes"));verify(!findChild(app,"faultTreeYes").enabled)
   findChild(app,"treeTechnician").text="Synthetic technician";findChild(app,"treeFinding").text="Synthetic safety observation only";
   const save=findChild(app,"saveFaultTree");verify(save.enabled)
   // The save control is below the first viewport: scroll it into view before clicking.
-  const scroll=findChild(app,"faultTreePage");const position=save.mapToItem(scroll.contentItem,0,0);scroll.contentItem.contentY=Math.max(0,position.y-scroll.availableHeight+save.height+20);wait(60);mouseClick(save)
+  const scroll=findChild(app,"faultTreePage");artifactClick(scroll,save)
   verify(workshopBridge.diagnoses(selected).length>0)
  }
  function test_cloudTrackingConsent(){
@@ -750,7 +823,7 @@ TestCase {
    const scope=findChild(app,"pcapScope");verify(scope.visible);verify(scope.text.indexOf("8 MiB")>=0)
    const point=run.mapToItem(app.contentItem,run.width/2,run.height/2);verify(point.y>0&&point.y<app.height)
   }
-  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  artifactClick(findChild(app,"forensicToolsScroll"),run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
   verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-pcap-summary/v1")>=0)
   const show=findChild(app,"showPcapResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
   verify(findChild(app,"forensicPreview").text.indexOf("nexvary-pcap-summary/v1")>=0);tabs.currentIndex=3
@@ -775,11 +848,12 @@ TestCase {
    scroll.contentItem.contentY=0
    const panel=findChild(app,"exifPanel");scroll.contentItem.contentY=panel.y;wait(50);verify(renderedFrame())
    const scope=findChild(app,"exifScope");verify(scope.visible);verify(scope.height+0.01>=scope.implicitHeight,"EXIF scope height "+scope.height+" implicit "+scope.implicitHeight);verify(scope.text.indexOf("8 MiB")>=0)
+   reveal(scroll,run);verify(renderedFrame());
    const top=run.mapToItem(app.contentItem,0,0),bottom=run.mapToItem(app.contentItem,run.width,run.height)
    verify(top.x>=0&&top.y>=0&&bottom.x<=app.width&&bottom.y<app.height,"EXIF action remains reachable")
    if(dark)verify(uiEvidence.captureWindow(app,exifScreenshotBase+(arabic?"ar":"en")+".png"))
   }
-  mouseClick(run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
+  artifactClick(findChild(app,"forensicToolsScroll"),run);tryCompare(recoveryBridge,"busy",false);compare(recoveryBridge.error,"");compare(recoveryBridge.evidence.length,1)
   verify(recoveryBridge.previewEvidence(0).indexOf("nexvary-exif-summary/v1")>=0)
   const show=findChild(app,"showExifResult");verify(show.enabled);mouseClick(show);compare(tabs.currentIndex,1)
   verify(findChild(app,"forensicPreview").text.indexOf("nexvary-exif-summary/v1")>=0)
@@ -793,7 +867,7 @@ TestCase {
   findChild(app,"forensicOperator").text="UI operator";findChild(app,"forensicAuthorization").text="LAB authorization";
   let record=findChild(app,"forensicRecordOperator");compare(record.enabled,false);
   findChild(app,"forensicOperatorConsent").checked=true;tryCompare(record,"enabled",true);
-  verify(renderedFrame());mouseClick(record);compare(recoveryBridge.caseOperator,"UI operator");
+  artifactClick(findChild(app,"forensicDetailScroll"),record);compare(recoveryBridge.caseOperator,"UI operator");
   verify(recoveryBridge.importVisibleFile(syntheticEvidencePath,true));tryCompare(recoveryBridge,"busy",false);
   let files=findChild(app,"forensicEvidenceList");tryCompare(files,"count",1);
   mouseClick(files,files.width/2,40);let preview=findChild(app,"forensicPreview");tryVerify(function(){return preview.text.indexOf("SYNTHETIC UI EVIDENCE")>=0});
@@ -896,23 +970,52 @@ TestCase {
   app.navigatePrimary(3);verify(renderedFrame());
   const ws=findChild(app,"osintWorkspace");
   compare(ws.demoMode,false);
+  verify(findChild(ws,"intelligenceDashboard")!==null);
+  compare(findChild(ws,"intelligenceRefreshCases").enabled,false);
+
   for(const ar of [true,false]){
    app.ar=ar;
    verify(renderedFrame());
-   verify(findChild(ws,"intelligenceBillingCard").visible);
+   verify(findChild(ws,"intelligenceSearchCards").visible);
+   verify(findChild(ws,"intelligenceCategory-email")!==null);verify(findChild(ws,"intelligenceCategory-phone")!==null);
    verify(findChild(ws,"intelligenceDefaultPrice").text.includes("€14.00"));
    verify(!findChild(ws,"intelligenceStartPaidSearch").enabled);
    verify(findChild(ws,"lampyreMcpEndpoint")===null);
    verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-cards-"+(ar?"ar":"en")+".png"));
   }
   const settings=findChild(ws,"intelligenceAdvancedSettings");
-  mouseClick(settings);
+  const intelligenceScroll=findChild(app,"intelligenceWorkspace");
+  reveal(intelligenceScroll,settings);mouseClick(settings);
   tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
+  verify(findChild(ws,"lampyreMcpEndpoint")===null);
+  verify(findChild(ws,"lampyreConnectionPanel").connection.endpoint===undefined);
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   reveal(intelligenceScroll,findChild(ws,"lampyreApiKey"));
+   verify(findChild(ws,"lampyreMcpEndpoint")===null);
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-setup-"+(ar?"ar":"en")+".png"));
+  }
   findChild(ws,"lampyreApiKey").text="Synthetic-credential-draft";
   identityBridge.logout();
   tryVerify(function(){return findChild(ws,"lampyreApiKey")===null});
   verify(!settings.visible);
   verify(identityBridge.login("ui-investigator","Synthetic-only UI password 2026!"))
+  app.navigatePrimary(3);verify(renderedFrame());
+  const investigatorSettings=findChild(ws,"intelligenceAdvancedSettings");
+  verify(investigatorSettings.visible);
+  verify(findChild(ws,"intelligenceStartPaidSearch").enabled);
+  verify(findChild(ws,"intelligenceRefreshCases").enabled);
+  verify(lawCaseBridge.searchCases(""));
+  ws.showDashboardDetails=true;verify(renderedFrame());
+  reveal(intelligenceScroll,findChild(ws,"intelligenceActiveCase"));
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-case-dashboard.png"));
+  ws.showDashboardDetails=false;verify(renderedFrame());
+  if(!ws.showAdvanced){reveal(intelligenceScroll,investigatorSettings);mouseClick(investigatorSettings);}
+  tryVerify(function(){return findChild(ws,"lampyreApiKey")!==null});
+  verify(findChild(ws,"lampyreMcpEndpoint")===null);
+  verify(!findChild(ws,"lampyreExecuteTool").enabled);
+  reveal(intelligenceScroll,findChild(ws,"lampyreApiKey"));
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"intelligence-investigator-setup.png"));
   app.goBack();
  }
  Component {id:firstRunPanelComponent;MR.IdentityPanel {app:test.windowUnderTest;identity:firstRunIdentity;width:600;height:650;x:400;y:160}}
@@ -938,6 +1041,175 @@ TestCase {
   findChild(app,"identityPassword").text="Synthetic-only UI password 2026!";artifactClick(findChild(app,"identityPanel"),findChild(app,"identitySignIn"));verify(identityBridge.authenticated,identityBridge.error);compare(identityBridge.session.role,"administrator");compare(lawCaseBridge.role,"unknown");compare(lawCaseBridge.cases.length,0);verify(renderedFrame())
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-ar.png"));app.ar=false;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"identity-en.png"))
   artifactClick(findChild(app,"identityPanel"),findChild(app,"identityLogout"));verify(!identityBridge.authenticated);law.section=0;app.navigateSection(0)
+ }
+ function test_compactGovernmentSettings(){
+  app.setWorkspace(false);app.navigateSection(10);app.ar=true;
+  tryVerify(function(){return app.font.family.indexOf("Noto Kufi Arabic")>=0},5000);
+  const reason=findChild(app,"governmentNetworkReason"),reference=findChild(app,"governmentNetworkCaseRef"),consent=findChild(app,"governmentNetworkApproval"),grid=findChild(app,"governmentRequestFields");
+  for(const size of [[1366,768],[1920,1080]])for(const ar of [true,false]){
+   app.width=size[0];app.height=size[1];app.ar=ar;verify(renderedFrame());
+   verify(reason.width<=320);verify(reference.width<=320);compare(grid.columns,2);
+   compare(Math.round(reason.mapToItem(grid,0,0).y),Math.round(reference.mapToItem(grid,0,0).y));
+   consent.checked=true;verify(renderedFrame());compare(String(findChild(consent,"selectionIndicator").color),"#a855f7");
+   findChild(app,"settingsScroll").contentItem.contentY=0;
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-settings-"+(ar?"ar":"en")+"-"+size[0]+".png"));
+  }
+  consent.checked=false;app.ar=true;
+ }
+ function test_yxDirectDeviceSettings(){
+  verify(uiEvidence.prepareReviewContext());app.setWorkspace(false);app.navigateSection(10);
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   const status=findChild(app,"directDevicePolicyStatus"),form=findChild(app,"governmentRequestFields");
+   verify(status!==null);verify(status.visible);verify(!form.visible);
+   const access=operationPolicy.permissions.filter(function(row){return row.capability==="device-tools"});
+   compare(access.length,1);verify(access[0].allowed);verify(access[0].directWork);
+   verify(findChild(app,"governmentPolicyState").text.indexOf(ar?"عمل مباشر":"Direct work")>=0);
+   findChild(app,"settingsScroll").contentItem.contentY=0;
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-direct-device-"+(ar?"ar":"en")+".png"));
+  }
+ }
+ function test_yxaOwnerPresentation(){
+  reviewCapture=true;
+  verify(uiEvidence.prepareReviewContext());lampyreConnection.forget();app.setWorkspace(false);
+  for(const ar of [true,false])for(const size of [[1366,768],[1920,1080],[2560,1440]]){
+   app.ar=ar;app.width=size[0];app.height=size[1];app.navigatePrimary(3);verify(renderedFrame());
+   const view=findChild(app,"intelligenceWorkspace"),grid=findChild(app,"intelligenceCategoryGrid");
+   view.contentItem.contentY=0;verify(renderedFrame());
+   if(grid.mapToItem(view,0,grid.height).y>view.availableHeight+2)uiEvidence.captureWindow(app,uiScreenshotBase+"review-card-overflow.png");
+   verify(grid.mapToItem(view,0,grid.height).y<=view.availableHeight+2,"All rows must fit: bottom="+grid.mapToItem(view,0,grid.height).y+" viewport="+view.availableHeight+" grid="+grid.width+"x"+grid.height+" columns="+grid.columns);
+   const seal=findChild(app,"nexvaryEyeSeal");tryCompare(seal,"status",Image.Ready);
+   compare(findChild(app,"brandSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
+   compare(app.humanError("اكتمل الفحص بنجاح"),ar?"اكتمل الفحص بنجاح":"Inspection completed successfully");
+   compare(app.humanError("اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: 2"),ar?"اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: 2":"Connection scan complete; discovered devices: 2");
+   compare(app.humanError("Auto refresh failed; verify USB/ADB and retry / فشل تحديث الاتصال؛ راجع USB وADB"),ar?"فشل تحديث الاتصال؛ راجع USB وADB":"Auto refresh failed; verify USB/ADB and retry");
+   if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-cards-"+(ar?"ar":"en")+".png"));
+  }
+  app.width=1366;app.height=768;app.navigate(11);
+  const tabs=findChild(app,"helpAboutTabs");tabs.currentIndex=1;
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   compare(findChild(app,"aboutSystemSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
+   verify(findChild(app,"aboutSystemVersion").text.includes(app.productVersion));
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-system-"+(ar?"ar":"en")+".png"));
+  }
+  tabs.currentIndex=2;app.ar=true;verify(renderedFrame());
+  compare(findChild(app,"companyContactEmail").text,"info@nexvary.com");
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-developer-ar.png"));tabs.currentIndex=0;
+  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;verify(renderedFrame());
+  verify(researchBridge.ready,researchBridge.error);verify(research.rows.length>0);
+  research.openDetails(research.rows[0]);
+  const fields=findChild(app,"researchDetailFields");verify(fields!==null);
+  tryVerify(function(){return fields.count>0},5000,"Selected source fields: "+JSON.stringify(research.selected));
+  let titleValue=null;
+  for(let i=0;i<fields.count;i++){const row=fields.itemAt(i);if(row&&row.fieldName==="title")titleValue=findChild(row,"researchDetailValue")}
+  verify(titleValue!==null,"Expected source title among "+fields.count+" structured fields");verify(titleValue.text.length>0);
+  compare(findChild(app,"researchRawJson").visible,false);verify(renderedFrame());
+  verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-research-details-ar.png"));research.selected={};app.ar=true;reviewCapture=false;
+ }
+ function test_yzNativeCardsDispatchAndDisplay(){
+  verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
+  const cards=findChild(app,"intelligenceSearchCards");verify(cards!==null);cards.selectedCard="";
+  verify(uiEvidence.prepareReviewConnection(true));tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);
+  verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
+  compare(uiEvidence.reviewConnectionStats().paidCalls,0);
+  for(const category of ["email","phone"]){
+   const before=uiEvidence.reviewConnectionStats().paidCalls;const collectionsBefore=uiEvidence.reviewConnectionStats().collections;
+   const card=findChild(cards,"intelligenceCategory-"+category);verify(card!==null);card.clicked();
+   const dialog=findChild(cards,"intelligenceServiceDialog");tryCompare(dialog,"opened",true);
+   const specialized=findChild(dialog.contentItem,"intelligenceSpecializedMode");verify(renderedFrame());mouseClick(specialized);verify(cards.specializedSearch);
+   tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.selectedCategory,category);
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before);
+   const selector=findChild(dialog.contentItem,"intelligenceServiceSelector");verify(selector!==null);selector.activated(0);
+   const input=findChild(dialog.contentItem,"intelligenceArgument-"+category);verify(input!==null);
+   const value=category==="email"?"native@example.invalid":"+12025550123";input.text=value;input.textEdited();
+   const execute=findChild(dialog.contentItem,"intelligenceExecuteService");verify(!execute.enabled);
+   const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);
+   const invoicesBefore=lampyreConnection.invoices.length;execute.clicked();
+   tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.state,"completed");compare(uiEvidence.reviewConnectionStats().collections,collectionsBefore+1);
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before+1);
+   const task=uiEvidence.reviewConnectionStats().lastArguments.tasks[0];compare(task.tool_name,"synthetic_"+category+"_lookup");compare(task.args[category],value);
+   compare(lampyreConnection.invoices.length,invoicesBefore+1);compare(lampyreConnection.currentInvoice.amountDueMinorUnits,1400);
+   verify(cards.showSearchResult);verify(lampyreConnection.resultText.includes("fixture"));
+   tryVerify(()=>findChild(dialog.contentItem,"lampyreConnectionPanel")!==null,3000);
+   const finding=findChild(dialog.contentItem,"intelligenceFindingData");verify(finding!==null);verify(finding.text.includes("https://example.invalid/synthetic-profile"));
+   const invoice=findChild(cards,"intelligenceCurrentInvoice");verify(invoice.visible);verify(invoice.text.includes("14.00"));verify(!consent.checked);
+   compare(uiEvidence.reviewConnectionStats().paidCalls,before+1);dialog.close();tryCompare(dialog,"opened",false);
+  }
+ }
+ function test_yzaUnifiedLookupCards(){
+  verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
+  const cards=findChild(app,"intelligenceSearchCards");verify(cards!==null);cards.selectedCard="";
+  verify(uiEvidence.prepareUnifiedReview());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.lookupConnected);
+  compare(uiEvidence.reviewConnectionStats().lookupSearches,0);
+  reviewCapture=true;
+  for(const kind of ["phone","email","username"]){
+   const before=uiEvidence.reviewConnectionStats().lookupSearches;findChild(cards,"intelligenceCategory-"+kind).clicked();
+   const dialog=findChild(cards,"intelligenceServiceDialog");tryCompare(dialog,"opened",true);verify(cards.unifiedSearch);
+   verify(!findChild(dialog.contentItem,"intelligenceServiceSelector").visible);compare(uiEvidence.reviewConnectionStats().lookupSearches,before);
+   const value=kind==="phone"?"+12025550123":kind==="email"?"synthetic@example.invalid":"synthetic-user";
+   const field=findChild(dialog.contentItem,"intelligenceArgument-"+kind);field.text=value;field.textEdited();
+   const submit=findChild(dialog.contentItem,"intelligenceExecuteService");verify(!submit.enabled);
+   const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");consent.checked=true;verify(submit.enabled);submit.clicked();submit.clicked();
+   tryCompare(lampyreConnection,"busy",false,5000);compare(lampyreConnection.state,"completed");
+   compare(uiEvidence.reviewConnectionStats().lookupSearches,before+1);compare(uiEvidence.reviewConnectionStats().lastLookupInput[kind],value);
+   const data=findChild(dialog.contentItem,"intelligenceFindingData");verify(data!==null);verify(data.text.includes("https://example.invalid/unified-profile"));
+   verify(!consent.checked);compare(lampyreConnection.currentInvoice.amountDueMinorUnits,1400);
+   verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-unified-"+kind+".png"));dialog.close();tryCompare(dialog,"opened",false);
+  }
+  reviewCapture=false;
+ }
+ function test_yzz_ownerInterfaceReview(){
+  reviewCapture=true;app.width=1536;app.height=980;
+  const screens=[];
+  function capture(key,label){
+   verify(renderedFrame());wait(30);const name="smoke-professional-ui-review-"+String(screens.length+1).padStart(3,"0")+"-"+key+".png";
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase.replace("smoke-professional-ui-","")+name));
+   screens.push({file:name,label:label,language:app.ar?"ar":"en",page:app.currentPage,synthetic:true});
+  }
+  function captureScroll(key,label,name){
+   const scroll=findChild(app,name);if(!scroll||!scroll.visible||!scroll.contentItem)return;
+   const view=scroll.contentItem;if(view.contentHeight===undefined||view.contentHeight<=view.height+60)return;
+   const start=view.contentY;for(let part=1;part<=12;part++){const next=Math.min(view.contentHeight-view.height,part*Math.max(100,view.height*0.85));if(next<=view.contentY+10)break;view.contentY=next;capture(key+"-part-"+(part+1),label);if(next>=view.contentHeight-view.height-2)break}view.contentY=start;
+  }
+  app.setWorkspace(true);app.navigateSection(10);verify(identityBridge.login("ui-admin","Synthetic-only UI password 2026!"));
+  capture("optional-legacy-accounts","إدارة الحسابات القديمة — اختيارية");
+  verify(uiEvidence.prepareReviewContext());
+  for(const gov of [true,false]){
+   app.setWorkspace(gov);
+   for(let i=0;i<app.sections.length;i++){
+    app.navigateSection(i);const key=(gov?"government-":"professional-")+i;capture(key,app.sections[i].ar);
+    const scrollers={7:"settingsScroll",11:"helpWorkspace",14:"governmentAnalysisWorkspace",15:"intelligenceWorkspace"};if(scrollers[app.currentPage])captureScroll(key,app.sections[i].ar,scrollers[app.currentPage]);
+   }
+  }
+  const tabs=[[1,"deviceTabs"],[2,"diagnosticTabs"],[4,"firmwareTabs"],[5,"workshopTabs"],[9,"forensicTabs"],[8,"recoveryTabs"]];
+  for(const route of tabs){app.currentPage=route[0];app.activeSection=0;const bar=findChild(app,route[1]);if(bar){for(let i=0;i<bar.count;i++){bar.currentIndex=i;capture(route[1]+"-"+i,route[1]+" / "+i)}}}
+  app.currentPage=3;capture("board","فحص اللوحات");app.currentPage=6;capture("parts","مخزون قطع الغيار");
+  app.setWorkspace(true);app.navigateSection(7);const research=findChild(app,"researchCenter");
+  for(let i=0;i<9;i++){research.section=i;capture("research-"+i,research.titles[i]);captureScroll("research-"+i,research.titles[i],"researchScroll")}
+  app.navigateSection(0);const law=findChild(app,"lawEnforcementWorkspace");
+  for(let i=0;i<12;i++){law.section=i;capture("law-"+i,law.titles[i])}
+  law.newCase();const form=findChild(app,"lawCaseForm");
+  for(let i=0;i<4;i++){form.step=i;findChild(app,"lawFormScroll").contentItem.contentY=0;capture("case-form-"+i,"إدخال القضية / "+i);captureScroll("case-form-"+i,"إدخال القضية / "+i,"lawFormScroll")}
+  form.form={caseNumber:"SYNTHETIC-VALID-INPUT",investigatingAgency:"Synthetic UI lab",investigatorName:"Synthetic operator"};form.step=0;capture("case-valid-fields","حقول صحيحة — خضراء");
+  form.setField("validFromUtc","invalid time");form.step=1;capture("case-invalid-time","قيمة وقت غير صحيحة — صفراء");form.setField("validFromUtc","2026-11-13T12:00:00Z");capture("case-time-controls","عناصر تعديل التاريخ والوقت");
+  app.currentPage=8;const recovery=findChild(app,"recoveryWorkspace");
+  if(recovery){findChild(app,"recoveryTabs").currentIndex=1;for(let i=0;i<8;i++){recovery.step=i;capture("recovery-step-"+i,"خطوة الاستعادة / "+i)}}
+  app.navigatePrimary(3);const ws=findChild(app,"osintWorkspace");const cards=findChild(app,"intelligenceSearchCards");
+  verify(cards!==null);
+  for(const category of ["email","phone"]){const button=findChild(cards,"intelligenceCategory-"+category);verify(button!==null);button.clicked();capture("search-"+category,"بحث "+category);findChild(cards,"intelligenceServiceDialog").close()}
+  if(ws){
+   ws.showAdvanced=true;verify(renderedFrame());const scroll=findChild(app,"intelligenceWorkspace");reveal(scroll,findChild(ws,"lampyreConnectionPanel"));capture("intelligence-setup","إعداد اتصال الاستخبارات");ws.showAdvanced=false;scroll.contentItem.contentY=0;
+   ws.showDashboardDetails=true;capture("intelligence-history","قضايا وسجل الاستخبارات");ws.showDashboardDetails=false;
+   ws.demoMode=true;ws.activeTab=2;verify(renderedFrame());const analysis=findChild(ws,"osintAnalysisPane");verify(analysis!==null);reveal(scroll,analysis);capture("graph-example","واجهة الرسم البياني — مثال محلي فقط");ws.demoMode=false;ws.activeTab=1;scroll.contentItem.contentY=0;
+  }
+  cards.selectedCard="";verify(uiEvidence.prepareReviewConnection());tryCompare(lampyreConnection,"busy",false,5000);verify(lampyreConnection.connected);verify(lampyreConnection.refreshCatalog());tryCompare(lampyreConnection,"busy",false,5000);
+  verify(lampyreConnection.discoverServices("email"));tryCompare(lampyreConnection,"busy",false,5000);
+  cards.selectedCard="email";cards.specializedSearch=true;cards.selectedService="synthetic_email_lookup";cards.values={email:"review@example.invalid"};findChild(cards,"intelligenceServiceDialog").open();capture("email-confirmation","تأكيد البحث — بيانات محلية فقط");
+  verify(lampyreConnection.runService("synthetic_email_lookup",JSON.stringify(cards.values),2,true));cards.showSearchResult=true;tryCompare(lampyreConnection,"busy",false,5000);capture("invoice-due","فاتورة مستحقة تجريبية 14 يورو");findChild(cards,"intelligenceServiceDialog").close();capture("invoices","سجل الفواتير التجريبي");
+  app.ar=false;capture("intelligence-en","Intelligence / English");
+  for(const section of [0,1,6,10]){app.setWorkspace(true);app.ar=false;app.navigateSection(section);capture("government-en-"+section,app.sections[section].en)}
+  verify(uiEvidence.saveReviewManifest(screens));reviewCapture=false;app.ar=true;
  }
  function test_z_exitAccept(){mouseClick(findChild(app,"exitButton"));let dialog=findChild(app,"exitDialog");tryCompare(dialog,"opened",true);mouseClick(dialog.standardButton(Dialog.Yes));tryCompare(app,"visible",false)}
 }

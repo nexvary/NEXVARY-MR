@@ -1,43 +1,11 @@
-# Color icon system
+# Government Edition professional icon release — 0.4.3
 
-The rebuild uses actual Microsoft Fluent UI System Icons **color SVG assets**.
-The existing ten navigation icons were already upstream artwork; they were not
-emoji or hand-generated geometric placeholders. This increment extends that
-same family rather than mixing unrelated styles or recoloring outline icons.
+All 27 active semantic SVG assets in `assets/icons-professional` now use original, unmodified Microsoft Fluent UI System Icons full-color vectors, MIT licensed, pinned at `a347af95478f989038cccbf085978865264c048a`. Twenty-four distinct upstream images and three stable aliases replace the prior procedurally drawn sculpted/geometric versions. This is not a palette recoloring. Every active file's exact SHA-256 and source/alias is recorded in `assets/icons-professional/PROVENANCE.json`; raw upstream files and the existing complete MIT notice remain in the repository and installer. No runtime CDN or new graphics framework is used. `scripts/fetch_professional_icons.py` restores vendored, hash-verified artwork without network access or recoloring.
 
-- Upstream: <https://github.com/microsoft/fluentui-system-icons>
-- Pinned revision: `a347af95478f989038cccbf085978865264c048a`
-- License: MIT; complete upstream copyright/permission notice is already shipped
-  at `packaging/licenses/FLUENT-ICONS-MIT.txt`.
-- Exact upstream path, Git blob ID and SHA-256 for every bundled upstream SVG:
-  `assets/icons/PROVENANCE.json`.
-- New SVG files are copied byte-for-byte from that revision. Download validation
-  checks Git's blob digest as well as recording SHA-256. Files remain local Qt
-  resources; no CDN or icon font is required at runtime.
+`qml/SemanticIcon.qml` centralizes icon resolution, a recognizable missing-asset fallback, device-pixel-aware source sizing, preserved aspect ratio and accessible-label/decorative behavior. Navigation, panel headings, intelligence, statuses already backed by SVGs, device/help/settings controls and checkbox artwork retain their stable semantic paths. Ordinary text controls and genuine device photos are not converted into pictograms. SVG artwork is not mirrored in Arabic; surrounding layouts still use RTL.
 
-| UI purpose | Asset |
-| --- | --- |
-| Dashboard | `home.svg` |
-| Device Manager | `phone.svg` |
-| Repair Studio | `toolbox.svg` / `wrench.svg` |
-| Firmware Intelligence | `arrow_square_down.svg` / `board.svg` |
-| USB Diagnostics | `phone_laptop.svg` (phone/workstation relationship) |
-| Forensic Laboratory | `document_lock.svg` / `search_visual.svg` |
-| Recovery & Backup | `history.svg` / `database.svg` |
-| Workshop CRM | `clipboard_task.svg` |
-| Reports | `document_text.svg` |
-| Research & Compatibility | `book_open_lightbulb.svg` / `puzzle_piece.svg` |
-| Settings | `settings.svg` |
-| Help & About | `question_circle.svg` |
-| Diagnostics / result status | `gauge.svg`, `shield_checkmark.svg`, `checkmark_circle.svg`, `error_circle.svg`, `warning.svg` |
-| Refresh / workflow | `arrow_sync.svg`, `data_bar_vertical_ascending.svg` |
+The new `assets/nexvary-mr.svg` application mark is original Nexvary vector artwork: an interlocking raised metallic N bridge, obsidian backing, blue return rail and restrained green/red signal accents. It contains no government insignia or third-party logo. `scripts/build_app_icon.py` produces the compatible PNG and `packaging/app.ico` with 16/24/32/48/64/128/256px frames. The same ICO is embedded by app.rc and Qt resources, applied by QGuiApplication to application windows/taskbar/Alt+Tab, and used by Inno Setup, both shortcuts and the uninstall entry.
 
-These semantic mappings are NEXVARY design choices; the image artwork is
-unmodified upstream. The pinned family has no 24-color USB/port glyph among
-the inspected USB entries, so the USB page uses the matching color phone/laptop
-asset rather than inventing a USB drawing or silently tinting an outline.
+Focused Windows CI on `fix/intelligence-p0-completion` runs the existing production job with its full native suite and installer safety gates. Unrelated Linux/server/laboratory jobs are skipped for this focused release; other branches retain their normal full matrices. Only `NEXVARY-MR-Government-Setup.exe` is built as a distributable. No portable ZIP is created. Icon visual tests exercise every semantic vector and fallback, Arabic/English at 1366×768, 1920×1080 and 2560×1440, including the existing 125%/150% UI test invocations. Only two focused QML visual captures are saved; required installer/runtime smoke captures remain enabled. Shell-extracted EXE/setup icons, Start Menu/desktop shortcuts and uninstall icon are checked on the disposable CI runner; this is not manual physical Windows acceptance.
 
-The separate original `check_mark.svg` control asset retains its existing
-provenance entry. It is not represented as Microsoft artwork. Qt SVG and its
-runtime deployment/license obligations remain covered by `docs/THIRD_PARTY.md`.
-The distributor must preserve notices when packaging the application.
+No authorized trial credential was present in the named integration environment variables. No secure secret-entry mechanism is exposed in this session. Live authentication, entitlements and paid tools remain unverified. No key is fabricated, added to CI or committed, and no live paid request is executed. The existing 22 transport/permission/credential fixtures are simulated and are not provider findings. Trial balances/costs are not assumed.
