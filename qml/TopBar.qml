@@ -9,11 +9,11 @@ Rectangle {
  readonly property string connectionState:!toolBridge.selectedSerial?"none":targetConnections.length!==1?"missing":targetConnections[0].transport==="fastboot"?"fastboot":targetConnections[0].state
  readonly property string connectionTitle:connectionState==="device"?app.trx("ADB مفوض","ADB authorized"):connectionState==="fastboot"?"Fastboot":connectionState==="unauthorized"?app.trx("ADB غير مفوض","ADB unauthorized"):connectionState==="offline"?app.trx("ADB غير متاح","ADB offline"):connectionState==="none"?app.trx("لم يحدد هدف","No target"):app.trx("اتصال غائب أو ملتبس","Missing / ambiguous")
  color:app.design.surface
- implicitHeight:72
+ implicitHeight:88
  RowLayout {
   anchors.fill:parent;anchors.margins:12;spacing:12
-  Image {source:"qrc:/assets/nexvary-mr.png";Layout.preferredWidth:38;Layout.preferredHeight:38;fillMode:Image.PreserveAspectFit}
-  ColumnLayout {visible:bar.app.width>=1100;spacing:2;Layout.preferredWidth:170;Label {text:"NEXVARY MR";font.pixelSize:19;font.bold:true;font.letterSpacing:1;color:bar.app.design.text}Label {text:bar.app.governmentMode?bar.app.trx("الإصدار الحكومي","GOVERNMENT EDITION"):bar.app.trx("الصيانة والتحليل الجنائي","REPAIR & FORENSICS");font.pixelSize:10;color:bar.app.design.muted}}
+  Image {objectName:"brandLogo";source:"qrc:/assets/nexvary-mr.png";sourceSize.width:256;sourceSize.height:256;Layout.preferredWidth:68;Layout.preferredHeight:68;fillMode:Image.PreserveAspectFit;smooth:true;mipmap:true;asynchronous:false}
+  ColumnLayout {visible:bar.app.width>=1100;spacing:2;Layout.preferredWidth:190;Label {text:"NEXVARY MR";font.pixelSize:22;font.bold:true;font.letterSpacing:1;color:bar.app.design.text}Label {text:bar.app.governmentMode?bar.app.trx("الإصدار الحكومي","GOVERNMENT EDITION"):bar.app.trx("الصيانة والتحليل الجنائي","REPAIR & FORENSICS");font.pixelSize:10;color:bar.app.design.muted}}
   Rectangle {Layout.preferredWidth:1;Layout.preferredHeight:30;color:bar.app.design.border}
   ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:3
    Label {text:bar.app.pageTitle;font.pixelSize:16;font.bold:true;color:bar.app.design.text;Layout.fillWidth:true;elide:Text.ElideRight}
