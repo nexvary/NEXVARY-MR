@@ -28,9 +28,9 @@ class InstitutionalInstallerTests(unittest.TestCase):
         self.assertIn('WizardForm.LicenseAcceptedRadio.Checked', setup)
 
     def test_candidate_version_is_consistent_across_binary_and_interface(self):
-        brand = (ROOT / 'qml/Brand.js').read_text()
+        brand = (ROOT / 'qml/Brand.js').read_text(encoding='utf-8-sig')
         version = re.search(r'version="([^"]+)"', brand).group(1)
         for name in ('cpp/src/main.cpp', 'packaging/app.rc', 'packaging/NEXVARY-MR.iss', 'CMakeLists.txt'):
             self.assertIn(version, (ROOT / name).read_text(encoding='utf-8-sig'))
         for name in ('qml/HelpPage.qml', 'qml/SettingsPage.qml', 'qml/AppShell.qml'):
-            self.assertNotRegex((ROOT / name).read_text(), r'0\.4\.[135]')
+            self.assertNotRegex((ROOT / name).read_text(encoding='utf-8-sig'), r'0\.4\.[135]')

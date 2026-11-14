@@ -50,7 +50,7 @@ ColumnLayout {
         OsintDesktopCommand {objectName:"intelligenceLoadCategories";text:search.app.trx("تحديث فئات البحث — دون رسوم","Refresh search categories — free");enabled:!!search.connection&&search.connection.connected&&!search.connection.busy;onClicked:search.connection.refreshCatalog()}
         BusyIndicator {running:!!search.connection&&search.connection.busy;visible:running;Layout.preferredWidth:30;Layout.preferredHeight:30}
     }
-    Label {visible:!connection||!connection.connected;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احفظ المفتاح واختبر الاتصال ثم حدّث الفئات. تظهر البطاقات من دليل الخدمة الحقيقي؛ لا توجد نتائج افتراضية.","Save the key, test the connection, then refresh categories. Cards come from the live service catalog; no default findings are generated.")}
+    Label {visible:false;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احفظ المفتاح واختبر الاتصال ثم حدّث الفئات. تظهر البطاقات من دليل الخدمة الحقيقي؛ لا توجد نتائج افتراضية.","Save the key, test the connection, then refresh categories. Cards come from the live service catalog; no default findings are generated.")}
     EntryField {objectName:"intelligenceCategoryFilter";implicitHeight:32;visible:search.categories.length>0;Layout.fillWidth:true;requiredInput:false;placeholderTextColor:app.design.muted;placeholderText:app.trx("تصفية بطاقات البحث","Filter search cards");onTextEdited:search.filter=text;color:app.design.text;background:Rectangle {color:search.app.design.surface;border.color:search.app.design.border;radius:5}}
     OsintDesktopCommand {objectName:"intelligenceResumeLookup";visible:!!search.connection&&search.connection.pendingResultCount>0;text:search.app.trx("متابعة الطلب السابق — دون بحث جديد","Resume existing request — no new search");onClicked:{search.selectedCard=search.connection.selectedCategory;search.showSearchResult=true;serviceDialog.open()}}
     GridLayout {
@@ -59,7 +59,9 @@ ColumnLayout {
         readonly property int rowCount:Math.max(1,Math.ceil(search.shownCategories.length/columns))
         readonly property real viewportHeight:typeof app.intelligenceViewportHeight==="number"?app.intelligenceViewportHeight:700
         readonly property int cardHeight:Math.max(50,Math.min(78,Math.floor((viewportHeight-108-(rowCount-1)*4)/rowCount)))
-        Layout.fillWidth:true;columns:width>=1400?10:width>=900?9:width>=760?8:width>=640?7:width>=520?6:width>=400?4:width>=300?3:2;columnSpacing:4;rowSpacing:4
+        readonly property int baseColumns:width>=1400?10:width>=900?9:width>=760?8:width>=640?7:width>=520?6:width>=400?4:width>=300?3:2
+        readonly property int fittingRows:Math.max(1,Math.floor((viewportHeight-104)/54))
+        Layout.fillWidth:true;columns:Math.min(Math.max(baseColumns,Math.ceil(search.shownCategories.length/fittingRows)),Math.max(2,Math.floor(width/92)));columnSpacing:4;rowSpacing:4
         Repeater {
             model:search.shownCategories
             delegate:Button {
@@ -70,13 +72,14 @@ ColumnLayout {
                 enabled:!search.connection||!search.connection.busy
                 text:Categories.title(modelData.name,search.app.ar)
                 Accessible.name:text
+                ToolTip.visible:hovered;ToolTip.text:text
                 onClicked:{search.specializedSearch=false;search.clearSelection();search.selectedCard=modelData.name;if(!search.unifiedSearch&&search.connection&&search.connection.connected&&search.connection.categories.some(row=>row.name===modelData.name))search.connection.discoverServices(modelData.name);serviceDialog.open()}
                 background:Rectangle {radius:12;gradient:Gradient {GradientStop {position:0;color:card.hovered?"#103F53":"#102C3B"} GradientStop {position:0.6;color:"#081019"} GradientStop {position:1;color:"#04080D"}} border.color:search.connection&&search.connection.selectedCategory===card.modelData.name?search.app.design.accent:search.app.design.border;border.width:card.activeFocus?2:1}
                 contentItem:RowLayout {
                     spacing:4
                     SemanticIcon {name:Categories.icon(card.modelData.name);Layout.preferredWidth:24;Layout.preferredHeight:24}
                     ColumnLayout {Layout.fillWidth:true;Layout.minimumWidth:0;spacing:2
-                     Label {Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:2;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:categoryGrid.cardHeight<58?12:14;font.bold:true;text:card.text}
+                     Label {Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:1;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:categoryGrid.cardHeight<58?12:14;font.bold:true;text:card.text}
                      Rectangle {objectName:"categoryRetailPrice";Layout.alignment:Qt.AlignHCenter;implicitWidth:66;implicitHeight:17;radius:8;border.color:"#39FF14";color:"#082F23";Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:"#F0FFF4";font.pixelSize:12;font.bold:true}}
                     }
                 }

@@ -1031,7 +1031,8 @@ TestCase {
    app.ar=ar;app.width=size[0];app.height=size[1];app.navigatePrimary(3);verify(renderedFrame());
    const view=findChild(app,"intelligenceWorkspace"),grid=findChild(app,"intelligenceCategoryGrid");
    view.contentItem.contentY=0;verify(renderedFrame());
-   verify(grid.mapToItem(view,0,grid.height).y<=view.availableHeight+2,"All category rows must fit the viewport");
+   if(grid.mapToItem(view,0,grid.height).y>view.availableHeight+2)uiEvidence.captureWindow(app,uiScreenshotBase+"review-card-overflow.png");
+   verify(grid.mapToItem(view,0,grid.height).y<=view.availableHeight+2,"All rows must fit: bottom="+grid.mapToItem(view,0,grid.height).y+" viewport="+view.availableHeight+" grid="+grid.width+"x"+grid.height+" columns="+grid.columns);
    const seal=findChild(app,"nexvaryEyeSeal");tryCompare(seal,"status",Image.Ready);
    compare(findChild(app,"brandSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
    if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-cards-"+(ar?"ar":"en")+".png"));

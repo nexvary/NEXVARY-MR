@@ -13,7 +13,7 @@ Rectangle {
   if(item.x<viewport.contentX)viewport.contentX=item.x;
   else if(item.x+item.width>viewport.contentX+viewport.width)viewport.contentX=item.x+item.width-viewport.width;
  }
- implicitHeight:112;color:"#E608121B"
+ implicitHeight:96;color:"#E608121B"
  LayoutMirroring.enabled:false
  LayoutMirroring.childrenInherit:true
  Rectangle {anchors.left:parent.left;anchors.right:parent.right;anchors.bottom:parent.bottom;height:1;color:"#24556D"}
