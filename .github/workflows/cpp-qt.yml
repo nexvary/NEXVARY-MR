@@ -144,7 +144,7 @@ jobs:
             dist/NEXVARY-Portal-SHA256SUMS.txt
           if-no-files-found: error
   qt:
-    # Verify the branch while retaining the owner hold on Setup creation.
+    # Owner approved one production Setup EXE after interface review.
     strategy:
       fail-fast: false
       matrix:
@@ -153,7 +153,7 @@ jobs:
     env:
       QT_QUICK_BACKEND: software
       MR_UI_ICON_FOCUS: '1'
-      MR_SKIP_SETUP: ${{ (github.head_ref == 'fix/intelligence-p0-completion' || github.ref == 'refs/heads/fix/intelligence-p0-completion') && 'true' || 'false' }}
+      MR_SKIP_SETUP: 'false'
     steps:
       - uses: actions/checkout@v4
       - name: Parse Windows deployment scripts before building

@@ -14,4 +14,4 @@ Persist the invoice intent before dispatch and protect the returned request UUID
 
 Secrets in the required query parameter are percent-encoded; URLs are never exposed to QML or logged. Redirects, response size, TLS failures and timeouts use the existing fail-closed network handling. The phone's plus sign is explicitly encoded as `%2B` to preserve the international identifier.
 
-Live read-only history authentication returned HTTP 204 with the owner's supplied key. No paid phone/email/username Data Lookup request was executed to validate this increment. Windows fixture results are not live intelligence, and do not establish physical installer acceptance. Setup creation remains on owner hold.
+Live read-only history authentication returned HTTP 204 with the owner's supplied key. No paid phone/email/username Data Lookup request was executed to validate this increment. Windows fixture results are not live intelligence, and do not establish physical installer acceptance. The owner approved creation of one production Windows Setup EXE on 2026-11-14 after interface review; no Portable or Laboratory package is requested.
