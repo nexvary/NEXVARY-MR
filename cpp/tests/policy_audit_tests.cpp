@@ -131,6 +131,28 @@ int permissionFixture(const QString &root) {
 class PolicyAuditTests final : public QObject {
   Q_OBJECT
 private slots:
+  void directDeviceToolsNeedNoApplicationAccount() {
+    QTemporaryDir t; QVERIFY(t.isValid());
+    IdentityService i(t.path()+"/identity", true);
+    GovernmentOperationPolicy p(&i);
+    QVERIFY(!p.permit("device-tools"));
+    QVERIFY(i.startDirectWork());
+    QVERIFY(p.granted("device-tools"));
+    QVERIFY(p.permit("device-tools"));
+    QVERIFY(p.requests().isEmpty());
+    QVERIFY(!p.permit("paid-unknown-cost"));
+    QVERIFY(!p.permit("unknown-capability"));
+    p.revokeAll();
+    QVERIFY(p.permit("device-tools"));
+    i.logout();
+    QVERIFY(!p.permit("device-tools"));
+    QVERIFY(i.startDirectWork());
+    QVERIFY(p.permit("device-tools"));
+    QFile corrupt(i.policyJournalPath());
+    QVERIFY(corrupt.open(QIODevice::Append));
+    QCOMPARE(corrupt.write("tamper"), qint64(6)); corrupt.close();
+    QVERIFY(!p.permit("device-tools"));
+  }
   void atomicSnapshotCrashBoundary_data(){
     QTest::addColumn<QString>("stage");QTest::addColumn<int>("expected");
     QTest::newRow("before-write")<<QString("before-write")<<138;

@@ -13,7 +13,7 @@ Panel {
  objectName:"governmentNetworkPanel"
  title:app.trx("سياسة العمليات الحكومية","Government operation policy")
  iconName:"document_lock"
- stateText:operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
+ stateText:identityBridge.directWork?app.trx("عمل مباشر","Direct work"):operationPolicy.offline?app.trx("المنع الافتراضي","Default deny"):app.trx("استثناءات مؤقتة نشطة","Temporary exceptions active")
  function requestCategory(name){const consent=approval.checked;approval.checked=false;selectedRequest=operationPolicy.requestException(name,reason.text,caseRef.text,seconds.value,consent)}
  function caption(name){
   const ar={"cloud-publish":"نشر متابعة الورشة سحابيًا","tracking-portal":"بوابة المتابعة، بما فيها الاتصال المحلي","signature-update":"تنزيل تواقيع FreshClam","device-tools":"أدوات الأجهزة الخارجية، ADB وscrcpy وفحص USB","paid-unknown-cost":"السماح بعمليات مجهولة التكلفة — تتطلب موافقة مدير مستقل","external-analysis":"التحليل الخارجي وطلبات OSINT","external-links":"فتح روابط HTTP/HTTPS في المتصفح"}
@@ -29,8 +29,9 @@ Panel {
   const en={"intelligence-mcp":"NEXVARY Intelligence request","lampyre-mcp":"NEXVARY Intelligence request","phone-osint":"Phone number OSINT","security-scan":"File scan","signature-update":"Signature update","partition-analysis":"Image partition analysis"}
   return (app.ar?ar:en)[kind]||kind
  }
- Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
- NeonCheckBox {id:policyTechnical;text:app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
+ Label {visible:!identityBridge.directWork||policyTechnical.checked;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:app.trx("لتفعيل عملية خارجية: اكتب السبب، اختر الفئة، ثم يراجع حساب آخر مخوّل الطلب. بعد الموافقة، ارجع بحساب طالب العملية وفعّل الطلب. التفعيل مؤقت ويمكن إيقافه فورًا.","To activate an external operation: enter its purpose, request one category, and obtain another authorized account's review. Then return as the requester and activate the approved request. Activation is temporary and can be stopped immediately.")}
+ Label {objectName:"directDevicePolicyStatus";visible:identityBridge.directWork;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.success:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("أدوات الجهاز متاحة مباشرة دون حساب تطبيق أو طلب استثناء. افتح مدير الأجهزة ثم اكتشاف ADB؛ وافق على اتصال USB من الهاتف.","Device tools are available directly without an application account or exception. Open Device Manager, discover ADB, and authorize USB on the handset."):app.trx("تعذر التحقق من سجل العمليات المحلي؛ يلزم إصلاح السجل قبل تشغيل أدوات الجهاز.","The local operation journal could not be verified; repair it before running device tools.")}
+ NeonCheckBox {id:policyTechnical;text:identityBridge.directWork?app.trx("إعدادات السياسات المؤسسية المتقدمة","Advanced institutional policy settings"):app.trx("تفاصيل سياسة الاتصال","Connection policy details")}
  Label {visible:policyTechnical.checked;objectName:"governmentNetworkScope";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("طلب لفئة واحدة وطالب محدد، ثم مراجعة وقرار من حساب آخر، ثم تفعيل الطالب لمدة لا تتجاوز عشر دقائق. تغيير الهوية أو الخروج يسحب التفعيل. يسجل التطبيق القرارات بتواقيع محلية؛ اختلاف الحسابات لا يثبت استقلال الأشخاص والتوقيت محلي. نطاق الفئة لا يقيد وجهة الشبكة أو الأداة، ومرجع القضية لا يمنح الوصول إليها. تبقى المشاركات المركبة والعمليات التابعة والمتصفح خارج احتواء نظام التشغيل المثبت.","Request one category for one principal, obtain review and a decision from a different account, then activate as the requester for at most ten minutes. Identity change/logout revokes activation. Decisions have local signatures; different accounts do not prove independent people and time is local. Category scope does not restrict destinations/tools; a case reference grants no case access. Mounted shares, descendants and browser activity remain outside verified OS containment.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:operationPolicy.auditStatus.healthy?app.design.accent:app.design.danger;text:operationPolicy.auditStatus.healthy?app.trx("سجل السياسات متاح — تحقق محلي","Policy journal available — local verification"):app.trx("تعذر التحقق من سجل السياسات — الاستثناءات مغلقة","Policy journal unavailable — exceptions denied")}
  ColumnLayout {
@@ -47,6 +48,9 @@ Panel {
    }
   }
  }
+ ColumnLayout {
+  visible:!identityBridge.directWork||policyTechnical.checked
+  Layout.fillWidth:true
  GridLayout {
   objectName:"governmentRequestFields";Layout.fillWidth:true;Layout.maximumWidth:700;columns:width>=600?2:1;columnSpacing:16;rowSpacing:12
   ColumnLayout {Layout.fillWidth:true;Layout.maximumWidth:320;spacing:5
@@ -75,9 +79,9 @@ Panel {
    Layout.minimumWidth:0
    required property var modelData
    Layout.fillWidth:true
-   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.allowed?panel.app.design.accent:panel.app.design.text;text:panel.caption(modelData.capability)+" · "+(modelData.allowed?panel.app.trx("مسموح مؤقتًا","Temporarily allowed"):panel.app.trx("محظور","Blocked"))}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:modelData.allowed?panel.app.design.accent:panel.app.design.text;text:panel.caption(modelData.capability)+" · "+(modelData.allowed?(modelData.directWork?panel.app.trx("متاح مباشرة","Available directly"):panel.app.trx("مسموح مؤقتًا","Temporarily allowed")):panel.app.trx("محظور","Blocked"))}
    Label {visible:modelData.allowed;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:panel.app.design.muted;text:(modelData.reason||"")+"\n"+(modelData.actor||"")+" · "+(modelData.expiresUtc||"")}
-   RowLayout {Layout.fillWidth:true
+   RowLayout {visible:!modelData.directWork;Layout.fillWidth:true
     ActionButton {objectName:"governmentNetworkGrant-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("طلب استثناء","Request exception");enabled:panel.canRequest&&approval.checked&&reason.text.trim().length>0&&!modelData.allowed;onClicked:panel.requestCategory(modelData.capability)}
     ActionButton {objectName:"governmentNetworkRevoke-"+modelData.capability;Layout.fillWidth:true;text:panel.app.trx("إيقاف التفعيل","Stop activation");visible:modelData.allowed;enabled:modelData.allowed;onClicked:operationPolicy.revoke(modelData.capability)}
    }
@@ -105,6 +109,7 @@ Panel {
    ActionButton {objectName:"governmentPolicyActivate-"+modelData.id;visible:modelData.status==="approved";enabled:owner;text:panel.app.trx("تفعيل بواسطة الطالب","Activate as requester");onClicked:operationPolicy.activateException(modelData.id)}
    ActionButton {objectName:"governmentPolicyCancel-"+modelData.id;visible:!closed;enabled:owner||assigned||panel.role==="administrator";text:panel.app.trx("سحب الطلب أو الموافقة","Revoke request or approval");onClicked:operationPolicy.revokeException(modelData.id)}
   }
+ }
  }
  ColumnLayout {
   visible:panel.canAudit;Layout.fillWidth:true

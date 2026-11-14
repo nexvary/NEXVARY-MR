@@ -180,6 +180,10 @@ bool GovernmentOperationPolicy::approvalCurrent(const QString &id) {
   return false;
 }
 bool GovernmentOperationPolicy::granted(const QString &capability) const {
+  // Windows identifies the direct operator; routine device discovery needs no
+  // second application account. Tool allowlists and handset consent still apply.
+  if (capability == "device-tools" && identity_ && identity_->directWork())
+    return audit_ && audit_->healthy() && identity_->authenticated();
   const auto it = grants_.constFind(capability);
   return audit_ && audit_->healthy() && it != grants_.cend() &&
          clock_.elapsed() < it->deadline && identity_ &&
@@ -197,6 +201,7 @@ QVariantList GovernmentOperationPolicy::permissions() const {
     const auto g = grants_.value(name);
     rows.append(QVariantMap{{"capability", name},
                             {"allowed", granted(name)},
+                            {"directWork", name == "device-tools" && identity_ && identity_->directWork()},
                             {"reason", g.reason},
                             {"actor", g.actor},
                             {"expiresUtc", g.expiresUtc},
@@ -318,6 +323,9 @@ bool GovernmentOperationPolicy::permit(const QString &capability) {
 
   if (allowed)
     r = requests_.value(grants_.value(capability).id);
+  if (allowed && capability == "device-tools" && identity_ && identity_->directWork())
+    r = {{"capability", capability}, {"mode", "windows-direct-work"},
+         {"observedActor", identity_->actor()}};
 
   if (!audit(allowed ? "operation-allowed" : "operation-denied", r,
              allowed ? "gate-allowed; operation completion not established"

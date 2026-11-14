@@ -144,7 +144,7 @@ jobs:
             dist/NEXVARY-Portal-SHA256SUMS.txt
           if-no-files-found: error
   qt:
-    # Owner approved one production Setup EXE after interface review.
+    # Verify the post-release device-policy repair before another Setup build.
     strategy:
       fail-fast: false
       matrix:
@@ -153,7 +153,7 @@ jobs:
     env:
       QT_QUICK_BACKEND: software
       MR_UI_ICON_FOCUS: '1'
-      MR_SKIP_SETUP: 'false'
+      MR_SKIP_SETUP: 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Parse Windows deployment scripts before building
@@ -228,9 +228,9 @@ jobs:
       - name: Verify MCP transport and Windows credential persistence
         shell: pwsh
         run: |
-          cmake --build build --config Release --target mr_lampyre_connection_tests --parallel
+          cmake --build build --config Release --target mr_lampyre_connection_tests mr_policy_audit_tests --parallel
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          ctest --test-dir build -C Release -R '^mr_lampyre_connection_tests$' --output-on-failure
+          ctest --test-dir build -C Release -R '^(mr_lampyre_connection_tests|mr_policy_audit_tests)$' --output-on-failure
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build GUI
         id: native_build

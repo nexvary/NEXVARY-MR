@@ -1012,6 +1012,19 @@ TestCase {
   }
   consent.checked=false;app.ar=true;
  }
+ function test_yxDirectDeviceSettings(){
+  verify(uiEvidence.prepareReviewContext());app.setWorkspace(false);app.navigateSection(10);
+  for(const ar of [true,false]){
+   app.ar=ar;verify(renderedFrame());
+   const status=findChild(app,"directDevicePolicyStatus"),form=findChild(app,"governmentRequestFields");
+   verify(status!==null);verify(status.visible);verify(!form.visible);
+   const access=operationPolicy.permissions.filter(function(row){return row.capability==="device-tools"});
+   compare(access.length,1);verify(access[0].allowed);verify(access[0].directWork);
+   verify(findChild(app,"governmentPolicyState").text.indexOf(ar?"عمل مباشر":"Direct work")>=0);
+   findChild(app,"settingsScroll").contentItem.contentY=0;
+   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-direct-device-"+(ar?"ar":"en")+".png"));
+  }
+ }
  function test_yzNativeCardsDispatchAndDisplay(){
   verify(uiEvidence.prepareReviewContext());app.navigatePrimary(3);verify(renderedFrame());
   const cards=findChild(app,"intelligenceSearchCards");verify(cards!==null);cards.selectedCard="";
