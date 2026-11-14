@@ -116,7 +116,7 @@ Item {
     Flow {
      Layout.fillWidth:true;spacing:8
      ActionButton {objectName:"analyzeDeviceLog";visible:resultTabs.currentIndex===1;text:app.trx("تحليل مؤشرات السجل","Analyze log indicators");enabled:toolBridge.logcat!=="";onClicked:logAnalysis.text=repairBridge.analyzeLogReport(toolBridge.logcat,app.ar)}
-     ActionButton {objectName:"useBundledScreenView";visible:resultTabs.currentIndex===3;text:app.trx("استخدام نسخة عرض الشاشة المضمّنة","Use bundled screen viewer");enabled:toolBridge.screenViewAvailable&&!toolBridge.busy&&!toolBridge.mirrorActive&&page.adbReady&&page.identified;onClicked:{if(toolBridge.clearTool("scrcpy"))page.reviewMirror();else app.notice=app.humanError(toolBridge.status)}}
+     ActionButton {objectName:"useBundledScreenView";visible:resultTabs.currentIndex===3;text:app.trx("استخدام نسخة عرض الشاشة المضمّنة","Use bundled screen viewer");enabled:toolBridge.screenViewAvailable&&!toolBridge.busy&&!toolBridge.mirrorActive&&page.adbReady&&page.identified;onClicked:{if(toolBridge.clearTool("scrcpy"))page.reviewMirror();else app.notice(false,"",toolBridge.status)}}
      ActionButton {objectName:"stopMirror";visible:resultTabs.currentIndex===3||toolBridge.mirrorActive;text:app.trx("إيقاف عرض الشاشة","Stop screen view");enabled:toolBridge.mirrorActive;onClicked:toolBridge.stopMirror()}
      Label {objectName:"mirrorState";visible:resultTabs.currentIndex===3&&toolBridge.mirrorActive;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#8eb6d6");text:page.screenState()}
     }

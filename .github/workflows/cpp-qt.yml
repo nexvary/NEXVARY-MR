@@ -158,7 +158,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 4
+          fetch-depth: 5
           ref: ${{ github.head_ref == 'fix/intelligence-p0-completion' && github.event.pull_request.head.sha || github.sha }}
       - name: Reuse verified native tests for the isolated installer repair
         shell: pwsh
@@ -188,7 +188,7 @@ jobs:
           # A single QML-only follow-up reuses the proven 0.4.7 backend suite.
           # Any other parent or native change keeps the full normal gate.
           $uiBase = '2d53e6300766d88d881370ffa767c7d91e91b54b'
-          if ($parent -eq '57cda305497afc325ad11427dc8470e01c748622' -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
+          if ($parent -eq '641c15e80c67e28ea4b068fe846ddc01564bc727' -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
             $files = @(git diff --name-only $uiBase HEAD)
             $allowed = @('.github/workflows/cpp-qt.yml','CMakeLists.txt','cpp/src/main.cpp','packaging/NEXVARY-MR.iss','packaging/app.rc','qml/Brand.js','qml/DeviceInspector.qml','qml/TopBar.qml','qml/AppShell.qml','qml/tests/tst_navigation.qml','qml/DevicesPage.qml','qml/StatusText.js','packaging/app.ico','assets/branding/nexvary-eye-seal.svg','assets/branding/nexvary-eye-symbol.svg','scripts/render_brand_icon.py','tests/test_icon_assets.py')
             if ($LASTEXITCODE -ne 0 -or @($files | Where-Object { $_ -notin $allowed }).Count -ne 0) { throw 'UI-only reuse refused: unexpected source changes' }
