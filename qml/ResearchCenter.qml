@@ -27,7 +27,13 @@ Item {
   const ar={"Vendor Claimed":"ادعاء المزوّد — غير متحقق مستقلًا","Not Tested":"لم يُختبر","Pending":"بانتظار المراجعة","Acquisition workflows":"مسارات جمع البيانات","Amnesty documents specific 2024 cases; no general present-day device support follows.":"توثّق منظمة العفو الدولية حالات محددة من 2024؛ لا يثبت ذلك دعم الأجهزة الحالية عمومًا.","Not established in this catalog; vendor descriptions remain vendor claims.":"لم يثبت ضمن هذا الفهرس؛ أوصاف المزوّد تظل ادعاءات من المزوّد.","Published workflow: Acquisition workflows. Internal proprietary implementation is unknown.":"المسار المنشور: جمع البيانات. تفاصيل التنفيذ الداخلي المملوك للمزوّد غير معروفة.","Exact hardware interfaces and protocol/version coverage require a selected licensed release. No undocumented protocol assumed.":"تحديد واجهات الأجهزة والبروتوكولات والإصدارات المدعومة يتطلب نسخة مرخّصة محددة؛ لا يُفترض وجود بروتوكول غير موثق.","Review vendor documentation for exact output/version; NEXVARY parser interoperability not tested.":"راجع توثيق المزوّد لتحديد المخرجات والإصدار؛ توافق محلّل Nexvary معها لم يُختبر.","Documented workflow provides a comparison target; performance superiority is not independently established.":"يتيح المسار الموثق هدفًا للمقارنة؛ تفوق الأداء غير مثبت بصورة مستقلة.","No NEXVARY lab verification, exact-device acceptance, licensing or claimed security access inferred.":"لا يُستنتج تحقق مختبري من Nexvary أو اعتماد جهاز محدد أو ترخيص أو وصول أمني من هذا السجل.","Native provenance, bounded parsing, integrity verification, role-scoped case review and offline reporting.":"توثيق محلي للمصدر، وتحليل بحدود مضبوطة، والتحقق من السلامة، ومراجعة القضايا بحسب الصلاحيات، وتقارير دون اتصال.","Compare synthetic artifacts and report hashes against a lawfully licensed selected release; isolate inputs and document versions.":"قارن بيانات اختبار اصطناعية وبصمات التقارير مع إصدار مرخّص قانونًا؛ اعزل المدخلات ووثّق الإصدارات."};
   return app.ar?(ar[text]||text):text;
  }
- function refresh(){const id=selected.id;rows=researchBridge.search(categories[section],query.text);selected=id?(rows.find(function(row){return row.id===id})||{}):{}}
+ function refresh(){const id=selected.id;rows=researchBridge.search(categories[section],query.text);selected=id?JSON.parse(JSON.stringify(rows.find(function(row){return row.id===id})||{})):{}}
+ function openDetails(row){
+  if(!row)return;
+  // Normalize native QVariant/model records before enumerating their fields.
+  selected=JSON.parse(JSON.stringify(row));rawResearch.checked=false;
+  Qt.callLater(function(){scroll.contentItem.contentY=Math.max(0,details.y-8)});
+ }
  function setField(key,value){let next=Object.assign({},form);next[key]=value;form=next}
  onSectionChanged:{form={};refresh()}
  Component.onCompleted:refresh()
@@ -62,16 +68,16 @@ Item {
     Repeater {model:page.rows
      delegate:Panel {required property var modelData;Layout.fillWidth:true;title:page.app.ar?(modelData.titleAr||modelData.title||modelData.model||modelData.id):(modelData.title||modelData.model||modelData.id);iconName:page.section===2?"search_visual":"document_text";stateText:modelData.status||"Pending"
       Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;textFormat:Text.PlainText;text:modelData.claim||modelData.advertised||modelData.question||modelData.actual||modelData.capability||""}
-      ActionButton {text:page.app.trx("عرض المصدر والقيود","View provenance and limits");onClicked:{page.selected=modelData;Qt.callLater(function(){scroll.contentItem.contentY=Math.max(0,details.y-8)})}}
+      ActionButton {text:page.app.trx("عرض المصدر والقيود","View provenance and limits");onClicked:page.openDetails(modelData)}
      }
     }
     EmptyState {visible:page.rows.length===0&&page.section>0&&page.section<6;Layout.fillWidth:true;app:page.app;iconName:"search_visual";title:app.trx("لا توجد سجلات مطابقة","No matching records");description:app.trx("غيّر البحث أو سجّل نتيجة فعلية. لم تُدرج نتائج مختبرية مفترضة.","Change the search or record an actual result. No lab results have been invented.")}
     Panel {id:details;visible:Object.keys(page.selected).length>0;Layout.fillWidth:true;title:app.trx("المصدر والتفاصيل","Provenance and details");iconName:"document_text"
      Label {visible:page.app.ar;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:page.app.design.muted;text:"تُعرض أسماء المنتجات والمقتطفات غير المترجمة بلغة المصدر؛ لا تعني ادعاءات المزوّد تحققًا مستقلًا."}
-     Repeater {model:Object.keys(page.selected).filter(function(key){return key!=="sourceIds"&&key!=="titleAr"&&!key.endsWith("Ar")})
-      delegate:ColumnLayout {required property string modelData;Layout.fillWidth:true;spacing:4
-       Label {text:page.detailTitle(modelData);font.bold:true;color:page.app.design.silver;Layout.fillWidth:true;wrapMode:Text.WordWrap}
-       Label {objectName:"researchDetail-"+modelData;Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:page.app.design.text;textFormat:Text.PlainText;text:page.detailValue(modelData)}
+     Repeater {id:detailFields;objectName:"researchDetailFields";model:Object.keys(page.selected).filter(function(key){return key!=="sourceIds"&&key!=="titleAr"&&!key.endsWith("Ar")})
+      delegate:ColumnLayout {id:detailRow;required property string modelData;readonly property string fieldName:modelData;Layout.fillWidth:true;spacing:4
+       Label {text:page.detailTitle(detailRow.fieldName);font.bold:true;color:page.app.design.silver;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+       Label {objectName:"researchDetailValue";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:page.app.design.text;textFormat:Text.PlainText;text:page.detailValue(detailRow.fieldName)}
       }
      }
      NeonCheckBox {id:rawResearch;objectName:"researchRawDetails";text:page.app.trx("البيانات التقنية الأصلية (JSON)","Original technical data (JSON)")}

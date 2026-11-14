@@ -1049,9 +1049,15 @@ TestCase {
   tabs.currentIndex=2;app.ar=true;verify(renderedFrame());
   compare(findChild(app,"companyContactEmail").text,"info@nexvary.com");
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-about-developer-ar.png"));tabs.currentIndex=0;
-  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;verify(renderedFrame());research.selected=research.rows[0];
-  tryVerify(function(){return findChild(app,"researchDetail-title")!==null},5000);verify(renderedFrame());
-  compare(findChild(app,"researchRawJson").visible,false);verify(findChild(app,"researchDetail-title").text.length>0);
+  app.navigate(13);const research=findChild(app,"researchCenter");research.section=2;verify(renderedFrame());
+  verify(researchBridge.ready,researchBridge.error);verify(research.rows.length>0);
+  research.openDetails(research.rows[0]);
+  const fields=findChild(app,"researchDetailFields");verify(fields!==null);
+  tryVerify(function(){return fields.count>0},5000,"Selected source fields: "+JSON.stringify(research.selected));
+  let titleValue=null;
+  for(let i=0;i<fields.count;i++){const row=fields.itemAt(i);if(row&&row.fieldName==="title")titleValue=findChild(row,"researchDetailValue")}
+  verify(titleValue!==null,"Expected source title among "+fields.count+" structured fields");verify(titleValue.text.length>0);
+  compare(findChild(app,"researchRawJson").visible,false);verify(renderedFrame());
   verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-research-details-ar.png"));research.selected={};app.ar=true;reviewCapture=false;
  }
  function test_yzNativeCardsDispatchAndDisplay(){
