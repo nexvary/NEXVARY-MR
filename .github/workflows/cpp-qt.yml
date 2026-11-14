@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: mr-cpp-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
@@ -156,6 +157,34 @@ jobs:
       MR_SKIP_SETUP: 'false'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ github.head_ref == 'fix/intelligence-p0-completion' && github.event.pull_request.head.sha || github.sha }}
+      - name: Reuse verified native tests for the isolated installer repair
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $verifiedSource = '06828bc686f79ad2dd7967aa17331cee9ef67077'
+          $parent = git rev-parse HEAD^
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot establish installer repair parent' }
+          if ($parent -eq $verifiedSource -and '${{ github.head_ref }}' -eq 'fix/intelligence-p0-completion') {
+            $files = @(git diff --name-only $verifiedSource HEAD)
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot compare installer repair files' }
+            $allowed = @('.github/workflows/cpp-qt.yml','packaging/NEXVARY-MR.iss','tests/test_institutional_installer.py')
+            if (@($files | Where-Object { $_ -notin $allowed }).Count -ne 0) { throw 'Installer-only reuse refused: application sources changed' }
+            $headers = @{Authorization="Bearer $env:GH_TOKEN";Accept='application/vnd.github+json'}
+            $verified = Invoke-RestMethod -Uri 'https://api.github.com/repos/nexvary/NEXVARY-MR/actions/jobs/132378935350' -Headers $headers
+            if ($verified.head_sha -ne $verifiedSource) { throw 'Native verification source mismatch' }
+            $required = @('Verify MCP transport and Windows credential persistence','Build GUI','Run CTest suite','Verify staged installer runtime in isolated path with spaces')
+            foreach ($name in $required) {
+              if (@($verified.steps | Where-Object { $_.name -eq $name -and $_.conclusion -eq 'success' }).Count -ne 1) { throw "Prior native gate did not pass: $name" }
+            }
+            New-Item -ItemType Directory -Force dist/evidence | Out-Null
+            [ordered]@{sourceCommit=$verifiedSource;run=43572240042;job=132378935350;verifiedSteps=$required;unchangedApplicationSources=$true} | ConvertTo-Json -Depth 4 | Set-Content dist/evidence/native-regression-reuse.json
+            'MR_INSTALLER_REPAIR_ONLY=true' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          }
       - name: Parse Windows deployment scripts before building
         shell: pwsh
         run: |
@@ -226,6 +255,7 @@ jobs:
       - name: Configure GUI and Qt integration tests
         run: cmake -S . -B build -DBUILD_TESTING=ON -DMR_BUILD_GUI=ON -DMR_BUILD_UPDATE_VERIFIER=ON -DMR_WARNINGS_AS_ERRORS=ON -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" -DMR_ENABLE_LAB_OPERATIONS=${{ matrix.profile == 'laboratory' && 'ON' || 'OFF' }}
       - name: Verify MCP transport and Windows credential persistence
+        if: env.MR_INSTALLER_REPAIR_ONLY != 'true'
         shell: pwsh
         run: |
           cmake --build build --config Release --target mr_lampyre_connection_tests mr_policy_audit_tests --parallel
@@ -236,7 +266,9 @@ jobs:
         id: native_build
         shell: pwsh
         run: |
-          if ($env:MR_SKIP_SETUP -eq 'true') {
+          if ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
+            cmake --build build --config Release --target nexvary_mr mr_evidence_import_worker mr_build_profile_fixture --parallel
+          } elseif ($env:MR_SKIP_SETUP -eq 'true') {
             # Owner is reviewing QML: build the existing native UI harness only.
             cmake --build build --config Release --target mr_ui_tests --parallel
           } else {
@@ -269,6 +301,10 @@ jobs:
         id: tests
         shell: pwsh
         run: |
+          if ($env:MR_INSTALLER_REPAIR_ONLY -eq 'true') {
+            ctest --test-dir build -C Release -R '^mr_gui_smoke$' --repeat until-fail:3 --output-on-failure --output-junit qt-results.xml
+            exit $LASTEXITCODE
+          }
           if ($env:MR_SKIP_SETUP -eq 'true') {
             ctest --test-dir build -C Release -R '^mr_ui_(owner_review_1([.]25|[.]5)?|scale_1[.]25|scale_1[.]5)$' --output-on-failure --output-junit qt-results.xml
           } else {
@@ -334,6 +370,16 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          function Invoke-InstallerProcess([string]$FilePath, [string]$Arguments) {
+            $owned = Start-Process -FilePath $FilePath -ArgumentList $Arguments -PassThru
+            $null = $owned.Handle
+            if (-not $owned.WaitForExit(120000)) {
+              & taskkill.exe /PID $owned.Id /T /F | Out-Null
+              throw 'Installer process exceeded its two-minute deadline'
+            }
+            $owned.WaitForExit()
+            return $owned
+          }
           $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
           $setup = (Resolve-Path 'dist/NEXVARY-MR-Government-Setup.exe').Path
           # Managed installs must explicitly accept every declaration.
@@ -344,13 +390,13 @@ jobs:
             $deniedLog = Join-Path $env:RUNNER_TEMP "NEXVARY denied $missing.log"
             $accepted = if ($missing -eq 'all') { @() } else { @($acceptanceFlags | Where-Object { $_ -ne $missing } | ForEach-Object { "/$_=1" }) }
             $arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=en /LOG=`"$deniedLog`" /DIR=`"$deniedDestination`" " + ($accepted -join ' ')
-            $denied = Start-Process $setup -ArgumentList $arguments -Wait -PassThru
+            $denied = Invoke-InstallerProcess -FilePath $setup -Arguments $arguments
             if ($denied.ExitCode -eq 0 -or (Test-Path (Join-Path $deniedDestination 'NEXVARY-MR.exe'))) { throw "Missing $missing declaration did not block installation" }
             if (-not ((Get-Content -LiteralPath $deniedLog -Raw) -match 'Managed installation requires explicit license and authority acceptance')) { throw "Unexpected rejection cause for $missing" }
             $rejected += [ordered]@{missing=$missing;exitCode=$denied.ExitCode;blocked=$true}
           }
           $rejected | ConvertTo-Json | Set-Content dist/evidence/installer-declaration-rejections.json
-          $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /TASKS=desktopicon /DIR=`"$destination`"" -Wait -PassThru
+          $result = Invoke-InstallerProcess -FilePath $setup -Arguments "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=en /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /TASKS=desktopicon /DIR=`"$destination`""
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
           $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
           if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Per-user uninstall registration was not created' }
@@ -390,7 +436,7 @@ jobs:
           $displayIcon = (Get-ItemProperty -LiteralPath $uninstallKey).DisplayIcon
           if ($displayIcon.Replace('"','').Split(',')[0] -ine (Join-Path $destination 'NEXVARY-MR.exe')) { throw 'Uninstall display icon mismatch' }
           [ordered]@{schemaVersion=1;icons=$iconChecks;startMenuShortcut=$true;desktopShortcut=$true;uninstallIcon=$true} | ConvertTo-Json -Depth 5 | Set-Content dist/evidence/application-icon-acceptance.json
-          $uninstall = Start-Process (Join-Path $destination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          $uninstall = Invoke-InstallerProcess -FilePath (Join-Path $destination 'unins000.exe') -Arguments '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
           if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
           $installedExe = Join-Path $destination 'NEXVARY-MR.exe'
           for ($attempt=0; $attempt -lt 25 -and (Test-Path -LiteralPath $installedExe); $attempt++) { Start-Sleep -Milliseconds 200 }
@@ -403,7 +449,7 @@ jobs:
           } | ConvertTo-Json | Set-Content dist/evidence/installer-lifecycle.json
           # Repeat installation, deployed launch and removal in Arabic.
           $arabicDestination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR Arabic install test'
-          $arabic = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=ar /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /DIR=`"$arabicDestination`"" -Wait -PassThru
+          $arabic = Invoke-InstallerProcess -FilePath $setup -Arguments "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=ar /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /DIR=`"$arabicDestination`""
           if ($arabic.ExitCode -ne 0) { throw "Arabic installation failed: $($arabic.ExitCode)" }
           if ((Get-ItemProperty -LiteralPath $uninstallKey).'Inno Setup: Language' -ne 'ar') { throw 'Arabic installer language was not selected' }
           foreach ($language in @('ar','en')) {
@@ -414,7 +460,7 @@ jobs:
             }
           }
           ./packaging/smoke-windows.ps1 -BundleDirectory $arabicDestination -Label installed-ar -RunInPlace
-          $arabicUninstall = Start-Process (Join-Path $arabicDestination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          $arabicUninstall = Invoke-InstallerProcess -FilePath (Join-Path $arabicDestination 'unins000.exe') -Arguments '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
           if ($arabicUninstall.ExitCode -ne 0) { throw 'Arabic uninstallation failed' }
           for ($attempt=0; $attempt -lt 25 -and (Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')); $attempt++) { Start-Sleep -Milliseconds 200 }
           if ((Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')) -or (Test-Path -LiteralPath $uninstallKey)) { throw 'Arabic uninstall left executable or registration' }

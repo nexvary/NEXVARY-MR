@@ -81,10 +81,10 @@ end;
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
-  if CurPageID = AuthorityPage.ID then begin
+  if (not WizardSilent) and (CurPageID = AuthorityPage.ID) then begin
     Result := AuthorityPage.Values[0] and AuthorityPage.Values[1];
     if not Result then
-      MsgBox(CustomMessage('AuthorityMissing'), mbError, MB_OK);
+      SuppressibleMsgBox(CustomMessage('AuthorityMissing'), mbError, MB_OK, IDOK);
   end;
 end;
 

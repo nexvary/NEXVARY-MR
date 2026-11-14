@@ -23,6 +23,8 @@ class InstitutionalInstallerTests(unittest.TestCase):
         self.assertIn('AuthorityPage.Values[0] := False', setup)
         self.assertIn('AuthorityPage.Values[1] := False', setup)
         self.assertIn('if WizardSilent then', setup)
+        self.assertIn('if (not WizardSilent) and (CurPageID = AuthorityPage.ID)', setup)
+        self.assertNotIn("      MsgBox(", setup)
         for key in ('NEXVARY_ACCEPT_LICENSE', 'NEXVARY_AUTHORIZED_ORG', 'NEXVARY_LAWFUL_USE'):
             self.assertIn('{param:' + key + '|0}', setup)
         self.assertIn('WizardForm.LicenseAcceptedRadio.Checked', setup)
