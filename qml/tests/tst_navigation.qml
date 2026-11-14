@@ -503,6 +503,23 @@ TestCase {
   for(const arabic of [true,false]){app.ar=arabic;app.width=1366;app.height=768;findChild(app,"deviceManagerScroll").contentItem.contentY=150;verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"screen-view-ready-"+(arabic?"ar":"en")+".png"))}
   toolBridge.autoRefresh=false;verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
  }
+ function test_mirrorClipboardAndValidation(){
+  app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0
+  verify(uiEvidence.setSyntheticDeviceMode("connected"));tryCompare(toolBridge,"busy",false,5000);toolBridge.selectDevice("SYNTHETIC42");verify(renderedFrame())
+  const page=findChild(app,"deviceManagerPage"),dialog=findChild(app,"mirrorConfirm"),input=findChild(app,"mirrorChallenge")
+  page.reviewMirror();tryCompare(dialog,"opened",true)
+  const serial=findChild(app,"mirrorReviewedSerial"),copy=findChild(app,"copyMirrorSerial"),status=findChild(app,"mirrorConfirmationStatus")
+  compare(serial.text,"SYNTHETIC42");verify(serial.readOnly);verify(serial.selectByMouse)
+  findChild(app,"mirrorOwner").checked=true;findChild(app,"mirrorComponent").checked=true
+  input.text="SYNTHETIC4";compare(input.inputState,"invalid");compare(String(input.inputColor),"#ffd166");verify(!dialog.standardButton(Dialog.Ok).enabled);verify(status.text.indexOf("الرقم غير مطابق")>=0)
+  mouseClick(copy);tryCompare(input,"activeFocus",true);keyClick(Qt.Key_A,Qt.ControlModifier);keyClick(Qt.Key_V,Qt.ControlModifier)
+  compare(input.text,serial.text);compare(input.inputState,"valid");tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true)
+  // The copy action never substitutes for either explicit consent.
+  findChild(app,"mirrorOwner").checked=false;compare(dialog.standardButton(Dialog.Ok).enabled,false)
+  app.ar=false;verify(status.text.indexOf("owner's authorization")>=0)
+  dialog.reject();tryCompare(dialog,"visible",false)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+ }
  function test_mirrorConsentAndNavigation(){
   app.currentPage=1;findChild(app,"deviceTabs").currentIndex=0;verify(renderedFrame())
   verify(findChild(app,"mirrorScope").visible);compare(findChild(app,"reviewMirror").enabled,false);compare(findChild(app,"stopMirror").enabled,false)

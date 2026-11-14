@@ -43,7 +43,15 @@ TestCase {
         editor.text="";keyClick(Qt.Key_V,Qt.ControlModifier);compare(editor.text,"Synthetic clipboard")
         keyClick(Qt.Key_A,Qt.ControlModifier);keyClick(Qt.Key_X,Qt.ControlModifier);compare(editor.text,"")
         keyClick(Qt.Key_V,Qt.ControlModifier);compare(editor.text,"Synthetic clipboard")
-        const menu=findChild(editor,"entryEditMenu");verify(menu);menu.popup(0,editor.height);tryCompare(menu,"opened",true);menu.close()
+        const menu=findChild(editor,"entryEditMenu");verify(menu)
+        mouseClick(editor,editor.width/2,editor.height/2,Qt.RightButton);tryCompare(menu,"opened",true);menu.close();tryCompare(menu,"opened",false)
+        editor.forceActiveFocus();keyClick(Qt.Key_F10,Qt.ShiftModifier);tryCompare(menu,"opened",true);menu.close();tryCompare(menu,"opened",false)
+        editor.forceActiveFocus();keyClick(Qt.Key_Menu);tryCompare(menu,"opened",true);menu.close();tryCompare(menu,"opened",false)
+        editor.selectAll();menu.popup(0,editor.height);tryCompare(menu,"opened",true)
+        mouseClick(findChild(menu,"editCut"));compare(editor.text,"")
+        menu.popup(0,editor.height);tryCompare(menu,"opened",true);mouseClick(findChild(menu,"editPaste"));compare(editor.text,"Synthetic clipboard")
+        editor.readOnly=true;editor.selectAll();menu.popup(0,editor.height);tryCompare(menu,"opened",true)
+        verify(findChild(menu,"editCopy").enabled);verify(!findChild(menu,"editCut").enabled);verify(!findChild(menu,"editPaste").enabled);menu.close()
     }
     function test_calendarClampingAndOptionalDates(){
         const picker=createTemporaryObject(dateComponent,test);verify(picker)

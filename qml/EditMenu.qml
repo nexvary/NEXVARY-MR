@@ -12,4 +12,5 @@ Menu {
     MenuSeparator {}
     MenuItem {objectName:"editSelectAll";text:menu.arabic?"تحديد الكل":"Select all";enabled:!!menu.editor && menu.editor.length > 0;onTriggered:menu.editor.selectAll()}
     Shortcut {sequence:"Shift+F10";enabled:!!menu.editor && menu.editor.activeFocus;onActivated:menu.popup(0,menu.editor.height)}
+    Shortcut {sequence:"Menu";enabled:!!menu.editor && menu.editor.activeFocus;onActivated:menu.popup(0,menu.editor.height)}
 }
