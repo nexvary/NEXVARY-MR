@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMap>
 #include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
@@ -42,7 +43,21 @@ int child(const QString &tool,const QStringList &args){
  if(args==QStringList{"devices","-l"}){
   out(mode=="duplicate"?"MIRROR42 device\nMIRROR42 device\n":mode=="offline"?"MIRROR42 offline\n":mode=="disconnected"?"List of devices attached\n":"List of devices attached\nMIRROR42 device\nOTHER42 device\n");return 0;
  }
+ if(args.size()==5&&args.mid(0,4)==QStringList{"-s","MIRROR42","shell","getprop"}){
+  if(mode=="property-flood"){const QByteArray bytes(100000,'x');std::fwrite(bytes.constData(),1,static_cast<size_t>(bytes.size()),stdout);std::fflush(stdout);return 0;}
+  if(mode=="property-timeout")QThread::msleep(30000);
+  if(mode=="property-error")return 3;
+  if(mode=="property-missing")return 0;
+  if(mode=="property-multiline"){out("Mirror Fixture\nUnexpected extra row\n");return 0;}
+  const auto key=args.last();
+  if(key=="ro.product.manufacturer")out(mode=="manufacturer-changed"?"Other\n":"Synthetic\n");
+  else if(key=="ro.product.model")out(mode=="identity-changed"?"Other\n":"Mirror Fixture\n");
+  else if(key=="ro.build.fingerprint")out(mode=="fingerprint-changed"?"synthetic/other\n":"synthetic/mirror\n");
+  else return 98;
+  return 0;
+ }
  if(args==QStringList{"-s","MIRROR42","shell","getprop"}){
+  if(mode=="large-property-catalogue")for(int i=0;i<1800;++i)std::fprintf(stdout,"[vendor.synthetic.padding.%d]: [Synthetic unrelated firmware property padding]\n",i);
   out(mode=="identity-changed"?"[ro.product.manufacturer]: [Synthetic]\n[ro.product.model]: [Other]\n[ro.build.fingerprint]: [synthetic/other]\n":"[ro.product.manufacturer]: [Synthetic]\n[ro.product.model]: [Mirror Fixture]\n[ro.build.fingerprint]: [synthetic/mirror]\n");return 0;
  }
  return 99;
@@ -98,11 +113,34 @@ private slots:
   }
   QVERIFY(!b.configureTool("adb",adb_));const auto before=journal();QVERIFY(!b.startMirror("MIRROR42",approval()));QCOMPARE(journal(),before);b.stopMirror();QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),4000);QVERIFY(!b.busy());QCOMPARE(b.mirrorState(),QString("stopped"));
  }
+ void largeCatalogueUsesOnlyPinnedIdentityValues(){
+  ToolBridge b;QVERIFY(ready(b));QFile::remove(log_);mode("large-property-catalogue");
+  QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(viewerStarted(),5000);
+  // Allow multiple monitor rounds: the large catalogue must not be dumped
+  // either before launch or during the periodic connection/identity checks.
+  QTest::qWait(4500);QVERIFY(b.mirrorActive());
+  QMap<QString,int> reads;
+  for(const auto &line:journal().split('\n')){
+   const auto row=QJsonDocument::fromJson(line).object();if(row.value("tool")!="adb")continue;
+   const auto args=row.value("args").toArray();
+   if(args==QJsonArray::fromStringList({"devices","-l"}))continue;
+   QCOMPARE(args.size(),5);QCOMPARE(args.at(0).toString(),QString("-s"));QCOMPARE(args.at(1).toString(),QString("MIRROR42"));
+   QCOMPARE(args.at(2).toString(),QString("shell"));QCOMPARE(args.at(3).toString(),QString("getprop"));
+   const auto key=args.at(4).toString();const QStringList allowed{"ro.product.manufacturer","ro.product.model","ro.build.fingerprint"};QVERIFY(allowed.contains(key));++reads[key];
+  }
+  QCOMPARE(reads.size(),3);for(auto count:reads)QVERIFY(count>=2);
+  b.stopMirror();QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),4000);
+ }
+ void cancelDuringIdentityStartsNoViewer(){
+  ToolBridge b;QVERIFY(ready(b));mode("property-timeout");QFile::remove(log_);
+  QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(journal().contains("ro.product.manufacturer"),3000);
+  b.cancel();QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),4000);QVERIFY(!viewerStarted());
+ }
  void cancelDuringVersionStartsNoViewer(){ToolBridge b;QVERIFY(ready(b));mode("version-timeout");QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(journal().contains("--version"),3000);b.cancel();QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),4000);QVERIFY(!viewerStarted());}
  void cleanWindowClose(){ToolBridge b;QVERIFY(ready(b));mode("viewer-close");QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),5000);QCOMPARE(b.mirrorState(),QString("stopped"));}
- void preflightFailure_data(){QTest::addColumn<QByteArray>("value");for(const auto &s:{"bad-version","version-timeout","duplicate","offline","disconnected","identity-changed"})QTest::newRow(s)<<QByteArray(s);}
+ void preflightFailure_data(){QTest::addColumn<QByteArray>("value");for(const auto &s:{"bad-version","version-timeout","duplicate","offline","disconnected","identity-changed","manufacturer-changed","fingerprint-changed","property-flood","property-timeout","property-error","property-missing","property-multiline"})QTest::newRow(s)<<QByteArray(s);}
  void preflightFailure(){ToolBridge b;QVERIFY(ready(b));mode(QTest::currentDataTag());QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),6000);QCOMPARE(b.mirrorState(),QString("failed"));QVERIFY(!viewerStarted());}
- void disconnectAndIdentityDuringView_data(){QTest::addColumn<QByteArray>("value");for(const auto &s:{"disconnected","identity-changed","duplicate"})QTest::newRow(s)<<QByteArray(s);}
+ void disconnectAndIdentityDuringView_data(){QTest::addColumn<QByteArray>("value");for(const auto &s:{"disconnected","identity-changed","duplicate","manufacturer-changed","fingerprint-changed","property-flood"})QTest::newRow(s)<<QByteArray(s);}
  void disconnectAndIdentityDuringView(){QFETCH(QByteArray,value);ToolBridge b;QVERIFY(ready(b));QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(viewerStarted(),5000);mode(value);QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),7000);QCOMPARE(b.mirrorState(),QString("failed"));}
  void viewerErrorAndOutputLimit_data(){QTest::addColumn<QByteArray>("value");QTest::newRow("error")<<QByteArray("viewer-error");QTest::newRow("bounded-output")<<QByteArray("viewer-flood");}
  void viewerErrorAndOutputLimit(){QFETCH(QByteArray,value);ToolBridge b;QVERIFY(ready(b));mode(value);QVERIFY(b.startMirror("MIRROR42",approval()));QTRY_VERIFY_WITH_TIMEOUT(!b.mirrorActive(),5000);QCOMPARE(b.mirrorState(),QString("failed"));QVERIFY(b.mirrorOutput().size()<=64*1024);}
