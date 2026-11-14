@@ -12,7 +12,7 @@ Rectangle {
  implicitHeight:96
  RowLayout {
   anchors.fill:parent;anchors.leftMargin:12;anchors.rightMargin:12;anchors.topMargin:8;anchors.bottomMargin:8;spacing:12
-  Image {objectName:"nexvaryEyeSeal";source:"qrc:/assets/branding/nexvary-eye-seal.png";sourceSize:Qt.size(384,384);Layout.minimumWidth:80;Layout.maximumWidth:80;Layout.preferredWidth:80;Layout.minimumHeight:80;Layout.maximumHeight:80;Layout.preferredHeight:80;fillMode:Image.PreserveAspectFit;smooth:true;mipmap:true;Accessible.name:bar.app.trx("ختم نيكسفاري — عين الاستخبارات","Nexvary intelligence eye seal")}
+  Image {objectName:"nexvaryEyeSeal";source:"qrc:/assets/branding/nexvary-eye-seal.svg";sourceSize:Qt.size(512,512);Layout.minimumWidth:80;Layout.maximumWidth:80;Layout.preferredWidth:80;Layout.minimumHeight:80;Layout.maximumHeight:80;Layout.preferredHeight:80;fillMode:Image.PreserveAspectFit;smooth:true;mipmap:true;Accessible.name:bar.app.trx("ختم نيكسفاري — عين الاستخبارات","Nexvary intelligence eye seal")}
   ColumnLayout {visible:bar.app.width>=1000;spacing:3;Layout.preferredWidth:260
    Label {text:"NEXVARY MR";font.pixelSize:25;font.bold:true;color:bar.app.design.text}
    Label {objectName:"brandSubtitle";text:bar.app.trx("منظومة العمليات والاستخبارات","Operations & Intelligence System");font.pixelSize:14;color:bar.app.design.silver;Layout.fillWidth:true;wrapMode:Text.WordWrap}

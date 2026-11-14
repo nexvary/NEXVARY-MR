@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<title>NEXVARY MR — Operations &amp; Intelligence System</title>
+<desc>Original silver eye seal with a blue intelligence iris. Simplified symbol for small Windows icons.</desc>
+<defs>
+ <linearGradient id="metal" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#f5fbff"/><stop offset=".22" stop-color="#8393a4"/><stop offset=".48" stop-color="#f9fcff"/><stop offset=".7" stop-color="#8a99aa"/><stop offset="1" stop-color="#e4edf4"/></linearGradient>
+ <radialGradient id="black"><stop stop-color="#152c3b"/><stop offset="1" stop-color="#060b10"/></radialGradient>
+ <radialGradient id="iris"><stop stop-color="#031b33"/><stop offset=".5" stop-color="#036fa7"/><stop offset=".85" stop-color="#00bfff"/><stop offset="1" stop-color="#0066a3"/></radialGradient>
+ <linearGradient id="eye" x2="0" y2="1"><stop stop-color="#f0f8ff"/><stop offset=".48" stop-color="#a1b5c5"/><stop offset="1" stop-color="#344e62"/></linearGradient>
+ <clipPath id="eyeClip"><path d="M64 256 Q256 66 448 256 Q256 446 64 256Z"/></clipPath>
+</defs>
+<circle cx="256" cy="256" r="248" fill="url(#metal)"/>
+<circle cx="256" cy="256" r="236" fill="url(#black)" stroke="#e1eaf0" stroke-width="3"/>
+<circle cx="256" cy="256" r="225" fill="none" stroke="#00bfff" stroke-width="3"/>
+<circle cx="256" cy="256" r="211" fill="#07121c" stroke="url(#metal)" stroke-width="5"/>
+<path d="M64 256 Q256 66 448 256 Q256 446 64 256Z" fill="url(#eye)" stroke="#06111a" stroke-width="20" stroke-linejoin="round"/>
+<path d="M64 256 Q256 66 448 256 Q256 446 64 256Z" fill="url(#eye)" stroke="url(#metal)" stroke-width="10" stroke-linejoin="round"/>
+<g clip-path="url(#eyeClip)">
+ <circle cx="256" cy="256" r="86" fill="url(#iris)" stroke="#b9f0ff" stroke-width="5"/>
+ <path d="M256 178 V334 M178 256 H334 M202.68 202.68 L309.32 309.32 M202.68 309.32 L309.32 202.68" stroke="#6ce1ff" stroke-width="3" opacity=".8"/>
+ <circle cx="256" cy="256" r="30.959999999999997" fill="#02070c" stroke="#00d9ff" stroke-width="5"/>
+ <circle cx="237.07999999999998" cy="232.78" r="12.040000000000001" fill="#f3fdff"/>
+ <circle cx="204.4" cy="277.5" r="6" fill="#39ff14"/>
+ <circle cx="310.18" cy="238.8" r="6" fill="#e7faff"/>
+</g>
+<circle cx="38" cy="256" r="7" fill="#00bfff"/>
+<circle cx="474" cy="256" r="7" fill="#39ff14"/>
+
+
+</svg>

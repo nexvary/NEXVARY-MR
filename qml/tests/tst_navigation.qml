@@ -512,10 +512,15 @@ TestCase {
     const point=button.mapToItem(inspector,0,0);verify(point.x>=0&&point.x+button.width<=inspector.width)
    }
    const seal=findChild(app,"nexvaryEyeSeal");compare(seal.status,Image.Ready);compare(seal.width,80);compare(seal.height,80)
-   verify(seal.source.toString().includes("nexvary-eye-seal.png"));const point=seal.mapToItem(app.contentItem,0,0);verify(point.y>=0&&point.y+seal.height<=app.design.topBarHeight)
+   verify(seal.source.toString().includes("nexvary-eye-seal.svg"));const point=seal.mapToItem(app.contentItem,0,0);verify(point.y>=0&&point.y+seal.height<=app.design.topBarHeight)
    if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-device-copy-"+(ar?"ar":"en")+".png"))
   }
-  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(uiEvidence.clearSyntheticTool())
+  const page=findChild(app,"deviceManagerPage"),tabs=findChild(app,"deviceResultTabs"),dialog=findChild(app,"mirrorConfirm")
+  tabs.currentIndex=3;verify(renderedFrame());const bundled=findChild(app,"useBundledScreenView");verify(bundled.enabled)
+  bundled.clicked();tryCompare(dialog,"opened",true);compare(findChild(app,"mirrorReviewedSerial").text,"SYNTHETIC42")
+  verify(!findChild(app,"mirrorOwner").checked);verify(!findChild(app,"mirrorComponent").checked);verify(!dialog.standardButton(Dialog.Ok).enabled);verify(!toolBridge.mirrorActive)
+  dialog.reject();tryCompare(dialog,"visible",false)
+  verify(uiEvidence.setSyntheticDeviceMode("disconnected"));tryCompare(toolBridge,"busy",false,5000);verify(!bundled.enabled);verify(uiEvidence.clearSyntheticTool())
   compare(model.text,"");verify(!findChild(inspector,"copyDeviceModel").enabled);app.showDevicePanel=false
  }
  function test_deviceBackgroundRefreshIsQuiet(){

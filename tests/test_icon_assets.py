@@ -23,6 +23,16 @@ class ProfessionalIconTests(unittest.TestCase):
             self.assertNotIn(b'<image', data)
             self.assertNotIn(b'<script', data)
 
+    def test_brand_seals_are_self_contained_vector_artwork(self):
+        for name in ('nexvary-eye-seal.svg', 'nexvary-eye-symbol.svg'):
+            data = (ROOT / 'assets/branding' / name).read_bytes()
+            root = ET.fromstring(data)
+            self.assertEqual(root.attrib['viewBox'], '0 0 512 512')
+            self.assertGreater(len(root.findall('.//{http://www.w3.org/2000/svg}path')), 3)
+            for forbidden in (b'<image', b'<script', b'<text', b'<foreignObject'):
+                self.assertNotIn(forbidden, data)
+        self.assertIn('nexvary-eye-seal.svg', (ROOT / 'qml/TopBar.qml').read_text())
+
     def test_windows_ico_has_all_required_native_sizes(self):
         data = (ROOT / 'packaging/app.ico').read_bytes()
         reserved, kind, count = struct.unpack_from('<HHH', data)
