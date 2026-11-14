@@ -138,7 +138,7 @@ Item {
    Label {text:app.trx("الجهاز المحدد — الرقم التسلسلي","Reviewed target — serial number");color:app.tone("#edf4ff")}
    RowLayout {Layout.fillWidth:true
     EntryField {id:mirrorSerial;objectName:"mirrorReviewedSerial";Layout.fillWidth:true;readOnly:true;requiredInput:false;text:page.reviewedMirrorTarget;LayoutMirroring.enabled:false;horizontalAlignment:TextInput.AlignLeft;Accessible.name:app.trx("الرقم التسلسلي للجهاز المحدد، قابل للنسخ","Reviewed device serial, selectable for copying")}
-    ActionButton {objectName:"copyMirrorSerial";text:app.trx("نسخ الرقم","Copy serial");enabled:mirrorSerial.length>0;onClicked:{mirrorSerial.selectAll();mirrorSerial.copy();mirrorChallenge.forceActiveFocus()}}
+    ActionButton {objectName:"copyMirrorSerial";text:app.trx("نسخ الرقم","Copy serial");enabled:mirrorSerial.length>0;onClicked:{mirrorSerial.selectAll();mirrorSerial.copy();Qt.callLater(function(){mirrorChallenge.forceActiveFocus()})}}
    }
    Label {objectName:"mirrorComponentNotice";Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("scrcpy يرفع مكونًا مؤقتًا ويشغله على الهاتف؛ هذه ليست عملية قراءة خالصة. قد تظهر بيانات الشاشة الخاصة في نافذة خارجية. إيقاف البرنامج لا يثبت تنظيف الهاتف أو سلامة الأدلة. اختبار الهاتف الفعلي معلق.","scrcpy uploads and runs a temporary device component; this is not a purely passive read. Private screen data may appear in an external window. Stopping the host does not prove phone cleanup or forensic integrity. Physical acceptance is pending.");color:app.tone("#eab775")}
    NeonCheckBox {id:mirrorOwner;objectName:"mirrorOwner";text:app.trx("لدي تفويض صريح من مالك الجهاز لعرض الشاشة","I have explicit owner authorization to view this screen")}

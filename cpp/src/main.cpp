@@ -167,7 +167,7 @@ int main(int argc,char *argv[]) {
  QGuiApplication app(argc,argv);
  QGuiApplication::setApplicationName(mr::service::laboratoryBuild()?QStringLiteral("NEXVARY-MR-Laboratory"):QStringLiteral("NEXVARY-MR"));
  QGuiApplication::setOrganizationName(QStringLiteral("NEXVARY"));
- QGuiApplication::setApplicationVersion(QStringLiteral("0.4.6"));
+ QGuiApplication::setApplicationVersion(QStringLiteral("0.4.7"));
  QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/packaging/app.ico")));
  QQuickStyle::setStyle(QStringLiteral("Fusion"));
  QCommandLineParser cli;

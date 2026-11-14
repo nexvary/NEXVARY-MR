@@ -148,10 +148,42 @@ private slots:
     QVERIFY(!p.permit("device-tools"));
     QVERIFY(i.startDirectWork());
     QVERIFY(p.permit("device-tools"));
+    // Reload the exact persisted bytes, including the direct gates. They are
+    // observations and must not require an unrelated institutional exception.
+    const auto stored = bytes(i.policyJournalPath());
+    PolicyAudit reopened(i.policyJournalPath(), true);
+    QVERIFY2(reopened.healthy(), qPrintable(reopened.error()));
+    QString why;
+    QVERIFY2(PolicyAudit::verifyExport(reopened.exportBytes(), reopened.anchor().value("publicKey").toString(), {}, why), qPrintable(why));
+    QCOMPARE(bytes(i.policyJournalPath()), stored);
     QFile corrupt(i.policyJournalPath());
     QVERIFY(corrupt.open(QIODevice::Append));
     QCOMPARE(corrupt.write("tamper"), qint64(6)); corrupt.close();
     QVERIFY(!p.permit("device-tools"));
+  }
+  void directDeviceCompatibilityIsNarrow_data() {
+    QTest::addColumn<QString>("variant");
+    for (const auto &variant : {"valid", "external", "paid", "mode", "actor", "extra", "browser", "outcome", "unsigned"})
+      QTest::newRow(variant) << QString(variant);
+  }
+  void directDeviceCompatibilityIsNarrow() {
+    QFETCH(QString, variant); QTemporaryDir t;
+    PolicyAudit journal(t.filePath("journal"), true); QVERIFY(journal.healthy());
+    QVariantMap record{{"capability", "device-tools"}, {"mode", "windows-direct-work"},
+      {"observedActor", "00000000-0000-4000-8000-000000000001 / windows-workspace"}};
+    if (variant == "external") record["capability"] = "external-analysis";
+    if (variant == "paid") record["capability"] = "paid-unknown-cost";
+    if (variant == "mode") record["mode"] = "direct";
+    if (variant == "actor") record["observedActor"] = "not-a-principal / windows-workspace";
+    if (variant == "extra") record["approved"] = true;
+    QVERIFY(journal.append(variant == "browser" ? "browser-result" : "operation-allowed", record,
+      variant == "outcome" ? "completed" : "gate-allowed; operation completion not established"));
+    auto data = journal.exportBytes();
+    if (variant == "unsigned") data.replace("\"signature\":\"", "\"signature\":\"x");
+    QString why;
+    QCOMPARE(PolicyAudit::verifyExport(data, journal.anchor().value("publicKey").toString(), {}, why), variant == "valid");
+    PolicyAudit reopened(t.filePath("journal"), true);
+    if (variant != "unsigned") QCOMPARE(reopened.healthy(), variant == "valid");
   }
   void atomicSnapshotCrashBoundary_data(){
     QTest::addColumn<QString>("stage");QTest::addColumn<int>("expected");

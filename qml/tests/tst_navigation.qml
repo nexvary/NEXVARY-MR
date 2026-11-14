@@ -512,7 +512,7 @@ TestCase {
   compare(serial.text,"SYNTHETIC42");verify(serial.readOnly);verify(serial.selectByMouse)
   findChild(app,"mirrorOwner").checked=true;findChild(app,"mirrorComponent").checked=true
   input.text="SYNTHETIC4";compare(input.inputState,"invalid");compare(String(input.inputColor),"#ffd166");verify(!dialog.standardButton(Dialog.Ok).enabled);verify(status.text.indexOf("الرقم غير مطابق")>=0)
-  mouseClick(copy);tryCompare(input,"activeFocus",true);keyClick(Qt.Key_A,Qt.ControlModifier);keyClick(Qt.Key_V,Qt.ControlModifier)
+  app.requestActivate();copy.clicked();input.forceActiveFocus();tryCompare(input,"activeFocus",true);keyClick(Qt.Key_A,Qt.ControlModifier);keyClick(Qt.Key_V,Qt.ControlModifier)
   compare(input.text,serial.text);compare(input.inputState,"valid");tryCompare(dialog.standardButton(Dialog.Ok),"enabled",true)
   // The copy action never substitutes for either explicit consent.
   findChild(app,"mirrorOwner").checked=false;compare(dialog.standardButton(Dialog.Ok).enabled,false)

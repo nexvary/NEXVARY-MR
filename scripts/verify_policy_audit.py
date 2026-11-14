@@ -293,7 +293,18 @@ def verify(data, anchor):
             reconciliation_seen = True
         elif action not in {"operation-allowed", "operation-denied", "browser-result", "audit-verification", "policy-rejection"}:
             raise ValueError("Unknown event action")
-        if action in {"operation-allowed", "browser-result"} and (not old or r != old or status != "active" or role != "system-observation"):
+        # Compatibility with exact journal-signed direct-device observations.
+        # This does not grant access or accept external/paid exception gates.
+        direct_device = (action == "operation-allowed"
+                         and set(r) == {"capability", "mode", "observedActor"}
+                         and r.get("capability") == "device-tools"
+                         and r.get("mode") == "windows-direct-work"
+                         and isinstance(r.get("observedActor"), str)
+                         and re.fullmatch(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12} / windows-workspace", r["observedActor"])
+                         and r["observedActor"][:36] != "00000000-0000-0000-0000-000000000000"
+                         and not actor and role == "system-observation" and not proof
+                         and p["result"] == "gate-allowed; operation completion not established")
+        if action in {"operation-allowed", "browser-result"} and not direct_device and (not old or r != old or status != "active" or role != "system-observation"):
             raise ValueError("Operation gate has no matching active exception")
         if action in {"expire", "session-close", "restart-close", "emergency-stop"} and role != "system-observation":
             raise ValueError("System closure attribution rejected")
