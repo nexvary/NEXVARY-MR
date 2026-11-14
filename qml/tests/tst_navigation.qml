@@ -1036,6 +1036,9 @@ TestCase {
    verify(grid.mapToItem(view,0,grid.height).y<=view.availableHeight+2,"All rows must fit: bottom="+grid.mapToItem(view,0,grid.height).y+" viewport="+view.availableHeight+" grid="+grid.width+"x"+grid.height+" columns="+grid.columns);
    const seal=findChild(app,"nexvaryEyeSeal");tryCompare(seal,"status",Image.Ready);
    compare(findChild(app,"brandSubtitle").text,ar?"منظومة العمليات والاستخبارات":"Operations & Intelligence System");
+   compare(app.humanError("اكتمل الفحص بنجاح"),ar?"اكتمل الفحص بنجاح":"Inspection completed successfully");
+   compare(app.humanError("اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: 2"),ar?"اكتمل فحص الاتصال؛ عدد الأجهزة المكتشفة: 2":"Connection scan complete; discovered devices: 2");
+   compare(app.humanError("Auto refresh failed; verify USB/ADB and retry / فشل تحديث الاتصال؛ راجع USB وADB"),ar?"فشل تحديث الاتصال؛ راجع USB وADB":"Auto refresh failed; verify USB/ADB and retry");
    if(size[0]===1366)verify(uiEvidence.captureWindow(app,uiScreenshotBase+"review-compact-cards-"+(ar?"ar":"en")+".png"));
   }
   app.width=1366;app.height=768;app.navigate(11);

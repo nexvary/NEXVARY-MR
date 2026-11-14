@@ -144,7 +144,7 @@ jobs:
             dist/NEXVARY-Portal-SHA256SUMS.txt
           if-no-files-found: error
   qt:
-    # Verify the post-release device-policy repair before another Setup build.
+    # Owner approved the completed Windows-only Setup release.
     strategy:
       fail-fast: false
       matrix:
@@ -153,7 +153,7 @@ jobs:
     env:
       QT_QUICK_BACKEND: software
       MR_UI_ICON_FOCUS: '1'
-      MR_SKIP_SETUP: 'true'
+      MR_SKIP_SETUP: 'false'
     steps:
       - uses: actions/checkout@v4
       - name: Parse Windows deployment scripts before building
@@ -336,6 +336,20 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $destination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR install test'
           $setup = (Resolve-Path 'dist/NEXVARY-MR-Government-Setup.exe').Path
+          # Managed installs must explicitly accept every declaration.
+          $acceptanceFlags = @('NEXVARY_ACCEPT_LICENSE','NEXVARY_AUTHORIZED_ORG','NEXVARY_LAWFUL_USE')
+          $rejected = @()
+          foreach ($missing in @('all') + $acceptanceFlags) {
+            $deniedDestination = Join-Path $env:RUNNER_TEMP "NEXVARY denied $missing"
+            $deniedLog = Join-Path $env:RUNNER_TEMP "NEXVARY denied $missing.log"
+            $accepted = if ($missing -eq 'all') { @() } else { @($acceptanceFlags | Where-Object { $_ -ne $missing } | ForEach-Object { "/$_=1" }) }
+            $arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=en /LOG=`"$deniedLog`" /DIR=`"$deniedDestination`" " + ($accepted -join ' ')
+            $denied = Start-Process $setup -ArgumentList $arguments -Wait -PassThru
+            if ($denied.ExitCode -eq 0 -or (Test-Path (Join-Path $deniedDestination 'NEXVARY-MR.exe'))) { throw "Missing $missing declaration did not block installation" }
+            if (-not ((Get-Content -LiteralPath $deniedLog -Raw) -match 'Managed installation requires explicit license and authority acceptance')) { throw "Unexpected rejection cause for $missing" }
+            $rejected += [ordered]@{missing=$missing;exitCode=$denied.ExitCode;blocked=$true}
+          }
+          $rejected | ConvertTo-Json | Set-Content dist/evidence/installer-declaration-rejections.json
           $result = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /TASKS=desktopicon /DIR=`"$destination`"" -Wait -PassThru
           if ($result.ExitCode -ne 0) { throw "Installer exited $($result.ExitCode)" }
           $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{47622673-61BA-45EA-92F5-F30F02FF2C07}_is1'
@@ -387,6 +401,24 @@ jobs:
             launchMode='installed-in-place'; uninstallExit=$uninstall.ExitCode
             installedExecutableRemoved=$true; perUserUninstallRegistrationRemoved=$true
           } | ConvertTo-Json | Set-Content dist/evidence/installer-lifecycle.json
+          # Repeat installation, deployed launch and removal in Arabic.
+          $arabicDestination = Join-Path $env:RUNNER_TEMP 'NEXVARY MR Arabic install test'
+          $arabic = Start-Process $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LANG=ar /NEXVARY_ACCEPT_LICENSE=1 /NEXVARY_AUTHORIZED_ORG=1 /NEXVARY_LAWFUL_USE=1 /DIR=`"$arabicDestination`"" -Wait -PassThru
+          if ($arabic.ExitCode -ne 0) { throw "Arabic installation failed: $($arabic.ExitCode)" }
+          if ((Get-ItemProperty -LiteralPath $uninstallKey).'Inno Setup: Language' -ne 'ar') { throw 'Arabic installer language was not selected' }
+          foreach ($language in @('ar','en')) {
+            foreach ($document in @("institutional-license-$language.txt","program-description-$language.txt")) {
+              $installedDocument = Join-Path $arabicDestination "legal/$document"
+              if (-not (Test-Path -LiteralPath $installedDocument)) { throw "Missing installed legal document: $document" }
+              if ((Get-FileHash $installedDocument).Hash -ne (Get-FileHash (Join-Path packaging $document)).Hash) { throw "Installed legal document changed: $document" }
+            }
+          }
+          ./packaging/smoke-windows.ps1 -BundleDirectory $arabicDestination -Label installed-ar -RunInPlace
+          $arabicUninstall = Start-Process (Join-Path $arabicDestination 'unins000.exe') -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru
+          if ($arabicUninstall.ExitCode -ne 0) { throw 'Arabic uninstallation failed' }
+          for ($attempt=0; $attempt -lt 25 -and (Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')); $attempt++) { Start-Sleep -Milliseconds 200 }
+          if ((Test-Path (Join-Path $arabicDestination 'NEXVARY-MR.exe')) -or (Test-Path -LiteralPath $uninstallKey)) { throw 'Arabic uninstall left executable or registration' }
+          [ordered]@{language='ar';installExit=$arabic.ExitCode;launchMode='installed-in-place';uninstallExit=$arabicUninstall.ExitCode;legalDocumentsVerified=$true} | ConvertTo-Json | Set-Content dist/evidence/installer-ar-lifecycle.json
       - name: Record artifact checksums
         if: matrix.profile == 'production' && env.MR_SKIP_SETUP != 'true'
         shell: pwsh

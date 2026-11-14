@@ -54,8 +54,6 @@ en.InfoBeforeClickLabel=Read the description, then click Next.
 ar.InfoBeforeClickLabel=اقرأ وصف النظام، ثم اضغط التالي.
 
 [Files]
-Source: "institutional-license-*.txt"; DestDir: "{app}\legal"; Flags: ignoreversion
-Source: "program-description-*.txt"; DestDir: "{app}\legal"; Flags: ignoreversion
 Source: "..\dist\NEXVARY-MR\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
 Name: "{group}\NEXVARY MR"; Filename: "{app}\NEXVARY-MR.exe"; IconFilename: "{app}\NEXVARY-MR.exe"; IconIndex: 0

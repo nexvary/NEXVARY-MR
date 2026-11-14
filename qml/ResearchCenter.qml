@@ -48,7 +48,7 @@ Item {
   Label {visible:researchBridge.error!=="";objectName:"researchError";text:researchBridge.error;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.danger;textFormat:Text.PlainText}
   RowLayout {Layout.fillWidth:true
    ComboBox {id:sectionSelector;objectName:"researchSectionSelector";onModelChanged:Qt.callLater(function(){sectionSelector.currentIndex=Qt.binding(function(){return page.section})});Layout.preferredWidth:Math.min(330,page.width*0.5);model:page.titles;currentIndex:page.section;onActivated:page.section=currentIndex}
-   EntryField {id:query;objectName:"researchQuery";Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
+   EntryField {id:query;objectName:"researchQuery";requiredInput:false;Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
    ActionButton {objectName:"researchSearch";text:app.trx("بحث","Search");onClicked:page.refresh()}
   }
   ScrollView {id:scroll;objectName:"researchScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
