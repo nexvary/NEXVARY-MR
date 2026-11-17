@@ -138,6 +138,19 @@ ColumnLayout {
   Label {objectName:"intelligencePendingResults";Layout.fillWidth:true;wrapMode:Text.WordWrap;visible:!!panel.connection&&panel.connection.pendingResultCount>0;color:panel.app.design.accent;text:panel.app.trx("البحث قيد المعالجة لدى الخدمة. نجمع نتيجة الطلب نفسه دون إعادة البحث أو خصم جديد.","The service is still processing this search. Collect its existing result without resubmitting or charging again.")}
   OsintDesktopCommand {objectName:"intelligenceCollectResults";visible:!!panel.connection&&panel.connection.pendingResultCount>0;text:panel.app.trx("جلب النتائج الحالية — دون إعادة البحث","Collect existing results — no new search");enabled:!!panel.connection&&!panel.connection.busy;onClicked:panel.connection.collectResults()}
   OsintDesktopCommand {visible:!!panel.connection&&panel.connection.busy;text:panel.app.trx("إيقاف الانتظار","Stop waiting");onClicked:panel.connection.cancel()}
+  RowLayout {Layout.fillWidth:true;visible:(panel.connection&&(panel.connection.findings||[]).length>0)
+   readonly property var findings:panel.connection?(panel.connection.findings||[]):[]
+   readonly property int resultCount:findings.filter(function(f){return f.status==="results"}).length
+   readonly property int emptyCount:findings.filter(function(f){return f.status==="empty"}).length
+   readonly property int failCount:findings.filter(function(f){return f.status==="failed"||f.status==="locked"}).length
+   Label {Layout.fillWidth:true;color:panel.app.design.text;font.bold:true;font.pixelSize:14
+    text:panel.app.trx("نتائج: ","Results: ")
+         +(parent.resultCount>0?(String(parent.resultCount)+panel.app.trx(" مصدر ببيانات"," source(s) with data")+" · "):"​")
+         +(parent.emptyCount>0?(String(parent.emptyCount)+panel.app.trx(" فارغ"," empty")+" · "):"​")
+         +(parent.failCount>0?(String(parent.failCount)+panel.app.trx(" فشل"," failed")):"​")
+   }
+   BusyIndicator {running:!!panel.connection&&panel.connection.busy;visible:running;Layout.preferredWidth:22;Layout.preferredHeight:22}
+  }
   Repeater {model:panel.connection?(panel.connection.findings||[]):[]
    delegate:ColumnLayout {
     required property var modelData
