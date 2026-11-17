@@ -67,7 +67,24 @@ ColumnLayout {
     }
     Label {visible:false;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.muted;text:app.trx("احفظ المفتاح واختبر الاتصال ثم حدّث الفئات. تظهر البطاقات من دليل الخدمة الحقيقي؛ لا توجد نتائج افتراضية.","Save the key, test the connection, then refresh categories. Cards come from the live service catalog; no default findings are generated.")}
     EntryField {objectName:"intelligenceCategoryFilter";implicitHeight:32;visible:search.categories.length>0;Layout.fillWidth:true;requiredInput:false;placeholderTextColor:app.design.muted;placeholderText:app.trx("تصفية بطاقات البحث","Filter search cards");onTextEdited:search.filter=text;color:app.design.text;background:Rectangle {color:search.app.design.surface;border.color:search.app.design.border;radius:5}}
-    OsintDesktopCommand {objectName:"intelligenceResumeLookup";visible:!!search.connection&&search.connection.pendingResultCount>0;text:search.app.trx("متابعة الطلب السابق — دون بحث جديد","Resume existing request — no new search");onClicked:{search.selectedCard=search.connection.selectedCategory;search.showSearchResult=true;serviceDialog.open()}}
+    Pane {
+        objectName:"intelligenceResumeBanner"
+        visible:!!search.connection&&search.connection.pendingResultCount>0
+        Layout.fillWidth:true;padding:10
+        background:Rectangle {radius:6;color:"#1A0C00";border.color:search.app.design.danger;border.width:1}
+        contentItem:RowLayout {
+            spacing:10
+            SemanticIcon {iconSource:"qrc:/assets/icons-professional/history.svg";Layout.preferredWidth:20;Layout.preferredHeight:20}
+            Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:13;color:search.app.design.danger
+                text:search.app.trx("طلب بحث قيد المعالجة — اجلب نتيجته دون إعادة الإرسال أو خصم جديد.",
+                                    "A search request is still processing — collect the existing result without resubmitting or incurring a new charge.")}
+            OsintDesktopCommand {
+                objectName:"intelligenceResumeLookup"
+                text:search.app.trx("جلب النتيجة","Collect result")
+                onClicked:{search.selectedCard=search.connection.selectedCategory;search.showSearchResult=true;serviceDialog.open()}
+            }
+        }
+    }
     GridLayout {
         objectName:"intelligenceCategoryGrid"
         id:categoryGrid

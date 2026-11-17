@@ -116,13 +116,23 @@ TestCase {
    compare(engine.runs,0)
   }
   function test_consentCheckboxFoundInDialogAndClearsOnClose(){
-   const pane=createTemporaryObject(component,test);verify(pane)
-   findChild(pane,"intelligenceCategory-email").clicked()
-   const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
-   const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");verify(consent)
-   consent.checked=true;verify(consent.checked)
-   dialog.close();tryCompare(dialog,"opened",false)
-   verify(!consent.checked)
-   compare(engine.runs,0)
-  }
+    const pane=createTemporaryObject(component,test);verify(pane)
+    findChild(pane,"intelligenceCategory-email").clicked()
+    const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+    const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");verify(consent)
+    consent.checked=true;verify(consent.checked)
+    dialog.close();tryCompare(dialog,"opened",false)
+    verify(!consent.checked)
+    compare(engine.runs,0)
+   }
+   function test_pendingResultBannerVisibleAndOpensDialog(){
+    engine.pendingResultCount=0;const pane=createTemporaryObject(component,test);verify(pane)
+    const banner=findChild(pane,"intelligenceResumeBanner");verify(banner)
+    verify(!banner.visible)
+    engine.pendingResultCount=1;wait(1)
+    verify(banner.visible)
+    const btn=findChild(pane,"intelligenceResumeLookup");verify(btn);btn.clicked()
+    const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+    dialog.close();compare(engine.runs,0)
+   }
 }
