@@ -8,29 +8,47 @@ ColumnLayout {
  property var app
  property string catalogFile:""
  spacing:10
- RowLayout {Layout.fillWidth:true
-  NavIcon {kind:6;Layout.preferredWidth:32;Layout.preferredHeight:32}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("كتالوج الأجهزة ومصادر الدعم","Devices and support provenance");color:app.tone("#edf4ff");font.pixelSize:20;font.bold:true}
-  ActionButton {objectName:"importDeviceCatalog";text:app.trx("تحديث كتالوج البيانات","Update data catalog");onClicked:{page.catalogFile="";digest.text="";reviewed.checked=false;catalogDialog.open()}}
- }
+  RowLayout {Layout.fillWidth:true
+   NavIcon {kind:6;Layout.preferredWidth:32;Layout.preferredHeight:32}
+   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:app.trx("كتالوج الأجهزة ومصادر الدعم","Devices and support provenance");color:app.tone("#edf4ff");font.pixelSize:20;font.bold:true}
+   Rectangle {
+    visible:rows.count>0
+    implicitWidth:countLabel.implicitWidth+16;implicitHeight:22;radius:11
+    color:"#0C3549";border.color:app.tone("#356756")
+    Label {id:countLabel;anchors.centerIn:parent;text:rows.count+" "+app.trx("مرجع","refs");font.pixelSize:12;color:app.tone("#51d6a2");font.bold:true}
+   }
+   ActionButton {objectName:"importDeviceCatalog";text:app.trx("تحديث كتالوج البيانات","Update data catalog");onClicked:{page.catalogFile="";digest.text="";reviewed.checked=false;catalogDialog.open()}}
+  }
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.tone("#eab775");text:app.trx("هذه قاعدة مراجع وليست قائمة هواتف اجتازت الاختبار. لا يُفعّل اسم الشركة أو الموديل أي أمر. القدرات تُقرأ من الاتصال الحالي، وأدوات OEM التجارية غير مدمجة.","This is a reference database, not a list of tested phones. Brand/model names cannot enable commands. Capabilities come from the current connection; commercial OEM tools are not integrated.")}
  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;color:app.tone("#a8bfd4");text:(serviceCatalog.deviceCatalog.revision||"")+" · "+(serviceCatalog.deviceCatalog.chipsets||[]).join(" / ")}
  RowLayout {Layout.fillWidth:true
   NeonComboBox {id:brand;objectName:"catalogBrand";Layout.preferredWidth:220;model:[app.trx("جميع الشركات","All brands")].concat(serviceCatalog.deviceCatalog.brands||[])}
   EntryField {id:search;objectName:"deviceCatalogSearch";Layout.fillWidth:true;placeholderText:app.trx("بحث بالموديل أو المعالج","Search model or chipset")}
  }
- ListView {id:rows;objectName:"deviceCatalogList";Layout.fillWidth:true;Layout.fillHeight:true;spacing:8;clip:true
-  model:(serviceCatalog.deviceCatalog.models||[]).filter(function(row){const query=search.text.toLowerCase().trim();return (brand.currentIndex===0||row.brand===brand.currentText)&&(!query||(row.model+" "+row.chipset).toLowerCase().includes(query))})
-  ScrollBar.vertical:ScrollBar {}
-  delegate:GlossSurface {required property var modelData;width:rows.width;implicitHeight:details.implicitHeight+24;color:app.tone("#0b2131");radius:8;border.color:app.tone("#234a63");reflection:0.06
-   ColumnLayout {id:details;anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;anchors.margins:12;spacing:6
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.brand+" · "+modelData.model;color:app.tone("#edf4ff");font.bold:true}
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:(modelData.evidence==="requested"?app.trx("مرجع مطلوب — غير متحقق","Requested reference — unverified"):app.trx("ادعاء موثق من مورّد — غير مختبر لدينا","Documented vendor claim — not tested by us"))+" · Android: "+(modelData.android||"?")+" · SoC: "+(modelData.chipset||"?");color:app.tone("#eab775")}
-    Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.requirements;color:app.tone("#a8bfd4");font.pixelSize:14}
-    ActionButton {visible:!!modelData.sourceUrl;text:app.trx("فتح المصدر","Open source");onClicked:app.openExternal(modelData.sourceUrl)}
+  ListView {id:rows;objectName:"deviceCatalogList";Layout.fillWidth:true;Layout.fillHeight:true;spacing:8;clip:true
+   model:(serviceCatalog.deviceCatalog.models||[]).filter(function(row){const query=search.text.toLowerCase().trim();return (brand.currentIndex===0||row.brand===brand.currentText)&&(!query||(row.model+" "+row.chipset).toLowerCase().includes(query))})
+   ScrollBar.vertical:ScrollBar {}
+   delegate:GlossSurface {required property var modelData;width:rows.width;implicitHeight:details.implicitHeight+24;color:app.tone("#0b2131");radius:8;border.color:app.tone("#234a63");reflection:0.06
+    ColumnLayout {id:details;anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;anchors.margins:12;spacing:6
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.brand+" · "+modelData.model;color:app.tone("#edf4ff");font.bold:true}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:(modelData.evidence==="requested"?app.trx("مرجع مطلوب — غير متحقق","Requested reference — unverified"):app.trx("ادعاء موثق من مورّد — غير مختبر لدينا","Documented vendor claim — not tested by us"))+" · Android: "+(modelData.android||"?")+" · SoC: "+(modelData.chipset||"?");color:app.tone("#eab775")}
+     Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;textFormat:Text.PlainText;text:modelData.requirements;color:app.tone("#a8bfd4");font.pixelSize:14}
+     ActionButton {visible:!!modelData.sourceUrl;text:app.trx("فتح المصدر","Open source");onClicked:app.openExternal(modelData.sourceUrl)}
+    }
+   }
+   EmptyState {
+    visible:rows.count===0
+    app:page.app
+    iconName:"database"
+    title:search.text.length>0||brand.currentIndex>0
+      ? app.trx("لا توجد نتائج للبحث الحالي","No results for this search")
+      : app.trx("الكتالوج فارغ","Catalog is empty")
+    description:search.text.length>0||brand.currentIndex>0
+      ? app.trx("جرّب نصًا مختلفًا أو اختر شركة أخرى","Try different text or select another brand")
+      : app.trx("حدّث الكتالوج لإضافة مراجع أجهزة موثقة المصدر.","Update the catalog to add source-documented device references.")
+    Layout.fillWidth:true
    }
   }
- }
  Dialog {id:catalogDialog;objectName:"deviceCatalogDialog";parent:Overlay.overlay;anchors.centerIn:parent;modal:true;width:Math.min(620,app.width-48);title:app.trx("استيراد بيانات مرجعية","Import reference data");standardButtons:Dialog.Ok|Dialog.Cancel
   onOpened:standardButton(Dialog.Ok).enabled=Qt.binding(function(){return reviewed.checked&&page.catalogFile!==""&&/^[a-fA-F0-9]{64}$/.test(digest.text.trim())})
   onAccepted:serviceCatalog.importDeviceCatalog(page.catalogFile,digest.text.trim(),reviewed.checked)
