@@ -95,7 +95,48 @@ Existing sessions, original source commits and the prefill backup at /home/ubunt
 - Next task: inspect the new hosted CI results, repair any remaining demonstrated defects, then reproduce B01 audit-store count discrepancy. Do not treat 135/139 as fixed.
 
 
-## Final CI Stabilization — 2026-11-17
+## Final Linux GUI Smoke Stabilization — 2026-11-17
+
+### Commit `64efe26` — 2 files
+
+#### Analysis: why previous fixes (b19f706) did not eliminate the loops
+
+Previous attempts either:
+1. Removed `Layout.fillHeight` or `Layout.minimumHeight` — changed symptoms but not root cause
+2. Changed `anchors.fill:parent` to `width/height` — does not break the actual dependency chain
+
+The Qt 6.8 polish loop fires when a `ColumnLayout` is polished recursively: it sizes its children → a child property change triggers `implicitHeight` update → parent re-evaluates → re-polishes the ColumnLayout.
+
+#### Root cause: Panel.qml:31
+
+`implicitHeight:column.implicitHeight+32` at line 30 creates a **synchronous feedback loop**:
+- Panel placed in parent ColumnLayout → parent sets Panel.height
+- Panel.implicitHeight triggers panel's parent Layout to re-evaluate
+- panel's parent ColumnLayout re-polishes Panel
+- Panel re-polishes `column` (the inner ColumnLayout)
+- `column.implicitHeight` has changed → loop
+
+**Fix:** Replace the direct `implicitHeight:` binding with `Binding { delayed:true; restoreMode:Binding.RestoreNone }`. The `delayed:true` defers evaluation to the next event-loop tick, breaking the synchronous re-entrancy. `restoreMode:Binding.RestoreNone` ensures the binding takes permanent ownership.
+
+#### Root cause: ForensicEvidencePage.qml:29
+
+The outer ColumnLayout (line 29) has `Layout.fillHeight:true` and `Layout.minimumHeight:0` children. Qt's Layout engine computes the ColumnLayout's `implicitHeight` from those children, and when the ColumnLayout is anchored to its parent and simultaneously asked to participate in a Layout that reads its implicitHeight, the synchronous cycle forms.
+
+**Fix:** Set `implicitHeight:0` directly on the outer ColumnLayout. This suppresses the ColumnLayout's implicit-height report to the parent Layout engine. The actual height is still controlled by `anchors.fill:parent` (restored). The children still receive correct heights because the actual Layout geometry (not implicitHeight) drives child sizing.
+
+#### Tests
+- billing 7/7 ✓
+- isolation OK ✓
+- `wait(60)` in affected tst_navigation.qml tests is sufficient for `delayed:true` Binding to fire (~1ms)
+
+#### Pushed: `1617d29..64efe26`
+
+### Next task
+Await CI for `64efe26`. Both `mr_gui_smoke` polish-loop warnings should be eliminated.
+If any further failure: read the exact new log before acting.
+Audit-store 135/139 remains CRITICAL/OPEN — separate release blocker.
+
+
 
 ### Commit `b19f706` — 3 files
 
