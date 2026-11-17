@@ -1,5 +1,13 @@
 # NEXVARY-MR implementation state
 
+## Current handoff — 2026-11-17
+
+- The default branch `main` still documents the Python/PySide6 foundation. The Windows Qt Government release work is in the draft stack [#22](https://github.com/nexvary/NEXVARY-MR/pull/22) → [#23](https://github.com/nexvary/NEXVARY-MR/pull/23) → [#24](https://github.com/nexvary/NEXVARY-MR/pull/24). Use `e5613226fe5b30fa91cfb38af57839f22febec5b` as the reviewed release baseline.
+- #22 adds €14.00 EUR server pricing and synthetic prepaid billing tests. Its Windows core and production packaging jobs passed in [run 43188235001](https://github.com/nexvary/NEXVARY-MR/actions/runs/43188235001). #23 adds bilingual service cards and keeps paid search disabled pending a trusted gateway.
+- #24 prepares Windows 0.4.10 and replaces full Android property dumps with serial-pinned reads of manufacturer, model and fingerprint. The [Windows production and installer run](https://github.com/nexvary/NEXVARY-MR/actions/runs/43614365391) passed. PR #24 reports 61 Windows CTest targets and 34 synthetic mirror cases. Real handset frame delivery remains unverified.
+- Next: run 0.4.10 on physical Windows 10/11 with an authorized handset, confirm visible frames and safe disconnect, then record the exact device and installer hash. For a later commercial release, validate an authenticated staging gateway and licensed adapter before enabling checkout. Resolve the documented audit-store discrepancy before release.
+- For a new OpenCode task, read this section first, then open only the relevant implementation and tests. Include commit SHA, changed paths, exact test results and open blockers in the next handoff.
+
 ## Intelligence cards integration
 
 - Active branch `integration/mr-intelligence-final-ux-pricing`. Base `2347fdb4b2fabf1fad265c566511d470fcfabd69` includes the stacked account, connection and modernization branches through PR #22.
