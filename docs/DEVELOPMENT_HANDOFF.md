@@ -95,7 +95,42 @@ Existing sessions, original source commits and the prefill backup at /home/ubunt
 - Next task: inspect the new hosted CI results, repair any remaining demonstrated defects, then reproduce B01 audit-store count discrepancy. Do not treat 135/139 as fixed.
 
 
-## CI Recovery Checkpoint 1 — 2026-11-17
+## UI improvement + device catalog — 2026-11-17
+
+### Phase 1: UI improvements (Commit b0361f4)
+
+**SupportedDevicesPage.qml:**
+- Added result-count badge (green pill) in the heading row — shows `N refs` when catalog has results
+- Added `EmptyState` below `ListView` for zero-result cases with context-aware messages:
+  - Search active → "No results for this search / Try different text"
+  - No filter → "Catalog is empty / Update catalog to add references"
+
+### Phase 2: Device catalog expansion (same commit b0361f4)
+
+11 new entries in `assets/data/device-service-catalog.json` (revision 2026-11-17):
+- Samsung Galaxy S25 / S25+ / S25 Ultra — Snapdragon 8 Elite, Android 15, GSMArena source
+- Xiaomi 14 / 14 Ultra — Snapdragon 8 Gen 3, Android 14, GSMArena source
+- Redmi Note 13 Pro — Snapdragon 7s Gen 2, Android 13, GSMArena source
+- OPPO Find X8 — Dimensity 9400, Android 15, GSMArena source
+- Realme GT 6 — Snapdragon 8s Gen 3, Android 14, GSMArena source
+- Google Pixel 9 / 9 Pro — Tensor G4, Android 14, official Google source
+- OnePlus 13 — Snapdragon 8 Elite, Android 15, GSMArena source
+
+All entries: `evidence: vendor-documentation`, `nexvaryValidated: false`, explicit disclaimer that no operation is enabled.
+
+**Billing tests:** 7/7 pass. Isolation: OK.
+**Pushed:** `0d61dd2..b0361f4` on `feat/intelligence-ux-polish-20261117`.
+
+### Next task
+
+Inspect CI results for `b0361f4`. If clean, proceed to:
+- B10: OEM service catalog expansion (Samsung chipset service ops in `device-service-catalog.json`)
+- Or investigate `mr_gui_smoke` layout-cycle warnings in `ForensicEvidencePage.qml:29` / `Panel.qml:31`
+  if the maintainer authorizes touching those files.
+
+Audit-store 135/139 remains CRITICAL/OPEN — do not close without evidence.
+
+
 
 ### Fix: tst_navigation.qml:1006 investigator launcher assertion
 
