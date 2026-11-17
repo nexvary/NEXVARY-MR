@@ -246,11 +246,11 @@ ColumnLayout {
       color: serviceCard.cardActive ? desktopTokens.success : desktopTokens.muted
       text: serviceCard.modelData.status
      }
-     OsintDesktopCommand {
-      id: searchAction
-      objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
-      primary: serviceCard.cardActive
-      enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !!workspace.intelligenceConnection && workspace.intelligenceConnection.lookupConnected
+      OsintDesktopCommand {
+       id: searchAction
+       objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
+       primary: serviceCard.cardActive
+       enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !workspace.administrator
       text: serviceCard.phoneService && workspace.showPhoneSearch
           ? workspace.app.trx("إغلاق نموذج البحث", "Close search form")
           : workspace.app.trx("بدء البحث", "Start search")
