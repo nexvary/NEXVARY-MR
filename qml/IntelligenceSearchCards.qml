@@ -40,11 +40,26 @@ ColumnLayout {
     spacing:4
     RowLayout {
         Layout.fillWidth:true
-        Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;font.pixelSize:20;color:app.design.text;text:app.trx("NEXVARY Intelligence","Intelligence Search")}
-        OsintDesktopCommand {text:search.app.trx("إعداد الاتصال","Connection setup");onClicked:search.setupRequested()}
+        ColumnLayout {
+            Layout.fillWidth:true;spacing:2
+            Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;font.pixelSize:22;color:app.design.text;text:"NEXVARY Intelligence"}
+            Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:13;color:app.design.muted;text:app.trx("بحث احترافي موثوق بالهوية والشبكة والأصول","Professional search — identity, network and asset intelligence")}
+        }
+        OsintDesktopCommand {iconName:"settings";text:search.app.trx("إعداد الاتصال","Connection setup");onClicked:search.setupRequested()}
     }
-    Label {objectName:"intelligenceRetailPrice";visible:false;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.success;text:app.trx("سعر نيكسفاري الموحد: ","NEXVARY fixed price: ")+search.retailPrice+app.trx(" لكل عملية بحث"," per search") }
-    Label {objectName:"intelligenceTotalDue";visible:!!connection&&connection.totalDueMinorUnits>0;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.success;text:app.trx("إجمالي المستحق غير المدفوع: ","Total unpaid amount due: ")+"€"+((connection&&connection.totalDueMinorUnits?connection.totalDueMinorUnits:0)/100).toFixed(2)}
+    Pane {
+        objectName:"intelligencePriceBanner"
+        Layout.fillWidth:true
+        padding:10
+        background:Rectangle {radius:6;color:"#071A28";border.color:search.app.design.accent;border.width:1}
+        contentItem:RowLayout {
+            spacing:12
+            SemanticIcon {iconSource:"qrc:/assets/icons-professional/coin_multiple.svg";Layout.preferredWidth:22;Layout.preferredHeight:22}
+            Label {objectName:"intelligenceRetailPrice";Layout.fillWidth:true;wrapMode:Text.WordWrap;font.pixelSize:14;font.bold:true;color:search.app.design.text;text:search.app.trx("سعر نيكسفاري الموحد: ","NEXVARY fixed price: ")+search.retailPrice+search.app.trx(" لكل عملية بحث"," per search")}
+            Label {objectName:"intelligenceTotalDue";visible:!!connection&&connection.totalDueMinorUnits>0;wrapMode:Text.WordWrap;font.pixelSize:13;color:search.app.design.danger;text:search.app.trx("مستحق غير مدفوع: ","Unpaid due: ")+"€"+((connection&&connection.totalDueMinorUnits?connection.totalDueMinorUnits:0)/100).toFixed(2)}
+        }
+    }
+
     RowLayout {
         visible:false;Layout.fillWidth:true
         OsintDesktopCommand {objectName:"intelligenceLoadCategories";text:search.app.trx("تحديث فئات البحث — دون رسوم","Refresh search categories — free");enabled:!!search.connection&&search.connection.connected&&!search.connection.busy;onClicked:search.connection.refreshCatalog()}
@@ -75,15 +90,15 @@ ColumnLayout {
                 Accessible.name:text
                 ToolTip.visible:hovered;ToolTip.text:text
                 onClicked:{search.specializedSearch=false;search.clearSelection();search.selectedCard=modelData.name;if(!search.unifiedSearch&&search.connection&&search.connection.connected&&search.connection.categories.some(row=>row.name===modelData.name))search.connection.discoverServices(modelData.name);serviceDialog.open()}
-                background:Rectangle {radius:12;gradient:Gradient {GradientStop {position:0;color:card.hovered?"#103F53":"#102C3B"} GradientStop {position:0.6;color:"#081019"} GradientStop {position:1;color:"#04080D"}} border.color:search.connection&&search.connection.selectedCategory===card.modelData.name?search.app.design.accent:search.app.design.border;border.width:card.activeFocus?2:1}
-                contentItem:ColumnLayout {
-                    spacing:1
-                    RowLayout {Layout.alignment:Qt.AlignHCenter;spacing:5
-                     SemanticIcon {name:Categories.icon(card.modelData.name);Layout.preferredWidth:18;Layout.preferredHeight:18}
-                     Rectangle {objectName:"categoryRetailPrice";implicitWidth:66;implicitHeight:16;radius:8;border.color:"#39FF14";color:"#082F23";Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:"#F0FFF4";font.pixelSize:12;font.bold:true}}
-                    }
-                    Label {Layout.fillWidth:true;Layout.minimumWidth:0;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:1;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:13;font.bold:true;text:card.text}
-                }
+                 background:Rectangle {radius:8;gradient:Gradient {GradientStop {position:0;color:card.hovered?"#0E3E54":search.connection&&search.connection.selectedCategory===card.modelData.name?"#0C3549":"#091D2B"} GradientStop {position:1;color:"#040C14"}} border.color:search.connection&&search.connection.selectedCategory===card.modelData.name?search.app.design.accent:card.hovered?"#2F7A9E":search.app.design.border;border.width:card.activeFocus?2:1}
+                 contentItem:ColumnLayout {
+                     spacing:2
+                     RowLayout {Layout.alignment:Qt.AlignHCenter;spacing:4
+                      SemanticIcon {name:Categories.icon(card.modelData.name);Layout.preferredWidth:16;Layout.preferredHeight:16}
+                      Rectangle {objectName:"categoryRetailPrice";implicitWidth:60;implicitHeight:15;radius:7;color:"#0C3549";border.color:search.app.design.accent;border.width:1;Label {objectName:"cardRetailPriceText";anchors.centerIn:parent;text:search.retailPrice;color:search.app.design.accent;font.pixelSize:11;font.bold:true}}
+                     }
+                     Label {Layout.fillWidth:true;Layout.minimumWidth:0;horizontalAlignment:Text.AlignHCenter;textFormat:Text.PlainText;maximumLineCount:1;elide:Text.ElideRight;color:search.app.design.text;font.pixelSize:13;font.bold:true;text:card.text}
+                 }
             }
         }
     }
@@ -165,8 +180,13 @@ ColumnLayout {
             onActivated:index=>search.selectedService=model[index].tool_name
             palette.text:search.app.design.text;palette.buttonText:search.app.design.text
         }
-        Label {objectName:"intelligenceServiceCost";visible:search.unifiedSearch||search.selectedService!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.accent;text:search.app.trx("السعر النهائي لعملية البحث: ","Search price: ")+search.retailPrice+search.app.trx(" — لا يعني تأكيد البحث أن التطبيق حصّل المبلغ."," — search confirmation does not record payment collection.")}
-        NeonCheckBox {id:paidConsent;objectName:"intelligenceServiceConsent";visible:search.unifiedSearch||search.selectedService!=="";Layout.fillWidth:true;text:search.app.trx("أؤكد عملية البحث بسعر نيكسفاري المبين وأوافق على إرسال البيانات وتنفيذ الخدمة","Confirm this search at the displayed NEXVARY price and authorize sending the inputs and executing the service");contentItem:Label {text:paidConsent.text;wrapMode:Text.WordWrap;color:search.app.design.text;leftPadding:paidConsent.mirrored?0:paidConsent.indicator.width+paidConsent.spacing;rightPadding:paidConsent.mirrored?paidConsent.indicator.width+paidConsent.spacing:0}}
+        Label {objectName:"intelligenceServiceCost";visible:search.unifiedSearch||search.selectedService!=="";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:search.app.design.accent;font.bold:true;font.pixelSize:15;text:search.app.trx("السعر النهائي: ","Confirmed price: ")+search.retailPrice+search.app.trx(" — لا يُعدّ هذا التأكيد تحصيلًا للمبلغ."," — this confirmation does not record payment collection.")}
+        Pane {
+            visible:search.unifiedSearch||search.selectedService!==""
+            Layout.fillWidth:true;padding:10
+            background:Rectangle {radius:6;color:"#071A28";border.color:search.app.design.accent;border.width:1}
+            contentItem:NeonCheckBox {id:paidConsent;objectName:"intelligenceServiceConsent";Layout.fillWidth:true;text:search.app.trx("أؤكد عملية البحث بسعر نيكسفاري المبين وأوافق على إرسال البيانات وتنفيذ الخدمة","Confirm this search at the displayed NEXVARY price and authorize sending the inputs and executing the service");contentItem:Label {text:paidConsent.text;wrapMode:Text.WordWrap;color:search.app.design.text;leftPadding:paidConsent.mirrored?0:paidConsent.indicator.width+paidConsent.spacing;rightPadding:paidConsent.mirrored?paidConsent.indicator.width+paidConsent.spacing:0}}
+        }
         OsintDesktopCommand {
             objectName:"intelligenceExecuteService";primary:true
             text:search.app.trx("تنفيذ البحث","Execute search")

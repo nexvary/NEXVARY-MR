@@ -102,39 +102,68 @@ Pane {
    ColumnLayout {
     visible:analysis.viewMode===1;Layout.fillWidth:true;spacing:8
     RowLayout {
-     OsintDesktopCommand {text:"−";enabled:graph.zoom>0.6;onClicked:graph.zoom=Math.max(0.6,graph.zoom-0.1);Accessible.name:analysis.app.trx("تصغير", "Zoom out")}
-     OsintDesktopCommand {text:"+";enabled:graph.zoom<1.8;onClicked:graph.zoom=Math.min(1.8,graph.zoom+0.1);Accessible.name:analysis.app.trx("تكبير", "Zoom in")}
+     OsintDesktopCommand {text:"-";enabled:graph.zoom>0.6;onClicked:graph.zoom=Math.max(0.6,graph.zoom-0.1);Accessible.name:analysis.app.trx("تصغير", "Zoom out")}
+     OsintDesktopCommand {text:"+";enabled:graph.zoom<2.2;onClicked:graph.zoom=Math.min(2.2,graph.zoom+0.1);Accessible.name:analysis.app.trx("تكبير", "Zoom in")}
      OsintDesktopCommand {text:analysis.app.trx("إعادة ضبط", "Reset");onClicked:{graph.zoom=1;graph.contentX=0;graph.contentY=0}}
     }
     Flickable {
      id:graph;objectName:"osintRelationshipGraph";property real zoom:1
-     Layout.fillWidth:true;Layout.preferredHeight:350;clip:true
-     contentWidth:720*zoom;contentHeight:380*zoom;boundsBehavior:Flickable.StopAtBounds
-     Rectangle {width:720;height:380;scale:graph.zoom;transformOrigin:Item.TopLeft;color:"transparent"
-      Repeater {model:analysis.records.length?2:0
-       delegate:Rectangle {required property int index;x:260;y:190;width:226;height:2;color:"#2F8DB1";rotation:index===0?-28.1:27.7;transformOrigin:Item.Left}
+     Layout.fillWidth:true;Layout.preferredHeight:380;clip:true
+     contentWidth:760*zoom;contentHeight:400*zoom;boundsBehavior:Flickable.StopAtBounds
+     Item {
+      id:graphCanvas
+      width:760;height:400;scale:graph.zoom;transformOrigin:Item.TopLeft
+      readonly property int cx:340
+      readonly property int cy:200
+      readonly property int radius:140
+      readonly property int nodeW:180
+      readonly property int nodeH:68
+      Rectangle {
+       x:parent.cx-32;y:parent.cy-20;width:64;height:40;radius:20
+       color:"#0C3549";border.color:"#23B9E7";border.width:2
+       Label {anchors.centerIn:parent;text:"NEXVARY";color:"#70D8F5";font.pixelSize:11;font.bold:true}
+       visible:analysis.records.length>0
       }
-      Repeater {model:analysis.records
-       delegate:Rectangle {
+      Repeater {
+       model:analysis.records
+       delegate:Item {
         required property int index;required property var modelData
-        x:index===0?50:460;y:index===0?145:index===1?38:250;width:210;height:76;radius:3
-        color:analysis.selectedIndex===index?"#0C435C":"#0A2231";border.color:analysis.selectedIndex===index?"#23B9E7":"#24556D"
-        RowLayout {anchors.fill:parent;anchors.margins:10;spacing:8
-         SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+modelData.icon+".svg";Layout.preferredWidth:28;Layout.preferredHeight:28;}
-         ColumnLayout {Layout.fillWidth:true;spacing:5
-          Label {text:modelData.type;color:"#70D8F5";font.pixelSize:14;font.bold:true}
-          Label {text:modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:14;Layout.fillWidth:true;elide:Text.ElideMiddle}
-         }
+        readonly property real angle:(2*Math.PI/Math.max(1,analysis.records.length))*index - Math.PI/2
+        readonly property int nx:Math.round(graphCanvas.cx + graphCanvas.radius*Math.cos(angle) - graphCanvas.nodeW/2)
+        readonly property int ny:Math.round(graphCanvas.cy + graphCanvas.radius*Math.sin(angle) - graphCanvas.nodeH/2)
+        readonly property int edgeX1:graphCanvas.cx
+        readonly property int edgeY1:graphCanvas.cy
+        readonly property int edgeX2:nx+graphCanvas.nodeW/2
+        readonly property int edgeY2:ny+graphCanvas.nodeH/2
+        Rectangle {
+         x:parent.edgeX1;y:parent.edgeY1
+         width:Math.sqrt(Math.pow(parent.edgeX2-parent.edgeX1,2)+Math.pow(parent.edgeY2-parent.edgeY1,2))
+         height:2;color:"#1A6080"
+         rotation:Math.atan2(parent.edgeY2-parent.edgeY1,parent.edgeX2-parent.edgeX1)*180/Math.PI
+         transformOrigin:Item.Left
+         visible:analysis.records.length>0
         }
-        MouseArea {anchors.fill:parent;onClicked:analysis.pick(parent.index)}
-        Accessible.role:Accessible.Button;Accessible.name:modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(index)
+        Rectangle {
+         x:parent.nx;y:parent.ny;width:graphCanvas.nodeW;height:graphCanvas.nodeH;radius:4
+         color:analysis.selectedIndex===parent.index?"#0C435C":"#0A2231"
+         border.color:analysis.selectedIndex===parent.index?"#23B9E7":"#24556D"
+         RowLayout {anchors.fill:parent;anchors.margins:8;spacing:6
+          SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+parent.modelData.icon+".svg";Layout.preferredWidth:24;Layout.preferredHeight:24}
+          ColumnLayout {Layout.fillWidth:true;spacing:3
+           Label {text:parent.modelData.type;color:"#70D8F5";font.pixelSize:12;font.bold:true;elide:Text.ElideRight;Layout.fillWidth:true}
+           Label {text:parent.modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle}
+          }
+         }
+         MouseArea {anchors.fill:parent;onClicked:analysis.pick(parent.parent.index)}
+         Accessible.role:Accessible.Button;Accessible.name:parent.modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(parent.index)
+        }
        }
       }
      }
      ScrollBar.horizontal:ScrollBar {}
      ScrollBar.vertical:ScrollBar {}
     }
-    Label {font.pixelSize:14;Layout.fillWidth:true;wrapMode:Text.WordWrap;text:analysis.app.trx("الروابط جزء من المثال الاصطناعي؛ لا تثبت علاقة حقيقية بين أشخاص أو حسابات.", "Links belong to the synthetic example; they do not establish real relationships between people or accounts.");color:analysis.app.design.muted}
+    Label {font.pixelSize:13;Layout.fillWidth:true;wrapMode:Text.WordWrap;text:analysis.app.trx("الروابط جزء من المثال الاصطناعي؛ لا تثبت علاقة حقيقية بين أشخاص أو حسابات.", "Links belong to the synthetic example; they do not establish real relationships between people or accounts.");color:analysis.app.design.muted}
    }
   }
   OsintDesktopPane {
