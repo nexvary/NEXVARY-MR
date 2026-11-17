@@ -95,7 +95,39 @@ Existing sessions, original source commits and the prefill backup at /home/ubunt
 - Next task: inspect the new hosted CI results, repair any remaining demonstrated defects, then reproduce B01 audit-store count discrepancy. Do not treat 135/139 as fixed.
 
 
-## UI improvement + device catalog — 2026-11-17
+## CI Stabilization Checkpoint — 2026-11-17
+
+### Commit `488b8af` — 6 files, 4 independent fixes
+
+#### Fix 1: Catalog count mismatch (CatalogTests + WorkstationNavigation)
+- `cpp/tests/catalog_tests.cpp` line 12: `48` → `59`
+- `qml/tests/tst_navigation.qml` line 602: `48` → `59`
+- Cause: 11 new device entries were added in `b0361f4` without updating test expectations
+- Security: `validDeviceCatalog` rejects `nexvaryValidated:true` and `command` fields — unchanged; no capability granted
+
+#### Fix 2: Panel.qml polish/layout loop (line 29 in CI log)
+- Root cause: `ColumnLayout { anchors.fill:parent }` inside a `GlossSurface` that derives `implicitHeight:column.implicitHeight+32` creates a circular dependency. `anchors.bottom` pulled the layout into the parent height, which the parent's `implicitHeight` was computing from the layout.
+- Fix: replaced `anchors.fill:parent;anchors.margins:16` with explicit `anchors.top/left/right` (no bottom); removed `Layout.fillHeight:true` from `container` child.
+
+#### Fix 3: ForensicEvidencePage.qml layout loop (line 29 in CI log)
+- Root cause: inner `RowLayout { Layout.fillHeight:true }` without `Layout.minimumHeight:0` in a `ColumnLayout { anchors.fill:parent }` inside an `Item` triggers Qt polish loop warning.
+- Fix: added `Layout.minimumHeight:0` to the fillHeight RowLayout.
+
+#### Fix 4: LampyreConnectionPanel.qml implicitHeight self-reference
+- Root cause: `Layout.preferredHeight:Math.min(360,Math.max(90,implicitHeight))` on an `EntryArea` — `implicitHeight` refers to the item's own implicit height before layout, creating a binding loop.
+- Fix: replaced `implicitHeight` with `contentHeight+topPadding+bottomPadding` which is the actual text content height.
+
+#### Fix 5: nexvary-eye-seal.svg Qt SVG compatibility
+- Root cause: `<path d="" transform="..."/>` empty path element in line 27 causes Qt SVG renderer to emit a warning (empty path data).
+- Fix: removed the single empty `<path d="">` element. Visual identity unchanged — the element contributed nothing visible.
+
+### Tests: billing 7/7, isolation OK. Pushed: `50fc5a9..488b8af`
+
+### Next task
+Await CI for `488b8af`. Expected: CatalogTests and tst_navigation count assertions pass; Panel/Forensic polish warnings resolved; SVG warning gone. If any remaining failure: read the new log before fixing.
+Audit-store 135/139 remains CRITICAL/OPEN.
+
+
 
 ### Phase 1: UI improvements (Commit b0361f4)
 
