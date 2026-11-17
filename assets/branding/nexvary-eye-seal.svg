@@ -3,8 +3,8 @@
 <desc>Original silver eye seal with a blue intelligence iris. Simplified symbol for small Windows icons.</desc>
 <defs>
  <linearGradient id="metal" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#f5fbff"/><stop offset=".22" stop-color="#8393a4"/><stop offset=".48" stop-color="#f9fcff"/><stop offset=".7" stop-color="#8a99aa"/><stop offset="1" stop-color="#e4edf4"/></linearGradient>
- <radialGradient id="black"><stop stop-color="#152c3b"/><stop offset="1" stop-color="#060b10"/></radialGradient>
- <radialGradient id="iris"><stop stop-color="#031b33"/><stop offset=".5" stop-color="#036fa7"/><stop offset=".85" stop-color="#00bfff"/><stop offset="1" stop-color="#0066a3"/></radialGradient>
+ <radialGradient id="black" cx="0.5" cy="0.5" r="0.5"><stop stop-color="#152c3b"/><stop offset="1" stop-color="#060b10"/></radialGradient>
+ <radialGradient id="iris" cx="0.5" cy="0.5" r="0.5"><stop stop-color="#031b33"/><stop offset=".5" stop-color="#036fa7"/><stop offset=".85" stop-color="#00bfff"/><stop offset="1" stop-color="#0066a3"/></radialGradient>
  <linearGradient id="eye" x2="0" y2="1"><stop stop-color="#f0f8ff"/><stop offset=".48" stop-color="#a1b5c5"/><stop offset="1" stop-color="#344e62"/></linearGradient>
  <clipPath id="eyeClip"><path d="M94 266 Q256 104 418 266 Q256 428 94 266Z"/></clipPath>
 </defs>

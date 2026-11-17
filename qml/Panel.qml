@@ -40,6 +40,6 @@ GlossSurface {
    StateBadge {visible:card.stateText!=="";text:card.stateText;tint:card.accentColor}
   }
   Rectangle {visible:card.title!=="";Layout.fillWidth:true;height:1;color:card.tokens?card.tokens.border:"#3C4859";opacity:0.55}
-  ColumnLayout {id:container;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;spacing:10}
+   ColumnLayout {id:container;Layout.fillWidth:true;spacing:10}
  }
 }

@@ -26,8 +26,8 @@ Item {
  }
  function showEvidence(id){kind.currentIndex=0;search.text="";page.selectedId=id}
  function notify(ok){app.notice(ok,app.trx("اكتملت العملية","Operation completed"),recoveryBridge.error)}
- ColumnLayout {
-  anchors.fill:parent;spacing:10
+  ColumnLayout {
+   width:parent.width;height:parent.height;spacing:10
   Label {text:recoveryBridge.active?recoveryBridge.caseTitle+" · "+recoveryBridge.caseId:app.trx("أنشئ أو افتح قضية من تبويب القضايا","Create or open a case in the Cases tab");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#8ac7f5");font.bold:true}
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
