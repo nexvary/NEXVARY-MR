@@ -38,7 +38,7 @@ TestCase {
   function runService(name,args,price,consent){if(consent)runs++;return consent}
  }
  Component {id:component;MR.IntelligenceSearchCards {width:960;app:style;connection:engine}}
- function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
+ function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.pendingResultCount=0;engine.busy=false;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
  function test_allCardsDisplayRetailPriceInBothLanguages(){
   const pane=createTemporaryObject(component,test);verify(pane);compare(pane.shownCategories.length,54)
   for(const ar of [false,true]){
@@ -56,6 +56,16 @@ TestCase {
   engine.connected=false;engine.lookupConnected=false;const pane=createTemporaryObject(component,test);verify(pane)
   findChild(pane,"intelligenceCategory-phone").clicked();const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
   verify(findChild(dialog.contentItem,"intelligenceArgument-phone"));verify(!findChild(dialog.contentItem,"intelligenceExecuteService").enabled);compare(engine.runs,0)
+ }
+ function test_pendingRequestBlocksNewSearchUntilCleared(){
+  const pane=createTemporaryObject(component,test);verify(pane)
+  findChild(pane,"intelligenceCategory-email").clicked()
+  const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+  const consent=findChild(dialog.contentItem,"intelligenceServiceConsent")
+  const execute=findChild(dialog.contentItem,"intelligenceExecuteService")
+  consent.checked=true;engine.pendingResultCount=1;verify(!execute.enabled)
+  engine.pendingResultCount=0;verify(execute.enabled)
+  dialog.close();tryCompare(dialog,"opened",false)
  }
  function test_primaryCardsUseUnifiedSearch(){
   const pane=createTemporaryObject(component,test);verify(pane)

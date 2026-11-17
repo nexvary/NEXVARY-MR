@@ -92,7 +92,7 @@ ColumnLayout {
         readonly property real viewportHeight:typeof app.intelligenceViewportHeight==="number"?app.intelligenceViewportHeight:700
         readonly property int cardHeight:Math.max(48,Math.min(72,Math.floor((viewportHeight-headerAllowance-(rowCount-1)*3)/rowCount)))
         readonly property int baseColumns:width>=1400?10:width>=900?9:width>=760?8:width>=640?7:width>=520?6:width>=400?4:width>=300?3:2
-        readonly property int headerAllowance:search.connection&&search.connection.totalDueMinorUnits>0?108:80
+        readonly property real headerAllowance:categoryGrid.y+search.y+2
         readonly property int fittingRows:Math.max(1,Math.floor((viewportHeight-headerAllowance+3)/51))
         Layout.fillWidth:true;columns:Math.min(Math.max(baseColumns,Math.ceil(search.shownCategories.length/fittingRows)),Math.max(2,Math.floor(width/92)));columnSpacing:4;rowSpacing:3
         Repeater {

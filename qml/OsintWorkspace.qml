@@ -250,7 +250,7 @@ ColumnLayout {
       id: searchAction
       objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
       primary: serviceCard.cardActive
-      enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator
+      enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !!workspace.intelligenceConnection && workspace.intelligenceConnection.lookupConnected
       text: serviceCard.phoneService && workspace.showPhoneSearch
           ? workspace.app.trx("إغلاق نموذج البحث", "Close search form")
           : workspace.app.trx("بدء البحث", "Start search")

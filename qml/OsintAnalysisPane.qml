@@ -127,6 +127,7 @@ Pane {
       Repeater {
        model:analysis.records
        delegate:Item {
+        id: graphNode
         required property int index;required property var modelData
         readonly property real angle:(2*Math.PI/Math.max(1,analysis.records.length))*index - Math.PI/2
         readonly property int nx:Math.round(graphCanvas.cx + graphCanvas.radius*Math.cos(angle) - graphCanvas.nodeW/2)
@@ -148,14 +149,14 @@ Pane {
          color:analysis.selectedIndex===parent.index?"#0C435C":"#0A2231"
          border.color:analysis.selectedIndex===parent.index?"#23B9E7":"#24556D"
          RowLayout {anchors.fill:parent;anchors.margins:8;spacing:6
-          SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+parent.modelData.icon+".svg";Layout.preferredWidth:24;Layout.preferredHeight:24}
+          SemanticIcon {iconSource:"qrc:/assets/icons-professional/"+graphNode.modelData.icon+".svg";Layout.preferredWidth:24;Layout.preferredHeight:24}
           ColumnLayout {Layout.fillWidth:true;spacing:3
-           Label {text:parent.modelData.type;color:"#70D8F5";font.pixelSize:12;font.bold:true;elide:Text.ElideRight;Layout.fillWidth:true}
-           Label {text:parent.modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle}
+           Label {text:graphNode.modelData.type;color:"#70D8F5";font.pixelSize:12;font.bold:true;elide:Text.ElideRight;Layout.fillWidth:true}
+           Label {text:graphNode.modelData.value;textFormat:Text.PlainText;color:"#E5EDF3";font.pixelSize:12;Layout.fillWidth:true;elide:Text.ElideMiddle}
           }
          }
          MouseArea {anchors.fill:parent;onClicked:analysis.pick(parent.parent.index)}
-         Accessible.role:Accessible.Button;Accessible.name:parent.modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(parent.index)
+         Accessible.role:Accessible.Button;Accessible.name:graphNode.modelData.value;activeFocusOnTab:true;Keys.onReturnPressed:analysis.pick(parent.index)
         }
        }
       }
