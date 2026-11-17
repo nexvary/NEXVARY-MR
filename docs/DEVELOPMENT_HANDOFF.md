@@ -82,3 +82,14 @@ Draft PR creation is authorized through the connected Nexvary GitHub account. No
 The tracked configuration has local infrastructure repairs that are intentionally excluded from the documentation commit. Runtime permissions are command-dispatch controls, not a security boundary. The service retains NoNewPrivileges, with ordinary checks dispatched through a root-owned broker into systemd sandboxes that cannot read AWS/SSH credentials. Do not restore broad interpreter access or build.steps/maxSteps: a synthetic final assistant message at that limit is incompatible with Sonnet 4.6 Bedrock.
 
 Existing sessions, original source commits and the prefill backup at /home/ubuntu/.local/state/opencode-prefill-repair.UJnJD5 must be preserved.
+
+
+## Git/CI recovery — 2026-11-17
+- Documentation published in 555bb2b. CI repair in fe3c0c9.
+- Compiler indentation and legacy launch gating were inherited from e561322. Graph warnings were introduced by f897373. The pending-result test left shared fixture state behind and is now reset in init, with a dedicated blocking/unblocking safety regression.
+- Card sizing uses its real vertical offset instead of an outdated 80-pixel header estimate.
+- Seven synthetic Python billing tests and whitespace validation passed locally. Lightsail has no CMake/Qt toolchain, so hosted Windows/Linux GUI runs remain the acceptance gate.
+- Draft PR: https://github.com/nexvary/NEXVARY-MR/pull/25 . No merge is authorized.
+- Secure Git broker supports scoped development publishing. Read docs/OPENCODE_GIT_BROKER.md before changing its policy.
+- OpenCode retains 1.19.5, Sonnet 4.6/Bedrock Frankfurt, NoNewPrivileges, session history and original prefill repair backup.
+- Next task: inspect the new hosted CI results, repair any remaining demonstrated defects, then reproduce B01 audit-store count discrepancy. Do not treat 135/139 as fixed.
