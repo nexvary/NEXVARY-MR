@@ -15,7 +15,7 @@
     "edit": {
       "*": "ask",
       "/tmp/opencode/**": "allow",
-      "/home/ubuntu/nexvary/projects/NEXVARY-MR/**": "allow"
+      "./**": "allow"
     },
 
     "bash": {
@@ -73,16 +73,16 @@
       "curl *169.254.169.254*": "deny",
       "wget *169.254.169.254*": "deny",
       "curl *amazonaws.com/latest/meta-data*": "deny",
-      "cat /home/ubuntu/.aws*": "deny",
-      "cat /home/ubuntu/.ssh*": "deny",
+      "cat ~/.aws*": "deny",
+      "cat ~/.ssh*": "deny",
       "cat /etc/shadow*": "deny",
       "cat *id_rsa*": "deny",
       "cat *credentials*": "deny",
       "rm -rf /*": "deny",
       "rm -rf ~*": "deny",
-      "rm -rf /home*": "deny",
-      "rm -f /home/ubuntu/.aws*": "deny",
-      "rm -f /home/ubuntu/.ssh*": "deny",
+      "rm -rf /home/*": "deny",
+      "rm -f ~/.aws*": "deny",
+      "rm -f ~/.ssh*": "deny",
       "rm -f /etc*": "deny",
       "rm -f /usr*": "deny",
       "git push origin main": "deny",
@@ -99,10 +99,10 @@
     "external_directory": {
       "*": "deny",
       "/tmp/opencode/**": "allow",
-      "/home/ubuntu/nexvary/projects/NEXVARY-MR/**": "allow",
-      "/home/ubuntu/.aws/**": "deny",
-      "/home/ubuntu/.ssh/**": "deny",
-      "/home/ubuntu/.config/opencode/**": "deny"
+      "./**": "allow",
+      "~/.aws/**": "deny",
+      "~/.ssh/**": "deny",
+      "~/.config/opencode/**": "deny"
     }
   }
 }
