@@ -95,7 +95,36 @@ Existing sessions, original source commits and the prefill backup at /home/ubunt
 - Next task: inspect the new hosted CI results, repair any remaining demonstrated defects, then reproduce B01 audit-store count discrepancy. Do not treat 135/139 as fixed.
 
 
-## CI Stabilization Checkpoint — 2026-11-17
+## Final CI Stabilization — 2026-11-17
+
+### Commit `b19f706` — 3 files
+
+#### Root causes and fixes
+
+**Panel.qml:31 — Polish loop**
+- Cause: `ColumnLayout {id:container; Layout.minimumHeight:implicitHeight}` inside `column`. A child Layout with `Layout.minimumHeight:implicitHeight` creates a self-referential cycle: the minimum height depends on the implicit height, which depends on children, which may depend on the Layout geometry Qt is still computing.
+- Fix: removed `Layout.minimumHeight:implicitHeight` from `container`. Qt Layouts already respect `implicitHeight` as a natural minimum without an explicit binding.
+
+**ForensicEvidencePage.qml:29 — Polish loop**
+- Cause: `ColumnLayout { anchors.fill:parent }` in a top-level `Item` with no explicit size, combined with `Layout.fillHeight:true` children. `anchors.fill` is bidirectional — the Layout tries to report its implicit height back to the parent while the parent sets the Layout's height, creating a cycle.
+- Fix: replaced `anchors.fill:parent` with `width:parent.width; height:parent.height` — one-directional bindings (parent → child only). Layout behavior unchanged; children still receive correct dimensions.
+
+**nexvary-eye-seal.svg — radialGradient parse failure**
+- Cause: `<radialGradient id="black">` and `<radialGradient id="iris">` were missing required `cx`, `cy`, `r` attributes. Qt SVG renderer cannot parse radialGradient without these, so `url(#black)` and `url(#iris)` failed to resolve.
+- Fix: added `cx="0.5" cy="0.5" r="0.5"` to both radialGradients. These are the standard objectBoundingBox defaults. Visual identity preserved — the gradients render identically.
+
+### Tests: billing 7/7, isolation OK
+### Pushed: `a1e76fa..b19f706`
+
+### Expected CI outcome
+- `mr_ui_tests`: all WorkstationNavigation tests pass (including catalog count 59, investigator gating, forensic layout)
+- `mr_gui_smoke`: Panel polish warning gone; SVG logo renders; ForensicEvidence layout warning gone
+- `linux-forensic` and `qt` jobs: should pass with these fixes
+
+### Next task
+Inspect CI results for `b19f706`. If `mr_gui_smoke` still fails, read the exact new log. Audit-store 135/139 remains a separate release blocker.
+
+
 
 ### Commit `488b8af` — 6 files, 4 independent fixes
 
