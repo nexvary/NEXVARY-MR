@@ -29,7 +29,7 @@ GlossSurface {
  color:tokens?tokens.surface:"#11151B";border.color:tokens?tokens.border:"#3C4859";border.width:1.5;radius:12;reflection:0.035
  implicitHeight:column.implicitHeight+32
  ColumnLayout {
-  id:column;anchors.fill:parent;anchors.margins:16;spacing:12
+  id:column;anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;anchors.topMargin:16;anchors.leftMargin:16;anchors.rightMargin:16;spacing:12
   RowLayout {
    visible:card.title!=="";Layout.fillWidth:true;spacing:10
    SemanticIcon {visible:card.iconName!=="";iconSource:visible?"qrc:/assets/icons-professional/"+card.iconName+".svg":"";Layout.preferredWidth:30;Layout.preferredHeight:30;fillMode:Image.PreserveAspectFit}
@@ -40,6 +40,6 @@ GlossSurface {
    StateBadge {visible:card.stateText!=="";text:card.stateText;tint:card.accentColor}
   }
   Rectangle {visible:card.title!=="";Layout.fillWidth:true;height:1;color:card.tokens?card.tokens.border:"#3C4859";opacity:0.55}
-  ColumnLayout {id:container;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;Layout.fillHeight:true;spacing:10}
+  ColumnLayout {id:container;Layout.fillWidth:true;Layout.minimumHeight:implicitHeight;spacing:10}
  }
 }

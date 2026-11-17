@@ -599,7 +599,7 @@ TestCase {
    findChild(app,"serviceDataLossConsent").checked=true;verify(!dialog.standardButton(Dialog.Ok).enabled)
    dialog.reject();tryCompare(dialog,"opened",false)
   }
-  tabs.currentIndex=2;verify(renderedFrame());const rows=findChild(app,"deviceCatalogList");compare(rows.count,48)
+  tabs.currentIndex=2;verify(renderedFrame());const rows=findChild(app,"deviceCatalogList");compare(rows.count,59)
   const search=findChild(app,"deviceCatalogSearch");search.text="SM-A057G";tryCompare(rows,"count",1);search.text="nothing matches";tryCompare(rows,"count",0);search.text=""
   mouseClick(findChild(app,"importDeviceCatalog"));const dialog=findChild(app,"deviceCatalogDialog");tryCompare(dialog,"opened",true);verify(!dialog.standardButton(Dialog.Ok).enabled);dialog.reject()
   mouseClick(app.navigationButton(0));compare(app.currentPage,0)

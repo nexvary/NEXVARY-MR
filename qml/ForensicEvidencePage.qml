@@ -35,8 +35,8 @@ Item {
    NeonComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis","native-analysis"];Layout.preferredWidth:180}
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
-  RowLayout {
-   Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;spacing:10
+   RowLayout {
+    Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;spacing:10
    ListView {
     id:files;objectName:"forensicEvidenceList";Layout.preferredWidth:Math.max(220,page.width*0.38);Layout.fillHeight:true;clip:true;spacing:8;model:page.filteredEvidence
     ScrollBar.vertical:ScrollBar {}
