@@ -38,7 +38,7 @@ TestCase {
   function runService(name,args,price,consent){if(consent)runs++;return consent}
  }
  Component {id:component;MR.IntelligenceSearchCards {width:960;app:style;connection:engine}}
- function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.pendingResultCount=0;engine.busy=false;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
+ function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.pendingResultCount=0;engine.busy=false;engine.retailPriceEur=14;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
  function test_allCardsDisplayRetailPriceInBothLanguages(){
   const pane=createTemporaryObject(component,test);verify(pane);compare(pane.shownCategories.length,54)
   for(const ar of [false,true]){
