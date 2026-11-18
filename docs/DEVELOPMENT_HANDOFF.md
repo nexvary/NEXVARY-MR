@@ -1,6 +1,40 @@
 # NEXVARY-MR Development Handoff
 
-## CI repair — 2026-11-18
+## CI repair correction — 2026-11-18 (run 44209842377, SHA 51e2c9b)
+
+### What was wrong with 51e2c9b
+
+Commit 51e2c9b introduced two incorrect fixes:
+
+1. **tst_navigation.qml:356** — added `verify(renderedFrame())` between `reveal` and `mouseClick`. `waitForRendering` does NOT drain `QTimer::singleShot(0)` callbacks from `Binding{delayed:true}`. The deferred Panel heights were still wrong when `reveal` computed the scroll position. This failed to fix line 356 and also caused `test_governmentArtifactControls` line 328 to break (same root cause — artifact test was already fragile for the same reason, masked by timing in prior run).
+
+2. **ForensicEvidencePage.qml:31** — added `Layout.minimumHeight:0`. This does NOT prevent re-invalidation. Qt's `QQuickLayout::invalidate(item)` is called via `QQuickLayoutAttached::itemImplicitHeightChanged()` whenever any child's `implicitHeight` changes, regardless of `Layout.minimumHeight` setting. The loop continued.
+
+### Corrected fixes
+
+#### Defect 1 — test_governmentArtifactControls:328 and test_governmentTimelineControls:356
+
+**Root cause (confirmed):** `Binding{delayed:true}` in Panel.qml schedules `implicitHeight` updates via `QTimer::singleShot(0)`. After `app.navigateSection(6)`, these timers have not fired. `verify(renderedFrame())` calls `waitForRendering` which processes the render loop but NOT pending 0ms timers. Panel heights remain 0. `reveal(page,button)` computes the wrong scroll offset. `mouseClick` misses the button. The build function is never called. `tryCompare(busy,false)` passes immediately. Result is empty. `.rows` or `.normalizedCount` is `undefined`.
+
+**Fix:** Replace `app.navigateSection(6);verify(renderedFrame())` with `app.navigateSection(6);wait(60);verify(renderedFrame())` at both lines 327 (artifact) and 355 (timeline). `wait(N)` calls `QTest::qWait` which processes ALL pending events including 0ms timers, draining the deferred bindings before `reveal` computes positions. The spurious `verify(renderedFrame())` added between `reveal` and `mouseClick` at line 356 in 51e2c9b is removed (it was wrong and redundant). All assertions unchanged.
+
+#### Defect 2 — ForensicEvidencePage.qml:29 ColumnLayout Polish loop
+
+**Root cause (corrected):** Qt calls `QQuickLayout::invalidate(item)` via `QQuickLayoutAttached::itemImplicitHeightChanged()` whenever a child's `implicitHeight` changes. For a `Label {wrapMode:Text.WrapAnywhere}` as a direct child of a `ColumnLayout {anchors.fill:parent}`, when the ColumnLayout's `rearrange()` sets the Label's width for the first time, the Label recomputes its word-wrap height and `implicitHeight` changes. This calls `invalidate` on the outer ColumnLayout, causing `polish()` → second rearrange. Qt detects this 2-step cycle and emits the warning. `Layout.minimumHeight:0` does NOT prevent `itemImplicitHeightChanged()` from firing — that path is unconditional in Qt's C++ code.
+
+**Fix:** Remove `wrapMode:Text.WrapAnywhere` from the Label at ForensicEvidencePage.qml:31 and replace with `elide:Text.ElideRight`. A single-line elided Label has a fixed single-line `implicitHeight` that does NOT change when its width is set. Therefore `itemImplicitHeightChanged()` is never called during `rearrange()`, breaking the 2-step loop. The `Layout.minimumHeight:0` from 51e2c9b is retained (harmless). No test asserts on this Label's wrapping behavior. The case title/ID label is a status header — elision is visually acceptable.
+
+### Local verification
+- billing 7/7 ✓
+- isolation OK ✓
+- No Qt/CMake toolchain on Lightsail; hosted CI is the acceptance gate for Windows/Ubuntu GUI tests.
+
+### Next task
+Await hosted CI for corrected SHA. If both defects clear: investigate audit-store 135/139 discrepancy (CRITICAL/OPEN, separate release blocker). Do not close without evidence.
+
+---
+
+## CI repair — 2026-11-18 (initial, partially incorrect)
 
 ### Commits (campaign-ci-stabilize-20261118)
 
