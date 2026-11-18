@@ -353,7 +353,7 @@ TestCase {
   const source=lawCaseBridge.addEvidence(device,syntheticTimelinePath,"Synthetic timeline","Synthetic custodian",true);verify(source!=="")
   verify(lawCaseBridge.importEvidence(source,"json","Synthetic timeline UI",true));tryCompare(lawCaseBridge,"importBusy",false,8000);verify(!!lawCaseBridge.importResult.reportJson,lawCaseBridge.error)
   app.navigateSection(6);verify(renderedFrame());const page=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentTimelinePanel"),button=findChild(app,"governmentTimelineBuild")
-  reveal(page,button);mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.normalizedCount,15);compare(lawCaseBridge.timelineResult.unresolvedCount,1)
+   reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.normalizedCount,15);compare(lawCaseBridge.timelineResult.unresolvedCount,1)
   const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious")
   tryCompare(page,"timelinePage",0);verify(next.enabled);verify(renderedFrame())
   reveal(page,next);verify(renderedFrame());mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)

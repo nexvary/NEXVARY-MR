@@ -1,5 +1,33 @@
 # NEXVARY-MR Development Handoff
 
+## CI repair — 2026-11-18
+
+### Commits (campaign-ci-stabilize-20261118)
+
+Two confirmed CI defects fixed against SHA 3a20f875 (run 44184087773).
+
+#### Defect 1 — test_governmentTimelineControls undefined vs 15 (tst_navigation.qml:356)
+
+**Root cause:** Commit `64efe26` introduced `Binding{delayed:true}` in `Panel.qml` to defer `implicitHeight` updates. After `app.navigateSection(6)` + `verify(renderedFrame())`, those deferred bindings had not yet fired. `reveal(page,button)` computed incorrect Panel heights, scrolled to the wrong position, and `mouseClick(button)` missed the `governmentTimelineBuild` button. `timelineBusy` never became true; `tryCompare` passed immediately; `timelineResult` remained empty; `.normalizedCount` was `undefined`.
+
+**Fix:** Added `verify(renderedFrame())` between `reveal(page,button)` and `mouseClick(button)` at tst_navigation.qml:356. `waitForRendering` processes pending timer events including the deferred binding callbacks, ensuring Panel heights are final before the click. Matches the identical pattern used by `test_governmentArtifactControls` at line 328. Assertion unchanged.
+
+#### Defect 2 — ForensicEvidencePage.qml:29 ColumnLayout Polish loop (mr_gui_smoke exit 6)
+
+**Root cause:** The outer `ColumnLayout {anchors.fill:parent}` at ForensicEvidencePage.qml:29 loops because its first direct child (a `Label {wrapMode:Text.WrapAnywhere}`) has no explicit `Layout.minimumHeight`. Qt 6 default-binds `Layout.minimumHeight` to `implicitHeight`. When the ColumnLayout's `rearrange()` sets the Label's width, the Label recomputes word-wrap → `implicitHeight` changes → `Layout.minimumHeight` changes → ColumnLayout is invalidated → `polish()` called recursively. Previous fixes (`implicitHeight:0` on the ColumnLayout, `width:parent.width; height:parent.height`) did not address the Label's default minimum-height binding and therefore did not break the loop. The `Binding{delayed:true}` fix in Panel.qml was unrelated to this synchronous cycle.
+
+**Fix:** Added `Layout.minimumHeight:0` to the Label at ForensicEvidencePage.qml:31. This removes the default binding to `implicitHeight`, so changing the Label's word-wrap height no longer invalidates the parent ColumnLayout during its own rearrange pass. Also removed the ineffective `implicitHeight:0` from the ColumnLayout at line 30 (Qt's internal `setImplicitSize()` overwrites any QML binding on a ColumnLayout's `implicitHeight`).
+
+### Local verification
+- billing 7/7 ✓
+- isolation OK ✓
+- No Qt/CMake toolchain on this host; Windows and Ubuntu GUI acceptance rely on hosted CI.
+
+### Next task
+Await CI results for the pushed SHA. If both defects are resolved: investigate audit-store 135/139 discrepancy (CRITICAL/OPEN release blocker). Do not treat it as fixed without evidence.
+
+---
+
 ## Current state — 2026-11-17
 
 ### Branch
