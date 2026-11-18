@@ -616,7 +616,9 @@ bool LampyreConnection::acceptTasks(const QJsonObject &result,bool collecting){
  for(const auto &value:incoming){
   if(!value.isObject())return fail("invalid-task-response");
   const auto row=value.toObject();const auto name=row.value("tool_name").toString();
-  if(name.isEmpty()||name.size()>256||seen.contains(name))return fail("invalid-task-response");seen.insert(name);
+  if(name.isEmpty()||name.size()>256||seen.contains(name))
+   return fail("invalid-task-response");
+  seen.insert(name);
   if(collecting){bool known=false;for(const auto &v:pendingTasks_){const auto task=v.toObject();if(task.value("tool_name")==name){known=true;if(row.contains("task_id")&&row.value("task_id")!=task.value("task_id"))return fail("invalid-task-response");}}
    if(!known)return fail("invalid-task-response");}
   if(row.value("status")=="running"){

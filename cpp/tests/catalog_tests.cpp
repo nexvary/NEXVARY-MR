@@ -9,7 +9,7 @@ class CatalogTests:public QObject {
 private slots:
  void dataCatalogUpdatesCannotGrantCapabilities(){
   QTemporaryDir t;const auto storage=t.filePath("guides.json"),input=t.filePath("catalog.json");ServiceCatalog c(storage);auto catalog=c.deviceCatalog();
-  QVERIFY(ServiceCatalog::validDeviceCatalog(catalog));QCOMPARE(catalog.value("brands").toStringList().size(),18);QCOMPARE(catalog.value("models").toList().size(),48);
+   QVERIFY(ServiceCatalog::validDeviceCatalog(catalog));QCOMPARE(catalog.value("brands").toStringList().size(),18);QCOMPARE(catalog.value("models").toList().size(),59);
   auto bad=catalog;bad.insert("commands",QVariantList{QStringLiteral("adb shell arbitrary")});QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));
   auto models=catalog.value("models").toList();auto model=models[0].toMap();model["nexvaryValidated"]=true;models[0]=model;bad=catalog;bad["models"]=models;QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));
   model["nexvaryValidated"]=false;model["command"]="erase";models[0]=model;bad["models"]=models;QVERIFY(!ServiceCatalog::validDeviceCatalog(bad));

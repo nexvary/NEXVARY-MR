@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "2026-10-23",
+  "revision": "2026-11-17",
   "brands": [
     "Samsung",
     "Xiaomi / Redmi / POCO",
@@ -508,6 +508,116 @@
       "evidence": "vendor-documentation",
       "sourceUrl": "https://news.samsung.com/us/samsung-unveils-galaxy-s26-series-most-intuitive-galaxy-ai-phone-yet/",
       "requirements": "Official product reference only, checked 2026-10-23. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S25",
+      "chipset": "Qualcomm Snapdragon 8 Elite",
+      "android": "15",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/samsung_galaxy_s25-12756.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S25+",
+      "chipset": "Qualcomm Snapdragon 8 Elite",
+      "android": "15",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/samsung_galaxy_s25+-12757.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S25 Ultra",
+      "chipset": "Qualcomm Snapdragon 8 Elite",
+      "android": "15",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/samsung_galaxy_s25_ultra-12332.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Xiaomi / Redmi / POCO",
+      "model": "Xiaomi 14",
+      "chipset": "Qualcomm Snapdragon 8 Gen 3",
+      "android": "14",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/xiaomi_14-12227.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Xiaomi / Redmi / POCO",
+      "model": "Xiaomi 14 Ultra",
+      "chipset": "Qualcomm Snapdragon 8 Gen 3",
+      "android": "14",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/xiaomi_14_ultra-12478.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Xiaomi / Redmi / POCO",
+      "model": "Redmi Note 13 Pro",
+      "chipset": "Qualcomm Snapdragon 7s Gen 2",
+      "android": "13",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/xiaomi_redmi_note_13_pro-12253.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Oppo",
+      "model": "Find X8",
+      "chipset": "MediaTek Dimensity 9400",
+      "android": "15",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/oppo_find_x8-12749.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Realme",
+      "model": "GT 6",
+      "chipset": "Qualcomm Snapdragon 8s Gen 3",
+      "android": "14",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/realme_gt_6-12558.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Google",
+      "model": "Pixel 9",
+      "chipset": "Google Tensor G4",
+      "android": "14",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://store.google.com/product/pixel_9_specs",
+      "requirements": "Official Google product page, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "Google",
+      "model": "Pixel 9 Pro",
+      "chipset": "Google Tensor G4",
+      "android": "14",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://store.google.com/product/pixel_9_pro_specs",
+      "requirements": "Official Google product page, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
+      "nexvaryValidated": false
+    },
+    {
+      "brand": "OnePlus",
+      "model": "OnePlus 13",
+      "chipset": "Qualcomm Snapdragon 8 Elite",
+      "android": "15",
+      "evidence": "vendor-documentation",
+      "sourceUrl": "https://www.gsmarena.com/oneplus_13-12700.php",
+      "requirements": "GSMArena specifications reference, checked 2026-11-17. Generic authorized ADB diagnostics require live probing. Regional model/build, USB binding, Fastboot/OEM operations and physical acceptance are unverified. This row grants no operation.",
       "nexvaryValidated": false
     }
   ],

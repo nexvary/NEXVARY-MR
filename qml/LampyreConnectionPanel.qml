@@ -138,6 +138,19 @@ ColumnLayout {
   Label {objectName:"intelligencePendingResults";Layout.fillWidth:true;wrapMode:Text.WordWrap;visible:!!panel.connection&&panel.connection.pendingResultCount>0;color:panel.app.design.accent;text:panel.app.trx("البحث قيد المعالجة لدى الخدمة. نجمع نتيجة الطلب نفسه دون إعادة البحث أو خصم جديد.","The service is still processing this search. Collect its existing result without resubmitting or charging again.")}
   OsintDesktopCommand {objectName:"intelligenceCollectResults";visible:!!panel.connection&&panel.connection.pendingResultCount>0;text:panel.app.trx("جلب النتائج الحالية — دون إعادة البحث","Collect existing results — no new search");enabled:!!panel.connection&&!panel.connection.busy;onClicked:panel.connection.collectResults()}
   OsintDesktopCommand {visible:!!panel.connection&&panel.connection.busy;text:panel.app.trx("إيقاف الانتظار","Stop waiting");onClicked:panel.connection.cancel()}
+  RowLayout {Layout.fillWidth:true;visible:(panel.connection&&(panel.connection.findings||[]).length>0)
+   readonly property var findings:panel.connection?(panel.connection.findings||[]):[]
+   readonly property int resultCount:findings.filter(function(f){return f.status==="results"}).length
+   readonly property int emptyCount:findings.filter(function(f){return f.status==="empty"}).length
+   readonly property int failCount:findings.filter(function(f){return f.status==="failed"||f.status==="locked"}).length
+   Label {Layout.fillWidth:true;color:panel.app.design.text;font.bold:true;font.pixelSize:14
+    text:panel.app.trx("نتائج: ","Results: ")
+         +(parent.resultCount>0?(String(parent.resultCount)+panel.app.trx(" مصدر ببيانات"," source(s) with data")+" · "):"​")
+         +(parent.emptyCount>0?(String(parent.emptyCount)+panel.app.trx(" فارغ"," empty")+" · "):"​")
+         +(parent.failCount>0?(String(parent.failCount)+panel.app.trx(" فشل"," failed")):"​")
+   }
+   BusyIndicator {running:!!panel.connection&&panel.connection.busy;visible:running;Layout.preferredWidth:22;Layout.preferredHeight:22}
+  }
   Repeater {model:panel.connection?(panel.connection.findings||[]):[]
    delegate:ColumnLayout {
     required property var modelData
@@ -150,7 +163,7 @@ ColumnLayout {
     }
    }
   }
-  Repeater {model:panel.connection&&!(panel.connection.findings||[]).length?panel.connection.resultItems:[];delegate:EntryArea {required property var modelData;Layout.fillWidth:true;Layout.preferredHeight:Math.min(360,Math.max(90,implicitHeight));readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.WrapAnywhere;text:modelData.text;color:panel.app.design.text;background:Rectangle {color:panel.app.design.surface}}}
+   Repeater {model:panel.connection&&!(panel.connection.findings||[]).length?panel.connection.resultItems:[];delegate:EntryArea {required property var modelData;Layout.fillWidth:true;Layout.preferredHeight:Math.min(360,Math.max(90,contentHeight+topPadding+bottomPadding));readOnly:true;selectByMouse:true;textFormat:TextEdit.PlainText;wrapMode:TextEdit.WrapAnywhere;text:modelData.text;color:panel.app.design.text;background:Rectangle {color:panel.app.design.surface}}}
   ComboBox {id:caseDevice;Layout.fillWidth:true;model:lawCaseBridge.devices;textRole:"model";visible:lawCaseBridge.activeCase.id!==undefined}
   NeonCheckBox {id:attachConsent;Layout.fillWidth:true;text:panel.app.trx("أوافق على إرفاق النتيجة كدليل غير متحقق منه بالقضية الأصلية","Attach result as unverified evidence to its original case")}
   OsintDesktopCommand {objectName:"lampyreAttachResult";text:panel.app.trx("إرفاق النتيجة بالقضية","Attach result to case");enabled:attachConsent.checked&&caseDevice.currentIndex>=0;onClicked:{const device=lawCaseBridge.devices[caseDevice.currentIndex]||({});const id=panel.connection.attachResult(device.id||"",attachConsent.checked);attachConsent.checked=false;panel.exportMessage=id!==""?panel.app.trx("أُرفقت النتيجة مع سجل تدقيق؛ محتواها غير متحقق منه","Result attached with an audit record; contents remain unverified"):panel.message(panel.connection.errorCode)}}

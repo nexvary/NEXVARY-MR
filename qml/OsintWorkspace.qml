@@ -9,7 +9,7 @@ ColumnLayout {
  property bool demoMode: false
  property bool showAdvanced: false
  property bool showPhoneSearch: false
- property bool showLocalTools:false
+  property bool showLocalTools:true
  property int activeTab: 1
  property bool showInspector: true
  property bool showRequests: true
@@ -160,7 +160,7 @@ ColumnLayout {
   }
  }
 
- OsintDesktopCommand {text:workspace.app.trx("أدوات محلية وإعدادات متقدمة","Local tools and advanced settings");onClicked:workspace.showLocalTools=!workspace.showLocalTools}
+  OsintDesktopCommand {text:workspace.showLocalTools?workspace.app.trx("إخفاء خدمات الاستخبارات","Hide intelligence services"):workspace.app.trx("عرض خدمات الاستخبارات","Show intelligence services");onClicked:workspace.showLocalTools=!workspace.showLocalTools}
  GridLayout {
   visible:workspace.showLocalTools
   Layout.fillWidth: true
@@ -182,14 +182,16 @@ ColumnLayout {
          : workspace.app.trx("افتح قضية لحفظ التقرير أو استخدم البحث المباشر", "Open a case to retain evidence or use direct search")
     },
     {
-     title: workspace.app.trx("البحث المدفوع", "Billable search"),
-     description: workspace.app.trx("تظهر الخدمات المدفوعة بعد التحقق من إتاحتها.",
-                                    "Billable services appear when their availability can be verified."),
-     input: workspace.app.trx("نوع الإدخال يحدده دليل الخدمات", "Input type is defined by the service catalog"),
-     price: workspace.app.trx("سعر نيكسفاري: €14.00 لكل عملية بحث", "NEXVARY price: €14.00 per search"),
+     title: workspace.app.trx("البحث الموحد عبر نيكسفاري", "NEXVARY unified search"),
+     description: workspace.app.trx("ابحث بالبريد الإلكتروني أو الهاتف أو اسم المستخدم عبر المصادر المتاحة. يُظهر سعر €14.00 قبل التنفيذ.",
+                                    "Search by email, phone or username across available sources. The €14.00 price is shown before execution."),
+     input: workspace.app.trx("الإدخال: بريد إلكتروني، هاتف دولي، أو اسم مستخدم", "Input: email, international phone, or username"),
+     price: workspace.app.trx("سعر نيكسفاري الموحد: €14.00 لكل عملية بحث", "NEXVARY fixed price: €14.00 per search"),
      icon: "search_visual",
-     status: workspace.intelligenceConnection&&workspace.intelligenceConnection.connected
-         ? workspace.app.trx("الأدوات متاحة؛ تطبّق الموافقات عند التنفيذ", "Tools available; execution approvals still apply")
+     status: workspace.intelligenceConnection&&workspace.intelligenceConnection.lookupConnected
+         ? workspace.app.trx("البحث الموحد متحقق — اختر فئة لبدء البحث", "Unified search verified — choose a category to start")
+         : workspace.intelligenceConnection&&workspace.intelligenceConnection.connected
+         ? workspace.app.trx("خدمات متخصصة متاحة؛ البحث الموحد غير متحقق", "Specialized services available; unified search not verified")
          : workspace.app.trx("يلزم إعداد اتصال الاستخبارات", "Intelligence connection setup required")
     }
    ]
@@ -198,6 +200,7 @@ ColumnLayout {
     required property int index
     required property var modelData
     readonly property bool phoneService: index === 0
+    readonly property bool cardActive: phoneService ? workspace.caseReady : workspace.intelligenceConnection && workspace.intelligenceConnection.lookupConnected
     objectName: phoneService ? "intelligencePhoneCard" : "intelligenceBillingCard"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -206,8 +209,9 @@ ColumnLayout {
     padding: 16
     background: Rectangle {
      radius: 8
-     color: desktopTokens.surface
-     border.color: searchAction.hovered || searchAction.activeFocus ? desktopTokens.accent : desktopTokens.border
+     color: desktopTokens.raised
+     border.color: serviceCard.cardActive ? desktopTokens.accent : desktopTokens.border
+     border.width: 1
     }
     contentItem: ColumnLayout {
      spacing: 8
@@ -215,37 +219,38 @@ ColumnLayout {
       Layout.fillWidth: true
       SemanticIcon {
        iconSource: "qrc:/assets/icons-professional/" + serviceCard.modelData.icon + ".svg"
-       Layout.preferredWidth: 32
-       Layout.preferredHeight: 32
+       Layout.preferredWidth: 26
+       Layout.preferredHeight: 26
       }
       Label {
        Layout.fillWidth: true
        wrapMode: Text.WordWrap
        color: desktopTokens.text
        font.bold: true
-       font.pixelSize:16
+       font.pixelSize: 15
        text: serviceCard.modelData.title
       }
      }
-     Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.muted; text: serviceCard.modelData.description }
-     Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.muted; text: serviceCard.modelData.input }
-     Item { Layout.fillHeight: true }
+     Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.muted; font.pixelSize: 13; text: serviceCard.modelData.description }
+     Label { Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.muted; font.pixelSize: 12; text: serviceCard.modelData.input }
+     Item { Layout.fillHeight: true; Layout.minimumHeight: 4 }
      Label {
       objectName: serviceCard.phoneService ? "intelligenceLocalPrice" : "intelligenceDefaultPrice"
-      Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.text; font.bold: true
+      Layout.fillWidth: true; wrapMode: Text.WordWrap; color: desktopTokens.accent; font.bold: true; font.pixelSize: 13
       text: serviceCard.modelData.price
      }
      Label {
       Layout.fillWidth: true
       wrapMode: Text.WordWrap
-      color: serviceCard.phoneService && workspace.caseReady ? desktopTokens.success : desktopTokens.danger
+      font.pixelSize: 12
+      color: serviceCard.cardActive ? desktopTokens.success : desktopTokens.muted
       text: serviceCard.modelData.status
      }
-     OsintDesktopCommand {
-      id: searchAction
-      objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
-      primary: serviceCard.phoneService
-      enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !workspace.administrator
+      OsintDesktopCommand {
+       id: searchAction
+       objectName: serviceCard.phoneService ? "intelligenceOpenPhoneSearch" : "intelligenceStartPaidSearch"
+       primary: serviceCard.cardActive
+       enabled: serviceCard.phoneService ? workspace.caseReady : workspace.intelligenceOperator && !workspace.administrator
       text: serviceCard.phoneService && workspace.showPhoneSearch
           ? workspace.app.trx("إغلاق نموذج البحث", "Close search form")
           : workspace.app.trx("بدء البحث", "Start search")

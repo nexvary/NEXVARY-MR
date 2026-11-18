@@ -38,7 +38,7 @@ TestCase {
   function runService(name,args,price,consent){if(consent)runs++;return consent}
  }
  Component {id:component;MR.IntelligenceSearchCards {width:960;app:style;connection:engine}}
- function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
+ function init(){engine.connected=true;engine.lookupConnected=true;engine.lookupRuns=0;engine.pendingResultCount=0;engine.busy=false;engine.retailPriceEur=14;engine.invoices=[];engine.runs=0;engine.selectedCategory="";engine.services=[];style.ar=false}
  function test_allCardsDisplayRetailPriceInBothLanguages(){
   const pane=createTemporaryObject(component,test);verify(pane);compare(pane.shownCategories.length,54)
   for(const ar of [false,true]){
@@ -57,6 +57,16 @@ TestCase {
   findChild(pane,"intelligenceCategory-phone").clicked();const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
   verify(findChild(dialog.contentItem,"intelligenceArgument-phone"));verify(!findChild(dialog.contentItem,"intelligenceExecuteService").enabled);compare(engine.runs,0)
  }
+ function test_pendingRequestBlocksNewSearchUntilCleared(){
+  const pane=createTemporaryObject(component,test);verify(pane)
+  findChild(pane,"intelligenceCategory-email").clicked()
+  const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+  const consent=findChild(dialog.contentItem,"intelligenceServiceConsent")
+  const execute=findChild(dialog.contentItem,"intelligenceExecuteService")
+  consent.checked=true;engine.pendingResultCount=1;verify(!execute.enabled)
+  engine.pendingResultCount=0;verify(execute.enabled)
+  dialog.close();tryCompare(dialog,"opened",false)
+ }
  function test_primaryCardsUseUnifiedSearch(){
   const pane=createTemporaryObject(component,test);verify(pane)
   for(const kind of ["phone","email","username"]){
@@ -66,14 +76,73 @@ TestCase {
   }
   compare(engine.lookupRuns,3);compare(engine.runs,0)
  }
- function test_openingCardDoesNotExecuteSearch(){
-  const pane=createTemporaryObject(component,test);verify(pane)
-  findChild(pane,"intelligenceCategory-email").clicked();const specialized=findChild(findChild(pane,"intelligenceServiceDialog").contentItem,"intelligenceSpecializedMode");specialized.checked=true;specialized.toggled();compare(engine.selectedCategory,"email");compare(engine.runs,0);tryCompare(findChild(pane,"intelligenceServiceDialog"),"opened",true)
-  const content=findChild(pane,"intelligenceServiceDialog").contentItem
-  const primary=findChild(content,"intelligenceArgument-email");verify(primary);primary.text="research@example.invalid";primary.textEdited();
-  const selector=findChild(content,"intelligenceServiceSelector");verify(selector);selector.activated(0);compare(pane.values.email,"research@example.invalid");compare(pane.selectedService,"fixture_lookup");compare(pane.fields.length,1)
-  const input=findChild(content,"intelligenceArgument-email");verify(input);input.text="research@example.invalid";input.textEdited()
-  const execute=findChild(content,"intelligenceExecuteService");verify(!execute.enabled)
-  const consent=findChild(content,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);execute.clicked();compare(engine.runs,1);verify(!consent.checked)
- }
+  function test_openingCardDoesNotExecuteSearch(){
+   const pane=createTemporaryObject(component,test);verify(pane)
+   findChild(pane,"intelligenceCategory-email").clicked();const specialized=findChild(findChild(pane,"intelligenceServiceDialog").contentItem,"intelligenceSpecializedMode");specialized.checked=true;specialized.toggled();compare(engine.selectedCategory,"email");compare(engine.runs,0);tryCompare(findChild(pane,"intelligenceServiceDialog"),"opened",true)
+   const content=findChild(pane,"intelligenceServiceDialog").contentItem
+   const primary=findChild(content,"intelligenceArgument-email");verify(primary);primary.text="research@example.invalid";primary.textEdited();
+   const selector=findChild(content,"intelligenceServiceSelector");verify(selector);selector.activated(0);compare(pane.values.email,"research@example.invalid");compare(pane.selectedService,"fixture_lookup");compare(pane.fields.length,1)
+   const input=findChild(content,"intelligenceArgument-email");verify(input);input.text="research@example.invalid";input.textEdited()
+   const execute=findChild(content,"intelligenceExecuteService");verify(!execute.enabled)
+   const consent=findChild(content,"intelligenceServiceConsent");consent.checked=true;verify(execute.enabled);execute.clicked();compare(engine.runs,1);verify(!consent.checked)
+  }
+  function test_priceBannerAlwaysVisibleAndCorrect(){
+   const pane=createTemporaryObject(component,test);verify(pane)
+   const banner=findChild(pane,"intelligencePriceBanner");verify(banner);verify(banner.visible)
+   const label=findChild(pane,"intelligenceRetailPrice");verify(label);verify(label.text.includes("€14.00"))
+   for(const ar of [false,true]){style.ar=ar;wait(1);verify(findChild(pane,"intelligencePriceBanner").visible)}
+   compare(engine.runs,0)
+  }
+  function test_retailPriceReflectsConnectionPrice(){
+   engine.retailPriceEur=14;const pane=createTemporaryObject(component,test);verify(pane)
+   compare(pane.retailPrice,"€14.00")
+   const label=findChild(pane,"intelligenceRetailPrice");verify(label.text.includes("€14.00"))
+   compare(engine.runs,0)
+  }
+  function test_invalidPhoneFormatShowsValidationError(){
+   const pane=createTemporaryObject(component,test);verify(pane)
+   findChild(pane,"intelligenceCategory-phone").clicked()
+   const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+   const content=dialog.contentItem
+   const input=findChild(content,"intelligenceArgument-phone");verify(input)
+   input.text="0501234567";input.textEdited()
+   const consent=findChild(content,"intelligenceServiceConsent");consent.checked=true
+   const execute=findChild(content,"intelligenceExecuteService");execute.clicked()
+   compare(engine.lookupRuns,0)
+   verify(pane.validationError.length>0)
+   verify(!consent.checked)
+  }
+  function test_categoryFilterNarrowsGrid(){
+   const pane=createTemporaryObject(component,test);verify(pane)
+   const full=pane.shownCategories.length;verify(full>=50)
+   const filter=findChild(pane,"intelligenceCategoryFilter");verify(filter)
+   filter.text="Email";filter.textEdited()
+   wait(1)
+   verify(pane.shownCategories.length<full)
+   verify(pane.shownCategories.some(function(r){return r.name==="email"}))
+   filter.text="";filter.textEdited()
+   wait(1)
+   compare(pane.shownCategories.length,full)
+   compare(engine.runs,0)
+  }
+  function test_consentCheckboxFoundInDialogAndClearsOnClose(){
+    const pane=createTemporaryObject(component,test);verify(pane)
+    findChild(pane,"intelligenceCategory-email").clicked()
+    const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+    const consent=findChild(dialog.contentItem,"intelligenceServiceConsent");verify(consent)
+    consent.checked=true;verify(consent.checked)
+    dialog.close();tryCompare(dialog,"opened",false)
+    verify(!consent.checked)
+    compare(engine.runs,0)
+   }
+   function test_pendingResultBannerVisibleAndOpensDialog(){
+    engine.pendingResultCount=0;const pane=createTemporaryObject(component,test);verify(pane)
+    const banner=findChild(pane,"intelligenceResumeBanner");verify(banner)
+    verify(!banner.visible)
+    engine.pendingResultCount=1;wait(1)
+    verify(banner.visible)
+    const btn=findChild(pane,"intelligenceResumeLookup");verify(btn);btn.clicked()
+    const dialog=findChild(pane,"intelligenceServiceDialog");tryCompare(dialog,"opened",true)
+    dialog.close();compare(engine.runs,0)
+   }
 }

@@ -26,17 +26,17 @@ Item {
  }
  function showEvidence(id){kind.currentIndex=0;search.text="";page.selectedId=id}
  function notify(ok){app.notice(ok,app.trx("اكتملت العملية","Operation completed"),recoveryBridge.error)}
- ColumnLayout {
-  anchors.fill:parent;spacing:10
-  Label {text:recoveryBridge.active?recoveryBridge.caseTitle+" · "+recoveryBridge.caseId:app.trx("أنشئ أو افتح قضية من تبويب القضايا","Create or open a case in the Cases tab");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WrapAnywhere;textFormat:Text.PlainText;color:app.tone("#8ac7f5");font.bold:true}
+  ColumnLayout {
+   anchors.fill:parent;spacing:10
+  Label {text:recoveryBridge.active?recoveryBridge.caseTitle+" · "+recoveryBridge.caseId:app.trx("أنشئ أو افتح قضية من تبويب القضايا","Create or open a case in the Cases tab");Layout.fillWidth:true;Layout.minimumWidth:0;Layout.minimumHeight:0;elide:Text.ElideRight;textFormat:Text.PlainText;color:app.tone("#8ac7f5");font.bold:true}
   RowLayout {
    Layout.fillWidth:true;Layout.minimumWidth:0
    EntryField {id:search;objectName:"forensicSearch";placeholderText:app.trx("بحث بالاسم أو المعرّف أو البصمة","Search name, ID or SHA256");Layout.fillWidth:true;Layout.minimumWidth:0}
    NeonComboBox {id:kind;objectName:"forensicKind";model:[app.trx("كل الأنواع","All types"),"logical-copy","carved-candidate","agent-metadata","external-analysis","native-analysis"];Layout.preferredWidth:180}
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
-  RowLayout {
-   Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;spacing:10
+   RowLayout {
+    Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;spacing:10
    ListView {
     id:files;objectName:"forensicEvidenceList";Layout.preferredWidth:Math.max(220,page.width*0.38);Layout.fillHeight:true;clip:true;spacing:8;model:page.filteredEvidence
     ScrollBar.vertical:ScrollBar {}
