@@ -1,0 +1,51 @@
+name: Claude Bedrock development
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: Authorized bounded development task
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: nexvary-claude-development
+  cancel-in-progress: false
+jobs:
+  develop:
+    if: github.repository == 'nexvary/NEXVARY-MR' && github.actor == 'nexvary' && github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Check deployment configuration
+        env:
+          ROLE: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN }}
+        run: |
+          test -n "$ROLE" || { echo "::error::Dedicated OIDC IAM role is not configured"; exit 1; }
+      - uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c
+        with:
+          role-to-assume: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN }}
+          aws-region: eu-central-1
+          role-duration-seconds: 900
+          allowed-account-ids: '716997672148'
+      - name: Verify temporary AWS identity
+        run: aws sts get-caller-identity --query Account --output text
+      - uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          use_bedrock: 'true'
+          prompt: |
+            Work only on a new feature branch from the checked-out integration baseline.
+            Never merge, push main, change workflows/IAM, reveal secrets, or invoke paid external services.
+            Read AGENTS.md. Preserve existing work. Report tests and blockers honestly.
+            Owner task:
+            ${{ inputs.task }}
+          claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 12 --max-budget-usd 0.25'
