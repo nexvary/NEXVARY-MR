@@ -37,7 +37,7 @@ jobs:
     if: >
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
-      startsWith(github.ref, 'refs/heads/integration/claude-bedrock-cloud-')
+      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -126,8 +126,8 @@ jobs:
       # ── 6. Python test environment ───────────────────────────────────────
       - name: Set up Python test environment
         run: |
-          pip install --quiet pytest 2>/dev/null || true
-          python3 -m pytest tests/ -q --collect-only 2>&1 | tail -5 || true
+          python3 -m pip install --quiet pytest
+          python3 -m pytest tests/ -q --collect-only > "$RUNNER_TEMP/pytest-collection.txt" 2>&1 || { cat "$RUNNER_TEMP/pytest-collection.txt"; exit 1; }
 
       # ── 7. Claude implements the task ─────────────────────────────────────
       - name: Claude implements authorized task
@@ -212,7 +212,7 @@ jobs:
           for p in paths:
               print("  ", p)
           PY
-          git diff --check || echo "::warning::Whitespace issues in diff"
+          git diff --check
           python3 - <<'PY'
           import subprocess
           from pathlib import Path
@@ -230,7 +230,7 @@ jobs:
         id: run_tests
         run: |
           cd tests
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt" || true
+          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt"
           EXIT=${PIPESTATUS[0]}
           if [ "$EXIT" -eq 0 ]; then
             echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
@@ -278,7 +278,7 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
         run: |
           cd tests
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt" || true
+          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt"
           EXIT=${PIPESTATUS[0]}
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 1" || \
@@ -327,7 +327,7 @@ jobs:
           (inputs.max_repair_attempts == '2' || inputs.max_repair_attempts == '3')
         run: |
           cd tests
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt" || true
+          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt"
           EXIT=${PIPESTATUS[0]}
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 2" || \
@@ -368,9 +368,25 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts == '3'
         run: |
           cd tests
-          python3 -m pytest --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt" || true
+          python3 -m pytest --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt"
           EXIT=${PIPESTATUS[0]}
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
+
+      - name: Final validation after repair attempts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          status = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=all"], text=True).splitlines()
+          paths = [line[3:].strip() for line in status]
+          forbidden = (".github/", ".git/", "secrets/", "credentials/")
+          for p in paths:
+              assert p not in {"AGENTS.md", ".env", "packaging/NEXVARY-MR.iss"}
+              assert not any(p.startswith(prefix) for prefix in forbidden), f"Protected file modified: {p}"
+          assert len(paths) <= 25, "Too many changed files"
+          print("Final validated file count:", len(paths))
+          PY
+          git diff --check
 
       # ── 13. Commit and push ───────────────────────────────────────────────
       - name: Commit and push development branch
