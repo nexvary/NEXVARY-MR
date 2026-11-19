@@ -60,6 +60,10 @@ jobs:
       - name: Validate exact file scope
         shell: bash
         run: |
+          echo 'Changed files:'
+          git status --short --untracked-files=all
+          echo 'Document details:'
+          ls -l docs/CLAUDE_CLOUD_PILOT.md || true
           test -s docs/CLAUDE_CLOUD_PILOT.md
           test "$(git status --porcelain --untracked-files=all | wc -l)" -eq 1
           test "$(git status --porcelain --untracked-files=all | sed 's/^...//')" = 'docs/CLAUDE_CLOUD_PILOT.md'
