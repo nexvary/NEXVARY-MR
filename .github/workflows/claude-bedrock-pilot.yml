@@ -49,13 +49,22 @@ jobs:
         shell: bash
         run: |
           npm install --prefix "$RUNNER_TEMP/claude-cli" @anthropic-ai/claude-code@2.1.328 --no-audit --no-fund
-          "$RUNNER_TEMP/claude-cli/node_modules/.bin/claude" -p 'Create docs/CLAUDE_CLOUD_PILOT.md containing a short factual note that this is an isolated cloud development pilot and that it does not prove production release readiness. Do not edit any other file. Do not run shell commands. Do not commit or push.' --model eu.anthropic.claude-sonnet-4-6 --max-turns 5 --allowedTools 'Write(docs/CLAUDE_CLOUD_PILOT.md)' --no-session-persistence --output-format json > "$RUNNER_TEMP/pilot-result.json"
+          "$RUNNER_TEMP/claude-cli/node_modules/.bin/claude" -p 'Write a short Markdown document for docs/CLAUDE_CLOUD_PILOT.md stating that this is an isolated cloud development pilot and does not prove production release readiness. Return ONLY the Markdown document text. Do not use tools, edit files, or run commands.' --model eu.anthropic.claude-sonnet-4-6 --max-turns 5 --tools '' --no-session-persistence --output-format json > "$RUNNER_TEMP/pilot-result.json"
           python3 - <<'PY'
           import json, os
           p=os.path.join(os.environ["RUNNER_TEMP"],"pilot-result.json")
           data=json.load(open(p))
           assert data.get("type")=="result" and not data.get("is_error"), "Claude execution failed"
+          from pathlib import Path
+          content = data.get("result", "")
+          assert isinstance(content, str) and len(content.strip()) >= 40, "Claude did not return usable document text"
+          assert "pilot" in content.lower(), "Claude response does not describe the pilot"
+          target = Path("docs/CLAUDE_CLOUD_PILOT.md")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          assert not target.exists(), "Pilot document already exists; refusing overwrite"
+          target.write_text(content.rstrip() + "\\n", encoding="utf-8")
           print("Claude completed; reported turns:",data.get("num_turns"))
+          print("Wrote Claude-authored document bytes:",target.stat().st_size)
           PY
       - name: Validate exact file scope
         shell: bash
