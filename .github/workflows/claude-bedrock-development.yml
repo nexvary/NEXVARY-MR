@@ -71,7 +71,8 @@ jobs:
           print("Verified assumed role:", identity["Arn"])
           PY
       - name: Minimal Sonnet 4.6 smoke test
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'smoke' && github.run_attempt == 1
+        id: smoke
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'smoke' || github.event_name == 'push' && contains(github.event.head_commit.message, '[bedrock-smoke]')) && github.run_attempt == 1
         uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -80,6 +81,30 @@ jobs:
           classify_inline_comments: 'false'
           prompt: 'Reply exactly NEXVARY_BEDROCK_OK. Do not call tools, read files, edit files, run commands, create branches or post comments.'
           claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 1 --tools ""'
+      - name: Verify smoke response and record estimated usage
+        if: steps.smoke.outcome == 'success'
+        env:
+          EXECUTION_FILE: ${{ steps.smoke.outputs.execution_file }}
+        run: |
+          python3 - <<'PY'
+          import os, json
+          with open(os.environ["EXECUTION_FILE"]) as f:
+              raw = f.read()
+          try:
+              data = json.loads(raw)
+              events = data if isinstance(data, list) else [data]
+          except json.JSONDecodeError:
+              events = [json.loads(line) for line in raw.splitlines() if line.strip()]
+          results = [event for event in events if event.get("type") == "result"]
+          assert results, "No Claude result event"
+          result = results[-1]
+          assert not result.get("is_error"), "Claude returned an error"
+          assert "NEXVARY_BEDROCK_OK" in result.get("result", ""), "Expected smoke response missing"
+          print(json.dumps({key: result.get(key) for key in ["result", "usage", "total_cost_usd", "num_turns", "modelUsage"]}))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write("Verified Claude response: NEXVARY_BEDROCK_OK\\n\\n")
+              f.write("SDK estimated cost USD: " + str(result.get("total_cost_usd", "not reported")) + "\\n")
+          PY
       - name: Authorized development
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'develop' && inputs.task != ''
         uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
