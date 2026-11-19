@@ -296,6 +296,7 @@ jobs:
         run: |
           TFILE="$RUNNER_TEMP/test-output-r1.txt"
           [ -f "$TFILE" ] || TFILE="$RUNNER_TEMP/test-output.txt"
+          export TFILE
           python3 - <<'PY'
           import os
           from pathlib import Path
@@ -319,8 +320,6 @@ jobs:
             --no-session-persistence \
             --output-format json \
             > "$RUNNER_TEMP/repair-2-result.json" 2>&1 || true
-        env:
-          TFILE: ${{ runner.temp }}/test-output-r1.txt
 
       - name: Re-run tests after repair 2
         if: >
