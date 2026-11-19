@@ -1,10 +1,18 @@
 name: Claude Bedrock development
 on:
+  push:
+    branches: ['integration/claude-bedrock-cloud-20261119']
+    paths: ['.github/workflows/claude-bedrock-development.yml']
   workflow_dispatch:
     inputs:
+      mode:
+        description: Authentication only, minimal smoke test, or authorized development
+        type: choice
+        default: auth
+        options: [auth, smoke, develop]
       task:
         description: Authorized bounded development task
-        required: true
+        required: false
         type: string
 permissions:
   contents: read
@@ -14,6 +22,8 @@ concurrency:
 jobs:
   develop:
     if: github.repository == 'nexvary/NEXVARY-MR' && github.actor == 'nexvary' && github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119'
+    env:
+      AWS_REGION: eu-central-1
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -27,18 +37,40 @@ jobs:
           persist-credentials: false
       - name: Check deployment configuration
         env:
-          ROLE: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN }}
+          ROLE: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN || 'arn:aws:iam::716997672148:role/nexvary-github-bedrock-development' }}
         run: |
           test -n "$ROLE" || { echo "::error::Dedicated OIDC IAM role is not configured"; exit 1; }
       - uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c
         with:
-          role-to-assume: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN }}
+          role-to-assume: ${{ vars.NEXVARY_BEDROCK_ROLE_ARN || 'arn:aws:iam::716997672148:role/nexvary-github-bedrock-development' }}
           aws-region: eu-central-1
           role-duration-seconds: 900
           allowed-account-ids: '716997672148'
       - name: Verify temporary AWS identity
-        run: aws sts get-caller-identity --query Account --output text
-      - uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
+        run: |
+          aws sts get-caller-identity --output json > "$RUNNER_TEMP/aws-identity.json"
+          python3 - <<'PY'
+          import json, os
+          with open(os.environ["RUNNER_TEMP"] + "/aws-identity.json") as f:
+              identity = json.load(f)
+          assert identity["Account"] == "716997672148", "Unexpected AWS account"
+          assert ":assumed-role/nexvary-github-bedrock-development/" in identity["Arn"], "Unexpected IAM role"
+          print("Verified AWS account:", identity["Account"])
+          print("Verified assumed role:", identity["Arn"])
+          PY
+      - name: Minimal Sonnet 4.6 smoke test
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'smoke' && github.run_attempt == 1
+        uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          use_bedrock: 'true'
+          allow_fork_prs: 'false'
+          classify_inline_comments: 'false'
+          prompt: 'Reply exactly NEXVARY_BEDROCK_OK. Do not call tools, read files, edit files, run commands, create branches or post comments.'
+          claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 1 --tools ""'
+      - name: Authorized development
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'develop' && inputs.task != ''
+        uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           use_bedrock: 'true'
