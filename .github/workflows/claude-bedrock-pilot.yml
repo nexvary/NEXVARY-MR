@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   pilot:
-    if: github.repository == 'nexvary/NEXVARY-MR' && github.actor == 'nexvary'
+    if: github.repository == 'nexvary/NEXVARY-MR' && github.actor == 'nexvary' && github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
