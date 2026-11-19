@@ -230,8 +230,10 @@ jobs:
         id: run_tests
         run: |
           cd tests
+          set +e
           python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt"
           EXIT=${PIPESTATUS[0]}
+          set -e
           if [ "$EXIT" -eq 0 ]; then
             echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
             echo "::notice::Python tests PASSED"
@@ -278,8 +280,10 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
         run: |
           cd tests
+          set +e
           python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt"
           EXIT=${PIPESTATUS[0]}
+          set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 1" || \
             echo "::warning::Tests still failing after repair 1"
@@ -327,8 +331,10 @@ jobs:
           (inputs.max_repair_attempts == '2' || inputs.max_repair_attempts == '3')
         run: |
           cd tests
+          set +e
           python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt"
           EXIT=${PIPESTATUS[0]}
+          set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 2" || \
             echo "::warning::Tests still failing after repair 2"
@@ -368,8 +374,10 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts == '3'
         run: |
           cd tests
+          set +e
           python3 -m pytest --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt"
           EXIT=${PIPESTATUS[0]}
+          set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
 
       - name: Final validation after repair attempts
