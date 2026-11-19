@@ -62,7 +62,7 @@ jobs:
           target = Path("docs/CLAUDE_CLOUD_PILOT.md")
           target.parent.mkdir(parents=True, exist_ok=True)
           assert not target.exists(), "Pilot document already exists; refusing overwrite"
-          target.write_text(content.rstrip() + "\\n", encoding="utf-8")
+          target.write_text(content.rstrip() + "\n", encoding="utf-8")
           print("Claude completed; reported turns:",data.get("num_turns"))
           print("Wrote Claude-authored document bytes:",target.stat().st_size)
           PY
