@@ -48,4 +48,4 @@ jobs:
             Read AGENTS.md. Preserve existing work. Report tests and blockers honestly.
             Owner task:
             ${{ inputs.task }}
-          claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 12 --max-budget-usd 0.25'
+          claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 12'
