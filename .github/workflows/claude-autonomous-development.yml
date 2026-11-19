@@ -557,26 +557,26 @@ jobs:
               if Path(rt, "claude-usage.json").exists() else {}
 
           content = f"""# Claude Autonomous Development — Run {run_id}
-
-| Metric | Value |
-|--------|-------|
-| Branch | `{branch}` |
-| Commit | `{sha}` |
-| Draft PR | {pr_url} |
-| Python Tests | {test_badge} |
-| Est. Cost | {usage.get('total_cost_usd', 'N/A')} USD |
-| Claude Turns | {usage.get('num_turns', 'N/A')} |
-
-## Claude Summary
-
-{summary_txt}
-
-## Limitations
-
-- Python tests only; Windows Qt/CTest requires separate CI run on this branch
-- No hardware-dependent tests
-- No automatic merge — human review required
-"""
+          
+          | Metric | Value |
+          |--------|-------|
+          | Branch | `{branch}` |
+          | Commit | `{sha}` |
+          | Draft PR | {pr_url} |
+          | Python Tests | {test_badge} |
+          | Est. Cost | {usage.get('total_cost_usd', 'N/A')} USD |
+          | Claude Turns | {usage.get('num_turns', 'N/A')} |
+          
+          ## Claude Summary
+          
+          {summary_txt}
+          
+          ## Limitations
+          
+          - Python tests only; Windows Qt/CTest requires separate CI run on this branch
+          - No hardware-dependent tests
+          - No automatic merge — human review required
+          """
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
               f.write(content)
           PY
