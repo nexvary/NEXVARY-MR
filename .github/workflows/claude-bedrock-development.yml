@@ -73,14 +73,17 @@ jobs:
       - name: Minimal Sonnet 4.6 smoke test
         id: smoke
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'smoke' || github.event_name == 'push' && contains(github.event.head_commit.message, '[bedrock-smoke]')) && github.run_attempt == 1
-        uses: anthropics/claude-code-action@5f6f4f420751e8ae8a3261e5d4c7cd49134c04f6
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          use_bedrock: 'true'
-          allow_fork_prs: 'false'
-          classify_inline_comments: 'false'
-          prompt: 'Reply exactly NEXVARY_BEDROCK_OK. Do not call tools, read files, edit files, run commands, create branches or post comments.'
-          claude_args: '--model eu.anthropic.claude-sonnet-4-6 --max-turns 1 --tools ""'
+        env:
+          CLAUDE_CODE_USE_BEDROCK: '1'
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
+          DISABLE_AUTOUPDATER: '1'
+        run: |
+          npm install --prefix "$RUNNER_TEMP/claude-cli" @anthropic-ai/claude-code@2.1.328 --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/bedrock-smoke"
+          cd "$RUNNER_TEMP/bedrock-smoke"
+          "$RUNNER_TEMP/claude-cli/node_modules/.bin/claude" --version
+          "$RUNNER_TEMP/claude-cli/node_modules/.bin/claude" -p 'Reply exactly NEXVARY_BEDROCK_OK.' --model eu.anthropic.claude-sonnet-4-6 --max-turns 1 --tools "" --safe-mode --restricted --no-session-persistence --system-prompt 'Return only the requested verification text.' --output-format json > "$RUNNER_TEMP/claude-smoke.json"
+          echo "execution_file=$RUNNER_TEMP/claude-smoke.json" >> "$GITHUB_OUTPUT"
       - name: Verify smoke response and record estimated usage
         if: steps.smoke.outcome == 'success'
         env:
