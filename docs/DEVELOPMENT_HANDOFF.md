@@ -1,5 +1,45 @@
 # NEXVARY-MR Development Handoff
 
+## Autonomous Claude Code cloud development system — 2026-11-19
+
+### Branch
+`integration/claude-bedrock-cloud-20261119-autonomous`
+Base: `2eab038` (integration/claude-bedrock-cloud-20261119)
+PR: Draft (pending push)
+
+### What was added
+- `.github/workflows/claude-autonomous-development.yml` — Full autonomous development workflow:
+  `workflow_dispatch` → AWS OIDC → Claude Code (Read/Glob/Grep/Edit/Write, max 15 turns) →
+  Python tests → bounded repair loop (0–3 attempts, 8 turns each) → commit → Draft PR on main
+- `docs/AUTONOMOUS_DEVELOPMENT.md` — Operating instructions, security model, cost estimates,
+  trigger examples (UI / `gh` CLI / curl API)
+
+### Infrastructure reused (not modified)
+- AWS OIDC role `nexvary-github-bedrock-development` (account 716997672148, eu-central-1)
+- Repository variable `NEXVARY_BEDROCK_ROLE_ARN`
+- Verified runs: STS `44477057278`, Claude `44477689443`; pilot branch `claude/pilot-44545876225`
+
+### Security constraints preserved
+- Owner-only trigger (`github.actor == 'nexvary'`)
+- Branch prefix check (`integration/claude-bedrock-cloud-*`) matches OIDC trust policy
+- Task text treated as untrusted (injection patterns rejected)
+- No `.github/`, `AGENTS.md`, or credentials modification allowed
+- No automatic merge; concurrency group limits to one execution at a time
+
+### Not verified in this branch
+- End-to-end `workflow_dispatch` → actual code change → Draft PR (requires GitHub Actions run)
+- Windows/Qt build (cpp-qt.yml must be triggered manually on the resulting PR branch)
+- Physical device tests
+
+### Next task
+Trigger `claude-autonomous-development.yml` via GitHub UI or API with a small test task
+(e.g. "Add a docstring to tests/test_core.py explaining the test suite scope").
+Verify: branch created, Python tests pass, Draft PR appears with real commit SHA.
+If successful: document the run URL in this file and proceed to investigate the
+audit-store 135/139 discrepancy (CRITICAL/OPEN release blocker).
+
+---
+
 ## CI repair correction — 2026-11-18 (run 44209842377, SHA 51e2c9b)
 
 ### What was wrong with 51e2c9b
