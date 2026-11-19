@@ -1,0 +1,23 @@
+name: Claude Autonomous Development
+# Default-branch registration only. This copy never executes paid model calls.
+# Dispatch the complete workflow from the approved integration branch.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: Authorized natural-language development task (10-2000 chars)
+        required: true
+        type: string
+      max_repair_attempts:
+        description: Maximum bounded repair attempts
+        type: choice
+        default: '2'
+        options: ['0', '1', '2', '3']
+permissions:
+  contents: read
+jobs:
+  registration-only:
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Dispatch must target the approved integration branch."
