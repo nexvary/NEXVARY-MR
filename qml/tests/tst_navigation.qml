@@ -356,8 +356,8 @@ TestCase {
    reveal(page,button);mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.normalizedCount,15);compare(lawCaseBridge.timelineResult.unresolvedCount,1)
   const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious")
   tryCompare(page,"timelinePage",0);verify(next.enabled);verify(renderedFrame())
-  reveal(page,next);verify(renderedFrame());wait(0);mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)
-  verify(previous.enabled);reveal(page,previous);verify(renderedFrame());wait(0);mouseClick(previous);tryCompare(page,"timelinePage",0);tryCompare(previous,"enabled",false)
+  reveal(page,next);verify(renderedFrame());waitForRendering(next,500);mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)
+  verify(previous.enabled);reveal(page,previous);verify(renderedFrame());waitForRendering(previous,500);mouseClick(previous);tryCompare(page,"timelinePage",0);tryCompare(previous,"enabled",false)
   for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
    app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(80);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
    verify(page.timelineExplanationAt(0).indexOf(arabic?"صحة":"authenticity")>=0,"Timeline uncertainty is explained in the selected language")

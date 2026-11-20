@@ -54,7 +54,7 @@ Item {
     Label {anchors.centerIn:parent;width:parent.width-20;visible:files.count===0;text:app.trx("لا توجد أدلة مطابقة","No matching evidence");wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");horizontalAlignment:Text.AlignHCenter}
    }
    ScrollView {
-    id:detail;objectName:"forensicDetailScroll";Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;clip:true;contentWidth:availableWidth
+    id:detail;objectName:"forensicDetailScroll";Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;clip:true;contentWidth:availableWidth
     ColumnLayout {
      width:detail.availableWidth;spacing:10
      Panel {
