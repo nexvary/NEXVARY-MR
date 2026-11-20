@@ -146,3 +146,9 @@ Delete the `claude/auto-{run_id}` branch and close the Draft PR. No other state 
 - AWS OIDC → Bedrock: verified run `44477057278` (STS) and `44477689443` (Claude CLI)
 - Pilot branch: `claude/pilot-44545876225`
 - See `docs/CLOUD_DEVELOPMENT_PILOT.md` for full evidence
+
+---
+
+## Confirming a completed run
+
+After triggering the workflow, open **Actions → Claude Autonomous Development** in the GitHub repository UI; the run appears as the topmost entry and its URL follows the pattern `https://github.com/nexvary/NEXVARY-MR/actions/runs/<run_id>`. Once the job finishes the final step ("Open Draft PR") logs the PR URL; navigate there and verify that the PR header shows the grey **Draft** label — if it shows the green **Open** label instead the PR was not created as a draft and should be converted before review.
