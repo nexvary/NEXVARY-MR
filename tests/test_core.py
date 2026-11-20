@@ -15,9 +15,14 @@ class CoreTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "repair.db"
             case_id = save_case("Samsung", "A52", "Bootloop", "test", path)
-            with init_db(path) as connection:
-                row = connection.execute("SELECT brand,model,symptom FROM cases WHERE id=?", (case_id,)).fetchone()
-            self.assertEqual(row, ("Samsung", "A52", "Bootloop"))
+            conn = init_db(path)
+            try:
+                row = conn.execute(
+                    "SELECT brand,model,symptom FROM cases WHERE id=?", (case_id,)
+                ).fetchone()
+            finally:
+                conn.close()
+        self.assertEqual(row, ("Samsung", "A52", "Bootloop"))
 
     def test_required_fields(self):
         with self.assertRaises(ValueError):
