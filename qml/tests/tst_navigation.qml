@@ -267,7 +267,7 @@ TestCase {
   app.navigateSection(6);verify(renderedFrame())
   const scroll=findChild(app,"governmentAnalysisWorkspace"),panel=findChild(app,"governmentPartitionPanel"),run=findChild(app,"governmentPartitionRun"),consent=findChild(app,"governmentPartitionConsent"),tool=findChild(app,"governmentPartitionTool")
   compare(run.enabled,false);verify(!lawCaseBridge.partitionsBusy);tool.text="Synthetic tool path only";findChild(app,"governmentPartitionEvidence").currentIndex=0;consent.checked=true;compare(run.enabled,true)
-  for(const ar of [true,false]){app.ar=ar;app.width=1366;app.height=768;reveal(scroll,panel);verify(renderedFrame());verify(panel.height>=panel.implicitHeight);verify(uiEvidence.captureWindow(app,uiScreenshotBase+"registered-partition-"+(ar?"ar":"en")+".png"))}
+  for(const ar of [true,false]){app.ar=ar;app.width=1366;app.height=768;reveal(scroll,panel);verify(renderedFrame());tryVerify(function(){return panel.height>=panel.implicitHeight},500,"panel height must equal implicitHeight after delayed binding");verify(uiEvidence.captureWindow(app,uiScreenshotBase+"registered-partition-"+(ar?"ar":"en")+".png"))}
   lawCaseBridge.closeWorkspace();verify(renderedFrame());compare(consent.checked,false);compare(run.enabled,false);compare(findChild(app,"governmentPartitionResult").text,"")
  }
  function test_governmentAdbBackupControls(){
@@ -342,7 +342,7 @@ TestCase {
   }
   app.width=1536;app.height=980;const select=panel.selectAt(0);reveal(page,select);verify(renderedFrame());mouseClick(select);compare(panel.selected.provenancePath.length,5)
   for(const arabic of [true,false]){app.ar=arabic;const path=findChild(app,"governmentArtifactPath");page.contentItem.contentY+=path.mapToItem(page.contentItem,0,0).y;wait(100);verify(renderedFrame());verify(uiEvidence.captureWindow(app,uiScreenshotBase+"government-artifact-path-"+(arabic?"ar":"en")+"-"+uiScaleTag+".png"))}
-  query.text=".*";reveal(page,button);verify(renderedFrame());mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,0);compare(lawCaseBridge.artifactsResult.nodes.length,1)
+  query.text=".*";reveal(page,button);verify(renderedFrame());waitForRendering(button,500);mouseClick(button);tryCompare(lawCaseBridge,"artifactsBusy",false,8000);compare(lawCaseBridge.artifactsResult.rows.length,0);compare(lawCaseBridge.artifactsResult.nodes.length,1)
   compare(lawCaseBridge.buildArtifacts("x".repeat(257)),false);const error=findChild(app,"governmentArtifactError");verify(error.visible);verify(error.text.indexOf("256")>=0);verify(!lawCaseBridge.artifactsResult.schema)
   verify(lawCaseBridge.verifyAudit());lawCaseBridge.closeWorkspace();verify(!lawCaseBridge.artifactsResult.schema);compare(!!panel.selected.id,false);compare(query.text,"");compare(button.enabled,false);app.setWorkspace(false)
  }
@@ -356,8 +356,8 @@ TestCase {
    reveal(page,button);mouseClick(button);tryCompare(lawCaseBridge,"timelineBusy",false,8000);compare(lawCaseBridge.timelineResult.normalizedCount,15);compare(lawCaseBridge.timelineResult.unresolvedCount,1)
   const next=findChild(app,"governmentTimelineNext"),previous=findChild(app,"governmentTimelinePrevious")
   tryCompare(page,"timelinePage",0);verify(next.enabled);verify(renderedFrame())
-  reveal(page,next);verify(renderedFrame());mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)
-  verify(previous.enabled);reveal(page,previous);verify(renderedFrame());mouseClick(previous);tryCompare(page,"timelinePage",0);tryCompare(previous,"enabled",false)
+  reveal(page,next);verify(renderedFrame());waitForRendering(next,500);reveal(page,next);mouseClick(next);tryCompare(page,"timelinePage",1);tryCompare(next,"enabled",false)
+  verify(previous.enabled);reveal(page,previous);verify(renderedFrame());waitForRendering(previous,500);reveal(page,previous);mouseClick(previous);tryCompare(page,"timelinePage",0);tryCompare(previous,"enabled",false)
   for(const arabic of [true,false])for(const size of [[840,480],[1366,768],[1536,980]]){
    app.ar=arabic;app.width=size[0];app.height=size[1];page.contentItem.contentY=0;wait(80);verify(renderedFrame());const header=uiEvidence.headerFingerprint(app)
    verify(page.timelineExplanationAt(0).indexOf(arabic?"صحة":"authenticity")>=0,"Timeline uncertainty is explained in the selected language")
@@ -565,10 +565,10 @@ TestCase {
   compare(panel.visible,false);panel.profile=syntheticModernCompatibility
   for(const arabic of [true,false])for(const dark of [true,false]){
    app.ar=arabic;app.darkTheme=dark;app.width=1180;app.height=760;scroll.contentItem.contentY=0;wait(60)
-   verify(panel.visible);verify(panel.width>180);verify(panel.height>=panel.implicitHeight)
+   verify(panel.visible);verify(panel.width>180);tryVerify(function(){return panel.height>=panel.implicitHeight},500,"panel height must equal implicitHeight after delayed binding")
    verify(findChild(app,"compatibilityPlatform").text.indexOf("37")>=0)
    verify(findChild(app,"compatibilityPageSize").text.indexOf("16384")>=0)
-   const evidence=findChild(app,"compatibilityEvidence");verify(evidence.height>=evidence.implicitHeight)
+   const evidence=findChild(app,"compatibilityEvidence");tryVerify(function(){return evidence.height>=evidence.implicitHeight},500,"evidence height must equal implicitHeight after delayed binding")
    const point=evidence.mapToItem(app.contentItem,0,0);verify(point.y>0&&point.y+evidence.height<app.height)
   }
   app.darkTheme=true

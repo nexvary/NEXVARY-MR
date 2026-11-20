@@ -36,9 +36,9 @@ Item {
    ActionButton {objectName:"forensicVerify";text:app.trx("تحقق SHA-256","Verify SHA-256");enabled:recoveryBridge.active&&!recoveryBridge.busy;onClicked:notify(recoveryBridge.verifyEvidence())}
   }
    RowLayout {
-    Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;spacing:10
+    Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;spacing:10;implicitHeight:0
    ListView {
-    id:files;objectName:"forensicEvidenceList";Layout.preferredWidth:Math.max(220,page.width*0.38);Layout.fillHeight:true;clip:true;spacing:8;model:page.filteredEvidence
+    id:files;objectName:"forensicEvidenceList";Layout.preferredWidth:Math.max(220,page.width*0.38);Layout.fillHeight:true;implicitHeight:0;clip:true;spacing:8;model:page.filteredEvidence
     ScrollBar.vertical:ScrollBar {}
     delegate:GlossSurface {
      required property var modelData
@@ -53,8 +53,10 @@ Item {
     }
     Label {anchors.centerIn:parent;width:parent.width-20;visible:files.count===0;text:app.trx("لا توجد أدلة مطابقة","No matching evidence");wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");horizontalAlignment:Text.AlignHCenter}
    }
+   Item {
+    Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;implicitHeight:0
    ScrollView {
-    id:detail;objectName:"forensicDetailScroll";Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;clip:true;contentWidth:availableWidth
+    id:detail;objectName:"forensicDetailScroll";anchors.fill:parent;clip:true;contentWidth:availableWidth
     ColumnLayout {
      width:detail.availableWidth;spacing:10
      Panel {
@@ -82,6 +84,7 @@ Item {
       Label {text:app.trx("سجل محلي مترابط بالبصمات؛ لا يثبت التسليم المادي أو اعتمادًا قضائيًا. سجلات القضايا القديمة تُميّز بأنها غير متحقق منها تاريخيًا.","Local hash-linked declarations do not prove physical handover or court accreditation. Migrated historical entries are marked unverified.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:14}
      }
     }
+   }
    }
   }
   RowLayout {
