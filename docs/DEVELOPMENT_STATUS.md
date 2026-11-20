@@ -36,7 +36,7 @@ Updated: 2026-11-20 (commits c973bb1 / 542ad88)
 |-----|---------|--------|--------|
 | [44683735949](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683735949) | Claude Autonomous Development | `integration/claude-bedrock-cloud-20261119-autonomous` | `16008d9` |
 | [44683692507](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683692507) | Python checks | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `abcc0e7` |
-| [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) | C++20 and Qt Windows (in progress) | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `c973bb1` |
+| [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) | C++20 and Qt Windows (in progress) | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `c973bb1` |
 | Latest | Python checks | `integration/claude-repository-rollout` | `816df2f` |
 | 44676460202 | Python checks | prior branch | success |
 | 44676460208 | Public history safety | prior branch | success |
@@ -46,7 +46,7 @@ Updated: 2026-11-20 (commits c973bb1 / 542ad88)
 
 | Run | Workflow | Branch |
 |-----|---------|--------|
-| [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) | C++20 and Qt Windows — Qt jobs building GUI, CTest pending | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` |
+| [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) | C++20 and Qt Windows — Qt jobs building GUI, CTest pending | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` |
 
 ### Previously Failing (now fixed) ❌→✅
 
@@ -130,7 +130,7 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 | Layer | Status | Evidence |
 |-------|--------|---------|
 | Python unit tests (pytest/unittest) | ✅ Passing | Runs 44683692507, latest on rollout branch |
-| QML/CTest on Windows (`c973bb1`) | ⏳ In progress | Run [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) — Qt jobs building GUI, CTest next |
+| QML/CTest on Windows (`c973bb1`) | ⏳ In progress | Run [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) — Qt jobs building GUI, CTest next |
 | Autonomous Claude development cycle | ✅ Verified | Run 44683735949, PR #37 |
 | AWS OIDC → Bedrock authentication | ✅ Verified | Run 44683735949 |
 
@@ -141,7 +141,7 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 | Layer | Reason |
 |-------|--------|
 | Physical device (ADB/Fastboot) | No hardware on GitHub runners |
-| Windows installer / Authenticode | Packaging steps 20-25 run automatically after CTest passes in run 44814065762 |
+| Windows installer / Authenticode | Packaging steps 20-25 run automatically after CTest passes in run 44815463185 |
 
 ---
 
