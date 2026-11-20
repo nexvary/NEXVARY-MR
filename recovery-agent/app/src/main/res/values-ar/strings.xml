@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NEXVARY MR · مساعد فحص الاستعادة</string>
+    <string name="subtitle">تقييم معلومات الجهاز محليًا · Android 8 فأحدث · دون استعادة ملفات محذوفة أو تعديل الجهاز</string>
+    <string name="install_warning">تنبيه مهم: تثبيت التطبيق وتشغيل Android وبدء Shizuku يكتب بيانات على الهاتف، وقد يقلل ذلك فرصة استعادة الملفات المحذوفة. إذا كانت البيانات المحذوفة مهمة، توقف عن استخدام الهاتف واستشر مختصًا قبل التثبيت. وقد تُحدّث القراءة سجلات النظام أو مزود الملفات أيضًا. هذه الأداة لا تستعيد الملفات المحذوفة أو بيانات التطبيقات الخاصة المشفرة.</string>
+    <string name="consent">أملك هذا الجهاز أو لدي إذن صريح من مالكه. أفهم أثر الكتابة وأوافق فقط على قراءة معلومات الجهاز وملف أختاره بنفسي.</string>
+    <string name="shizuku_state">حالة Shizuku الاختياري: %1$s</string>
+    <string name="collect_public">١ · قراءة معلومات الجهاز والتخزين العامة</string>
+    <string name="request_shizuku">٢ · طلب إذن Shizuku الاختياري</string>
+    <string name="collect_shell">٣ · فحوص معلومات ثابتة بصلاحية Shell</string>
+    <string name="choose_file">اختيار ملف محلي وحساب SHA-256</string>
+    <string name="file_scope">تُقبل ملفات مزودي المستندات المحليين في نظام Android فقط. لا يُجرى مسح للمجلدات أو جمع لبيانات التطبيقات الخاصة أو صور الأقسام، ولا تُنسخ محتويات الملف إلى التقرير. الحد الأقصى 16 GiB؛ يتوقف الحساب بعد خمس دقائق أو عند مغادرة التطبيق.</string>
+    <string name="cancel">إلغاء العملية الجارية</string>
+    <string name="export_report">تصدير تقرير JSON إلى NEXVARY MR</string>
+    <string name="export_warning">يُنشئ التصدير مستندًا في موقع تختاره. يتضمن التقرير معلومات الجهاز واسم الملف المختار وحجمه وبصمته. راجعه قبل المشاركة؛ فهو لا يثبت الملكية أو أصالة البرامج الثابتة أو نجاح الاستعادة.</string>
+    <string name="ready">لم تُجمع معلومات بعد. أكد نطاق الإذن ثم ابدأ القراءة.</string>
+    <string name="consent_revoked">أُلغي الإذن ومُسحت المعلومات المجموعة من ذاكرة التطبيق.</string>
+    <string name="service_stopped">انقطع Shizuku؛ مُسحت نتائج الصلاحية الإضافية وأُلغي الفحص الجاري.</string>
+    <string name="permission_revoked">إذن Shizuku غير متاح أو أُلغي؛ مُسحت نتائج الصلاحية الإضافية.</string>
+    <string name="collecting_shell">جارٍ تنفيذ فحوص المعلومات الثابتة…</string>
+    <string name="shell_complete">اكتملت فحوص المعلومات الثابتة. راجع التقرير؛ عدم توفر فحص لا يثبت سلامة الجهاز.</string>
+    <string name="bind_timeout">تعذر ربط المساعد خلال خمس ثوانٍ. تحقق من تشغيل Shizuku وإذن التطبيق ووضع Shell.</string>
+    <string name="collecting_public">جارٍ قراءة معلومات Android العامة…</string>
+    <string name="public_complete">قُرئت معلومات الجهاز العامة. تظهر وحدات التخزين التي تسمح واجهات Android العامة بعرضها فقط.</string>
+    <string name="root_refused">وضع Root غير مدعوم ومرفوض؛ لم يبدأ فحص بصلاحية إضافية. استخدم Shizuku المشغّل عبر ADB بصلاحية UID 2000.</string>
+    <string name="shizuku_setup">ثبّت تطبيق Shizuku الرسمي وشغّله بنفسك عند الحاجة. يدعم Android 11 فأحدث التشغيل عبر التصحيح اللاسلكي، وتحتاج الإصدارات الأقدم المدعومة إلى كمبيوتر لبدء Shizuku. أعد تشغيله بعد إعادة تشغيل الهاتف. هذا المساعد لا يثبّته أو يشغّله تلقائيًا.</string>
+    <string name="permission_settings">رُفض الإذن. راجع التطبيق في قائمة التطبيقات المصرح لها داخل Shizuku؛ لم يُرسل طلب متكرر.</string>
+    <string name="root_or_permission">يلزم Shizuku متصل ومصرح به صراحةً بصلاحية Shell UID 2000. يُرفض Root وأي UID غير معروف.</string>
+    <string name="connecting_shell">جارٍ ربط مساعد معلومات Shell الاختياري…</string>
+    <string name="local_provider_required">اختر ملفًا محليًا من مزود تخزين النظام أو التنزيلات أو الوسائط في Android. تُرفض المواقع الشبكية ومزودات الملفات الأخرى.</string>
+    <string name="hashing">جارٍ حساب SHA-256 للملف المحلي دون نسخ محتواه إلى التقرير…</string>
+    <string name="hash_complete">حُسبت بصمة الملف المختار؛ البصمة لا تثبت أصالته أو قابليته للاستعادة.</string>
+    <string name="report_not_ready">التقرير غير جاهز أو تجاوز الحدود. اقرأ معلومات الجهاز العامة وراجع نطاق الإذن أولًا.</string>
+    <string name="exporting">جارٍ كتابة مستند التقرير الذي اخترته صراحةً…</string>
+    <string name="export_complete">صُدّر تقرير JSON. انقله بنفسك ثم استورده داخل NEXVARY MR.</string>
+    <string name="operation_failed">فشلت قراءة المعلومات أو رُفضت أو تغيّر الملف أثناء القراءة أو تجاوز أحد الحدود. لم تُنفّذ عملية إصلاح أو استعادة على الهاتف.</string>
+    <string name="canceled">أُلغيت العملية.</string>
+    <string name="timed_out">انتهت مهلة العملية وأُلغيت. جرّب ملفًا محليًا أصغر أو راجع الاتصال.</string>
+    <string name="background_canceled">أُلغي العمل الجاري عند مغادرة التطبيق. لا يستمر أي مسح في الخلفية.</string>
+</resources>

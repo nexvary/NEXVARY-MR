@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NEXVARY MR · Recovery Agent</string>
+    <string name="subtitle">Local metadata assessment · Android 8+ · No deleted-file recovery or device modification</string>
+    <string name="install_warning">Important: installing this APK, running Android, and starting Shizuku write to the phone. Those writes can reduce the chance of recovering deleted data. If deleted data matters, stop using the phone and consult a recovery specialist before installation. Reads can also update system/provider records. This tool does not recover deleted or encrypted private app data.</string>
+    <string name="consent">I own this device or have the owner’s explicit permission. I understand the write impact and consent only to device metadata and a file I explicitly choose.</string>
+    <string name="shizuku_state">Optional Shizuku status: %1$s</string>
+    <string name="collect_public">1 · Read public device and storage metadata</string>
+    <string name="request_shizuku">2 · Request optional Shizuku permission</string>
+    <string name="collect_shell">3 · Run fixed shell metadata probes</string>
+    <string name="choose_file">Choose one local file and calculate SHA-256</string>
+    <string name="file_scope">Only Android system local-document providers are accepted. No directory scan, private app data, partition image, or file content enters the report. Maximum file size: 16 GiB; hashing stops after five minutes or when the app leaves the foreground.</string>
+    <string name="cancel">Cancel active operation</string>
+    <string name="export_report">Export metadata JSON for NEXVARY MR</string>
+    <string name="export_warning">Export creates a new document in a location you choose. The report contains device metadata and the chosen file’s name, size and hash. Review before sharing. It is not proof of ownership, firmware authenticity, or successful recovery.</string>
+    <string name="ready">No metadata has been collected. Confirm the scope, then start a read.</string>
+    <string name="consent_revoked">Consent revoked; volatile collected metadata cleared.</string>
+    <string name="service_stopped">Shizuku disconnected; privileged results cleared and the active probe canceled.</string>
+    <string name="permission_revoked">Shizuku permission is unavailable or revoked; privileged results cleared.</string>
+    <string name="collecting_shell">Reading fixed shell metadata…</string>
+    <string name="shell_complete">Fixed metadata probes completed. Review the report; unavailable probes do not establish device health.</string>
+    <string name="bind_timeout">The optional helper could not connect within five seconds. Check Shizuku, permission and shell mode.</string>
+    <string name="collecting_public">Reading public Android metadata…</string>
+    <string name="public_complete">Public device metadata read. Only storage volumes visible through the Android public API are listed.</string>
+    <string name="root_refused">Root mode is unsupported and refused. No privileged probe was started. Use Shizuku started with ADB as UID 2000.</string>
+    <string name="shizuku_setup">Install and start the official Shizuku app yourself if needed. Non-root Android 11+ supports wireless debugging; earlier supported versions need a computer to start Shizuku. Restart Shizuku after reboot. This agent never installs or starts it automatically.</string>
+    <string name="permission_settings">Permission was denied. Review this agent in Shizuku’s authorized-app list; no repeated permission request was sent.</string>
+    <string name="root_or_permission">A live, explicitly authorized Shizuku shell UID 2000 is required. Root and unknown UIDs are refused.</string>
+    <string name="connecting_shell">Connecting the optional shell metadata helper…</string>
+    <string name="local_provider_required">Choose a local file using Android’s system storage, downloads or media document provider. Other providers and network locations are refused.</string>
+    <string name="hashing">Calculating the selected local file’s SHA-256 without copying its contents into the report…</string>
+    <string name="hash_complete">SHA-256 calculated for the selected file. A hash does not prove authenticity or recoverability.</string>
+    <string name="report_not_ready">Report is not ready or exceeds its size limits. Collect public metadata and review the scope first.</string>
+    <string name="exporting">Writing the explicitly selected report document…</string>
+    <string name="export_complete">Metadata JSON exported. Transfer that file yourself and import it in NEXVARY MR.</string>
+    <string name="operation_failed">The metadata operation failed, was denied, changed during reading, or exceeded a size limit. No device repair or recovery operation was performed.</string>
+    <string name="canceled">Operation canceled.</string>
+    <string name="timed_out">Operation timed out and was canceled. Try a smaller local file or review the connection.</string>
+    <string name="background_canceled">Active work canceled because the app left the foreground. No background scan continues.</string>
+</resources>

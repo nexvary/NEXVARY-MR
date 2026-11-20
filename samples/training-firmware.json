@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "brand": "NEXVARY Training",
+  "model": "MR-DEMO-1",
+  "build": "training-placeholder-not-a-real-firmware",
+  "sourceUrl": "https://example.com/training-only",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}

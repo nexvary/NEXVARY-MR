@@ -1,0 +1,24 @@
+{
+  "format": "nexvary.board.v1",
+  "title": "NEXVARY synthetic training board",
+  "author": "NEXVARY MR contributors",
+  "license": "CC0-1.0",
+  "description": "Original fictional training data dedicated to the public domain under CC0 1.0. This is not a phone board, schematic, manufacturer reference, or diagnostic authority. All component names and voltages are illustrative. Never apply these values to a real device.",
+  "width": 1000,
+  "height": 650,
+  "nets": [
+    {"name": "DEMO_INPUT", "referenceVoltage": 5.0, "tolerance": 0.25},
+    {"name": "DEMO_RAIL", "referenceVoltage": 3.3, "tolerance": 0.1},
+    {"name": "DEMO_SIGNAL"},
+    {"name": "DEMO_GND", "referenceVoltage": 0, "tolerance": 0.05}
+  ],
+  "components": [
+    {"reference": "J_DEMO1", "name": "Synthetic input connector", "x": 55, "y": 65, "width": 180, "height": 80, "nets": ["DEMO_INPUT", "DEMO_GND"]},
+    {"reference": "U_DEMO1", "name": "Synthetic regulator", "x": 325, "y": 125, "width": 190, "height": 180, "nets": ["DEMO_INPUT", "DEMO_RAIL", "DEMO_GND"]},
+    {"reference": "C_DEMO1", "name": "Synthetic capacitor", "x": 255, "y": 350, "width": 75, "height": 115, "nets": ["DEMO_RAIL", "DEMO_GND"]},
+    {"reference": "U_DEMO2", "name": "Synthetic controller", "x": 650, "y": 190, "width": 225, "height": 240, "nets": ["DEMO_RAIL", "DEMO_SIGNAL", "DEMO_GND"]},
+    {"reference": "R_DEMO1", "name": "Synthetic resistor", "x": 525, "y": 470, "width": 130, "height": 60, "nets": ["DEMO_SIGNAL", "DEMO_GND"]},
+    {"reference": "TP_DEMO1", "name": "Synthetic rail test point", "x": 420, "y": 370, "width": 55, "height": 55, "nets": ["DEMO_RAIL"]},
+    {"reference": "TP_DEMO2", "name": "Synthetic ground test point", "x": 820, "y": 520, "width": 55, "height": 55, "nets": ["DEMO_GND"]}
+  ]
+}
