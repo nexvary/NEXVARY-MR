@@ -1,6 +1,6 @@
 # NEXVARY-MR — Development Status
 
-Updated: 2026-11-20 (commits 6c50924 / Item-wrapper-fix)
+Updated: 2026-11-21 (commits 57b5ec7 — implicitHeight:0 + re-reveal fix)
 
 ---
 
@@ -44,9 +44,9 @@ Updated: 2026-11-20 (commits 6c50924 / Item-wrapper-fix)
 
 ### In Progress / Pending ⏳
 
-| Run | Workflow | Branch |
-|-----|---------|--------|
-| [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) | C++20 and Qt Windows — Qt jobs building GUI, CTest pending | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` |
+| Run | Workflow | Branch | Commit |
+|-----|---------|--------|--------|
+| [44827717134](https://github.com/nexvary/NEXVARY-MR/actions/runs/44827717134) | C++20 and Qt Windows | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `57b5ec7` |
 
 ### Previously Failing (now fixed) ❌→✅
 
@@ -58,7 +58,8 @@ Updated: 2026-11-20 (commits 6c50924 / Item-wrapper-fix)
 | 44676460196 | C++20 and Qt Windows | `test_modernCompatibilityPanel` / `test_governmentTimelineControls` — `delayed:true` Binding deferred layout update | `edef10a` |
 | 44684543830 | C++20 and Qt Windows | `mr_gui_smoke` Polish loop (`qmlWarnings=1`) — `delayed:true` removed in `abcc0e7` created feedback cycle | `edef10a` |
 | (run on `edef10a`) | C++20 and Qt Windows | `test_governmentTimelineControls` — `wait(0)` insufficient; `ForensicEvidencePage.qml` ScrollView missing `Layout.minimumHeight:0` triggered Polish loop on Linux | `c973bb1` |
-| [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) | C++20 and Qt Windows | `test_governmentArtifactControls` line 345 — `reveal()+renderedFrame()` insufficient after RTL/size loop; Linux smoke `qmlWarnings=1` — `Layout.minimumHeight:0` alone didn't prevent implicitHeight propagation from ScrollView → outer ColumnLayout | pending fix (this commit) |
+| [44815463185](https://github.com/nexvary/NEXVARY-MR/actions/runs/44815463185) | C++20 and Qt Windows | `test_governmentArtifactControls` line 345 — `reveal()+renderedFrame()` insufficient after RTL/size loop; Linux smoke `qmlWarnings=1` — `Layout.minimumHeight:0` alone didn't prevent implicitHeight propagation from ScrollView → outer ColumnLayout | `6c50924` / `711aca7` |
+| [44821721227](https://github.com/nexvary/NEXVARY-MR/actions/runs/44821721227) | C++20 and Qt Windows | `test_governmentTimelineControls` line 359 — deferred Binding fires after `waitForRendering`, shifting scroll before click; `mr_ui_scale_1.25`/`1.5` — same race at higher DPI; Linux smoke — Item wrapper didn't fix Polish loop; root cause: fill-height RowLayout and ListView emit `implicitHeightChanged` during outer ColumnLayout polish | `57b5ec7` |
 
 ---
 
