@@ -27,7 +27,7 @@ GlossSurface {
  readonly property color accentColor:tokens?(accent==="blue"?tokens.accent:accent==="green"?tokens.success:tokens.silver):"#B6C4D5"
  default property alias body:container.data
  color:tokens?tokens.surface:"#11151B";border.color:tokens?tokens.border:"#3C4859";border.width:1.5;radius:12;reflection:0.035
- Binding {target:card;property:"implicitHeight";value:column.implicitHeight+32;restoreMode:Binding.RestoreNone}
+ Binding {target:card;property:"implicitHeight";value:column.implicitHeight+32;delayed:true;restoreMode:Binding.RestoreNone}
  ColumnLayout {
   id:column;anchors.top:parent.top;anchors.left:parent.left;anchors.right:parent.right;anchors.topMargin:16;anchors.leftMargin:16;anchors.rightMargin:16;spacing:12
   RowLayout {
