@@ -9,6 +9,9 @@ name: Claude Autonomous Development
 # See docs/AUTONOMOUS_DEVELOPMENT.md for operating instructions.
 
 on:
+  push:
+    branches: [integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation]
+    paths: ['.github/workflows/claude-autonomous-development.yml']
   workflow_dispatch:
     inputs:
       task:
@@ -37,6 +40,8 @@ jobs:
     if: >
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.event.head_commit.message == 'ci: verify isolated SQLite regression end to end')) &&
       (github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation')
@@ -59,7 +64,7 @@ jobs:
       - name: Validate task and prepare isolated branch
         env:
           GH_TOKEN: ${{ github.token }}
-          OWNER_TASK: ${{ inputs.task }}
+          OWNER_TASK: ${{ inputs.task || 'Allow save_case in nexvary_mr/core.py to accept None for optional maintenance notes and persist it as empty text. Preserve trimming and required field validation. Add a SQLite regression test to tests/test_core.py using a temporary database. Edit only these two files.' }}
         run: |
           python3 -I - <<'PY'
           import os, re
@@ -284,7 +289,7 @@ jobs:
 
       # ── 10. Repair attempt 1 ─────────────────────────────────────────────
       - name: Claude repair attempt 1
-        if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
+        if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0' && github.event_name == 'workflow_dispatch'
         env:
           CLAUDE_CODE_USE_BEDROCK: '1'
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
@@ -318,7 +323,7 @@ jobs:
             > "$RUNNER_TEMP/repair-1-result.json" 2>&1 || true
 
       - name: Re-run tests after repair 1
-        if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
+        if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0' && github.event_name == 'workflow_dispatch'
         run: |
           set +e
           "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ -x --tb=short -q > "$RUNNER_TEMP/test-output-r1.txt" 2>&1
