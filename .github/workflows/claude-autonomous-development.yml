@@ -372,6 +372,17 @@ jobs:
           EXIT=${PIPESTATUS[0]}
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
 
+      # ── 12.5. Gate: require passing tests before publishing ─────────────────
+      - name: Require passing Python tests before publishing
+        shell: bash
+        run: |
+          if [ "$TESTS_PASSED" != "true" ]; then
+            echo "::error::Python tests did not pass (TESTS_PASSED=$TESTS_PASSED). Refusing to commit or open a Draft PR."
+            echo "To resolve: fix the failing tests, or increase max_repair_attempts so the repair loop can retry."
+            exit 1
+          fi
+          echo "Python tests passed — proceeding to commit and publish."
+
       # ── 13. Commit and push ───────────────────────────────────────────────
       - name: Commit and push development branch
         id: commit_push
@@ -398,7 +409,7 @@ jobs:
 
       # ── 14. Create Draft PR ───────────────────────────────────────────────
       - name: Create Draft PR
-        if: env.COMMIT_SHA != ''
+        if: env.COMMIT_SHA != '' && env.TESTS_PASSED == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
