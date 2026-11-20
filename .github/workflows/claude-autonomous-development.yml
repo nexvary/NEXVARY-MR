@@ -131,7 +131,7 @@ jobs:
         run: |
           docker build --tag nexvary-pytest:"$GITHUB_RUN_ID" - <<'DOCKERFILE'
           FROM python:3.12-slim
-          RUN pip install --no-cache-dir pytest==9.0.2
+          RUN pip install --no-cache-dir pytest==9.0.2 cryptography==46.0.5
           DOCKERFILE
           cat > "$RUNNER_TEMP/isolated-python" <<'BASH'
           #!/usr/bin/env bash
