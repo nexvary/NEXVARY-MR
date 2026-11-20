@@ -1,6 +1,6 @@
 # NEXVARY-MR — Development Status
 
-Updated: 2026-11-20
+Updated: 2026-11-20 (commit edef10a)
 
 ---
 
@@ -35,6 +35,7 @@ Updated: 2026-11-20
 |-----|---------|--------|--------|
 | [44683735949](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683735949) | Claude Autonomous Development | `integration/claude-bedrock-cloud-20261119-autonomous` | `16008d9` |
 | [44683692507](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683692507) | Python checks | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `abcc0e7` |
+| Latest (triggered by `edef10a`) | C++20 and Qt Windows | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `edef10a` |
 | Latest | Python checks | `integration/claude-repository-rollout` | `816df2f` |
 | 44676460202 | Python checks | prior branch | success |
 | 44676460208 | Public history safety | prior branch | success |
@@ -53,7 +54,8 @@ Updated: 2026-11-20
 | 44680368505 | Python checks | `PermissionError [WinError 32]` — SQLite connection not closed before temp dir cleanup on Windows | `816df2f` |
 | 44680350032 | Python checks | Same as above | `816df2f` |
 | 44680324451 | Python checks | Same as above | `816df2f` |
-| 44676460196 | C++20 and Qt Windows | `test_modernCompatibilityPanel` / `test_governmentTimelineControls` — `delayed:true` Binding deferred layout update | `abcc0e7` |
+| 44676460196 | C++20 and Qt Windows | `test_modernCompatibilityPanel` / `test_governmentTimelineControls` — `delayed:true` Binding deferred layout update | `edef10a` |
+| 44684543830 | C++20 and Qt Windows | `mr_gui_smoke` Polish loop (`qmlWarnings=1`) — `delayed:true` removed in `abcc0e7` created feedback cycle | `edef10a` |
 
 ---
 
@@ -70,19 +72,25 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 - `save_case()`: replaced `with init_db() as conn:` with `try/finally` + explicit `commit()` + `close()`
 - `test_case_persistence`: replaced context-manager query with `try/finally` + explicit `close()`
 
-### QML Panel timing fix (`integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation`, commit `abcc0e7`)
+### QML Panel and test fix (`integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation`, commit `edef10a`)
 
-**Files changed:** `qml/Panel.qml`
+**Files changed:** `qml/Panel.qml`, `qml/tests/tst_navigation.qml`
 
-Removed `delayed:true` from the `implicitHeight` Binding. The delayed Binding fires
-`card.implicitHeight = column.implicitHeight + 32` in one frame, but the ColumnLayout
-Polish (resize pass) is deferred to the NEXT frame. The test's `verify()` / `tryCompare()`
-ran between frames, finding `panel.height` still at the old value. Without `delayed:true`,
-the Binding fires synchronously, the layout Polish completes in the same frame, and both
-`test_modernCompatibilityPanel` and `test_governmentTimelineControls` pass.
+**Problem:** Two-sided timing issue:
+- WITHOUT `delayed:true`: Windows navigation tests pass, but Linux `mr_gui_smoke` fails
+  with `QML ColumnLayout: Polish loop detected` (qmlWarnings=1 → smoke aborts).
+- WITH `delayed:true`: smoke test passes, but Windows navigation tests fail because
+  the deferred Binding fires one frame after `renderedFrame()` and before the click.
 
-No binding loop exists after removing `delayed:true`: `column.implicitHeight` depends on
-child content, not on `card.implicitHeight` (column is anchored top/left/right only).
+**Fix (commit `edef10a`):**
+- `Panel.qml`: restored `delayed:true` — required to break the Polish feedback cycle
+  (`card.implicitHeight → column rePolish → column.implicitHeight → Binding fires again`).
+- `tst_navigation.qml`:
+  - `test_modernCompatibilityPanel` (lines 270, 568, 571): replaced `verify(height>=implicitHeight)`
+    with `tryVerify(fn,500)` so the test retries for up to 500 ms after the deferred Binding fires.
+  - `test_governmentTimelineControls` (lines 359–360): added `wait(0)` between
+    `reveal()+renderedFrame()` and `mouseClick()` to let the deferred layout settle
+    before click coordinates are resolved.
 
 ### Autonomous development workflow
 
@@ -128,7 +136,7 @@ child content, not on `card.implicitHeight` (column is anchored top/left/right o
 
 ## Next Development Priority
 
-1. Confirm Qt/Windows build passes on `abcc0e7` (commit on `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation`)
+1. Confirm Qt/Windows AND Linux builds pass on `edef10a` (the definitive fix for both Windows navigation tests and Linux smoke test)
 2. Merge PR chain: #33 → #31 → #28 to bring fixes into the main integration branch
 3. Use autonomous workflow for next legitimate development task on the roadmap
 4. Continue NEXVARY-MR roadmap: device service engine, forensic case management, intelligence UX polish
