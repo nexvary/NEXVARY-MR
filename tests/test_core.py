@@ -23,5 +23,14 @@ class CoreTests(unittest.TestCase):
     def test_required_fields(self):
         with self.assertRaises(ValueError):
             save_case("", "A52", "Bootloop")
+
+    def test_none_notes_persisted_as_empty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "repair_none_notes.db"
+            case_id = save_case("Samsung", "A52", "Bootloop", None, path)
+            with closing(init_db(path)) as connection:
+                row = connection.execute("SELECT notes FROM cases WHERE id=?", (case_id,)).fetchone()
+            self.assertEqual(row[0], "")
+
 if __name__ == "__main__":
     unittest.main()
