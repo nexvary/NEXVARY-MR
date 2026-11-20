@@ -38,7 +38,8 @@ jobs:
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
       (github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous' ||
-      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification')
+      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification' ||
+      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation')
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -60,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           OWNER_TASK: ${{ inputs.task }}
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os, re
           from pathlib import Path
           task = os.environ.get("OWNER_TASK", "").strip()
@@ -84,7 +85,7 @@ jobs:
       # ── 3. OIDC claims inspection ────────────────────────────────────────
       - name: Inspect OIDC claims
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os, json, base64, urllib.request
           url = os.environ["ACTIONS_ID_TOKEN_REQUEST_URL"] + "&audience=sts.amazonaws.com"
           req = urllib.request.Request(url, headers={
@@ -108,7 +109,7 @@ jobs:
       - name: Verify AWS identity
         run: |
           aws sts get-caller-identity --output json > "$RUNNER_TEMP/aws-id.json"
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import json, os
           identity = json.load(open(os.environ["RUNNER_TEMP"] + "/aws-id.json"))
           assert identity["Account"] == "716997672148", "Unexpected AWS account"
@@ -125,10 +126,48 @@ jobs:
           echo "Claude Code version: $("$RUNNER_TEMP/claude-cli/node_modules/.bin/claude" --version)"
 
       # ── 6. Python test environment ───────────────────────────────────────
-      - name: Set up Python test environment
+      - name: Prepare and verify isolated Python runner
+        shell: bash
         run: |
-          python3 -m pip install --quiet pytest
-          python3 -m pytest tests/ -q --collect-only > "$RUNNER_TEMP/pytest-collection.txt" 2>&1 || { cat "$RUNNER_TEMP/pytest-collection.txt"; exit 1; }
+          docker build --tag nexvary-pytest:"$GITHUB_RUN_ID" - <<'DOCKERFILE'
+          FROM python:3.12-slim
+          RUN pip install --no-cache-dir pytest==9.0.2
+          DOCKERFILE
+          cat > "$RUNNER_TEMP/isolated-python" <<'BASH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          exec docker run --rm -i --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges --user 65534:65534 --pids-limit 128 \
+            --tmpfs /tmp:rw,nosuid,nodev,size=64m --env HOME=/tmp \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/repo,readonly" \
+            --workdir /repo nexvary-pytest:"$GITHUB_RUN_ID" python "$@"
+          BASH
+          chmod 0700 "$RUNNER_TEMP/isolated-python"
+          export NEXVARY_ISOLATION_PROBE=host-only
+          "$RUNNER_TEMP/isolated-python" -I - <<'PY'
+          import errno
+          import os
+          import socket
+          from pathlib import Path
+          assert not any(name.startswith(("AWS_", "ACTIONS_ID_TOKEN_")) for name in os.environ)
+          assert not {"GH_TOKEN", "GITHUB_TOKEN", "NEXVARY_ISOLATION_PROBE"} & os.environ.keys()
+          assert not Path("/var/run/docker.sock").exists()
+          assert set(os.listdir("/sys/class/net")) == {"lo"}
+          try:
+              socket.create_connection(("192.0.2.1", 443), timeout=2)
+          except OSError as error:
+              assert error.errno == errno.ENETUNREACH, error
+          else:
+              raise RuntimeError("Sandbox unexpectedly has a network route")
+          try:
+              Path("/repo/.isolation-write-probe").touch()
+          except OSError as error:
+              assert error.errno == errno.EROFS, error
+          else:
+              raise RuntimeError("Sandbox can write to checkout")
+          print("Isolation verified: no runner credentials, writable checkout or network route")
+          PY
+          "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ -q --collect-only
 
       # ── 7. Claude implements the task ─────────────────────────────────────
       - name: Claude implements authorized task
@@ -138,7 +177,7 @@ jobs:
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
           DISABLE_AUTOUPDATER: '1'
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os
           from pathlib import Path
           task = Path(os.environ["RUNNER_TEMP"], "owner-task.txt").read_text()
@@ -168,11 +207,12 @@ jobs:
             -p "$(cat "$RUNNER_TEMP/claude-prompt.txt")" \
             --model eu.anthropic.claude-sonnet-4-6 \
             --max-turns 15 \
+            --tools 'Read,Glob,Grep,Edit,Write' \
             --allowedTools 'Read,Glob,Grep,Edit,Write' \
             --no-session-persistence \
             --output-format json \
             > "$RUNNER_TEMP/claude-result.json" 2>&1
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import json, os
           from pathlib import Path
           data = json.loads(Path(os.environ["RUNNER_TEMP"], "claude-result.json").read_text())
@@ -192,7 +232,7 @@ jobs:
       # ── 8. Validate changed files ────────────────────────────────────────
       - name: Validate changed files (security check)
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import subprocess
           from pathlib import Path
           status = subprocess.check_output(
@@ -214,7 +254,7 @@ jobs:
               print("  ", p)
           PY
           git diff --check
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import subprocess
           from pathlib import Path
           changed = subprocess.check_output(
@@ -222,7 +262,7 @@ jobs:
           py_files = [line[3:].strip() for line in changed if line[3:].strip().endswith(".py")]
           if py_files:
               for f in py_files:
-                  subprocess.run(["python3", "-m", "py_compile", f], check=True)
+                  subprocess.run(["python3", "-I", "-m", "py_compile", f], check=True)
               print(f"Python syntax OK: {len(py_files)} file(s)")
           PY
 
@@ -231,8 +271,8 @@ jobs:
         id: run_tests
         run: |
           set +e
-          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt"
-          EXIT=${PIPESTATUS[0]}
+          "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ -x --tb=short -q > "$RUNNER_TEMP/test-output.txt" 2>&1
+          EXIT=$?
           set -e
           if [ "$EXIT" -eq 0 ]; then
             echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
@@ -250,7 +290,7 @@ jobs:
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
           DISABLE_AUTOUPDATER: '1'
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os
           from pathlib import Path
           test_out = Path(os.environ["RUNNER_TEMP"], "test-output.txt").read_text()[:3000]
@@ -271,6 +311,7 @@ jobs:
             -p "$(cat "$RUNNER_TEMP/repair-1-prompt.txt")" \
             --model eu.anthropic.claude-sonnet-4-6 \
             --max-turns 8 \
+            --tools 'Read,Glob,Grep,Edit,Write' \
             --allowedTools 'Read,Glob,Grep,Edit,Write' \
             --no-session-persistence \
             --output-format json \
@@ -280,8 +321,8 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
         run: |
           set +e
-          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt"
-          EXIT=${PIPESTATUS[0]}
+          "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ -x --tb=short -q > "$RUNNER_TEMP/test-output-r1.txt" 2>&1
+          EXIT=$?
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 1" || \
@@ -300,7 +341,7 @@ jobs:
           TFILE="$RUNNER_TEMP/test-output-r1.txt"
           [ -f "$TFILE" ] || TFILE="$RUNNER_TEMP/test-output.txt"
           export TFILE
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os
           from pathlib import Path
           tfile = os.environ["TFILE"]
@@ -319,6 +360,7 @@ jobs:
             -p "$(cat "$RUNNER_TEMP/repair-2-prompt.txt")" \
             --model eu.anthropic.claude-sonnet-4-6 \
             --max-turns 8 \
+            --tools 'Read,Glob,Grep,Edit,Write' \
             --allowedTools 'Read,Glob,Grep,Edit,Write' \
             --no-session-persistence \
             --output-format json \
@@ -330,8 +372,8 @@ jobs:
           (inputs.max_repair_attempts == '2' || inputs.max_repair_attempts == '3')
         run: |
           set +e
-          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt"
-          EXIT=${PIPESTATUS[0]}
+          "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ -x --tb=short -q > "$RUNNER_TEMP/test-output-r2.txt" 2>&1
+          EXIT=$?
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
             echo "::notice::Tests PASSED after repair 2" || \
@@ -345,7 +387,7 @@ jobs:
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
           DISABLE_AUTOUPDATER: '1'
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import os
           from pathlib import Path
           tfile = os.environ["RUNNER_TEMP"] + "/test-output-r2.txt"
@@ -363,6 +405,7 @@ jobs:
             -p "$(cat "$RUNNER_TEMP/repair-3-prompt.txt")" \
             --model eu.anthropic.claude-sonnet-4-6 \
             --max-turns 6 \
+            --tools 'Read,Glob,Grep,Edit,Write' \
             --allowedTools 'Read,Glob,Grep,Edit,Write' \
             --no-session-persistence \
             --output-format json \
@@ -372,15 +415,15 @@ jobs:
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts == '3'
         run: |
           set +e
-          python3 -m pytest tests/ --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt"
-          EXIT=${PIPESTATUS[0]}
+          "$RUNNER_TEMP/isolated-python" -B -m pytest -p no:cacheprovider tests/ --tb=short -q > "$RUNNER_TEMP/test-output-r3.txt" 2>&1
+          EXIT=$?
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
 
       - name: Final validation after repair attempts
         shell: bash
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import subprocess
           status = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=all"], text=True).splitlines()
           paths = [line[3:].strip() for line in status]
@@ -431,7 +474,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import json, os, subprocess
           from pathlib import Path
 
@@ -528,9 +571,14 @@ jobs:
           Path(rt, "pr-body.md").write_text(body, encoding="utf-8")
           PY
           TASK_PREVIEW=$(head -c 80 "$RUNNER_TEMP/owner-task.txt" | tr '\n' ' ')
+          BASE_SHA=$(git ls-remote --exit-code origin "refs/heads/$GITHUB_REF_NAME" | cut -f1)
+          if [[ "$BASE_SHA" != "$GITHUB_SHA" ]]; then
+            echo "::error::The source branch moved. Rerun from its current revision."
+            exit 1
+          fi
           gh pr create \
             --draft \
-            --base main \
+            --base "$GITHUB_REF_NAME" \
             --head "$DEV_BRANCH" \
             --title "feat(claude): $TASK_PREVIEW" \
             --body-file "$RUNNER_TEMP/pr-body.md" \
@@ -542,7 +590,7 @@ jobs:
       - name: Write job summary
         if: always()
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import json, os
           from pathlib import Path
 
