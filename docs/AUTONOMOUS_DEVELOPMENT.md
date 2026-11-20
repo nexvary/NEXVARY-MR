@@ -146,3 +146,36 @@ Delete the `claude/auto-{run_id}` branch and close the Draft PR. No other state 
 - AWS OIDC → Bedrock: verified run `44477057278` (STS) and `44477689443` (Claude CLI)
 - Pilot branch: `claude/pilot-44545876225`
 - See `docs/CLOUD_DEVELOPMENT_PILOT.md` for full evidence
+
+---
+
+## Troubleshooting
+
+### Python tests fail with `ModuleNotFoundError` or `ImportError`
+
+Python tests must be invoked from the **repository root**, not from inside `tests/` or `nexvary_mr/`.
+The workflow runs:
+
+```bash
+cd $GITHUB_WORKSPACE
+python -m pytest tests/
+```
+
+Running from a subdirectory breaks relative imports such as `from nexvary_mr.billing import ...`
+because the package root is not on `sys.path`.  If you reproduce locally, always run:
+
+```bash
+# correct — from repository root
+python -m pytest tests/
+
+# incorrect — imports will fail
+cd tests && python -m pytest
+```
+
+### Draft PR is never opened after a workflow run
+
+Failed Python tests are a **publication gate**: the workflow does not commit or open a Draft PR
+if any test remains failing after all repair attempts.  Check the Actions run log for the step
+`Run Python tests` and address the failure before re-triggering.  The repair loop runs up to
+`max_repair_attempts` times; if tests still fail after the last attempt the job exits non-zero
+and no branch or PR is created.
