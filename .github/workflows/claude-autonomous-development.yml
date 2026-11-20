@@ -41,7 +41,7 @@ jobs:
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
       (github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' && github.event.head_commit.message == 'ci: verify isolated SQLite regression end to end')) &&
+      (github.event_name == 'push' && github.event.head_commit.message == 'ci: diagnose isolated SQLite test failures')) &&
       (github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation')
@@ -444,6 +444,11 @@ jobs:
       - name: Require passing Python tests before publishing
         run: |
           if [[ "$TESTS_PASSED" != "true" ]]; then
+            for report in "$RUNNER_TEMP"/test-output*.txt; do
+              [[ -f "$report" ]] || continue
+              printf "Test report: %s\n" "${report##*/}"
+              tail -n 100 "$report" | sed "s/^/[pytest] /"
+            done
             echo "::error::Python tests must pass before publishing a branch or Draft PR."
             exit 1
           fi
