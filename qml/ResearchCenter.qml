@@ -51,7 +51,8 @@ Item {
    EntryField {id:query;objectName:"researchQuery";requiredInput:false;Layout.fillWidth:true;maximumLength:256;placeholderText:app.trx("بحث في السجلات والمصادر","Search records and sources");onTextEdited:page.refresh()}
    ActionButton {objectName:"researchSearch";text:app.trx("بحث","Search");onClicked:page.refresh()}
   }
-  ScrollView {id:scroll;objectName:"researchScroll";Layout.fillWidth:true;Layout.fillHeight:true;contentWidth:availableWidth;clip:true
+  Item {Layout.fillWidth:true;Layout.fillHeight:true;Layout.minimumWidth:0;Layout.minimumHeight:0
+  ScrollView {id:scroll;objectName:"researchScroll";anchors.fill:parent;contentWidth:availableWidth;clip:true
    ColumnLayout {width:scroll.availableWidth;spacing:12
     Panel {visible:page.section===0;title:app.trx("المحركات المشتركة وبوابات الإثبات","Shared engines and evidence gates");iconName:"gauge";Layout.fillWidth:true
      Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:app.design.text;text:researchBridge.catalog.atlas.length+app.trx(" سجلًا معرفيًا · "," knowledge records · ")+researchBridge.catalog.tools.length+app.trx(" أدوات · "," tools · ")+researchBridge.catalog.experiments.length+app.trx(" خطط تجارب · "," experiment plans · ")+researchBridge.results.length+app.trx(" نتائج مسجلة"," recorded results")}
@@ -118,6 +119,7 @@ Item {
     }
     LawTrainingPage {visible:page.section===8;Layout.fillWidth:true;Layout.preferredHeight:600;app:page.app}
    }
+  }
   }
  }
  FileDialog {id:evidence;fileMode:FileDialog.OpenFile;onAccepted:page.evidencePath=selectedFile.toString()}

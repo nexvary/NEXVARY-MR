@@ -53,8 +53,10 @@ Item {
     }
     Label {anchors.centerIn:parent;width:parent.width-20;visible:files.count===0;text:app.trx("لا توجد أدلة مطابقة","No matching evidence");wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");horizontalAlignment:Text.AlignHCenter}
    }
+   Item {
+    Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0
    ScrollView {
-    id:detail;objectName:"forensicDetailScroll";Layout.preferredWidth:400;Layout.fillWidth:true;Layout.minimumWidth:0;Layout.fillHeight:true;Layout.minimumHeight:0;clip:true;contentWidth:availableWidth
+    id:detail;objectName:"forensicDetailScroll";anchors.fill:parent;clip:true;contentWidth:availableWidth
     ColumnLayout {
      width:detail.availableWidth;spacing:10
      Panel {
@@ -82,6 +84,7 @@ Item {
       Label {text:app.trx("سجل محلي مترابط بالبصمات؛ لا يثبت التسليم المادي أو اعتمادًا قضائيًا. سجلات القضايا القديمة تُميّز بأنها غير متحقق منها تاريخيًا.","Local hash-linked declarations do not prove physical handover or court accreditation. Migrated historical entries are marked unverified.");Layout.fillWidth:true;Layout.minimumWidth:0;wrapMode:Text.WordWrap;color:app.tone("#9bbbd3");font.pixelSize:14}
      }
     }
+   }
    }
   }
   RowLayout {
