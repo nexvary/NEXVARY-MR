@@ -73,9 +73,10 @@ def init_db(path=None):
 def save_case(brand, model, symptom, notes="", path=None):
     if not all([brand.strip(), model.strip(), symptom.strip()]):
         raise ValueError("Brand, model and symptom are required")
+    notes_text = (notes or "").strip()
     with closing(init_db(path)) as connection:
         cursor = connection.execute(
             "INSERT INTO cases (brand, model, symptom, notes) VALUES (?, ?, ?, ?)",
-            (brand.strip(), model.strip(), symptom.strip(), notes.strip()))
+            (brand.strip(), model.strip(), symptom.strip(), notes_text))
         connection.commit()
         return cursor.lastrowid
