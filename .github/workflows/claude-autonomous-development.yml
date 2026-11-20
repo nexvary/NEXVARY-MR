@@ -37,7 +37,8 @@ jobs:
     if: >
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
-      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous'
+      (github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous' ||
+      github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification')
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -229,9 +230,8 @@ jobs:
       - name: Run Python tests
         id: run_tests
         run: |
-          cd tests
           set +e
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt"
+          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output.txt"
           EXIT=${PIPESTATUS[0]}
           set -e
           if [ "$EXIT" -eq 0 ]; then
@@ -279,9 +279,8 @@ jobs:
       - name: Re-run tests after repair 1
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts != '0'
         run: |
-          cd tests
           set +e
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt"
+          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r1.txt"
           EXIT=${PIPESTATUS[0]}
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
@@ -330,9 +329,8 @@ jobs:
           env.TESTS_PASSED == 'false' &&
           (inputs.max_repair_attempts == '2' || inputs.max_repair_attempts == '3')
         run: |
-          cd tests
           set +e
-          python3 -m pytest -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt"
+          python3 -m pytest tests/ -x --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r2.txt"
           EXIT=${PIPESTATUS[0]}
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV" && \
@@ -373,9 +371,8 @@ jobs:
       - name: Re-run tests after repair 3
         if: env.TESTS_PASSED == 'false' && inputs.max_repair_attempts == '3'
         run: |
-          cd tests
           set +e
-          python3 -m pytest --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt"
+          python3 -m pytest tests/ --tb=short -q 2>&1 | tee "$RUNNER_TEMP/test-output-r3.txt"
           EXIT=${PIPESTATUS[0]}
           set -e
           [ "$EXIT" -eq 0 ] && echo "TESTS_PASSED=true" >> "$GITHUB_ENV"
@@ -395,6 +392,13 @@ jobs:
           print("Final validated file count:", len(paths))
           PY
           git diff --check
+
+      - name: Require passing Python tests before publishing
+        run: |
+          if [[ "$TESTS_PASSED" != "true" ]]; then
+            echo "::error::Python tests must pass before publishing a branch or Draft PR."
+            exit 1
+          fi
 
       # ── 13. Commit and push ───────────────────────────────────────────────
       - name: Commit and push development branch
@@ -422,6 +426,7 @@ jobs:
 
       # ── 14. Create Draft PR ───────────────────────────────────────────────
       - name: Create Draft PR
+        shell: bash
         if: env.COMMIT_SHA != ''
         env:
           GH_TOKEN: ${{ github.token }}
