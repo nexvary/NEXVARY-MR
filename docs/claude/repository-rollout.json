@@ -1,0 +1,359 @@
+{
+  "owner": "nexvary",
+  "authorization": "This inventory proposes rollout targets and does not grant access. Only repositories individually configured and verified may receive cloud tasks.",
+  "pilot": {
+    "repository": "nexvary/NEXVARY-MR",
+    "run": "https://github.com/nexvary/NEXVARY-MR/actions/runs/44676287883",
+    "draftPullRequest": "https://github.com/nexvary/NEXVARY-MR/pull/35"
+  },
+  "repositories": [
+    {
+      "id": "1368444267",
+      "repository": "nexvary/ABSHAR-Smart-Catalog",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359369999",
+      "repository": "nexvary/Aegis-CUAS-Command",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1402252717",
+      "repository": "nexvary/Al-Makhtut-Al-Hayy",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1373187405",
+      "repository": "nexvary/AlQuds-New-Library",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1373689637",
+      "repository": "nexvary/android-mc",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1415225145",
+      "repository": "nexvary/edu-quran-erp",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1429422339",
+      "repository": "nexvary/FG-Chat",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1358806723",
+      "repository": "nexvary/FG-Machines-Car",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1399738256",
+      "repository": "nexvary/FG-MikroTik-Manager",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1434971277",
+      "repository": "nexvary/FG-Secrets",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1420957841",
+      "repository": "nexvary/Floating-Note",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1375014540",
+      "repository": "nexvary/LinkCore-Android",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1389509165",
+      "repository": "nexvary/NEXVARY-AI-Radar",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359695560",
+      "repository": "nexvary/Nexvary-Andalus-Studio",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1372968524",
+      "repository": "nexvary/NEXVARY-Aviation-Navigator",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1362437096",
+      "repository": "nexvary/NEXVARY-Avionics-Lab",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1358844984",
+      "repository": "nexvary/NEXVARY-Browser-Forensics-Lab",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1463340028",
+      "repository": "nexvary/NEXVARY-CX-Cloud",
+      "defaultBranch": "main",
+      "state": "bootstrap-required"
+    },
+    {
+      "id": "1358875263",
+      "repository": "nexvary/nexvary-cx-platform",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1382405351",
+      "repository": "nexvary/NEXVARY-DA",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1408365205",
+      "repository": "nexvary/NEXVARY-DC",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1454835823",
+      "repository": "nexvary/NEXVARY-Deal",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1358859689",
+      "repository": "nexvary/NEXVARY-Digital-Forensics-Workbench",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1366682879",
+      "repository": "nexvary/NEXVARY-Emergency-Mesh",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1411339177",
+      "repository": "nexvary/NEXVARY-eSIM",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1358856216",
+      "repository": "nexvary/NEXVARY-FaceLab",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1366582105",
+      "repository": "nexvary/NEXVARY-FoodGuard",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1418127504",
+      "repository": "nexvary/NEXVARY-HifzAI",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1364169588",
+      "repository": "nexvary/NEXVARY-Intelligence-Browser",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1418745698",
+      "repository": "nexvary/NEXVARY-Lingo",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1441200238",
+      "repository": "nexvary/NEXVARY-Lithos",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1382893345",
+      "repository": "nexvary/NEXVARY-MC",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1383808197",
+      "repository": "nexvary/NEXVARY-Meta-Security",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1421842070",
+      "repository": "nexvary/NEXVARY-MR",
+      "defaultBranch": "main",
+      "state": "pilot-verified"
+    },
+    {
+      "id": "1408490100",
+      "repository": "nexvary/NEXVARY-NetScan",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1361345349",
+      "repository": "nexvary/Nexvary-Panel",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1382731736",
+      "repository": "nexvary/NEXVARY-Privacy-Mesh",
+      "defaultBranch": "main",
+      "state": "bootstrap-required"
+    },
+    {
+      "id": "1419304767",
+      "repository": "nexvary/NEXVARY-PromptForge",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1389328160",
+      "repository": "nexvary/NEXVARY-RealEstate-AI-OS",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1387552811",
+      "repository": "nexvary/NEXVARY-Recorder-Studio",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1424728059",
+      "repository": "nexvary/NEXVARY-SC",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1376489084",
+      "repository": "nexvary/NEXVARY-SCADA",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1398806688",
+      "repository": "nexvary/NEXVARY-Security-Suite",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1360621198",
+      "repository": "nexvary/NEXVARY-SEO-Autopilot.",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1406517941",
+      "repository": "nexvary/NEXVARY-Smart-OS",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1358883546",
+      "repository": "nexvary/NEXVARY-Spectra-OS",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359921433",
+      "repository": "nexvary/Nexvary-Tool-Box",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1420760657",
+      "repository": "nexvary/NEXVARY-Traffic",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359957837",
+      "repository": "nexvary/NEXVARY-Travel",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1410929001",
+      "repository": "nexvary/NEXVARY-USB",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1457418377",
+      "repository": "nexvary/NEXVARY-UtilityCalc",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1404233763",
+      "repository": "nexvary/NEXVARY-Veil-Launcher",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1413623053",
+      "repository": "nexvary/NEXVARY-Voice",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1366685485",
+      "repository": "nexvary/NEXVARY-VScan",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359186796",
+      "repository": "nexvary/NEXVARY-Web-Platform",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1404867554",
+      "repository": "nexvary/NEXVARY-WiFi-Call",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1366690453",
+      "repository": "nexvary/SHURAYH-Legal",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    },
+    {
+      "id": "1359438721",
+      "repository": "nexvary/Turkiye-Legacy-Platform",
+      "defaultBranch": "main",
+      "state": "pending-verification"
+    }
+  ]
+}
