@@ -1,5 +1,11 @@
 # NEXVARY-MR Development Handoff
 
+## 2026-11-20 Autonomous Verification
+
+The Python SQLite fix (audit-store integrity) and QML Panel timing fix (`wait(60)` deferred-binding drain) were confirmed committed on branch `feat/intelligence-ux-polish-20261117` / `campaign-ci-stabilize-20261118` as documented in the CI repair sections below.
+
+---
+
 ## Autonomous Claude Code cloud development system — 2026-11-19
 
 ### Branch
