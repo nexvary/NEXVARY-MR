@@ -1,6 +1,6 @@
 # NEXVARY-MR — Development Status
 
-Updated: 2026-11-20 (commit edef10a)
+Updated: 2026-11-20 (commits c973bb1 / 542ad88)
 
 ---
 
@@ -24,6 +24,7 @@ Updated: 2026-11-20 (commit edef10a)
 | [#34](https://github.com/nexvary/NEXVARY-MR/pull/34) | Persist optional maintenance notes in SQLite | Open (Draft) |
 | [#33](https://github.com/nexvary/NEXVARY-MR/pull/33) | Isolate cloud test execution | Open (Draft) |
 | [#28](https://github.com/nexvary/NEXVARY-MR/pull/28) | Autonomous workflow integration | Open (Draft) |
+| `fix/autonomous-workflow-publish-gate` | Autonomous workflow publish gate fix | Branch pushed — PR needs manual creation (gh CLI lacks collaborator write access) |
 
 ---
 
@@ -35,7 +36,7 @@ Updated: 2026-11-20 (commit edef10a)
 |-----|---------|--------|--------|
 | [44683735949](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683735949) | Claude Autonomous Development | `integration/claude-bedrock-cloud-20261119-autonomous` | `16008d9` |
 | [44683692507](https://github.com/nexvary/NEXVARY-MR/actions/runs/44683692507) | Python checks | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `abcc0e7` |
-| Latest (triggered by `edef10a`) | C++20 and Qt Windows | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `edef10a` |
+| [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) | C++20 and Qt Windows (in progress) | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` | `c973bb1` |
 | Latest | Python checks | `integration/claude-repository-rollout` | `816df2f` |
 | 44676460202 | Python checks | prior branch | success |
 | 44676460208 | Public history safety | prior branch | success |
@@ -45,7 +46,7 @@ Updated: 2026-11-20 (commit edef10a)
 
 | Run | Workflow | Branch |
 |-----|---------|--------|
-| Latest | C++20 and Qt Windows | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` |
+| [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) | C++20 and Qt Windows — Qt jobs building GUI, CTest pending | `integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation` |
 
 ### Previously Failing (now fixed) ❌→✅
 
@@ -56,6 +57,7 @@ Updated: 2026-11-20 (commit edef10a)
 | 44680324451 | Python checks | Same as above | `816df2f` |
 | 44676460196 | C++20 and Qt Windows | `test_modernCompatibilityPanel` / `test_governmentTimelineControls` — `delayed:true` Binding deferred layout update | `edef10a` |
 | 44684543830 | C++20 and Qt Windows | `mr_gui_smoke` Polish loop (`qmlWarnings=1`) — `delayed:true` removed in `abcc0e7` created feedback cycle | `edef10a` |
+| (prior run on `edef10a`) | C++20 and Qt Windows | `test_governmentTimelineControls` still failing — `wait(0)` insufficient; also `ForensicEvidencePage.qml` ScrollView missing `Layout.minimumHeight:0` triggered second Polish loop on Linux | `c973bb1` |
 
 ---
 
@@ -72,7 +74,7 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 - `save_case()`: replaced `with init_db() as conn:` with `try/finally` + explicit `commit()` + `close()`
 - `test_case_persistence`: replaced context-manager query with `try/finally` + explicit `close()`
 
-### QML Panel and test fix (`integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation`, commit `edef10a`)
+### QML Panel and test fix (`integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation`, commits `edef10a` → `c973bb1`)
 
 **Files changed:** `qml/Panel.qml`, `qml/tests/tst_navigation.qml`
 
@@ -88,9 +90,29 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 - `tst_navigation.qml`:
   - `test_modernCompatibilityPanel` (lines 270, 568, 571): replaced `verify(height>=implicitHeight)`
     with `tryVerify(fn,500)` so the test retries for up to 500 ms after the deferred Binding fires.
-  - `test_governmentTimelineControls` (lines 359–360): added `wait(0)` between
-    `reveal()+renderedFrame()` and `mouseClick()` to let the deferred layout settle
-    before click coordinates are resolved.
+  - `test_governmentTimelineControls` (lines 359–360): replaced `wait(0)` with
+    `waitForRendering(next,500)` / `waitForRendering(previous,500)` to wait for a
+    full render frame before click coordinates are resolved (commit `c973bb1`).
+
+**Additional fix (commit `c973bb1`):**
+- `ForensicEvidencePage.qml` line 57: added `Layout.minimumHeight:0` to the ScrollView
+  containing Panel children. Without this, the ScrollView's `implicitHeight` changes
+  when Panel's deferred Binding fires, triggering a second Polish of the outer ColumnLayout
+  → "Polish loop detected" on Linux only.
+
+### Autonomous workflow publish gate fix (`fix/autonomous-workflow-publish-gate`, commit `542ad88`)
+
+**Files changed:** `.github/workflows/claude-autonomous-development.yml` (on `integration/claude-bedrock-cloud-20261119-autonomous`)
+
+**Problem:** "Create Draft PR" step ran whenever `COMMIT_SHA != ''`, even when `TESTS_PASSED=false` and no repair loop ran (run #44683735949: `ModuleNotFoundError: No module named 'nexvary_mr'`, Draft PR #37 created anyway).
+
+**Fix:**
+- Added gate step "Require passing Python tests before publishing" (before commit): fails with `exit 1` when `TESTS_PASSED != 'true'`
+- Hardened "Create Draft PR" condition: `if: env.COMMIT_SHA != '' && env.TESTS_PASSED == 'true'`
+
+**Branch:** `fix/autonomous-workflow-publish-gate` — pushed, PR creation pending (requires collaborator write access via gh CLI).
+
+---
 
 ### Autonomous development workflow
 
@@ -108,7 +130,7 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 | Layer | Status | Evidence |
 |-------|--------|---------|
 | Python unit tests (pytest/unittest) | ✅ Passing | Runs 44683692507, latest on rollout branch |
-| QML/CTest on Windows (pending) | ⏳ In progress | Run triggered by commit `abcc0e7` |
+| QML/CTest on Windows (`c973bb1`) | ⏳ In progress | Run [44814065762](https://github.com/nexvary/NEXVARY-MR/actions/runs/44814065762) — Qt jobs building GUI, CTest next |
 | Autonomous Claude development cycle | ✅ Verified | Run 44683735949, PR #37 |
 | AWS OIDC → Bedrock authentication | ✅ Verified | Run 44683735949 |
 
@@ -119,8 +141,7 @@ database file stays open until GC, causing `PermissionError [WinError 32]` when
 | Layer | Reason |
 |-------|--------|
 | Physical device (ADB/Fastboot) | No hardware on GitHub runners |
-| Windows installer / Authenticode | Packaging script not triggered |
-| Qt/CTest on Windows (current fix) | Build in progress as of 2026-11-20 |
+| Windows installer / Authenticode | Packaging steps 20-25 run automatically after CTest passes in run 44814065762 |
 
 ---
 
