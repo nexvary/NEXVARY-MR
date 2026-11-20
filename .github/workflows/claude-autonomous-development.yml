@@ -41,7 +41,7 @@ jobs:
       github.repository == 'nexvary/NEXVARY-MR' &&
       github.actor == 'nexvary' &&
       (github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' && github.event.head_commit.message == 'ci: diagnose isolated SQLite test failures')) &&
+      (github.event_name == 'push' && github.event.head_commit.message == 'ci: verify SQLite with Git in isolated runner')) &&
       (github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification' ||
       github.ref == 'refs/heads/integration/claude-bedrock-cloud-20261119-autonomous-verification-isolation')
@@ -136,6 +136,8 @@ jobs:
         run: |
           docker build --tag nexvary-pytest:"$GITHUB_RUN_ID" - <<'DOCKERFILE'
           FROM python:3.12-slim
+          RUN apt-get update && apt-get install -y --no-install-recommends git \
+              && rm -rf /var/lib/apt/lists/*
           RUN pip install --no-cache-dir pytest==9.0.2 cryptography==46.0.5
           DOCKERFILE
           cat > "$RUNNER_TEMP/isolated-python" <<'BASH'
